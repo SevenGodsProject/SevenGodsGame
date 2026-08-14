@@ -1,0 +1,118 @@
+.tutorial-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  background: #05060dd9;
+  display: grid;
+  place-items: center;
+  padding: 20px;
+}
+
+.tutorial-card {
+  width: 100%;
+  max-width: 480px;
+  max-height: 85vh;
+  overflow-y: auto;
+  background: linear-gradient(165deg, #14152cee 0%, #0b0d17ee 100%);
+  border: 1px solid #ffd16644;
+  border-radius: 16px;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  color: #e8e9f3;
+  box-shadow: 0 0 40px -8px #ffd16644;
+}
+
+.tutorial-title {
+  margin: 0;
+  font-size: 20px;
+  text-align: center;
+  color: #ffd166;
+}
+
+.tutorial-genre {
+  margin: -8px 0 0;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-align: center;
+  color: #ffd166cc;
+}
+
+.tutorial-sections {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin: 0;
+}
+
+.tutorial-section {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+/* 施策：各項目に図解（実際のカード/敵/神の画像、または汎用アイコン）を添える */
+.tutorial-section-visual {
+  flex-shrink: 0;
+  width: 56px;
+  height: 56px;
+  border-radius: 12px;
+  overflow: hidden;
+  display: grid;
+  place-items: center;
+  background: #ffffff0d;
+  border: 1px solid #ffd16633;
+}
+
+.tutorial-section-visual img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.tutorial-section-glyph {
+  width: 32px;
+  height: 32px;
+  color: #ffd166;
+}
+
+.tutorial-section-text {
+  flex: 1;
+  min-width: 0;
+}
+
+.tutorial-section dt {
+  font-weight: 700;
+  color: #ffd166;
+  font-size: 14px;
+}
+
+.tutorial-section dd {
+  margin: 4px 0 0;
+  font-size: 13px;
+  color: #a9adc4;
+  line-height: 1.6;
+}
+
+.tutorial-close {
+  align-self: center;
+  padding: 10px 28px;
+  border-radius: 999px;
+  border: 1px solid #ffd166;
+  background: linear-gradient(180deg, #ffd16626, #ffd1660a);
+  color: #ffd166;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 0 18px -4px #ffd16688;
+  transition:
+    box-shadow 0.2s ease,
+    transform 0.15s ease;
+}
+
+.tutorial-close:hover {
+  box-shadow: 0 0 26px -2px #ffd166cc;
+  transform: translateY(-2px);
+}
+

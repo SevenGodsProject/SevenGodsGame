@@ -1,0 +1,80 @@
+/**
+ * 効果音（決定：UI演出・サウンド）。
+ *
+ * 本物の音源ファイルはまだ無いため、Web Audio APIでその場で音を合成する
+ * プレースホルダー実装。`public/assets` に音源が用意できたら、この
+ * ファイルの中身を `new Audio(url).play()` に差し替えるだけで済むように、
+ * 呼び出し側（useBattleSound.ts）は `sfx.xxx()` という形しか知らない。
+ */
+
+let ctx: AudioContext | null = null
+let muted = false
+
+function getCtx(): AudioContext | null {
+  if (typeof window === 'undefined') return null
+  const Ctor = window.AudioContext
+  if (!Ctor) return null
+  if (!ctx) ctx = new Ctor()
+  if (ctx.state === 'suspended') void ctx.resume()
+  return ctx
+}
+
+export function setSoundMuted(value: boolean): void {
+  muted = value
+}
+
+export function isSoundMuted(): boolean {
+  return muted
+}
+
+type ToneOptions = {
+  type?: OscillatorType
+  volume?: number
+  delayMs?: number
+}
+
+function tone(freq: number, durationMs: number, opts: ToneOptions = {}): void {
+  if (muted) return
+  const audioCtx = getCtx()
+  if (!audioCtx) return
+
+  const { type = 'sine', volume = 0.12, delayMs = 0 } = opts
+  const osc = audioCtx.createOscillator()
+  const gain = audioCtx.createGain()
+  osc.type = type
+  osc.frequency.value = freq
+
+  const startAt = audioCtx.currentTime + delayMs / 1000
+  const stopAt = startAt + durationMs / 1000
+  gain.gain.setValueAtTime(0, startAt)
+  gain.gain.linearRampToValueAtTime(volume, startAt + 0.008)
+  gain.gain.exponentialRampToValueAtTime(0.0001, stopAt)
+
+  osc.connect(gain)
+  gain.connect(audioCtx.destination)
+  osc.start(startAt)
+  osc.stop(stopAt + 0.02)
+}
+
+function arpeggio(freqs: number[], durationMs: number, stepMs: number, opts: ToneOptions = {}): void {
+  freqs.forEach((freq, i) => tone(freq, durationMs, { ...opts, delayMs: (opts.delayMs ?? 0) + i * stepMs }))
+}
+
+export const sfx = {
+  cardPlay: () => tone(320, 70, { type: 'square', volume: 0.07 }),
+  cardDrawn: () => tone(520, 35, { type: 'square', volume: 0.03 }),
+  damageEnemy: () => {
+    tone(200, 90, { type: 'sawtooth', volume: 0.11 })
+    tone(130, 120, { type: 'sawtooth', volume: 0.07, delayMs: 40 })
+  },
+  damageSelf: () => tone(90, 160, { type: 'square', volume: 0.13 }),
+  heal: () => arpeggio([440, 660], 100, 70, { type: 'sine', volume: 0.09 }),
+  block: () => tone(220, 60, { type: 'triangle', volume: 0.07 }),
+  resonanceGain: () => tone(880, 55, { type: 'sine', volume: 0.05 }),
+  resonanceBurst: () => arpeggio([523, 659, 784, 1047], 160, 70, { type: 'sine', volume: 0.12 }),
+  otomoEvolve: () => arpeggio([392, 523, 659, 784, 988], 140, 60, { type: 'triangle', volume: 0.09 }),
+  divination: () => arpeggio([660, 880], 90, 60, { type: 'sine', volume: 0.08 }),
+  enemyTurn: () => tone(150, 100, { type: 'square', volume: 0.06 }),
+  victory: () => arpeggio([523, 659, 784, 1047], 220, 130, { type: 'triangle', volume: 0.13 }),
+  defeat: () => arpeggio([440, 349, 293], 320, 180, { type: 'sawtooth', volume: 0.11 }),
+}

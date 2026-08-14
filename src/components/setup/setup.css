@@ -1,0 +1,840 @@
+.setup-screen {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 100%;
+  max-width: 960px;
+  color: #e8e9f3;
+}
+
+.setup-title {
+  font-size: 30px;
+  font-weight: 800;
+  margin: 0;
+  letter-spacing: 0.03em;
+  background: linear-gradient(135deg, #fff2cf 0%, #ffd166 55%, #e0a53a 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  text-shadow: 0 0 26px #ffd16666;
+  filter: drop-shadow(0 2px 5px #000000aa);
+}
+
+.setup-subtitle {
+  margin: 0;
+  color: #a9adc4;
+  font-size: 14px;
+}
+
+/*
+ * ステータスバー4軸の凡例（CEOフィードバック「特殊が分かりにくい」
+ * 「防御・回復が0だと被弾時どうなるのか不安」への対応）。
+ * カードごとに繰り返さず、グリッドの上に1回だけ表示する。
+ */
+.god-select-legend {
+  margin: 0;
+  padding: 10px 14px;
+  border-radius: 10px;
+  background: #ffffff0d;
+  border: 1px solid #ffffff1a;
+  color: #c3c6de;
+  font-size: 12px;
+  line-height: 1.7;
+}
+
+.god-select-legend strong {
+  color: #ffd166;
+  font-weight: 700;
+}
+
+/* --- 難易度選択 --- */
+
+.difficulty-select {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.difficulty-option {
+  flex: 1 1 160px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 10px 14px;
+  border: 1px solid #ffffff1a;
+  border-radius: 10px;
+  background: linear-gradient(165deg, #14152caa 0%, #0b0d17cc 100%);
+  color: inherit;
+  cursor: pointer;
+  text-align: left;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.difficulty-option:hover {
+  border-color: #ffd16688;
+}
+
+.difficulty-option-active {
+  border-color: #ffd166;
+  box-shadow: 0 0 16px -4px #ffd16688;
+}
+
+.difficulty-option-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.difficulty-option-label {
+  font-weight: 700;
+}
+
+.difficulty-option-stars {
+  font-size: 13px;
+  letter-spacing: 1px;
+}
+
+.difficulty-option-stars .star-filled {
+  color: #ffd166;
+  text-shadow: 0 0 6px #ffd16688;
+}
+
+.difficulty-option-stars .star-empty {
+  color: #ffffff2a;
+}
+
+.difficulty-option-desc {
+  font-size: 12px;
+  color: #a9adc4;
+}
+
+/* --- 神選択画面 --- */
+
+.god-select-grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px;
+}
+
+.god-select-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 12px;
+  flex: 1 1 200px;
+  max-width: 220px;
+  border: 1px solid #ffffff1a;
+  border-radius: 12px;
+  background: linear-gradient(165deg, #14152caa 0%, #0b0d17cc 100%);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  color: inherit;
+  cursor: pointer;
+  box-shadow: inset 0 1px 0 #ffffff10;
+  transition:
+    transform 0.15s ease,
+    box-shadow 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.god-select-card:hover {
+  border-color: #ffd166;
+  background: linear-gradient(165deg, #2a2140aa 0%, #0b0d17cc 100%);
+  box-shadow:
+    inset 0 1px 0 #ffffff10,
+    0 0 20px -4px #ffd16688;
+  transform: translateY(-3px);
+}
+
+.god-select-card img {
+  width: 100%;
+  max-width: 120px;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+.god-select-name {
+  font-weight: 700;
+}
+
+.god-select-tagline {
+  font-size: 12px;
+  color: #a9adc4;
+  text-align: center;
+}
+
+/* 自己ベストスコア（決定48フォローアップ：ハイスコア・自己ベストの記録機能） */
+.god-select-record {
+  font-size: 11px;
+  font-weight: 700;
+  color: #ffd166cc;
+}
+
+/*
+ * プレイスタイル分類バッジ（CEOフィードバック「攻撃型・防御型など特徴が
+ * わかるように」への対応）。5種の`archetype`ごとに色を変え、視覚的にも
+ * 一覧比較できるようにする。
+ */
+.god-archetype-badge {
+  font-size: 11px;
+  font-weight: 700;
+  padding: 2px 10px;
+  border-radius: 999px;
+  border: 1px solid transparent;
+}
+
+.god-archetype-attack {
+  color: #ff8f6b;
+  background: #ff8f6b1a;
+  border-color: #ff8f6b44;
+}
+
+.god-archetype-defense {
+  color: #6bb4ff;
+  background: #6bb4ff1a;
+  border-color: #6bb4ff44;
+}
+
+.god-archetype-support {
+  color: #7de08a;
+  background: #7de08a1a;
+  border-color: #7de08a44;
+}
+
+.god-archetype-technique {
+  color: #c39bff;
+  background: #c39bff1a;
+  border-color: #c39bff44;
+}
+
+.god-archetype-balance {
+  color: #ffd166;
+  background: #ffd1661a;
+  border-color: #ffd16644;
+}
+
+/* 施策A：7神中その型が1体しかいない場合の強調（「才華を選ぶ理由が分からない」への対応） */
+.god-archetype-unique {
+  font-weight: 800;
+  opacity: 0.9;
+}
+
+/*
+ * 4軸ステータスバー（攻撃・防御・回復・特殊）。`resonanceEffects`と
+ * OTOMOの`effectsByForm`から機械的に集計した数値（`godStyle.ts`）を、
+ * 全神共通のスケールで並べることで「見ただけで比較できる」ようにする。
+ */
+.god-select-stats {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  margin-top: 2px;
+}
+
+.god-stat-block {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.god-stat-row {
+  display: grid;
+  grid-template-columns: 28px 1fr 24px;
+  align-items: center;
+  gap: 6px;
+}
+
+/* 施策A：「特殊」バーの内訳（例：「カード+2枚・神力+2」）。数字だけでは中身が伝わらないため */
+.god-stat-note {
+  padding-left: 34px;
+  font-size: 9px;
+  color: #c39bffcc;
+  line-height: 1.4;
+}
+
+.god-stat-label {
+  font-size: 10px;
+  color: #a9adc4;
+}
+
+.god-stat-track {
+  height: 6px;
+  border-radius: 999px;
+  background: #ffffff14;
+  overflow: hidden;
+}
+
+.god-stat-fill {
+  display: block;
+  height: 100%;
+  border-radius: 999px;
+  transition: width 0.2s ease;
+}
+
+.god-stat-fill-attack {
+  background: #ff8f6b;
+}
+
+.god-stat-fill-defense {
+  background: #6bb4ff;
+}
+
+.god-stat-fill-heal {
+  background: #7de08a;
+}
+
+.god-stat-fill-special {
+  background: #c39bff;
+}
+
+.god-stat-value {
+  font-size: 10px;
+  color: #d7d9ec;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+/* --- ②難易度ステップ：選んだ神の再確認カード --- */
+
+.god-select-recap {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 10px 14px;
+  border: 1px solid #ffffff1a;
+  border-radius: 12px;
+  background: linear-gradient(165deg, #14152caa 0%, #0b0d17cc 100%);
+  color: inherit;
+  cursor: pointer;
+  text-align: left;
+  width: fit-content;
+  transition: border-color 0.2s ease;
+}
+
+.god-select-recap:hover {
+  border-color: #ffd16688;
+}
+
+.god-select-recap img {
+  width: 56px;
+  height: 56px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+.god-select-recap-body {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.god-select-recap-name {
+  font-weight: 700;
+  font-size: 15px;
+}
+
+.god-select-recap-change {
+  font-size: 12px;
+  color: #a9adc4;
+}
+
+.god-select-confirm {
+  align-self: flex-start;
+  margin-top: 4px;
+  padding: 12px 28px;
+  border: none;
+  border-radius: 999px;
+  font-weight: 700;
+  font-size: 15px;
+  color: #221607;
+  background: linear-gradient(135deg, #ffe6a3 0%, #ffd166 55%, #e0a53a 100%);
+  box-shadow: 0 0 20px -4px #ffd16688;
+  cursor: pointer;
+  transition:
+    transform 0.15s ease,
+    box-shadow 0.2s ease;
+}
+
+.god-select-confirm:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 24px -4px #ffd166aa;
+}
+
+/* --- OTOMOの成長の絆選択（決定44） --- */
+
+.growth-path-select {
+  display: flex;
+  align-items: stretch;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.growth-path-label {
+  display: flex;
+  align-items: center;
+  font-size: 13px;
+  color: #a9adc4;
+  white-space: nowrap;
+}
+
+.growth-path-option {
+  flex: 1 1 200px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 8px 14px;
+  border: 1px solid #ffffff1a;
+  border-radius: 10px;
+  background: linear-gradient(165deg, #14152caa 0%, #0b0d17cc 100%);
+  color: inherit;
+  cursor: pointer;
+  text-align: left;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.growth-path-option:hover {
+  border-color: #ffd16688;
+}
+
+.growth-path-option-active {
+  border-color: #ffd166;
+  box-shadow: 0 0 16px -4px #ffd16688;
+}
+
+.growth-path-option-label {
+  font-weight: 700;
+  font-size: 13px;
+}
+
+.growth-path-option-desc {
+  font-size: 11px;
+  color: #a9adc4;
+}
+
+/* --- デッキ構築画面 --- */
+
+.deck-builder-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.deck-builder-count {
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 999px;
+  border: 1px solid #1c2038;
+}
+
+.deck-builder-count-ok {
+  border-color: #4dbd74;
+  color: #4dbd74;
+}
+
+.deck-builder-toolbar button,
+.deck-builder-actions button {
+  padding: 9px 20px;
+  border-radius: 999px;
+  border: 1px solid #ffd166;
+  background: linear-gradient(180deg, #ffd16620, #ffd1660a);
+  color: #ffd166;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 0 14px -6px #ffd16688;
+  transition:
+    box-shadow 0.2s ease,
+    transform 0.15s ease,
+    background 0.2s ease;
+}
+
+.deck-builder-toolbar button:hover,
+.deck-builder-actions button:not(:disabled):hover {
+  background: linear-gradient(180deg, #ffd16644, #ffd16614);
+  box-shadow: 0 0 22px -2px #ffd166cc;
+  transform: translateY(-2px);
+}
+
+.deck-builder-actions button:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+  border-color: #444a68;
+  color: #444a68;
+}
+
+.deck-builder-pool {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  max-height: 55vh;
+  overflow-y: auto;
+  padding-right: 4px;
+}
+
+.deck-builder-section h2 {
+  font-size: 14px;
+  margin: 0 0 8px;
+}
+
+.deck-builder-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 10px;
+}
+
+.deck-builder-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-height: 220px;
+  padding: 10px;
+  border: 1px solid;
+  border-radius: 10px;
+  overflow: hidden;
+  background: linear-gradient(165deg, #14152caa 0%, #0b0d17cc 100%);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  transition: transform 0.15s ease;
+}
+
+.deck-builder-card:hover {
+  transform: translateY(-3px);
+}
+
+/* 角丸の内側だけにクリップする装飾レイヤー（イラスト・フォールバックアイコン）。
+   コストバッジ・本文はこの外に置き、常に前面へ出るようにする（決定28と同じパターン） */
+.deck-builder-card-clip {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.deck-builder-card-illustration {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 22%;
+}
+
+.deck-builder-card-icon {
+  position: absolute;
+  right: -8px;
+  bottom: -10px;
+  width: 64px;
+  height: 64px;
+  opacity: 0.22;
+  filter: drop-shadow(0 0 6px currentColor);
+}
+
+.deck-builder-card-icon svg {
+  width: 100%;
+  height: 100%;
+}
+
+.deck-builder-card > *:not(.deck-builder-card-clip) {
+  position: relative;
+  z-index: 1;
+}
+
+.deck-builder-card-cost {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 700;
+  color: #0b0d17;
+}
+
+.deck-builder-card-body {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1;
+}
+
+.deck-builder-card-has-art .deck-builder-card-body {
+  margin: auto -10px -10px;
+  padding: 26px 10px 10px;
+  border-bottom-left-radius: inherit;
+  border-bottom-right-radius: inherit;
+  background: linear-gradient(180deg, transparent 0%, #05060da8 30%, #05060df5 75%);
+}
+
+.deck-builder-card-god {
+  font-size: 10px;
+  color: #ffd166;
+}
+
+.deck-builder-card-bonus {
+  font-size: 10px;
+  font-weight: 700;
+  color: #4dbd74;
+}
+
+.deck-builder-card-name {
+  font-weight: 700;
+  padding-right: 26px;
+}
+
+.deck-builder-card-text {
+  font-size: 12px;
+  color: #a9adc4;
+  flex-grow: 1;
+}
+
+.deck-builder-card-stepper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 4px;
+}
+
+.deck-builder-card-stepper button {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  border: 1px solid #444a68;
+  background: transparent;
+  color: #e8e9f3;
+  cursor: pointer;
+  font-size: 14px;
+  line-height: 1;
+}
+
+.deck-builder-card-stepper button:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.deck-builder-card-stepper button:not(:disabled):hover {
+  border-color: #ffd166;
+  color: #ffd166;
+}
+
+.deck-builder-card-stepper span {
+  min-width: 2.4em;
+  text-align: center;
+  font-weight: 700;
+  font-size: 12px;
+}
+
+.deck-builder-errors {
+  margin: 0;
+  padding-left: 20px;
+  color: #e5484d;
+  font-size: 13px;
+}
+
+.deck-builder-actions {
+  display: flex;
+  justify-content: space-between;
+}
+
+/*
+ * --- ホーム画面（起動時のヒーロー画面） ---
+ * CEOが共有した参考画像（他ゲームのタイトル画面）の構図を意匠だけ流用：
+ * 左＝ロゴ・キャッチコピー・CTA、右＝代表の神を大きく見せるポートレートカード。
+ * ランキング／シーズン等の参考画像にあった要素は今回のスコープ外。
+ */
+.home-screen {
+  width: 100%;
+  max-width: 1040px;
+}
+
+.home-hero {
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  align-items: center;
+  gap: 32px;
+}
+
+.home-hero-text {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.home-eyebrow {
+  margin: 0;
+  font-size: 12px;
+  letter-spacing: 0.3em;
+  color: #a9adc4;
+}
+
+.home-title {
+  margin: 0;
+  font-size: clamp(40px, 7vw, 64px);
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  color: #f4f5fb;
+  text-shadow: 0 2px 20px #00000088;
+}
+
+.home-title-accent {
+  background: linear-gradient(135deg, #fff2cf 0%, #ffd166 55%, #e0a53a 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  text-shadow: 0 0 30px #ffd16666;
+}
+
+/* ジャンル表記（「SEVEN GODS：共鳴カードバトル」のサブタイトル部分） */
+.home-genre-label {
+  margin: 6px 0 0;
+  font-size: clamp(20px, 3vw, 28px);
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  color: #ffd166;
+  text-shadow: 0 0 20px #ffd16666;
+}
+
+.home-tagline {
+  margin: 4px 0 8px;
+  font-size: 16px;
+  color: #c3c6de;
+}
+
+.home-cta-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 8px;
+}
+
+.home-cta-primary {
+  padding: 14px 32px;
+  border: none;
+  border-radius: 999px;
+  font-weight: 700;
+  font-size: 16px;
+  color: #221607;
+  background: linear-gradient(135deg, #ffe6a3 0%, #ffd166 55%, #e0a53a 100%);
+  box-shadow: 0 0 24px -4px #ffd16688;
+  cursor: pointer;
+  transition:
+    transform 0.15s ease,
+    box-shadow 0.2s ease;
+}
+
+.home-cta-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 28px -4px #ffd166aa;
+}
+
+.home-cta-secondary {
+  padding: 14px 24px;
+  border-radius: 999px;
+  border: 1px solid #ffffff33;
+  background: #14152caa;
+  color: #e8e9f3;
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  transition: border-color 0.2s ease;
+}
+
+.home-cta-secondary:hover {
+  border-color: #ffd16688;
+}
+
+.home-howto-button {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 6px;
+  padding: 0;
+  border: none;
+  background: none;
+  color: #a9adc4;
+  font-size: 13px;
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.home-howto-button:hover {
+  color: #ffd166;
+}
+
+.home-howto-icon {
+  width: 15px;
+  height: 15px;
+  flex-shrink: 0;
+}
+
+.home-portrait-card {
+  position: relative;
+  aspect-ratio: 3 / 4;
+  border-radius: 20px;
+  overflow: hidden;
+  border: 1px solid #ffd16644;
+  box-shadow:
+    0 0 0 1px #00000055,
+    0 20px 50px -12px #000000aa,
+    0 0 40px -12px #ffd16655;
+}
+
+.home-portrait-card img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.home-portrait-overlay {
+  position: absolute;
+  inset: auto 0 0 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+  padding: 16px;
+  background: linear-gradient(0deg, #05060df2 0%, #05060db0 45%, transparent 100%);
+}
+
+.home-portrait-name {
+  font-size: 20px;
+  font-weight: 800;
+  color: #f4f5fb;
+}
+
+.home-portrait-tagline {
+  font-size: 13px;
+  color: #c3c6de;
+}
+
+@media (max-width: 700px) {
+  .home-hero {
+    grid-template-columns: 1fr;
+  }
+
+  .home-hero-text {
+    align-items: center;
+    text-align: center;
+  }
+
+  .home-portrait-card {
+    max-width: 320px;
+    margin: 0 auto;
+  }
+}

@@ -1,0 +1,106 @@
+import { useEffect, useRef, useState } from 'react'
+import type { GameEvent } from '../../core/types'
+
+export type BattleFx = {
+  /** 変わるたびにEnemyPanelのシェイクを再生させるキー */
+  enemyHitKey: number
+  /** 変わるたびにPlayerPanelのシェイクを再生させるキー */
+  selfHitKey: number
+  /** 変わるたびにHPバーの回復グローを再生させるキー */
+  healKey: number
+  /** 変わるたびに共鳴発動バナーを再生させるキー */
+  burstKey: number
+  /** 変わるたびにOTOMOの成長グローを再生させるキー */
+  evolveKey: number
+  /** 変わるたびに神（プレイヤー側）の攻撃モーションを再生させるキー */
+  godAttackKey: number
+  /** 変わるたびに敵の攻撃モーションを再生させるキー */
+  enemyAttackKey: number
+  /** 変わるたびに「神力を使い残した」トーストを再生させるキー（決定40） */
+  apPenaltyKey: number
+  /** 直近の使い残しペナルティのスコア減点量（負の値） */
+  apPenaltyAmount: number
+}
+
+const INITIAL_FX: BattleFx = {
+  enemyHitKey: 0,
+  selfHitKey: 0,
+  healKey: 0,
+  burstKey: 0,
+  evolveKey: 0,
+  godAttackKey: 0,
+  enemyAttackKey: 0,
+  apPenaltyKey: 0,
+  apPenaltyAmount: 0,
+}
+
+/**
+ * イベントログを見て、演出（シェイク・グロー・共鳴バナー）の再生タイミングを作るフック。
+ * ルール本体（core）は演出を一切知らないので、「起きた出来事」から
+ * 「どう見せるか」への変換はすべてここに閉じ込めます。
+ */
+export function useBattleFx(log: GameEvent[]): BattleFx {
+  const [fx, setFx] = useState<BattleFx>(INITIAL_FX)
+  const seenCount = useRef(0)
+
+  useEffect(() => {
+    // ログが短くなった＝ゲームがリスタートされた
+    if (log.length < seenCount.current) seenCount.current = 0
+
+    const newEvents = log.slice(seenCount.current)
+    seenCount.current = log.length
+    if (newEvents.length === 0) return
+
+    let enemyHit = 0
+    let selfHit = 0
+    let heal = 0
+    let burst = 0
+    let evolve = 0
+    let godAttack = 0
+    let enemyAttack = 0
+    let apPenalty = 0
+    let apPenaltyAmount = 0
+
+    for (const event of newEvents) {
+      if (event.t === 'DAMAGE_DEALT' && event.amount > 0) {
+        // target='enemy'は「敵が被弾」＝神（プレイヤー側）が攻撃を実行した瞬間。
+        // target='self'はその逆で、敵が攻撃を実行した瞬間。
+        if (event.target === 'enemy') {
+          enemyHit += 1
+          godAttack += 1
+        } else {
+          selfHit += 1
+          enemyAttack += 1
+        }
+      } else if (event.t === 'HEALED' && event.amount > 0) {
+        heal += 1
+      } else if (event.t === 'RESONANCE_BURST') {
+        burst += 1
+        godAttack += 1
+      } else if (event.t === 'OTOMO_EVOLVED') {
+        evolve += 1
+      } else if (event.t === 'SCORE_GAINED' && event.reason === 'apEfficiency' && event.amount < 0) {
+        // 決定40：神力の使い残しペナルティ（決定不変ルール4のrules.ts側の値そのもの）を
+        // ログに埋もれさせず、画面上のトーストとしても一瞬強調する
+        apPenalty += 1
+        apPenaltyAmount = event.amount
+      }
+    }
+
+    if (enemyHit || selfHit || heal || burst || evolve || godAttack || enemyAttack || apPenalty) {
+      setFx((prev) => ({
+        enemyHitKey: prev.enemyHitKey + enemyHit,
+        selfHitKey: prev.selfHitKey + selfHit,
+        healKey: prev.healKey + heal,
+        burstKey: prev.burstKey + burst,
+        evolveKey: prev.evolveKey + evolve,
+        godAttackKey: prev.godAttackKey + godAttack,
+        enemyAttackKey: prev.enemyAttackKey + enemyAttack,
+        apPenaltyKey: prev.apPenaltyKey + apPenalty,
+        apPenaltyAmount: apPenalty ? apPenaltyAmount : prev.apPenaltyAmount,
+      }))
+    }
+  }, [log])
+
+  return fx
+}

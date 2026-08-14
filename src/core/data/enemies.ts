@@ -1,0 +1,176 @@
+import { enemyId } from '../types/ids'
+import type { EnemyDef, EnemyId } from '../types'
+
+export const ENEMY_IDS = {
+  trial: enemyId('enemy_01'),
+  oni: enemyId('enemy_02'),
+  onryo: enemyId('enemy_03'),
+  karakuri: enemyId('enemy_04'),
+  juuma: enemyId('enemy_05'),
+  ryujin: enemyId('enemy_06'),
+  doukeshi: enemyId('enemy_07'),
+} as const
+
+const art = (slug: string) => `/assets/enemies/${slug}/art.png`
+
+/**
+ * 決定32：敵のバリエーション化。CEOがChatGPT/Geminiで生成した7体分のイラストを
+ * 元に、それぞれ異なるHP・攻撃パターンを持つ敵として定義した。
+ *
+ * `trial`（試練の影）は決定17・21で調整済みの検証済みバランス（HP103、
+ * 攻撃5→15の逓増）を一切変更せず、立ち絵だけを追加している
+ * （`balanceSim.test.ts`は引き続きこの敵で検証しているため、数値を変えると
+ * 決定21・26で積み上げたバランス調整が無効になる）。
+ *
+ * 他6体は新規デザインで、`balanceSim.test.ts`はまだこの6体をカバーして
+ * いない（自動シミュレーター未検証。決定25と同じ「今後の課題」扱い）。
+ * `charge`（溜め。次のラウンドに大技）を使うのは`karakuri`と`doukeshi`の
+ * 2体が初採用（決定4の「行動予告を読む」を最も色濃く体験できるタイプ）。
+ */
+export const ENEMIES: EnemyDef[] = [
+  {
+    id: ENEMY_IDS.trial,
+    name: '試練の影',
+    maxHp: 103,
+    art: art('datenshi'),
+    battleCries: ['その力、まことのものか見極めよう', 'まだ終わらぬ…続けるがいい', '影は、揺らがぬ'],
+    actions: [
+      { kind: 'attack', amount: 5 }, // R1
+      { kind: 'attack', amount: 6 }, // R2
+      { kind: 'attack', amount: 8 }, // R3
+      { kind: 'attack', amount: 9 }, // R4
+      { kind: 'attack', amount: 11 }, // R5
+      { kind: 'attack', amount: 13 }, // R6
+      { kind: 'attack', amount: 15 }, // R7
+    ],
+  },
+  {
+    id: ENEMY_IDS.oni,
+    name: '業斧の鬼将',
+    maxHp: 100,
+    art: art('oni'),
+    battleCries: ['吠えろ、我が斧よ！', '一撃で仕留めてくれる！', 'これしきの傷、何ほどのことか！'],
+    // 標準型。攻撃はtrialよりわずかに重いが、HPはtrial以下（決定36でバランス
+    // シミュレーターが蒼毘・寿楽・笑蓮のdefensive戦略で7ラウンド以内に倒し切れない
+    // ケースを検出したため108→100に調整）
+    actions: [
+      { kind: 'attack', amount: 5 },
+      { kind: 'attack', amount: 7 },
+      { kind: 'attack', amount: 9 },
+      { kind: 'attack', amount: 11 },
+      { kind: 'attack', amount: 13 },
+      { kind: 'attack', amount: 15 },
+      { kind: 'attack', amount: 17 },
+    ],
+  },
+  {
+    id: ENEMY_IDS.onryo,
+    name: '藍花の怨霊',
+    maxHp: 95,
+    art: art('onryo'),
+    battleCries: ['まだ…まだ足りぬ…', '恨みは深く、蒼く燃える…', 'そなたも、いずれこちら側へ…'],
+    // 遅咲き型。序盤は弱いが後半に祟りが強まる
+    actions: [
+      { kind: 'attack', amount: 3 },
+      { kind: 'attack', amount: 4 },
+      { kind: 'attack', amount: 6 },
+      { kind: 'attack', amount: 9 },
+      { kind: 'attack', amount: 13 },
+      { kind: 'attack', amount: 18 },
+      { kind: 'attack', amount: 23 },
+    ],
+  },
+  {
+    id: ENEMY_IDS.karakuri,
+    name: '銀甲の機工師',
+    maxHp: 100,
+    art: art('karakuri'),
+    battleCries: ['照準、完了', '無駄のない一撃を', '歯車は、止まらない'],
+    // 技巧型。2回「溜め」てから大技を撃つ。予告を見てブロックを合わせる読み合いが核
+    actions: [
+      { kind: 'attack', amount: 6 },
+      { kind: 'charge', label: '砲身に魔力を溜めている…' },
+      { kind: 'attack', amount: 22 },
+      { kind: 'attack', amount: 7 },
+      { kind: 'charge', label: '砲身に魔力を溜めている…' },
+      { kind: 'attack', amount: 26 },
+      { kind: 'attack', amount: 9 },
+    ],
+  },
+  {
+    id: ENEMY_IDS.juuma,
+    name: '双牙の魔獣',
+    maxHp: 85,
+    art: art('juuma'),
+    battleCries: ['ガアアアッ！', '喰らい尽くしてやる…！', '牙が、疼く'],
+    // 速攻型。HPは低いが最初から圧をかけてくる
+    actions: [
+      { kind: 'attack', amount: 9 },
+      { kind: 'attack', amount: 10 },
+      { kind: 'attack', amount: 12 },
+      { kind: 'attack', amount: 13 },
+      { kind: 'attack', amount: 14 },
+      { kind: 'attack', amount: 15 },
+      { kind: 'attack', amount: 16 },
+    ],
+  },
+  {
+    id: ENEMY_IDS.ryujin,
+    name: '蒼海の龍神',
+    maxHp: 103,
+    art: art('ryujin'),
+    battleCries: ['小さき者よ、海の重みを知るがいい', '悠久の時に比べれば、瞬きよ', '波は、いずれ全てを飲み込む'],
+    // 耐久型。後半に攻撃力が伸びる持久戦タイプ（決定36でHPを125→103に調整。
+    // 125のままだと笑蓮が全戦略で勝率0%になるなど、防御寄りのデッキが
+    // 7ラウンド以内に倒し切れないケースが多発したため、trialと同じ103まで下げた）
+    actions: [
+      { kind: 'attack', amount: 4 },
+      { kind: 'attack', amount: 5 },
+      { kind: 'attack', amount: 7 },
+      { kind: 'attack', amount: 9 },
+      { kind: 'attack', amount: 12 },
+      { kind: 'attack', amount: 16 },
+      { kind: 'attack', amount: 20 },
+    ],
+  },
+  {
+    id: ENEMY_IDS.doukeshi,
+    name: '乱舞の道化',
+    maxHp: 92,
+    art: art('doukeshi'),
+    battleCries: ['さあ、遊びの時間だ！', '次はどっちが痛いかな〜？', 'ハハッ、踊れ踊れ！'],
+    // 攪乱型。小さな一撃と「溜め」からの大技を織り交ぜる、最も予測しにくい行動パターン
+    actions: [
+      { kind: 'attack', amount: 4 },
+      { kind: 'charge', label: 'カードを宙に舞わせている…' },
+      { kind: 'attack', amount: 19 },
+      { kind: 'attack', amount: 6 },
+      { kind: 'attack', amount: 12 },
+      { kind: 'charge', label: 'カードを宙に舞わせている…' },
+      { kind: 'attack', amount: 24 },
+    ],
+  },
+]
+
+const ENEMY_BY_ID = new Map<EnemyId, EnemyDef>(ENEMIES.map((e) => [e.id, e]))
+
+export function getEnemyDef(id: EnemyId): EnemyDef {
+  const def = ENEMY_BY_ID.get(id)
+  if (!def) {
+    throw new Error(`敵の定義が見つかりません: ${id}`)
+  }
+  return def
+}
+
+/**
+ * シードから決定論的に対戦する敵を選ぶ（決定32）。`Math.random`は使わず、
+ * `state.seed`（バトル開始時に発行される文字列）だけから毎回同じ結果になる
+ * 単純な文字列ハッシュで選ぶ（決定不変ルール2：シード付き乱数のみ使用）。
+ */
+export function pickEnemyId(seed: string): EnemyId {
+  let hash = 0
+  for (let i = 0; i < seed.length; i++) {
+    hash = (hash * 31 + seed.charCodeAt(i)) >>> 0
+  }
+  return ENEMIES[hash % ENEMIES.length].id
+}

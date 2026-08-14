@@ -1,0 +1,1449 @@
+.battle {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 100%;
+  max-width: 1120px;
+  position: relative;
+}
+
+.end-round-button,
+.game-over-card button {
+  padding: 12px 32px;
+  border-radius: 999px;
+  border: 1px solid #ffd166;
+  background: linear-gradient(180deg, #ffd16626, #ffd1660a);
+  color: #ffd166;
+  font-weight: 700;
+  font-size: 14px;
+  letter-spacing: 0.06em;
+  cursor: pointer;
+  box-shadow:
+    0 0 18px -4px #ffd16688,
+    inset 0 1px 0 #ffffff33;
+  transition:
+    box-shadow 0.2s ease,
+    transform 0.15s ease,
+    background 0.2s ease;
+}
+
+.end-round-button:not(:disabled):hover,
+.game-over-card button:hover {
+  background: linear-gradient(180deg, #ffd1664a, #ffd16618);
+  box-shadow:
+    0 0 26px -2px #ffd166cc,
+    inset 0 1px 0 #ffffff55;
+  transform: translateY(-2px);
+}
+
+.game-over-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.end-round-button {
+  align-self: center;
+}
+
+.end-round-button:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+.battle-topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 20px;
+  border: 1px solid #ffd16633;
+  border-radius: 12px;
+  background: linear-gradient(120deg, #14152cb0 0%, #0b0d17c0 100%);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  color: #e8e9f3;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  box-shadow:
+    inset 0 1px 0 #ffffff14,
+    0 0 20px -6px #7a4fc466;
+}
+
+.battle-main {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  position: relative;
+  padding: 14px;
+  border-radius: 20px;
+  overflow: hidden;
+  background-image:
+    linear-gradient(180deg, transparent 0%, #05060d99 55%, #05060dee 100%),
+    url('/assets/backgrounds/arena.jpg');
+  background-size: cover;
+  background-position: center top;
+}
+
+.ally-row {
+  display: grid;
+  grid-template-columns: 1.3fr 0.9fr;
+  gap: 12px;
+}
+
+/* 戦闘場の雰囲気演出（CEO要望「背景が単色でつまらない」への対応）。
+   味方側（緑）・敵側（紫）の光がせめぎ合う「アリーナ」の空気感を、
+   決定28と同じ「クリップ層＋wildcardでの前面固定」パターンで敷く。
+   cast-flashは全画面オーバーレイとして独立に位置指定するため、
+   wildcardの対象から明示的に除外する（決定28で踏んだ同じ落とし穴を避ける）。 */
+.battle-arena-glow {
+  position: absolute;
+  inset: -24px;
+  z-index: 0;
+  pointer-events: none;
+  border-radius: 24px;
+  overflow: hidden;
+  background:
+    radial-gradient(ellipse 460px 520px at 16% 82%, #4dbd7430 0%, transparent 65%),
+    radial-gradient(ellipse 460px 520px at 50% 6%, #9b59b638 0%, transparent 60%),
+    radial-gradient(ellipse 520px 420px at 90% 55%, #ffd16626 0%, transparent 60%),
+    radial-gradient(ellipse 380px 420px at 85% 90%, #ff6ec722 0%, transparent 65%);
+  filter: blur(4px);
+  animation: arena-glow-breathe 9s ease-in-out infinite;
+}
+
+@keyframes arena-glow-breathe {
+  0%,
+  100% {
+    opacity: 0.5;
+  }
+  50% {
+    opacity: 0.8;
+  }
+}
+
+.battle-main > *:not(.battle-arena-glow):not(.cast-flash) {
+  position: relative;
+  z-index: 1;
+}
+
+/* カード使用時のスキル演出（決定34）。カードのタイプ色でアイコンが中央に
+   パッと現れて弾けるように広がる。`CARD_PLAY_REVEAL_MS`（見せ方の遅延）の
+   間だけ表示されるので、アニメーションはやや短めに作ってある。 */
+.cast-flash {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  pointer-events: none;
+  z-index: 8;
+}
+
+.cast-flash::before {
+  content: '';
+  position: absolute;
+  width: 260px;
+  height: 260px;
+  border-radius: 50%;
+  background: radial-gradient(circle, var(--cast-glow, currentColor) 0%, transparent 70%);
+  opacity: 0.6;
+  animation: cast-flash-ring 0.35s ease-out forwards;
+}
+
+.cast-flash-icon {
+  position: relative;
+  width: 130px;
+  height: 130px;
+  filter: drop-shadow(0 0 24px var(--cast-glow, currentColor));
+  animation: cast-flash-pop 0.35s cubic-bezier(0.2, 0.8, 0.3, 1) forwards;
+}
+
+/* 決定40：CEOがChatGPTで生成したスキルエフェクト（黒背景・mix-blend-mode:screenで合成）。
+   カードのアイコン（.cast-flash-icon）と重ねて表示し、実写のエフェクトの上に
+   どの効果かひと目でわかるアイコンを乗せる構成にしている。 */
+.cast-flash-art {
+  position: absolute;
+  width: 320px;
+  height: 320px;
+  object-fit: contain;
+  mix-blend-mode: screen;
+  pointer-events: none;
+}
+
+.cast-flash-icon svg {
+  width: 100%;
+  height: 100%;
+}
+
+@keyframes cast-flash-pop {
+  0% {
+    transform: scale(0.2);
+    opacity: 0;
+  }
+  40% {
+    transform: scale(1.15);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1.3);
+    opacity: 0;
+  }
+}
+
+@keyframes cast-flash-ring {
+  0% {
+    transform: scale(0.3);
+    opacity: 0.75;
+  }
+  100% {
+    transform: scale(1.7);
+    opacity: 0;
+  }
+}
+
+/* 決定40：カードタイプごとに演出の「動き」自体を変え、単調さを解消する。
+   色・アイコンは元々タイプごとに違ったが、動きは共通の一種類だけだったため、
+   6タイプに合わせた個別のキーフレームを割り当てる。 */
+@keyframes cast-flash-pop-attack {
+  0% {
+    transform: translate(-36px, -8px) rotate(-25deg) scale(0.4);
+    opacity: 0;
+  }
+  35% {
+    transform: translate(4px, 2px) rotate(-6deg) scale(1.25);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(0, 0) rotate(0deg) scale(1.35);
+    opacity: 0;
+  }
+}
+
+@keyframes cast-flash-pop-guard {
+  0% {
+    transform: translateY(34px) scale(0.6);
+    opacity: 0;
+  }
+  55% {
+    transform: translateY(-4px) scale(1.05);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(0) scale(1.05);
+    opacity: 0;
+  }
+}
+
+@keyframes cast-flash-pop-resonance {
+  0% {
+    transform: rotate(-50deg) scale(0.3);
+    opacity: 0;
+  }
+  50% {
+    transform: rotate(210deg) scale(1.2);
+    opacity: 1;
+  }
+  100% {
+    transform: rotate(390deg) scale(1.35);
+    opacity: 0;
+  }
+}
+
+@keyframes cast-flash-pop-support {
+  0% {
+    transform: translateY(18px) scale(0.7);
+    opacity: 0;
+  }
+  50% {
+    transform: translateY(-8px) scale(1.1);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(-22px) scale(1.15);
+    opacity: 0;
+  }
+}
+
+@keyframes cast-flash-pop-hinder {
+  0% {
+    transform: translateY(-56px) scale(0.5);
+    opacity: 0;
+  }
+  40% {
+    transform: translateY(6px) scale(1.2);
+    opacity: 1;
+  }
+  60% {
+    transform: translateY(-4px) scale(1.05);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(0) scale(1.1);
+    opacity: 0;
+  }
+}
+
+@keyframes cast-flash-pop-oracle {
+  0% {
+    transform: scale(0.2) rotate(0deg);
+    opacity: 0;
+  }
+  45% {
+    transform: scale(1.3) rotate(180deg);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1.6) rotate(360deg);
+    opacity: 0;
+  }
+}
+
+.cast-flash-attack .cast-flash-icon,
+.cast-flash-attack .cast-flash-art {
+  animation: cast-flash-pop-attack 0.4s cubic-bezier(0.2, 0.8, 0.3, 1) forwards;
+}
+
+.cast-flash-guard .cast-flash-icon,
+.cast-flash-guard .cast-flash-art {
+  animation: cast-flash-pop-guard 0.45s cubic-bezier(0.2, 0.8, 0.3, 1) forwards;
+}
+
+.cast-flash-resonance .cast-flash-icon,
+.cast-flash-resonance .cast-flash-art {
+  animation: cast-flash-pop-resonance 0.45s cubic-bezier(0.2, 0.8, 0.3, 1) forwards;
+}
+
+.cast-flash-support .cast-flash-icon,
+.cast-flash-support .cast-flash-art {
+  animation: cast-flash-pop-support 0.5s cubic-bezier(0.2, 0.8, 0.3, 1) forwards;
+}
+
+.cast-flash-hinder .cast-flash-icon,
+.cast-flash-hinder .cast-flash-art {
+  animation: cast-flash-pop-hinder 0.45s cubic-bezier(0.2, 0.8, 0.3, 1) forwards;
+}
+
+.cast-flash-oracle .cast-flash-icon,
+.cast-flash-oracle .cast-flash-art {
+  animation: cast-flash-pop-oracle 0.5s cubic-bezier(0.2, 0.8, 0.3, 1) forwards;
+}
+
+@media (max-width: 700px) {
+  .ally-row {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ガラス風パネル（CEO要望「UIフレームをガラス風に」対応）。
+   半透明＋backdrop-blur＋内側ハイライト＋外側グローで浮遊感を出す。 */
+.panel {
+  border: 1px solid #ffffff1a;
+  border-radius: 14px;
+  background: linear-gradient(165deg, #14152caa 0%, #0b0d17cc 100%);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  box-shadow:
+    inset 0 1px 0 #ffffff14,
+    inset 0 0 24px #00000055,
+    0 10px 26px -14px #000000cc,
+    0 0 0 1px #7a4fc422;
+}
+
+.panel-title {
+  font-weight: 700;
+  color: #e8e9f3;
+  letter-spacing: 0.03em;
+}
+
+.hp-bar {
+  position: relative;
+  height: 18px;
+  border-radius: 999px;
+  background: #16203c;
+  overflow: hidden;
+}
+
+.hp-bar-fill {
+  height: 100%;
+  transition: width 0.2s ease;
+}
+
+.hp-bar-label {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  font-size: 11px;
+  color: #e8e9f3;
+  text-shadow: 0 1px 2px #000;
+}
+
+.floating-numbers {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+@keyframes float-up {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, 0);
+  }
+  15% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -28px);
+  }
+}
+
+.floating-number {
+  position: absolute;
+  left: 50%;
+  top: -4px;
+  font-size: 22px;
+  font-weight: 800;
+  text-shadow:
+    0 2px 4px #000,
+    0 0 14px currentColor;
+  animation: float-up 0.9s ease-out forwards;
+  white-space: nowrap;
+}
+
+.floating-number-damage {
+  color: #ff6b6b;
+}
+
+.floating-number-heal {
+  color: #4dbd74;
+}
+
+.badge {
+  display: inline-block;
+  width: fit-content;
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: 12px;
+}
+
+.badge-block {
+  background: #16203c;
+  color: #7fb2ff;
+}
+
+.buff-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.badge-buff {
+  background: #241a38;
+  color: #c39bff;
+}
+
+.intent {
+  font-size: 13px;
+  color: #ffb4b4;
+}
+
+.god-otomo-panel {
+  align-items: center;
+}
+
+.god-tagline {
+  margin: 0;
+  font-size: 11px;
+  color: #7f8ab8;
+  text-align: center;
+  font-style: italic;
+}
+
+.god-otomo-portraits {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+}
+
+.portrait {
+  margin: 0;
+  text-align: center;
+}
+
+.portrait img {
+  width: 84px;
+  height: 84px;
+  object-fit: contain;
+  border-radius: 12px;
+  background: #05060d;
+  box-shadow: 0 0 20px -4px #ffd16655;
+}
+
+.portrait figcaption {
+  font-size: 11px;
+  color: #7f8ab8;
+  margin-top: 2px;
+}
+
+.resonance-gauge {
+  position: relative;
+  width: 100%;
+  height: 16px;
+  border-radius: 999px;
+  background: #16203c;
+  overflow: hidden;
+}
+
+.resonance-gauge-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #ffd166, #ff9f6e);
+  transition: width 0.2s ease;
+}
+
+.resonance-gauge-label {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  font-size: 10px;
+  color: #05060d;
+  font-weight: 700;
+}
+
+.battle-log {
+  border: 1px solid #ffffff14;
+  border-radius: 10px;
+  background: linear-gradient(165deg, #14152c88 0%, #0b0d17aa 100%);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  padding: 8px 12px;
+  font-size: 12px;
+  color: #7f8ab8;
+  min-height: 20px;
+}
+
+@keyframes hit-shake {
+  10%,
+  90% {
+    transform: translateX(-2px);
+  }
+  20%,
+  80% {
+    transform: translateX(4px);
+  }
+  30%,
+  50%,
+  70% {
+    transform: translateX(-7px);
+  }
+  40%,
+  60% {
+    transform: translateX(7px);
+  }
+}
+
+.hit-shake {
+  animation: hit-shake 0.4s ease-in-out;
+}
+
+/* 決定28：被弾時の閃光。hit-shakeと同時に効かせたいので、カスケードの
+   上書き事故を避けるために1つのanimationプロパティへまとめている
+   （.hit-shakeと.impact-flashを別クラスのままanimationショートハンドで
+   併用すると、CSSファイル内で後に書かれた方のanimationだけが効いてしまう）。 */
+@keyframes impact-flash {
+  0% {
+    filter: brightness(1);
+  }
+  15% {
+    filter: brightness(2.4) saturate(1.4);
+  }
+  100% {
+    filter: brightness(1);
+  }
+}
+
+.hit-shake-flash {
+  animation:
+    hit-shake 0.4s ease-in-out,
+    impact-flash 0.35s ease-out;
+}
+
+/* 被弾した瞬間だけ現れる斬撃の光。EnemyPanel/PlayerPanelのHPバーラッパー
+   （position: relativeなdiv）に重ねる想定 */
+.slash-fx {
+  position: absolute;
+  inset: -60% -10%;
+  pointer-events: none;
+  overflow: visible;
+  z-index: 2;
+}
+
+.slash-fx::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 160%;
+  height: 3px;
+  background: linear-gradient(90deg, transparent, #fff, #ffd166, transparent);
+  box-shadow: 0 0 10px 2px #ffd166cc;
+  transform: translate(-50%, -50%) rotate(-22deg) scaleX(0);
+  transform-origin: center;
+  animation: slash-sweep 0.32s ease-out forwards;
+}
+
+.slash-fx-reverse::before {
+  transform: translate(-50%, -50%) rotate(22deg) scaleX(0);
+  background: linear-gradient(90deg, transparent, #ff8080, #fff, transparent);
+  box-shadow: 0 0 10px 2px #ff8080cc;
+}
+
+@keyframes slash-sweep {
+  0% {
+    transform: translate(-50%, -50%) rotate(-22deg) scaleX(0);
+    opacity: 0;
+  }
+  35% {
+    opacity: 1;
+  }
+  60% {
+    transform: translate(-50%, -50%) rotate(-22deg) scaleX(1);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(-50%, -50%) rotate(-22deg) scaleX(1);
+    opacity: 0;
+  }
+}
+
+/* 敵のビジュアル（決定28で導入したCSSオーラの土台に、決定32で専用イラストを載せ、
+   決定34で「迫力のある大きな1枚絵」に拡大した）。円形の小アイコンではなく、
+   縦長のポートレート枠いっぱいにイラストを見せ、輪郭は柔らかいビネットでぼかす。 */
+/* 敵の掛け声（決定40）。ラウンドが変わるたびにkeyが変わり、ポップインを再生する */
+.enemy-speech-bubble {
+  position: relative;
+  align-self: center;
+  max-width: 280px;
+  margin: 0 auto 2px;
+  padding: 7px 14px;
+  border-radius: 12px;
+  background: linear-gradient(165deg, #1c1030ee 0%, #0b0d17ee 100%);
+  border: 1px solid #9b59b655;
+  box-shadow:
+    0 4px 16px -6px #000000aa,
+    inset 0 1px 0 #ffffff14;
+  font-size: 12px;
+  color: #e8d9ff;
+  text-align: center;
+  animation: enemy-line-pop 0.3s ease-out;
+}
+
+.enemy-speech-bubble::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  bottom: -6px;
+  width: 11px;
+  height: 11px;
+  background: #12081fee;
+  border-right: 1px solid #9b59b655;
+  border-bottom: 1px solid #9b59b655;
+  transform: translateX(-50%) rotate(45deg);
+}
+
+@keyframes enemy-line-pop {
+  0% {
+    opacity: 0;
+    transform: translateY(6px) scale(0.92);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.enemy-avatar-wrap {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  padding: 4px 0;
+}
+
+/* ポートレートの背後で回るオーラの輪（CEO要望「もう少し臨場感がほしい」への対応）。
+   実素材の解像度自体は変えられないため、CSSの光の演出で「力を纏っている」感を足す */
+.enemy-avatar-wrap::before,
+.player-avatar-wrap::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 270px;
+  height: 270px;
+  z-index: -1;
+  border-radius: 50%;
+  pointer-events: none;
+  filter: blur(3px);
+  transform: translate(-50%, -50%) rotate(0deg);
+  animation: portrait-aura-spin 14s linear infinite;
+}
+
+.enemy-avatar-wrap::before {
+  background: conic-gradient(
+    from 0deg,
+    transparent 0deg,
+    #9b59b666 50deg,
+    transparent 130deg,
+    transparent 210deg,
+    #e5484d55 290deg,
+    transparent 350deg
+  );
+  animation-direction: reverse;
+}
+
+.player-avatar-wrap::before {
+  background: conic-gradient(
+    from 0deg,
+    transparent 0deg,
+    #4dbd7466 50deg,
+    transparent 130deg,
+    transparent 210deg,
+    #ffd16655 290deg,
+    transparent 350deg
+  );
+}
+
+@keyframes portrait-aura-spin {
+  from {
+    transform: translate(-50%, -50%) rotate(0deg);
+  }
+  to {
+    transform: translate(-50%, -50%) rotate(360deg);
+  }
+}
+
+.enemy-avatar {
+  width: 200px;
+  height: 240px;
+  border-radius: 18px;
+  background-color: #120821;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  box-shadow:
+    0 0 40px 8px #9b59b666,
+    inset 0 0 30px #00000099,
+    inset 0 0 0 1px #ffffff14;
+  position: relative;
+  animation: enemy-idle 3.4s ease-in-out infinite;
+}
+
+@keyframes enemy-idle {
+  0%,
+  100% {
+    transform: translateY(0) scale(1);
+  }
+  50% {
+    transform: translateY(-3px) scale(1.015);
+  }
+}
+
+/* 攻撃モーション：それぞれの陣営が相手側へ一瞬突進して戻る */
+@keyframes enemy-lunge {
+  0% {
+    transform: translateX(0) scale(1);
+  }
+  35% {
+    transform: translateX(-16px) scale(1.06);
+  }
+  65% {
+    transform: translateX(5px) scale(0.99);
+  }
+  100% {
+    transform: translateX(0) scale(1);
+  }
+}
+
+.enemy-lunge .enemy-avatar {
+  animation:
+    enemy-idle 3.4s ease-in-out infinite,
+    enemy-lunge 0.45s ease-out;
+}
+
+@keyframes god-lunge {
+  0% {
+    transform: translateX(0) scale(1);
+  }
+  35% {
+    transform: translateX(14px) scale(1.05);
+  }
+  65% {
+    transform: translateX(-4px) scale(0.99);
+  }
+  100% {
+    transform: translateX(0) scale(1);
+  }
+}
+
+.god-lunge img {
+  animation: god-lunge 0.45s ease-out;
+}
+
+/* プレイヤー側アバター（決定31。EnemyPanelのenemy-avatarと対になる見た目。
+   決定34でenemy-avatarと同じ「大きな縦長ポートレート」に揃えた） */
+.player-avatar-wrap {
+  position: relative;
+  display: flex;
+  justify-content: center;
+}
+
+.player-avatar {
+  width: 200px;
+  height: 240px;
+  object-fit: contain;
+  border-radius: 18px;
+  background: #05060d;
+  box-shadow:
+    0 0 40px 8px #4dbd7455,
+    inset 0 0 30px #00000099,
+    inset 0 0 0 1px #ffffff14;
+}
+
+@keyframes heal-pulse {
+  0% {
+    filter: drop-shadow(0 0 0 #4dbd7400);
+  }
+  30% {
+    filter: drop-shadow(0 0 6px #4dbd74cc);
+  }
+  100% {
+    filter: drop-shadow(0 0 0 #4dbd7400);
+  }
+}
+
+.heal-pulse {
+  animation: heal-pulse 0.7s ease-out;
+}
+
+@keyframes evolve-glow {
+  0% {
+    filter: drop-shadow(0 0 0 #ffd16600);
+    transform: scale(1);
+  }
+  30% {
+    filter: drop-shadow(0 0 14px #ffd166ee);
+    transform: scale(1.08);
+  }
+  100% {
+    filter: drop-shadow(0 0 0 #ffd16600);
+    transform: scale(1);
+  }
+}
+
+.evolve-glow {
+  animation: evolve-glow 1.2s ease-out;
+}
+
+@keyframes burst-flash {
+  0% {
+    opacity: 0;
+    transform: scale(0.85);
+  }
+  15% {
+    opacity: 1;
+    transform: scale(1.02);
+  }
+  75% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.05);
+  }
+}
+
+.burst-banner {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  pointer-events: none;
+  background: radial-gradient(circle, #ffd16644, transparent 70%);
+  animation: burst-flash 1.4s ease-out forwards;
+  z-index: 5;
+  border-radius: 12px;
+}
+
+.burst-banner span {
+  font-size: 26px;
+  font-weight: 700;
+  color: #ffd166;
+  text-shadow: 0 0 20px #ffd166cc;
+}
+
+@keyframes enemy-turn-flash {
+  0% {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  20% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  80% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+.enemy-turn-banner {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  pointer-events: none;
+  background: radial-gradient(circle, #e5484d33, transparent 70%);
+  animation: enemy-turn-flash 0.9s ease-in-out forwards;
+  z-index: 6;
+  border-radius: 12px;
+}
+
+.enemy-turn-banner span {
+  font-size: 24px;
+  font-weight: 700;
+  color: #ff8080;
+  text-shadow: 0 0 16px #e5484dcc;
+}
+
+/* 神力の使い残しペナルティを、ログに埋もれさせず一瞬強調するトースト（決定40） */
+.ap-penalty-toast {
+  position: absolute;
+  top: 62px;
+  left: 50%;
+  z-index: 7;
+  padding: 8px 18px;
+  border-radius: 999px;
+  background: linear-gradient(180deg, #e5484d33, #0b0d17ee);
+  border: 1px solid #e5484d66;
+  color: #ff9a9a;
+  font-size: 13px;
+  font-weight: 700;
+  white-space: nowrap;
+  pointer-events: none;
+  animation: ap-penalty-toast-fade 2s ease-out forwards;
+}
+
+@keyframes ap-penalty-toast-fade {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -6px);
+  }
+  15% {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+  80% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -6px);
+  }
+}
+
+.battle-error {
+  color: #ff6b6b;
+  font-size: 13px;
+  text-align: center;
+}
+
+.divination-panel {
+  border: 1px solid #7a4fc455;
+  border-radius: 10px;
+  background: linear-gradient(165deg, #1a1230b0 0%, #0f0b1acc 100%);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  padding: 10px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  box-shadow: inset 0 1px 0 #ffffff10;
+}
+
+.divination-panel-title {
+  font-size: 12px;
+  color: #c9a8ff;
+  font-weight: 700;
+}
+
+.divination-choices {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.divination-choice {
+  flex: 1;
+  min-width: 150px;
+  border: 1px solid #5a4080;
+  border-radius: 8px;
+  background: #150f24;
+  color: #e8e9f3;
+  padding: 6px 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  text-align: left;
+  cursor: pointer;
+}
+
+.divination-choice:hover:not(:disabled) {
+  background: #241a38;
+}
+
+.divination-choice:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.divination-choice-name {
+  font-size: 12px;
+  font-weight: 700;
+  color: #c9a8ff;
+}
+
+.divination-choice-text {
+  font-size: 11px;
+  color: #b8bfe0;
+}
+
+.hand {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+}
+
+.card-view {
+  width: 132px;
+  min-height: 190px;
+  border: 2px solid;
+  border-radius: 10px;
+  color: #e8e9f3;
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  text-align: left;
+  cursor: pointer;
+  position: relative;
+  transition:
+    transform 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+.card-view:disabled {
+  cursor: not-allowed;
+}
+
+.card-view:not(:disabled):hover {
+  transform: translateY(-8px) scale(1.04);
+}
+
+.card-view:not(:disabled):hover .card-view-shine {
+  transform: translateX(120%) rotate(20deg);
+  opacity: 1;
+}
+
+/* 角丸の内側だけにクリップする装飾レイヤー（イラスト・透かしアイコン・シャイン）。
+   コストバッジ（角からはみ出す配置）はこの外に置いて影響しないようにしている */
+.card-view-clip {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.card-view-art {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: top center;
+  opacity: 0.22;
+  filter: saturate(0.8);
+  mask-image: linear-gradient(180deg, #000 20%, transparent 85%);
+}
+
+.card-view-illustration {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 22%;
+  border-radius: inherit;
+}
+
+.card-view-body {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.card-view:not(.card-view-has-art) .card-view-body {
+  flex: 1;
+}
+
+.card-view-has-art .card-view-body {
+  margin-top: auto;
+  margin-left: -8px;
+  margin-right: -8px;
+  margin-bottom: -8px;
+  padding: 30px 8px 8px;
+  border-bottom-left-radius: inherit;
+  border-bottom-right-radius: inherit;
+  background: linear-gradient(180deg, transparent 0%, #05060da8 35%, #05060df2 100%);
+}
+
+.card-view-icon-bg {
+  position: absolute;
+  right: -10px;
+  bottom: -14px;
+  width: 84px;
+  height: 84px;
+  opacity: 0.22;
+  filter: drop-shadow(0 0 6px currentColor);
+}
+
+.card-view-icon-bg svg {
+  width: 100%;
+  height: 100%;
+}
+
+.card-view-shine {
+  position: absolute;
+  top: -20%;
+  left: -60%;
+  width: 40%;
+  height: 140%;
+  background: linear-gradient(115deg, transparent, #ffffff55 45%, #ffffffaa 50%, transparent 55%);
+  transform: translateX(-40%) rotate(20deg);
+  opacity: 0;
+  transition:
+    transform 0.55s ease,
+    opacity 0.55s ease;
+}
+
+.card-view > *:not(.card-view-clip) {
+  position: relative;
+  z-index: 1;
+}
+
+@keyframes card-play {
+  0% {
+    transform: scale(1) translateY(0);
+    opacity: 1;
+    filter: brightness(1);
+  }
+  40% {
+    transform: scale(1.08) translateY(-10px);
+    filter: brightness(1.3);
+  }
+  100% {
+    transform: scale(0.6) translateY(-40px);
+    opacity: 0;
+    filter: brightness(1.5);
+  }
+}
+
+.card-view-playing {
+  animation: card-play 0.22s ease-in forwards;
+  pointer-events: none;
+  z-index: 4;
+}
+
+.card-view-cost {
+  position: absolute;
+  top: -10px;
+  left: -10px;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  color: #05060d;
+  font-weight: 700;
+  display: grid;
+  place-items: center;
+  font-size: 13px;
+  border: 1px solid #ffffff40;
+  box-shadow:
+    0 2px 6px #00000066,
+    inset 0 1px 2px #ffffff77;
+}
+
+/* 背景・box-shadow本体はCardView.tsxのインラインstyleで神ごとに出し分けるため、
+   ここでは専用カードだけの追加装飾（枠の二重ライン）のみを持たせる */
+.card-view-exclusive {
+  outline: 1px solid #ffd16655;
+  outline-offset: -4px;
+}
+
+.card-view-god {
+  font-size: 10px;
+  color: #ffd166;
+  letter-spacing: 0.05em;
+}
+
+.card-view-name {
+  font-weight: 700;
+  font-size: 13px;
+}
+
+.card-view-type {
+  font-size: 10px;
+  color: #7f8ab8;
+}
+
+.card-view-text {
+  font-size: 11px;
+  color: #b8bfe0;
+  flex: 1;
+}
+
+/* 決定43：勝利後の報酬カード選択画面。GameOverOverlayと同じ全面オーバーレイの型を踏襲 */
+.reward-overlay {
+  position: absolute;
+  inset: 0;
+  background: #05060dcc;
+  display: grid;
+  place-items: center;
+  border-radius: 12px;
+  z-index: 9;
+  padding: 12px;
+}
+
+.reward-card-panel {
+  background: #0b0d17;
+  border: 1px solid #ffd16655;
+  border-radius: 14px;
+  padding: 20px 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  max-width: 560px;
+  box-shadow: 0 0 40px -8px #ffd16644;
+}
+
+.reward-title {
+  margin: 0;
+  font-size: 18px;
+  color: #ffd166;
+  text-align: center;
+}
+
+.reward-subtitle {
+  margin: 0;
+  font-size: 12px;
+  color: #a9adc4;
+  text-align: center;
+}
+
+.reward-cards {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.reward-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  width: 140px;
+  min-height: 200px;
+  padding: 10px;
+  border: 1px solid;
+  border-radius: 10px;
+  overflow: hidden;
+  background: linear-gradient(165deg, #14152caa 0%, #0b0d17cc 100%);
+  cursor: pointer;
+  text-align: left;
+  color: inherit;
+  transition:
+    transform 0.15s ease,
+    box-shadow 0.2s ease;
+}
+
+.reward-card:not(:disabled):hover {
+  transform: translateY(-4px);
+  box-shadow: 0 0 20px -4px #ffd16688;
+}
+
+.reward-card:disabled {
+  cursor: default;
+  opacity: 0.5;
+}
+
+.reward-card-picked {
+  opacity: 1 !important;
+  border-color: #ffd166 !important;
+  box-shadow: 0 0 24px -2px #ffd166cc !important;
+}
+
+.reward-card-clip {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.reward-card-illustration {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.reward-card-icon {
+  position: absolute;
+  right: -8px;
+  bottom: -10px;
+  width: 60px;
+  height: 60px;
+  opacity: 0.22;
+}
+
+.reward-card-icon svg {
+  width: 100%;
+  height: 100%;
+}
+
+.reward-card > *:not(.reward-card-clip) {
+  position: relative;
+  z-index: 1;
+}
+
+.reward-card-body {
+  margin: auto -10px -10px;
+  padding: 26px 10px 10px;
+  border-bottom-left-radius: inherit;
+  border-bottom-right-radius: inherit;
+  background: linear-gradient(180deg, transparent 0%, #05060da8 30%, #05060df5 75%);
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.reward-card-god {
+  font-size: 9px;
+  color: #ffd166;
+}
+
+.reward-card-name {
+  font-weight: 700;
+  font-size: 13px;
+}
+
+.reward-card-text {
+  font-size: 11px;
+  color: #b8bfe0;
+}
+
+.reward-skip {
+  padding: 8px 20px;
+  border-radius: 999px;
+  border: 1px solid #444a68;
+  background: transparent;
+  color: #a9adc4;
+  cursor: pointer;
+  font-size: 12px;
+}
+
+.reward-skip:not(:disabled):hover {
+  border-color: #ffd166;
+  color: #ffd166;
+}
+
+.game-over-overlay {
+  position: absolute;
+  inset: 0;
+  background: #05060dcc;
+  display: grid;
+  place-items: center;
+  border-radius: 12px;
+  /* 決定48フォローアップの実プレイ検証で発見：z-indexが未指定だったため、
+     .enemy-panel/.ally-row（z-index:1）や.burst-banner（z-index:5）など
+     戦闘中の演出要素がこのオーバーレイより上に描画され、決着後も操作可能な
+     ように見えてしまうバグがあった（DOM上は正しく最後の子として存在し、
+     内容も正しかったため型チェック・自動テストでは検出できなかった）。
+     .reward-overlay（z-index:9、決定43）より確実に上に来るよう10を指定する。 */
+  z-index: 10;
+}
+
+.game-over-card {
+  background: #0b0d17;
+  border: 1px solid #1c2038;
+  border-radius: 14px;
+  padding: 24px 32px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  min-width: 260px;
+}
+
+.game-over-status {
+  font-size: 22px;
+  font-weight: 700;
+}
+
+.game-over-status-won {
+  color: #ffd166;
+}
+
+.game-over-status-lost {
+  color: #ff6b6b;
+}
+
+.game-over-status-finished {
+  color: #7f8ab8;
+}
+
+.game-over-new-best {
+  font-size: 13px;
+  font-weight: 700;
+  color: #ffd166;
+  text-shadow: 0 0 12px #ffd16688;
+}
+
+.score-total {
+  font-size: 16px;
+  color: #e8e9f3;
+}
+
+.score-breakdown {
+  display: grid;
+  grid-template-columns: auto auto;
+  gap: 2px 16px;
+  font-size: 12px;
+  color: #7f8ab8;
+  margin: 0;
+}
+
+.score-breakdown dd {
+  margin: 0;
+  color: #e8e9f3;
+  text-align: right;
+}
