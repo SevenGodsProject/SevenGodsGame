@@ -1,5 +1,6 @@
 import type { GodId, PlayerState } from '../../core/types'
 import { getGodDef } from '../../core/data/gods'
+import { STAT_LABEL } from '../setup/godStyle'
 import { HpBar } from './HpBar'
 import { FloatingNumbers } from './FloatingNumbers'
 import type { FloatingNumber } from './useFloatingNumbers'
@@ -49,7 +50,7 @@ export function PlayerPanel({ godId, player, hitKey, healKey, attackKey, floatin
         <div className="buff-list">
           {player.buffs.map((b, i) => (
             <span key={i} className="badge badge-buff">
-              {b.stat} {b.amount > 0 ? '+' : ''}
+              {STAT_LABEL[b.stat]} {b.amount > 0 ? '+' : ''}
               {b.amount}（{b.remainingRounds}）
             </span>
           ))}

@@ -1,4 +1,4 @@
-import { describe, it } from 'vitest'
+import { describe, expect, it } from 'vitest'
 import { GODS } from '../data/gods'
 import { ENEMIES, ENEMY_IDS } from '../data/enemies'
 import { getCardDef } from '../data/cards'
@@ -406,4 +406,137 @@ describe('バランスシミュレーション（Planner用・アサーション
     }
   })
 
+  /**
+   * 決定58：決定57で「CEOに改めて相談する」とされていたhard×defensiveの膠着
+   * （蒼毘・寿楽・笑蓮が未撃破100%）について、8/31完成披露ロードマップの
+   * Task A1（難易度バランス修正）としてhard×全神(7)×全戦略(3)×全敵(7)=147通り
+   * を実測した結果、以下が判明した：
+   *
+   *   1. 膠着（蒼毘/寿楽/笑蓮のdefensive戦略、双牙の魔獣を除く6敵）は、
+   *      終了時の敵残りHPが平均2〜16%という僅差の「時間切れ」であり、
+   *      決定57が示唆した「防御に全振りすれば一切攻撃しない」という
+   *      構造的ロックではなかった。
+   *   2. 膠着・敗北が発生する全21組み合わせについて、同じ神・同じ敵で
+   *      balanced戦略が必ず73%以上（多くは88〜100%）の勝率を記録しており、
+   *      「合理的な戦略では絶対に勝てない」という意味での詰みは0件だった
+   *      （最弱は才華×双牙の魔獣で、最善戦略でも50%＝五分五分の接戦）。
+   *
+   * CEOはこの結果を受け、数値変更は行わずTask A1をクローズする判断をした。
+   * 防御アーキタイプ（蒼毘・寿楽・笑蓮）がdefensive戦略でhard時に高確率で
+   * 膠着する特性自体は、「堅実だが決め手に欠ける」という意図されたアーキ
+   * タイプの個性として扱い、修正対象にしない。
+   *
+   * このテストは、将来のカード追加・数値調整によって「合理的な戦略
+   * （balanced等）を選べば少なくとも五分五分以上で勝敗が成立する」という
+   * 今回確認した状態が壊れていないかを保証する再現防止テスト。しきい値
+   * 50%は今回実測した最弱値（才華×双牙の魔獣×defensive＝50%）に一致させて
+   * おり、これを下回る＝新たな「詰み」が生まれたことを意味する。
+   */
+  it('決定58：hard×全神×全敵で、少なくとも1戦略が50%以上の勝率を保つことを保証する（再現防止）', () => {
+    const strategies: Strategy[] = ['balanced', 'aggressive', 'defensive']
+    const failures: string[] = []
+
+    for (const enemy of ENEMIES) {
+      for (const god of GODS) {
+        const deck = getRecommendedDeck(god.id)
+        let best = 0
+        let bestStrategy: Strategy = 'balanced'
+        for (const strategy of strategies) {
+          const r = summarizeWinRate(god.nameJa, god.id, deck, strategy, 40, enemy.id, 'guardian', 'hard')
+          if (r.winRate > best) {
+            best = r.winRate
+            bestStrategy = strategy
+          }
+        }
+        if (best < 50) {
+          failures.push(`${enemy.name} × ${god.nameJa}：最善戦略(${bestStrategy})でも勝率${best.toFixed(0)}%`)
+        }
+      }
+    }
+
+    expect(failures, `詰み（最善戦略でも勝率50%未満）が発生:\n${failures.join('\n')}`).toEqual([])
+  })
+
+  /**
+   * 決定59：Task A2（スコア係数チューニング）の実測分析結果を固定する再現防止
+   * テスト。7神×3戦略×trialでスコア内訳を実測した結果、才華（コンボ型）が
+   * 他神より約10〜20%高く、笑蓮（支援型・単発火力低め）が低いという偏りが
+   * 判明したが、これは各神のアーキタイプ設計を素直に反映した意図的な差であり、
+   * 両神とも勝率自体は健全（balanced/defensiveで88〜100%）だったため、CEOは
+   * `rules.ts`のスコア係数・`gods.ts`の神固有値のいずれも変更しない判断をした。
+   *
+   * したがって、このテストは「7神のスコアを均一化する」方向の検証はあえて
+   * 書かない（それ自体が今回の判断に反するため）。代わりに、今回確認した
+   * ゲームデザイン上の性質——①勝利スコアが敗北スコアを常に大きく上回ること、
+   * ②aggressive戦略が「勝率は低いが勝利時スコアは高い」というハイリスク・
+   * ハイリターンを保っていること——が将来の変更で意図せず崩れていないかを
+   * 保証する。
+   */
+  it('決定59：勝利スコアが敗北スコアを常に大きく上回ることを保証する（再現防止）', () => {
+    const strategies: Strategy[] = ['balanced', 'aggressive', 'defensive']
+    const wonScores: number[] = []
+    const lostScores: number[] = []
+
+    for (const god of GODS) {
+      const deck = getRecommendedDeck(god.id)
+      for (const strategy of strategies) {
+        for (let i = 0; i < 40; i++) {
+          const r = playOneGame(`scoreguard-${god.id}-${strategy}-${i}`, strategy, god.id, deck, ENEMY_IDS.trial)
+          if (r.status === 'won') wonScores.push(r.score)
+          else if (r.status === 'lost') lostScores.push(r.score)
+        }
+      }
+    }
+
+    const avg = (arr: number[]) => (arr.length ? arr.reduce((a, b) => a + b, 0) / arr.length : 0)
+    const avgWon = avg(wonScores)
+    const avgLost = avg(lostScores)
+
+    // 実測（normal×trial）では勝利時平均800前後・敗北時平均300前後（約2.6倍）。
+    // 1.5倍という余裕を持たせたしきい値で、将来の変更で逆転・接近しないことだけを保証する。
+    expect(avgWon, `勝利時平均スコア${avgWon.toFixed(0)} / 敗北時平均スコア${avgLost.toFixed(0)}`).toBeGreaterThan(
+      avgLost * 1.5,
+    )
+  })
+
+  it('決定59：aggressive戦略の「勝率は低いが勝利時スコアは高い」ハイリスク・ハイリターン性を保証する（再現防止）', () => {
+    const strategies: Strategy[] = ['balanced', 'aggressive']
+    const stats: Record<Strategy, { won: number; total: number; wonScores: number[] }> = {
+      balanced: { won: 0, total: 0, wonScores: [] },
+      aggressive: { won: 0, total: 0, wonScores: [] },
+      defensive: { won: 0, total: 0, wonScores: [] },
+    }
+
+    for (const god of GODS) {
+      const deck = getRecommendedDeck(god.id)
+      for (const strategy of strategies) {
+        for (let i = 0; i < 40; i++) {
+          const r = playOneGame(`riskreward-${god.id}-${strategy}-${i}`, strategy, god.id, deck, ENEMY_IDS.trial)
+          stats[strategy].total++
+          if (r.status === 'won') {
+            stats[strategy].won++
+            stats[strategy].wonScores.push(r.score)
+          }
+        }
+      }
+    }
+
+    const avg = (arr: number[]) => (arr.length ? arr.reduce((a, b) => a + b, 0) / arr.length : 0)
+    const aggWinRate = stats.aggressive.won / stats.aggressive.total
+    const balWinRate = stats.balanced.won / stats.balanced.total
+    const aggAvgWon = avg(stats.aggressive.wonScores)
+    const balAvgWon = avg(stats.balanced.wonScores)
+
+    // リスク：aggressiveの勝率はbalancedより明確に低い（現状81% vs 99%程度）
+    expect(aggWinRate, `aggressive勝率${(aggWinRate * 100).toFixed(0)}% / balanced勝率${(balWinRate * 100).toFixed(0)}%`).toBeLessThan(
+      balWinRate,
+    )
+    // リターン：aggressiveが勝ったときのスコアは、balancedの勝利時スコアを
+    // 大きく下回らない（多少の余裕=0.9倍を許容しつつ、「リスクだけでリターンが
+    // 無い」状態への劣化を検知する）
+    expect(
+      aggAvgWon,
+      `aggressive勝利時平均${aggAvgWon.toFixed(0)} / balanced勝利時平均${balAvgWon.toFixed(0)}`,
+    ).toBeGreaterThan(balAvgWon * 0.9)
+  })
 })

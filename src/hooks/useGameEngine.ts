@@ -13,9 +13,15 @@ import { applyAction } from '../core/engine'
 import { ENEMY_IDS, pickEnemyId } from '../core/data/enemies'
 import { clearBattleSave, saveBattle } from './battleSaveStorage'
 import { recordGameResult } from './recordStorage'
+import { recordOtomoBond } from './otomoBondStorage'
 
-/** ラウンド終了→次ラウンド開始の結果を見せる前に「敵のターン」を溜める時間（見せ方のみ。判定タイミングは変えない） */
-const ENEMY_TURN_REVEAL_MS = 900
+/**
+ * ラウンド終了→次ラウンド開始の結果を見せる前に「敵のターン」を溜める時間（見せ方のみ。判定タイミングは変えない）。
+ * 決定61（Task A4）：900ms→700msに短縮。CARD_PLAY_REVEAL_MS(220ms)との比率を
+ * 約3.2倍に保ちつつ（カード1枚の演出より明確に長い「間」は維持）、7ラウンド分
+ * 積み重なる待機時間を短縮する。charge/attackによる分岐は追加しない。
+ */
+const ENEMY_TURN_REVEAL_MS = 700
 
 /**
  * 開発用の敵指定バックドア（決定40）。`?enemy=oni`のようにURLで指定すると、
@@ -81,6 +87,10 @@ export function useGameEngine(): UseGameEngine {
       clearBattleSave()
       // 決定48フォローアップ：決着した瞬間に神ごとの戦績（自己ベスト・勝敗数）を更新する。
       setNewBest(recordGameResult(result.state).isNewBest)
+      // 決定70（Task C1）：決着した瞬間にOTOMO育成記録（表示専用）を更新する。
+      // recordGameResultと同じ分岐・同じ1回性なので二重加算は発生しない
+      // （詳細はotomoBondStorage.tsのコメントを参照）。
+      recordOtomoBond(result.state)
     }
   }, [])
 

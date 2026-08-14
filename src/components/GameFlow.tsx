@@ -10,9 +10,11 @@ import { computeSnapshot, type FeedbackSnapshot } from './feedback/feedbackSnaps
 import { HomeScreen } from './setup/HomeScreen'
 import { GodSelectScreen } from './setup/GodSelectScreen'
 import { DeckBuilderScreen } from './setup/DeckBuilderScreen'
+import { OtomoGrowthScreen } from './setup/OtomoGrowthScreen'
+import { RecordScreen } from './setup/RecordScreen'
 import { BattleScreen } from './battle/BattleScreen'
 
-type SetupScreen = 'home' | 'godSelect' | 'deckBuild'
+type SetupScreen = 'home' | 'godSelect' | 'deckBuild' | 'otomoGrowth' | 'record'
 
 type GameFlowProps = {
   /** Appのヘッダーで管理するミュート状態（決定：アイコンをApp全体で共通化） */
@@ -73,6 +75,8 @@ export function GameFlow({ muted, onShowTutorial, onSnapshotChange }: GameFlowPr
           <HomeScreen
             savedBattle={savedBattle}
             onShowTutorial={onShowTutorial}
+            onShowOtomoGrowth={() => setSetupScreen('otomoGrowth')}
+            onShowRecord={() => setSetupScreen('record')}
             onStartFresh={() => {
               clearBattleSave()
               setSetupScreen('godSelect')
@@ -87,6 +91,12 @@ export function GameFlow({ muted, onShowTutorial, onSnapshotChange }: GameFlowPr
             }}
           />
         )
+      }
+      if (setupScreen === 'otomoGrowth') {
+        return <OtomoGrowthScreen onBack={() => setSetupScreen('home')} />
+      }
+      if (setupScreen === 'record') {
+        return <RecordScreen onBack={() => setSetupScreen('home')} />
       }
       if (setupScreen === 'deckBuild' && godId) {
         return (

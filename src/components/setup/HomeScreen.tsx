@@ -1,7 +1,7 @@
 import type { GameState } from '../../core/types'
 import { GODS } from '../../core/data/gods'
 import { ARCHETYPE_LABEL } from './godStyle'
-import { BookIcon } from '../icons'
+import { BookIcon, HeartIcon, TrophyIcon } from '../icons'
 import './setup.css'
 
 type HomeScreenProps = {
@@ -10,6 +10,10 @@ type HomeScreenProps = {
   onStartFresh: () => void
   onResume: () => void
   onShowTutorial: () => void
+  /** Task C2：OTOMO育成画面を開く */
+  onShowOtomoGrowth: () => void
+  /** Task E1：戦績画面を開く */
+  onShowRecord: () => void
 }
 
 /** ホーム画面で見せる代表の神（決定16・18のMVP基準神と同じ恵比寿で統一） */
@@ -28,7 +32,14 @@ const FEATURED_GOD = GODS[0]
  * ランキング・シーズン・プロフィール等（参考画像にあった要素）は、
  * 運営プラットフォームとの連携が前提の別スコープのため今回は含めない。
  */
-export function HomeScreen({ savedBattle, onStartFresh, onResume, onShowTutorial }: HomeScreenProps) {
+export function HomeScreen({
+  savedBattle,
+  onStartFresh,
+  onResume,
+  onShowTutorial,
+  onShowOtomoGrowth,
+  onShowRecord,
+}: HomeScreenProps) {
   const savedGod = savedBattle ? GODS.find((g) => g.id === savedBattle.godId) : undefined
 
   return (
@@ -56,6 +67,14 @@ export function HomeScreen({ savedBattle, onStartFresh, onResume, onShowTutorial
           <button type="button" className="home-howto-button" onClick={onShowTutorial}>
             <BookIcon className="home-howto-icon" />
             遊び方を見る
+          </button>
+          <button type="button" className="home-howto-button" onClick={onShowOtomoGrowth}>
+            <HeartIcon className="home-howto-icon" />
+            OTOMOとの絆を見る
+          </button>
+          <button type="button" className="home-howto-button" onClick={onShowRecord}>
+            <TrophyIcon className="home-howto-icon" />
+            戦績を見る
           </button>
         </div>
 

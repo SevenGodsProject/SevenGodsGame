@@ -1,6 +1,17 @@
 import type { GameEvent, GameStatus, OtomoForm } from '../../core/types'
 import { getCardDef } from '../../core/data/cards'
 import { DIVINATION_CHOICES } from '../../core/data/divination'
+import { STAT_LABEL } from '../setup/godStyle'
+
+/**
+ * A3監査：`GameEvent`の`BUFF_APPLIED.stat`は（サーバー越しの将来対応を見据え）
+ * 素の`string`型のため、`STAT_LABEL`（'atk'|'def'限定）にそのまま渡せない。
+ * 未知の値が来た場合は元の文字列にフォールバックする安全な変換のみここに置く
+ * （`core/types`側は変更しない）。
+ */
+function statLabel(stat: string): string {
+  return stat in STAT_LABEL ? STAT_LABEL[stat as keyof typeof STAT_LABEL] : stat
+}
 
 const STATUS_LABEL: Record<GameStatus, string> = {
   playing: '進行中',
@@ -45,7 +56,7 @@ export function formatEvent(event: GameEvent): string {
     case 'OTOMO_EVOLVED':
       return `OTOMOが${OTOMO_FORM_LABEL[event.form]}に成長した！`
     case 'BUFF_APPLIED':
-      return `${event.target === 'enemy' ? '敵' : '自分'}の${event.stat}が${event.amount > 0 ? '+' : ''}${event.amount}（${event.rounds}ラウンド）`
+      return `${event.target === 'enemy' ? '敵' : '自分'}の${statLabel(event.stat)}が${event.amount > 0 ? '+' : ''}${event.amount}（${event.rounds}ラウンド）`
     case 'ENEMY_INTENT_SET':
       return event.kind === 'attack' ? `敵の次の行動：攻撃${event.amount}` : '敵の次の行動：溜め'
     case 'ENEMY_ACTED':

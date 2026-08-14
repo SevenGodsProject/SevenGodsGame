@@ -1,5 +1,6 @@
 import type { EnemyState } from '../../core/types'
 import { getEnemyDef } from '../../core/data/enemies'
+import { STAT_LABEL } from '../setup/godStyle'
 import { HpBar } from './HpBar'
 import { FloatingNumbers } from './FloatingNumbers'
 import type { FloatingNumber } from './useFloatingNumbers'
@@ -59,7 +60,7 @@ export function EnemyPanel({ enemy, round, hitKey, attackKey, floatingNumbers }:
         <div className="buff-list">
           {enemy.buffs.map((b, i) => (
             <span key={i} className="badge badge-buff">
-              {b.stat} {b.amount > 0 ? '+' : ''}
+              {STAT_LABEL[b.stat]} {b.amount > 0 ? '+' : ''}
               {b.amount}（{b.remainingRounds}）
             </span>
           ))}

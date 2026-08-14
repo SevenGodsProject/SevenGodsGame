@@ -32,6 +32,16 @@ describe('computeSnapshot', () => {
     expect(snapshot.score).toBeUndefined()
   })
 
+  it('Task C2：OTOMO育成画面は画面名が「OTOMO育成」になる', () => {
+    const snapshot = computeSnapshot({ setupScreen: 'otomoGrowth', godId: null, difficulty: 'normal', state: null })
+    expect(snapshot.screen).toBe('OTOMO育成')
+  })
+
+  it('Task E1：戦績画面は画面名が「戦績」になる', () => {
+    const snapshot = computeSnapshot({ setupScreen: 'record', godId: null, difficulty: 'normal', state: null })
+    expect(snapshot.screen).toBe('戦績')
+  })
+
   it('神未選択のホーム画面では神名を含めない', () => {
     const snapshot = computeSnapshot({ setupScreen: 'home', godId: null, difficulty: 'normal', state: null })
     expect(snapshot.screen).toBe('ホーム')

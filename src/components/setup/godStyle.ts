@@ -101,7 +101,13 @@ export function countGodsByArchetype(gods: GodDef[]): Record<GodArchetype, numbe
   return counts
 }
 
-const STAT_LABEL: Record<'atk' | 'def', string> = {
+/**
+ * atk/defの内部キーを日本語表示名に変換する共通マップ。
+ * 元々このファイル（神選択画面の特殊効果説明）専用だったが、A3監査で
+ * `PlayerPanel`/`EnemyPanel`/`formatEvent`のバフ表示が内部キーをそのまま
+ * 表示していたことが判明したため、既存資産として`export`して再利用する。
+ */
+export const STAT_LABEL: Record<'atk' | 'def', string> = {
   atk: '攻撃力',
   def: '防御力',
 }

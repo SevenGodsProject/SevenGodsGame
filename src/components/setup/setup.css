@@ -252,15 +252,19 @@
 }
 
 /* 施策A：「特殊」バーの内訳（例：「カード+2枚・神力+2」）。数字だけでは中身が伝わらないため */
+/* 決定66（Task B3）：9〜10pxはスマホでの可読性としてやや小さいため微増。
+   375〜430pxで実測し、god-stat-row（grid-template-columns:28px 1fr 24px、
+   値欄は固定24px幅）内で2桁の数値（実測最大値は32）でもはみ出さないことを
+   確認した上で採用。God-select画面全体のレイアウト崩れは無し。 */
 .god-stat-note {
   padding-left: 34px;
-  font-size: 9px;
+  font-size: 10px;
   color: #c39bffcc;
   line-height: 1.4;
 }
 
 .god-stat-label {
-  font-size: 10px;
+  font-size: 11px;
   color: #a9adc4;
 }
 
@@ -295,7 +299,7 @@
 }
 
 .god-stat-value {
-  font-size: 10px;
+  font-size: 11px;
   color: #d7d9ec;
   text-align: right;
   font-variant-numeric: tabular-nums;
@@ -610,14 +614,18 @@
 }
 
 .deck-builder-card-stepper button {
-  width: 26px;
-  height: 26px;
+  /* 決定66（Task B3）：26pxはApple HIG(44pt)/Material Design(48dp)の推奨を
+     大きく下回り、デッキ編成で頻繁に操作する主要UIのため拡大。375〜430pxで
+     ブラウザ実測し、カード幅（151〜179px）内で他要素と重ならない安全な値として
+     40pxを採用（実測時点で左右各10px分の余白が残ることを確認済み）。 */
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
   border: 1px solid #444a68;
   background: transparent;
   color: #e8e9f3;
   cursor: pointer;
-  font-size: 14px;
+  font-size: 16px;
   line-height: 1;
 }
 
@@ -837,4 +845,197 @@
     max-width: 320px;
     margin: 0 auto;
   }
+}
+
+/*
+ * --- OTOMO育成画面（Task C2、決定71） ---
+ * `.god-select-grid`/`.god-select-card`（神選択画面）・`.god-stat-track`/
+ * `.god-stat-fill`（ステータスバー）と同じ視覚言語を踏襲しつつ、
+ * 既存クラスは共有せず専用クラスにした（片方の変更がもう片方の
+ * レイアウトに波及しないようにするため）。
+ */
+.otomo-growth-grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px;
+}
+
+.otomo-growth-card {
+  display: flex;
+  gap: 12px;
+  padding: 12px;
+  flex: 1 1 260px;
+  max-width: 340px;
+  border: 1px solid #ffffff1a;
+  border-radius: 12px;
+  background: linear-gradient(165deg, #14152caa 0%, #0b0d17cc 100%);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  box-shadow: inset 0 1px 0 #ffffff10;
+}
+
+.otomo-growth-card img {
+  width: 72px;
+  height: 72px;
+  object-fit: cover;
+  border-radius: 10px;
+  flex-shrink: 0;
+}
+
+.otomo-growth-body {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+  flex: 1;
+}
+
+.otomo-growth-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.otomo-growth-name {
+  font-weight: 700;
+}
+
+.otomo-growth-level {
+  font-size: 12px;
+  font-weight: 700;
+  color: #ffd166;
+  white-space: nowrap;
+}
+
+.otomo-growth-god {
+  font-size: 11px;
+  color: #a9adc4;
+}
+
+.otomo-growth-bar-track {
+  height: 6px;
+  border-radius: 999px;
+  background: #ffffff14;
+  overflow: hidden;
+  margin-top: 2px;
+}
+
+.otomo-growth-bar-fill {
+  display: block;
+  height: 100%;
+  border-radius: 999px;
+  background: #c39bff;
+  transition: width 0.2s ease;
+}
+
+.otomo-growth-points {
+  font-size: 11px;
+  color: #c3c6de;
+}
+
+.otomo-growth-text {
+  font-size: 12px;
+  color: #ffd166cc;
+}
+
+.otomo-growth-stats {
+  font-size: 10px;
+  color: #a9adc4;
+}
+
+.otomo-growth-back {
+  align-self: flex-start;
+  margin-top: 4px;
+}
+
+/*
+ * --- 戦績画面（Task E1、決定73） ---
+ * `.otomo-growth-*`（Task C2）と同じ「カードグリッド」の視覚言語を踏襲。
+ * 既存クラスは共有せず専用クラスにした。
+ */
+.record-grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px;
+}
+
+.record-card {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 14px;
+  flex: 1 1 240px;
+  max-width: 300px;
+  border: 1px solid #ffffff1a;
+  border-radius: 12px;
+  background: linear-gradient(165deg, #14152caa 0%, #0b0d17cc 100%);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  box-shadow: inset 0 1px 0 #ffffff10;
+}
+
+.record-card-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.record-card-name {
+  font-weight: 700;
+  font-size: 15px;
+}
+
+.record-best {
+  font-size: 13px;
+  color: #c3c6de;
+}
+
+.record-best strong {
+  font-size: 16px;
+  color: #ffd166;
+}
+
+.record-best-difficulty {
+  font-size: 11px;
+  color: #a9adc4;
+}
+
+.record-stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 6px;
+}
+
+.record-stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  padding: 6px 4px;
+  border-radius: 8px;
+  background: #ffffff0a;
+}
+
+.record-stat-value {
+  font-weight: 700;
+  font-size: 15px;
+  font-variant-numeric: tabular-nums;
+}
+
+.record-stat-label {
+  font-size: 10px;
+  color: #a9adc4;
+}
+
+.record-empty {
+  font-size: 12px;
+  color: #6a6f88;
+}
+
+.record-back {
+  align-self: flex-start;
+  margin-top: 4px;
 }

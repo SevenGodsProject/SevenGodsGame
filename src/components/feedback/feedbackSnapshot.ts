@@ -11,7 +11,7 @@ import { GODS } from '../../core/data/gods'
  * 分離してテスト可能にしている。
  */
 export type FeedbackSnapshot = {
-  screen: 'ホーム' | '神選択' | 'デッキ構築' | 'バトル中' | '決着'
+  screen: 'ホーム' | '神選択' | 'デッキ構築' | 'OTOMO育成' | '戦績' | 'バトル中' | '決着'
   godName?: string
   difficultyLabel: string
   round?: number
@@ -37,7 +37,7 @@ function godNameJa(godId: GodId): string {
 
 export type SnapshotInput = {
   /** GameFlowのセットアップ画面。バトル中（stateがある）はここを見ない */
-  setupScreen: 'home' | 'godSelect' | 'deckBuild'
+  setupScreen: 'home' | 'godSelect' | 'deckBuild' | 'otomoGrowth' | 'record'
   godId: GodId | null
   difficulty: Difficulty
   state: GameState | null
@@ -55,7 +55,16 @@ export function computeSnapshot({ setupScreen, godId, difficulty, state }: Snaps
       otomoFormLabel: OTOMO_FORM_LABEL[state.otomo.form],
     }
   }
-  const screen = setupScreen === 'home' ? 'ホーム' : setupScreen === 'godSelect' ? '神選択' : 'デッキ構築'
+  const screen =
+    setupScreen === 'home'
+      ? 'ホーム'
+      : setupScreen === 'godSelect'
+        ? '神選択'
+        : setupScreen === 'deckBuild'
+          ? 'デッキ構築'
+          : setupScreen === 'otomoGrowth'
+            ? 'OTOMO育成'
+            : '戦績'
   return {
     screen,
     godName: godId ? godNameJa(godId) : undefined,

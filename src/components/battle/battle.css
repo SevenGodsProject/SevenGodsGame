@@ -1218,9 +1218,13 @@
   flex: 1;
 }
 
-/* 決定43：勝利後の報酬カード選択画面。GameOverOverlayと同じ全面オーバーレイの型を踏襲 */
+/* 決定43：勝利後の報酬カード選択画面。GameOverOverlayと同じ全面オーバーレイの型を踏襲。
+   決定63（Task B2）：position:absoluteだと`.battle`（スクロール可能な戦闘画面全体、
+   スマホでは2500px超）を基準に中央配置されてしまい、決着時のスクロール位置によっては
+   画面外に表示される問題があったため、TutorialOverlay/FeedbackOverlayと同じ
+   position:fixed（ビューポート基準）に変更した。 */
 .reward-overlay {
-  position: absolute;
+  position: fixed;
   inset: 0;
   background: #05060dcc;
   display: grid;
@@ -1228,6 +1232,10 @@
   border-radius: 12px;
   z-index: 9;
   padding: 12px;
+  /* 決定64（Task A5）：「画面が突然切り替わった」ではなく「結果が提示された」と
+     感じられるよう、背景の短いフェードインを追加（0.25秒、既存のcast-flash等と
+     同じ軽量なkeyframesパターンを踏襲） */
+  animation: overlay-fade-in 0.25s ease-out;
 }
 
 .reward-card-panel {
@@ -1241,6 +1249,15 @@
   gap: 14px;
   max-width: 560px;
   box-shadow: 0 0 40px -8px #ffd16644;
+  /* 決定65：position:fixed化（決定63）以降、パネルの内容がビューポート高を
+     超えると「見送る」ボタン等に到達できなくなる操作不能バグが発見されたため、
+     TutorialOverlay（.tutorial-card）/FeedbackOverlay（.feedback-card）と
+     全く同じmax-height:85vh + overflow-y:autoのパターンをそのまま踏襲する。
+     数値も既存の85vhをそのまま流用（新しい値を推測で決めない）。 */
+  max-height: 85vh;
+  overflow-y: auto;
+  /* 決定64：カードはfade+scaleで「提示された」感を出す（0.35秒、過剰なバウンドは無し） */
+  animation: overlay-card-pop-in 0.35s cubic-bezier(0.2, 0.8, 0.3, 1);
 }
 
 .reward-title {
@@ -1376,8 +1393,40 @@
   color: #ffd166;
 }
 
+/* 決定64（Task A5）：GameOverOverlay/RewardOverlay共通の軽量な登場演出。
+   「画面が突然切り替わった」ではなく「結果が提示された」と感じられることが目的で、
+   過剰なバウンド・長時間演出は避け、既存のcast-flash等と同じ軽量な
+   fade/scaleパターンに揃える。prefers-reduced-motionは、index.cssの既存方針
+   （body::before/::afterの環境演出のみ無効化・hit-shake等の個別フィードバック
+   演出は対象外）に合わせ、本演出も対象外のままとする（既存のバトル内演出
+   [hit-shake/cast-flash/burst-flash等]がいずれもreduced-motion非対応である
+   ことをbattle.css全体で確認済み、ここだけ挙動を変えると一貫性が崩れるため）。 */
+@keyframes overlay-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes overlay-card-pop-in {
+  from {
+    opacity: 0;
+    transform: scale(0.94);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
 .game-over-overlay {
-  position: absolute;
+  /* 決定63（Task B2）：position:absoluteだと`.battle`（スクロール可能な戦闘画面
+     全体、スマホでは2500px超）を基準に中央配置されてしまい、決着時のスクロール
+     位置によっては画面外に表示される問題があったため、TutorialOverlay/
+     FeedbackOverlayと同じposition:fixed（ビューポート基準）に変更した。 */
+  position: fixed;
   inset: 0;
   background: #05060dcc;
   display: grid;
@@ -1390,6 +1439,8 @@
      内容も正しかったため型チェック・自動テストでは検出できなかった）。
      .reward-overlay（z-index:9、決定43）より確実に上に来るよう10を指定する。 */
   z-index: 10;
+  /* 決定64：背景の短いフェードイン（0.25秒） */
+  animation: overlay-fade-in 0.25s ease-out;
 }
 
 .game-over-card {
@@ -1402,6 +1453,54 @@
   align-items: center;
   gap: 12px;
   min-width: 260px;
+  /* 決定64：カードのfade+scale登場演出（0.35秒） */
+  animation: overlay-card-pop-in 0.35s cubic-bezier(0.2, 0.8, 0.3, 1);
+}
+
+/* 決定64：勝利・敗北・未撃破で「文字を読まなくても感覚的に区別できる」よう、
+   カード枠とボタン装飾のトーンをstatus別に変える。勝利（.game-over-card-won）は
+   既存の金色・祝祭的な雰囲気をそのまま維持するため上書きしない。
+   敗北のみ、既存の.end-round-button共有スタイル（金色グラデーション）を
+   より詳細度の高いセレクタで上書きし、赤〜暗色系の控えめなトーンにする
+   （祝祭感を出さないことが目的）。未撃破は中立的なグレー系で揃える。 */
+.game-over-card-lost {
+  border-color: #e5484d44;
+}
+
+.game-over-card-lost .game-over-actions button {
+  border-color: #e5484d;
+  background: linear-gradient(180deg, #e5484d26, #e5484d0a);
+  color: #ff8080;
+  box-shadow:
+    0 0 14px -6px #e5484d66,
+    inset 0 1px 0 #ffffff22;
+}
+
+.game-over-card-lost .game-over-actions button:hover {
+  background: linear-gradient(180deg, #e5484d44, #e5484d18);
+  box-shadow:
+    0 0 20px -2px #e5484d99,
+    inset 0 1px 0 #ffffff33;
+}
+
+.game-over-card-finished {
+  border-color: #7f8ab844;
+}
+
+.game-over-card-finished .game-over-actions button {
+  border-color: #7f8ab8;
+  background: linear-gradient(180deg, #7f8ab826, #7f8ab80a);
+  color: #b8bfe0;
+  box-shadow:
+    0 0 14px -6px #7f8ab866,
+    inset 0 1px 0 #ffffff22;
+}
+
+.game-over-card-finished .game-over-actions button:hover {
+  background: linear-gradient(180deg, #7f8ab844, #7f8ab818);
+  box-shadow:
+    0 0 20px -2px #7f8ab899,
+    inset 0 1px 0 #ffffff33;
 }
 
 .game-over-status {
@@ -1436,10 +1535,23 @@
 .score-breakdown {
   display: grid;
   grid-template-columns: auto auto;
-  gap: 2px 16px;
+  gap: 4px 16px;
   font-size: 12px;
   color: #7f8ab8;
   margin: 0;
+}
+
+.score-breakdown dt {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+/* 決定64：「次はどうすれば伸ばせるか」を一行で示す補足（長文にしない） */
+.score-breakdown-hint {
+  font-size: 9px;
+  font-weight: 400;
+  color: #5c6690;
 }
 
 .score-breakdown dd {

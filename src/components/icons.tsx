@@ -37,6 +37,34 @@ export function BookIcon({ className }: { className?: string }) {
   )
 }
 
+/** Task C2：ホーム画面「OTOMOとの絆を見る」ボタン用のハートアイコン */
+export function HeartIcon({ className }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 24 24" className={className} aria-hidden="true">
+      <path
+        d="M12 20.5s-7.5-4.6-9.9-9.2C.6 8 2 4.8 5.3 4.1c2-.4 3.9.5 5 2.1a1 1 0 0 0 1.4 0c1.1-1.6 3-2.5 5-2.1 3.3.7 4.7 3.9 3.2 7.2C19.5 15.9 12 20.5 12 20.5Z"
+        fill="currentColor"
+      />
+    </svg>
+  )
+}
+
+/** Task E1：ホーム画面「戦績を見る」ボタン用のトロフィーアイコン */
+export function TrophyIcon({ className }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 24 24" className={className} aria-hidden="true">
+      <g stroke="currentColor" strokeWidth={1.8} strokeLinejoin="round" strokeLinecap="round" fill="none">
+        <path d="M7 4h10v5a5 5 0 0 1-10 0V4Z" />
+        <path d="M7 5H4.5a1 1 0 0 0-1 1.2C4 8.5 5.5 9.7 7 10" />
+        <path d="M17 5h2.5a1 1 0 0 1 1 1.2C20 8.5 18.5 9.7 17 10" />
+        <path d="M12 14v3" />
+        <path d="M8.5 20.5h7" />
+        <path d="M9.5 17.5c0 1.4 1 3 2.5 3s2.5-1.6 2.5-3" />
+      </g>
+    </svg>
+  )
+}
+
 /** 実プレイ・フィードバック基盤：ヘッダーの「感想を送る」ボタン用の吹き出しアイコン */
 export function FeedbackIcon({ className }: { className?: string }) {
   return (
