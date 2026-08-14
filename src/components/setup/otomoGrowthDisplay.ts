@@ -56,3 +56,28 @@ export function computeOtomoGrowthDisplay(record: OtomoBondRecord): OtomoGrowthD
     bondText: computeBondText(record, level),
   }
 }
+
+export type OtomoLevelUp = {
+  prevLevel: number
+  nextLevel: number
+}
+
+/**
+ * 決定74（Task C3）：対局前後の育成記録からLvを比較し、実際に上がった
+ * 場合だけ`OtomoLevelUp`を返す（上がっていなければnull）。
+ *
+ * 1戦で獲得できる`resonanceCount`は最大2（doji到達時）、1Lvに必要なのは
+ * `POINTS_PER_LEVEL`=3のため、1戦で2Lv以上一気に上がることは現在の
+ * 数値上は起こらない（2 < 3のため、跨げる境界は最大1つ）。ただし将来
+ * `POINTS_PER_LEVEL`や1戦あたりの獲得量が変わっても壊れないよう、
+ * `nextLevel - prevLevel`が2以上になるケースも問題なく扱える形にしてある
+ * （呼び出し側は`prevLevel`→`nextLevel`をそのまま表示すればよい）。
+ */
+export function detectOtomoLevelUp(
+  prevRecord: OtomoBondRecord,
+  nextRecord: OtomoBondRecord,
+): OtomoLevelUp | null {
+  const prevLevel = computeOtomoGrowthDisplay(prevRecord).level
+  const nextLevel = computeOtomoGrowthDisplay(nextRecord).level
+  return nextLevel > prevLevel ? { prevLevel, nextLevel } : null
+}

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { computeOtomoGrowthDisplay } from './otomoGrowthDisplay'
+import { computeOtomoGrowthDisplay, detectOtomoLevelUp } from './otomoGrowthDisplay'
 import type { OtomoBondRecord } from '../../hooks/otomoBondStorage'
 
 function record(overrides: Partial<OtomoBondRecord> = {}): OtomoBondRecord {
@@ -50,5 +50,37 @@ describe('computeOtomoGrowthDisplay', () => {
   it('pointsPerLevelは常に3を返す', () => {
     expect(computeOtomoGrowthDisplay(record()).pointsPerLevel).toBe(3)
     expect(computeOtomoGrowthDisplay(record({ resonanceCount: 100 })).pointsPerLevel).toBe(3)
+  })
+})
+
+/** 決定74（Task C3）：Lv到達演出の発動判定ロジックのテスト */
+describe('detectOtomoLevelUp', () => {
+  it('Lvが上がった場合、prevLevel/nextLevelを含むオブジェクトを返す', () => {
+    const prev = record({ resonanceCount: 2 }) // Lv1
+    const next = record({ battlesPlayed: 1, resonanceCount: 3 }) // Lv2
+    expect(detectOtomoLevelUp(prev, next)).toEqual({ prevLevel: 1, nextLevel: 2 })
+  })
+
+  it('Lvが変わらない場合はnullを返す（同じ対局結果を渡してもLvUP扱いにしない）', () => {
+    const prev = record({ resonanceCount: 1 }) // Lv1
+    const next = record({ battlesPlayed: 1, resonanceCount: 1 }) // Lv1のまま（例：spirit形態止まりの対局）
+    expect(detectOtomoLevelUp(prev, next)).toBeNull()
+  })
+
+  it('prevとnextが全く同じ場合（playing状態を渡したケース相当）はnullを返す', () => {
+    const same = record({ resonanceCount: 5 })
+    expect(detectOtomoLevelUp(same, same)).toBeNull()
+  })
+
+  it('Lvが下がることは通常発生しないが、下がった場合もnullを返す（UPのみ検知する設計）', () => {
+    const prev = record({ resonanceCount: 5 }) // Lv2
+    const next = record({ resonanceCount: 0 }) // Lv1
+    expect(detectOtomoLevelUp(prev, next)).toBeNull()
+  })
+
+  it('未プレイ→初戦でLv1のまま（resonanceCount+0）ならnullを返す', () => {
+    const prev = record()
+    const next = record({ battlesPlayed: 1, resonanceCount: 0 })
+    expect(detectOtomoLevelUp(prev, next)).toBeNull()
   })
 })

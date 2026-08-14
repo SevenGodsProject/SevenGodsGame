@@ -1527,6 +1527,21 @@
   text-shadow: 0 0 12px #ffd16688;
 }
 
+/*
+ * 決定74（Task C3）：OTOMO絆Lv到達演出。新規keyframesは作らず、決定64で
+ * 既に使っている`overlay-card-pop-in`（fade+scale、過剰なバウンド無し）を
+ * そのまま再利用する（CEO指示「既存の安全なパターンを再利用」に対応）。
+ * 0.5秒はCEO指定の目安（0.5〜1.5秒）の下限側を採用し、戦闘テンポを
+ * 止めないよう短めにした。
+ */
+.game-over-otomo-levelup {
+  font-size: 13px;
+  font-weight: 700;
+  color: #c39bff;
+  text-shadow: 0 0 12px #c39bff88;
+  animation: overlay-card-pop-in 0.5s cubic-bezier(0.2, 0.8, 0.3, 1);
+}
+
 .score-total {
   font-size: 16px;
   color: #e8e9f3;

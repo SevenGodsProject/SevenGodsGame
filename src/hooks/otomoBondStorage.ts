@@ -128,12 +128,20 @@ export function loadOtomoBond(godId: GodId): OtomoBondRecord {
  * 決着（won/lost/finished）したGameStateをOTOMO育成記録に反映する。
  * 'playing'の状態を渡した場合は何もしない（recordGameResultと同じガード）。
  * 戦闘バランス・GameStateには一切書き戻さない、表示専用の永続化。
+ *
+ * 決定74（Task C3）：呼び出し側（Lv到達演出）がこの1戦での変化量を
+ * 判定できるよう、更新前後の記録を両方返す（`recordGameResult`が
+ * `isNewBest`を返すのと同じ設計）。'playing'を渡した場合（何も更新
+ * しない）はprev===nextを返し、呼び出し側でLv差分を計算しても
+ * 差が出ない＝誤ってレベルアップ演出が出ることはない。
  */
-export function recordOtomoBond(state: GameState): void {
-  if (state.status === 'playing') return
-
+export function recordOtomoBond(state: GameState): { prevRecord: OtomoBondRecord; nextRecord: OtomoBondRecord } {
   const data = load()
   const prev = data.records[state.godId] ?? EMPTY_RECORD
+
+  if (state.status === 'playing') {
+    return { prevRecord: prev, nextRecord: prev }
+  }
 
   const next: OtomoBondRecord = {
     battlesPlayed: prev.battlesPlayed + 1,
@@ -142,4 +150,5 @@ export function recordOtomoBond(state: GameState): void {
   }
 
   save({ ...data, records: { ...data.records, [state.godId]: next } })
+  return { prevRecord: prev, nextRecord: next }
 }

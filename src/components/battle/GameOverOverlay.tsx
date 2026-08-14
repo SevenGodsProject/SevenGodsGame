@@ -33,13 +33,26 @@ type GameOverOverlayProps = {
   score: ScoreState
   /** この1戦でその神のスコア自己ベストを更新したか（決定48フォローアップ） */
   newBest: boolean
+  /**
+   * 決定74（Task C3）：この1戦でOTOMOの親密度Lvが上がった場合のみ渡される
+   * （上がっていなければnull）。勝敗を問わず出る（OTOMOは敗北戦でも育つ、
+   * 決定70の設計どおり）。
+   */
+  otomoLevelUp: { otomoName: string; prevLevel: number; nextLevel: number } | null
   /** 同じ神・同じデッキでもう一度戦う */
   onRematch: () => void
   /** 神選択からやり直す（決定24：Phase 5） */
   onReselect: () => void
 }
 
-export function GameOverOverlay({ status, score, newBest, onRematch, onReselect }: GameOverOverlayProps) {
+export function GameOverOverlay({
+  status,
+  score,
+  newBest,
+  otomoLevelUp,
+  onRematch,
+  onReselect,
+}: GameOverOverlayProps) {
   return (
     <div className="game-over-overlay">
       {/* 決定64：勝敗・未撃破で装飾トーンを分ける（status別クラス）。文字色だけでなく
@@ -47,6 +60,11 @@ export function GameOverOverlay({ status, score, newBest, onRematch, onReselect 
       <div className={`game-over-card game-over-card-${status}`}>
         <div className={`game-over-status game-over-status-${status}`}>{STATUS_LABEL[status]}</div>
         {newBest && <div className="game-over-new-best">✨ 自己ベスト更新！</div>}
+        {otomoLevelUp && (
+          <div className="game-over-otomo-levelup">
+            💠 絆Lv UP！ {otomoLevelUp.otomoName} Lv.{otomoLevelUp.prevLevel} → Lv.{otomoLevelUp.nextLevel}
+          </div>
+        )}
         <div className="score-total">スコア {score.total}</div>
         <dl className="score-breakdown">
           <dt>

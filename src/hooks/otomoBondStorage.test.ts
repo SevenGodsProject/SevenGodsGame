@@ -171,4 +171,27 @@ describe('otomoBondStorage', () => {
       dojiReached: 0,
     })
   })
+
+  // 決定74（Task C3）：Lv到達演出の判定に使う戻り値（更新前後の記録）のテスト
+  describe('戻り値（決定74・Task C3）', () => {
+    it('決着時、prevRecordは更新前・nextRecordは更新後の値を返す', () => {
+      const { prevRecord: firstPrev, nextRecord: firstNext } = recordOtomoBond(
+        withResult(startGame('bond-8'), 'won', 'incarnate'),
+      )
+      expect(firstPrev).toEqual({ battlesPlayed: 0, resonanceCount: 0, dojiReached: 0 })
+      expect(firstNext).toEqual({ battlesPlayed: 1, resonanceCount: 1, dojiReached: 0 })
+
+      const { prevRecord: secondPrev, nextRecord: secondNext } = recordOtomoBond(
+        withResult(startGame('bond-8b'), 'won', 'doji'),
+      )
+      expect(secondPrev).toEqual(firstNext)
+      expect(secondNext).toEqual({ battlesPlayed: 2, resonanceCount: 3, dojiReached: 1 })
+    })
+
+    it('進行中（playing）はprevRecordとnextRecordが同じ値を返す（＝呼び出し側で差分を見ても変化なしと判定できる）', () => {
+      const { prevRecord, nextRecord } = recordOtomoBond(startGame('bond-9'))
+      expect(prevRecord).toEqual(nextRecord)
+      expect(prevRecord).toEqual({ battlesPlayed: 0, resonanceCount: 0, dojiReached: 0 })
+    })
+  })
 })

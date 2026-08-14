@@ -13,7 +13,7 @@ import { applyAction } from '../core/engine'
 import { ENEMY_IDS, pickEnemyId } from '../core/data/enemies'
 import { clearBattleSave, saveBattle } from './battleSaveStorage'
 import { recordGameResult } from './recordStorage'
-import { recordOtomoBond } from './otomoBondStorage'
+import { recordOtomoBond, type OtomoBondRecord } from './otomoBondStorage'
 
 /**
  * ラウンド終了→次ラウンド開始の結果を見せる前に「敵のターン」を溜める時間（見せ方のみ。判定タイミングは変えない）。
@@ -46,6 +46,8 @@ export type UseGameEngine = {
   pendingCardUid: CardUid | null
   /** 直前の決着でスコアの自己ベストを更新したか（決定48フォローアップ） */
   newBest: boolean
+  /** 直前の決着でOTOMOの育成記録がどう変わったか（決定74・Task C3、Lv到達演出の判定に使う） */
+  otomoBondChange: { prevRecord: OtomoBondRecord; nextRecord: OtomoBondRecord } | null
   startGame: (
     godId: GodId,
     deck: CardDefId[],
@@ -74,6 +76,10 @@ export function useGameEngine(): UseGameEngine {
   const [isEnemyTurn, setIsEnemyTurn] = useState(false)
   const [pendingCardUid, setPendingCardUid] = useState<CardUid | null>(null)
   const [newBest, setNewBest] = useState(false)
+  const [otomoBondChange, setOtomoBondChange] = useState<{
+    prevRecord: OtomoBondRecord
+    nextRecord: OtomoBondRecord
+  } | null>(null)
 
   const commit = useCallback((result: { state: GameState; events: GameEvent[] }) => {
     setState(result.state)
@@ -90,7 +96,8 @@ export function useGameEngine(): UseGameEngine {
       // 決定70（Task C1）：決着した瞬間にOTOMO育成記録（表示専用）を更新する。
       // recordGameResultと同じ分岐・同じ1回性なので二重加算は発生しない
       // （詳細はotomoBondStorage.tsのコメントを参照）。
-      recordOtomoBond(result.state)
+      // 決定74（Task C3）：更新前後の記録を両方保持し、Lv到達演出の判定に使う。
+      setOtomoBondChange(recordOtomoBond(result.state))
     }
   }, [])
 
@@ -131,6 +138,7 @@ export function useGameEngine(): UseGameEngine {
       setIsEnemyTurn(false)
       setPendingCardUid(null)
       setNewBest(false)
+      setOtomoBondChange(null)
       const seed = `seed-${Date.now()}`
       dispatch({
         type: 'START_GAME',
@@ -170,6 +178,7 @@ export function useGameEngine(): UseGameEngine {
     setIsEnemyTurn(false)
     setPendingCardUid(null)
     setNewBest(false)
+    setOtomoBondChange(null)
     setState(savedState)
   }, [])
 
@@ -180,6 +189,7 @@ export function useGameEngine(): UseGameEngine {
     setIsEnemyTurn(false)
     setPendingCardUid(null)
     setNewBest(false)
+    setOtomoBondChange(null)
   }, [])
 
   return {
@@ -189,6 +199,7 @@ export function useGameEngine(): UseGameEngine {
     isEnemyTurn,
     pendingCardUid,
     newBest,
+    otomoBondChange,
     startGame,
     resumeGame,
     resetGame,

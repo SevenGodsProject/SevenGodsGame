@@ -2,8 +2,10 @@ import { useEffect, useState } from 'react'
 import { RULES } from '../../core/data/rules'
 import { getCardDef } from '../../core/data/cards'
 import { getGodDef } from '../../core/data/gods'
+import { getOtomoDef } from '../../core/data/otomo'
 import type { UseGameEngine } from '../../hooks/useGameEngine'
 import { addRewardBonus } from '../../hooks/rewardStorage'
+import { detectOtomoLevelUp } from '../setup/otomoGrowthDisplay'
 import { useBattleFx } from './useBattleFx'
 import { useBattleSound } from './useBattleSound'
 import { useFloatingNumbers } from './useFloatingNumbers'
@@ -35,7 +37,8 @@ type BattleScreenProps = {
  * ここでは`engine.state`が常に存在する前提で戦闘中の表示だけに専念する。
  */
 export function BattleScreen({ engine, muted, onRematch, onReselect }: BattleScreenProps) {
-  const { state, log, error, isEnemyTurn, pendingCardUid, newBest, playCard, endRound, divine } = engine
+  const { state, log, error, isEnemyTurn, pendingCardUid, newBest, otomoBondChange, playCard, endRound, divine } =
+    engine
   const fx = useBattleFx(log)
   const { enemyNumbers, playerNumbers } = useFloatingNumbers(log)
   useBattleSound(muted ? [] : log)
@@ -57,6 +60,12 @@ export function BattleScreen({ engine, muted, onRematch, onReselect }: BattleScr
   const pendingCard = pendingCardUid ? state.hand.find((c) => c.uid === pendingCardUid) : undefined
   const pendingCardDef = pendingCard ? getCardDef(pendingCard.defId) : null
   const castStyle = pendingCardDef ? TYPE_STYLE[pendingCardDef.type] : null
+
+  // 決定74（Task C3）：対局前後の育成記録からLvが実際に上がった場合だけバッジを出す。
+  const levelUp = otomoBondChange ? detectOtomoLevelUp(otomoBondChange.prevRecord, otomoBondChange.nextRecord) : null
+  const otomoLevelUp = levelUp
+    ? { otomoName: getOtomoDef(state.otomo.defId).nameJa, prevLevel: levelUp.prevLevel, nextLevel: levelUp.nextLevel }
+    : null
 
   return (
     <div className="battle">
@@ -170,6 +179,7 @@ export function BattleScreen({ engine, muted, onRematch, onReselect }: BattleScr
           status={state.status}
           score={state.score}
           newBest={newBest}
+          otomoLevelUp={otomoLevelUp}
           onRematch={onRematch}
           onReselect={onReselect}
         />

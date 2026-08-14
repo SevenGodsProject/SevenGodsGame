@@ -99,7 +99,9 @@
       "Bash(echo \"oxlint exit: $?\")",
       "Bash(grep -iv \"^.*://\\\\|import\")",
       "PowerShell(Get-Item *)",
-      "Bash(echo \"TSC_EXIT:$?\")"
+      "Bash(echo \"TSC_EXIT:$?\")",
+      "PowerShell([System.Media.SystemSounds]::Exclamation.Play\\(\\); Start-Sleep -Milliseconds 400)",
+      "Bash(git grep *)"
     ]
   }
 }
