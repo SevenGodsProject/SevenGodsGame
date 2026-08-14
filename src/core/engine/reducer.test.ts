@@ -185,4 +185,68 @@ describe('full playthrough', () => {
     expect(state.player.hp).toBe(0)
     expect(lastResult.events.some((e) => e.t === 'GAME_ENDED')).toBe(true)
   })
+
+  /**
+   * 決定76：`status:'finished'`（7ラウンド終了・未撃破、決定3）への遷移を
+   * 直接検証する再現防止テスト。
+   *
+   * 過去3回（決定68追記）、AI戦略を実プレイ相当にシミュレートして「未撃破に
+   * なるまで7ラウンド回す」形での再現を試みたが失敗し撤回した。今回は
+   * `round.ts`のコードを読み、`finishRound`の遷移条件（①ラウンド7の
+   * END_ROUND時点で②プレイヤーがまだ生きていて③敵もまだ倒せていなければ
+   * finishedになる、という条件そのもの）を直接ターゲットにする形へ方針転換：
+   * 「実プレイでランダムに未撃破を狙う」のではなく、ラウンド7の直前まで
+   * 進んだ状態を直接組み立てて`END_ROUND`を1回発行するだけで再現する。
+   * AI戦略・特定の神・特定の難易度には一切依存しないため、低リスクかつ
+   * 100%決定論的に再現できる。
+   */
+  it('決定76: ラウンド7でプレイヤーが生存し敵を倒せていない場合、finishedに遷移する', () => {
+    const base = startTestGame('finished-repro')
+    const almostDone = {
+      ...base,
+      round: RULES.totalRounds,
+      phase: 'playerTurn' as const,
+      status: 'playing' as const,
+      // HP・ダメージ数値の妥当性はここでの検証対象ではないため、rules.ts/
+      // enemies.tsの具体的な攻撃力とは無関係な、十分に大きい値を使う
+      // （「ラウンド7の敵攻撃で確実に生き残る」という条件だけを保証したい）
+      player: { ...base.player, hp: 999999 },
+      // ラウンド1のintentが残っていると古い予告のまま行動してしまうため、
+      // ラウンド7として再計算させるためnullに戻す（runEnemyTurnの仕様どおり）
+      enemy: { ...base.enemy, intent: null },
+    }
+
+    const { state: next, events } = applyAction(almostDone, { type: 'END_ROUND' })
+
+    expect(next.status).toBe('finished')
+    expect(next.phase).toBe('gameOver')
+    expect(next.round).toBe(RULES.totalRounds)
+    expect(next.player.hp).toBeGreaterThan(0)
+    expect(next.enemy.hp).toBeGreaterThan(0)
+    expect(events.some((e) => e.t === 'ROUND_ENDED')).toBe(true)
+    expect(events.some((e) => e.t === 'GAME_ENDED' && e.status === 'finished')).toBe(true)
+  })
+
+  it('決定76: ラウンド7でも敵の攻撃で力尽きれば finished ではなく lost になる（優先順位の確認）', () => {
+    // endRound.tsの処理順は「敵のターン（runEnemyTurn）→ラウンド終了処理
+    // （finishRound）」の順。finishRoundは`status !== 'playing'`なら何もせず
+    // 早期returnするため、同じEND_ROUND呼び出しの中で敵の攻撃により先に
+    // lostへ遷移していれば、finishedに上書きされることは絶対に無い。
+    // trial（試練の影）のラウンド7の攻撃力は15（enemies.ts）のため、
+    // HP1のプレイヤーは確実に力尽きる。
+    const base = startTestGame('finished-priority-lost')
+    const almostDone = {
+      ...base,
+      round: RULES.totalRounds,
+      phase: 'playerTurn' as const,
+      status: 'playing' as const,
+      player: { ...base.player, hp: 1 },
+      enemy: { ...base.enemy, intent: null },
+    }
+
+    const { state: next } = applyAction(almostDone, { type: 'END_ROUND' })
+
+    expect(next.status).toBe('lost')
+    expect(next.player.hp).toBe(0)
+  })
 })
