@@ -52,7 +52,13 @@ export function RewardOverlay({ godId, seed, onPick, onSkip }: RewardOverlayProp
               >
                 <div className="reward-card-clip" aria-hidden="true">
                   {illustration ? (
-                    <img className="reward-card-illustration" src={illustration} alt="" />
+                    <img
+                      className="reward-card-illustration"
+                      src={illustration}
+                      alt=""
+                      loading="lazy"
+                      decoding="async"
+                    />
                   ) : (
                     <div className="reward-card-icon" style={{ color: style.color }}>
                       <CardIcon def={card} />

@@ -46,7 +46,15 @@ export function CardView({ instance, affordable, playable, playing, onPlay }: Ca
       onClick={onPlay}
     >
       <div className="card-view-clip" aria-hidden="true">
-        {illustration && <img className="card-view-illustration" src={illustration} alt="" />}
+        {illustration && (
+          <img
+            className="card-view-illustration"
+            src={illustration}
+            alt=""
+            loading="lazy"
+            decoding="async"
+          />
+        )}
         {!illustration && godArt && (
           <div className="card-view-art" style={{ backgroundImage: `url(${godArt})` }} />
         )}

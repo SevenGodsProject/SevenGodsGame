@@ -174,7 +174,13 @@ export function DeckBuilderScreen({
                     >
                       <div className="deck-builder-card-clip" aria-hidden="true">
                         {illustration ? (
-                          <img className="deck-builder-card-illustration" src={illustration} alt="" />
+                          <img
+                            className="deck-builder-card-illustration"
+                            src={illustration}
+                            alt=""
+                            loading="lazy"
+                            decoding="async"
+                          />
                         ) : (
                           <div className="deck-builder-card-icon" style={{ color: style.color }}>
                             <CardIcon def={card} />

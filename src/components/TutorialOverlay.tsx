@@ -65,7 +65,7 @@ export function TutorialOverlay({ onClose }: TutorialOverlayProps) {
             <div key={section.title} className="tutorial-section">
               <div className="tutorial-section-visual">
                 {section.visual.kind === 'image' ? (
-                  <img src={section.visual.src} alt={section.visual.alt} />
+                  <img src={section.visual.src} alt={section.visual.alt} loading="lazy" decoding="async" />
                 ) : (
                   <GlyphIcon glyph={section.visual.glyph} className="tutorial-section-glyph" />
                 )}
