@@ -15,6 +15,14 @@ import type { CardDefId } from '../types/ids'
  * デコード後メモリ（フォーマット非依存、幅×高さ×4byte）は元の1024×1536の
  * 約1/4（6.0MB→1.5MB/枚）に削減され、デッキ構築画面で最大32枚同時デコード時の
  * OOMリスクを直接的に緩和する。
+ *
+ * B候補「未実装カード4枚の新規生成」：連撃(card_common_attack_09)・
+ * 闘志(card_common_support_06)・見通し(card_common_support_07)・
+ * 浄めの光(card_common_hinder_05)を追加。CARD_ART_STYLE_GUIDE.mdの型に基づく
+ * プロンプトでCEOが生成したマスター画像を、既存56枚と同じCanvas API手順
+ * （512×768・WebP品質0.85）でそのまま変換して登録した（新規PNGマスターは
+ * プロジェクトには保存していない。既存56枚と異なり、生成→変換のみで
+ * 中間PNGを残す運用はしていない）。
  */
 const CARD_ART: Partial<Record<CardDefId, string>> = {
   card_common_attack_01: '/assets/cards/card_common_attack_01.webp',
@@ -25,6 +33,7 @@ const CARD_ART: Partial<Record<CardDefId, string>> = {
   card_common_attack_06: '/assets/cards/card_common_attack_06.webp',
   card_common_attack_07: '/assets/cards/card_common_attack_07.webp',
   card_common_attack_08: '/assets/cards/card_common_attack_08.webp',
+  card_common_attack_09: '/assets/cards/card_common_attack_09.webp',
   card_common_guard_01: '/assets/cards/card_common_guard_01.webp',
   card_common_guard_02: '/assets/cards/card_common_guard_02.webp',
   card_common_guard_03: '/assets/cards/card_common_guard_03.webp',
@@ -38,10 +47,13 @@ const CARD_ART: Partial<Record<CardDefId, string>> = {
   card_common_support_03: '/assets/cards/card_common_support_03.webp',
   card_common_support_04: '/assets/cards/card_common_support_04.webp',
   card_common_support_05: '/assets/cards/card_common_support_05.webp',
+  card_common_support_06: '/assets/cards/card_common_support_06.webp',
+  card_common_support_07: '/assets/cards/card_common_support_07.webp',
   card_common_hinder_01: '/assets/cards/card_common_hinder_01.webp',
   card_common_hinder_02: '/assets/cards/card_common_hinder_02.webp',
   card_common_hinder_03: '/assets/cards/card_common_hinder_03.webp',
   card_common_hinder_04: '/assets/cards/card_common_hinder_04.webp',
+  card_common_hinder_05: '/assets/cards/card_common_hinder_05.webp',
   card_common_oracle_01: '/assets/cards/card_common_oracle_01.webp',
   card_common_oracle_02: '/assets/cards/card_common_oracle_02.webp',
   card_common_oracle_03: '/assets/cards/card_common_oracle_03.webp',
