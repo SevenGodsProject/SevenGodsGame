@@ -17,8 +17,6 @@ import { BattleScreen } from './battle/BattleScreen'
 type SetupScreen = 'home' | 'godSelect' | 'deckBuild' | 'otomoGrowth' | 'record'
 
 type GameFlowProps = {
-  /** Appのヘッダーで管理するミュート状態（決定：アイコンをApp全体で共通化） */
-  muted: boolean
   /** 「遊び方」ボタン（ホーム画面用）。トップバー分はAppが自前で持つ */
   onShowTutorial: () => void
   /** 実プレイ・フィードバック基盤：ヘッダーのフィードバックボタンに添える現在のプレイ状況 */
@@ -35,7 +33,7 @@ type GameFlowProps = {
  * 表示するだけ」のコンポーネントに専念でき、開始前の画面遷移ロジックと
  * 戦闘中の表示ロジックが混ざらずに済みます。
  */
-export function GameFlow({ muted, onShowTutorial, onSnapshotChange }: GameFlowProps) {
+export function GameFlow({ onShowTutorial, onSnapshotChange }: GameFlowProps) {
   const engine = useGameEngine()
   const [savedBattle] = useState(() => loadBattleSave())
   const [setupScreen, setSetupScreen] = useState<SetupScreen>('home')
@@ -45,7 +43,7 @@ export function GameFlow({ muted, onShowTutorial, onSnapshotChange }: GameFlowPr
   const [otomoGrowthPath, setOtomoGrowthPath] = useState<GrowthPath>('guardian')
 
   // 実プレイ・フィードバック基盤：画面遷移やラウンド進行のたびに、ヘッダーの
-  // フィードバックボタンが添える「今の状況」をAppへ伝える（muted/showTutorialと
+  // フィードバックボタンが添える「今の状況」をAppへ伝える（showTutorialと
   // 同じ「Appのヘッダーに一本化する」方針、決定45参照）。
   useEffect(() => {
     onSnapshotChange(computeSnapshot({ setupScreen, godId, difficulty, state: engine.state }))
@@ -128,7 +126,6 @@ export function GameFlow({ muted, onShowTutorial, onSnapshotChange }: GameFlowPr
     return (
       <BattleScreen
         engine={engine}
-        muted={muted}
         onRematch={() =>
           godId &&
           deck &&

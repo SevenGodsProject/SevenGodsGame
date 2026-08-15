@@ -46,7 +46,6 @@ function App() {
     <div className="app">
       <header className="app-header">
         <span className="app-title">SEVEN GODS</span>
-        <span className="app-badge">開発環境 稼働中</span>
         <span className="app-header-spacer" />
         <button
           type="button"
@@ -76,12 +75,8 @@ function App() {
       </header>
 
       <main className="game-stage">
-        <GameFlow muted={muted} onShowTutorial={() => setShowTutorial(true)} onSnapshotChange={setSnapshot} />
+        <GameFlow onShowTutorial={() => setShowTutorial(true)} onSnapshotChange={setSnapshot} />
       </main>
-
-      <footer className="app-footer">
-        React + TypeScript + Phaser 3
-      </footer>
 
       {showTutorial && <TutorialOverlay onClose={closeTutorial} />}
       {showFeedback && <FeedbackOverlay snapshot={snapshot} onClose={() => setShowFeedback(false)} />}

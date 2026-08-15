@@ -868,8 +868,12 @@
   }
 }
 
+/* 決定80（Phase 1）：.battleは縦に長い要素（375pxで2000px超）のため、
+   position:absoluteのままだと基準がビューポートではなく.battle全体になり、
+   共鳴バースト演出が画面外に描画されていた（決定63でGameOverOverlay/
+   RewardOverlayに対して行ったのと同じ修正をここにも適用）。 */
 .burst-banner {
-  position: absolute;
+  position: fixed;
   inset: 0;
   display: grid;
   place-items: center;
@@ -904,8 +908,9 @@
   }
 }
 
+/* 決定80（Phase 1）：.burst-bannerと同じ理由でfixed化 */
 .enemy-turn-banner {
-  position: absolute;
+  position: fixed;
   inset: 0;
   display: grid;
   place-items: center;

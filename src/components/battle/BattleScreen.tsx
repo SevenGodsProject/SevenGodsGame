@@ -24,8 +24,6 @@ import './battle.css'
 type BattleScreenProps = {
   /** GameFlowが保持するuseGameEngineの戻り値。state は必ずゲーム進行中/決着済み */
   engine: UseGameEngine
-  /** Appのヘッダーで管理するミュート状態（決定：アイコンをApp全体で共通化） */
-  muted: boolean
   /** 決着後、同じ神・同じデッキでもう一度戦う */
   onRematch: () => void
   /** 決着後、神選択からやり直す */
@@ -35,13 +33,20 @@ type BattleScreenProps = {
 /**
  * 戦闘画面。ゲーム開始前の画面遷移（神選択・デッキ構築）はGameFlowが担当するため、
  * ここでは`engine.state`が常に存在する前提で戦闘中の表示だけに専念する。
+ * 決定80（Phase 1）：ミュート状態はsound.ts側のフラグのみで完結するため、
+ * ここではpropとして受け取らない（以前は`muted`を受け取りログを[]に見せる
+ * 二重防御をしていたが、それがミュート解除時のSE一斉再生バグの原因だった）。
  */
-export function BattleScreen({ engine, muted, onRematch, onReselect }: BattleScreenProps) {
+export function BattleScreen({ engine, onRematch, onReselect }: BattleScreenProps) {
   const { state, log, error, isEnemyTurn, pendingCardUid, newBest, otomoBondChange, playCard, endRound, divine } =
     engine
   const fx = useBattleFx(log)
   const { enemyNumbers, playerNumbers } = useFloatingNumbers(log)
-  useBattleSound(muted ? [] : log)
+  // 決定80（Phase 1）：sound.ts側のmutedフラグが既にsfx.xxx()を全て止めているため、
+  // ここでの「ミュート中はlogを[]に見せる」二重防御は不要だった。しかも副作用として、
+  // ミュート解除時にuseBattleSound内部のseenCountが0にリセットされ、logが元の長さに
+  // 戻った瞬間にその対局の全イベントのSEが一斉に再生されるバグを引き起こしていた。
+  useBattleSound(log)
 
   // 決定43：報酬カードは勝利1回につき1回だけ提示する。新しいバトル（seedが変わる）
   // のたびにリセットする（再開・「もう一度」でも新しいseedが発行されるため）。

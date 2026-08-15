@@ -43,4 +43,15 @@ describe('formatEvent', () => {
     })
     expect(text).toContain('unknown-stat')
   })
+
+  it('SCORE_GAINEDでreason=oracleを「神託」という日本語表示にする', () => {
+    const text = formatEvent({ t: 'SCORE_GAINED', reason: 'oracle', amount: 200 })
+    expect(text).toBe('スコア+200（神託）')
+    expect(text).not.toContain('oracle')
+  })
+
+  it('未知のreason文字列が来た場合は元の文字列にフォールバックする（安全側）', () => {
+    const text = formatEvent({ t: 'SCORE_GAINED', reason: 'unknown-reason', amount: 10 })
+    expect(text).toContain('unknown-reason')
+  })
 })

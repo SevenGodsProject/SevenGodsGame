@@ -13,6 +13,22 @@ function statLabel(stat: string): string {
   return stat in STAT_LABEL ? STAT_LABEL[stat as keyof typeof STAT_LABEL] : stat
 }
 
+/**
+ * 決定80（Phase 1）：`SCORE_GAINED.reason`も`BUFF_APPLIED.stat`と同じ理由
+ * （素の`string`型）で内部キーがそのまま出ていた（例：「スコア+200（oracle）」）。
+ * `statLabel`と同じ安全なフォールバック変換のみここに置く（`core/types`は変更しない）。
+ */
+const SCORE_REASON_LABEL: Record<string, string> = {
+  damage: 'ダメージ',
+  combo: 'コンボ',
+  apEfficiency: '神力効率',
+  oracle: '神託',
+}
+
+function scoreReasonLabel(reason: string): string {
+  return reason in SCORE_REASON_LABEL ? SCORE_REASON_LABEL[reason] : reason
+}
+
 const STATUS_LABEL: Record<GameStatus, string> = {
   playing: '進行中',
   won: '勝利',
@@ -62,7 +78,7 @@ export function formatEvent(event: GameEvent): string {
     case 'ENEMY_ACTED':
       return event.kind === 'attack' ? `敵が攻撃${event.amount}` : '敵が溜めた'
     case 'SCORE_GAINED':
-      return `スコア${event.amount >= 0 ? '+' : ''}${event.amount}（${event.reason}）`
+      return `スコア${event.amount >= 0 ? '+' : ''}${event.amount}（${scoreReasonLabel(event.reason)}）`
     case 'ROUND_ENDED':
       return `ラウンド${event.round}終了${event.unusedAp > 0 ? `（神力${event.unusedAp}余り）` : ''}`
     case 'GAME_ENDED':
