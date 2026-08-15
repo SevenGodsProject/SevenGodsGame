@@ -512,7 +512,8 @@
   display: grid;
   place-items: center;
   font-size: 10px;
-  color: #05060d;
+  color: #e8e9f3;
+  text-shadow: 0 1px 2px #000;
   font-weight: 700;
 }
 
@@ -1623,5 +1624,69 @@
 
   .end-round-button:not(:disabled):hover {
     transform: translateX(-50%) translateY(-2px);
+  }
+}
+
+/*
+ * P0②改善（CEO承認済み、B案）：PC幅（1280px前後）で開くと、敵/自分/OTOMOの
+ * 縦積み（.battle-mainだけで800px前後）のせいで、手札はおろか共鳴ゲージすら
+ * 初期表示で画面外になっていた問題への対応。
+ *
+ * .battle-mainをPC幅限定で2カラム化し、左＝敵パネル、右＝プレイヤー＋OTOMO/
+ * 共鳴パネル（縦積みのまま）という横並びレイアウトに変える。DOMの並び順・
+ * JSXは一切変更していない（既存の enemy-panel → ally-row という兄弟順のまま、
+ * CSSで列に割り当てているだけ）。
+ *
+ * 検証（実機・座標計算）：1280×1000相当では敵HP・プレイヤーHP・共鳴ゲージ・
+ * 手札・ラウンド終了ボタンまで全てスクロール0で収まる。1280×800相当では
+ * 手札の下端がわずかに画面外（キャラクター表示を不自然に縮めてまで完全1画面化は
+ * 優先しない、というCEO方針どおり）。1034×515のような極端に低いビューポートでも、
+ * 敵HP・プレイヤーHPはスクロール0で確認でき、手札までのスクロール量は
+ * 従来の約950pxから大幅に削減される。
+ *
+ * アバターサイズ・panel余白はこのレイアウトのために必要最小限だけ圧縮している
+ * （200×240→150×180、.battle-mainのpadding/gap、.panelのpadding/gapのみ）。
+ * .panelクラスはenemy-panel/player-panel/god-otomo-panel以外に使用箇所が
+ * ないため、.battle-main .panelへのスコープでも実質全パネルに適用される。
+ *
+ * 決定77の固定「ラウンドを終える」バー（z-index:3・position:fixed）はそのまま
+ * 維持しており、本変更後もRewardOverlay(9)・GameOverOverlay(10)・
+ * Tutorial/FeedbackOverlay(100)より確実に低いまま。スマホは対象外
+ * （min-width:900pxの外側のため、375/390/430pxの既存レイアウトは無変更）。
+ */
+@media (min-width: 900px) {
+  .battle-main {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: start;
+    padding: 10px;
+    gap: 10px;
+  }
+
+  .ally-row {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+
+  .battle-main .panel {
+    padding: 10px;
+    gap: 5px;
+  }
+
+  .enemy-avatar,
+  .player-avatar {
+    width: 150px;
+    height: 180px;
+  }
+
+  .enemy-avatar-wrap,
+  .player-avatar-wrap {
+    padding: 0;
+  }
+
+  .enemy-avatar-wrap::before,
+  .player-avatar-wrap::before {
+    width: 205px;
+    height: 205px;
   }
 }
