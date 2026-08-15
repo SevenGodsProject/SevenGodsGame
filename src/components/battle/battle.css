@@ -908,6 +908,47 @@
   }
 }
 
+@keyframes evolve-flash {
+  0% {
+    opacity: 0;
+    transform: scale(0.92);
+  }
+  25% {
+    opacity: 1;
+    transform: scale(1.02);
+  }
+  75% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.05);
+  }
+}
+
+/* FINAL_BACKLOG_8-31.md Phase 3「OTOMO進化バナーの新設」。
+   .burst-banner/.enemy-turn-banner（決定80でfixed化済み）と同じ型を踏襲し、
+   OTOMO専用の色（紫）で区別する。z-indexは6（enemy-turn-banner）より上、
+   9（reward-overlay）より下（決定48フォローアップのz-index順序を維持）。 */
+.evolve-banner {
+  position: fixed;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  pointer-events: none;
+  background: radial-gradient(circle, #c9a6ff44, transparent 70%);
+  animation: evolve-flash 1.4s ease-out forwards;
+  z-index: 7;
+  border-radius: 12px;
+}
+
+.evolve-banner span {
+  font-size: 26px;
+  font-weight: 700;
+  color: #c9a6ff;
+  text-shadow: 0 0 20px #c9a6ffcc;
+}
+
 /* 決定80（Phase 1）：.burst-bannerと同じ理由でfixed化 */
 .enemy-turn-banner {
   position: fixed;
@@ -1469,6 +1510,14 @@
    敗北のみ、既存の.end-round-button共有スタイル（金色グラデーション）を
    より詳細度の高いセレクタで上書きし、赤〜暗色系の控えめなトーンにする
    （祝祭感を出さないことが目的）。未撃破は中立的なグレー系で揃える。 */
+/* FINAL_BACKLOG_8-31.md B候補「勝利リザルトカードへの金枠追加」。
+   .game-over-card-lost/.game-over-card-finishedと同じ型で、勝利時のみ
+   既存ボタンの金色（#ffd166）をカード枠自体にも回し、祝祭感を強める。 */
+.game-over-card-won {
+  border-color: #ffd16666;
+  box-shadow: 0 0 24px -8px #ffd16688;
+}
+
 .game-over-card-lost {
   border-color: #e5484d44;
 }

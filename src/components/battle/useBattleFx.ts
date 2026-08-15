@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
-import type { GameEvent } from '../../core/types'
+import type { GameEvent, OtomoForm } from '../../core/types'
 
 export type BattleFx = {
   /** 変わるたびにEnemyPanelのシェイクを再生させるキー */
@@ -12,6 +12,8 @@ export type BattleFx = {
   burstKey: number
   /** 変わるたびにOTOMOの成長グローを再生させるキー */
   evolveKey: number
+  /** 直近のOTOMO進化後の形態（FINAL_BACKLOG_8-31.md Phase 3「OTOMO進化バナー」用） */
+  evolveForm: OtomoForm | null
   /** 変わるたびに神（プレイヤー側）の攻撃モーションを再生させるキー */
   godAttackKey: number
   /** 変わるたびに敵の攻撃モーションを再生させるキー */
@@ -28,6 +30,7 @@ const INITIAL_FX: BattleFx = {
   healKey: 0,
   burstKey: 0,
   evolveKey: 0,
+  evolveForm: null,
   godAttackKey: 0,
   enemyAttackKey: 0,
   apPenaltyKey: 0,
@@ -56,6 +59,7 @@ export function useBattleFx(log: GameEvent[]): BattleFx {
     let heal = 0
     let burst = 0
     let evolve = 0
+    let evolveForm: OtomoForm | null = null
     let godAttack = 0
     let enemyAttack = 0
     let apPenalty = 0
@@ -79,6 +83,7 @@ export function useBattleFx(log: GameEvent[]): BattleFx {
         godAttack += 1
       } else if (event.t === 'OTOMO_EVOLVED') {
         evolve += 1
+        evolveForm = event.form
       } else if (event.t === 'SCORE_GAINED' && event.reason === 'apEfficiency' && event.amount < 0) {
         // 決定40：神力の使い残しペナルティ（決定不変ルール4のrules.ts側の値そのもの）を
         // ログに埋もれさせず、画面上のトーストとしても一瞬強調する
@@ -94,6 +99,7 @@ export function useBattleFx(log: GameEvent[]): BattleFx {
         healKey: prev.healKey + heal,
         burstKey: prev.burstKey + burst,
         evolveKey: prev.evolveKey + evolve,
+        evolveForm: evolve ? evolveForm : prev.evolveForm,
         godAttackKey: prev.godAttackKey + godAttack,
         enemyAttackKey: prev.enemyAttackKey + enemyAttack,
         apPenaltyKey: prev.apPenaltyKey + apPenalty,

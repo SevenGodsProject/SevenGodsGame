@@ -129,6 +129,12 @@ export function BattleScreen({ engine, onRematch, onReselect }: BattleScreenProp
         </div>
       )}
 
+      {fx.evolveKey > 0 && fx.evolveForm && (
+        <div key={`evolve-${fx.evolveKey}`} className="evolve-banner">
+          <span>🌱 {formatEvent({ t: 'OTOMO_EVOLVED', form: fx.evolveForm })}</span>
+        </div>
+      )}
+
       {isEnemyTurn && (
         <div className="enemy-turn-banner">
           <span>⚔ 敵のターン</span>
