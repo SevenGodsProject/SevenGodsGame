@@ -9,6 +9,7 @@ import { loadDeckPreference } from '../../hooks/deckPreferenceStorage'
 import { loadRewardBonuses } from '../../hooks/rewardStorage'
 import { RARITY_STYLE, TYPE_STYLE } from '../battle/cardStyle'
 import { CardIcon } from '../battle/cardIcon'
+import { describeEffectList } from './otomoEffectText'
 import './setup.css'
 
 type DeckBuilderScreenProps = {
@@ -19,14 +20,16 @@ type DeckBuilderScreenProps = {
   onBack: () => void
 }
 
-// 決定80（Phase 1）：OTOMOごとに実際の効果（otomo.tsのeffectsByForm／
-// powerPathEffectsByForm）は異なり、「守り＝HP回復・ブロック」「力＝ダメージ・妨害」
-// という以前の断定的な説明は一部のOTOMOで実データと矛盾していた（例：小槌は
-// 守り/攻めが実データと逆）。7体共通で矛盾しない、方向性のみを示す表現に変更する。
-// 正確な実効果の表示はPhase 3「OTOMO形態効果・共鳴効果の文章表示」で対応する。
-const GROWTH_PATH_OPTIONS: { value: GrowthPath; label: string; description: string }[] = [
-  { value: 'guardian', label: '守りの絆', description: 'OTOMOの守りや支援の力を引き出す成長方針' },
-  { value: 'power', label: '力の絆', description: 'OTOMOの個性をより強く引き出す成長方針' },
+// 決定80（Phase 1）で「守り＝HP回復・ブロック」「力＝ダメージ・妨害」という
+// 断定的な説明が一部のOTOMOで実データと矛盾していた（例：小槌は守り/攻めが逆）
+// ため、方向性のみの表現に置き換えていた。Phase 3（CEO承認：案A）で、各絆の
+// 童子（最大成長）時の実効果を`otomoEffectText.ts`で文章化して表示するように
+// なったため、ここは`label`のみを持つ（説明文は`otomo.effectsByForm`等から
+// 描画時に動的生成する。GROWTH_PATH_OPTIONS自体は神・OTOMOに依存しない
+// 静的な選択肢定義のため、description欄をここに固定で持たせない）。
+const GROWTH_PATH_OPTIONS: { value: GrowthPath; label: string }[] = [
+  { value: 'guardian', label: '守りの絆' },
+  { value: 'power', label: '力の絆' },
 ]
 
 const TYPE_ORDER: CardDef['type'][] = ['attack', 'guard', 'resonance', 'support', 'hinder', 'oracle']
@@ -120,21 +123,30 @@ export function DeckBuilderScreen({
         枚まで編成できます（報酬カードで上限が増えたカードは、それ以上編成できます）。
       </p>
 
+      <p className="growth-path-resonance">
+        共鳴発動：{describeEffectList(god.resonanceEffects) ?? '変化なし'}
+      </p>
+
       <div className="growth-path-select" role="radiogroup" aria-label="OTOMOの成長の絆">
         <span className="growth-path-label">{otomo.nameJa}の成長：</span>
-        {GROWTH_PATH_OPTIONS.map((opt) => (
-          <button
-            key={opt.value}
-            type="button"
-            role="radio"
-            aria-checked={otomoGrowthPath === opt.value}
-            className={`growth-path-option${otomoGrowthPath === opt.value ? ' growth-path-option-active' : ''}`}
-            onClick={() => onOtomoGrowthPathChange(opt.value)}
-          >
-            <span className="growth-path-option-label">{opt.label}</span>
-            <span className="growth-path-option-desc">{opt.description}</span>
-          </button>
-        ))}
+        {GROWTH_PATH_OPTIONS.map((opt) => {
+          const dojiEffects =
+            opt.value === 'power' ? otomo.powerPathEffectsByForm.doji : otomo.effectsByForm.doji
+          const effectText = describeEffectList(dojiEffects) ?? '変化なし'
+          return (
+            <button
+              key={opt.value}
+              type="button"
+              role="radio"
+              aria-checked={otomoGrowthPath === opt.value}
+              className={`growth-path-option${otomoGrowthPath === opt.value ? ' growth-path-option-active' : ''}`}
+              onClick={() => onOtomoGrowthPathChange(opt.value)}
+            >
+              <span className="growth-path-option-label">{opt.label}</span>
+              <span className="growth-path-option-desc">童子まで育つと：{effectText}</span>
+            </button>
+          )
+        })}
       </div>
 
       <div className="deck-builder-toolbar">

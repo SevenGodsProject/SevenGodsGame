@@ -378,6 +378,18 @@
 
 /* --- OTOMOの成長の絆選択（決定44） --- */
 
+/*
+ * Phase 3（CEO承認：案A）：神の共鳴効果（`resonanceEffects`）は絆の選択に
+ * 関係なく共通のため、`.growth-path-select`の直上に1回だけ表示する
+ * （各絆カード内で重複させない）。新規のインタラクティブ要素は増やさず、
+ * 既存の`.growth-path-label`と同じトーンのテキスト行として追加した。
+ */
+.growth-path-resonance {
+  margin: 0 0 6px;
+  font-size: 12px;
+  color: #a9adc4;
+}
+
 .growth-path-select {
   display: flex;
   align-items: stretch;
