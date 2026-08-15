@@ -871,7 +871,12 @@
 /* 決定80（Phase 1）：.battleは縦に長い要素（375pxで2000px超）のため、
    position:absoluteのままだと基準がビューポートではなく.battle全体になり、
    共鳴バースト演出が画面外に描画されていた（決定63でGameOverOverlay/
-   RewardOverlayに対して行ったのと同じ修正をここにも適用）。 */
+   RewardOverlayに対して行ったのと同じ修正をここにも適用）。
+   CEO指示によりOTOMO進化バナーとの時間差表示（総演出時間約1.9秒）のため
+   1.4s→0.9sに短縮。BattleScreen.tsxがこの要素のonAnimationEndを検知して
+   evolve-bannerの表示を起動するため、この時間そのものがOTOMO進化バナーへの
+   バトンタッチのタイミングになる（JS側に別の秒数を持たせていないため、
+   ここを変えるだけでバトンタッチのタイミングも自動的に追随する）。 */
 .burst-banner {
   position: fixed;
   inset: 0;
@@ -879,7 +884,7 @@
   place-items: center;
   pointer-events: none;
   background: radial-gradient(circle, #ffd16644, transparent 70%);
-  animation: burst-flash 1.4s ease-out forwards;
+  animation: burst-flash 0.9s ease-out forwards;
   z-index: 5;
   border-radius: 12px;
 }
@@ -929,7 +934,12 @@
 /* FINAL_BACKLOG_8-31.md Phase 3「OTOMO進化バナーの新設」。
    .burst-banner/.enemy-turn-banner（決定80でfixed化済み）と同じ型を踏襲し、
    OTOMO専用の色（紫）で区別する。z-indexは6（enemy-turn-banner）より上、
-   9（reward-overlay）より下（決定48フォローアップのz-index順序を維持）。 */
+   9（reward-overlay）より下（決定48フォローアップのz-index順序を維持）。
+   共鳴バーストと同時発生時に完全に重なって読めなくなる不具合が発覚したため、
+   BattleScreen.tsxで.burst-bannerのonAnimationEnd後にこのバナーを表示する
+   時間差方式に変更した（同時マウントをやめ、常に共鳴バースト→OTOMO進化の順で
+   バトンタッチする）。1.4s→1.0sに短縮（.burst-banner 0.9s + このバナー1.0s＝
+   総演出時間約1.9秒、CEO指示）。 */
 .evolve-banner {
   position: fixed;
   inset: 0;
@@ -937,7 +947,7 @@
   place-items: center;
   pointer-events: none;
   background: radial-gradient(circle, #c9a6ff44, transparent 70%);
-  animation: evolve-flash 1.4s ease-out forwards;
+  animation: evolve-flash 1.0s ease-out forwards;
   z-index: 7;
   border-radius: 12px;
 }

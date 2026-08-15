@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { RULES } from '../../core/data/rules'
 import { getCardDef } from '../../core/data/cards'
 import { getGodDef } from '../../core/data/gods'
@@ -42,6 +42,25 @@ export function BattleScreen({ engine, onRematch, onReselect }: BattleScreenProp
     engine
   const fx = useBattleFx(log)
   const { enemyNumbers, playerNumbers } = useFloatingNumbers(log)
+
+  // CEO指示：共鳴バースト（.burst-banner）とOTOMO進化（.evolve-banner）が
+  // 同時に重なって表示される不具合の修正。setTimeoutでCSSのanimation-durationと
+  // 別々にJS側の遅延時間を持つと将来ズレるため、.burst-bannerの実際の
+  // onAnimationEnd（CSS側の実測終了タイミングそのもの）を使って進化バナーの
+  // 表示キーを起動する。マジックナンバーの重複が発生しない。
+  // shownEvolveKeyRefは「直近どのevolveKeyまでバナーを見せ終えたか」の監視位置で、
+  // fx.evolveKeyがそれより進んでいる時だけ（＝今回のバーストにOTOMO進化が
+  // 伴っていた時だけ）evolveBannerKeyを進めてバナーを表示する。
+  // 童子まで成長済みでOTOMO_EVOLVEDが発生しない場合はfx.evolveKeyが動かないため、
+  // このハンドラが呼ばれても何もせず、共鳴バーストのバナーのみが表示される。
+  const [evolveBannerKey, setEvolveBannerKey] = useState(0)
+  const shownEvolveKeyRef = useRef(0)
+  const handleBurstAnimationEnd = () => {
+    if (fx.evolveKey > shownEvolveKeyRef.current) {
+      shownEvolveKeyRef.current = fx.evolveKey
+      setEvolveBannerKey((k) => k + 1)
+    }
+  }
   // 決定80（Phase 1）：sound.ts側のmutedフラグが既にsfx.xxx()を全て止めているため、
   // ここでの「ミュート中はlogを[]に見せる」二重防御は不要だった。しかも副作用として、
   // ミュート解除時にuseBattleSound内部のseenCountが0にリセットされ、logが元の長さに
@@ -124,13 +143,13 @@ export function BattleScreen({ engine, onRematch, onReselect }: BattleScreenProp
       </div>
 
       {fx.burstKey > 0 && (
-        <div key={`burst-${fx.burstKey}`} className="burst-banner">
+        <div key={`burst-${fx.burstKey}`} className="burst-banner" onAnimationEnd={handleBurstAnimationEnd}>
           <span>✨ {getGodDef(state.godId).nameJa}の一撃！</span>
         </div>
       )}
 
-      {fx.evolveKey > 0 && fx.evolveForm && (
-        <div key={`evolve-${fx.evolveKey}`} className="evolve-banner">
+      {evolveBannerKey > 0 && fx.evolveForm && (
+        <div key={`evolve-${evolveBannerKey}`} className="evolve-banner">
           <span>🌱 {formatEvent({ t: 'OTOMO_EVOLVED', form: fx.evolveForm })}</span>
         </div>
       )}
