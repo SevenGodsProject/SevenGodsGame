@@ -35,7 +35,7 @@ type GameFlowProps = {
  */
 export function GameFlow({ onShowTutorial, onSnapshotChange }: GameFlowProps) {
   const engine = useGameEngine()
-  const [savedBattle] = useState(() => loadBattleSave())
+  const [savedBattle, setSavedBattle] = useState(() => loadBattleSave())
   const [setupScreen, setSetupScreen] = useState<SetupScreen>('home')
   const [godId, setGodId] = useState<GodId | null>(null)
   const [deck, setDeck] = useState<CardDefId[] | null>(null)
@@ -58,6 +58,17 @@ export function GameFlow({ onShowTutorial, onSnapshotChange }: GameFlowProps) {
   useEffect(() => {
     playTrack(inBattle ? 'battle' : 'home')
   }, [inBattle])
+
+  // savedBattleは起動時に一度だけ読み込んだきりだと、その後`clearBattleSave`
+  // （決着時／「神を選ぶ」選択時）や新規保存が起きても値が古いまま残ってしまう
+  // （例：はじめから選び直したのに、ホームに戻ると実在しない「続きから」が
+  // 表示される）。ホーム画面に戻るたびに読み直すことで、常に最新の保存状態を
+  // 反映する（loadBattleSave自体のロジックは変更せず再利用するだけ）。
+  useEffect(() => {
+    if (setupScreen === 'home') {
+      setSavedBattle(loadBattleSave())
+    }
+  }, [setupScreen])
 
   const backToGodSelect = () => {
     engine.resetGame()
@@ -119,6 +130,7 @@ export function GameFlow({ onShowTutorial, onSnapshotChange }: GameFlowProps) {
             setGodId(selectedGodId)
             setSetupScreen('deckBuild')
           }}
+          onBack={() => setSetupScreen('home')}
         />
       )
     }

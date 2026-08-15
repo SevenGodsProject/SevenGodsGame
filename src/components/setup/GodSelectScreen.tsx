@@ -70,6 +70,8 @@ type GodSelectScreenProps = {
   difficulty: Difficulty
   onDifficultyChange: (difficulty: Difficulty) => void
   onSelect: (godId: GodId) => void
+  /** 神一覧ステップからホームへ戻る（決定80フォローアップ：Phase 1⑥） */
+  onBack: () => void
 }
 
 const DIFFICULTY_OPTIONS: { value: Difficulty; label: string; description: string; stars: number }[] = [
@@ -106,7 +108,7 @@ function DifficultyStars({ stars }: { stars: number }) {
  * という契約）は変えず、ステップの見せ方だけをこのコンポーネント内の
  * ローカルstateで完結させている。
  */
-export function GodSelectScreen({ difficulty, onDifficultyChange, onSelect }: GodSelectScreenProps) {
+export function GodSelectScreen({ difficulty, onDifficultyChange, onSelect, onBack }: GodSelectScreenProps) {
   const [pendingGodId, setPendingGodId] = useState<GodId | null>(null)
   const pendingGod = pendingGodId ? GODS.find((g) => g.id === pendingGodId) : undefined
 
@@ -214,6 +216,10 @@ export function GodSelectScreen({ difficulty, onDifficultyChange, onSelect }: Go
               )
             })}
           </div>
+
+          <button type="button" className="home-cta-secondary god-select-back" onClick={onBack}>
+            ‹ ホームへ戻る
+          </button>
         </>
       )}
     </div>
