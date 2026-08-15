@@ -1574,3 +1574,54 @@
   color: #e8e9f3;
   text-align: right;
 }
+
+/*
+ * 決定77：PC幅（1280px前後）で「ラウンドを終える」ボタンに到達するまで
+ * 400px超のスクロールが必要になる問題への最小修正（CEO実機リハーサルで発見）。
+ *
+ * `.battle`は単純な縦積み（flex-direction:column）で、`.battle-main`
+ * （敵/自分/OTOMOパネル）だけで800px前後を占めるため、PCでも毎ラウンド
+ * スクロールが必要になっていた。375〜430pxのスマホでは元々スクロールが
+ * 前提の操作性であり問題視されていなかった（決定62〜67）ため、この対応は
+ * `min-width:900px`のPC幅限定とし、スマホの既存レイアウト・挙動は
+ * 一切変更しない。
+ *
+ * ボタン自体をposition:fixedでビューポート下部に常時固定する。実機検証で
+ * position:sticky／fixedのどちらも「ボタンの本来位置が画面外にあるため
+ * スクロール量ゼロの時点で画面下部に浮き、.battle-main内のプレイヤー
+ * 立ち絵の上に重なる」ことを確認済みだが、これは「常設の操作バー」として
+ * 意図的に見せることで許容する（CEO承認済み）。既存の金色パネル系
+ * （backdrop-filter:blur(8px)、.divination-panel等）と同じ視覚言語を
+ * 踏襲し、単なる浮遊物ではなく操作バーに見えるようにした。
+ *
+ * z-indexは3とし、RewardOverlay(9)・GameOverOverlay(10)・
+ * TutorialOverlay/FeedbackOverlay(いずれも100)より確実に低く保つ
+ * （実機検証済み：オーバーレイ表示中は正しくそちらが最前面になる）。
+ * disabled制御・onClickのロジックはBattleScreen.tsx側で無変更のため、
+ * カード使用中・敵ターン中は従来どおり操作不能（半透明・cursor:not-allowed）
+ * のまま。
+ */
+@media (min-width: 900px) {
+  .battle {
+    /* 固定ボタンの高さ＋下余白ぶん、ページ末尾のコンテンツが隠れないよう確保 */
+    padding-bottom: 90px;
+  }
+
+  .end-round-button {
+    position: fixed;
+    left: 50%;
+    bottom: 20px;
+    transform: translateX(-50%);
+    z-index: 3;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    box-shadow:
+      0 0 18px -4px #ffd16688,
+      0 10px 28px -8px #000000cc,
+      inset 0 1px 0 #ffffff33;
+  }
+
+  .end-round-button:not(:disabled):hover {
+    transform: translateX(-50%) translateY(-2px);
+  }
+}
