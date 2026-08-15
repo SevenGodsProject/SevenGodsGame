@@ -139,7 +139,7 @@ export function DeckBuilderScreen({
         <button type="button" onClick={resetToRecommended}>
           おすすめデッキに戻す
         </button>
-        <button type="button" onClick={clearAll}>
+        <button type="button" className="deck-builder-clear-button" onClick={clearAll}>
           全て外す
         </button>
       </div>

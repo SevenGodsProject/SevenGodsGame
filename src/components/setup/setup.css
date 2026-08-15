@@ -467,6 +467,30 @@
   transform: translateY(-2px);
 }
 
+/* CEO承認済み・P1（誤操作対策A案）：「全て外す」（20枚を一括で消す操作）を、
+   隣の「おすすめデッキに戻す」（安全な復元操作）と視覚的に区別する。
+   確認ダイアログは追加せず、見た目だけを主張の弱いghost風にすることで
+   「押す前に一瞬立ち止まる」きっかけを作る。金色の強調（背景グラデーション・
+   グロー・ホバー時の浮き上がり）を外し、このファイルで既存の「控えめな
+   補助テキスト」に使っている配色（#a9adc4系）を流用した。文字は既存と
+   同じ13px・読める明度のまま、タップ領域（padding/border-radius）・
+   onClick・clearAllのロジックはいずれも無変更。 */
+.deck-builder-toolbar .deck-builder-clear-button {
+  background: transparent;
+  border-color: #444a68;
+  color: #a9adc4;
+  font-weight: 400;
+  box-shadow: none;
+}
+
+.deck-builder-toolbar .deck-builder-clear-button:hover {
+  background: #ffffff0a;
+  border-color: #6b7094;
+  color: #c7cbe0;
+  box-shadow: none;
+  transform: none;
+}
+
 .deck-builder-actions button:disabled {
   opacity: 0.35;
   cursor: not-allowed;
