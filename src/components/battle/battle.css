@@ -564,6 +564,43 @@
   );
 }
 
+/*
+ * 決定95：共鳴満タン直前の「助走」演出。`.resonance-gauge`自体は`overflow:hidden`で
+ * fillをピル状にクリップしているため、発光レイヤーをその内側の::afterに置くと
+ * クリップされて見えなくなる。そのため`.resonance-gauge-wrap`という薄いラッパーを
+ * 追加し、その::afterに発光を持たせる（`.resonance-gauge`本体・fill・labelのCSSは
+ * 一切変更していない＝0〜4/7の見た目は既存と完全に同一）。
+ * アニメーションは`.battle-arena-glow`と全く同じ`arena-glow-breathe`
+ * （opacity:0.5→0.8→0.5のみ、新規keyframesなし）を流用するが、ラッパー自身ではなく
+ * 装飾レイヤーの::afterだけに適用することで、ゲージ本体（fill・「共鳴 X/7」の文字）の
+ * 不透明度は常に1のまま保ち、テキストの可読性を一切損なわない設計にした。
+ */
+.resonance-gauge-wrap {
+  position: relative;
+  width: 100%;
+}
+
+.resonance-gauge-wrap::after {
+  content: '';
+  position: absolute;
+  inset: -3px;
+  border-radius: 999px;
+  pointer-events: none;
+  z-index: -1;
+  opacity: 0;
+}
+
+.resonance-gauge-wrap.resonance-gauge-mid::after {
+  opacity: 0.45;
+  box-shadow: 0 0 10px 1px #ffd16699;
+}
+
+.resonance-gauge-wrap.resonance-gauge-high::after {
+  opacity: 0.5;
+  box-shadow: 0 0 16px 2px #ffd166cc;
+  animation: arena-glow-breathe 1.8s ease-in-out infinite;
+}
+
 .resonance-gauge {
   position: relative;
   width: 100%;
