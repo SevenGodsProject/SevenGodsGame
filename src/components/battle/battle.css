@@ -491,6 +491,47 @@
   margin-top: 2px;
 }
 
+/*
+ * 決定91（C-1）：OTOMOポートレートへのオーラ枠追加。
+ * `.enemy-avatar-wrap::before`/`.player-avatar-wrap::before`（679-729行）と全く同じ構造
+ * （conic-gradient・blur(3px)・z-index:-1・`portrait-aura-spin`14s回転、新規keyframesなし）を
+ * `.portrait-otomo`にも適用し、隣の神/敵アバターだけが額装済みでOTOMOだけ素の正方形という
+ * 見た目の落差を解消する。サイズは既存のアバター200px/オーラ270px＝1.35倍という比率を
+ * `.portrait img`の84pxにそのまま当てはめた114px（レイアウトサイズ＝imgのwidth/height/
+ * 配置は一切変更しない。オーラは position:absolute の装飾レイヤーのため通常フローに
+ * 参加しない）。色はOTOMO紫（#c39bff、buff系バッジ・進化グローと共通の色）と
+ * 共鳴金（#ffd16655、`.player-avatar-wrap::before`と同値）の2色で、
+ * 「神・OTOMOは同じ陣営の光」という統一感を出す。回転方向は敵がreverse・
+ * 味方（神）が正方向のため、OTOMOも味方側として正方向にした。
+ */
+.portrait-otomo {
+  position: relative;
+}
+
+.portrait-otomo::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 114px;
+  height: 114px;
+  z-index: -1;
+  border-radius: 50%;
+  pointer-events: none;
+  filter: blur(3px);
+  transform: translate(-50%, -50%) rotate(0deg);
+  animation: portrait-aura-spin 14s linear infinite;
+  background: conic-gradient(
+    from 0deg,
+    transparent 0deg,
+    #c39bff66 50deg,
+    transparent 130deg,
+    transparent 210deg,
+    #ffd16655 290deg,
+    transparent 350deg
+  );
+}
+
 .resonance-gauge {
   position: relative;
   width: 100%;
