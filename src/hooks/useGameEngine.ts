@@ -20,6 +20,9 @@ import { recordOtomoBond, type OtomoBondRecord } from './otomoBondStorage'
  * 決定61（Task A4）：900ms→700msに短縮。CARD_PLAY_REVEAL_MS(220ms)との比率を
  * 約3.2倍に保ちつつ（カード1枚の演出より明確に長い「間」は維持）、7ラウンド分
  * 積み重なる待機時間を短縮する。charge/attackによる分岐は追加しない。
+ * 決定90でCARD_PLAY_REVEAL_MSを220ms→280msに変更したため、比率は約2.5倍になった
+ * （カード1枚の演出より明確に長い「間」という決定61の意図は2.5倍でも維持されるため、
+ * ENEMY_TURN_REVEAL_MS自体はここでは変更しない）。
  */
 const ENEMY_TURN_REVEAL_MS = 700
 
@@ -33,8 +36,14 @@ function resolveForcedEnemyId() {
   if (!slug || !(slug in ENEMY_IDS)) return null
   return ENEMY_IDS[slug as keyof typeof ENEMY_IDS]
 }
-/** カードが手札から消える前に、使用アニメーションを見せる時間（見せ方のみ） */
-const CARD_PLAY_REVEAL_MS = 220
+/**
+ * カードが手札から消える前に、使用アニメーションを見せる時間（見せ方のみ）。
+ * 決定90：220ms→280msに変更。battle.cssのタイプ別cast-flash-pop-*演出（attack=0.4s、
+ * guard/resonance/hinder=0.45s、support/oracle=0.5s）のうちopacity:1のピーク到達時刻の
+ * 最大値（support=250ms地点）を上回る最小のキリのいい値とし、6タイプ全てが最大不透明度に
+ * 到達してから結果が着弾するようにした。
+ */
+const CARD_PLAY_REVEAL_MS = 280
 
 export type UseGameEngine = {
   state: GameState | null

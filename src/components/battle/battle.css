@@ -1223,7 +1223,8 @@
 }
 
 .card-view-playing {
-  animation: card-play 0.22s ease-in forwards;
+  /* 決定90：CARD_PLAY_REVEAL_MS(280ms)と揃え、0.22s→0.28sに変更 */
+  animation: card-play 0.28s ease-in forwards;
   pointer-events: none;
   z-index: 4;
 }
