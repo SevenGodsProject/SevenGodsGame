@@ -172,12 +172,23 @@
   transform: translateY(-3px);
 }
 
+/*
+ * 決定92（C-2）：サムネイルの額装統一。`.card-view-exclusive`（battle.css）の
+ * outline方式と`.portrait img`（battle.css）のbox-shadowグローを、値そのまま
+ * 流用する（新しい数値は作らない）。inset box-shadowは`object-fit:cover`のimgでは
+ * コンテンツに隠れて見えないため使わない。下端グラデーション・archetype別の
+ * 色分けは今回は行わず、金トークン(#ffd166)単一で`.home-portrait-card`等の
+ * 既存デザイン言語と揃える。画像そのものは無加工。
+ */
 .god-select-card img {
   width: 100%;
   max-width: 120px;
   aspect-ratio: 1 / 1;
   object-fit: cover;
   border-radius: 8px;
+  outline: 1px solid #ffd16655;
+  outline-offset: -2px;
+  box-shadow: 0 0 20px -4px #ffd16655;
 }
 
 .god-select-name {
@@ -352,6 +363,9 @@
   height: 56px;
   object-fit: cover;
   border-radius: 8px;
+  outline: 1px solid #ffd16655;
+  outline-offset: -2px;
+  box-shadow: 0 0 20px -4px #ffd16655;
 }
 
 .god-select-recap-body {
@@ -938,6 +952,9 @@
   object-fit: cover;
   border-radius: 10px;
   flex-shrink: 0;
+  outline: 1px solid #ffd16655;
+  outline-offset: -2px;
+  box-shadow: 0 0 20px -4px #ffd16655;
 }
 
 .otomo-growth-body {
