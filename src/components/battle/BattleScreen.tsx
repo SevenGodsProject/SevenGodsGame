@@ -91,11 +91,19 @@ export function BattleScreen({ engine, onRematch, onReselect }: BattleScreenProp
     ? { otomoName: getOtomoDef(state.otomo.defId).nameJa, prevLevel: levelUp.prevLevel, nextLevel: levelUp.nextLevel }
     : null
 
+  // 決定93（C-8）：AP表示のゲージ化。GodOtomoPanelの共鳴ゲージ比率計算と同じガード式。
+  const apRatio = state.ap.max > 0 ? Math.min(1, state.ap.current / state.ap.max) : 0
+
   return (
     <div className="battle">
       <div className="battle-topbar">
         <span>ラウンド {state.round} / {RULES.totalRounds}</span>
-        <span>神力 {state.ap.current} / {state.ap.max}</span>
+        <span className="battle-topbar-ap">
+          <span>神力 {state.ap.current} / {state.ap.max}</span>
+          <span className="ap-gauge">
+            <span className="ap-gauge-fill" style={{ width: `${apRatio * 100}%` }} />
+          </span>
+        </span>
         <span>スコア {state.score.total}</span>
       </div>
 

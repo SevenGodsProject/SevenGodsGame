@@ -71,6 +71,38 @@
     0 0 20px -6px #7a4fc466;
 }
 
+/*
+ * 決定93（C-8）：AP（神力）表示のゲージ化。「神力 X / Y」の数値表示は1文字も変えず、
+ * その直下に小型ゲージを追加する最小案。`.resonance-gauge`のtrack/fill/transitionの
+ * 考え方だけを再利用し、クラスは共有せず新設する（決定71が明文化した「視覚言語は
+ * 踏襲しつつクラスは共有しない」慣習に合わせ、共鳴側の変更がAP側に波及しないように
+ * するため）。`.battle-topbar-ap`は列flexで、幅をテキスト幅にそのまま追従させる
+ * （固定pxを持たない）ことで横幅を一切増やさない。`.battle-topbar`自体は
+ * flex-wrapを持たないため、375px幅を含むどの幅でも折り返しは発生しない。
+ * 色は共鳴ゲージ（金〜オレンジ）と誤認しないよう青系（#7fb2ff/#4d88e5）にした。
+ */
+.battle-topbar-ap {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 3px;
+}
+
+.ap-gauge {
+  height: 6px;
+  border-radius: 999px;
+  background: #16203c;
+  overflow: hidden;
+}
+
+.ap-gauge-fill {
+  display: block;
+  height: 100%;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #7fb2ff, #4d88e5);
+  transition: width 0.2s ease;
+}
+
 .battle-main {
   display: flex;
   flex-direction: column;
