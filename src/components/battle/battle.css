@@ -1128,8 +1128,9 @@
   color: #e8e9f3;
   padding: 6px 10px;
   display: flex;
-  flex-direction: column;
-  gap: 2px;
+  flex-direction: row;
+  align-items: center;
+  gap: 8px;
   text-align: left;
   cursor: pointer;
 }
@@ -1141,6 +1142,30 @@
 .divination-choice:disabled {
   opacity: 0.4;
   cursor: not-allowed;
+}
+
+/*
+ * 決定94：神託3択のアイコン化。TutorialOverlay（tutorial.css）の
+ * `.tutorial-section-visual`/`.tutorial-section-glyph`と全く同じ金×ガラス系トークン
+ * （background:#ffffff0d、border:1px solid #ffd16633、color:#ffd166）をそのまま流用し、
+ * 新しい色・新しいkeyframesは作っていない（常時アニメーションなし）。
+ */
+.divination-choice-glyph {
+  flex-shrink: 0;
+  width: 28px;
+  height: 28px;
+  padding: 4px;
+  border-radius: 8px;
+  background: #ffffff0d;
+  border: 1px solid #ffd16633;
+  color: #ffd166;
+}
+
+.divination-choice-body {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
 }
 
 .divination-choice-name {
