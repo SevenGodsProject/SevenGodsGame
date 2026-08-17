@@ -216,6 +216,8 @@ export function BattleScreen({ engine, onRematch, onReselect }: BattleScreenProp
         <GameOverOverlay
           status={state.status}
           score={state.score}
+          godId={state.godId}
+          otomo={state.otomo}
           newBest={newBest}
           otomoLevelUp={otomoLevelUp}
           onRematch={onRematch}

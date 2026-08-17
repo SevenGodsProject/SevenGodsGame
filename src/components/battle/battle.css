@@ -1648,6 +1648,47 @@
   min-width: 260px;
   /* 決定64：カードのfade+scale登場演出（0.35秒） */
   animation: overlay-card-pop-in 0.35s cubic-bezier(0.2, 0.8, 0.3, 1);
+  /*
+   * 決定96（C-3）：神＋OTOMOポートレート追加でカード高が伸びる分、375×480等の
+   * 低いビューポート高でボタンに到達できなくなることを防ぐ。値は`.reward-card-panel`
+   * （決定65）と同じ既存パターンをそのまま流用（FINAL_BACKLOG_8-31.md B候補として
+   * 既に記録済みの項目）。
+   */
+  max-height: 85vh;
+  overflow-y: auto;
+}
+
+/*
+ * 決定96（C-3）：勝利リザルトへの神＋OTOMOポートレート。`.portrait img`（OTOMOパネル、
+ * 511-518行）のbox-shadow/border-radius/背景色を値そのまま流用し、サイズのみ変更。
+ * 新規色・新規keyframesは追加しない。回転オーラ（決定91）は「静止して読む画面」には
+ * 不向きなため採用せず、静的な発光のみに留める。既存の.game-over-card-won（決定82）の
+ * 金枠仕様には一切触れない。
+ */
+.game-over-portraits {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 8px;
+}
+
+.game-over-portrait-god {
+  width: 112px;
+  height: 112px;
+  object-fit: contain;
+  border-radius: 12px;
+  background: #05060d;
+  box-shadow: 0 0 20px -4px #ffd16655;
+}
+
+.game-over-portrait-otomo {
+  width: 72px;
+  height: 72px;
+  object-fit: contain;
+  border-radius: 12px;
+  background: #05060d;
+  box-shadow: 0 0 20px -4px #ffd16655;
+  margin-left: -12px;
 }
 
 /* 決定64：勝利・敗北・未撃破で「文字を読まなくても感覚的に区別できる」よう、
