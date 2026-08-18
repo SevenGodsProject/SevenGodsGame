@@ -34,14 +34,20 @@ export function PlayerPanel({ godId, player, hitKey, healKey, attackKey, floatin
       >
         <img className="player-avatar" src={god.art.front} alt={god.nameJa} />
       </div>
-      <div
-        key={`${hitKey}-${healKey}`}
-        className={
-          [hitKey > 0 ? 'hit-shake-flash' : '', healKey > 0 ? 'heal-pulse' : ''].join(' ').trim() || undefined
-        }
-        style={{ position: 'relative' }}
-      >
-        <HpBar current={player.hp} max={player.maxHp} color="#4dbd74" />
+      {/* 第二次完成フェーズF-1（緊急バグ修正）：以前はhit-shake-flash（被弾）と
+          heal-pulse（回復）が`key={`${hitKey}-${healKey}`}`という単一のkeyを
+          共有していた。hitKey/healKeyはともに単調増加で一度0より大きくなると
+          恒久的にtrueのままのため、「一度でも被弾した後」に回復のみが発生して
+          healKeyだけが変わってもkey文字列自体は変化し再マウントが起き、その際
+          `hitKey > 0`の条件でhit-shake-flash（被弾シェイク＋赤い斬撃線slash-fx）が
+          意図せず再生されてしまっていた（回復しただけなのに殴られたように見える
+          誤表示）。被弾用と回復用でそれぞれ独立したkeyのラッパーに分離し、
+          お互いの再マウントに影響しないようにする（EnemyPanel.tsxの
+          `key={`hit-${hitKey}`}`と同じ命名パターンに統一）。 */}
+      <div key={`hit-${hitKey}`} className={hitKey > 0 ? 'hit-shake-flash' : undefined} style={{ position: 'relative' }}>
+        <div key={`heal-${healKey}`} className={healKey > 0 ? 'heal-pulse' : undefined}>
+          <HpBar current={player.hp} max={player.maxHp} color="#4dbd74" />
+        </div>
         {hitKey > 0 && <div className="slash-fx slash-fx-reverse" />}
         <FloatingNumbers numbers={floatingNumbers} />
       </div>
