@@ -1096,9 +1096,15 @@
   text-shadow: 0 0 16px #e5484dcc;
 }
 
-/* 神力の使い残しペナルティを、ログに埋もれさせず一瞬強調するトースト（決定40） */
+/* 神力の使い残しペナルティを、ログに埋もれさせず一瞬強調するトースト（決定40）。
+   第二次完成フェーズP0-2：.cast-flash（決定80の適用漏れ）と全く同じ理由で、
+   .battle（position:relative）の直下にposition:absolute; top:62pxで置かれていたため、
+   縦長の.battleを手札位置までスクロールした実プレイ状態では常に画面外だった。
+   fixed化することで、スクロール位置に関係なくビューポート上端から62pxに表示される
+   （.battleにtransform/filter/containは無いため、containing blockは正しくビューポート）。
+   top値・その他の見た目は変更しない最小差分。 */
 .ap-penalty-toast {
-  position: absolute;
+  position: fixed;
   top: 62px;
   left: 50%;
   z-index: 7;
