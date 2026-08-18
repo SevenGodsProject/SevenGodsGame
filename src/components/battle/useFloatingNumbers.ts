@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import type { Dispatch, SetStateAction } from 'react'
 import type { GameEvent } from '../../core/types'
 
-export type FloatingNumber = { id: number; text: string; kind: 'damage' | 'heal' }
+export type FloatingNumber = { id: number; text: string; kind: 'damage' | 'heal' | 'block' }
 
 const LIFETIME_MS = 900
 
@@ -38,9 +38,20 @@ export function useFloatingNumbers(log: GameEvent[]): {
     }
 
     for (const event of newEvents) {
-      if (event.t === 'DAMAGE_DEALT' && event.amount > 0) {
-        const entry: FloatingNumber = { id: nextId.current++, text: `-${event.amount}`, kind: 'damage' }
-        spawn(event.target === 'enemy' ? setEnemyNumbers : setPlayerNumbers, entry)
+      if (event.t === 'DAMAGE_DEALT') {
+        const setter = event.target === 'enemy' ? setEnemyNumbers : setPlayerNumbers
+        if (event.amount > 0) {
+          spawn(setter, { id: nextId.current++, text: `-${event.amount}`, kind: 'damage' })
+        }
+        // 第二次完成フェーズP0-3：DAMAGE_DEALT.blockedは既存のデータとして
+        // 存在していたが、これまでどのフックも読んでいなかった（未消費）。
+        // 完全ブロック時（amount=0・blocked>0）は既存の「-N」表示が出ないため、
+        // これが唯一の視覚フィードバックになる。一部ブロック時は「-N」と並んで
+        // 表示されるが、CSS側で表示位置をずらしており（.floating-number-block）、
+        // 二重表示（同じ位置に重なる）にはならない。
+        if (event.blocked > 0) {
+          spawn(setter, { id: nextId.current++, text: `🛡${event.blocked}`, kind: 'block' })
+        }
       } else if (event.t === 'HEALED' && event.amount > 0) {
         spawn(setPlayerNumbers, { id: nextId.current++, text: `+${event.amount}`, kind: 'heal' })
       }

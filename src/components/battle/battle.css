@@ -463,6 +463,16 @@
   color: #4dbd74;
 }
 
+/* 第二次完成フェーズP0-3：完全/一部ブロック時の軽減量表示。既存の
+   badge-block（🛡アイコン、color:#7fb2ff）と同じ色でUI言語を揃える。
+   .floating-number-damageと同時に出るケース（一部ブロック＋HPダメージ）で
+   同じ位置に重ならないよう、left値だけをずらす（transformはtranslate(-50%,…)の
+   ままなので、left自体を基準にした自己センタリングは崩れない）。 */
+.floating-number-block {
+  left: 30%;
+  color: #7fb2ff;
+}
+
 .badge {
   display: inline-block;
   width: fit-content;

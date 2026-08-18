@@ -74,8 +74,19 @@ export function useBattleFx(log: GameEvent[]): BattleFx {
           godAttack += 1
         } else {
           selfHit += 1
-          enemyAttack += 1
         }
+      } else if (event.t === 'ENEMY_ACTED' && event.kind === 'attack') {
+        // 第二次完成フェーズP0-3：以前はDAMAGE_DEALT{target:'self', amount>0}の
+        // 分岐内でenemyAttackも一緒に加算していたため、プレイヤーが完全ブロック
+        // （dealt=0）した瞬間は敵の突進モーションそのものが再生されなかった
+        // （防御が一番決まった時に画面が一番静かになる、という逆転が起きていた）。
+        // ENEMY_ACTEDは「敵が実際に攻撃した」ことを示す専用イベントで、
+        // round.tsのrunEnemyTurnからのみ出る（effects.tsの自傷カード効果とは
+        // 無関係）ため、ここを起点にすればブロック結果に関係なく敵の攻撃
+        // モーションだけを独立して発火できる。selfHit（被弾シェイク・斬撃）は
+        // 従来どおりamount>0（dealtが実際に発生した時）限定のまま変更しない
+        // （ブロックしたのに殴られたように見える誤読を避けるため）。
+        enemyAttack += 1
       } else if (event.t === 'HEALED' && event.amount > 0) {
         heal += 1
       } else if (event.t === 'RESONANCE_BURST') {
