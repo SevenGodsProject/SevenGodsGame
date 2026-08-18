@@ -933,12 +933,30 @@
   }
 }
 
+/* 第二次完成フェーズ候補A：.player-avatarにアイドル（呼吸）を足すのに合わせ、
+   .god-lunge imgも書き換える必要がある（これは任意の対称性配慮ではなく必須）。
+   PlayerPanel.tsxのplayer-avatar-wrapは`key={`god-${attackKey}`}`、attackKeyは
+   単調増加で一度0より大きくなると`god-lunge`クラスは対局終了まで恒久的に
+   付いたままになる（EnemyPanel.tsxのenemy-lungeと同じ構造）。
+   `.god-lunge img`（specificity 0,1,1）は`.player-avatar`（0,1,0）より必ず勝つため、
+   god-lunge側のanimationにenemy-idleを含めておかないと、1枚目の攻撃カードを
+   使った瞬間に立ち絵のアイドルが対局終了まで永久に停止してしまう。
+   enemy側の`.enemy-lunge .enemy-avatar`（この少し上のブロック）と全く同じ
+   パターン（1つのanimationショートハンドにidle+lungeを両方含める）で解決する。 */
 .god-lunge img {
-  animation: god-lunge 0.45s ease-out;
+  animation:
+    enemy-idle 3.4s ease-in-out infinite,
+    god-lunge 0.45s ease-out;
 }
 
 /* プレイヤー側アバター（決定31。EnemyPanelのenemy-avatarと対になる見た目。
-   決定34でenemy-avatarと同じ「大きな縦長ポートレート」に揃えた） */
+   決定34でenemy-avatarと同じ「大きな縦長ポートレート」に揃えた）。
+   第二次完成フェーズ候補A：敵側は最初から.enemy-avatarに常時アイドル
+   （呼吸）アニメーションがあるのに、プレイヤー側の立ち絵だけ完全に静止して
+   いた非対称を解消する。新規keyframesは追加せず、既存のenemy-idleを
+   そのまま名前流用する（動きの中身自体は汎用的なtranslateY+scaleのパルスで
+   enemy専用の意味を持たないため）。レイアウトに影響しないtransformのみで
+   スマホ幅にも影響なし。 */
 .player-avatar-wrap {
   position: relative;
   display: flex;
@@ -955,6 +973,7 @@
     0 0 40px 8px #4dbd7455,
     inset 0 0 30px #00000099,
     inset 0 0 0 1px #ffffff14;
+  animation: enemy-idle 3.4s ease-in-out infinite;
 }
 
 @keyframes heal-pulse {
