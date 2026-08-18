@@ -1,5 +1,7 @@
-import type { OtomoState } from '../../core/types'
+import type { GodId, OtomoState } from '../../core/types'
 import { getOtomoDef } from '../../core/data/otomo'
+import { getGodDef } from '../../core/data/gods'
+import { describeEffectList } from '../setup/otomoEffectText'
 
 const FORM_LABEL: Record<OtomoState['form'], string> = {
   spirit: '精霊態',
@@ -8,6 +10,7 @@ const FORM_LABEL: Record<OtomoState['form'], string> = {
 }
 
 type GodOtomoPanelProps = {
+  godId: GodId
   otomo: OtomoState
   resonance: { value: number; max: number }
   /** 変わるたびにOTOMOの成長グローを再生する */
@@ -31,14 +34,22 @@ function getResonanceStage(value: number): '' | 'resonance-gauge-mid' | 'resonan
   return ''
 }
 
-export function GodOtomoPanel({ otomo, resonance, evolveKey }: GodOtomoPanelProps) {
+export function GodOtomoPanel({ godId, otomo, resonance, evolveKey }: GodOtomoPanelProps) {
   const otomoDef = getOtomoDef(otomo.defId)
   const ratio = resonance.max > 0 ? Math.min(1, resonance.value / resonance.max) : 0
   const resonanceStage = getResonanceStage(resonance.value)
+  // 第二次完成フェーズP0-4：神ごとに個性化されたresonanceEffects（gods.ts）を
+  // バトル中いつでも確認できるようにする。DeckBuilderScreen.tsxが既に同じ
+  // describeEffectList(god.resonanceEffects)を「共鳴発動：…」という文言で
+  // 表示しており、ここでも同じ関数・同じ文言を再利用することで、実データを
+  // JSXへ手書きで複製しない（single source of truth）。神・数値・発動条件は
+  // 一切変更していない、純粋な表示専用の追加。
+  const resonanceEffectText = describeEffectList(getGodDef(godId).resonanceEffects) ?? '変化なし'
 
   return (
     <div className="panel god-otomo-panel">
       <div className="panel-title">共鳴</div>
+      <p className="resonance-effect-text">共鳴発動：{resonanceEffectText}</p>
       <div className="god-otomo-portraits">
         <figure
           key={`otomo-${evolveKey}`}

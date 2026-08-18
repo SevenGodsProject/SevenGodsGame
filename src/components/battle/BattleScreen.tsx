@@ -132,6 +132,7 @@ export function BattleScreen({ engine, onRematch, onReselect }: BattleScreenProp
             floatingNumbers={playerNumbers}
           />
           <GodOtomoPanel
+            godId={state.godId}
             otomo={state.otomo}
             resonance={state.resonance}
             evolveKey={fx.evolveKey}

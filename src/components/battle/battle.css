@@ -506,6 +506,18 @@
   align-items: center;
 }
 
+/* 第二次完成フェーズP0-4：共鳴発動効果のバトル中常時表示。setup.cssの
+   .growth-path-resonance（DeckBuilderScreen.tsxで同じ文言・同じ関数を使用）と
+   同系統の控えめなスタイルで、共鳴ゲージ・OTOMO表示を圧迫しないコンパクトな
+   1〜2行に収める。 */
+.resonance-effect-text {
+  margin: 0 0 4px;
+  font-size: 11px;
+  color: #a9adc4;
+  text-align: center;
+  line-height: 1.3;
+}
+
 .god-tagline {
   margin: 0;
   font-size: 11px;
