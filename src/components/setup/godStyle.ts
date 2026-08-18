@@ -1,4 +1,5 @@
-import type { Effect, GodArchetype, GodDef, OtomoDef } from '../../core/types'
+import type { Effect, GodArchetype, GodDef, GodId, OtomoDef } from '../../core/types'
+import { GOD_IDS } from '../../core/data/gods'
 
 /**
  * 神選択画面：「どの神を選べばいいか分からない」というCEOフィードバックへの対応。
@@ -79,6 +80,32 @@ export const ARCHETYPE_LABEL: Record<GodArchetype, string> = {
   support: '支援型',
   technique: '技巧型',
   balance: 'バランス型',
+}
+
+/**
+ * 神ごとの「得意戦法」（第二次完成フェーズ候補D。CEOフィードバック「神選択時点で
+ * 戦い方の違いが分からない」への対応）。
+ *
+ * `tagline`/`motif`（`gods.ts`）と同じ「手書きの人間向け説明」だが、あえて
+ * `src/core/`には置かず`src/components/setup/`側の独立したルックアップとした
+ * （純粋な表示文字列であり、ゲームロジックではないため。`ARCHETYPE_LABEL`と
+ * 同じ設計パターン）。文言は`gods.ts`の`resonanceEffects`・専用カード
+ * （`cards/*.ts`）・`deckBuilder.ts`の実データと個別に照合済み（8/31第二次
+ * 完成フェーズ・候補D、Opus最終レビューで7神ぶん再検証済み）。
+ *
+ * スコープはゲームプレイの手順の説明のみ。性格・世界観・ストーリーは含めない
+ * （FINAL_BACKLOG_8-31.md §3-D「七神の世界観テキスト拡充」には踏み込まない）。
+ * archetypeバッジ（攻撃型／防御型…）と重複する「〜型／アタッカー」等の
+ * 分類語は末尾に付けない。
+ */
+export const GOD_TACTICS: Record<GodId, string> = {
+  [GOD_IDS.ebisu]: '大きな一撃と最高スコアで押し切る、扱いやすい構成',
+  [GOD_IDS.taiyo]: '自分を鼓舞してから畳みかける、最大火力の一撃',
+  [GOD_IDS.sobi]: 'ブロックを厚く重ねて受け止め、崩れず反撃する',
+  [GOD_IDS.saika]: '神力とカードを増やし、1ラウンドに何枚も撃ち込む',
+  [GOD_IDS.juraku]: '軽いカードを次々に重ね、敵の攻撃力を削って長引かせる',
+  [GOD_IDS.fukuei]: '危険を冒して攻め、掴んだ幸運で立て直す',
+  [GOD_IDS.shouren]: '回復とブロックの総量が最大、粘り勝ちを狙う',
 }
 
 /**

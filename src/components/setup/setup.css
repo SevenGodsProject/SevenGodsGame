@@ -201,6 +201,16 @@
   text-align: center;
 }
 
+/* 第二次完成フェーズ候補D：「得意戦法」（GOD_TACTICS、godStyle.ts）。
+   taglineより一段控えめな11pxにして主従をつけ（taglineが「口調」・こちらが
+   「手順の説明」）、読み飛ばされない程度の存在感に留める。 */
+.god-select-tactics {
+  font-size: 11px;
+  color: #7f8ab8;
+  text-align: center;
+  line-height: 1.4;
+}
+
 /* 自己ベストスコア（決定48フォローアップ：ハイスコア・自己ベストの記録機能） */
 .god-select-record {
   font-size: 11px;

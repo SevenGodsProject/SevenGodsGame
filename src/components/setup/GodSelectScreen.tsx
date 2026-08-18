@@ -3,7 +3,14 @@ import type { Difficulty, GodId } from '../../core/types'
 import { GODS } from '../../core/data/gods'
 import { getOtomoDef } from '../../core/data/otomo'
 import { loadGodRecord } from '../../hooks/recordStorage'
-import { ARCHETYPE_LABEL, computeGodStats, countGodsByArchetype, describeSpecial, type GodStats } from './godStyle'
+import {
+  ARCHETYPE_LABEL,
+  computeGodStats,
+  countGodsByArchetype,
+  describeSpecial,
+  GOD_TACTICS,
+  type GodStats,
+} from './godStyle'
 import './setup.css'
 
 const STAT_AXES: { key: keyof GodStats; label: string; hint: string }[] = [
@@ -208,6 +215,7 @@ export function GodSelectScreen({ difficulty, onDifficultyChange, onSelect, onBa
                   </span>
                   <div className="god-select-name">{god.nameJa}</div>
                   <div className="god-select-tagline">「{god.tagline}」</div>
+                  <div className="god-select-tactics">{GOD_TACTICS[god.id]}</div>
                   {record.bestScore > 0 && (
                     <div className="god-select-record">自己ベスト {record.bestScore}（{record.wins}勝）</div>
                   )}
