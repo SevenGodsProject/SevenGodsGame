@@ -162,9 +162,16 @@
 
 /* カード使用時のスキル演出（決定34）。カードのタイプ色でアイコンが中央に
    パッと現れて弾けるように広がる。`CARD_PLAY_REVEAL_MS`（見せ方の遅延）の
-   間だけ表示されるので、アニメーションはやや短めに作ってある。 */
+   間だけ表示されるので、アニメーションはやや短めに作ってある。
+   第二次完成フェーズP0-1：決定80が.burst-banner等をfixed化した際、この要素だけ
+   position:absoluteのまま取りこぼされていた（.battle-arena-glowのコメントが
+   「全画面オーバーレイとして独立に位置指定する」と元々意図していた通りにする）。
+   .battle-mainはoverflow:hiddenだが、fixedは祖先のoverflow/positionの影響を受けない
+   （.battle/.battle-mainともtransform/filter/willChange/containを持たないため、
+   containing blockは正しくビューポートになる）。既存のposition:relative/z-index:1を
+   .cast-flashへ強制しない除外ルール（下の.battle-main > *セレクタ）はそのまま有効。 */
 .cast-flash {
-  position: absolute;
+  position: fixed;
   inset: 0;
   display: grid;
   place-items: center;
