@@ -9,7 +9,7 @@ import { detectOtomoLevelUp } from '../setup/otomoGrowthDisplay'
 import { useBattleFx } from './useBattleFx'
 import { useBattleSound } from './useBattleSound'
 import { useFloatingNumbers } from './useFloatingNumbers'
-import { CAST_FX, TYPE_STYLE } from './cardStyle'
+import { CAST_FX, getEnemyDamagePowerTier, TYPE_STYLE } from './cardStyle'
 import { CardIcon } from './cardIcon'
 import { CardView } from './CardView'
 import { EnemyPanel } from './EnemyPanel'
@@ -84,6 +84,12 @@ export function BattleScreen({ engine, onRematch, onReselect }: BattleScreenProp
   const pendingCard = pendingCardUid ? state.hand.find((c) => c.uid === pendingCardUid) : undefined
   const pendingCardDef = pendingCard ? getCardDef(pendingCard.defId) : null
   const castStyle = pendingCardDef ? TYPE_STYLE[pendingCardDef.type] : null
+  // 第二次完成フェーズ候補C：通常攻撃と強攻撃・特大攻撃の演出強度を分ける。
+  // typeやgodIdではなく「敵へ与えるdamage量」（cardIcon.tsxのgetEnemyDamagePowerTier、
+  // 既存のgetPrimaryGlyphと同じ閾値10/15を再利用）だけで判定するため、神託
+  // （type:'oracle', damage 25）のようなattack以外の高ダメージカードも正しく
+  // 最上位tierになる。
+  const castPowerTier = pendingCardDef ? getEnemyDamagePowerTier(pendingCardDef) : null
 
   // 決定74（Task C3）：対局前後の育成記録からLvが実際に上がった場合だけバッジを出す。
   const levelUp = otomoBondChange ? detectOtomoLevelUp(otomoBondChange.prevRecord, otomoBondChange.nextRecord) : null
@@ -140,7 +146,9 @@ export function BattleScreen({ engine, onRematch, onReselect }: BattleScreenProp
         </div>
         {castStyle && pendingCardDef && (
           <div
-            className={`cast-flash cast-flash-${pendingCardDef.type}`}
+            className={`cast-flash cast-flash-${pendingCardDef.type}${
+              castPowerTier && castPowerTier !== 'normal' ? ` cast-flash-power-${castPowerTier}` : ''
+            }`}
             style={{ color: castStyle.color, ['--cast-glow' as string]: castStyle.glow }}
           >
             <img className="cast-flash-art" src={CAST_FX[pendingCardDef.type]} alt="" />

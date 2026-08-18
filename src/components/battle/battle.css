@@ -368,6 +368,28 @@
   animation: cast-flash-pop-oracle 0.5s cubic-bezier(0.2, 0.8, 0.3, 1) forwards;
 }
 
+/* 第二次完成フェーズ候補C：強カード演出power tier（CEO条件付きGO）。
+   通常攻撃と強攻撃・特大攻撃の見た目の差を、既存の.cast-flash-icon（130px固定・
+   filter:drop-shadow 24pxが基準）の発光の強さだけで表現する。
+   【厳守した制約】
+   ・リングサイズ（.cast-flash::beforeの260px）は拡大しない
+   ・animation-name／durationには一切触れない（決定90のCARD_PLAY_REVEAL_MS=280ms
+     前提を壊さないため。上のタイプ別.cast-flash-pop-*ルールと同じ(0,2,0)の
+     specificityだがプロパティが競合しない＝animationとfilterで別プロパティの
+     ため、ソース順を後ろに置くだけで安全に共存する）
+   ・新規keyframesは追加していない（既存animation定義はそのまま）
+   ・godId／カード名／神専用カードかどうかでは分岐しない
+     （BattleScreen.tsxのcastPowerTierは「敵へ与えるdamage量」のみで判定、
+     cardIcon.tsxのgetEnemyDamagePowerTierを参照）
+   tierは`normal`（クラス無し・従来通り）／`strong`／`huge`の3段階。 */
+.cast-flash-power-strong .cast-flash-icon {
+  filter: drop-shadow(0 0 34px var(--cast-glow, currentColor));
+}
+
+.cast-flash-power-huge .cast-flash-icon {
+  filter: drop-shadow(0 0 46px var(--cast-glow, currentColor)) brightness(1.15);
+}
+
 @media (max-width: 700px) {
   .ally-row {
     grid-template-columns: 1fr;

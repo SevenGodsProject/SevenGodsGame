@@ -1,4 +1,4 @@
-import type { CardType, Rarity } from '../../core/types'
+import type { CardDef, CardType, Rarity } from '../../core/types'
 
 /**
  * カードの見た目（決定28で色付き四角からグラデーション調に刷新）。
@@ -40,4 +40,28 @@ export const RARITY_STYLE: Record<Rarity, { ring: string; label: string }> = {
   common: { ring: '#8a93b8', label: 'コモン' },
   rare: { ring: '#4d9fff', label: 'レア' },
   legend: { ring: '#ffcf40', label: 'レジェンド' },
+}
+
+export type PowerTier = 'normal' | 'strong' | 'huge'
+
+/**
+ * 第二次完成フェーズ候補C（強カード演出power tier）：カードが「敵へ与える
+ * damage量」だけから通常/強/特大の3段階を判定する。`def.type`・`def.godId`・
+ * `def.id`は一切参照しない（FINAL_BACKLOG §3-D「神専用カードの使用時演出
+ * 差別化」に踏み込まないための設計上の制約）。type非依存のため、attack以外
+ * （例：神託＝type:'oracle', damage 25）でも正しく最上位tierになる。
+ *
+ * 閾値は`cardIcon.tsx`の`getPrimaryGlyph`（attackケース）が既に持つ境界
+ * （amount>=15→burst、amount>=10→swordHeavy）をそのまま再利用した。実データ
+ * （全60種+神託、敵へのdamage効果を持つ21種）で分布を確認したところ、
+ * 10未満13枚（3〜8、大半がコスト1の基本カード）・10〜14が4枚・15以上が4枚
+ * （15/18/20/25）と自然な3つの塊になっており、感覚ではなくこの分布に基づく
+ * 閾値である。
+ */
+export function getEnemyDamagePowerTier(def: CardDef): PowerTier {
+  const dmg = def.effects.find((e) => e.kind === 'damage' && e.target === 'enemy')
+  const amount = dmg && dmg.kind === 'damage' ? dmg.amount : 0
+  if (amount >= 15) return 'huge'
+  if (amount >= 10) return 'strong'
+  return 'normal'
 }
