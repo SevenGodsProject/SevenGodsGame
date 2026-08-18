@@ -539,4 +539,83 @@ describe('バランスシミュレーション（Planner用・アサーション
       `aggressive勝利時平均${aggAvgWon.toFixed(0)} / balanced勝利時平均${balAvgWon.toFixed(0)}`,
     ).toBeGreaterThan(balAvgWon * 0.9)
   })
+
+  /**
+   * 第三次完成フェーズ（決定98）：ランキング向けスコア設計の検討材料として、
+   * 勝利試合のみを対象に「最終スコア×撃破ラウンド×神×難易度」の相関を
+   * 観察するための計測テスト。アサーションは持たない（既存の決定58・59
+   * 再現防止テストとは独立で、それらのしきい値・ロジックには一切触れていない）。
+   *
+   * Opusレビューで示された「roundBonusの撃破ラウンド差（最大300点）は、
+   * 早期撃破で失うcombo・oracleBonusの機会損失とほぼ相殺され、早期撃破と
+   * 後期撃破の総スコアはほぼ等価になる」という算術上の推定を、実測ログとして
+   * 残しておく。将来のランキング設計（9月以降）で、この相関を数値で
+   * 再確認したいときにこのテストの出力を使う。
+   *
+   * `npx vitest run src/core/engine/balanceSim.test.ts --reporter=verbose`で
+   * console.logを閲覧できる（既定reporterでは非表示、ファイル冒頭コメント参照）。
+   */
+  it('決定98：勝利試合の「最終スコア×撃破ラウンド×神×難易度」相関ログ（アサーションなし・計測専用）', () => {
+    const strategies: Strategy[] = ['balanced', 'aggressive', 'defensive']
+    const difficulties: Difficulty[] = ['easy', 'normal', 'hard']
+
+    type WonSample = { god: string; difficulty: Difficulty; strategy: Strategy; round: number; score: number }
+    const samples: WonSample[] = []
+
+    for (const god of GODS) {
+      const deck = getRecommendedDeck(god.id)
+      for (const difficulty of difficulties) {
+        for (const strategy of strategies) {
+          for (let i = 0; i < 20; i++) {
+            const r = playOneGame(
+              `roundscore-${god.id}-${difficulty}-${strategy}-${i}`,
+              strategy,
+              god.id,
+              deck,
+              ENEMY_IDS.trial,
+              'guardian',
+              difficulty,
+            )
+            if (r.status === 'won') {
+              samples.push({ god: god.nameJa, difficulty, strategy, round: r.round, score: r.score })
+            }
+          }
+        }
+      }
+    }
+
+    // 撃破ラウンド別の平均スコア（神・戦略・難易度を問わず全体で集計）。
+    // 「早く倒すほどスコアが伸びるか、それとも他の得点源の機会損失で相殺されるか」を一目で見る。
+    const byRound = new Map<number, number[]>()
+    for (const s of samples) {
+      const arr = byRound.get(s.round) ?? []
+      arr.push(s.score)
+      byRound.set(s.round, arr)
+    }
+    const avg = (arr: number[]) => (arr.length ? arr.reduce((a, b) => a + b, 0) / arr.length : 0)
+    console.log('\n--- 決定98計測：撃破ラウンド別の平均スコア（全神・全戦略・全難易度、勝利試合のみ） ---')
+    for (const round of [...byRound.keys()].sort((a, b) => a - b)) {
+      const arr = byRound.get(round) ?? []
+      console.log(`R${round}撃破: ${arr.length}件, 平均スコア${avg(arr).toFixed(1)}`)
+    }
+
+    // 神×難易度別の平均スコア・平均撃破ラウンド（デッキ構築＝神選択がスコアにどれだけ効くかの参考値）
+    console.log('\n--- 決定98計測：神×難易度別の平均スコア・平均撃破ラウンド（勝利試合のみ） ---')
+    for (const god of GODS) {
+      for (const difficulty of difficulties) {
+        const arr = samples.filter((s) => s.god === god.nameJa && s.difficulty === difficulty)
+        if (arr.length === 0) continue
+        console.log(
+          `${god.nameJa} / ${difficulty}: ${arr.length}件, 平均スコア${avg(arr.map((s) => s.score)).toFixed(1)}, 平均撃破ラウンドR${avg(arr.map((s) => s.round)).toFixed(1)}`,
+        )
+      }
+    }
+
+    // 戦略別の平均スコア（アサーションなし。決定59の再現防止テストとは別集計）
+    console.log('\n--- 決定98計測：戦略別の平均スコア（勝利試合のみ、全神・全難易度） ---')
+    for (const strategy of strategies) {
+      const arr = samples.filter((s) => s.strategy === strategy)
+      console.log(`${strategy}: ${arr.length}件, 平均スコア${avg(arr.map((s) => s.score)).toFixed(1)}`)
+    }
+  })
 })
