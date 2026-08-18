@@ -49,8 +49,14 @@ export function useFloatingNumbers(log: GameEvent[]): {
         // これが唯一の視覚フィードバックになる。一部ブロック時は「-N」と並んで
         // 表示されるが、CSS側で表示位置をずらしており（.floating-number-block）、
         // 二重表示（同じ位置に重なる）にはならない。
+        // 表記は「軽減N」（アイコンなし）。「🛡N」だと既存の残ブロック量バッジ
+        // （PlayerPanel/EnemyPanelの.badge-block、同じ🛡アイコン・同じ色）と
+        // 見た目が完全に一致し、「残っている量」なのか「今回吸収した量」なのか
+        // 一瞬で区別できなかった（Opusレビュー・CEO判断）。既存のバトルログ
+        // （formatEvent.ts）が同じ意味を「（N軽減）」と表現している言葉をそのまま
+        // 流用し、色（#7fb2ff）はバッジと共通のまま維持している。
         if (event.blocked > 0) {
-          spawn(setter, { id: nextId.current++, text: `🛡${event.blocked}`, kind: 'block' })
+          spawn(setter, { id: nextId.current++, text: `軽減${event.blocked}`, kind: 'block' })
         }
       } else if (event.t === 'HEALED' && event.amount > 0) {
         spawn(setPlayerNumbers, { id: nextId.current++, text: `+${event.amount}`, kind: 'heal' })
