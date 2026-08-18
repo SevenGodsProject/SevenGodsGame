@@ -161,6 +161,10 @@
     transform 0.15s ease,
     box-shadow 0.2s ease,
     border-color 0.2s ease;
+  /* CEOフィードバック「キャラクター画像のベタ貼り感」対応・第一段階（①＋③のみ）。
+     疑似要素（::before/::after）をposition:absoluteで配置するためだけに追加。
+     カードのサイズ・flexフローには一切影響しない。 */
+  position: relative;
 }
 
 .god-select-card:hover {
@@ -170,6 +174,81 @@
     inset 0 1px 0 #ffffff10,
     0 0 20px -4px #ffd16688;
   transform: translateY(-3px);
+}
+
+/*
+ * キャラクター画像のベタ貼り感対応（①属性オーラ＋③足元グロー＋薄めシルエット
+ * リムライト、3点セットで正式採用）。
+ *
+ * ①③は新規keyframes・回転演出・新規画像を使わない静的なグロー。色は既存の
+ * .god-archetype-*（行234〜262、バッジと同じ5色）をCSS変数経由でそのまま
+ * 再利用し、JSX側のclassNameは一切変更しない（:has()でバッジ要素の存在から
+ * 色を決める）。7枚同時表示でも騒がしくならないよう、opacityを大きく抑えた
+ * 静的なグローに留めている（battle.cssの.enemy-avatar-wrap::before等と同じ
+ * 「z-index:-1で背後に置く」型は踏襲しつつ、回転(portrait-aura-spin)は使わない）。
+ *
+ * 当初はimgへのdrop-shadowを「object-fit:cover+角丸クリップ後のimg全体に
+ * 矩形の影が乗り逆効果」と見送っていたが、実機のピクセル解析で7神全画像とも
+ * ボックス縁が99〜100%透過（決定34・35のアルファ抜き済みPNG）と判明。
+ * filter: drop-shadow()のソースはクリップ後の矩形ではなくimg自身のアルファ
+ * チャンネルに追従するため、実際にはキャラクターのシルエットに沿って発光する
+ * ことを確認できたので、下の.god-select-card imgに薄め単層でリムライトとして
+ * 追加採用した（`.god-select-card img`のfilterプロパティ、この下）。
+ */
+.god-select-card:has(.god-archetype-attack) {
+  --archetype-glow: #ff8f6b;
+}
+
+.god-select-card:has(.god-archetype-defense) {
+  --archetype-glow: #6bb4ff;
+}
+
+.god-select-card:has(.god-archetype-support) {
+  --archetype-glow: #7de08a;
+}
+
+.god-select-card:has(.god-archetype-technique) {
+  --archetype-glow: #c39bff;
+}
+
+.god-select-card:has(.god-archetype-balance) {
+  --archetype-glow: #ffd166;
+}
+
+/* ①属性オーラ（画像の背後、円形・静止） */
+.god-select-card::before {
+  content: '';
+  position: absolute;
+  top: 4px;
+  left: 50%;
+  width: 140px;
+  height: 140px;
+  transform: translateX(-50%);
+  border-radius: 50%;
+  background: radial-gradient(circle, var(--archetype-glow, #ffd166) 0%, transparent 70%);
+  filter: blur(18px);
+  opacity: 0.32;
+  z-index: -1;
+  pointer-events: none;
+}
+
+/* ③足元の楕円形グロー（画像下端付近、横長・静止）。
+   top値は画像高さ（padding-top 12px + 画像120px）からの推定で、
+   7神実機確認のうえ必要なら微調整する。 */
+.god-select-card::after {
+  content: '';
+  position: absolute;
+  top: 118px;
+  left: 50%;
+  width: 88px;
+  height: 16px;
+  transform: translateX(-50%);
+  border-radius: 50%;
+  background: radial-gradient(ellipse, var(--archetype-glow, #ffd166) 0%, transparent 75%);
+  filter: blur(6px);
+  opacity: 0.4;
+  z-index: -1;
+  pointer-events: none;
 }
 
 /*
@@ -189,6 +268,8 @@
   outline: 1px solid #ffd16655;
   outline-offset: -2px;
   box-shadow: 0 0 20px -4px #ffd16655;
+  /* シルエット準拠の薄いリムライト。単層のみ、archetype色を再利用。 */
+  filter: drop-shadow(0 0 3px var(--archetype-glow, #ffd166));
 }
 
 .god-select-name {
