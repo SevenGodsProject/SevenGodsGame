@@ -53,7 +53,7 @@ export function EnemyPanel({ enemy, round, hitKey, attackKey, floatingNumbers }:
         {enemy.intent
           ? enemy.intent.kind === 'attack'
             ? `⚔ 次の攻撃：${enemy.intent.amount}`
-            : '溜めている…'
+            : enemy.intent.label
           : '行動予告なし'}
       </div>
       {enemy.buffs.length > 0 && (
