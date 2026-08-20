@@ -2,7 +2,7 @@ import { GODS } from '../../core/data/gods'
 import { getOtomoDef } from '../../core/data/otomo'
 import { loadOtomoBond } from '../../hooks/otomoBondStorage'
 import { computeOtomoGrowthDisplay } from './otomoGrowthDisplay'
-import { OTOMO_THEME_COLOR } from './godStyle'
+import { OTOMO_BACKGROUND_IMAGE, OTOMO_THEME_COLOR } from './godStyle'
 import './setup.css'
 
 /** 絆ランク★の最大数（bondTierの最大値と一致。tier0〜3の4段階だが★は1〜3の3段階で表現） */
@@ -43,15 +43,20 @@ export function OtomoGrowthScreen({ onBack }: OtomoGrowthScreenProps) {
           const record = loadOtomoBond(god.id)
           const display = computeOtomoGrowthDisplay(record)
           const theme = OTOMO_THEME_COLOR[god.id]
+          const backgroundImage = OTOMO_BACKGROUND_IMAGE[god.id]
+          // OTOMOカード背景 個別化（第2版）：CEO承認の参考イメージから切り出した
+          // 専用背景画像（godId由来の修飾クラスは維持しつつ、実体はCSS変数
+          // --otomo-bg-imageとして注入し、setup.css側でbackground-imageに使う）。
+          // 枠色・グロー等（--otomo-theme/-border）は従来どおり維持。
           return (
             <div
-              className="otomo-growth-card"
+              className={`otomo-growth-card otomo-growth-card--${god.id}`}
               data-tier={display.bondTier}
               key={god.id}
               style={{
                 ['--otomo-theme' as string]: theme.base,
-                ['--otomo-theme-bg' as string]: theme.bg,
                 ['--otomo-theme-border' as string]: theme.border,
+                ['--otomo-bg-image' as string]: `url(${backgroundImage})`,
               }}
             >
               <img src={otomoDef.art.doji} alt={otomoDef.nameJa} />

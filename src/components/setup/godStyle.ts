@@ -184,6 +184,28 @@ export const OTOMO_THEME_COLOR: Record<GodId, { base: string; bg: string; border
 }
 
 /**
+ * OTOMOカード背景 個別化（第2版・専用背景画像）：CEO承認の参考イメージ
+ * （7枚の世界観イラスト。キャラクター・文字・UIは含まれない純粋な背景画像）から、
+ * 各OTOMOに対応するパネルだけを切り出し、モバイル向けに軽量化したWebP派生版。
+ * 原本（`c:\Users\kimi1\Downloads\`の参考画像、リポジトリ外）は保存していない。
+ * 保存先は既存の`public/assets/otomo/{otomoId}/{spirit,incarnate,doji}.webp`と
+ * 同じディレクトリ構成に揃え、`background.webp`として追加した（新しいトップ
+ * レベルフォルダを作らず既存の命名規則を優先）。CSSグラデーションだけで
+ * 参考画像に近づける検証を先に行ったが、①具象的な絵柄（魚・満月・魔法陣等）は
+ * グラデーションでは表現できない、②このカードは横長・情報密度が高くモチーフを
+ * 置く余白がない、の2点で限界に達したため、画像を正式採用した。
+ */
+export const OTOMO_BACKGROUND_IMAGE: Record<GodId, string> = {
+  [GOD_IDS.ebisu]: '/assets/otomo/taimaru/background.webp',
+  [GOD_IDS.taiyo]: '/assets/otomo/kozuchi/background.webp',
+  [GOD_IDS.sobi]: '/assets/otomo/momokatsu/background.webp',
+  [GOD_IDS.saika]: '/assets/otomo/kotone/background.webp',
+  [GOD_IDS.juraku]: '/assets/otomo/juka/background.webp',
+  [GOD_IDS.fukuei]: '/assets/otomo/haku/background.webp',
+  [GOD_IDS.shouren]: '/assets/otomo/shofuku/background.webp',
+}
+
+/**
  * 「特殊」バーの数字だけでは中身が分からない（CEOフィードバック）ため、
  * 何が積み上がって特殊になっているのかを一言で示す。該当効果が無ければnull。
  * draw・gainApは神の共鳴＋OTOMO成長の合計値にまとめ（「カード+2枚・カード+1枚」の

@@ -1047,16 +1047,22 @@
   border: 1px solid #ffffff1a;
   border-radius: 12px;
   /*
-   * OTOMO育成インセンティブ改善（8/31版）：7体共通だった背景を神ごとの
-   * テーマカラー（`OTOMO_THEME_COLOR`、godStyle.ts）で差別化する。既存の
-   * ダーク基調グラデーションはそのまま残し、左上から淡いテーマカラーの
-   * 放射グローを重ねるだけ（新規画像は使わない）。CSSカスタムプロパティは
-   * コンポーネント側（OtomoGrowthScreen.tsx）でカードごとにinline styleとして
-   * 注入している。
+   * OTOMOカード背景 個別化（第2版・専用背景画像）：CEO承認の参考イメージから
+   * 切り出した7枚のWebP（`OTOMO_BACKGROUND_IMAGE`、godStyle.ts）を、
+   * `--otomo-bg-image`経由でカードごとに差し替える。最前面にOTOMO立ち絵・
+   * UI情報（img・otomo-growth-body、通常のDOM子要素）、その下に読みやすさ
+   * 確保用の暗いオーバーレイ、最背面に専用背景画像という3層構成。
+   * `background`は複数レイヤーを重ねられるため、1つのプロパティで
+   * 「オーバーレイ→画像」の順に指定するだけで、要素本来の背景として
+   * 常に子要素の下に描画される（z-index等のスタッキング制御は不要）。
+   * オーバーレイは左（OTOMO立ち絵側、多少透けても実害がない）から右
+   * （UI情報側）にかけて暗くなる方向にし、名前・Lv・★・進捗・絆称号等の
+   * 可読性を確保しつつ、画像の主題（魚・太陽・月・魔法陣等）がカード左側で
+   * 覗けるようにしている。
    */
   background:
-    radial-gradient(120% 160% at 15% -15%, var(--otomo-theme-bg, transparent) 0%, transparent 62%),
-    linear-gradient(165deg, #14152caa 0%, #0b0d17cc 100%);
+    linear-gradient(100deg, #05060d1f 0%, #05060db3 32%, #05060dea 58%, #05060df7 100%),
+    var(--otomo-bg-image, none) center / cover no-repeat;
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
   box-shadow: inset 0 1px 0 #ffffff10;
@@ -1107,15 +1113,74 @@
   opacity: 0.9;
 }
 
+/*
+ * OTOMOカード背景 個別化（第2版・専用背景画像への移行）：CSSグラデーションのみで
+ * 7体を作り分ける実装（放射位置・向き・副次パターンを変える案、さらに太陽・満月・
+ * 魔法陣等の焦点モチーフを追加する案）を検証したが、①具象的な絵柄はグラデーション
+ * では表現できない、②このカードは横長・情報密度が高くモチーフを置く余白がない
+ * （実測：焦点モチーフが`.otomo-growth-head`のテキスト領域と座標レベルで重なる）、
+ * の2点で限界に達したため、CEO承認の専用背景画像（`OTOMO_BACKGROUND_IMAGE`、
+ * godStyle.ts）に置き換えた。背景画像本体は`.otomo-growth-card`側の
+ * `background`（本体で1回だけ指定、`--otomo-bg-image`を参照）で描画するため、
+ * ここでは各OTOMOのテーマカラーを使った上端アクセントバー（`::before`、
+ * 2色グラデーション）だけを維持している。
+ */
+.otomo-growth-card--ebisu::before {
+  background: linear-gradient(90deg, var(--otomo-theme, transparent), #ffd166);
+}
+
+.otomo-growth-card--taiyo::before {
+  background: linear-gradient(90deg, var(--otomo-theme, transparent), #ffe9b0);
+}
+
+.otomo-growth-card--sobi::before {
+  background: linear-gradient(90deg, #d8ecff, var(--otomo-theme, transparent));
+}
+
+.otomo-growth-card--saika::before {
+  background: linear-gradient(90deg, var(--otomo-theme, transparent), #ffffff);
+}
+
+.otomo-growth-card--juraku::before {
+  background: linear-gradient(90deg, var(--otomo-theme, transparent), #d9f2b9);
+}
+
+.otomo-growth-card--fukuei::before {
+  background: linear-gradient(90deg, #ffffff, var(--otomo-theme, transparent));
+}
+
+.otomo-growth-card--shouren::before {
+  background: linear-gradient(90deg, #ffd166, var(--otomo-theme, transparent));
+}
+
+/*
+ * OTOMO画像の「肖像フレーム化」（背景個別化 STEP2〜4）：doji.webp自体は
+ * 紫の宇宙背景が焼き込まれた不透明画像（透過なし、加工禁止）のため、
+ * カード全体の専用背景（background.webp）と隣接すると「二重背景」に見える
+ * 問題があった。画像そのものは一切加工せず、CSSの`padding`＋`background`
+ * だけで額縁（プレート）を作る：`box-sizing:border-box`により外形サイズ
+ * 72×72pxは変えず、内側に2pxの暗いプレートのリングを作ることで、画像の
+ * 紫背景とカードの専用背景の「境界」を意図的な額縁の縁として見せている。
+ * 縁の色（outline）と外側の淡い発光（box-shadow）には神ごとの
+ * `--otomo-theme`/`-border`（既存のOTOMO_THEME_COLOR、godStyle.ts）を使い、
+ * 専用背景・進捗バー・絆称号バッジと同じ色でOTOMO本体を「調和した1枚の
+ * ポートレートカード」として見せる。mix-blend-mode・filterでの色変換・
+ * 画像の不透明度変更は行っていない＝キャラクター画質はそのまま。
+ */
 .otomo-growth-card img {
   width: 72px;
   height: 72px;
+  box-sizing: border-box;
+  padding: 2px;
   object-fit: cover;
   border-radius: 10px;
   flex-shrink: 0;
-  outline: 1px solid #ffd16655;
-  outline-offset: -2px;
-  box-shadow: 0 0 20px -4px #ffd16655;
+  background: #0b0d17;
+  outline: 1.5px solid var(--otomo-theme-border, #ffd16655);
+  outline-offset: -1.5px;
+  box-shadow:
+    inset 0 1px 0 #ffffff2a,
+    0 0 14px -3px var(--otomo-theme-border, #ffd16655);
 }
 
 .otomo-growth-body {
