@@ -20,6 +20,23 @@ type HomeScreenProps = {
 const FEATURED_GOD = GODS[0]
 
 /**
+ * トップ画面専用の高品質キービジュアル（恵比寿のみ）。
+ *
+ * `god.art.keyvisual`（675×900・quality72、神選択画面の120px角サムネイル用に
+ * 最適化した軽量版）をそのままトップ画面のヒーロー枠（`.home-portrait-card`、
+ * PC幅で実測CSS約454px、devicePixelRatio 1.5〜2.0の高DPI環境では実質900px超の
+ * 解像度が必要）に使うと、高DPI環境で明確に画質が粗く見えることが実機確認で
+ * 判明した（CEO実プレイ報告）。トップ画面はゲームの第一印象を左右するため、
+ * 原本（`public/assets/reference/gods/ebisu-keyvisual.png`、1086×1448、
+ * 保護対象・変更禁止）の解像度をアップスケールせずそのまま維持したWebP
+ * （quality88、511KB）を別ファイルとして新規に用意した。
+ * 神選択画面・recap・他6神はこれまでどおり`god.art.keyvisual`（軽量版）を
+ * 使い続けるため、ここではFEATURED_GOD側の`art.keyvisual`を上書きせず、
+ * トップ画面専用のローカル定数として分離している。
+ */
+const EBISU_HERO_IMAGE = '/assets/gods/ebisu/keyvisual-hero.webp'
+
+/**
  * 起動直後に必ず表示するヒーロー画面。
  *
  * CEOが共有した他ゲームのタイトル画面（配色・レイアウトの意匠参考のみ、
@@ -81,8 +98,10 @@ export function HomeScreen({
         <div className="home-portrait-card">
           {/* 七神キービジュアル採用：`.home-portrait-card`は元々aspect-ratio:3/4で、
               恵比寿キービジュアル原本（1086×1448＝ちょうど3:4）と寸法がほぼ一致するため
-              クロップがごく少なく収まる。object-positionの個別調整は不要だった。 */}
-          <img src={FEATURED_GOD.art.keyvisual} alt={FEATURED_GOD.nameJa} />
+              クロップがごく少なく収まる。object-positionの個別調整は不要だった。
+              トップ画質改善：軽量版（god.art.keyvisual）ではなくトップ専用の
+              高品質版（EBISU_HERO_IMAGE）を使う。 */}
+          <img src={EBISU_HERO_IMAGE} alt={FEATURED_GOD.nameJa} />
           <div className="home-portrait-overlay">
             <span className={`god-archetype-badge god-archetype-${FEATURED_GOD.archetype}`}>
               {ARCHETYPE_LABEL[FEATURED_GOD.archetype]}
