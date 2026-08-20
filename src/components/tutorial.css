@@ -53,15 +53,26 @@
   gap: 14px;
 }
 
-/* 施策：各項目に図解（実際のカード/敵/神の画像、または汎用アイコン）を添える */
+/*
+ * TutorialOverlay UX改善（実戦UI統一）：各項目の図解を実戦のUIコンポーネント・
+ * CSSクラスの縮小引用に置き換えたため、正方形56×56px固定から「横長スロット」に
+ * 変更した（`.ap-gauge`・`.intent`・`.resonance-gauge`・`.divination-choice-glyph`
+ * はいずれも横長のバー/バッジ/アイコン列で、正方形には収まらない）。CEO指定の
+ * 目安「幅90〜120px程度」の範囲で112pxとした。高さは内容量（HPバー+ラウンド表示は
+ * 2行、共鳴ゲージ/AP等は1〜2行）に応じて可変にし、`.tutorial-section`1行の
+ * リズムを大きく崩さない範囲（min-height）に留めている。
+ */
 .tutorial-section-visual {
   flex-shrink: 0;
-  width: 56px;
-  height: 56px;
+  width: 112px;
+  min-height: 40px;
+  box-sizing: border-box;
+  padding: 6px 8px;
   border-radius: 12px;
-  overflow: hidden;
-  display: grid;
-  place-items: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 4px;
   background: #ffffff0d;
   border: 1px solid #ffd16633;
 }
@@ -70,12 +81,55 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
+  border-radius: 8px;
 }
 
 .tutorial-section-glyph {
   width: 32px;
   height: 32px;
   color: #ffd166;
+  align-self: center;
+}
+
+/* 目的：実戦のHpBar（`.hp-bar`、EnemyPanelと共通）の下にラウンド表示を添える */
+.tutorial-visual-round {
+  font-size: 10px;
+  color: #a9adc4;
+  text-align: center;
+}
+
+/* 神力（AP）：実戦の`.battle-topbar-ap`と同じ「テキスト＋`.ap-gauge`」構成 */
+.tutorial-visual-ap-text {
+  font-size: 10px;
+  color: #e8e9f3;
+  white-space: nowrap;
+}
+
+/* 敵の「予告」：実戦の`.intent`をそのまま流用しつつ、112px幅内で折り返しを許可する */
+.tutorial-visual-intent {
+  white-space: normal;
+  line-height: 1.3;
+  text-align: center;
+}
+
+/*
+ * 託宣：実戦のDivinationPanelと同じ`.divination-choice-glyph`（背景・枠線・
+ * アイコン色は完全に同一）を3つ横並びで表示する。実物は38px相当（28px＋
+ * padding4px×2＋border1px×2）×3で114px超と、112px幅の枠に収まらないため、
+ * このスロット内でのみサイズだけを縮小する（色・背景・枠線・角丸は
+ * `.divination-choice-glyph`本体を上書きしない＝視覚言語はDivinationPanelと
+ * 完全に一致させたまま、サイズだけこの枠に合わせている）。
+ */
+.tutorial-visual-divination {
+  display: flex;
+  justify-content: center;
+  gap: 3px;
+}
+
+.tutorial-visual-divination .divination-choice-glyph {
+  width: 20px;
+  height: 20px;
+  padding: 3px;
 }
 
 .tutorial-section-text {
