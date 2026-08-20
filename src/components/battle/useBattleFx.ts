@@ -22,6 +22,12 @@ export type BattleFx = {
   apPenaltyKey: number
   /** 直近の使い残しペナルティのスコア減点量（負の値） */
   apPenaltyAmount: number
+  /** 蒼毘Visual Polish：変わるたびにbadge-blockのパルス演出を再生させるキー */
+  blockGainKey: number
+  /** スマホUX修正：変わるたびに「カード使用結果」の画面固定トーストを再生させるキー */
+  resultToastKey: number
+  /** 直近のカード使用結果として表示するテキスト（複数効果は" / "で連結） */
+  resultToastText: string
 }
 
 const INITIAL_FX: BattleFx = {
@@ -35,6 +41,9 @@ const INITIAL_FX: BattleFx = {
   enemyAttackKey: 0,
   apPenaltyKey: 0,
   apPenaltyAmount: 0,
+  blockGainKey: 0,
+  resultToastKey: 0,
+  resultToastText: '',
 }
 
 /**
@@ -64,6 +73,16 @@ export function useBattleFx(log: GameEvent[]): BattleFx {
     let enemyAttack = 0
     let apPenalty = 0
     let apPenaltyAmount = 0
+    let blockGain = 0
+    let resultToast = 0
+    // スマホUX修正：カード使用結果（攻撃/回復/防御）は、EnemyPanel/PlayerPanelという
+    // 非fixed要素の中でしか見えず、手札位置までスクロールした状態では画面外だった
+    // （cast-flash・burst-banner・ap-penalty-toast等は既にfixedで解決済みだが、
+    // 数値結果そのものだけがこの問題を抱えていた）。既存のapPenaltyKey/Amountと
+    // 全く同じ「単発トースト」パターンをそのまま複製し、1回のカード使用で複数の
+    // 効果（例：ダメージ+回復の複合カード）が起きた場合は" / "で連結して1つの
+    // トーストにまとめる。core/engine・数値・効果処理は無変更、表示専用の追加。
+    const resultTexts: string[] = []
 
     for (const event of newEvents) {
       if (event.t === 'DAMAGE_DEALT' && event.amount > 0) {
@@ -72,6 +91,8 @@ export function useBattleFx(log: GameEvent[]): BattleFx {
         if (event.target === 'enemy') {
           enemyHit += 1
           godAttack += 1
+          resultToast += 1
+          resultTexts.push(`⚔ 敵に${event.amount}ダメージ`)
         } else {
           selfHit += 1
         }
@@ -89,6 +110,8 @@ export function useBattleFx(log: GameEvent[]): BattleFx {
         enemyAttack += 1
       } else if (event.t === 'HEALED' && event.amount > 0) {
         heal += 1
+        resultToast += 1
+        resultTexts.push(`💚 HP+${event.amount}`)
       } else if (event.t === 'RESONANCE_BURST') {
         burst += 1
         godAttack += 1
@@ -100,10 +123,28 @@ export function useBattleFx(log: GameEvent[]): BattleFx {
         // ログに埋もれさせず、画面上のトーストとしても一瞬強調する
         apPenalty += 1
         apPenaltyAmount = event.amount
+      } else if (event.t === 'BLOCK_GAINED' && event.target === 'self' && event.amount > 0) {
+        // 蒼毘Visual Polish：既存のBLOCK_GAINEDイベント（これまでどのフックも
+        // 未消費だった）を起点に、badge-blockの一瞬のパルスだけを追加する。
+        // 数値・block加算処理そのもの（core/engine）は無変更、表示専用の対応。
+        blockGain += 1
+        resultToast += 1
+        resultTexts.push(`🛡 ブロック+${event.amount}`)
       }
     }
 
-    if (enemyHit || selfHit || heal || burst || evolve || godAttack || enemyAttack || apPenalty) {
+    if (
+      enemyHit ||
+      selfHit ||
+      heal ||
+      burst ||
+      evolve ||
+      godAttack ||
+      enemyAttack ||
+      apPenalty ||
+      blockGain ||
+      resultToast
+    ) {
       setFx((prev) => ({
         enemyHitKey: prev.enemyHitKey + enemyHit,
         selfHitKey: prev.selfHitKey + selfHit,
@@ -115,6 +156,9 @@ export function useBattleFx(log: GameEvent[]): BattleFx {
         enemyAttackKey: prev.enemyAttackKey + enemyAttack,
         apPenaltyKey: prev.apPenaltyKey + apPenalty,
         apPenaltyAmount: apPenalty ? apPenaltyAmount : prev.apPenaltyAmount,
+        blockGainKey: prev.blockGainKey + blockGain,
+        resultToastKey: prev.resultToastKey + resultToast,
+        resultToastText: resultToast ? resultTexts.join(' / ') : prev.resultToastText,
       }))
     }
   }, [log])

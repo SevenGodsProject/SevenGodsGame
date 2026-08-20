@@ -34,26 +34,86 @@ export type OtomoGrowthDisplay = {
   pointsPerLevel: number
   /** 次のLvまでの進捗（0〜1、進捗バーの幅に使う） */
   progressRatio: number
-  /** 簡単な絆テキスト */
+  /** 簡単な絆テキスト（＝絆称号。文言は`BOND_TIER_TITLE`と同一） */
   bondText: string
+  /**
+   * OTOMO育成インセンティブ改善（8/31版）：絆称号の段階（0〜3）。
+   * `computeBondText`の条件分岐をそのまま段階化した値で、新しい判定基準は
+   * 一切追加していない（既存仕様と完全に一致させるため、判定ロジック自体は
+   * `computeBondTier`に一本化し、`computeBondText`はそこから文言を引くだけにした）。
+   * カード枠の発光段階（STEP4）・絆ランク★表示にもこの値をそのまま使う。
+   */
+  bondTier: 0 | 1 | 2 | 3
+  /**
+   * 次の絆称号解放までの説明テキスト。最上位段階（tier3）に到達済みの場合は
+   * これ以上解放される絆称号が存在しないため`null`（＝存在しない報酬を
+   * 表示しないためのガード）。
+   */
+  nextUnlockText: string | null
 }
 
-function computeBondText(record: OtomoBondRecord, level: number): string {
-  if (record.battlesPlayed === 0) return 'まだ出会ったばかり'
-  if (record.dojiReached > 0 && level >= 5) return '固い絆で結ばれた相棒'
-  if (level >= 3) return '息の合った相棒'
-  return '共に歩み始めた相棒'
+/** 絆称号（tier→文言）。`computeBondText`の分岐と1:1で対応する。 */
+const BOND_TIER_TITLE: Record<0 | 1 | 2 | 3, string> = {
+  0: 'まだ出会ったばかり',
+  1: '共に歩み始めた相棒',
+  2: '息の合った相棒',
+  3: '固い絆で結ばれた相棒',
+}
+
+/**
+ * 絆称号の段階判定。`computeBondText`が元々持っていた条件分岐（決定71）を
+ * そのまま段階番号に置き換えただけで、新しい閾値は増やしていない。
+ * tier3のみ「level>=5」と「dojiReached>0」の2条件が必要な非対称構造で、
+ * `nextUnlockText`はこの非対称さ（童子到達が必須という条件）を隠さず
+ * そのまま説明文に反映する。
+ */
+function computeBondTier(record: OtomoBondRecord, level: number): 0 | 1 | 2 | 3 {
+  if (record.battlesPlayed === 0) return 0
+  if (record.dojiReached > 0 && level >= 5) return 3
+  if (level >= 3) return 2
+  return 1
+}
+
+function computeNextUnlockText(
+  record: OtomoBondRecord,
+  level: number,
+  tier: 0 | 1 | 2 | 3,
+  pointsInLevel: number,
+): string | null {
+  if (tier === 0) {
+    return `絆称号「${BOND_TIER_TITLE[1]}」（初めての対局を終えると解放）`
+  }
+  if (tier === 1) {
+    // 目標Lv3に到達するまでの必要pt。resonanceCount = (level-1)*POINTS_PER_LEVEL + pointsInLevel
+    // なので、目標時点のresonanceCount（(3-1)*POINTS_PER_LEVEL）との差分で求める。
+    const needed = (3 - level) * POINTS_PER_LEVEL - pointsInLevel
+    return `絆称号「${BOND_TIER_TITLE[2]}」（あと${needed}pt）`
+  }
+  if (tier === 2) {
+    const needsLevel = level < 5
+    const needsDoji = record.dojiReached === 0
+    const pointsNeeded = needsLevel ? (5 - level) * POINTS_PER_LEVEL - pointsInLevel : 0
+    const conditions: string[] = []
+    if (needsLevel) conditions.push(`あと${pointsNeeded}pt`)
+    if (needsDoji) conditions.push('童子形態での対局終了が1回以上必要')
+    return `絆称号「${BOND_TIER_TITLE[3]}」（${conditions.join('・')}）`
+  }
+  // tier3：これ以上解放される絆称号が存在しないため、存在しない報酬を示さずnullを返す
+  return null
 }
 
 export function computeOtomoGrowthDisplay(record: OtomoBondRecord): OtomoGrowthDisplay {
   const level = 1 + Math.floor(record.resonanceCount / POINTS_PER_LEVEL)
   const pointsInLevel = record.resonanceCount % POINTS_PER_LEVEL
+  const bondTier = computeBondTier(record, level)
   return {
     level,
     pointsInLevel,
     pointsPerLevel: POINTS_PER_LEVEL,
     progressRatio: pointsInLevel / POINTS_PER_LEVEL,
-    bondText: computeBondText(record, level),
+    bondText: BOND_TIER_TITLE[bondTier],
+    bondTier,
+    nextUnlockText: computeNextUnlockText(record, level, bondTier, pointsInLevel),
   }
 }
 

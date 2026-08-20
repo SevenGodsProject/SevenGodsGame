@@ -2,7 +2,11 @@ import { GODS } from '../../core/data/gods'
 import { getOtomoDef } from '../../core/data/otomo'
 import { loadOtomoBond } from '../../hooks/otomoBondStorage'
 import { computeOtomoGrowthDisplay } from './otomoGrowthDisplay'
+import { OTOMO_THEME_COLOR } from './godStyle'
 import './setup.css'
+
+/** 絆ランク★の最大数（bondTierの最大値と一致。tier0〜3の4段階だが★は1〜3の3段階で表現） */
+const BOND_RANK_MAX = 3
 
 type OtomoGrowthScreenProps = {
   onBack: () => void
@@ -38,13 +42,35 @@ export function OtomoGrowthScreen({ onBack }: OtomoGrowthScreenProps) {
           const otomoDef = getOtomoDef(god.otomoId)
           const record = loadOtomoBond(god.id)
           const display = computeOtomoGrowthDisplay(record)
+          const theme = OTOMO_THEME_COLOR[god.id]
           return (
-            <div className="otomo-growth-card" key={god.id}>
+            <div
+              className="otomo-growth-card"
+              data-tier={display.bondTier}
+              key={god.id}
+              style={{
+                ['--otomo-theme' as string]: theme.base,
+                ['--otomo-theme-bg' as string]: theme.bg,
+                ['--otomo-theme-border' as string]: theme.border,
+              }}
+            >
               <img src={otomoDef.art.doji} alt={otomoDef.nameJa} />
               <div className="otomo-growth-body">
                 <div className="otomo-growth-head">
                   <span className="otomo-growth-name">{otomoDef.nameJa}</span>
-                  <span className="otomo-growth-level">Lv.{display.level}</span>
+                  <span className="otomo-growth-level-group">
+                    <span className="otomo-growth-level">Lv.{display.level}</span>
+                    {/* レベルアップの証（STEP4）：絆ランク★。bondTierと同じ判定基準を
+                        流用しているため、絆称号（下のotomo-growth-title-text）と必ず
+                        一致する。数値の暗記なしで「育っているか」が一目で分かるようにする。 */}
+                    <span className="otomo-growth-rank-stars" aria-hidden="true" title={`絆ランク ${display.bondTier}/${BOND_RANK_MAX}`}>
+                      {Array.from({ length: BOND_RANK_MAX }, (_, i) => (
+                        <span key={i} className={i < display.bondTier ? 'star-filled' : 'star-empty'}>
+                          ★
+                        </span>
+                      ))}
+                    </span>
+                  </span>
                 </div>
                 <div className="otomo-growth-god">{god.nameJa}の相棒</div>
                 <div className="otomo-growth-bar-track">
@@ -54,10 +80,15 @@ export function OtomoGrowthScreen({ onBack }: OtomoGrowthScreenProps) {
                   />
                 </div>
                 <div className="otomo-growth-points">
-                  共鳴成長ポイント {record.resonanceCount}（次のLvまで{' '}
-                  {display.pointsPerLevel - display.pointsInLevel}）
+                  共鳴成長ポイント {display.pointsInLevel}/{display.pointsPerLevel}（累計{record.resonanceCount}）
                 </div>
-                <div className="otomo-growth-text">{display.bondText}</div>
+                {display.nextUnlockText && (
+                  <div className="otomo-growth-next-unlock">🔓 次の解放：{display.nextUnlockText}</div>
+                )}
+                <div className="otomo-growth-title-block">
+                  <span className="otomo-growth-title-label">絆称号</span>
+                  <span className="otomo-growth-title-text">「{display.bondText}」</span>
+                </div>
                 {record.battlesPlayed > 0 && (
                   <div className="otomo-growth-stats">
                     共に戦った対局 {record.battlesPlayed}回・童子到達 {record.dojiReached}回

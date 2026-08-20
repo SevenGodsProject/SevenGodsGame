@@ -79,7 +79,10 @@ export function HomeScreen({
         </div>
 
         <div className="home-portrait-card">
-          <img src={FEATURED_GOD.art.main} alt={FEATURED_GOD.nameJa} />
+          {/* 七神キービジュアル採用：`.home-portrait-card`は元々aspect-ratio:3/4で、
+              恵比寿キービジュアル原本（1086×1448＝ちょうど3:4）と寸法がほぼ一致するため
+              クロップがごく少なく収まる。object-positionの個別調整は不要だった。 */}
+          <img src={FEATURED_GOD.art.keyvisual} alt={FEATURED_GOD.nameJa} />
           <div className="home-portrait-overlay">
             <span className={`god-archetype-badge god-archetype-${FEATURED_GOD.archetype}`}>
               {ARCHETYPE_LABEL[FEATURED_GOD.archetype]}

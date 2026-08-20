@@ -34,6 +34,9 @@ const art = (id: string) => ({
   main: `/assets/gods/${id}/main.png`,
   front: `/assets/gods/${id}/front.png`,
   back: `/assets/gods/${id}/back.webp`,
+  // 七神キービジュアル採用：原本（public/assets/reference/gods/）から生成した
+  // 軽量WebP派生版。原本ファイル名・godIdが一致しているため機械的に導出できる。
+  keyvisual: `/assets/gods/${id}/keyvisual.webp`,
 })
 
 /**

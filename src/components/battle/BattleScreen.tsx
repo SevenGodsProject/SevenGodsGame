@@ -41,7 +41,7 @@ export function BattleScreen({ engine, onRematch, onReselect }: BattleScreenProp
   const { state, log, error, isEnemyTurn, pendingCardUid, newBest, otomoBondChange, playCard, endRound, divine } =
     engine
   const fx = useBattleFx(log)
-  const { enemyNumbers, playerNumbers } = useFloatingNumbers(log)
+  const { enemyNumbers, playerNumbers } = useFloatingNumbers(log, state?.godId)
 
   // CEO指示：共鳴バースト（.burst-banner）とOTOMO進化（.evolve-banner）が
   // 同時に重なって表示される不具合の修正。setTimeoutでCSSのanimation-durationと
@@ -119,6 +119,16 @@ export function BattleScreen({ engine, onRematch, onReselect }: BattleScreenProp
         </div>
       )}
 
+      {/* スマホUX修正：手札位置までスクロールした状態でカードを使っても、
+          攻撃/回復/防御の結果がその場で分かるようにするfixedトースト。
+          強制スクロールはしない（ユーザー明示指示）。ap-penalty-toastと同じ
+          「keyを増分してCSSアニメーションを再生させる」パターンを複製している。 */}
+      {fx.resultToastKey > 0 && (
+        <div key={`result-toast-${fx.resultToastKey}`} className="result-toast">
+          {fx.resultToastText}
+        </div>
+      )}
+
       <div className="battle-main">
         <div className="battle-arena-glow" aria-hidden="true" />
         <EnemyPanel
@@ -135,6 +145,7 @@ export function BattleScreen({ engine, onRematch, onReselect }: BattleScreenProp
             hitKey={fx.selfHitKey}
             healKey={fx.healKey}
             attackKey={fx.godAttackKey}
+            blockGainKey={fx.blockGainKey}
             floatingNumbers={playerNumbers}
           />
           <GodOtomoPanel

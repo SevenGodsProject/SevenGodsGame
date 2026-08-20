@@ -1,16 +1,32 @@
 import { useEffect, useRef, useState } from 'react'
 import type { Dispatch, SetStateAction } from 'react'
-import type { GameEvent } from '../../core/types'
+import type { GameEvent, GodId } from '../../core/types'
+import { getGodDef } from '../../core/data/gods'
 
-export type FloatingNumber = { id: number; text: string; kind: 'damage' | 'heal' | 'block' }
+export type FloatingNumber = {
+  id: number
+  text: string
+  kind: 'damage' | 'heal' | 'block' | 'draw' | 'ap'
+}
 
 const LIFETIME_MS = 900
 
 /**
  * イベントログを見て、HPバーの上に浮かべる「-8」「+5」のような数値の
  * 出現・消滅タイミングを作るフック。実際の見た目（アニメーション）はCSS側。
+ *
+ * 才華Visual Polish：共鳴効果のdraw/gainApは、core/engine側にフローティング用の
+ * イベントが存在しない（CARD_DRAWNは全ドロー共通で発火が多すぎ、gainApは
+ * そもそもイベントを発行しない設計）。core/engineには一切手を入れず、
+ * RESONANCE_BURST発生時にgodId経由でgetGodDef(godId).resonanceEffects
+ * （静的データ、GodOtomoPanel.tsxのP0-4と同じ参照パターン）を読み、
+ * draw/gainApが含まれていればその場でフローティング数値を合成する
+ * 表示専用の対応にした。共鳴の数値・処理・発動条件は無変更。
  */
-export function useFloatingNumbers(log: GameEvent[]): {
+export function useFloatingNumbers(
+  log: GameEvent[],
+  godId: GodId | undefined,
+): {
   enemyNumbers: FloatingNumber[]
   playerNumbers: FloatingNumber[]
 } {
@@ -60,9 +76,26 @@ export function useFloatingNumbers(log: GameEvent[]): {
         }
       } else if (event.t === 'HEALED' && event.amount > 0) {
         spawn(setPlayerNumbers, { id: nextId.current++, text: `+${event.amount}`, kind: 'heal' })
+      } else if (event.t === 'RESONANCE_BURST' && godId) {
+        const resonanceEffects = getGodDef(godId).resonanceEffects
+        for (const effect of resonanceEffects) {
+          if (effect.kind === 'draw' && effect.amount > 0) {
+            spawn(setPlayerNumbers, {
+              id: nextId.current++,
+              text: `カード+${effect.amount}`,
+              kind: 'draw',
+            })
+          } else if (effect.kind === 'gainAp' && effect.amount > 0) {
+            spawn(setPlayerNumbers, {
+              id: nextId.current++,
+              text: `神力+${effect.amount}`,
+              kind: 'ap',
+            })
+          }
+        }
       }
     }
-  }, [log])
+  }, [log, godId])
 
   return { enemyNumbers, playerNumbers }
 }

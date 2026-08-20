@@ -498,6 +498,22 @@
   color: #7fb2ff;
 }
 
+/* 才華Visual Polish：共鳴のdraw/gainApは、既存damage(中央50%)・block(軽減、30%)と
+   同時に出現しうる（才華の共鳴＝damage+draw+gainApが同時発火）ため、既存の
+   .floating-number-blockと同じ「left値だけをずらす」手法をそのまま踏襲し、
+   3種が重ならないよう左右に振り分けた。色はdamage(赤)/heal(緑)/block(青)と
+   衝突しない新規2色（AP用の青系#7fb2ffは既存block/APゲージと被るため避けた）。
+   新規keyframesは追加していない（既存float-upをそのまま再利用）。 */
+.floating-number-draw {
+  left: 15%;
+  color: #ffd166;
+}
+
+.floating-number-ap {
+  left: 85%;
+  color: #c39bff;
+}
+
 .badge {
   display: inline-block;
   width: fit-content;
@@ -509,6 +525,29 @@
 .badge-block {
   background: #16203c;
   color: #7fb2ff;
+}
+
+/* 蒼毘Visual Polish：ブロック獲得時、既存badge-blockを一瞬だけ拡大＋発光させる
+   軽量パルス。新規要素は追加せず既存バッジに演出を足すだけ、持続時間は
+   0.5秒（他の単発演出＝軽減N等のLIFETIME_MS 900msより短く控えめにした）。
+   badge-blockの色（#7fb2ff）と同系のグローのみで、既存の色・数値は無変更。 */
+@keyframes badge-block-pulse {
+  0% {
+    transform: scale(1);
+    box-shadow: none;
+  }
+  40% {
+    transform: scale(1.25);
+    box-shadow: 0 0 12px 2px #7fb2ffaa;
+  }
+  100% {
+    transform: scale(1);
+    box-shadow: none;
+  }
+}
+
+.badge-block-pulse {
+  animation: badge-block-pulse 0.5s ease-out;
 }
 
 .buff-list {
@@ -1169,6 +1208,50 @@
    fixed化することで、スクロール位置に関係なくビューポート上端から62pxに表示される
    （.battleにtransform/filter/containは無いため、containing blockは正しくビューポート）。
    top値・その他の見た目は変更しない最小差分。 */
+/* スマホUX修正：カード使用結果（攻撃/回復/防御）を、スクロール位置に関係なく
+   確認できるようにするfixedトースト。ap-penalty-toast（top:62px、決定97）と
+   同じfixedパターンを踏襲しつつ、時間帯が別（こちらはカード使用のたび・
+   ap-penalty-toastはラウンド終了時のみ）でも縦位置が被らないよう100pxにずらした。
+   手札カード（.hand、通常フローの下部）とは重ならないよう画面上部に固定し、
+   ユーザーの指の位置（手札操作中）を隠さないことを優先した（CEO指示：強制
+   スクロールも、操作の邪魔になる位置への表示も避ける）。新規keyframes1つのみ、
+   既存のcast-flash・burst-banner等とは別レイヤー（z-index:4、既存の空き番号）。 */
+@keyframes result-toast-pop {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, 6px);
+  }
+  15% {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+  80% {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -4px);
+  }
+}
+
+.result-toast {
+  position: fixed;
+  top: 100px;
+  left: 50%;
+  z-index: 4;
+  padding: 8px 18px;
+  border-radius: 999px;
+  background: linear-gradient(180deg, #ffffff22, #0b0d17ee);
+  border: 1px solid #ffffff33;
+  color: #f4f5fb;
+  font-size: 13px;
+  font-weight: 700;
+  white-space: nowrap;
+  pointer-events: none;
+  animation: result-toast-pop 1.4s ease-out forwards;
+}
+
 .ap-penalty-toast {
   position: fixed;
   top: 62px;

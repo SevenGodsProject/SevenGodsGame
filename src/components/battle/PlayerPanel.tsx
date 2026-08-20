@@ -14,6 +14,8 @@ type PlayerPanelProps = {
   healKey: number
   /** 変わるたびに神（プレイヤー側）の攻撃モーションを再生する */
   attackKey: number
+  /** 蒼毘Visual Polish：変わるたびにbadge-blockのパルスを再生する */
+  blockGainKey: number
   floatingNumbers: FloatingNumber[]
 }
 
@@ -21,7 +23,15 @@ type PlayerPanelProps = {
  * プレイヤー側パネル。決定31で選択中の神の立ち絵をここに表示し、
  * EnemyPanel（敵アバター＋HP）と対になる「敵 vs プレイヤー」レイアウトにした。
  */
-export function PlayerPanel({ godId, player, hitKey, healKey, attackKey, floatingNumbers }: PlayerPanelProps) {
+export function PlayerPanel({
+  godId,
+  player,
+  hitKey,
+  healKey,
+  attackKey,
+  blockGainKey,
+  floatingNumbers,
+}: PlayerPanelProps) {
   const god = getGodDef(godId)
 
   return (
@@ -51,7 +61,14 @@ export function PlayerPanel({ godId, player, hitKey, healKey, attackKey, floatin
         {hitKey > 0 && <div className="slash-fx slash-fx-reverse" />}
         <FloatingNumbers numbers={floatingNumbers} />
       </div>
-      {player.block > 0 && <div className="badge badge-block">🛡 {player.block}</div>}
+      {player.block > 0 && (
+        <div
+          key={`block-${blockGainKey}`}
+          className={`badge badge-block${blockGainKey > 0 ? ' badge-block-pulse' : ''}`}
+        >
+          🛡 {player.block}
+        </div>
+      )}
       {player.buffs.length > 0 && (
         <div className="buff-list">
           {player.buffs.map((b, i) => (

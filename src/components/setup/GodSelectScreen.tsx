@@ -9,6 +9,7 @@ import {
   countGodsByArchetype,
   describeSpecial,
   GOD_TACTICS,
+  KEYVISUAL_OBJECT_POSITION,
   type GodStats,
 } from './godStyle'
 import './setup.css'
@@ -153,7 +154,11 @@ export function GodSelectScreen({ difficulty, onDifficultyChange, onSelect, onBa
           </p>
 
           <button type="button" className="god-select-recap" onClick={() => setPendingGodId(null)}>
-            <img src={pendingGod.art.main} alt={pendingGod.nameJa} />
+            <img
+              src={pendingGod.art.keyvisual}
+              alt={pendingGod.nameJa}
+              style={{ objectPosition: KEYVISUAL_OBJECT_POSITION[pendingGod.id] }}
+            />
             <span className="god-select-recap-body">
               <span className="god-select-recap-name">{pendingGod.nameJa}</span>
               <span className="god-select-recap-change">神を選び直す ›</span>
@@ -206,7 +211,12 @@ export function GodSelectScreen({ difficulty, onDifficultyChange, onSelect, onBa
                   className="god-select-card"
                   onClick={() => setPendingGodId(god.id)}
                 >
-                  <img src={god.art.main} alt={god.nameJa} />
+                  <img
+                    src={god.art.keyvisual}
+                    alt={god.nameJa}
+                    className="god-select-card-img-keyvisual"
+                    style={{ objectPosition: KEYVISUAL_OBJECT_POSITION[god.id] }}
+                  />
                   <span className={`god-archetype-badge god-archetype-${god.archetype}`}>
                     {ARCHETYPE_LABEL[god.archetype]}
                     {archetypeCounts[god.archetype] === 1 && (

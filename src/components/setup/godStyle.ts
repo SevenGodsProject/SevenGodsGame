@@ -140,6 +140,50 @@ export const STAT_LABEL: Record<'atk' | 'def', string> = {
 }
 
 /**
+ * 七神キービジュアル採用：`.god-select-card img`/`.god-select-recap img`は
+ * 1:1の正方形枠（`object-fit:cover`）だが、キービジュアル原本は7神で縦横比が
+ * 不揃い（5神が3:4、福永が約4:5、笑蓮のみ1:1）。正方形にcoverすると縦方向が
+ * 大きくクロップされるため、神ごとに顔・特徴的な装備が欠けない位置を実機
+ * プレビューで目視確認し、`object-position`のY軸オフセットだけを個別指定する
+ * （X軸はどの神も左右中央で問題ないため`center`固定）。全神に同じ値を
+ * 機械的に適用すると特定の神だけ顔が切れるため、値は共通化しない。
+ * 笑蓮は原本が既に1:1（1254×1254）でクロップが発生しないため中央のままでよい。
+ */
+export const KEYVISUAL_OBJECT_POSITION: Record<GodId, string> = {
+  [GOD_IDS.ebisu]: 'center 25%',
+  [GOD_IDS.taiyo]: 'center 30%',
+  [GOD_IDS.sobi]: 'center 28%',
+  [GOD_IDS.saika]: 'center 22%',
+  [GOD_IDS.juraku]: 'center 15%',
+  [GOD_IDS.fukuei]: 'center 20%',
+  [GOD_IDS.shouren]: 'center',
+}
+
+/**
+ * OTOMO育成インセンティブ改善（8/31版）：「OTOMOとの絆」画面の7枚のカードを
+ * 一目で見分けられるようにする専用テーマカラー。
+ *
+ * `.god-archetype-*`（5色）をそのまま流用しなかった理由：7神中3神（恵比寿・
+ * 大耀・福永）が同じattack型のため、archetype色だけでは最大5色にしかならず
+ * 7体を一意に区別できない（OTOMO育成監査STEP7で確認済み）。そのため7神の
+ * キービジュアル（`public/assets/reference/gods/`）の配色を目視で参照しつつ、
+ * 色相環を7等分した明確に異なる7色を新規に割り当てた（画像アセットは
+ * 追加せず、CSSカスタムプロパティとして各カードに注入するだけ）。
+ * `base`＝バッジ・称号見出し等の不透明表示用、`bg`＝カード背景グローの
+ * 淡色オーバーレイ用、`border`＝カード外枠用。値は既存コードの配色記法
+ * （8桁HEXでアルファを直書き、例：`#ffd16655`）に合わせている。
+ */
+export const OTOMO_THEME_COLOR: Record<GodId, { base: string; bg: string; border: string }> = {
+  [GOD_IDS.ebisu]: { base: '#ff6b5e', bg: '#ff6b5e22', border: '#ff6b5e66' },
+  [GOD_IDS.taiyo]: { base: '#e8b33d', bg: '#e8b33d22', border: '#e8b33d66' },
+  [GOD_IDS.sobi]: { base: '#4d9fff', bg: '#4d9fff22', border: '#4d9fff66' },
+  [GOD_IDS.saika]: { base: '#c96bff', bg: '#c96bff22', border: '#c96bff66' },
+  [GOD_IDS.juraku]: { base: '#6ec972', bg: '#6ec97222', border: '#6ec97266' },
+  [GOD_IDS.fukuei]: { base: '#3ddbb0', bg: '#3ddbb022', border: '#3ddbb066' },
+  [GOD_IDS.shouren]: { base: '#ff7fb3', bg: '#ff7fb322', border: '#ff7fb366' },
+}
+
+/**
  * 「特殊」バーの数字だけでは中身が分からない（CEOフィードバック）ため、
  * 何が積み上がって特殊になっているのかを一言で示す。該当効果が無ければnull。
  * draw・gainApは神の共鳴＋OTOMO成長の合計値にまとめ（「カード+2枚・カード+1枚」の

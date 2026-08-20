@@ -9,6 +9,12 @@ export type GodArt = {
   front: string
   /** 背面向き（自陣・プレイヤー側表示等） */
   back: string
+  /**
+   * 七神キービジュアル採用（タイトル画面＋神選択画面）：
+   * `public/assets/reference/gods/{id}-keyvisual.png`（原本・保護対象、変更禁止）から
+   * 生成した軽量WebP派生版。原本は無加工のまま保持し、表示用にはこちらのみ使う。
+   */
+  keyvisual: string
 }
 
 /**

@@ -53,6 +53,52 @@ describe('computeOtomoGrowthDisplay', () => {
   })
 })
 
+/**
+ * OTOMO育成インセンティブ改善（8/31版）：絆称号の段階（bondTier）と
+ * 「次の解放」プレビュー（nextUnlockText）のテスト。判定条件は既存の
+ * `computeBondText`（決定71）の分岐と完全に一致させているため、bondTextの
+ * 既存テストケースと矛盾しないことも合わせて確認する。
+ */
+describe('computeOtomoGrowthDisplay（絆称号tier・次の解放）', () => {
+  it('未プレイはbondTier=0で、次の解放は初戦クリアで得られる絆称号を示す', () => {
+    const display = computeOtomoGrowthDisplay(record())
+    expect(display.bondTier).toBe(0)
+    expect(display.nextUnlockText).toBe('絆称号「共に歩み始めた相棒」（初めての対局を終えると解放）')
+  })
+
+  it('bondTier=1（Lv1、対局済み）は次のLv3到達に必要なptを示す', () => {
+    const display = computeOtomoGrowthDisplay(record({ battlesPlayed: 1, resonanceCount: 0 }))
+    expect(display.bondTier).toBe(1)
+    expect(display.level).toBe(1)
+    expect(display.nextUnlockText).toBe('絆称号「息の合った相棒」（あと6pt）')
+  })
+
+  it('bondTier=1（Lv2）は必要ptがレベル内ポイントぶん減る', () => {
+    const display = computeOtomoGrowthDisplay(record({ battlesPlayed: 2, resonanceCount: 4 }))
+    expect(display.bondTier).toBe(1)
+    expect(display.level).toBe(2)
+    expect(display.nextUnlockText).toBe('絆称号「息の合った相棒」（あと2pt）')
+  })
+
+  it('bondTier=2（Lv3、doji未到達）は次の解放にptと童子到達の両方を示す', () => {
+    const display = computeOtomoGrowthDisplay(record({ battlesPlayed: 5, resonanceCount: 6, dojiReached: 0 }))
+    expect(display.bondTier).toBe(2)
+    expect(display.nextUnlockText).toBe('絆称号「固い絆で結ばれた相棒」（あと6pt・童子形態での対局終了が1回以上必要）')
+  })
+
+  it('bondTier=2（Lv5、doji未到達）はpt条件を満たしているため童子到達のみを示す', () => {
+    const display = computeOtomoGrowthDisplay(record({ battlesPlayed: 10, resonanceCount: 12, dojiReached: 0 }))
+    expect(display.bondTier).toBe(2)
+    expect(display.nextUnlockText).toBe('絆称号「固い絆で結ばれた相棒」（童子形態での対局終了が1回以上必要）')
+  })
+
+  it('bondTier=3（最上位）に到達すると、これ以上の絆称号は存在しないためnullを返す', () => {
+    const display = computeOtomoGrowthDisplay(record({ battlesPlayed: 10, resonanceCount: 12, dojiReached: 2 }))
+    expect(display.bondTier).toBe(3)
+    expect(display.nextUnlockText).toBeNull()
+  })
+})
+
 /** 決定74（Task C3）：Lv到達演出の発動判定ロジックのテスト */
 describe('detectOtomoLevelUp', () => {
   it('Lvが上がった場合、prevLevel/nextLevelを含むオブジェクトを返す', () => {
