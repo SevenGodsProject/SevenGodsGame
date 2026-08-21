@@ -132,6 +132,35 @@
   padding: 3px;
 }
 
+/*
+ * 「ラウンドを終える」（初心者向け再設計の最重要追加、STEP1⑤）：
+ * 実戦の`.end-round-button`と同じ配色（金の縁取り・グラデーション）を
+ * 軽量に再現するだけの表示専用ボタン風ラベル（クリックできない、実際の
+ * 遷移は起こさない）。battle.cssには依存せず、この見た目だけをここで完結させる。
+ */
+.tutorial-visual-endround {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.tutorial-visual-endround-button {
+  font-size: 10px;
+  font-weight: 700;
+  white-space: nowrap;
+  padding: 4px 10px;
+  border-radius: 999px;
+  border: 1px solid #ffd166;
+  background: linear-gradient(180deg, #ffd16626, #ffd1660a);
+  color: #ffd166;
+}
+
+.tutorial-visual-endround-note {
+  font-size: 10px;
+  color: #a9adc4;
+}
+
 .tutorial-section-text {
   flex: 1;
   min-width: 0;
@@ -148,6 +177,55 @@
   font-size: 13px;
   color: #a9adc4;
   line-height: 1.6;
+}
+
+/* ⑥のみ：戦闘ルール本文（dd）と区別する、控えめなOTOMO育成への短い導線 */
+.tutorial-section-note {
+  margin: 6px 0 0;
+  font-size: 11px;
+  color: #8d92ab;
+  line-height: 1.5;
+}
+
+/*
+ * 攻略のコツ（初心者向け再設計、STEP2）：6ステップの下に置く小さな箇条書き
+ * ブロック。`.tutorial-sections`と同じカード内に収まるよう、装飾は最小限
+ * （見出し1行＋箇条書き最大4行）に留めている。
+ */
+.tutorial-tips {
+  border-top: 1px solid #ffd16633;
+  padding-top: 12px;
+}
+
+.tutorial-tips-title {
+  margin: 0 0 6px;
+  font-size: 13px;
+  font-weight: 700;
+  color: #ffd166;
+}
+
+.tutorial-tips-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.tutorial-tips-list li {
+  position: relative;
+  padding-left: 14px;
+  font-size: 12px;
+  color: #a9adc4;
+  line-height: 1.5;
+}
+
+.tutorial-tips-list li::before {
+  content: '・';
+  position: absolute;
+  left: 0;
+  color: #ffd166;
 }
 
 .tutorial-close {
