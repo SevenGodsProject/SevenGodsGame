@@ -51,7 +51,15 @@ export function OtomoGrowthScreen({ onBack }: OtomoGrowthScreenProps) {
     <div className="setup-screen">
       <h1 className="setup-title">OTOMOとの絆</h1>
       <p className="setup-subtitle">
-        対局を重ねるほど、OTOMOとの絆が育ちます（表示専用の記録です。戦闘の強さには影響しません）。
+        対局を重ねて、7体のOTOMOとの絆を深めよう！
+        <br />
+        <br />
+        絆が深まると「精霊態・受肉態・童子」の形態の記録が少しずつ解放されます。
+        <br />
+        すべてのOTOMOと絆を結び、「七柱との絆」7/7を目指そう！
+        <br />
+        <br />
+        ※育成はコレクション要素です。戦闘の強さやスコアには影響しません。
       </p>
 
       {/* Phase1.5（TASK3）：7体グリッドの直前に全体進捗を表示。1体達成条件はbondTier>=1
