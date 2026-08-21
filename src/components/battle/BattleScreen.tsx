@@ -12,6 +12,7 @@ import { useFloatingNumbers } from './useFloatingNumbers'
 import { CAST_FX, getEnemyDamagePowerTier, TYPE_STYLE } from './cardStyle'
 import { CardIcon } from './cardIcon'
 import { CardView } from './CardView'
+import { BattleHud } from './BattleHud'
 import { EnemyPanel } from './EnemyPanel'
 import { PlayerPanel } from './PlayerPanel'
 import { GodOtomoPanel } from './GodOtomoPanel'
@@ -188,6 +189,16 @@ export function BattleScreen({ engine, onRematch, onReselect }: BattleScreenProp
         </div>
       )}
 
+      {/* Battle UX P0改善：カード選択中でも戦況を確認できるcompact HUD（案B）。
+          `.hand`の直前に置くことで、EnemyPanel/PlayerPanelがまだ画面内にある
+          間は本来位置に留まり、スクロールでそれらが隠れたタイミングで初めて
+          画面上部にstickyで張り付く（比較検証済み）。決着後（勝敗/未撃破）は
+          RewardOverlay/GameOverOverlayに切り替わるため、`status==='playing'`
+          の間だけ表示する＝それらのモーダルとHUDが同時に存在することはない。 */}
+      {state.status === 'playing' && (
+        <BattleHud enemy={state.enemy} player={state.player} ap={state.ap} resonance={state.resonance} />
+      )}
+
       <div className="hand">
         {state.hand.map((instance) => (
           <CardView
@@ -201,14 +212,12 @@ export function BattleScreen({ engine, onRematch, onReselect }: BattleScreenProp
         ))}
       </div>
 
-      <div className="battle-log">
-        {log.slice(-6).map((event, i) => (
-          <div key={i}>{formatEvent(event)}</div>
-        ))}
-      </div>
-
       {error && <div className="battle-error">{error}</div>}
 
+      {/* Battle UX P0改善：操作順（カードを使う→託宣→ラウンドを終える）に
+          合わせ、DivinationPanel・終了ボタンをbattle-logより前に並べ替えた
+          （旧順：hand→battle-log→error→DivinationPanel→終了ボタン）。
+          遊び方画面の説明順と矛盾しないようにする。 */}
       <DivinationPanel
         remaining={state.divination.remaining}
         usedThisRound={state.divination.usedThisRound}
@@ -219,6 +228,12 @@ export function BattleScreen({ engine, onRematch, onReselect }: BattleScreenProp
       <button type="button" className="end-round-button" disabled={!isPlayerTurn} onClick={endRound}>
         ラウンドを終える
       </button>
+
+      <div className="battle-log">
+        {log.slice(-6).map((event, i) => (
+          <div key={i}>{formatEvent(event)}</div>
+        ))}
+      </div>
 
       {state.status === 'won' && !rewardDone && (
         <RewardOverlay

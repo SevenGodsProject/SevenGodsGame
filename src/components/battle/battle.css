@@ -45,6 +45,15 @@
 
 .end-round-button {
   align-self: center;
+  /*
+   * Battle UX P0改善：託宣パネルの直後に「ラウンドを終える」を配置する
+   * 並び替え（BattleScreen.tsx）に合わせ、手札の誤タップ対策として
+   * 託宣パネルとの間に視覚的な余白を追加する。`.battle`の`gap:16px`と
+   * 合わせて約36px（30〜40pxの目安内）の距離になる。PC幅
+   * （min-width:900px）では`position:fixed`に切り替わり、bottom基準で
+   * 配置されるためこのmargin-topは見た目に影響しない。
+   */
+  margin-top: 20px;
 }
 
 .end-round-button:disabled {
@@ -1378,6 +1387,45 @@
   color: #b8bfe0;
 }
 
+/*
+ * Battle UX P0改善（HUD方式最終比較、案B採用）：カード選択中でも
+ * 敵の予告・自分HP・AP・共鳴を確認できるcompact戦況バー。`.hand`の直前に
+ * 配置し（BattleScreen.tsx）、`position:sticky`により「EnemyPanel/
+ * PlayerPanelがまだ画面内にある間は本来位置に留まり、スクロールでそれらが
+ * 隠れたタイミングで画面上部に張り付く」挙動にする（実測・実写で確認済み、
+ * 高さ58px・二重表示なし）。既存`.battle-topbar`は変更していない
+ * （案A＝topbar拡張は常時二重表示になることが確認できたため不採用）。
+ * z-indexは2とし、`.battle-main`直下要素(1)より上・`.result-toast`(4)や
+ * 各種バナー(5〜7)より下に置くことで、演出バナーの上に不自然に被らない
+ * ようにしている。
+ */
+.battle-hud {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 12px;
+  color: #e8e9f3;
+  background: linear-gradient(120deg, #14152cb0 0%, #0b0d17c0 100%);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid #ffd16633;
+  border-radius: 12px;
+  padding: 8px 14px;
+}
+
+.battle-hud-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.battle-hud-sep {
+  color: #a9adc4;
+}
+
 .hand {
   display: flex;
   flex-wrap: wrap;
@@ -2061,7 +2109,12 @@
   .battle-main {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    align-items: start;
+    /* Battle UX P0改善：`align-items:start`だと2カラムの丈が揃わず、
+       短い方（敵パネル）の下に空白ができていた（実測167.8px）。`stretch`に
+       することで両カラムを同じ高さに揃え、空白を解消する。敵画像サイズ・
+       演出座標・DOM構成には触れていない（`.panel`が元々flex-columnのため、
+       高さが伸びた分は`.panel`内の余白として吸収される）。 */
+    align-items: stretch;
     padding: 10px;
     gap: 10px;
   }
