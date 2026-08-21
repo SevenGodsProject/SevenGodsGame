@@ -1,4 +1,5 @@
 import type { OtomoBondRecord } from '../../hooks/otomoBondStorage'
+import { OTOMO_FORM_ORDER, type OtomoForm } from '../../core/types'
 
 /**
  * 決定71（Task C2）：OTOMO育成画面の表示専用ロジック（親密度Lv・進捗バー・絆テキスト）。
@@ -50,6 +51,14 @@ export type OtomoGrowthDisplay = {
    * 表示しないためのガード）。
    */
   nextUnlockText: string | null
+  /**
+   * Phase1.5（3形態ギャラリー）：`bondTier`から導出する、絆画面で閲覧可能な
+   * 形態一覧。新しい閾値は増やさず、既存`bondTier`の判定結果をそのまま
+   * `OTOMO_FORM_ORDER`（core/types/otomo.ts）のスライスに対応させただけ。
+   * メイン肖像（doji固定表示）は変更しない前提のため、これは「記録として
+   * 閲覧できる形態」を示す値であり、メイン肖像の切り替えには使わない。
+   */
+  unlockedForms: readonly OtomoForm[]
 }
 
 /** 絆称号（tier→文言）。`computeBondText`の分岐と1:1で対応する。 */
@@ -74,6 +83,19 @@ function computeBondTier(record: OtomoBondRecord, level: number): 0 | 1 | 2 | 3 
   return 1
 }
 
+/**
+ * 絆称号の段階からギャラリー閲覧可能な形態を導出する（Phase1.5 TASK1）。
+ * 新しい閾値は増やさず、既存`bondTier`の境界（tier1到達・tier3到達）を
+ * そのまま再利用する：tier0=精霊態のみ／tier1・2=+受肉態／tier3=+童子。
+ * tier1→2の境界には形態解放を割り当てない（`computeNextUnlockText`と
+ * 対応関係を一致させるため）。
+ */
+function computeUnlockedForms(tier: 0 | 1 | 2 | 3): readonly OtomoForm[] {
+  if (tier >= 3) return OTOMO_FORM_ORDER
+  if (tier >= 1) return OTOMO_FORM_ORDER.slice(0, 2)
+  return OTOMO_FORM_ORDER.slice(0, 1)
+}
+
 function computeNextUnlockText(
   record: OtomoBondRecord,
   level: number,
@@ -81,24 +103,31 @@ function computeNextUnlockText(
   pointsInLevel: number,
 ): string | null {
   if (tier === 0) {
-    return `絆称号「${BOND_TIER_TITLE[1]}」（初めての対局を終えると解放）`
+    // Phase1.5：tier0→1の境界でunlockedFormsが精霊態のみ→+受肉態に変わるタイミングと
+    // 一致するため「受肉態の記録」を併記する。メイン肖像（doji固定）は変わらないため、
+    // 「姿が見える」ではなく「記録を閲覧できる」という表現にしている（CEO指示）。
+    return `絆称号「${BOND_TIER_TITLE[1]}」＋受肉態の記録（初めての対局を終えると解放）`
   }
   if (tier === 1) {
     // 目標Lv3に到達するまでの必要pt。resonanceCount = (level-1)*POINTS_PER_LEVEL + pointsInLevel
     // なので、目標時点のresonanceCount（(3-1)*POINTS_PER_LEVEL）との差分で求める。
+    // tier1→2の境界はunlockedFormsに変化がないため、形態記録の文言は追加しない
+    // （存在しない報酬を表示しないため）。
     const needed = (3 - level) * POINTS_PER_LEVEL - pointsInLevel
     return `絆称号「${BOND_TIER_TITLE[2]}」（あと${needed}pt）`
   }
   if (tier === 2) {
+    // Phase1.5：tier2→3の境界でunlockedFormsが+童子に変わるタイミングと一致するため
+    // 「童子の記録」を併記する。
     const needsLevel = level < 5
     const needsDoji = record.dojiReached === 0
     const pointsNeeded = needsLevel ? (5 - level) * POINTS_PER_LEVEL - pointsInLevel : 0
     const conditions: string[] = []
     if (needsLevel) conditions.push(`あと${pointsNeeded}pt`)
     if (needsDoji) conditions.push('童子形態での対局終了が1回以上必要')
-    return `絆称号「${BOND_TIER_TITLE[3]}」（${conditions.join('・')}）`
+    return `絆称号「${BOND_TIER_TITLE[3]}」＋童子の記録（${conditions.join('・')}）`
   }
-  // tier3：これ以上解放される絆称号が存在しないため、存在しない報酬を示さずnullを返す
+  // tier3：これ以上解放される絆称号・形態記録が存在しないため、存在しない報酬を示さずnullを返す
   return null
 }
 
@@ -114,7 +143,26 @@ export function computeOtomoGrowthDisplay(record: OtomoBondRecord): OtomoGrowthD
     bondText: BOND_TIER_TITLE[bondTier],
     bondTier,
     nextUnlockText: computeNextUnlockText(record, level, bondTier, pointsInLevel),
+    unlockedForms: computeUnlockedForms(bondTier),
   }
+}
+
+export type SevenBondSummary = {
+  /** bondTier>=1（＝一度でも対局を終えた）OTOMOの数 */
+  achievedCount: number
+  /** OTOMOの総数（常に7だが、GODSの実データから導出し固定値にしない） */
+  total: number
+}
+
+/**
+ * 「七柱との絆」全体進捗の集計（Phase1.5 TASK3）。
+ * 1体達成条件はbondTier>=1（＝computeOtomoGrowthDisplayの判定をそのまま
+ * 再利用、新しい閾値は増やしていない）。新規保存データは使わず、
+ * 呼び出し側が渡す既存otomoBondレコードの配列から毎回導出する。
+ */
+export function computeSevenBondSummary(records: readonly OtomoBondRecord[]): SevenBondSummary {
+  const achievedCount = records.filter((record) => computeOtomoGrowthDisplay(record).bondTier >= 1).length
+  return { achievedCount, total: records.length }
 }
 
 export type OtomoLevelUp = {

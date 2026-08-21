@@ -1023,6 +1023,77 @@
 }
 
 /*
+ * Phase1.5 TASK3：「七柱との絆」全体進捗。7体グリッドの直前に置く。
+ * 新規画像・新規演出は使わず、既存の進捗バー（.otomo-growth-bar-track等）と
+ * 同じ視覚言語（トラック＋フィル）を専用クラスで踏襲する。7/7達成時のみ
+ * `.otomo-seven-bond-complete`が付き、既存tier3カードの金色グロー配色を
+ * 軽く再利用する（新規カラートークンは追加しない）。
+ */
+.otomo-seven-bond {
+  max-width: 340px;
+  margin: 0 auto 16px;
+  padding: 10px 14px;
+  border-radius: 12px;
+  border: 1px solid #ffffff1a;
+  background: linear-gradient(165deg, #14152caa 0%, #0b0d17cc 100%);
+}
+
+.otomo-seven-bond-complete {
+  border-color: #ffd16688;
+  box-shadow: 0 0 18px -6px #ffd16688;
+}
+
+.otomo-seven-bond-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.otomo-seven-bond-title {
+  font-weight: 700;
+  font-size: 13px;
+  color: #ffd166;
+}
+
+.otomo-seven-bond-count {
+  font-size: 12px;
+  font-weight: 700;
+  color: #e8e9f3;
+}
+
+.otomo-seven-bond-track {
+  height: 6px;
+  border-radius: 999px;
+  background: #ffffff14;
+  overflow: hidden;
+  margin-top: 6px;
+}
+
+.otomo-seven-bond-fill {
+  display: block;
+  height: 100%;
+  border-radius: 999px;
+  background: #ffd166;
+  transition: width 0.2s ease;
+}
+
+.otomo-seven-bond-complete .otomo-seven-bond-fill {
+  background: linear-gradient(90deg, #ffd166, #ffe9b0);
+}
+
+.otomo-seven-bond-text {
+  margin: 6px 0 0;
+  font-size: 11px;
+  color: #c3c6de;
+}
+
+.otomo-seven-bond-complete .otomo-seven-bond-text {
+  color: #ffd166cc;
+  font-weight: 700;
+}
+
+/*
  * --- OTOMO育成画面（Task C2、決定71） ---
  * `.god-select-grid`/`.god-select-card`（神選択画面）・`.god-stat-track`/
  * `.god-stat-fill`（ステータスバー）と同じ視覚言語を踏襲しつつ、
@@ -1292,6 +1363,63 @@
   font-size: 12px;
   font-weight: 700;
   color: #ffd166cc;
+}
+
+/*
+ * Phase1.5 TASK1：3形態ギャラリー。メイン肖像（72px角、doji固定）とは別に、
+ * 「記録として閲覧できる形態」を24px角の小サムネイルで横並びに表示する
+ * 追加1行。カード高さへの影響を最小にするため、ラベルとサムネイルを
+ * 新しい行を増やさず同じflex行に併記し、gapも詰めている。背景画像
+ * （--otomo-bg-image）を隠しすぎないよう、行の背景は透過のままにしている。
+ *
+ * UX改善（CEO+相棒確認フィードバック）：サムネイルのみだと初見で意味が
+ * 伝わりにくいとの指摘を受け「形態の記録」ラベルを追加。サムネイルは
+ * 22px→24pxへ微増（比較検証の結果、375px幅でも横スクロール・折り返し
+ * なしを確認できたため採用。26pxはラベル併記時に窮屈になったため見送り）。
+ */
+.otomo-growth-gallery {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 2px;
+  flex-wrap: wrap;
+}
+
+.otomo-growth-gallery-label {
+  font-size: 10px;
+  color: #a9adc4;
+  flex-shrink: 0;
+}
+
+.otomo-growth-gallery-slot {
+  width: 24px;
+  height: 24px;
+  border-radius: 5px;
+  overflow: hidden;
+  flex-shrink: 0;
+  outline: 1px solid var(--otomo-theme-border, #ffffff2a);
+  outline-offset: -1px;
+  background: #05060da0;
+  display: grid;
+  place-items: center;
+}
+
+.otomo-growth-gallery-slot img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* 未解放スロット：新規画像は使わず、暗い背景＋🔒のみで表現する。 */
+.otomo-growth-gallery-slot-locked {
+  background: #05060dcc;
+  outline-color: #ffffff1a;
+}
+
+.otomo-growth-gallery-lock {
+  font-size: 10px;
+  opacity: 0.6;
+  line-height: 1;
 }
 
 .otomo-growth-stats {
