@@ -15,17 +15,17 @@ import {
 import './setup.css'
 
 const STAT_AXES: { key: keyof GodStats; label: string; hint: string }[] = [
-  { key: 'attack', label: '攻撃', hint: '神の一撃が敵に与えるダメージ' },
+  { key: 'attack', label: '攻撃', hint: '敵へのダメージ' },
   {
     key: 'defense',
     label: '防御',
-    hint: 'ブロック付与や、敵の攻撃力を下げる効果の合計（被ダメージを軽減する効果）',
+    hint: 'ブロック・敵の弱体化で被ダメージを減らす効果',
   },
-  { key: 'heal', label: '回復', hint: 'HPを回復する量' },
+  { key: 'heal', label: '回復', hint: 'HPを回復する効果' },
   {
     key: 'special',
-    label: '特殊',
-    hint: 'カードを引く・神力を得る・自分を強化する等、ダメージ以外の効果をまとめた目安の数値',
+    label: '支援',
+    hint: 'カード・神力・自己強化など、戦いを有利にする効果',
   },
 ]
 
@@ -190,14 +190,19 @@ export function GodSelectScreen({ difficulty, onDifficultyChange, onSelect, onBa
         </>
       ) : (
         <>
-          <p className="setup-subtitle">選んだ神によって、共鳴発動時の一撃とOTOMOの成長効果が変わります。</p>
+          <p className="setup-subtitle">
+            7柱の神には、それぞれ得意な戦い方があります。
+            <br />
+            攻撃・防御・回復・支援の4つのバーで特徴を比べられます。最初は見た目や好みで選んでも大丈夫です。
+            <br />
+            選ぶ神によって、共鳴時の「神の一撃」とOTOMOの後押しが変わります。
+          </p>
 
           <p className="god-select-legend">
-            下の4項目は「共鳴発動時（神の一撃＋OTOMO成長）」のボーナス効果です。
-            <strong>攻撃</strong>＝ダメージ、<strong>防御</strong>＝ブロック・敵の弱体化、
-            <strong>回復</strong>＝HP回復、<strong>特殊</strong>＝ドロー・神力獲得・強化など。
-            通常の攻撃・防御・回復はどの神を選んでも共通カードで使えるため、
-            0の項目があっても被弾時に不利になるわけではありません。
+            <strong>攻撃</strong>＝敵へのダメージ、<strong>防御</strong>＝ブロック・敵の弱体化で被ダメージを減らす効果、
+            <strong>回復</strong>＝HPを回復する効果、<strong>支援</strong>＝カード・神力・自己強化など、戦いを有利にする効果。
+            バーが大きいほど、その分野を得意とする神です。
+            これらは共鳴時の得意分野を表す目安です。0の項目があっても、通常の攻撃・防御・回復は共通カードで使えます。
           </p>
 
           <div className="god-select-grid">
