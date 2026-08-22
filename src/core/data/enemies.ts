@@ -32,7 +32,14 @@ export const ENEMIES: EnemyDef[] = [
     id: ENEMY_IDS.trial,
     name: '試練の影',
     maxHp: 103,
-    art: art('datenshi'),
+    // STEP-A5：敵アセット刷新の第一弾としてdatenshiのみ本番でWebPへ切り替えた
+    // （破片混入のあった旧art.pngから、単体・透過済みの新規絵へ差し替え。
+    // 数値・AIには一切触れていない）。他6体はまだPNGのため、共通の`art()`
+    // ヘルパーは変更せず、この1体だけ直接パスを指定する最小変更にしている。
+    art: '/assets/enemies/datenshi/art.webp',
+    typeLabel: '標準・入門型',
+    typeDescription: '基本を守れば戦える。終盤にやや攻撃が強まる。',
+    visualType: 'lateSurgeMild',
     battleCries: [
       'その力、まことのものか見極めよう',
       'まだ終わらぬ…続けるがいい',
@@ -57,6 +64,9 @@ export const ENEMIES: EnemyDef[] = [
     name: '業斧の鬼将',
     maxHp: 100,
     art: art('oni'),
+    typeLabel: '重撃型',
+    typeDescription: '攻撃が重い。防御を切らさない。',
+    visualType: 'standard',
     battleCries: [
       '吠えろ、我が斧よ！',
       '一撃で仕留めてくれる！',
@@ -84,6 +94,9 @@ export const ENEMIES: EnemyDef[] = [
     name: '藍花の怨霊',
     maxHp: 95,
     art: art('onryo'),
+    typeLabel: '遅咲き型',
+    typeDescription: '終盤に攻撃が急激に強くなる。',
+    visualType: 'lateSurgeStrong',
     battleCries: [
       'まだ…まだ足りぬ…',
       '恨みは深く、蒼く燃える…',
@@ -109,6 +122,9 @@ export const ENEMIES: EnemyDef[] = [
     name: '銀甲の機工師',
     maxHp: 100,
     art: art('karakuri'),
+    typeLabel: '溜め型',
+    typeDescription: '溜めの次に大技。予告を読んで備える。',
+    visualType: 'standard',
     battleCries: [
       '照準、完了',
       '無駄のない一撃を',
@@ -134,6 +150,9 @@ export const ENEMIES: EnemyDef[] = [
     name: '双牙の魔獣',
     maxHp: 85,
     art: art('juuma'),
+    typeLabel: '速攻型',
+    typeDescription: '序盤から攻撃が激しい。',
+    visualType: 'fast',
     battleCries: [
       'ガアアアッ！',
       '喰らい尽くしてやる…！',
@@ -159,6 +178,9 @@ export const ENEMIES: EnemyDef[] = [
     name: '蒼海の龍神',
     maxHp: 103,
     art: art('ryujin'),
+    typeLabel: '耐久型',
+    typeDescription: '高HP。7ラウンドで倒し切る火力配分が重要。',
+    visualType: 'heavy',
     battleCries: [
       '小さき者よ、海の重みを知るがいい',
       '悠久の時に比べれば、瞬きよ',
@@ -186,6 +208,9 @@ export const ENEMIES: EnemyDef[] = [
     name: '乱舞の道化',
     maxHp: 92,
     art: art('doukeshi'),
+    typeLabel: 'トリック型',
+    typeDescription: '不規則な溜め攻撃。毎ターン予告確認が重要。',
+    visualType: 'standard',
     battleCries: [
       'さあ、遊びの時間だ！',
       '次はどっちが痛いかな〜？',

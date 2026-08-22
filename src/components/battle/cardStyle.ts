@@ -1,4 +1,4 @@
-import type { CardDef, CardType, Rarity } from '../../core/types'
+import type { CardDef, CardType, EnemyActionDef, Rarity } from '../../core/types'
 
 /**
  * カードの見た目（決定28で色付き四角からグラデーション調に刷新）。
@@ -64,4 +64,32 @@ export function getEnemyDamagePowerTier(def: CardDef): PowerTier {
   if (amount >= 15) return 'huge'
   if (amount >= 10) return 'strong'
   return 'normal'
+}
+
+/**
+ * STEP3-A（8/31 敵7体ゲーム性監査 処理05）：敵の予告（`enemy.intent`）のダメージ量から
+ * 表示tierを決める。閾値は`getEnemyDamagePowerTier`と全く同じ10/15をそのまま流用した
+ * （プレイヤーが「自分のカードの威力」と「敵の次の一撃の威力」を同じ物差しで比較できる
+ * ようにするため）。敵AI・行動テーブル（enemies.ts）・攻撃値には一切関与しない、
+ * 表示専用の純粋関数。
+ */
+export function getIntentPowerTier(amount: number): PowerTier {
+  if (amount >= 15) return 'huge'
+  if (amount >= 10) return 'strong'
+  return 'normal'
+}
+
+/**
+ * STEP3-A（処理05）：予告表示の共通フォーマット。`EnemyPanel`・`BattleHud`の
+ * 両方から呼ぶ（意匠を揃えるため）。既存の`EnemyActionDef`（attack/chargeの
+ * 2種類のみ）の範囲内で完結しており、新しい行動種別・敵AI・攻撃値には
+ * 一切関与しない表示専用ロジック。
+ */
+export function formatEnemyIntent(intent: EnemyActionDef | null): string {
+  if (!intent) return '行動予告なし'
+  if (intent.kind === 'charge') return `⚡ ${intent.label}`
+  const tier = getIntentPowerTier(intent.amount)
+  if (tier === 'huge') return `🔥 特大 ${intent.amount}`
+  if (tier === 'strong') return `💥 強打 ${intent.amount}`
+  return `⚔ ${intent.amount}`
 }

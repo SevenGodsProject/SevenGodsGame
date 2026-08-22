@@ -13,6 +13,7 @@ import { CAST_FX, getEnemyDamagePowerTier, TYPE_STYLE } from './cardStyle'
 import { CardIcon } from './cardIcon'
 import { CardView } from './CardView'
 import { BattleHud } from './BattleHud'
+import { BattleMiniResult } from './BattleMiniResult'
 import { EnemyPanel } from './EnemyPanel'
 import { PlayerPanel } from './PlayerPanel'
 import { GodOtomoPanel } from './GodOtomoPanel'
@@ -41,7 +42,9 @@ type BattleScreenProps = {
 export function BattleScreen({ engine, onRematch, onReselect }: BattleScreenProps) {
   const { state, log, error, isEnemyTurn, pendingCardUid, newBest, otomoBondChange, playCard, endRound, divine } =
     engine
-  const fx = useBattleFx(log)
+  // STEP2-B：BattleMiniResultのAP獲得検出用（gainAp効果はGameEventを出さないため、
+  // useBattleFx側でap.currentの差分から検出する。stateがまだ無い初回描画では0扱い）
+  const fx = useBattleFx(log, state?.ap.current ?? 0)
   const { enemyNumbers, playerNumbers } = useFloatingNumbers(log, state?.godId)
 
   // CEO指示：共鳴バースト（.burst-banner）とOTOMO進化（.evolve-banner）が
@@ -197,6 +200,22 @@ export function BattleScreen({ engine, onRematch, onReselect }: BattleScreenProp
           の間だけ表示する＝それらのモーダルとHUDが同時に存在することはない。 */}
       {state.status === 'playing' && (
         <BattleHud enemy={state.enemy} player={state.player} ap={state.ap} resonance={state.resonance} />
+      )}
+
+      {/* STEP2-B：BattleHud直下に、カード使用結果（誰が誰を攻撃したか＋数値変化）を
+          一時表示する。BattleHudと同じsticky領域内に置くことで、`.hand`まで
+          スクロールした状態でも「カードを押した瞬間、その場で結果が見える」を
+          実現する（CEO実プレイ指摘「カードしか見えず攻撃シーンが見えない」への対応）。
+          表示するものが無い時はコンポーネント自体がnullを返すため、空領域は残らない。 */}
+      {state.status === 'playing' && (
+        <BattleMiniResult
+          godId={state.godId}
+          enemy={state.enemy}
+          player={state.player}
+          resonanceMax={state.resonance.max}
+          resultKey={fx.miniResultKey}
+          result={fx.miniResult}
+        />
       )}
 
       <div className="hand">

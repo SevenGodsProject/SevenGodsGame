@@ -1,6 +1,14 @@
 import type { CardDef, CardDefId, CardType, GodId } from '../types'
 import { RULES } from './rules'
-import { ALL_CARDS, getCardDef } from './cards'
+import {
+  ALL_CARDS,
+  getCardDef,
+  CARD_IDS,
+  EBISU_CARD_IDS,
+  SOBI_CARD_IDS,
+  SAIKA_CARD_IDS,
+  JURAKU_CARD_IDS,
+} from './cards'
 import { STARTER_DECK } from './decks'
 import { DEFAULT_GOD_ID, GOD_IDS } from './gods'
 
@@ -125,10 +133,110 @@ function recommendedExclusiveCopies(godId: GodId): number {
 }
 
 /**
+ * v4おすすめデッキ（8/31提出版・Opus監査「7神ゲーム性／戦闘UX 最終設計監査」で
+ * 確定した方針をSTEP1として実装）。
+ *
+ * CEO実プレイでの指摘「同じカードが何枚も出て選択肢が多く感じる」「どの神でも
+ * 似たプレイになる」への対応。方針は「神専用カードは重複を許容する（最大2枚）、
+ * 共通カードは原則1枚」。TARGET_TYPE_COUNT／recommendedExclusiveCopiesベースの
+ * 機械的な充填（下記の一般ロジック）を使わず、神ごとに手動設計した固定リストを返す。
+ *
+ * 対象は恵比寿・蒼毘・才華・寿楽の4神のみ（大耀・福永・笑蓮はOpusのv4試行で
+ * 一部セルが悪化したため今回は対象外、現行の一般ロジックのまま）。
+ *
+ * 各デッキとも合計20枚・専用8枚(2枚×4種)＋共通12枚。共通カードの2枚投入は
+ * 明確な理由がある場合のみ許可した例外（蒼毘の呪縛、寿楽の渾身の一撃／大喝／
+ * 呪縛／浄めの光）で、いずれもhard×defensiveの歴史的スタレメイト対策として
+ * Opus監査のシミュレーションで効果を確認済み。
+ */
+const V4_RECOMMENDED_DECKS: Partial<Record<GodId, CardDefId[]>> = {
+  [GOD_IDS.ebisu]: [
+    ...Array(2).fill(EBISU_CARD_IDS.greatCatch),
+    ...Array(2).fill(EBISU_CARD_IDS.tidingsCatch),
+    ...Array(2).fill(EBISU_CARD_IDS.ebisuSmile),
+    ...Array(2).fill(EBISU_CARD_IDS.fortune),
+    CARD_IDS.strike,
+    CARD_IDS.heavyBlow,
+    CARD_IDS.quickStrike,
+    CARD_IDS.allOutStrike,
+    CARD_IDS.guard,
+    CARD_IDS.ironStance,
+    CARD_IDS.readTheAttack,
+    CARD_IDS.resonate,
+    CARD_IDS.kaguraDance,
+    CARD_IDS.oracle,
+    CARD_IDS.prophecy,
+    CARD_IDS.minorOracle,
+  ],
+  [GOD_IDS.sobi]: [
+    ...Array(2).fill(SOBI_CARD_IDS.unshakableStance),
+    ...Array(2).fill(SOBI_CARD_IDS.oathOfShield),
+    ...Array(2).fill(SOBI_CARD_IDS.counterBlade),
+    ...Array(2).fill(SOBI_CARD_IDS.sternRebuke),
+    CARD_IDS.strike,
+    CARD_IDS.heavyBlow,
+    CARD_IDS.allOutStrike,
+    CARD_IDS.quickStrike,
+    CARD_IDS.parry,
+    CARD_IDS.resonate,
+    CARD_IDS.kaguraDance,
+    CARD_IDS.mikoDance,
+    ...Array(2).fill(CARD_IDS.curse), // 例外：hard×defensiveの歴史的スタレメイト対策
+    CARD_IDS.oracle,
+    CARD_IDS.prophecy,
+  ],
+  [GOD_IDS.saika]: [
+    ...Array(2).fill(SAIKA_CARD_IDS.mesmerizingDance),
+    ...Array(2).fill(SAIKA_CARD_IDS.standingOvation),
+    ...Array(2).fill(SAIKA_CARD_IDS.soloPerformance),
+    ...Array(2).fill(SAIKA_CARD_IDS.encore),
+    CARD_IDS.heavyBlow,
+    CARD_IDS.quickStrike,
+    CARD_IDS.renGeki,
+    CARD_IDS.allOutStrike,
+    CARD_IDS.guard,
+    // STEP1-B修正（回帰対応）：hard×双牙の魔獣（速攻型、R1から高圧力）で
+    // 才華v4が最善戦略でも20%前後まで崩壊する回帰が発覚。診断の結果、guard型が
+    // 守護1枚のみでR1〜R2に防御手段を引けず素通しでHPを失っていたことが真因と
+    // 判明（未撃破ではなく全例HP0敗北）。一撃(dmg5のみ)→鉄壁の構え(block12)、
+    // 見通し(draw1+gainAp1、独奏/喝采と役割重複)→受け流し(block3+共鳴1、
+    // コンボ性を維持)の2枚差し替えで、双牙の魔獣×hard×defensiveを70〜85%
+    // まで回復させつつ、他6敵・easy/normal・重複率・カード使用枚数など
+    // 才華の個性指標にはほぼ影響がないことをシミュレーションで確認済み。
+    CARD_IDS.ironStance,
+    CARD_IDS.parry,
+    CARD_IDS.resonate,
+    CARD_IDS.kaguraDance,
+    CARD_IDS.mikoDance,
+    CARD_IDS.oracle,
+    CARD_IDS.prophecy,
+  ],
+  [GOD_IDS.juraku]: [
+    ...Array(2).fill(JURAKU_CARD_IDS.mischief),
+    ...Array(2).fill(JURAKU_CARD_IDS.wisdomOfAges),
+    ...Array(2).fill(JURAKU_CARD_IDS.halfJoking),
+    ...Array(2).fill(JURAKU_CARD_IDS.whimsy),
+    ...Array(2).fill(CARD_IDS.allOutStrike), // 例外：hard×defensiveの歴史的スタレメイト対策（単発火力の集中が必須）
+    ...Array(2).fill(CARD_IDS.warCry), // 同上
+    ...Array(2).fill(CARD_IDS.curse), // 例外：妨害重ねがけコンセプトの核
+    ...Array(2).fill(CARD_IDS.purifyingLight), // 同上
+    CARD_IDS.resonate,
+    CARD_IDS.kaguraDance,
+    CARD_IDS.oracle,
+    CARD_IDS.prophecy,
+  ],
+}
+
+/**
  * 「おすすめデッキ」を1つ生成します。
  *
- * 恵比寿は決定12で確定済みのSTARTER_DECK（32種から選び抜いた20種）をそのまま使う。
- * 他の6神は決定25で専用カード4種が用意されたため、まずそれを
+ * v4対象4神（恵比寿・蒼毘・才華・寿楽）は上記`V4_RECOMMENDED_DECKS`の固定
+ * リストをそのまま返す。恵比寿は決定12で確定済みのSTARTER_DECKに代わり、
+ * こちらが「おすすめデッキ」として採用される（STARTER_DECK自体は変更せず
+ * `decks.ts`に残置。balanceSim.test.ts等の既存フィクスチャとしての参照は
+ * 引き続き有効）。
+ *
+ * 残る3神（大耀・福永・笑蓮）は決定25で専用カード4種が用意されたため、まずそれを
  * `recommendedExclusiveCopies(godId)`枚ずつ採用して神の個性を必ず体験できるように
  * した上で、残り枠は`TARGET_TYPE_COUNT`から専用カードの投入分を差し引いた
  * 不足分を種別ごとに共通カードで埋める。
@@ -142,6 +250,11 @@ function recommendedExclusiveCopies(godId: GodId): number {
  * 「均等に少しずつ」しか採用できず、結果的に攻撃カードの絶対数が不足していた。
  */
 export function getRecommendedDeck(godId: GodId): CardDefId[] {
+  const v4Deck = V4_RECOMMENDED_DECKS[godId]
+  if (v4Deck) {
+    return [...v4Deck]
+  }
+
   if (godId === DEFAULT_GOD_ID) {
     return [...STARTER_DECK]
   }

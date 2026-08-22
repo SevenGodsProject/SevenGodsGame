@@ -1,6 +1,31 @@
 import { useEffect, useRef, useState } from 'react'
 import type { GameEvent, OtomoForm } from '../../core/types'
 
+/**
+ * STEP2-B（BattleMiniResult）：1回のアクション（カード使用／ラウンド終了＝敵ターン）で
+ * 何が起きたかを構造化したデータ。既存GameEventから導出するだけで、core/engineの
+ * GameState・reducer・イベント定義は一切変更しない（gainApだけイベントが存在しない
+ * ため、useBattleFxの外側でap.currentの差分から検出する＝下記apGain参照）。
+ */
+export type MiniResultData = {
+  /** 誰が誰を攻撃したか。カードで敵を攻撃＝'playerAttack'、敵のターン＝'enemyAttack'、
+   * 攻撃を伴わない効果（回復・共鳴・支援等のみ）＝'neutral' */
+  direction: 'playerAttack' | 'enemyAttack' | 'neutral'
+  /** 敵に与えた実ダメージ（target='enemy'のDAMAGE_DEALT合計） */
+  enemyDamage: number
+  /** 敵の攻撃で自分が実際に受けたダメージ（ブロック後、ENEMY_ACTEDを伴うバッチのみ） */
+  enemyAttackDamage: number
+  /** 自分のカード効果による自傷ダメージ（捨身の一撃等、ENEMY_ACTEDを伴わないバッチ） */
+  selfInflictedDamage: number
+  heal: number
+  block: number
+  resonanceGain: number
+  resonanceTotal: number | null
+  apGain: number
+  drawCount: number
+  buffs: { target: 'enemy' | 'self'; stat: string; amount: number; rounds: number }[]
+}
+
 export type BattleFx = {
   /** 変わるたびにEnemyPanelのシェイクを再生させるキー */
   enemyHitKey: number
@@ -28,6 +53,10 @@ export type BattleFx = {
   resultToastKey: number
   /** 直近のカード使用結果として表示するテキスト（複数効果は" / "で連結） */
   resultToastText: string
+  /** STEP2-B：変わるたびにBattleMiniResult（HUD直下のミニ戦闘結果）を再生させるキー */
+  miniResultKey: number
+  /** 直近のアクションの構造化結果。該当する効果が無かった場合はnull */
+  miniResult: MiniResultData | null
 }
 
 const INITIAL_FX: BattleFx = {
@@ -44,6 +73,8 @@ const INITIAL_FX: BattleFx = {
   blockGainKey: 0,
   resultToastKey: 0,
   resultToastText: '',
+  miniResultKey: 0,
+  miniResult: null,
 }
 
 /**
@@ -51,16 +82,25 @@ const INITIAL_FX: BattleFx = {
  * ルール本体（core）は演出を一切知らないので、「起きた出来事」から
  * 「どう見せるか」への変換はすべてここに閉じ込めます。
  */
-export function useBattleFx(log: GameEvent[]): BattleFx {
+export function useBattleFx(log: GameEvent[], apCurrent: number): BattleFx {
   const [fx, setFx] = useState<BattleFx>(INITIAL_FX)
   const seenCount = useRef(0)
+  // STEP2-B：gainAp効果はGameEventを一切出さない（effects.tsのcase 'gainAp'参照）ため、
+  // core/engineに新しいイベントを追加せず、UI層でap.currentの差分だけを見て検出する。
+  // 新しいGameStateは持たない（既存のap.currentという値を読むだけ）。
+  const prevAp = useRef(apCurrent)
 
   useEffect(() => {
     // ログが短くなった＝ゲームがリスタートされた
-    if (log.length < seenCount.current) seenCount.current = 0
+    if (log.length < seenCount.current) {
+      seenCount.current = 0
+      prevAp.current = apCurrent
+    }
 
     const newEvents = log.slice(seenCount.current)
     seenCount.current = log.length
+    const apDelta = apCurrent - prevAp.current
+    prevAp.current = apCurrent
     if (newEvents.length === 0) return
 
     let enemyHit = 0
@@ -75,6 +115,18 @@ export function useBattleFx(log: GameEvent[]): BattleFx {
     let apPenaltyAmount = 0
     let blockGain = 0
     let resultToast = 0
+    // STEP2-B（BattleMiniResult用の集計。既存のresultTexts等とは独立に集計するだけで
+    // core/engineには一切触れない）
+    let mrEnemyDamage = 0
+    let mrHeal = 0
+    let mrBlock = 0
+    let mrResonanceGain = 0
+    let mrResonanceTotal: number | null = null
+    let mrDrawCount = 0
+    let mrEnemyAttackDamage = 0
+    let mrSelfInflictedDamage = 0
+    let mrEnemyActed = 0
+    const mrBuffs: MiniResultData['buffs'] = []
     // スマホUX修正：カード使用結果（攻撃/回復/防御）は、EnemyPanel/PlayerPanelという
     // 非fixed要素の中でしか見えず、手札位置までスクロールした状態では画面外だった
     // （cast-flash・burst-banner・ap-penalty-toast等は既にfixedで解決済みだが、
@@ -93,8 +145,18 @@ export function useBattleFx(log: GameEvent[]): BattleFx {
           godAttack += 1
           resultToast += 1
           resultTexts.push(`⚔ 敵に${event.amount}ダメージ`)
+          mrEnemyDamage += event.amount
         } else {
           selfHit += 1
+          // STEP2-B：ENEMY_ACTEDが同バッチに先行していれば「敵の攻撃で受けた
+          // ダメージ」、無ければ「捨身の一撃等、自分のカード効果による自傷」。
+          // round.tsのrunEnemyTurnはENEMY_ACTED→applyDamageの順でイベントを
+          // 積むため、newEvents内では常にENEMY_ACTEDが先に処理済みになる。
+          if (mrEnemyActed > 0) {
+            mrEnemyAttackDamage += event.amount
+          } else {
+            mrSelfInflictedDamage += event.amount
+          }
         }
       } else if (event.t === 'ENEMY_ACTED' && event.kind === 'attack') {
         // 第二次完成フェーズP0-3：以前はDAMAGE_DEALT{target:'self', amount>0}の
@@ -108,10 +170,12 @@ export function useBattleFx(log: GameEvent[]): BattleFx {
         // 従来どおりamount>0（dealtが実際に発生した時）限定のまま変更しない
         // （ブロックしたのに殴られたように見える誤読を避けるため）。
         enemyAttack += 1
+        mrEnemyActed += 1
       } else if (event.t === 'HEALED' && event.amount > 0) {
         heal += 1
         resultToast += 1
         resultTexts.push(`💚 HP+${event.amount}`)
+        mrHeal += event.amount
       } else if (event.t === 'RESONANCE_BURST') {
         burst += 1
         godAttack += 1
@@ -130,8 +194,47 @@ export function useBattleFx(log: GameEvent[]): BattleFx {
         blockGain += 1
         resultToast += 1
         resultTexts.push(`🛡 ブロック+${event.amount}`)
+        mrBlock += event.amount
+      } else if (event.t === 'RESONANCE_GAINED') {
+        // STEP2-B：既存イベント（これまでどのフックも未消費だった）をミニ結果表示に使う
+        mrResonanceGain += event.amount
+        mrResonanceTotal = event.total
+      } else if (event.t === 'CARD_DRAWN') {
+        mrDrawCount += 1
+      } else if (event.t === 'BUFF_APPLIED') {
+        mrBuffs.push({ target: event.target, stat: event.stat, amount: event.amount, rounds: event.rounds })
       }
     }
+
+    // STEP2-B：ミニ結果の方向性を決定。ENEMY_ACTEDがあれば敵ターン、
+    // 敵へのダメージがあればプレイヤー攻撃、それ以外（回復・共鳴・支援のみ）は中立。
+    const mrDirection: MiniResultData['direction'] =
+      mrEnemyActed > 0 ? 'enemyAttack' : mrEnemyDamage > 0 ? 'playerAttack' : 'neutral'
+    const hasMiniResult =
+      mrEnemyDamage > 0 ||
+      mrEnemyAttackDamage > 0 ||
+      mrSelfInflictedDamage > 0 ||
+      mrHeal > 0 ||
+      mrBlock > 0 ||
+      mrResonanceGain > 0 ||
+      mrDrawCount > 0 ||
+      apDelta !== 0 ||
+      mrBuffs.length > 0
+    const miniResult: MiniResultData | null = hasMiniResult
+      ? {
+          direction: mrDirection,
+          enemyDamage: mrEnemyDamage,
+          enemyAttackDamage: mrEnemyAttackDamage,
+          selfInflictedDamage: mrSelfInflictedDamage,
+          heal: mrHeal,
+          block: mrBlock,
+          resonanceGain: mrResonanceGain,
+          resonanceTotal: mrResonanceTotal,
+          apGain: apDelta,
+          drawCount: mrDrawCount,
+          buffs: mrBuffs,
+        }
+      : null
 
     if (
       enemyHit ||
@@ -143,7 +246,8 @@ export function useBattleFx(log: GameEvent[]): BattleFx {
       enemyAttack ||
       apPenalty ||
       blockGain ||
-      resultToast
+      resultToast ||
+      miniResult
     ) {
       setFx((prev) => ({
         enemyHitKey: prev.enemyHitKey + enemyHit,
@@ -159,9 +263,11 @@ export function useBattleFx(log: GameEvent[]): BattleFx {
         blockGainKey: prev.blockGainKey + blockGain,
         resultToastKey: prev.resultToastKey + resultToast,
         resultToastText: resultToast ? resultTexts.join(' / ') : prev.resultToastText,
+        miniResultKey: miniResult ? prev.miniResultKey + 1 : prev.miniResultKey,
+        miniResult: miniResult ?? prev.miniResult,
       }))
     }
-  }, [log])
+  }, [log, apCurrent])
 
   return fx
 }

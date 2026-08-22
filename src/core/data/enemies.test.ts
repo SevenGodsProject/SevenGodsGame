@@ -23,6 +23,18 @@ describe('ENEMIES', () => {
       }
     }
   })
+
+  // STEP3-A（8/31 敵7体ゲーム性監査 処理20＝A案）：EnemyDefへ追加した表示専用
+  // メタデータ（typeLabel/typeDescription/visualType）が7体全てに揃っていることを
+  // 保証する。HP・actions（数値・行動テーブル）はこのテストの対象外＝無変更のまま。
+  it('gives every enemy a short type label and description (STEP3-A)', () => {
+    for (const enemy of ENEMIES) {
+      expect(enemy.typeLabel.length).toBeGreaterThan(0)
+      expect(enemy.typeDescription.length).toBeGreaterThan(0)
+      // BattleHud/EnemyPanelの1行表示を圧迫しないよう、短い説明であることを保証する
+      expect(enemy.typeDescription.length).toBeLessThanOrEqual(30)
+    }
+  })
 })
 
 describe('pickEnemyId', () => {

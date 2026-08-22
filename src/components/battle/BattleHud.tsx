@@ -1,4 +1,5 @@
 import type { EnemyState, PlayerState } from '../../core/types'
+import { formatEnemyIntent } from './cardStyle'
 
 type BattleHudProps = {
   enemy: EnemyState
@@ -25,11 +26,8 @@ type BattleHudProps = {
  * 「カードを選ぶ判断に必須の4項目＋敵HP」だけに絞っている）。
  */
 export function BattleHud({ enemy, player, ap, resonance }: BattleHudProps) {
-  const intentText = enemy.intent
-    ? enemy.intent.kind === 'attack'
-      ? `⚔ 次 ${enemy.intent.amount}`
-      : enemy.intent.label
-    : '予告なし'
+  // STEP3-A：EnemyPanelと同じtier表示（⚔/💥/🔥/⚡）に揃える。HUDの高さ・レイアウトは無変更。
+  const intentText = formatEnemyIntent(enemy.intent)
 
   return (
     <div className="battle-hud">
