@@ -121,7 +121,10 @@ export const ENEMIES: EnemyDef[] = [
     id: ENEMY_IDS.karakuri,
     name: '銀甲の機工師',
     maxHp: 100,
-    art: art('karakuri'),
+    // STEP-K5：敵アセット刷新の第二弾としてkarakuriもPNGからWebPへ本番切り替え
+    // （STEP-K1〜K4Bで発光修正版を検証・A判定。datenshi＝STEP-A5と同じ最小変更
+    // 方式で、この1体だけ直接パスを指定する。数値・AIには一切触れていない）。
+    art: '/assets/enemies/karakuri/art.webp',
     typeLabel: '溜め型',
     typeDescription: '溜めの次に大技。予告を読んで備える。',
     visualType: 'standard',
