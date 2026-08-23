@@ -210,7 +210,10 @@ export const ENEMIES: EnemyDef[] = [
     id: ENEMY_IDS.doukeshi,
     name: '乱舞の道化',
     maxHp: 92,
-    art: art('doukeshi'),
+    // STEP-D4：敵アセット刷新の第三弾としてdoukeshiもPNGからWebPへ本番切り替え
+    // （STEP-D1〜D3で候補Bを検証・A判定。datenshi＝STEP-A5・karakuri＝STEP-K5と
+    // 同じ最小変更方式で、この1体だけ直接パスを指定する。数値・AIには一切触れていない）。
+    art: '/assets/enemies/doukeshi/art.webp',
     typeLabel: 'トリック型',
     typeDescription: '不規則な溜め攻撃。毎ターン予告確認が重要。',
     visualType: 'standard',
