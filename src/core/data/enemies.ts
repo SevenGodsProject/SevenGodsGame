@@ -63,7 +63,10 @@ export const ENEMIES: EnemyDef[] = [
     id: ENEMY_IDS.oni,
     name: '業斧の鬼将',
     maxHp: 100,
-    art: art('oni'),
+    // STEP-L2：敵アセット最終調整の第一弾としてoniもPNGからWebPへ本番切り替え
+    // （STEP-L1で軽加工候補を検証・A判定。新規生成は行わず、512×512化・余白調整
+    // のみ。datenshi/karakuri/doukeshiと同じ最小変更方式。数値・AIには一切触れていない）。
+    art: '/assets/enemies/oni/art.webp',
     typeLabel: '重撃型',
     typeDescription: '攻撃が重い。防御を切らさない。',
     visualType: 'standard',
@@ -152,7 +155,10 @@ export const ENEMIES: EnemyDef[] = [
     id: ENEMY_IDS.juuma,
     name: '双牙の魔獣',
     maxHp: 85,
-    art: art('juuma'),
+    // STEP-L2：敵アセット最終調整の第二弾としてjuumaもPNGからWebPへ本番切り替え
+    // （STEP-L1で軽加工候補を検証・A判定。左端の破片除去＋512×512化のみで、
+    // 新規生成なし。datenshi/karakuri/doukeshi/oniと同じ最小変更方式）。
+    art: '/assets/enemies/juuma/art.webp',
     typeLabel: '速攻型',
     typeDescription: '序盤から攻撃が激しい。',
     visualType: 'fast',
