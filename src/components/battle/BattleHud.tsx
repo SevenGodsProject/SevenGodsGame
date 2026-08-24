@@ -1,5 +1,5 @@
 import type { EnemyState, PlayerState } from '../../core/types'
-import { formatEnemyIntent } from './cardStyle'
+import { formatEnemyIntent, getIntentTierClass } from './cardStyle'
 
 type BattleHudProps = {
   enemy: EnemyState
@@ -28,6 +28,11 @@ type BattleHudProps = {
 export function BattleHud({ enemy, player, ap, resonance }: BattleHudProps) {
   // STEP3-A：EnemyPanelと同じtier表示（⚔/💥/🔥/⚡）に揃える。HUDの高さ・レイアウトは無変更。
   const intentText = formatEnemyIntent(enemy.intent)
+  // STEP-UX4：危険度クラスもEnemyPanelと揃える。box-model（padding/border）に
+  // 影響する装飾は使わず、outline/text-shadow/絶対配置の::afterのみで表現して
+  // いるため、`.battle-hud`の高さ（`.battle-mini-result`のtop:58pxが依存する
+  // 実測値）には影響しない。
+  const intentTierClass = getIntentTierClass(enemy.intent)
 
   return (
     <div className="battle-hud">
@@ -36,7 +41,7 @@ export function BattleHud({ enemy, player, ap, resonance }: BattleHudProps) {
           敵 HP {enemy.hp}/{enemy.maxHp}
         </span>
         <span className="battle-hud-sep">｜</span>
-        <span>{intentText}</span>
+        <span className={intentTierClass || undefined}>{intentText}</span>
       </div>
       <div className="battle-hud-row">
         <span>

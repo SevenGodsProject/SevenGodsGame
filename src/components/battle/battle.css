@@ -601,6 +601,58 @@
   color: #ffb4b4;
 }
 
+/* STEP-UX4：敵Intentの危険度強調。「全部を派手にしない」方針のため、通常
+   （⚔・tier=normal）はクラス無し＝現状の見た目のまま。強打（💥・strong）は
+   色をわずかに変えるだけで枠・グロー・pulseは付けない。特大（🔥・huge）と
+   溜め（⚡・charge）だけ枠＋グローで明確に強調するが、pulse（呼吸するような
+   弱い強弱）はCEO方針により最上位のcharge一段にだけ絞る。
+   新しい色体系は追加せず、huge側は既存の攻撃色（TYPE_STYLE.attack、
+   cardStyle.ts、#e5484d系）、charge側は既存の`.enemy-avatar-charging`と
+   同じ色（#ffd166）をそのまま再利用する。
+   .battle-hud（`.battle-mini-result`のtop:58pxが依存する実測高さ）にも同じ
+   クラスを使うため、padding/borderなどbox-modelに影響する装飾は使わず、
+   text-shadow・outline（レイアウトサイズに影響しない）・絶対配置の::after
+   （通常フロー外）のみで表現している。 */
+.intent-tier-strong {
+  color: #ff6b6b;
+  font-weight: 700;
+}
+
+.intent-tier-huge {
+  display: inline-block;
+  position: relative;
+  color: #ffb4b4;
+  font-weight: 700;
+  text-shadow: 0 0 6px #e5484dcc;
+  outline: 1px solid #e5484d66;
+  outline-offset: 2px;
+}
+
+.intent-tier-charge {
+  display: inline-block;
+  position: relative;
+  color: #ffd166;
+  font-weight: 700;
+  text-shadow: 0 0 6px #ffd166cc;
+  outline: 1px solid #ffd16666;
+  outline-offset: 2px;
+}
+
+/* 呼吸グロー本体は::afterの装飾レイヤーにのみ適用し（`.resonance-gauge-wrap::after`
+   と同じ設計、決定95踏襲）、テキスト本体（数値・文言）は常にopacity:1のまま
+   可読性を落とさない。既存のarena-glow-breathe（opacity:0.5→0.8→0.5のみ）を
+   新規keyframes無しで流用、durationも共鳴6/7演出と同じ1.8sを踏襲する。 */
+.intent-tier-charge::after {
+  content: '';
+  position: absolute;
+  inset: -4px;
+  border-radius: 6px;
+  box-shadow: 0 0 10px 2px #ffd16666;
+  pointer-events: none;
+  opacity: 0.5;
+  animation: arena-glow-breathe 1.8s ease-in-out infinite;
+}
+
 .god-otomo-panel {
   align-items: center;
 }

@@ -1,7 +1,7 @@
 import type { EnemyState } from '../../core/types'
 import { getEnemyDef } from '../../core/data/enemies'
 import { STAT_LABEL } from '../setup/godStyle'
-import { formatEnemyIntent } from './cardStyle'
+import { formatEnemyIntent, getIntentTierClass } from './cardStyle'
 import { HpBar } from './HpBar'
 import { FloatingNumbers } from './FloatingNumbers'
 import type { FloatingNumber } from './useFloatingNumbers'
@@ -62,7 +62,7 @@ export function EnemyPanel({ enemy, round, hitKey, attackKey, floatingNumbers }:
         <FloatingNumbers numbers={floatingNumbers} />
       </div>
       {enemy.block > 0 && <div className="badge badge-block">🛡 {enemy.block}</div>}
-      <div className="intent">{formatEnemyIntent(enemy.intent)}</div>
+      <div className={`intent ${getIntentTierClass(enemy.intent)}`.trim()}>{formatEnemyIntent(enemy.intent)}</div>
       {enemy.buffs.length > 0 && (
         <div className="buff-list">
           {enemy.buffs.map((b, i) => (

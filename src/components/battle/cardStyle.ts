@@ -93,3 +93,21 @@ export function formatEnemyIntent(intent: EnemyActionDef | null): string {
   if (tier === 'strong') return `💥 強打 ${intent.amount}`
   return `⚔ ${intent.amount}`
 }
+
+/**
+ * STEP-UX4：敵Intentの危険度をCSSクラス名として返す表示専用の純粋関数。
+ * `formatEnemyIntent`（文言）は一切変更せず、既存の`getIntentPowerTier`と
+ * `intent.kind`の判定だけを再利用する（新しい危険度指標・GameStateは
+ * 追加しない）。normal（通常攻撃）は空文字＝現状の見た目のまま。
+ * strong（💥強打）はテキスト色のみ、huge（🔥特大）とcharge（⚡溜め）は
+ * 枠線＋グローを付与し、CEO方針により`最上位のみpulse`とするためchargeにだけ
+ * `intent-tier-charge`の呼吸グロー（battle.css側）を持たせる。
+ */
+export function getIntentTierClass(intent: EnemyActionDef | null): string {
+  if (!intent) return ''
+  if (intent.kind === 'charge') return 'intent-tier-charge'
+  const tier = getIntentPowerTier(intent.amount)
+  if (tier === 'huge') return 'intent-tier-huge'
+  if (tier === 'strong') return 'intent-tier-strong'
+  return ''
+}
