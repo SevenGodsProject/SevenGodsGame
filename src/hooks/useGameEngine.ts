@@ -55,6 +55,9 @@ export type UseGameEngine = {
   pendingCardUid: CardUid | null
   /** 直前の決着でスコアの自己ベストを更新したか（決定48フォローアップ） */
   newBest: boolean
+  /** 直前の決着時点の自己ベスト（更新前の値。STEP-UX6-B、GameOverOverlayの
+   * 「自己ベストまであとN点」表示に使う。未記録なら0） */
+  prevBest: number
   /** 直前の決着でOTOMOの育成記録がどう変わったか（決定74・Task C3、Lv到達演出の判定に使う） */
   otomoBondChange: { prevRecord: OtomoBondRecord; nextRecord: OtomoBondRecord } | null
   startGame: (
@@ -85,6 +88,7 @@ export function useGameEngine(): UseGameEngine {
   const [isEnemyTurn, setIsEnemyTurn] = useState(false)
   const [pendingCardUid, setPendingCardUid] = useState<CardUid | null>(null)
   const [newBest, setNewBest] = useState(false)
+  const [prevBest, setPrevBest] = useState(0)
   const [otomoBondChange, setOtomoBondChange] = useState<{
     prevRecord: OtomoBondRecord
     nextRecord: OtomoBondRecord
@@ -101,7 +105,10 @@ export function useGameEngine(): UseGameEngine {
     } else {
       clearBattleSave()
       // 決定48フォローアップ：決着した瞬間に神ごとの戦績（自己ベスト・勝敗数）を更新する。
-      setNewBest(recordGameResult(result.state).isNewBest)
+      // STEP-UX6-B：戻り値のprevBest（更新前の自己ベスト）も同時に保持する。
+      const recordResult = recordGameResult(result.state)
+      setNewBest(recordResult.isNewBest)
+      setPrevBest(recordResult.prevBest)
       // 決定70（Task C1）：決着した瞬間にOTOMO育成記録（表示専用）を更新する。
       // recordGameResultと同じ分岐・同じ1回性なので二重加算は発生しない
       // （詳細はotomoBondStorage.tsのコメントを参照）。
@@ -147,6 +154,7 @@ export function useGameEngine(): UseGameEngine {
       setIsEnemyTurn(false)
       setPendingCardUid(null)
       setNewBest(false)
+      setPrevBest(0)
       setOtomoBondChange(null)
       const seed = `seed-${Date.now()}`
       dispatch({
@@ -187,6 +195,7 @@ export function useGameEngine(): UseGameEngine {
     setIsEnemyTurn(false)
     setPendingCardUid(null)
     setNewBest(false)
+    setPrevBest(0)
     setOtomoBondChange(null)
     setState(savedState)
   }, [])
@@ -198,6 +207,7 @@ export function useGameEngine(): UseGameEngine {
     setIsEnemyTurn(false)
     setPendingCardUid(null)
     setNewBest(false)
+    setPrevBest(0)
     setOtomoBondChange(null)
   }, [])
 
@@ -208,6 +218,7 @@ export function useGameEngine(): UseGameEngine {
     isEnemyTurn,
     pendingCardUid,
     newBest,
+    prevBest,
     otomoBondChange,
     startGame,
     resumeGame,

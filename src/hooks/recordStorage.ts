@@ -90,9 +90,14 @@ export function loadGodRecord(godId: GodId): GodRecord {
  * 決着（won/lost/finished）したGameStateを戦績に反映する。
  * `isNewBest`はこの1戦でスコアの自己ベストを更新したかどうか
  * （GameOverOverlayの「自己ベスト更新！」表示に使う）。
+ * `prevBest`はこの1戦で上書きされる前の自己ベスト（STEP-UX6-B、
+ * GameOverOverlayの「自己ベストまであとN点」表示に使う。未記録なら0）。
+ * `GodRecord`の保存構造・`bestScore`の計算方法自体は無変更で、関数内で
+ * 既に算出済みだった`prev.bestScore`を戻り値に追加しただけ
+ * （`recordOtomoBond`が既に`{prevRecord, nextRecord}`を両方返す設計と同型）。
  */
-export function recordGameResult(state: GameState): { isNewBest: boolean } {
-  if (state.status === 'playing') return { isNewBest: false }
+export function recordGameResult(state: GameState): { isNewBest: boolean; prevBest: number } {
+  if (state.status === 'playing') return { isNewBest: false, prevBest: 0 }
 
   const data = load()
   const prev = data.records[state.godId] ?? EMPTY_RECORD
@@ -113,5 +118,5 @@ export function recordGameResult(state: GameState): { isNewBest: boolean } {
   }
 
   save({ ...data, records: { ...data.records, [state.godId]: next } })
-  return { isNewBest }
+  return { isNewBest, prevBest: prev.bestScore }
 }

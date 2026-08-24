@@ -2640,6 +2640,21 @@
   text-shadow: 0 0 12px #ffd16688;
 }
 
+/* STEP-UX6-B（結果画面“あと一歩”フィードバック）：敗北／未撃破時の敵残りHP・
+   自己ベスト差分の表示。装飾は文字色のみに留め、新規アニメーション・box-shadow・
+   パネルは追加しない（CEO方針「最大2行程度」「派手な新規演出禁止」）。 */
+.game-over-enemy-hp {
+  font-size: 13px;
+  font-weight: 700;
+  color: #a0abd6;
+}
+
+.game-over-best-gap {
+  font-size: 13px;
+  font-weight: 700;
+  color: #a0abd6;
+}
+
 /*
  * 決定74（Task C3）：OTOMO絆Lv到達演出。新規keyframesは作らず、決定64で
  * 既に使っている`overlay-card-pop-in`（fade+scale、過剰なバウンド無し）を

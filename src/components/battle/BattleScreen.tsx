@@ -41,8 +41,19 @@ type BattleScreenProps = {
  * 二重防御をしていたが、それがミュート解除時のSE一斉再生バグの原因だった）。
  */
 export function BattleScreen({ engine, onRematch, onReselect }: BattleScreenProps) {
-  const { state, log, error, isEnemyTurn, pendingCardUid, newBest, otomoBondChange, playCard, endRound, divine } =
-    engine
+  const {
+    state,
+    log,
+    error,
+    isEnemyTurn,
+    pendingCardUid,
+    newBest,
+    prevBest,
+    otomoBondChange,
+    playCard,
+    endRound,
+    divine,
+  } = engine
   // STEP2-B：BattleMiniResultのAP獲得検出用（gainAp効果はGameEventを出さないため、
   // useBattleFx側でap.currentの差分から検出する。stateがまだ無い初回描画では0扱い）
   const fx = useBattleFx(log, state?.ap.current ?? 0)
@@ -330,7 +341,9 @@ export function BattleScreen({ engine, onRematch, onReselect }: BattleScreenProp
           score={state.score}
           godId={state.godId}
           otomo={state.otomo}
+          enemy={state.enemy}
           newBest={newBest}
+          prevBest={prevBest}
           otomoLevelUp={otomoLevelUp}
           onRematch={onRematch}
           onReselect={onReselect}

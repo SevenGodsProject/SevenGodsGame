@@ -1,4 +1,4 @@
-import type { GameStatus, GodId, OtomoState, ScoreState } from '../../core/types'
+import type { EnemyState, GameStatus, GodId, OtomoState, ScoreState } from '../../core/types'
 import { getGodDef } from '../../core/data/gods'
 import { getOtomoDef } from '../../core/data/otomo'
 
@@ -40,8 +40,19 @@ type GameOverOverlayProps = {
    */
   godId: GodId
   otomo: OtomoState
+  /**
+   * STEP-UX6-B：敗北／未撃破時に「あと一歩だった」を伝えるための敵の残りHP。
+   * BattleScreen.tsxが既にEnemyPanel等へ渡しているのと同じstate.enemyを
+   * そのまま渡すだけで、GameState・core/engineの変更は一切不要。
+   */
+  enemy: EnemyState
   /** この1戦でその神のスコア自己ベストを更新したか（決定48フォローアップ） */
   newBest: boolean
+  /**
+   * STEP-UX6-B：この1戦で上書きされる前の自己ベスト（未記録なら0）。
+   * newBestがfalseの時のみ「自己ベストまであとN点」の表示に使う。
+   */
+  prevBest: number
   /**
    * 決定74（Task C3）：この1戦でOTOMOの親密度Lvが上がった場合のみ渡される
    * （上がっていなければnull）。勝敗を問わず出る（OTOMOは敗北戦でも育つ、
@@ -59,13 +70,26 @@ export function GameOverOverlay({
   score,
   godId,
   otomo,
+  enemy,
   newBest,
+  prevBest,
   otomoLevelUp,
   onRematch,
   onReselect,
 }: GameOverOverlayProps) {
   const god = getGodDef(godId)
   const otomoDef = getOtomoDef(otomo.defId)
+  // STEP-UX6-B：敗北／未撃破時のみ、敵の残りHPで「あと一歩だった」を伝える
+  // （決定64「敗北時は祝祭感を出さない」方針とは別軸の情報表示のため、
+  // 勝利演出とは競合しない）。残りHP率10%以下の時だけ煽り文言を追加する
+  // 1段階のみとし、11〜30%用の中間文言は今回は入れない（CEO指示、表示ルールを
+  // 増やしすぎないため）。新しいGameState・敵数値は一切追加していない。
+  const showEnemyHp = status !== 'won'
+  const enemyHpRatio = enemy.maxHp > 0 ? enemy.hp / enemy.maxHp : 0
+  const showCloseCall = showEnemyHp && enemyHpRatio > 0 && enemyHpRatio <= 0.1
+  // STEP-UX6-B：自己ベスト未更新かつ、過去に一度でも記録がある（prevBest>0）場合のみ
+  // 差分を表示する。newBest時は既存の「自己ベスト更新！」演出を優先し重複表示しない。
+  const bestGap = !newBest && prevBest > 0 && prevBest > score.total ? prevBest - score.total : null
 
   return (
     <div className="game-over-overlay">
@@ -73,7 +97,14 @@ export function GameOverOverlay({
           カード枠・ボタン装飾も変えることで、文字を読まなくても感覚的に区別できるようにする */}
       <div className={`game-over-card game-over-card-${status}`}>
         <div className={`game-over-status game-over-status-${status}`}>{STATUS_LABEL[status]}</div>
+        {showEnemyHp && (
+          <div className="game-over-enemy-hp">
+            敵の残りHP {enemy.hp} / {enemy.maxHp}
+            {showCloseCall && '　あと一歩だった！'}
+          </div>
+        )}
         {newBest && <div className="game-over-new-best">✨ 自己ベスト更新！</div>}
+        {bestGap !== null && <div className="game-over-best-gap">自己ベストまであと{bestGap}点</div>}
         {otomoLevelUp && (
           <div className="game-over-otomo-levelup">
             💠 絆Lv UP！ {otomoLevelUp.otomoName} Lv.{otomoLevelUp.prevLevel} → Lv.{otomoLevelUp.nextLevel}
