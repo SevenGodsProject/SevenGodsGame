@@ -14,6 +14,7 @@ import { CardIcon } from './cardIcon'
 import { CardView } from './CardView'
 import { BattleHud } from './BattleHud'
 import { BattleMiniResult } from './BattleMiniResult'
+import { BattleResonanceCutin } from './BattleResonanceCutin'
 import { EnemyPanel } from './EnemyPanel'
 import { PlayerPanel } from './PlayerPanel'
 import { GodOtomoPanel } from './GodOtomoPanel'
@@ -65,6 +66,39 @@ export function BattleScreen({ engine, onRematch, onReselect }: BattleScreenProp
       setEvolveBannerKey((k) => k + 1)
     }
   }
+
+  // STEP-R2で蒼毘のみのプロトタイプとして導入し、STEP-R3で全7神へ横展開した
+  // 共鳴7/7カットイン。useBattleFx.ts自体は変更せず、既存のfx.burstKeyを
+  // 信号源として使う（STEP-R1でB案採用）。burstKeyの増分をカットイン表示の
+  // トリガーに変換し、カットインのonComplete（＝下のhandleBurstAnimationEndと
+  // 対になるCSS実測終了ベースのハンドオフ）で初めてburst-bannerを表示する。
+  // STEP-R2時点ではisSobiで分岐し他神は旧来の即時burst-bannerパスを残していたが、
+  // STEP-R3で全神が同じカットイン経由のパスに統一されたため、その分岐は削除した
+  // （どの神でもcutinBurstBannerKeyだけを見ればよい）。
+  const [cutinVisible, setCutinVisible] = useState(false)
+  const [cutinActive, setCutinActive] = useState(false)
+  const shownCutinBurstKeyRef = useRef(0)
+  const [cutinBurstBannerKey, setCutinBurstBannerKey] = useState(0)
+  // STEP-R2（処理10）：7/7カットイン発生時のみBattleMiniResultを一時抑制するための
+  // 監視位置。MiniResultData自体（fx.miniResult）は一切書き換えず、表示レイヤー側で
+  // 「このminiResultKeyは抑制対象か」を判定するだけ（データを破壊しない方針）。
+  // burst成立バッチは常にRESONANCE_GAINEDを伴うためhasMiniResultが真になり、
+  // fx.miniResultKeyもfx.burstKeyと同じバッチ内で進む（useBattleFx.ts参照）。
+  const suppressedMiniResultKeyRef = useRef<number | null>(null)
+  useEffect(() => {
+    if (fx.burstKey > shownCutinBurstKeyRef.current) {
+      shownCutinBurstKeyRef.current = fx.burstKey
+      suppressedMiniResultKeyRef.current = fx.miniResultKey
+      setCutinVisible(true)
+      setCutinActive(true)
+    }
+  }, [fx.burstKey, fx.miniResultKey])
+  const handleCutinComplete = () => {
+    setCutinVisible(false)
+    setCutinActive(false)
+    setCutinBurstBannerKey((k) => k + 1)
+  }
+
   // 決定80（Phase 1）：sound.ts側のmutedフラグが既にsfx.xxx()を全て止めているため、
   // ここでの「ミュート中はlogを[]に見せる」二重防御は不要だった。しかも副作用として、
   // ミュート解除時にuseBattleSound内部のseenCountが0にリセットされ、logが元の長さに
@@ -82,8 +116,16 @@ export function BattleScreen({ engine, onRematch, onReselect }: BattleScreenProp
     return null
   }
 
+  // STEP-R2（処理11）：カットイン表示中（900ms）はカード操作をブロックする。
+  // 新しいGameStateフラグは追加せず、既存のpendingCardUidと同じ「ローカルstateを
+  // isPlayerTurnの算出に足す」だけの考え方を踏襲する。カットイン終了後は
+  // cutinActiveがfalseに戻り、即座に既存の操作性へ復帰する。
   const isPlayerTurn =
-    state.phase === 'playerTurn' && state.status === 'playing' && !isEnemyTurn && !pendingCardUid
+    state.phase === 'playerTurn' &&
+    state.status === 'playing' &&
+    !isEnemyTurn &&
+    !pendingCardUid &&
+    !cutinActive
 
   const pendingCard = pendingCardUid ? state.hand.find((c) => c.uid === pendingCardUid) : undefined
   const pendingCardDef = pendingCard ? getCardDef(pendingCard.defId) : null
@@ -174,8 +216,16 @@ export function BattleScreen({ engine, onRematch, onReselect }: BattleScreenProp
         )}
       </div>
 
-      {fx.burstKey > 0 && (
-        <div key={`burst-${fx.burstKey}`} className="burst-banner" onAnimationEnd={handleBurstAnimationEnd}>
+      {/* STEP-R3：全7神で共鳴7/7カットインを挟む（STEP-R2は蒼毘のみのプロトタイプ
+          だった）。カットイン終了（onComplete）までburst-bannerの表示自体を
+          遅らせる。burst-banner自身のJSX・onAnimationEnd＝evolve-bannerへの
+          ハンドオフは完全に無変更（信号源がcutinBurstBannerKeyに一本化されただけ）。 */}
+      {cutinVisible && (
+        <BattleResonanceCutin key={`cutin-${fx.burstKey}`} godId={state.godId} onComplete={handleCutinComplete} />
+      )}
+
+      {cutinBurstBannerKey > 0 && (
+        <div key={`burst-${cutinBurstBannerKey}`} className="burst-banner" onAnimationEnd={handleBurstAnimationEnd}>
           <span>✨ {getGodDef(state.godId).nameJa}の一撃！</span>
         </div>
       )}
@@ -207,7 +257,11 @@ export function BattleScreen({ engine, onRematch, onReselect }: BattleScreenProp
           スクロールした状態でも「カードを押した瞬間、その場で結果が見える」を
           実現する（CEO実プレイ指摘「カードしか見えず攻撃シーンが見えない」への対応）。
           表示するものが無い時はコンポーネント自体がnullを返すため、空領域は残らない。 */}
-      {state.status === 'playing' && (
+      {/* STEP-R2（処理10）：蒼毘の共鳴7/7を含むバッチだけ、cut-in+burst-bannerと
+          画面が過密にならないようBattleMiniResultを一時的に表示しない。
+          suppressedMiniResultKeyRefが指すkeyの回だけ抑制し、1〜6/7の通常共鳴・
+          通常攻撃/防御/回復等の表示は完全に従来通り（BattleMiniResult自体は無変更）。 */}
+      {state.status === 'playing' && fx.miniResultKey !== suppressedMiniResultKeyRef.current && (
         <BattleMiniResult
           godId={state.godId}
           enemy={state.enemy}

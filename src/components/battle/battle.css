@@ -1168,6 +1168,122 @@
   }
 }
 
+/* STEP-R2：共鳴7/7カットイン（蒼毘のみのプロトタイプ）。案A・横スライド。
+   .burst-banner（z-index:5）より一段下の4とし、cast-flash(8)・evolve-banner(7)・
+   enemy-turn-banner(6)より常に下、HUD(2)・BattleMiniResult(3)より上に位置する
+   フルスクリーンオーバーレイ（既存の.burst-bannerと同じfixed+pointer-events:none
+   パターンを踏襲）。ルート要素に暗転用(0.2s)とタイマー用(0.9s)の2つのanimationを
+   同時に付与し、900ms側（resonance-cutin-timer、見た目には影響しないopacity:1→1の
+   ダミーanimation）のonAnimationEndだけを終了検知に使う（BattleResonanceCutin.tsx
+   側でanimationNameを判定）。setTimeoutでCSSのdurationを別途JS側に持たない、
+   決定80のevolve-banner踏襲パターン。 */
+.resonance-cutin {
+  position: fixed;
+  inset: 0;
+  z-index: 4;
+  display: flex;
+  align-items: center;
+  pointer-events: none;
+  overflow: hidden;
+  animation:
+    resonance-cutin-dim 0.2s ease-out forwards,
+    resonance-cutin-timer 0.9s linear forwards;
+}
+
+@keyframes resonance-cutin-dim {
+  from {
+    background: #05060d00;
+  }
+  to {
+    background: #05060dcc;
+  }
+}
+
+@keyframes resonance-cutin-timer {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* 画像＋文字を同一コンテナでレイアウトすることで、「画像は右側、文字だけ画面
+   中央」というPCでのズレ（STEP-R1で再発防止の最重要事項として確定）を構造的に
+   防止する。widthはclamp()で375px（56vw=210px）〜430px超まで自然に追従し、
+   375専用の固定値にしない（STEP-R1処理09）。PC（900px以上）だけ340px固定＋
+   right位置を実測調整する。 */
+.resonance-cutin-group {
+  position: absolute;
+  top: 50%;
+  right: 15%;
+  width: clamp(210px, 56vw, 230px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transform: translate(100%, -50%);
+  opacity: 0;
+  animation: resonance-cutin-slide 0.4s ease-out 0.2s forwards;
+}
+
+@keyframes resonance-cutin-slide {
+  from {
+    transform: translate(100%, -50%);
+    opacity: 0;
+  }
+  to {
+    transform: translate(0, -50%);
+    opacity: 1;
+  }
+}
+
+.resonance-cutin-image {
+  width: 100%;
+  height: auto;
+  border-radius: 12px;
+  box-shadow: 0 0 30px 6px #ffd16655;
+}
+
+/* STEP-R3：笑蓮のkeyvisualのみ900×900の正方形・横臥ポーズで、他6神
+   （675〜720×900の縦長ポートレート、顔中央上寄せ）と構図が大きく異なる。
+   元画像アセットは変更せず、表示側だけでトリミングする。aspect-ratioを
+   他6神と同じ3:4（675×900相当）に固定してcoverすると、900×900正方形は
+   縦方向は無トリミング（高さがそのままboxの高さに一致）、横方向だけ25%
+   （900pxの左右合計225px）が切り取られる計算になる。
+   object-positionは実画像をグリッド計測して決定（推測で固定していない）：
+   顔の中心はおよそx=29%・y=23%（左上寄り）。x:20%にすると、実際に見える
+   範囲はx=5%〜80%となり、顔（29%）を左端から余裕を持って収めつつ、
+   右側に伸びる横臥ポーズの下半身・膝も80%まで残る（0%まで振り切ると
+   顔が窮屈になり、50%centerだと逆に顔が窓の外＝画面外に出てしまう）。
+   y座標は高さが無トリミングのため実質効かないが、意図を明示するために
+   顔の実測y位置に合わせている。 */
+.resonance-cutin-image[data-god='shouren'] {
+  aspect-ratio: 3 / 4;
+  object-fit: cover;
+  object-position: 20% 23%;
+}
+
+.resonance-cutin-text {
+  margin-top: 8px;
+  width: 100%;
+  text-align: center;
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 1.3;
+  color: #ffd166;
+  text-shadow: 0 0 16px #ffd166cc;
+}
+
+@media (min-width: 900px) {
+  .resonance-cutin-group {
+    right: 29%;
+    width: 340px;
+  }
+  .resonance-cutin-text {
+    font-size: 24px;
+  }
+}
+
 /* 決定80（Phase 1）：.battleは縦に長い要素（375pxで2000px超）のため、
    position:absoluteのままだと基準がビューポートではなく.battle全体になり、
    共鳴バースト演出が画面外に描画されていた（決定63でGameOverOverlay/
