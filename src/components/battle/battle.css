@@ -2483,10 +2483,28 @@
     gap: 5px;
   }
 
-  .enemy-avatar,
+  /* STEP-FINAL-D（改善A）：上のalign-items:stretchで敵パネルの外枠が
+     右カラム（プレイヤー＋OTOMO/共鳴パネルの合計高さ）に合わせて伸びる際、
+     .panelはjustify-content未指定（デフォルトflex-start）のため、伸びた分が
+     パネル下部にまるごと空白として残り、敵画像が縦長の枠の中で小さく・
+     浮いて見えていた（STEP-FINAL-C監査で発見）。.enemy-panelだけに
+     justify-content:centerを足すことで、その余白を子要素の上下に均等配分し、
+     .player-panel／.god-otomo-panelには一切影響しない。 */
+  .enemy-panel {
+    justify-content: center;
+  }
+
   .player-avatar {
     width: 150px;
     height: 180px;
+  }
+
+  /* STEP-FINAL-D（改善A）：敵画像をPC限定で約+15%拡大（150×180→173×207、
+     縦横比は変更前と同じ5:6を維持）。初期候補値のため、次回の実機確認で
+     微調整の可能性がある。.player-avatarは意図的に対象外（CEO指示）。 */
+  .enemy-avatar {
+    width: 173px;
+    height: 207px;
   }
 
   .enemy-avatar-wrap,
@@ -2494,9 +2512,39 @@
     padding: 0;
   }
 
-  .enemy-avatar-wrap::before,
   .player-avatar-wrap::before {
     width: 205px;
     height: 205px;
+  }
+
+  /* オーラ環も画像拡大と同じ+15%（205px→236px）で追従させ、既存の
+     「オーラは画像幅の一定比率」という関係（決定91）を崩さないようにする。 */
+  .enemy-avatar-wrap::before {
+    width: 236px;
+    height: 236px;
+  }
+
+  /* STEP-FINAL-D（改善B）：OTOMOポートレート（84px固定）だけが敵/プレイヤー
+     アバターや共鳴カットインと違いPC専用の拡大ルールを一度も持っておらず、
+     PC幅の広いパネル内で相対的に小さく浮いて見えていた（STEP-FINAL-C監査で
+     発見）。widthとheightのみをPC限定で上書きし、DOM構造・共鳴テキスト/
+     ゲージの配置・position/animation等の他プロパティ・375/390/430px側の値には
+     一切触れない。104pxも候補として実測比較したが、共鳴ゲージとの余白が
+     84px時+2px→104px時-1px（計算上わずかに重なる）まで縮み、PC縦方向の
+     高さも+20pxと100pxより4px多く伸びる一方、104pxと100pxの見た目の差は
+     ズームスクリーンショット比較でほぼ判別できなかったため、安全側の
+     100pxを採用した（共鳴ゲージとの余白は0px＝ちょうど接する計算値だが、
+     アウラはz-index:-1・半透明・blur(3px)のため実際の視覚的な衝突・
+     文字被りは確認されていない）。 */
+  .portrait img {
+    width: 100px;
+    height: 100px;
+  }
+
+  /* オーラ環も決定91の「画像幅×1.35」比率を維持したまま追従させる
+     （100px×1.35=135px）。 */
+  .portrait-otomo::before {
+    width: 135px;
+    height: 135px;
   }
 }
