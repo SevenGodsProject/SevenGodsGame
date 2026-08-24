@@ -1,7 +1,7 @@
 import type { EnemyState } from '../../core/types'
 import { getEnemyDef } from '../../core/data/enemies'
 import { STAT_LABEL } from '../setup/godStyle'
-import { formatEnemyIntent, getIntentTierClass } from './cardStyle'
+import { formatEnemyIntent, getIntentTierClass, type PowerTier } from './cardStyle'
 import { HpBar } from './HpBar'
 import { FloatingNumbers } from './FloatingNumbers'
 import type { FloatingNumber } from './useFloatingNumbers'
@@ -14,6 +14,9 @@ type EnemyPanelProps = {
   hitKey: number
   /** 変わるたびに敵の攻撃モーションを再生する */
   attackKey: number
+  /** STEP-UX5：直近の敵攻撃の危険度tier（fx.enemyAttackTier）。突進モーションの
+   * 「重さ」を、visualType由来の速度（lungeSpeedSuffix）とは独立に掛け合わせる。 */
+  attackTier: PowerTier
   floatingNumbers: FloatingNumber[]
 }
 
@@ -24,7 +27,7 @@ type EnemyPanelProps = {
  * `impact-flash`＋斬撃エフェクトで応じる。決定40：ラウンドごとに敵の掛け声を
  * 吹き出しで表示する（`Math.random`は使わず`round`から決定論的に選ぶ）。
  */
-export function EnemyPanel({ enemy, round, hitKey, attackKey, floatingNumbers }: EnemyPanelProps) {
+export function EnemyPanel({ enemy, round, hitKey, attackKey, attackTier, floatingNumbers }: EnemyPanelProps) {
   const def = getEnemyDef(enemy.defId)
   const line = def.battleCries[(round - 1) % def.battleCries.length]
 
@@ -35,6 +38,13 @@ export function EnemyPanel({ enemy, round, hitKey, attackKey, floatingNumbers }:
   const surgeClass = isLateSurge ? (def.visualType === 'lateSurgeStrong' ? ' enemy-avatar-surge-strong' : ' enemy-avatar-surge-mild') : ''
   const chargingClass = enemy.intent?.kind === 'charge' ? ' enemy-avatar-charging' : ''
   const lungeSpeedSuffix = def.visualType === 'fast' ? '-fast' : def.visualType === 'heavy' ? '-heavy' : ''
+  // STEP-UX5：「動き方」（lungeSpeedSuffix、敵の個性＝visualType由来）と
+  // 「攻撃の重さ」（attackTier、今回のIntent危険度由来）を別クラスとして
+  // 両方付与する。battle.cssの複合セレクタ（.enemy-lunge{-fast,-heavy}.enemy-lunge-tier-*）
+  // が両方を掛け合わせる。normal tierはトークン自体を付与しないため、visualType単体の
+  // 見た目（STEP3-A以前からの既存演出）と完全に同一のまま。
+  const lungeTierToken =
+    attackTier === 'huge' ? ' enemy-lunge-tier-huge' : attackTier === 'strong' ? ' enemy-lunge-tier-strong' : ''
 
   return (
     <div className="panel enemy-panel">
@@ -48,7 +58,7 @@ export function EnemyPanel({ enemy, round, hitKey, attackKey, floatingNumbers }:
       </div>
       <div
         key={`atk-${attackKey}`}
-        className={`enemy-avatar-wrap${attackKey > 0 ? ` enemy-lunge${lungeSpeedSuffix}` : ''}`}
+        className={`enemy-avatar-wrap${attackKey > 0 ? ` enemy-lunge${lungeSpeedSuffix}${lungeTierToken}` : ''}`}
       >
         <div className={`enemy-avatar${surgeClass}${chargingClass}`} style={{ backgroundImage: `url(${def.art})` }} />
       </div>

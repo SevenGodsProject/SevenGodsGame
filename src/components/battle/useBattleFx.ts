@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import type { GameEvent, OtomoForm } from '../../core/types'
+import { getIntentPowerTier, type PowerTier } from './cardStyle'
 
 /**
  * STEP2-B（BattleMiniResult）：1回のアクション（カード使用／ラウンド終了＝敵ターン）で
@@ -43,6 +44,13 @@ export type BattleFx = {
   godAttackKey: number
   /** 変わるたびに敵の攻撃モーションを再生させるキー */
   enemyAttackKey: number
+  /** STEP-UX5：直近の敵攻撃（ENEMY_ACTED.amount）の危険度tier。既存
+   * getIntentPowerTier（cardStyle.ts、Intent表示・cast-flash演出と共通の
+   * 10/15閾値）をそのまま再利用するだけで、新しい閾値・GameStateは持たない。
+   * chargeターン（攻撃そのものではない）では更新しない。enemyAttackKeyと
+   * 同時に更新されるため、EnemyPanelの突進演出・PlayerPanelの被弾演出の
+   * 両方が「同じ1回の攻撃」に対して同じtierを参照できる。 */
+  enemyAttackTier: PowerTier
   /** 変わるたびに「神力を使い残した」トーストを再生させるキー（決定40） */
   apPenaltyKey: number
   /** 直近の使い残しペナルティのスコア減点量（負の値） */
@@ -68,6 +76,7 @@ const INITIAL_FX: BattleFx = {
   evolveForm: null,
   godAttackKey: 0,
   enemyAttackKey: 0,
+  enemyAttackTier: 'normal',
   apPenaltyKey: 0,
   apPenaltyAmount: 0,
   blockGainKey: 0,
@@ -111,6 +120,7 @@ export function useBattleFx(log: GameEvent[], apCurrent: number): BattleFx {
     let evolveForm: OtomoForm | null = null
     let godAttack = 0
     let enemyAttack = 0
+    let newEnemyAttackTier: PowerTier | null = null
     let apPenalty = 0
     let apPenaltyAmount = 0
     let blockGain = 0
@@ -171,6 +181,9 @@ export function useBattleFx(log: GameEvent[], apCurrent: number): BattleFx {
         // （ブロックしたのに殴られたように見える誤読を避けるため）。
         enemyAttack += 1
         mrEnemyActed += 1
+        // STEP-UX5：この攻撃の予告時点の危険度（Intentが表示していたのと
+        // 全く同じamount・全く同じ閾値関数）をそのままFXへ伝搬する。
+        newEnemyAttackTier = getIntentPowerTier(event.amount)
       } else if (event.t === 'HEALED' && event.amount > 0) {
         heal += 1
         resultToast += 1
@@ -258,6 +271,7 @@ export function useBattleFx(log: GameEvent[], apCurrent: number): BattleFx {
         evolveForm: evolve ? evolveForm : prev.evolveForm,
         godAttackKey: prev.godAttackKey + godAttack,
         enemyAttackKey: prev.enemyAttackKey + enemyAttack,
+        enemyAttackTier: newEnemyAttackTier ?? prev.enemyAttackTier,
         apPenaltyKey: prev.apPenaltyKey + apPenalty,
         apPenaltyAmount: apPenalty ? apPenaltyAmount : prev.apPenaltyAmount,
         blockGainKey: prev.blockGainKey + blockGain,

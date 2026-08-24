@@ -1,6 +1,7 @@
 import type { GodId, PlayerState } from '../../core/types'
 import { getGodDef } from '../../core/data/gods'
 import { STAT_LABEL } from '../setup/godStyle'
+import type { PowerTier } from './cardStyle'
 import { HpBar } from './HpBar'
 import { FloatingNumbers } from './FloatingNumbers'
 import type { FloatingNumber } from './useFloatingNumbers'
@@ -16,6 +17,9 @@ type PlayerPanelProps = {
   attackKey: number
   /** 蒼毘Visual Polish：変わるたびにbadge-blockのパルスを再生する */
   blockGainKey: number
+  /** STEP-UX5：直近の敵攻撃の危険度tier（fx.enemyAttackTier）。被弾演出
+   * （hit-shake-flash）の強さを、Intent予告と同じ物差しで表現する。 */
+  enemyAttackTier: PowerTier
   floatingNumbers: FloatingNumber[]
 }
 
@@ -30,9 +34,15 @@ export function PlayerPanel({
   healKey,
   attackKey,
   blockGainKey,
+  enemyAttackTier,
   floatingNumbers,
 }: PlayerPanelProps) {
   const god = getGodDef(godId)
+  // STEP-UX5：被弾シェイクの強さを、その攻撃のIntent危険度と同じtierで
+  // 出し分ける。normalはトークンを付与せず既存のhit-shake-flashのまま
+  // （見た目・体感とも変更前と完全に同一）。
+  const hitTierToken =
+    enemyAttackTier === 'huge' ? ' hit-tier-huge' : enemyAttackTier === 'strong' ? ' hit-tier-strong' : ''
 
   return (
     <div className="panel player-panel">
@@ -54,7 +64,11 @@ export function PlayerPanel({
           誤表示）。被弾用と回復用でそれぞれ独立したkeyのラッパーに分離し、
           お互いの再マウントに影響しないようにする（EnemyPanel.tsxの
           `key={`hit-${hitKey}`}`と同じ命名パターンに統一）。 */}
-      <div key={`hit-${hitKey}`} className={hitKey > 0 ? 'hit-shake-flash' : undefined} style={{ position: 'relative' }}>
+      <div
+        key={`hit-${hitKey}`}
+        className={hitKey > 0 ? `hit-shake-flash${hitTierToken}` : undefined}
+        style={{ position: 'relative' }}
+      >
         <div key={`heal-${healKey}`} className={healKey > 0 ? 'heal-pulse' : undefined}>
           <HpBar current={player.hp} max={player.maxHp} color="#4dbd74" />
         </div>

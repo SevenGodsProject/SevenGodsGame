@@ -865,6 +865,92 @@
     impact-flash 0.35s ease-out;
 }
 
+/* STEP-UX5（敵攻撃演出をIntent tierに連動）：「危険そうに見える予告」と
+   「実際に受ける攻撃の重さ」を一致させるため、被弾演出（hit-shake-flash）に
+   Intentと同じtier（normal/strong/huge、cardStyle.tsのgetIntentPowerTier）を
+   反映する。既存.hit-shake-flashの上書きはせず、複合クラス（.hit-shake-flash+
+   .hit-tier-*）としてanimationショートハンド全体を1セットで再定義することで、
+   意図しないプロパティ競合（例：impact-flashが既にfilterを専有しているため、
+   静的filterを後から重ねる手法は使えない）を避けている。複合クラスの詳細度
+   （0,2,0）は単体の.hit-shake-flash（0,1,0）より常に高く、CSS定義順に依存せず
+   安全に上書きされる。normal tierは何も付与しないため既存の見た目・体感と
+   完全に同一のまま。 */
+@keyframes hit-shake-strong {
+  10%,
+  90% {
+    transform: translateX(-2px);
+  }
+  20%,
+  80% {
+    transform: translateX(5px);
+  }
+  30%,
+  50%,
+  70% {
+    transform: translateX(-9px);
+  }
+  40%,
+  60% {
+    transform: translateX(9px);
+  }
+}
+
+@keyframes hit-shake-huge {
+  10%,
+  90% {
+    transform: translateX(-3px);
+  }
+  20%,
+  80% {
+    transform: translateX(6px);
+  }
+  30%,
+  50%,
+  70% {
+    transform: translateX(-12px);
+  }
+  40%,
+  60% {
+    transform: translateX(12px);
+  }
+}
+
+@keyframes impact-flash-strong {
+  0% {
+    filter: brightness(1);
+  }
+  15% {
+    filter: brightness(2.55) saturate(1.4);
+  }
+  100% {
+    filter: brightness(1);
+  }
+}
+
+@keyframes impact-flash-huge {
+  0% {
+    filter: brightness(1);
+  }
+  15% {
+    filter: brightness(2.8) saturate(1.55);
+  }
+  100% {
+    filter: brightness(1);
+  }
+}
+
+.hit-shake-flash.hit-tier-strong {
+  animation:
+    hit-shake-strong 0.4s ease-in-out,
+    impact-flash-strong 0.35s ease-out;
+}
+
+.hit-shake-flash.hit-tier-huge {
+  animation:
+    hit-shake-huge 0.42s ease-in-out,
+    impact-flash-huge 0.38s ease-out;
+}
+
 /* 被弾した瞬間だけ現れる斬撃の光。EnemyPanel/PlayerPanelのHPバーラッパー
    （position: relativeなdiv）に重ねる想定 */
 .slash-fx {
@@ -1080,6 +1166,91 @@
   animation:
     enemy-idle 3.4s ease-in-out infinite,
     enemy-lunge 0.65s ease-out;
+}
+
+/* STEP-UX5（敵攻撃演出をIntent tierに連動）：「敵の個性」（visualType→
+   lungeSpeedSuffix→上のenemy-lunge/-fast/-heavy＝animation-durationのみを
+   変える）と「今回の攻撃の重さ」（attackTier→enemy-lunge-tier-strong/-huge）を
+   独立した2つのクラスとして両方付与し、複合セレクタで掛け合わせる。速度用の
+   3クラスは既存のanimationショートハンドを専有しているため、重ね書きせず
+   「速度×重さ」の組み合わせぶんだけ複合ルールを用意し、都度durationは元の
+   速度クラスの値をそのまま踏襲・transform（突進距離・拡大率）だけをtier別に
+   変える（hugeのみ軽い自己発光をfilterで追加。keyframe自体は新規のみで
+   既存enemy-lungeは無変更）。durationを変えていないためテンポへの影響はゼロ。
+   複合セレクタ（.enemy-lunge{,-fast,-heavy}.enemy-lunge-tier-*）の詳細度
+   （0,3,0）は速度単体ルール（0,2,0）より必ず高く、CSS定義順に依存せず安全に
+   上書きされる。normal tierはトークン自体を付与しないため、visualType単体の
+   既存演出（STEP3-A以前から）と完全に同一のまま。chargeターンはそもそも
+   enemyAttackKeyが増分されない（useBattleFx.ts、ENEMY_ACTED.kindが'attack'の
+   時のみ）ため、lunge自体が発生せずtierクラスも無関係。 */
+@keyframes enemy-lunge-strong {
+  0% {
+    transform: translateX(0) scale(1);
+  }
+  35% {
+    transform: translateX(-18px) scale(1.07);
+  }
+  65% {
+    transform: translateX(5px) scale(0.99);
+  }
+  100% {
+    transform: translateX(0) scale(1);
+  }
+}
+
+@keyframes enemy-lunge-huge {
+  0% {
+    transform: translateX(0) scale(1);
+    filter: brightness(1);
+  }
+  35% {
+    transform: translateX(-21px) scale(1.09);
+    filter: brightness(1.12);
+  }
+  65% {
+    transform: translateX(5px) scale(0.99);
+    filter: brightness(1);
+  }
+  100% {
+    transform: translateX(0) scale(1);
+    filter: brightness(1);
+  }
+}
+
+.enemy-lunge.enemy-lunge-tier-strong .enemy-avatar {
+  animation:
+    enemy-idle 3.4s ease-in-out infinite,
+    enemy-lunge-strong 0.45s ease-out;
+}
+
+.enemy-lunge-fast.enemy-lunge-tier-strong .enemy-avatar {
+  animation:
+    enemy-idle 3.4s ease-in-out infinite,
+    enemy-lunge-strong 0.3s ease-out;
+}
+
+.enemy-lunge-heavy.enemy-lunge-tier-strong .enemy-avatar {
+  animation:
+    enemy-idle 3.4s ease-in-out infinite,
+    enemy-lunge-strong 0.65s ease-out;
+}
+
+.enemy-lunge.enemy-lunge-tier-huge .enemy-avatar {
+  animation:
+    enemy-idle 3.4s ease-in-out infinite,
+    enemy-lunge-huge 0.45s ease-out;
+}
+
+.enemy-lunge-fast.enemy-lunge-tier-huge .enemy-avatar {
+  animation:
+    enemy-idle 3.4s ease-in-out infinite,
+    enemy-lunge-huge 0.3s ease-out;
+}
+
+.enemy-lunge-heavy.enemy-lunge-tier-huge .enemy-avatar {
+  animation:
+    enemy-idle 3.4s ease-in-out infinite,
+    enemy-lunge-huge 0.65s ease-out;
 }
 
 /* STEP3-A（処理06/07）：遅咲き型の終盤glow。round>=5から付与され、既存の

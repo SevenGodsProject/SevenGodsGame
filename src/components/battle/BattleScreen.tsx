@@ -182,6 +182,7 @@ export function BattleScreen({ engine, onRematch, onReselect }: BattleScreenProp
           round={state.round}
           hitKey={fx.enemyHitKey}
           attackKey={fx.enemyAttackKey}
+          attackTier={fx.enemyAttackTier}
           floatingNumbers={enemyNumbers}
         />
         <div className="ally-row">
@@ -192,6 +193,7 @@ export function BattleScreen({ engine, onRematch, onReselect }: BattleScreenProp
             healKey={fx.healKey}
             attackKey={fx.godAttackKey}
             blockGainKey={fx.blockGainKey}
+            enemyAttackTier={fx.enemyAttackTier}
             floatingNumbers={playerNumbers}
           />
           <GodOtomoPanel
