@@ -199,6 +199,8 @@ export function BattleScreen({ engine, onRematch, onReselect }: BattleScreenProp
             otomo={state.otomo}
             resonance={state.resonance}
             evolveKey={fx.evolveKey}
+            otomoGrowthPath={state.otomoGrowthPath}
+            reactionKey={cutinBurstBannerKey}
           />
         </div>
         {castStyle && pendingCardDef && (

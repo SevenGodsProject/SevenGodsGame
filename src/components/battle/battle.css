@@ -1150,6 +1150,90 @@
   animation: evolve-glow 1.2s ease-out;
 }
 
+/* STEP-UX2：OTOMO仲間化プロトタイプ（蒼毘の百勝のみ）。常時アニメーション
+   ではなく、burst-banner表示と同じ瞬間だけ「少し前へ出て・軽く拡大・短く発光」
+   する一過性の演出。evolve-glowと同じdrop-shadow+scaleの構造を踏襲しつつ、
+   色はOTOMOの既存アクセント紫（#c39bff、決定91のオーラ色と同一）にして
+   「これはOTOMO自身の一瞬」と神の金色の一撃（burst-banner）と区別できるように
+   した。durationは0.5s（CEO指定の0.4〜0.6秒レンジの中央）。 */
+@keyframes otomo-reaction-pop {
+  0% {
+    transform: scale(1) translateY(0);
+    filter: drop-shadow(0 0 0 #c39bff00);
+  }
+  40% {
+    transform: scale(1.14) translateY(-6px);
+    filter: drop-shadow(0 0 16px #c39bffee);
+  }
+  100% {
+    transform: scale(1) translateY(0);
+    filter: drop-shadow(0 0 0 #c39bff00);
+  }
+}
+
+.otomo-reacting {
+  animation: otomo-reaction-pop 0.5s ease-out;
+}
+
+/* OTOMO名＋効果を、ポートレート画像に重ねて一瞬だけ見せるラベル。
+   .portrait-otomoが既にposition:relative（決定91）のため新しい位置基準は
+   増やさず、position:absoluteでポートレート中央に重ねるだけ。情報量を
+   増やすのではなく「今起きたOTOMOの貢献」を一瞬だけ可視化する用途のため、
+   常時表示のresonance-effect-text（神側）とは独立・別レイヤー。 */
+@keyframes otomo-reaction-label-pop {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -50%) translateY(6px);
+  }
+  20% {
+    opacity: 1;
+    transform: translate(-50%, -50%) translateY(0);
+  }
+  75% {
+    opacity: 1;
+    transform: translate(-50%, -50%) translateY(0);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -50%) translateY(-4px);
+  }
+}
+
+/* STEP-UX2-C：max-width固定+nowrap+ellipsisだと、童子形態で効果が2つ
+   連結された場合（例：「百勝「ブロック+10・HP回復+6」」）に文字が途中で
+   省略され、効果の内容が読めなくなっていた（STEP-UX2-B QAで発見）。
+   width:max-contentで短い文言（効果1つ）は今まで通り1行に収まりつつ、
+   max-width:190pxを超える長さの時だけ自然に折り返す形にし、-webkit-line-
+   clampを保険として2行までに制限する（百勝の童子は最大2効果のためこの
+   保険が実際に効くことは無い想定だが、将来のデータ変更に対する安全策）。
+   ellipsisによる文字の欠落は起こさない（2行に収まらない極端なケースでも、
+   情報を隠すより2行目まで見せる方を優先）。 */
+.otomo-reaction-label {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  z-index: 2;
+  display: -webkit-box;
+  width: max-content;
+  max-width: 190px;
+  overflow: hidden;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  white-space: normal;
+  overflow-wrap: break-word;
+  text-align: center;
+  padding: 3px 8px;
+  border-radius: 8px;
+  background: #05060dcc;
+  color: #ffffff;
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 1.25;
+  text-shadow: 0 0 6px #000000cc;
+  pointer-events: none;
+  animation: otomo-reaction-label-pop 0.5s ease-out;
+}
+
 @keyframes burst-flash {
   0% {
     opacity: 0;

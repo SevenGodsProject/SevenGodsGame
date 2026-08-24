@@ -1,4 +1,5 @@
-import type { GodId, OtomoState } from '../../core/types'
+import { useEffect, useRef, useState } from 'react'
+import type { GodId, GrowthPath, OtomoState } from '../../core/types'
 import { getOtomoDef } from '../../core/data/otomo'
 import { getGodDef } from '../../core/data/gods'
 import { describeEffectList } from '../setup/otomoEffectText'
@@ -15,6 +16,14 @@ type GodOtomoPanelProps = {
   resonance: { value: number; max: number }
   /** 変わるたびにOTOMOの成長グローを再生する */
   evolveKey: number
+  /** STEP-UX2：現在選択中の育成方針（守り/力）。OTOMO自身の効果テキストを
+      現在の形態・方針に合わせて算出するためだけに使う表示専用の値で、
+      GameStateの読み取りのみ（reducer・core/engineには一切触れない）。 */
+  otomoGrowthPath: GrowthPath
+  /** STEP-UX2：burst-banner表示と同じタイミングでOTOMOの短いリアクション
+      演出を再生するためのキー（BattleScreen.tsxのcutinBurstBannerKeyを
+      そのまま渡すだけ。新しいGameState・タイマーは一切追加しない）。 */
+  reactionKey: number
 }
 
 /**
@@ -34,7 +43,7 @@ function getResonanceStage(value: number): '' | 'resonance-gauge-mid' | 'resonan
   return ''
 }
 
-export function GodOtomoPanel({ godId, otomo, resonance, evolveKey }: GodOtomoPanelProps) {
+export function GodOtomoPanel({ godId, otomo, resonance, evolveKey, otomoGrowthPath, reactionKey }: GodOtomoPanelProps) {
   const otomoDef = getOtomoDef(otomo.defId)
   const ratio = resonance.max > 0 ? Math.min(1, resonance.value / resonance.max) : 0
   const resonanceStage = getResonanceStage(resonance.value)
@@ -46,6 +55,34 @@ export function GodOtomoPanel({ godId, otomo, resonance, evolveKey }: GodOtomoPa
   // 一切変更していない、純粋な表示専用の追加。
   const resonanceEffectText = describeEffectList(getGodDef(godId).resonanceEffects) ?? '変化なし'
 
+  // STEP-UX2で蒼毘の百勝のみのプロトタイプとして導入し、STEP-UX2-Cのラベル
+  // 折り返し修正を経て、STEP-UX3で全7OTOMOへ横展開した。「常時アニメーション
+  // させず、発動した瞬間だけ」という方針のため、burst-banner表示と同じ
+  // reactionKey（=cutinBurstBannerKey）を監視し、そのバッチでOTOMO自身の効果
+  // （DeckBuilderScreen.tsx同様、育成方針でeffectsByForm/powerPathEffectsByForm
+  // を切り替える既存パターンをそのまま踏襲）が実際にあった時だけ、名前＋効果を
+  // 0.5秒だけ見せる。効果が空（spirit形態等）の回は「助けてくれた」と嘘を
+  // つかないよう、そもそもリアクションを発生させない。7OTOMOとも全く同じ
+  // ロジック・同じCSSで、神ごとの分岐は一切持たない（GOD_IDSでの神判定は
+  // 削除済み）。GameState・reducer・core/engine・OTOMO効果の数値は一切
+  // 変更していない、表示専用のローカルstateのみ。
+  const otomoOwnEffects =
+    otomoGrowthPath === 'power' ? otomoDef.powerPathEffectsByForm[otomo.form] : otomoDef.effectsByForm[otomo.form]
+  const otomoOwnEffectText = describeEffectList(otomoOwnEffects)
+  const [reactionActive, setReactionActive] = useState(false)
+  const shownReactionKeyRef = useRef(0)
+  useEffect(() => {
+    if (otomoOwnEffectText && reactionKey > shownReactionKeyRef.current) {
+      shownReactionKeyRef.current = reactionKey
+      setReactionActive(true)
+    }
+  }, [reactionKey, otomoOwnEffectText])
+  const handleReactionAnimationEnd = (event: React.AnimationEvent<HTMLElement>) => {
+    if (event.target !== event.currentTarget) return
+    if (event.animationName !== 'otomo-reaction-pop') return
+    setReactionActive(false)
+  }
+
   return (
     <div className="panel god-otomo-panel">
       <div className="panel-title">共鳴</div>
@@ -53,12 +90,18 @@ export function GodOtomoPanel({ godId, otomo, resonance, evolveKey }: GodOtomoPa
       <div className="god-otomo-portraits">
         <figure
           key={`otomo-${evolveKey}`}
-          className={`portrait portrait-otomo${evolveKey > 0 ? ' evolve-glow' : ''}`}
+          className={`portrait portrait-otomo${evolveKey > 0 ? ' evolve-glow' : ''}${reactionActive ? ' otomo-reacting' : ''}`}
+          onAnimationEnd={reactionActive ? handleReactionAnimationEnd : undefined}
         >
           <img src={otomoDef.art[otomo.form]} alt={otomoDef.nameJa} />
           <figcaption>
             {otomoDef.nameJa}（{FORM_LABEL[otomo.form]}）
           </figcaption>
+          {reactionActive && otomoOwnEffectText && (
+            <div className="otomo-reaction-label">
+              {otomoDef.nameJa}「{otomoOwnEffectText}」
+            </div>
+          )}
         </figure>
       </div>
       <div className={`resonance-gauge-wrap ${resonanceStage}`.trim()}>
