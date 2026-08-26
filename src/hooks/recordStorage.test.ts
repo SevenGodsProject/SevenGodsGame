@@ -57,6 +57,8 @@ describe('recordStorage', () => {
     expect(record).toEqual({
       bestScore: 0,
       bestScoreDifficulty: null,
+      bestBattleScore: 0,
+      bestBattleScoreDifficulty: null,
       wins: 0,
       losses: 0,
       finished: 0,
@@ -71,36 +73,68 @@ describe('recordStorage', () => {
     expect(loadGodRecord(GOD_IDS.ebisu).wins).toBe(0)
   })
 
-  it('勝利するとwinsとbestScoreが更新され、isNewBestがtrueになる', () => {
+  it('勝利するとwinsとbestBattleScoreが更新され、isNewBestがtrueになる（BASE-D：最終スコア＝素点×1.3）', () => {
     const state = withStatus(startGame('rec-2'), 'won', 4, 320)
     const { isNewBest } = recordGameResult(state)
     expect(isNewBest).toBe(true)
     const record = loadGodRecord(GOD_IDS.ebisu)
     expect(record.wins).toBe(1)
-    expect(record.bestScore).toBe(320)
-    expect(record.bestScoreDifficulty).toBe('normal')
+    // 新式ベストは最終スコア（素点320×1.3=416）で記録される
+    expect(record.bestBattleScore).toBe(Math.round(320 * 1.3))
+    expect(record.bestBattleScoreDifficulty).toBe('normal')
+    // 旧bestScoreはもう更新されない（旧記録として温存するだけ）
+    expect(record.bestScore).toBe(0)
     expect(record.fastestWinRound).toBe(4)
   })
 
-  it('2回目の勝利がベストスコアを下回る場合、isNewBestはfalseでbestScoreは維持される', () => {
+  it('2回目の勝利がベストスコアを下回る場合、isNewBestはfalseでbestBattleScoreは維持される', () => {
     recordGameResult(withStatus(startGame('rec-3'), 'won', 5, 320))
     const { isNewBest } = recordGameResult(withStatus(startGame('rec-3b'), 'won', 2, 100))
     expect(isNewBest).toBe(false)
     const record = loadGodRecord(GOD_IDS.ebisu)
-    expect(record.bestScore).toBe(320)
+    expect(record.bestBattleScore).toBe(Math.round(320 * 1.3))
     expect(record.wins).toBe(2)
     // fastestWinRoundはスコアと独立して常に最速値を保持する
     expect(record.fastestWinRound).toBe(2)
   })
 
-  it('敗北・未撃破もそれぞれのカウンタだけ増える（bestScoreはスコアが上回れば更新される）', () => {
+  it('敗北・未撃破もそれぞれのカウンタだけ増える（bestBattleScoreはスコアが上回れば更新される）', () => {
     recordGameResult(withStatus(startGame('rec-4'), 'lost', 3, 50))
     recordGameResult(withStatus(startGame('rec-4b'), 'finished', 7, 80))
     const record = loadGodRecord(GOD_IDS.ebisu)
     expect(record.losses).toBe(1)
     expect(record.finished).toBe(1)
-    expect(record.bestScore).toBe(80)
+    expect(record.bestBattleScore).toBe(Math.round(80 * 1.3))
     expect(record.fastestWinRound).toBeNull()
+  })
+
+  it('PROTO以前の保存データ（bestBattleScore欠落）は既定値0で補完され、旧bestScoreは温存される', () => {
+    // 旧構造（新フィールド無し）を直接保存して読み込む
+    localStorage.setItem(
+      'sevengods.records',
+      JSON.stringify({
+        version: 1,
+        records: {
+          [GOD_IDS.ebisu]: {
+            bestScore: 812,
+            bestScoreDifficulty: 'hard',
+            wins: 3,
+            losses: 1,
+            finished: 0,
+            fastestWinRound: 5,
+          },
+        },
+      }),
+    )
+    const record = loadGodRecord(GOD_IDS.ebisu)
+    expect(record.bestScore).toBe(812)
+    expect(record.bestBattleScore).toBe(0)
+    // 新式で決着すると旧bestScoreはそのまま・新bestBattleScoreだけが記録される
+    recordGameResult(withStatus(startGame('rec-legacy'), 'won', 4, 300))
+    const after = loadGodRecord(GOD_IDS.ebisu)
+    expect(after.bestScore).toBe(812)
+    expect(after.bestBattleScore).toBe(Math.round(300 * 1.3))
+    expect(after.wins).toBe(4)
   })
 
   it('神ごとに戦績を独立して保持する', () => {

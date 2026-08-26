@@ -1,6 +1,7 @@
 import type { Difficulty } from '../../core/types'
 import { GODS } from '../../core/data/gods'
 import { loadGodRecord, type GodRecord } from '../../hooks/recordStorage'
+import { formatScaled } from '../displayScale'
 import { ARCHETYPE_LABEL } from './godStyle'
 import './setup.css'
 
@@ -58,13 +59,27 @@ export function RecordScreen({ onBack }: RecordScreenProps) {
 
               {played ? (
                 <>
+                  {/* STEP-SCORE2-D-PROTO：自己ベストは新スコア式（bestBattleScore）を表示。
+                      新式での記録がまだ無い場合のみ、旧式の記録を「（旧形式）」付きで表示する
+                      （新旧のスコア式はスケールが異なり直接比較できないため）。 */}
                   <div className="record-best">
-                    自己ベスト <strong>{record.bestScore}</strong>
-                    {record.bestScoreDifficulty && (
-                      <span className="record-best-difficulty">
-                        （{DIFFICULTY_LABEL[record.bestScoreDifficulty]}）
-                      </span>
-                    )}
+                    自己ベスト{' '}
+                    <strong>
+                      {/* D2b：新式ベストは表示×10。旧形式の記録は当時のスケールのまま出す
+                          （×10すると新式と同次元に見えて混乱するため） */}
+                      {record.bestBattleScore > 0
+                        ? formatScaled(record.bestBattleScore)
+                        : record.bestScore}
+                    </strong>
+                    {record.bestBattleScore > 0
+                      ? record.bestBattleScoreDifficulty && (
+                          <span className="record-best-difficulty">
+                            （{DIFFICULTY_LABEL[record.bestBattleScoreDifficulty]}）
+                          </span>
+                        )
+                      : record.bestScore > 0 && (
+                          <span className="record-best-difficulty">（旧形式）</span>
+                        )}
                   </div>
                   <div className="record-stats">
                     <div className="record-stat">

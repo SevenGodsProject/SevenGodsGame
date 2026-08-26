@@ -1,4 +1,5 @@
 import type { CardDef, CardType, EnemyActionDef, Rarity } from '../../core/types'
+import { formatScaled } from '../displayScale'
 
 /**
  * カードの見た目（決定28で色付き四角からグラデーション調に刷新）。
@@ -88,10 +89,11 @@ export function getIntentPowerTier(amount: number): PowerTier {
 export function formatEnemyIntent(intent: EnemyActionDef | null): string {
   if (!intent) return '行動予告なし'
   if (intent.kind === 'charge') return `⚡ ${intent.label}`
+  // D2b：tier判定は内部値のまま、表示数値のみ×10（displayScale.ts）
   const tier = getIntentPowerTier(intent.amount)
-  if (tier === 'huge') return `🔥 特大 ${intent.amount}`
-  if (tier === 'strong') return `💥 強打 ${intent.amount}`
-  return `⚔ ${intent.amount}`
+  if (tier === 'huge') return `🔥 特大 ${formatScaled(intent.amount)}`
+  if (tier === 'strong') return `💥 強打 ${formatScaled(intent.amount)}`
+  return `⚔ ${formatScaled(intent.amount)}`
 }
 
 /**

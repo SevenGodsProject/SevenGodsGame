@@ -1,5 +1,6 @@
 import type { Effect, GodArchetype, GodDef, GodId, OtomoDef } from '../../core/types'
 import { GOD_IDS } from '../../core/data/gods'
+import { formatScaled } from '../displayScale'
 
 /**
  * 神選択画面：「どの神を選べばいいか分からない」というCEOフィードバックへの対応。
@@ -226,13 +227,14 @@ export function describeSpecial(god: GodDef, otomo: OtomoDef): string | null {
         gainApTotal += effect.amount
         break
       case 'buff':
-        parts.push(`自分の${STAT_LABEL[effect.stat]}+${effect.amount}（${effect.rounds}R）`)
+        // D2b：バフ量は表示×10（攻撃力ドメインのため）
+        parts.push(`自分の${STAT_LABEL[effect.stat]}+${formatScaled(effect.amount)}（${effect.rounds}R）`)
         break
       case 'debuff':
         // 敵atkデバフはcomputeGodStats側でdefenseに計上済みのため、ここでは除く
         if (!(effect.target === 'enemy' && effect.stat === 'atk')) {
           const target = effect.target === 'enemy' ? '敵' : '自分'
-          parts.push(`${target}の${STAT_LABEL[effect.stat]}${effect.amount}（${effect.rounds}R）`)
+          parts.push(`${target}の${STAT_LABEL[effect.stat]}-${formatScaled(effect.amount)}（${effect.rounds}R）`)
         }
         break
       default:

@@ -22,7 +22,7 @@ export const EBISU_CARDS: CardDef[] = [
   {
     id: EBISU_CARD_IDS.greatCatch,
     name: '大漁',
-    text: '敵に8ダメージを与え、共鳴ゲージを2上昇させる。',
+    text: '敵に80ダメージを与え、共鳴ゲージを2上昇させる。',
     type: 'attack',
     cost: 2,
     rarity: 'rare',
@@ -35,7 +35,7 @@ export const EBISU_CARDS: CardDef[] = [
   {
     id: EBISU_CARD_IDS.fortune,
     name: '福授け',
-    text: 'HPを3回復し、スコアを30得る。',
+    text: 'HPを30回復し、スコアを300得る。',
     type: 'support',
     cost: 1,
     rarity: 'rare',
@@ -48,7 +48,7 @@ export const EBISU_CARDS: CardDef[] = [
   {
     id: EBISU_CARD_IDS.tidingsCatch,
     name: '潮招き',
-    text: '敵に10ダメージを与え、HPを4回復する。',
+    text: '敵に100ダメージを与え、HPを40回復する。',
     type: 'attack',
     cost: 2,
     rarity: 'rare',
@@ -62,7 +62,7 @@ export const EBISU_CARDS: CardDef[] = [
   {
     id: EBISU_CARD_IDS.ebisuSmile,
     name: '恵比寿顔',
-    text: 'HPを6回復し、共鳴ゲージを2上昇させる。',
+    text: 'HPを60回復し、共鳴ゲージを2上昇させる。',
     type: 'support',
     cost: 2,
     rarity: 'rare',

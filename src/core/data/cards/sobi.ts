@@ -20,7 +20,7 @@ export const SOBI_CARDS: CardDef[] = [
   {
     id: SOBI_CARD_IDS.unshakableStance,
     name: '不動の構え',
-    text: 'ブロックを13得る。',
+    text: 'ブロックを130得る。',
     type: 'guard',
     cost: 2,
     rarity: 'rare',
@@ -31,7 +31,7 @@ export const SOBI_CARDS: CardDef[] = [
   {
     id: SOBI_CARD_IDS.oathOfShield,
     name: '誓いの盾',
-    text: 'ブロックを4得て、HPを3回復する。',
+    text: 'ブロックを40得て、HPを30回復する。',
     type: 'guard',
     cost: 1,
     rarity: 'rare',
@@ -44,7 +44,7 @@ export const SOBI_CARDS: CardDef[] = [
   {
     id: SOBI_CARD_IDS.counterBlade,
     name: '反撃の刃',
-    text: 'ブロックを6得て、敵に8ダメージを与える。',
+    text: 'ブロックを60得て、敵に80ダメージを与える。',
     type: 'attack',
     cost: 2,
     rarity: 'rare',
@@ -58,7 +58,7 @@ export const SOBI_CARDS: CardDef[] = [
   {
     id: SOBI_CARD_IDS.sternRebuke,
     name: '一喝',
-    text: '敵の攻撃力を3ラウンドのあいだ6下げる。',
+    text: '敵の攻撃力を3ラウンドのあいだ60下げる。',
     type: 'hinder',
     cost: 2,
     rarity: 'rare',

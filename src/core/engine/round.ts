@@ -2,7 +2,7 @@ import type { EnemyActionDef, GameEvent, GameState } from '../types'
 import { RULES } from '../data/rules'
 import { getEnemyDef } from '../data/enemies'
 import { performDraw } from './deck'
-import { addScore, applyDamage } from './effects'
+import { applyDamage } from './effects'
 import { sumBuff, tickBuffs } from './buffs'
 import type { Rng } from '../rng/seededRandom'
 
@@ -56,6 +56,9 @@ export function startRound(
     player: { ...state.player, block: 0 },
     enemy: { ...state.enemy, block: 0, intent },
     divination: { ...state.divination, usedThisRound: false },
+    // Mastery（決定110）：「1ラウンド最大実効ダメージ」のラウンド内集計をリセット。
+    // bestRoundDamage（試合内最大）は維持する。
+    mastery: { ...state.mastery, roundDamage: 0 },
   }
   events.push({ t: 'ROUND_STARTED', round: state.round, apGranted: apAmount })
   events.push(intentEvent(intent))
@@ -100,20 +103,17 @@ export function runEnemyTurn(state: GameState): StepResult {
 }
 
 /**
- * ラウンド終了処理。神力効率スコアを確定し、
+ * ラウンド終了処理。
+ * BASE-D（決定109）：未使用APペナルティは廃止した（実測寄与が極小で、
+ * スコア上の意味が薄かったため）。unusedApはROUND_ENDEDイベントの情報としてのみ残す。
  * 決着していなければ次のラウンドへ、7ラウンド終えていれば「未撃破」で終了します（決定3）。
  */
 export function finishRound(state: GameState, rng: Rng): StepResult {
   const events: GameEvent[] = []
   const unusedAp = state.status === 'playing' ? state.ap.current : 0
-  const penalty = unusedAp * RULES.score.unusedApPenalty
-  const score = addScore(state.score, 'apEfficiency', -penalty)
   events.push({ t: 'ROUND_ENDED', round: state.round, unusedAp })
-  if (penalty > 0) {
-    events.push({ t: 'SCORE_GAINED', reason: 'apEfficiency', amount: -penalty })
-  }
 
-  let next: GameState = { ...state, score }
+  let next: GameState = state
 
   if (next.status !== 'playing') {
     return { state: next, events }

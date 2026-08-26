@@ -1,4 +1,5 @@
 import type { Effect } from '../../core/types'
+import { formatScaled } from '../displayScale'
 import { STAT_LABEL } from './godStyle'
 
 /**
@@ -22,28 +23,29 @@ import { STAT_LABEL } from './godStyle'
  * 黙って読み飛ばす（`null`を返し、呼び出し側で除外する）安全設計。
  */
 function describeOneEffect(effect: Effect): string | null {
+  // D2b：damage/block/heal/score/buff/debuffは表示×10。draw/gainAp/resonanceは対象外
   switch (effect.kind) {
     case 'damage':
       return effect.target === 'enemy'
-        ? `敵に${effect.amount}ダメージ`
-        : `自分に${effect.amount}ダメージ`
+        ? `敵に${formatScaled(effect.amount)}ダメージ`
+        : `自分に${formatScaled(effect.amount)}ダメージ`
     case 'block':
-      return `ブロック+${effect.amount}`
+      return `ブロック+${formatScaled(effect.amount)}`
     case 'heal':
-      return `HP回復+${effect.amount}`
+      return `HP回復+${formatScaled(effect.amount)}`
     case 'score':
-      return `スコア+${effect.amount}`
+      return `スコア+${formatScaled(effect.amount)}`
     case 'draw':
       return `カード+${effect.amount}枚`
     case 'gainAp':
       return `神力+${effect.amount}`
     case 'buff': {
       const target = effect.target === 'enemy' ? '敵' : '自分'
-      return `${target}の${STAT_LABEL[effect.stat]}+${effect.amount}（${effect.rounds}R）`
+      return `${target}の${STAT_LABEL[effect.stat]}+${formatScaled(effect.amount)}（${effect.rounds}R）`
     }
     case 'debuff': {
       const target = effect.target === 'enemy' ? '敵' : '自分'
-      return `${target}の${STAT_LABEL[effect.stat]}-${effect.amount}（${effect.rounds}R）`
+      return `${target}の${STAT_LABEL[effect.stat]}-${formatScaled(effect.amount)}（${effect.rounds}R）`
     }
     case 'resonance':
       // otomo.ts/gods.tsの実データでは未使用（共鳴発動中に共鳴を再度上昇させる

@@ -1,6 +1,7 @@
 import type { EnemyState } from '../../core/types'
 import { getEnemyDef } from '../../core/data/enemies'
 import { STAT_LABEL } from '../setup/godStyle'
+import { formatScaled } from '../displayScale'
 import { formatEnemyIntent, getIntentTierClass, type PowerTier } from './cardStyle'
 import { HpBar } from './HpBar'
 import { FloatingNumbers } from './FloatingNumbers'
@@ -71,14 +72,14 @@ export function EnemyPanel({ enemy, round, hitKey, attackKey, attackTier, floati
         {hitKey > 0 && <div className="slash-fx" />}
         <FloatingNumbers numbers={floatingNumbers} />
       </div>
-      {enemy.block > 0 && <div className="badge badge-block">🛡 {enemy.block}</div>}
+      {enemy.block > 0 && <div className="badge badge-block">🛡 {formatScaled(enemy.block)}</div>}
       <div className={`intent ${getIntentTierClass(enemy.intent)}`.trim()}>{formatEnemyIntent(enemy.intent)}</div>
       {enemy.buffs.length > 0 && (
         <div className="buff-list">
           {enemy.buffs.map((b, i) => (
             <span key={i} className="badge badge-buff">
               {STAT_LABEL[b.stat]} {b.amount > 0 ? '+' : ''}
-              {b.amount}（{b.remainingRounds}）
+              {formatScaled(b.amount)}（{b.remainingRounds}）
             </span>
           ))}
         </div>

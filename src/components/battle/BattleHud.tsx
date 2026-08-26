@@ -1,4 +1,5 @@
 import type { EnemyState, PlayerState } from '../../core/types'
+import { formatScaled } from '../displayScale'
 import { formatEnemyIntent, getIntentTierClass } from './cardStyle'
 
 type BattleHudProps = {
@@ -38,14 +39,14 @@ export function BattleHud({ enemy, player, ap, resonance }: BattleHudProps) {
     <div className="battle-hud">
       <div className="battle-hud-row">
         <span>
-          敵 HP {enemy.hp}/{enemy.maxHp}
+          敵 HP {formatScaled(enemy.hp)}/{formatScaled(enemy.maxHp)}
         </span>
         <span className="battle-hud-sep">｜</span>
         <span className={intentTierClass || undefined}>{intentText}</span>
       </div>
       <div className="battle-hud-row">
         <span>
-          自分 HP {player.hp}/{player.maxHp}
+          自分 HP {formatScaled(player.hp)}/{formatScaled(player.maxHp)}
         </span>
         <span className="battle-hud-sep">｜</span>
         <span>

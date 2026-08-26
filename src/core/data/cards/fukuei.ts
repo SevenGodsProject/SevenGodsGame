@@ -20,7 +20,7 @@ export const FUKUEI_CARDS: CardDef[] = [
   {
     id: FUKUEI_CARD_IDS.fortuneStrike,
     name: '一攫千金',
-    text: '敵に15ダメージを与え、自分に2ダメージを与える。',
+    text: '敵に150ダメージを与え、自分に20ダメージを与える。',
     type: 'attack',
     cost: 2,
     rarity: 'rare',
@@ -33,7 +33,7 @@ export const FUKUEI_CARDS: CardDef[] = [
   {
     id: FUKUEI_CARD_IDS.goddessOfLuck,
     name: '幸運の女神',
-    text: 'HPを4回復し、神力を1得る。',
+    text: 'HPを40回復し、神力を1得る。',
     type: 'support',
     cost: 1,
     rarity: 'rare',
@@ -59,7 +59,7 @@ export const FUKUEI_CARDS: CardDef[] = [
   {
     id: FUKUEI_CARD_IDS.unbreakableStep,
     name: '不屈の一歩',
-    text: '敵に4ダメージを与え、HPを2回復する。',
+    text: '敵に40ダメージを与え、HPを20回復する。',
     type: 'attack',
     cost: 1,
     rarity: 'rare',

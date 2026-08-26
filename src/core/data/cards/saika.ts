@@ -33,7 +33,7 @@ export const SAIKA_CARDS: CardDef[] = [
   {
     id: SAIKA_CARD_IDS.standingOvation,
     name: '喝采',
-    text: 'カードを1枚引き、スコアを20得る。',
+    text: 'カードを1枚引き、スコアを200得る。',
     type: 'support',
     cost: 1,
     rarity: 'rare',
@@ -46,7 +46,7 @@ export const SAIKA_CARDS: CardDef[] = [
   {
     id: SAIKA_CARD_IDS.soloPerformance,
     name: '独奏',
-    text: '敵に4ダメージを与え、神力を1得る。',
+    text: '敵に40ダメージを与え、神力を1得る。',
     type: 'attack',
     cost: 1,
     rarity: 'rare',
@@ -59,7 +59,7 @@ export const SAIKA_CARDS: CardDef[] = [
   {
     id: SAIKA_CARD_IDS.encore,
     name: 'アンコール',
-    text: '神力を2得て、スコアを30得る。',
+    text: '神力を2得て、スコアを300得る。',
     type: 'support',
     cost: 2,
     rarity: 'rare',

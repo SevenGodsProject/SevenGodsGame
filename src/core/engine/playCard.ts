@@ -32,8 +32,13 @@ export function playCard(
     throw new Error(`神力が足りません: ${cardDef.name}（必要${cost} / 残り${state.ap.current}）`)
   }
 
-  const isCombo = state.cardsPlayedThisRound >= 1
-  const comboBonus = isCombo ? RULES.score.comboPerExtraCard : 0
+  // BASE-D（決定109）：連携は逓減加点。このラウンドの1枚目は0点、
+  // 2枚目以降はcomboSteps（12/8/4）、それを超える枚数はcomboOverflow（3）。
+  // 線形加点（旧comboPerExtraCard）は「枚数を出すほど青天井」の枚数バイアスの
+  // 主因だったため逓減へ変更した。
+  const position = state.cardsPlayedThisRound // このカードを使う前の、ラウンド内使用済み枚数
+  const comboBonus =
+    position === 0 ? 0 : RULES.score.comboSteps[position - 1] ?? RULES.score.comboOverflow
 
   let next: GameState = {
     ...state,

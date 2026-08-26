@@ -7,13 +7,44 @@ import { startTestGame } from './testUtils'
 const rng = () => createRng('effect-test')
 
 describe('applyDamage', () => {
-  it('reduces enemy hp and adds damage score', () => {
+  it('reduces enemy hp and adds effective-damage score (BASE-D: ×perDamage)', () => {
     const state = startTestGame()
     const { state: next } = applyDamage(state, 'enemy', 5)
 
     expect(next.enemy.hp).toBe(state.enemy.maxHp - 5)
-    expect(next.score.damage).toBe(5)
-    expect(next.score.total).toBe(5)
+    // BASE-D（決定109）：実効ダメージ5 × perDamage(1.2) = 6
+    expect(next.score.damage).toBeCloseTo(5 * 1.2)
+    expect(next.score.total).toBeCloseTo(5 * 1.2)
+  })
+
+  it('BASE-D: overkill（敵の残りHPを超えた分）はスコアに加算されない', () => {
+    const state = startTestGame()
+    const lowHp = { ...state, enemy: { ...state.enemy, hp: 5 } }
+    const { state: next } = applyDamage(lowHp, 'enemy', 20)
+
+    expect(next.enemy.hp).toBe(0)
+    expect(next.status).toBe('won')
+    // 実効ダメージは5のみ。overkill 15は無得点
+    expect(next.score.damage).toBeCloseTo(5 * 1.2)
+  })
+
+  it('BASE-D: Mastery集計は実効ダメージのみを1ラウンド最大として追跡する（スコアとは分離）', () => {
+    const state = startTestGame()
+    const lowHp = { ...state, enemy: { ...state.enemy, hp: 10 } }
+    const { state: next } = applyDamage(lowHp, 'enemy', 30)
+
+    // overkill除外：実効10のみがMasteryに載る
+    expect(next.mastery.roundDamage).toBe(10)
+    expect(next.mastery.bestRoundDamage).toBe(10)
+  })
+
+  it('BASE-D: 同一ラウンドの複数回ダメージはMasteryのroundDamageに合算される', () => {
+    const state = startTestGame()
+    const first = applyDamage(state, 'enemy', 8).state
+    const second = applyDamage(first, 'enemy', 7).state
+
+    expect(second.mastery.roundDamage).toBe(15)
+    expect(second.mastery.bestRoundDamage).toBe(15)
   })
 
   it('is absorbed by block first', () => {
@@ -25,13 +56,17 @@ describe('applyDamage', () => {
     expect(events[0]).toMatchObject({ t: 'DAMAGE_DEALT', amount: 2, blocked: 3 })
   })
 
-  it('wins the game and grants a defeat bonus when enemy hp reaches 0', () => {
+  it('wins the game and grants BASE-D victory bonuses when enemy hp reaches 0', () => {
     const state = startTestGame()
     const { state: next, events } = applyDamage(state, 'enemy', state.enemy.hp)
 
     expect(next.status).toBe('won')
-    // 決定: defeatBonus(200) + perRemainingRound(100) * 残りラウンド(7-1=6)
-    expect(next.score.roundBonus).toBe(200 + 100 * 6)
+    // BASE-D（決定109）：勝利時のみ victory(300) + tempo(R1撃破はR3以前の290で頭打ち)
+    // + survival(HP満タン=30) + difficultyBonus(normal=0)
+    expect(next.score.victory).toBe(300)
+    expect(next.score.tempo).toBe(290)
+    expect(next.score.survival).toBe(30)
+    expect(next.score.difficultyBonus).toBe(0)
     expect(events.some((e) => e.t === 'DAMAGE_DEALT')).toBe(true)
   })
 
@@ -74,9 +109,11 @@ describe('applyEffect', () => {
 
     expect(next.resonance.value).toBe(0)
     expect(events.some((e) => e.t === 'RESONANCE_BURST')).toBe(true)
-    // MVPの共通発動効果：敵に25ダメージ＋スコア200（決定9）
+    // 恵比寿の発動効果：敵に25ダメージ＋score200（決定23）。
+    // BASE-D（決定109）：score直接効果は加算されず、ダメージ分（25×1.2）のみ得点になる
     expect(next.enemy.hp).toBe(state.enemy.maxHp - 25)
-    expect(next.score.oracleBonus).toBe(200)
+    expect(next.score.damage).toBeCloseTo(25 * 1.2)
+    expect(next.score.total).toBeCloseTo(25 * 1.2)
   })
 
   it('evolves the OTOMO spirit → incarnate on the first burst (決定19)', () => {
@@ -193,11 +230,11 @@ describe('applyEffect', () => {
     expect(next.enemy.hp).toBe(debuffedSelf.enemy.maxHp)
   })
 
-  it('score effect adds to oracleBonus and total', () => {
+  it('BASE-D: score effect no longer adds to Battle Score (oracle/BURST score除外)', () => {
     const state = startTestGame()
-    const { state: next } = applyEffect(state, { kind: 'score', amount: 100 }, rng())
-    expect(next.score.oracleBonus).toBe(100)
-    expect(next.score.total).toBe(100)
+    const { state: next, events } = applyEffect(state, { kind: 'score', amount: 100 }, rng())
+    expect(next.score.total).toBe(0)
+    expect(events.some((e) => e.t === 'SCORE_GAINED')).toBe(false)
   })
 })
 
@@ -213,6 +250,7 @@ describe('applyEffects', () => {
       rng(),
     )
     expect(next.enemy.hp).toBe(state.enemy.maxHp - 25)
-    expect(next.score.oracleBonus).toBe(100)
+    // BASE-D：score効果は無得点。damage分（25×1.2）だけがtotalに載る
+    expect(next.score.total).toBeCloseTo(25 * 1.2)
   })
 })

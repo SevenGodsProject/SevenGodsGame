@@ -1,6 +1,7 @@
 import type { GodId, PlayerState } from '../../core/types'
 import { getGodDef } from '../../core/data/gods'
 import { STAT_LABEL } from '../setup/godStyle'
+import { formatScaled } from '../displayScale'
 import type { PowerTier } from './cardStyle'
 import { HpBar } from './HpBar'
 import { FloatingNumbers } from './FloatingNumbers'
@@ -80,7 +81,7 @@ export function PlayerPanel({
           key={`block-${blockGainKey}`}
           className={`badge badge-block${blockGainKey > 0 ? ' badge-block-pulse' : ''}`}
         >
-          🛡 {player.block}
+          🛡 {formatScaled(player.block)}
         </div>
       )}
       {player.buffs.length > 0 && (
@@ -88,7 +89,7 @@ export function PlayerPanel({
           {player.buffs.map((b, i) => (
             <span key={i} className="badge badge-buff">
               {STAT_LABEL[b.stat]} {b.amount > 0 ? '+' : ''}
-              {b.amount}（{b.remainingRounds}）
+              {formatScaled(b.amount)}（{b.remainingRounds}）
             </span>
           ))}
         </div>

@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import { getGodDef } from '../../core/data/gods'
 import { getEnemyDef } from '../../core/data/enemies'
 import { STAT_LABEL } from '../setup/godStyle'
+import { formatScaled } from '../displayScale'
 import type { EnemyState, GodId, PlayerState } from '../../core/types'
 import type { MiniResultData } from './useBattleFx'
 
@@ -82,30 +83,31 @@ export function BattleMiniResult({ godId, enemy, player, resonanceMax, resultKey
         </div>
       )}
       <div className="battle-mini-result-lines">
+        {/* D2b：damage/HP/block/healは表示×10。共鳴・神力・カード枚数は倍率対象外 */}
         {isPlayerAttack && result.enemyDamage > 0 && (
           <>
-            <span className="battle-mini-result-main battle-mini-result-damage">-{result.enemyDamage} DAMAGE!</span>
+            <span className="battle-mini-result-main battle-mini-result-damage">-{formatScaled(result.enemyDamage)} DAMAGE!</span>
             <span className="battle-mini-result-sub">
-              敵 HP {enemyHpBefore}→{enemy.hp}
+              敵 HP {formatScaled(enemyHpBefore)}→{formatScaled(enemy.hp)}
             </span>
           </>
         )}
         {isEnemyAttack && result.enemyAttackDamage > 0 && (
           <>
-            <span className="battle-mini-result-main battle-mini-result-damage">-{result.enemyAttackDamage} DAMAGE!</span>
+            <span className="battle-mini-result-main battle-mini-result-damage">-{formatScaled(result.enemyAttackDamage)} DAMAGE!</span>
             <span className="battle-mini-result-sub">
-              HP {selfHpBefore}→{player.hp}
+              HP {formatScaled(selfHpBefore)}→{formatScaled(player.hp)}
             </span>
           </>
         )}
         {result.selfInflictedDamage > 0 && (
-          <span className="battle-mini-result-sub battle-mini-result-damage">自分に{result.selfInflictedDamage}ダメージ</span>
+          <span className="battle-mini-result-sub battle-mini-result-damage">自分に{formatScaled(result.selfInflictedDamage)}ダメージ</span>
         )}
         {result.block > 0 && (
-          <span className="battle-mini-result-sub battle-mini-result-block">🛡 BLOCK +{result.block}</span>
+          <span className="battle-mini-result-sub battle-mini-result-block">🛡 BLOCK +{formatScaled(result.block)}</span>
         )}
         {result.heal > 0 && (
-          <span className="battle-mini-result-sub battle-mini-result-heal">✨ HP +{result.heal}</span>
+          <span className="battle-mini-result-sub battle-mini-result-heal">✨ HP +{formatScaled(result.heal)}</span>
         )}
         {result.resonanceGain > 0 && (
           <span className="battle-mini-result-sub battle-mini-result-resonance">
@@ -120,7 +122,7 @@ export function BattleMiniResult({ godId, enemy, player, resonanceMax, resultKey
             {b.target === 'enemy' ? '敵' : '自分'}
             {STAT_LABEL[b.stat as keyof typeof STAT_LABEL] ?? b.stat}
             {b.amount > 0 ? '+' : ''}
-            {b.amount}（{b.rounds}R）
+            {formatScaled(b.amount)}（{b.rounds}R）
           </span>
         ))}
       </div>

@@ -106,7 +106,7 @@ describe('PLAY_CARD', () => {
     expect(events.some((e) => e.t === 'CARD_PLAYED')).toBe(true)
   })
 
-  it('awards a combo bonus from the second card played in a round (決定: comboPerExtraCard)', () => {
+  it('awards a diminishing combo bonus from the second card played in a round (BASE-D: comboSteps)', () => {
     const base = startTestGame()
     const first = { uid: cardUid('t-guard-1'), defId: CARD_IDS.guard }
     const second = { uid: cardUid('t-guard-2'), defId: CARD_IDS.guard }
@@ -115,8 +115,9 @@ describe('PLAY_CARD', () => {
     const afterFirst = applyAction(state, { type: 'PLAY_CARD', uid: first.uid })
     expect(afterFirst.state.score.combo).toBe(0)
 
+    // BASE-D（決定109）：2枚目はcomboSteps[0]（=12）
     const afterSecond = applyAction(afterFirst.state, { type: 'PLAY_CARD', uid: second.uid })
-    expect(afterSecond.state.score.combo).toBe(RULES.score.comboPerExtraCard)
+    expect(afterSecond.state.score.combo).toBe(RULES.score.comboSteps[0])
   })
 
   it('throws when the AP cost cannot be paid', () => {
@@ -154,10 +155,13 @@ describe('END_ROUND', () => {
     expect(kinds).toContain('ROUND_STARTED')
   })
 
-  it('penalizes unused AP in the score (rules.score.unusedApPenalty)', () => {
+  it('BASE-D: unused AP is no longer penalized（未使用APペナルティ廃止）', () => {
     const state = startTestGame() // AP2を1枚も使わない
-    const { state: next } = applyAction(state, { type: 'END_ROUND' })
-    expect(next.score.apEfficiency).toBe(-(RULES.ap.perRound[0] * RULES.score.unusedApPenalty))
+    const { state: next, events } = applyAction(state, { type: 'END_ROUND' })
+    // スコアは一切変動しない（敵の攻撃は自分への被弾でありスコア対象外）
+    expect(next.score.total).toBe(state.score.total)
+    // unusedApはROUND_ENDEDの情報としては残る
+    expect(events.some((e) => e.t === 'ROUND_ENDED' && e.unusedAp === RULES.ap.perRound[0])).toBe(true)
   })
 
   it('throws once the game is already over', () => {

@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import type { Dispatch, SetStateAction } from 'react'
 import type { GameEvent, GodId } from '../../core/types'
 import { getGodDef } from '../../core/data/gods'
+import { formatScaled } from '../displayScale'
 
 export type FloatingNumber = {
   id: number
@@ -56,8 +57,9 @@ export function useFloatingNumbers(
     for (const event of newEvents) {
       if (event.t === 'DAMAGE_DEALT') {
         const setter = event.target === 'enemy' ? setEnemyNumbers : setPlayerNumbers
+        // D2b：damage/block/healは表示×10。draw/AP（下のRESONANCE_BURST分岐）は倍率対象外
         if (event.amount > 0) {
-          spawn(setter, { id: nextId.current++, text: `-${event.amount}`, kind: 'damage' })
+          spawn(setter, { id: nextId.current++, text: `-${formatScaled(event.amount)}`, kind: 'damage' })
         }
         // 第二次完成フェーズP0-3：DAMAGE_DEALT.blockedは既存のデータとして
         // 存在していたが、これまでどのフックも読んでいなかった（未消費）。
@@ -72,10 +74,10 @@ export function useFloatingNumbers(
         // （formatEvent.ts）が同じ意味を「（N軽減）」と表現している言葉をそのまま
         // 流用し、色（#7fb2ff）はバッジと共通のまま維持している。
         if (event.blocked > 0) {
-          spawn(setter, { id: nextId.current++, text: `軽減${event.blocked}`, kind: 'block' })
+          spawn(setter, { id: nextId.current++, text: `軽減${formatScaled(event.blocked)}`, kind: 'block' })
         }
       } else if (event.t === 'HEALED' && event.amount > 0) {
-        spawn(setPlayerNumbers, { id: nextId.current++, text: `+${event.amount}`, kind: 'heal' })
+        spawn(setPlayerNumbers, { id: nextId.current++, text: `+${formatScaled(event.amount)}`, kind: 'heal' })
       } else if (event.t === 'RESONANCE_BURST' && godId) {
         const resonanceEffects = getGodDef(godId).resonanceEffects
         for (const effect of resonanceEffects) {

@@ -2,6 +2,7 @@ import type { GameEvent, GameStatus, OtomoForm } from '../../core/types'
 import { getCardDef } from '../../core/data/cards'
 import { DIVINATION_CHOICES } from '../../core/data/divination'
 import { STAT_LABEL } from '../setup/godStyle'
+import { formatScaled } from '../displayScale'
 
 /**
  * A3監査：`GameEvent`の`BUFF_APPLIED.stat`は（サーバー越しの将来対応を見据え）
@@ -57,14 +58,15 @@ export function formatEvent(event: GameEvent): string {
       return `山札切れ：捨札をシャッフルして山札に戻した（${event.count}枚）`
     case 'CARD_PLAYED':
       return `「${getCardDef(event.defId).name}」を使用（神力${event.cost}）`
+    // D2b：damage/block/heal/バフ量/スコアは表示×10。AP・共鳴・ラウンドは倍率対象外
     case 'DAMAGE_DEALT':
       return event.target === 'enemy'
-        ? `敵に${event.amount}ダメージ${event.blocked > 0 ? `（${event.blocked}軽減）` : ''}`
-        : `${event.amount}ダメージを受けた${event.blocked > 0 ? `（${event.blocked}軽減）` : ''}`
+        ? `敵に${formatScaled(event.amount)}ダメージ${event.blocked > 0 ? `（${formatScaled(event.blocked)}軽減）` : ''}`
+        : `${formatScaled(event.amount)}ダメージを受けた${event.blocked > 0 ? `（${formatScaled(event.blocked)}軽減）` : ''}`
     case 'BLOCK_GAINED':
-      return `ブロック+${event.amount}`
+      return `ブロック+${formatScaled(event.amount)}`
     case 'HEALED':
-      return `HP+${event.amount}`
+      return `HP+${formatScaled(event.amount)}`
     case 'RESONANCE_GAINED':
       return `共鳴+${event.amount}（${event.total}）`
     case 'RESONANCE_BURST':
@@ -72,17 +74,17 @@ export function formatEvent(event: GameEvent): string {
     case 'OTOMO_EVOLVED':
       return `OTOMOが${OTOMO_FORM_LABEL[event.form]}に成長した！`
     case 'BUFF_APPLIED':
-      return `${event.target === 'enemy' ? '敵' : '自分'}の${statLabel(event.stat)}が${event.amount > 0 ? '+' : ''}${event.amount}（${event.rounds}ラウンド）`
+      return `${event.target === 'enemy' ? '敵' : '自分'}の${statLabel(event.stat)}が${event.amount > 0 ? '+' : ''}${formatScaled(event.amount)}（${event.rounds}ラウンド）`
     case 'ENEMY_INTENT_SET':
-      return event.kind === 'attack' ? `敵の次の行動：攻撃${event.amount}` : '敵の次の行動：溜め'
+      return event.kind === 'attack' ? `敵の次の行動：攻撃${formatScaled(event.amount)}` : '敵の次の行動：溜め'
     case 'ENEMY_ACTED':
-      return event.kind === 'attack' ? `敵が攻撃${event.amount}` : '敵が溜めた'
+      return event.kind === 'attack' ? `敵が攻撃${formatScaled(event.amount)}` : '敵が溜めた'
     case 'SCORE_GAINED':
-      return `スコア${event.amount >= 0 ? '+' : ''}${event.amount}（${scoreReasonLabel(event.reason)}）`
+      return `スコア${event.amount >= 0 ? '+' : ''}${formatScaled(event.amount)}（${scoreReasonLabel(event.reason)}）`
     case 'ROUND_ENDED':
       return `ラウンド${event.round}終了${event.unusedAp > 0 ? `（神力${event.unusedAp}余り）` : ''}`
     case 'GAME_ENDED':
-      return `決着：${STATUS_LABEL[event.status]}（スコア${event.totalScore}）`
+      return `決着：${STATUS_LABEL[event.status]}（スコア${formatScaled(event.totalScore)}）`
     case 'DIVINATION_USED':
       return `「${DIVINATION_CHOICES[event.choiceIndex].name}」を受けた（残り${event.remaining}回）`
   }

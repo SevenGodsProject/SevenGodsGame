@@ -1,5 +1,7 @@
 import type { Difficulty, GameState, GodId } from '../../core/types'
 import { GODS } from '../../core/data/gods'
+import { getFinalScore } from '../../core/engine'
+import { scaleDisplay } from '../displayScale'
 
 /**
  * フィードバック機能（実プレイ・フィードバック基盤）が自動添付する
@@ -51,7 +53,8 @@ export function computeSnapshot({ setupScreen, godId, difficulty, state }: Snaps
       godName: godNameJa(state.godId),
       difficultyLabel: DIFFICULTY_LABEL[state.difficulty],
       round: state.round,
-      score: state.score.total,
+      // D2b：フィードバックにはユーザーが見ているのと同じ表示値（×10）を載せる
+      score: scaleDisplay(getFinalScore(state.score)),
       otomoFormLabel: OTOMO_FORM_LABEL[state.otomo.form],
     }
   }

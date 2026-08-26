@@ -104,11 +104,11 @@ export function applyEffect(
     }
 
     case 'score': {
-      const score = addScore(state.score, 'oracleBonus', effect.amount)
-      return {
-        state: { ...state, score },
-        events: [{ t: 'SCORE_GAINED', reason: 'oracle', amount: effect.amount }],
-      }
+      // BASE-D（決定109）：oracle/BURSTの`score`直接効果はBattle Scoreへ加算しない。
+      // カード・神データの`score`効果定義自体は温存する（damage/draw等の他効果は
+      // 通常どおり発生し、`score`だけがスコア集計に乗らない）。SCORE_GAINEDイベントも
+      // 発行しない（獲得していないスコアをログに出すと嘘になるため）。
+      return { state, events: [] }
     }
   }
 }
@@ -137,17 +137,30 @@ export function applyDamage(
   if (target === 'enemy') {
     const blocked = Math.min(state.enemy.block, amount)
     const dealt = amount - blocked
+    // BASE-D（決定109）：スコア・Masteryに数えるのは「実効ダメージ」のみ。
+    // 敵の残りHPを超えた分（overkill）は敵HPには意味を持たず、加点もしない。
+    const effective = Math.min(dealt, state.enemy.hp)
     const hp = Math.max(0, state.enemy.hp - dealt)
-    const score = addScore(state.score, 'damage', dealt * RULES.score.perDamage)
+    const score = addScore(state.score, 'damage', effective * RULES.score.perDamage)
+
+    // Mastery集計（決定110プロトタイプ）：1ラウンド実効ダメージの最大値を追跡する。
+    // スコアとは完全分離（bestRoundDamageはtotalへ一切影響しない）。
+    const roundDamage = state.mastery.roundDamage + effective
+    const mastery = {
+      roundDamage,
+      bestRoundDamage: Math.max(state.mastery.bestRoundDamage, roundDamage),
+    }
 
     const events: GameEvent[] = [
       { t: 'DAMAGE_DEALT', target: 'enemy', amount: dealt, blocked },
     ]
-    if (dealt > 0) {
+    if (effective > 0) {
       events.push({
         t: 'SCORE_GAINED',
         reason: 'damage',
-        amount: dealt * RULES.score.perDamage,
+        // perDamageが小数のため、ログ表示用イベントは四捨五入した値を出す
+        // （score本体は正確な値で加算される）。
+        amount: Math.round(effective * RULES.score.perDamage),
       })
     }
 
@@ -155,6 +168,7 @@ export function applyDamage(
       ...state,
       enemy: { ...state.enemy, hp, block: state.enemy.block - blocked },
       score,
+      mastery,
     }
 
     if (hp <= 0 && nextState.status === 'playing') {
@@ -182,11 +196,24 @@ export function applyDamage(
   }
 }
 
-/** 決定1・3：撃破時のボーナス。残りラウンド数に応じて加点し、勝利にする */
+/**
+ * 決定1・3＋BASE-D（決定109）：撃破時のボーナス。勝利時のみ、
+ * 基礎点・逓減テンポ表・残HPボーナス・難易度補正（加算）を確定して勝利にする。
+ * 敗北・未撃破ではこれらは一切加算されない。
+ */
 function applyVictory(state: GameState): GameState {
-  const remainingRounds = RULES.totalRounds - state.round
-  const bonus = RULES.score.defeatBonus + RULES.score.perRemainingRound * remainingRounds
-  const score = addScore(state.score, 'roundBonus', bonus)
+  const roundIndex = Math.min(Math.max(state.round, 1), RULES.totalRounds) - 1
+  const tempo = RULES.score.tempoByRound[roundIndex] ?? 0
+  const survival =
+    state.player.maxHp > 0
+      ? Math.round((state.player.hp / state.player.maxHp) * RULES.score.survivalMax)
+      : 0
+  const difficultyBonus = RULES.score.difficultyBonus[state.difficulty]
+
+  let score = addScore(state.score, 'victory', RULES.score.victoryBase)
+  score = addScore(score, 'tempo', tempo)
+  score = addScore(score, 'survival', survival)
+  score = addScore(score, 'difficultyBonus', difficultyBonus)
   return { ...state, status: 'won', score }
 }
 

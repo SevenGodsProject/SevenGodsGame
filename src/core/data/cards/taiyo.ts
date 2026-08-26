@@ -20,7 +20,7 @@ export const TAIYO_CARDS: CardDef[] = [
   {
     id: TAIYO_CARD_IDS.boldStrike,
     name: '豪快な一撃',
-    text: '敵に14ダメージを与え、自分に2ダメージを与える。',
+    text: '敵に140ダメージを与え、自分に20ダメージを与える。',
     type: 'attack',
     cost: 2,
     rarity: 'rare',
@@ -34,7 +34,7 @@ export const TAIYO_CARDS: CardDef[] = [
   {
     id: TAIYO_CARD_IDS.sisterlyCommand,
     name: '姉御の号令',
-    text: '自分の攻撃力を2ラウンドのあいだ3上げる。',
+    text: '自分の攻撃力を2ラウンドのあいだ30上げる。',
     type: 'support',
     cost: 1,
     rarity: 'rare',
@@ -45,7 +45,7 @@ export const TAIYO_CARDS: CardDef[] = [
   {
     id: TAIYO_CARD_IDS.singleMinded,
     name: '一心不乱',
-    text: '敵に4ダメージを与え、共鳴ゲージを1上昇させる。',
+    text: '敵に40ダメージを与え、共鳴ゲージを1上昇させる。',
     type: 'attack',
     cost: 1,
     rarity: 'rare',
@@ -58,7 +58,7 @@ export const TAIYO_CARDS: CardDef[] = [
   {
     id: TAIYO_CARD_IDS.lookingAfterJuniors,
     name: '後輩想い',
-    text: 'ブロックを6得て、HPを4回復する。',
+    text: 'ブロックを60得て、HPを40回復する。',
     type: 'support',
     cost: 2,
     rarity: 'rare',

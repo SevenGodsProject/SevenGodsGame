@@ -78,19 +78,47 @@ export const RULES = {
   baselineDamagePerAp: 5,
 
   /**
-   * スコア。項目は確定、係数は未決定のため仮の値です。
+   * スコア（BASE-D、決定109のsimulation検証済み候補値。正式採用値ではなくprototype）。
+   *
+   * 旧式（〜決定98）からの主な変更：
+   * - overkill（敵の残りHPを超えた分）は無得点
+   * - oracle/BURSTの`score`直接効果はBattle Scoreへ加算しない
+   * - 未使用APペナルティは廃止
+   * - 撃破ボーナスは「基礎300＋逓減テンポ表」（線形の残ラウンド係数は
+   *   「遅く倒すほど高得点」への反転や早期撃破神のテール暴走を招くため）
+   * - 難易度は倍率でなく加算（倍率は神ごとのhard適性差を増幅するため）
    */
   score: {
-    /** 与ダメージ1あたり */
-    perDamage: 1,
-    /** 神力を1余らせるごとの減点 */
-    unusedApPenalty: 2,
-    /** 撃破ボーナス */
-    defeatBonus: 200,
-    /** 撃破時、残ったラウンド1つあたり */
-    perRemainingRound: 100,
-    /** 1ラウンドに2枚目以降を使うごと */
-    comboPerExtraCard: 10,
+    /** 実効ダメージ（overkill除外後）1あたり */
+    perDamage: 1.2,
+    /**
+     * 連携：各ラウンドの2枚目/3枚目/4枚目の加点。5枚目以降は`comboOverflow`。
+     * 線形加点は「枚数を出すほど青天井」になり枚数バイアスの主因だったため逓減にする。
+     */
+    comboSteps: [12, 8, 4],
+    comboOverflow: 3,
+    /** 勝利時の基礎点 */
+    victoryBase: 300,
+    /**
+     * 勝利時の早期撃破ボーナス。index = 撃破ラウンド-1（R1〜R7）。
+     * R3以前は理論上ほぼ到達不能のため290で頭打ちにする（安全側の外挿）。
+     */
+    tempoByRound: [290, 290, 290, 240, 170, 90, 0],
+    /** 勝利時、残りHP率（0〜1）に掛けるボーナス上限 */
+    survivalMax: 30,
+    /** 勝利時の難易度補正（加算） */
+    difficultyBonus: { easy: -20, normal: 0, hard: 30 },
+    /** 表示スコア＝素点合計×この倍率を四捨五入（getFinalScore） */
+    finalScale: 1.3,
+  },
+
+  /**
+   * Mastery（神技評価）のグレード閾値（決定110プロトタイプ。正式採用値ではない）。
+   * Battle Scoreとは完全分離で、totalへは加算しない。
+   */
+  mastery: {
+    /** 大耀「爆発」：1ラウンド最大実効ダメージ ÷ 敵最大HP のグレード下限 */
+    taiyo: { s: 0.58, a: 0.45, b: 0.37 },
   },
 
   /**
@@ -112,6 +140,10 @@ export const RULES = {
     hard: { enemyHpMultiplier: 1.15, enemyAtkMultiplier: 1.15, playerMaxHpBonus: -3 },
   },
 
-  /** セーブデータのバージョン。互換性維持のため必ず持たせる */
-  saveVersion: 3,
+  /**
+   * セーブデータのバージョン。互換性維持のため必ず持たせる。
+   * v4（STEP-SCORE2-D-PROTO）：ScoreStateをBASE-D構造へ変更し、MasteryStateを追加。
+   * v3セーブはbattleSaveStorage.tsのmigrateで読み込み継続できる（破棄しない）。
+   */
+  saveVersion: 4,
 } as const

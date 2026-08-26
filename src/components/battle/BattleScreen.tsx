@@ -1,5 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { RULES } from '../../core/data/rules'
+import { getFinalScore, getMastery } from '../../core/engine'
+import { formatScaled } from '../displayScale'
 import { getCardDef } from '../../core/data/cards'
 import { getGodDef } from '../../core/data/gods'
 import { getOtomoDef } from '../../core/data/otomo'
@@ -167,14 +169,11 @@ export function BattleScreen({ engine, onRematch, onReselect }: BattleScreenProp
             <span className="ap-gauge-fill" style={{ width: `${apRatio * 100}%` }} />
           </span>
         </span>
-        <span>スコア {state.score.total}</span>
+        <span>スコア {formatScaled(getFinalScore(state.score))}</span>
       </div>
 
-      {fx.apPenaltyKey > 0 && (
-        <div key={`ap-penalty-${fx.apPenaltyKey}`} className="ap-penalty-toast">
-          神力を使い切れませんでした（スコア{fx.apPenaltyAmount}）
-        </div>
-      )}
+      {/* BASE-D（決定109）：未使用APペナルティ廃止に伴い、ap-penalty-toastの表示を
+          撤去した（useBattleFx側の集計は発火源イベントが消えたため自然に沈黙する）。 */}
 
       {/* スマホUX修正：手札位置までスクロールした状態でカードを使っても、
           攻撃/回復/防御の結果がその場で分かるようにするfixedトースト。
@@ -345,6 +344,7 @@ export function BattleScreen({ engine, onRematch, onReselect }: BattleScreenProp
           newBest={newBest}
           prevBest={prevBest}
           otomoLevelUp={otomoLevelUp}
+          mastery={getMastery(state)}
           onRematch={onRematch}
           onReselect={onReselect}
         />

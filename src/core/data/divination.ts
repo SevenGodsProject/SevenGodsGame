@@ -11,7 +11,7 @@ import type { DivinationChoice } from '../types'
 export const DIVINATION_CHOICES: DivinationChoice[] = [
   {
     name: '加護の託宣',
-    text: 'HPを3回復し、ブロックを2得る。',
+    text: 'HPを30回復し、ブロックを20得る。',
     effects: [
       { kind: 'heal', amount: 3 },
       { kind: 'block', amount: 2 },
@@ -27,7 +27,7 @@ export const DIVINATION_CHOICES: DivinationChoice[] = [
   },
   {
     name: '天啓の託宣',
-    text: '敵に3ダメージを与え、スコアを8得る。',
+    text: '敵に30ダメージを与え、スコアを80得る。',
     effects: [
       { kind: 'damage', target: 'enemy', amount: 3 },
       { kind: 'score', amount: 8 },

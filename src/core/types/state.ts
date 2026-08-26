@@ -30,22 +30,43 @@ export type PlayerState = {
 }
 
 /**
- * スコアの内訳。
- * 計算式（係数）は未決定ですが、「何を記録するか」は今決められます。
- * 項目さえ確保しておけば、係数は後からいくらでも調整できます。
+ * スコアの内訳（BASE-D、決定109プロトタイプ）。
+ *
+ * 全項目「素点」で持ち、表示スコアは`getFinalScore()`（素点合計×finalScale）で算出する。
+ * 旧形式（saveVersion 3以前：damage/combo/apEfficiency/roundBonus/oracleBonus）からの
+ * 移行では、旧式にしか無い項目の合計を`legacy`へ畳み込んでtotalの連続性を保つ
+ * （battleSaveStorage.tsのmigrateを参照）。
  */
 export type ScoreState = {
-  /** 与えた総ダメージ */
+  /** 実効ダメージ分（敵の残りHPを超えた分＝overkillは加点しない）×perDamage */
   damage: number
-  /** 1ラウンドに複数枚使ったときの連携ボーナス */
+  /** 連携：1ラウンドに2枚目以降を使ったときの逓減ボーナス */
   combo: number
-  /** 神力を無駄にしなかったか */
-  apEfficiency: number
-  /** 早く倒したことによるボーナス */
-  roundBonus: number
-  /** 神託カード・共鳴発動によるボーナス */
-  oracleBonus: number
+  /** 勝利時の撃破基礎点（victoryBase） */
+  victory: number
+  /** 勝利時の早期撃破ボーナス（撃破ラウンドが早いほど大きい） */
+  tempo: number
+  /** 勝利時の残りHPボーナス（残HP率×survivalMax） */
+  survival: number
+  /** 勝利時の難易度補正（加算方式。easyは負、hardは正） */
+  difficultyBonus: number
+  /** 旧セーブ（v3以前）から引き継いだ旧形式スコア分。新規ゲームでは常に0 */
+  legacy: number
+  /** 素点合計。表示スコアは getFinalScore(score) を使うこと */
   total: number
+}
+
+/**
+ * Mastery（神技評価）用の試合内集計（決定110プロトタイプ）。
+ * Battle Score（ScoreState）とは完全分離で、totalへは一切加算しない。
+ * 現段階は大耀「爆発」（1ラウンド最大実効ダメージ）に必要な集計のみを持つ。
+ * resume（決定29）を跨いでも失われないよう、イベントログではなくGameStateで持つ。
+ */
+export type MasteryState = {
+  /** 現在のラウンドに敵へ与えた実効ダメージ合計（ラウンド開始でリセット） */
+  roundDamage: number
+  /** 1ラウンド実効ダメージの試合内最大値 */
+  bestRoundDamage: number
 }
 
 /**
@@ -99,6 +120,8 @@ export type GameState = {
   exhausted: CardInstance[]
 
   score: ScoreState
+  /** 神技評価（Mastery）用の試合内集計（決定110プロトタイプ。スコアとは非加算） */
+  mastery: MasteryState
 
   /** コンボ判定用：このラウンドに使ったカード枚数 */
   cardsPlayedThisRound: number

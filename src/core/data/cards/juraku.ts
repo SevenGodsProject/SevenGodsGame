@@ -20,7 +20,7 @@ export const JURAKU_CARDS: CardDef[] = [
   {
     id: JURAKU_CARD_IDS.mischief,
     name: '悪戯',
-    text: '敵の攻撃力を2ラウンドのあいだ4下げる。',
+    text: '敵の攻撃力を2ラウンドのあいだ40下げる。',
     type: 'hinder',
     cost: 1,
     rarity: 'rare',
@@ -31,7 +31,7 @@ export const JURAKU_CARDS: CardDef[] = [
   {
     id: JURAKU_CARD_IDS.wisdomOfAges,
     name: '長生きの知恵',
-    text: 'HPを4回復し、ブロックを4得る。',
+    text: 'HPを40回復し、ブロックを40得る。',
     type: 'guard',
     cost: 1,
     rarity: 'rare',
@@ -44,7 +44,7 @@ export const JURAKU_CARDS: CardDef[] = [
   {
     id: JURAKU_CARD_IDS.halfJoking,
     name: 'からかい半分',
-    text: '敵に7ダメージを与え、敵の攻撃力を2ラウンドのあいだ4下げる。',
+    text: '敵に70ダメージを与え、敵の攻撃力を2ラウンドのあいだ40下げる。',
     type: 'attack',
     cost: 2,
     rarity: 'rare',
@@ -58,7 +58,7 @@ export const JURAKU_CARDS: CardDef[] = [
   {
     id: JURAKU_CARD_IDS.whimsy,
     name: '気まぐれ',
-    text: '共鳴ゲージを2上昇させ、HPを2回復する。',
+    text: '共鳴ゲージを2上昇させ、HPを20回復する。',
     type: 'resonance',
     cost: 1,
     rarity: 'rare',

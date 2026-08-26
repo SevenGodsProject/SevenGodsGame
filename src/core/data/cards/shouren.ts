@@ -20,7 +20,7 @@ export const SHOUREN_CARDS: CardDef[] = [
   {
     id: SHOUREN_CARD_IDS.bagOfFortune,
     name: '福袋',
-    text: 'HPを11回復する。',
+    text: 'HPを110回復する。',
     type: 'support',
     cost: 2,
     rarity: 'rare',
@@ -31,7 +31,7 @@ export const SHOUREN_CARDS: CardDef[] = [
   {
     id: SHOUREN_CARD_IDS.deepEmbrace,
     name: '懐の深さ',
-    text: 'ブロックを11得る。',
+    text: 'ブロックを110得る。',
     type: 'guard',
     cost: 2,
     rarity: 'rare',
@@ -47,7 +47,7 @@ export const SHOUREN_CARDS: CardDef[] = [
   {
     id: SHOUREN_CARD_IDS.laughItOff,
     name: '笑って許す',
-    text: 'HPを4回復し、ブロックを4得る。',
+    text: 'HPを40回復し、ブロックを40得る。',
     type: 'support',
     cost: 1,
     rarity: 'rare',
@@ -60,7 +60,7 @@ export const SHOUREN_CARDS: CardDef[] = [
   {
     id: SHOUREN_CARD_IDS.gentleBlow,
     name: 'おおらかな一打',
-    text: '敵に7ダメージを与え、HPを3回復する。',
+    text: '敵に70ダメージを与え、HPを30回復する。',
     type: 'attack',
     cost: 1,
     rarity: 'rare',

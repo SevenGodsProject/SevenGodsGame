@@ -1,6 +1,9 @@
 import type { EnemyState, GameStatus, GodId, OtomoState, ScoreState } from '../../core/types'
 import { getGodDef } from '../../core/data/gods'
 import { getOtomoDef } from '../../core/data/otomo'
+import { getFinalScore, type MasteryResult } from '../../core/engine'
+import { formatScaled } from '../displayScale'
+import { describeMastery } from './masteryDisplay'
 
 const STATUS_LABEL: Record<Exclude<GameStatus, 'playing'>, string> = {
   won: '勝利',
@@ -9,25 +12,21 @@ const STATUS_LABEL: Record<Exclude<GameStatus, 'playing'>, string> = {
 }
 
 /**
- * 決定64（Task A5）：スコア内訳の各項目が「次はどうすれば伸ばせるか」を
- * 一目で分かるようにする短い補足。長文の説明ではなく一行に収まる分だけに絞る
- * （375pxでリザルトカードが縦長になりすぎないようにするため）。
- * 文言は`rules.ts`（perDamage/comboPerExtraCard/unusedApPenalty/defeatBonus/
- * perRemainingRound）と`gods.ts`の各`resonanceEffects`の`score`効果・
- * `divination.ts`の天啓の託宣を実際に確認した上で、仕組みと矛盾しないよう
- * 決定した：
- * - 神力効率は「使い切るとUP」ではなく常に0以下の減点方式（unusedApPenalty）
- *   なので「余らせると減点」と表現する
- * - 撃破ボーナスはapplyVictory経由で勝利時のみ加算されるため「早く倒すほど」
- * - 神託・共鳴はA2で判明した通り、天啓の託宣（+8）と神/OTOMOの共鳴発動時の
- *   score効果（150〜200）の両方が実際の発生源
+ * 決定64（Task A5）→BASE-D（決定109プロトタイプ）対応：スコア内訳の各項目が
+ * 「次はどうすれば伸ばせるか」を一目で分かるようにする短い補足。
+ * 文言はrules.tsのBASE-D係数（perDamage/comboSteps/victoryBase/tempoByRound/
+ * survivalMax/difficultyBonus/finalScale）と矛盾しないように選んだ：
+ * - 実効ダメージ：敵の残りHPを超えた分（overkill）は入らない
+ * - 連携：逓減のため「2枚目以降でUP」だけを言う（枚数無限に伸びる誤解を避ける）
+ * - 撃破・早期撃破・生存・難易度は勝利時のみ加算される
  */
-const SCORE_HINT: Record<keyof Omit<ScoreState, 'total'>, string> = {
-  damage: '与えたダメージ',
+const SCORE_HINT: Record<Exclude<keyof ScoreState, 'total' | 'legacy'>, string> = {
+  damage: '敵に効いたダメージ分',
   combo: '1ラウンドに2枚以上でUP',
-  apEfficiency: '神力を余らせると減点',
-  roundBonus: '早く倒すほどUP',
-  oracleBonus: '神託・共鳴の発動でUP',
+  victory: '敵を倒すと加算',
+  tempo: '早く倒すほどUP',
+  survival: '残りHPが多いほどUP',
+  difficultyBonus: '難しいほどUP',
 }
 
 type GameOverOverlayProps = {
@@ -59,6 +58,12 @@ type GameOverOverlayProps = {
    * 決定70の設計どおり）。
    */
   otomoLevelUp: { otomoName: string; prevLevel: number; nextLevel: number } | null
+  /**
+   * STEP-SCORE2-D-PROTO（決定110）：神技評価（Mastery）。対応する神技が
+   * 未実装の神ではnull。Battle Scoreとは完全分離の表示専用情報で、
+   * スコアには一切加算されない。勝利時のみ表示する。
+   */
+  mastery: MasteryResult | null
   /** 同じ神・同じデッキでもう一度戦う */
   onRematch: () => void
   /** 神選択からやり直す（決定24：Phase 5） */
@@ -74,11 +79,15 @@ export function GameOverOverlay({
   newBest,
   prevBest,
   otomoLevelUp,
+  mastery,
   onRematch,
   onReselect,
 }: GameOverOverlayProps) {
   const god = getGodDef(godId)
   const otomoDef = getOtomoDef(otomo.defId)
+  // BASE-D：ユーザーへ見せるスコアは最終スコア（素点合計×1.3）。内訳は素点を
+  // 四捨五入して表示する（perDamageが小数のためdamageのみ端数がありうる）。
+  const finalScore = getFinalScore(score)
   // STEP-UX6-B：敗北／未撃破時のみ、敵の残りHPで「あと一歩だった」を伝える
   // （決定64「敗北時は祝祭感を出さない」方針とは別軸の情報表示のため、
   // 勝利演出とは競合しない）。残りHP率10%以下の時だけ煽り文言を追加する
@@ -89,7 +98,7 @@ export function GameOverOverlay({
   const showCloseCall = showEnemyHp && enemyHpRatio > 0 && enemyHpRatio <= 0.1
   // STEP-UX6-B：自己ベスト未更新かつ、過去に一度でも記録がある（prevBest>0）場合のみ
   // 差分を表示する。newBest時は既存の「自己ベスト更新！」演出を優先し重複表示しない。
-  const bestGap = !newBest && prevBest > 0 && prevBest > score.total ? prevBest - score.total : null
+  const bestGap = !newBest && prevBest > 0 && prevBest > finalScore ? prevBest - finalScore : null
 
   return (
     <div className="game-over-overlay">
@@ -99,12 +108,12 @@ export function GameOverOverlay({
         <div className={`game-over-status game-over-status-${status}`}>{STATUS_LABEL[status]}</div>
         {showEnemyHp && (
           <div className="game-over-enemy-hp">
-            敵の残りHP {enemy.hp} / {enemy.maxHp}
+            敵の残りHP {formatScaled(enemy.hp)} / {formatScaled(enemy.maxHp)}
             {showCloseCall && '　あと一歩だった！'}
           </div>
         )}
         {newBest && <div className="game-over-new-best">✨ 自己ベスト更新！</div>}
-        {bestGap !== null && <div className="game-over-best-gap">自己ベストまであと{bestGap}点</div>}
+        {bestGap !== null && <div className="game-over-best-gap">自己ベストまであと{formatScaled(bestGap)}点</div>}
         {otomoLevelUp && (
           <div className="game-over-otomo-levelup">
             💠 絆Lv UP！ {otomoLevelUp.otomoName} Lv.{otomoLevelUp.prevLevel} → Lv.{otomoLevelUp.nextLevel}
@@ -125,33 +134,67 @@ export function GameOverOverlay({
             <img className="game-over-portrait-otomo" src={otomoDef.art[otomo.form]} alt={otomoDef.nameJa} />
           </div>
         )}
-        <div className="score-total">スコア {score.total}</div>
+        <div className="score-total">スコア {formatScaled(finalScore)}</div>
+        {/* STEP-SCORE2-D2a：神技評価の3行構成。CEO実測「A/Sって何かわからない」への対応。
+            gradeに和語補助、何を測ったかの1行、次Grade目標（C評価は励まし文）を表示する */}
+        {status === 'won' && mastery && (() => {
+          const display = describeMastery(mastery, godId, god.nameJa)
+          return (
+            <div className="game-over-mastery">
+              <div className="game-over-mastery-grade">
+                神技評価 <strong>{display.gradeLabel}</strong>
+                <span className="score-breakdown-hint">スコアとは別の、その神らしい戦い方の評価</span>
+              </div>
+              <div className="game-over-mastery-desc">{display.description}</div>
+              <div className="game-over-mastery-goal">{display.goal}</div>
+            </div>
+          )
+        })()}
         <dl className="score-breakdown">
           <dt>
-            ダメージ
+            実効ダメージ
             <span className="score-breakdown-hint">{SCORE_HINT.damage}</span>
           </dt>
-          <dd>{score.damage}</dd>
+          <dd>{formatScaled(Math.round(score.damage))}</dd>
           <dt>
-            コンボ
+            連携
             <span className="score-breakdown-hint">{SCORE_HINT.combo}</span>
           </dt>
-          <dd>{score.combo}</dd>
+          <dd>{formatScaled(score.combo)}</dd>
           <dt>
-            神力効率
-            <span className="score-breakdown-hint">{SCORE_HINT.apEfficiency}</span>
+            撃破
+            <span className="score-breakdown-hint">{SCORE_HINT.victory}</span>
           </dt>
-          <dd>{score.apEfficiency}</dd>
+          <dd>{formatScaled(score.victory)}</dd>
           <dt>
-            撃破ボーナス
-            <span className="score-breakdown-hint">{SCORE_HINT.roundBonus}</span>
+            早期撃破
+            <span className="score-breakdown-hint">{SCORE_HINT.tempo}</span>
           </dt>
-          <dd>{score.roundBonus}</dd>
+          <dd>{formatScaled(score.tempo)}</dd>
           <dt>
-            神託・共鳴
-            <span className="score-breakdown-hint">{SCORE_HINT.oracleBonus}</span>
+            生存
+            <span className="score-breakdown-hint">{SCORE_HINT.survival}</span>
           </dt>
-          <dd>{score.oracleBonus}</dd>
+          <dd>{formatScaled(score.survival)}</dd>
+          <dt>
+            難易度
+            <span className="score-breakdown-hint">{SCORE_HINT.difficultyBonus}</span>
+          </dt>
+          <dd>{formatScaled(score.difficultyBonus)}</dd>
+          {score.legacy !== 0 && (
+            <>
+              <dt>
+                旧形式分
+                <span className="score-breakdown-hint">再開した旧セーブの引き継ぎ分</span>
+              </dt>
+              <dd>{formatScaled(score.legacy)}</dd>
+            </>
+          )}
+          <dt className="score-breakdown-subtotal">
+            小計 ×1.3
+            <span className="score-breakdown-hint">最終スコア＝小計の1.3倍</span>
+          </dt>
+          <dd className="score-breakdown-subtotal">{formatScaled(Math.round(score.total))} → {formatScaled(finalScore)}</dd>
         </dl>
         <div className="game-over-actions">
           <button type="button" onClick={onRematch}>

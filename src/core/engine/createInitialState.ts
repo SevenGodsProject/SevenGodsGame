@@ -88,10 +88,16 @@ export function createInitialState(
     score: {
       damage: 0,
       combo: 0,
-      apEfficiency: 0,
-      roundBonus: 0,
-      oracleBonus: 0,
+      victory: 0,
+      tempo: 0,
+      survival: 0,
+      difficultyBonus: 0,
+      legacy: 0,
       total: 0,
+    },
+    mastery: {
+      roundDamage: 0,
+      bestRoundDamage: 0,
     },
 
     cardsPlayedThisRound: 0,

@@ -53,7 +53,7 @@ export const COMMON_CARDS: CardDef[] = [
   {
     id: CARD_IDS.strike,
     name: '一撃',
-    text: '敵に5ダメージを与える。',
+    text: '敵に50ダメージを与える。',
     type: 'attack',
     cost: 1,
     rarity: 'common',
@@ -63,7 +63,7 @@ export const COMMON_CARDS: CardDef[] = [
   {
     id: CARD_IDS.heavyBlow,
     name: '剛撃',
-    text: '敵に12ダメージを与える。',
+    text: '敵に120ダメージを与える。',
     type: 'attack',
     cost: 2,
     rarity: 'common',
@@ -73,7 +73,7 @@ export const COMMON_CARDS: CardDef[] = [
   {
     id: CARD_IDS.guard,
     name: '守護',
-    text: 'ブロックを5得る。このラウンドの被ダメージを軽減する。',
+    text: 'ブロックを50得る。このラウンドの被ダメージを軽減する。',
     type: 'guard',
     cost: 1,
     rarity: 'common',
@@ -92,7 +92,7 @@ export const COMMON_CARDS: CardDef[] = [
   {
     id: CARD_IDS.heal,
     name: '癒し',
-    text: 'HPを5回復する。',
+    text: 'HPを50回復する。',
     type: 'support',
     cost: 1,
     rarity: 'common',
@@ -101,7 +101,7 @@ export const COMMON_CARDS: CardDef[] = [
   {
     id: CARD_IDS.curse,
     name: '呪縛',
-    text: '敵の攻撃力を3ラウンドのあいだ5下げる。',
+    text: '敵の攻撃力を3ラウンドのあいだ50下げる。',
     type: 'hinder',
     cost: 2,
     rarity: 'common',
@@ -113,7 +113,7 @@ export const COMMON_CARDS: CardDef[] = [
   {
     id: CARD_IDS.oracle,
     name: '神託',
-    text: '敵に25ダメージを与え、スコアを100得る。',
+    text: '敵に250ダメージを与え、スコアを1,000得る。',
     type: 'oracle',
     cost: 3,
     rarity: 'rare',
@@ -129,7 +129,7 @@ export const COMMON_CARDS: CardDef[] = [
   {
     id: CARD_IDS.quickStrike,
     name: '速攻',
-    text: '敵に4ダメージを与え、カードを1枚引く。',
+    text: '敵に40ダメージを与え、カードを1枚引く。',
     type: 'attack',
     cost: 1,
     rarity: 'common',
@@ -142,7 +142,7 @@ export const COMMON_CARDS: CardDef[] = [
   {
     id: CARD_IDS.allOutStrike,
     name: '渾身の一撃',
-    text: '敵に20ダメージを与える。',
+    text: '敵に200ダメージを与える。',
     type: 'attack',
     cost: 3,
     rarity: 'common',
@@ -152,7 +152,7 @@ export const COMMON_CARDS: CardDef[] = [
   {
     id: CARD_IDS.ironStance,
     name: '鉄壁の構え',
-    text: 'ブロックを12得る。',
+    text: 'ブロックを120得る。',
     type: 'guard',
     cost: 2,
     rarity: 'common',
@@ -162,7 +162,7 @@ export const COMMON_CARDS: CardDef[] = [
   {
     id: CARD_IDS.breathOfLife,
     name: '息吹',
-    text: 'HPを12回復する。',
+    text: 'HPを120回復する。',
     type: 'support',
     cost: 2,
     rarity: 'common',
@@ -181,7 +181,7 @@ export const COMMON_CARDS: CardDef[] = [
   {
     id: CARD_IDS.readTheAttack,
     name: '見切り',
-    text: '敵の攻撃力を1ラウンドのあいだ5下げる。',
+    text: '敵の攻撃力を1ラウンドのあいだ50下げる。',
     type: 'hinder',
     cost: 1,
     rarity: 'common',
@@ -193,7 +193,7 @@ export const COMMON_CARDS: CardDef[] = [
   {
     id: CARD_IDS.kaguraDance,
     name: '神楽舞',
-    text: '共鳴ゲージを3上昇させ、ブロックを3得る。',
+    text: '共鳴ゲージを3上昇させ、ブロックを30得る。',
     type: 'resonance',
     cost: 2,
     rarity: 'common',
@@ -205,7 +205,7 @@ export const COMMON_CARDS: CardDef[] = [
   {
     id: CARD_IDS.prophecy,
     name: '予言',
-    text: 'カードを2枚引き、スコアを20得る。',
+    text: 'カードを2枚引き、スコアを200得る。',
     type: 'oracle',
     cost: 2,
     rarity: 'rare',
@@ -221,7 +221,7 @@ export const COMMON_CARDS: CardDef[] = [
   {
     id: CARD_IDS.recklessBlow,
     name: '捨身の一撃',
-    text: '自分に3ダメージを与え、敵に6ダメージを与える。',
+    text: '自分に30ダメージを与え、敵に60ダメージを与える。',
     type: 'attack',
     cost: 1,
     rarity: 'common',
@@ -234,7 +234,7 @@ export const COMMON_CARDS: CardDef[] = [
   {
     id: CARD_IDS.windStep,
     name: '神速',
-    text: '敵に3ダメージを与え、共鳴ゲージを1上昇させる。',
+    text: '敵に30ダメージを与え、共鳴ゲージを1上昇させる。',
     type: 'attack',
     cost: 1,
     rarity: 'common',
@@ -247,7 +247,7 @@ export const COMMON_CARDS: CardDef[] = [
   {
     id: CARD_IDS.flurry,
     name: '乱舞',
-    text: '敵に10ダメージを与え、共鳴ゲージを1上昇させる。',
+    text: '敵に100ダメージを与え、共鳴ゲージを1上昇させる。',
     type: 'attack',
     cost: 2,
     rarity: 'common',
@@ -259,7 +259,7 @@ export const COMMON_CARDS: CardDef[] = [
   {
     id: CARD_IDS.warCry,
     name: '大喝',
-    text: '敵に18ダメージを与え、敵の攻撃力を1ラウンドのあいだ3下げる。',
+    text: '敵に180ダメージを与え、敵の攻撃力を1ラウンドのあいだ30下げる。',
     type: 'attack',
     cost: 3,
     rarity: 'common',
@@ -272,7 +272,7 @@ export const COMMON_CARDS: CardDef[] = [
   {
     id: CARD_IDS.parry,
     name: '受け流し',
-    text: 'ブロックを3得て、共鳴ゲージを1上昇させる。',
+    text: 'ブロックを30得て、共鳴ゲージを1上昇させる。',
     type: 'guard',
     cost: 1,
     rarity: 'common',
@@ -284,7 +284,7 @@ export const COMMON_CARDS: CardDef[] = [
   {
     id: CARD_IDS.bastion,
     name: '守りの陣',
-    text: 'ブロックを8得て、HPを4回復する。',
+    text: 'ブロックを80得て、HPを40回復する。',
     type: 'guard',
     cost: 2,
     rarity: 'common',
@@ -296,7 +296,7 @@ export const COMMON_CARDS: CardDef[] = [
   {
     id: CARD_IDS.mikoDance,
     name: '巫女の舞',
-    text: '共鳴ゲージを1上昇させ、HPを3回復する。',
+    text: '共鳴ゲージを1上昇させ、HPを30回復する。',
     type: 'resonance',
     cost: 1,
     rarity: 'common',
@@ -308,7 +308,7 @@ export const COMMON_CARDS: CardDef[] = [
   {
     id: CARD_IDS.risingTide,
     name: '秘技・満ちる',
-    text: '共鳴ゲージを4上昇させ、ブロックを5得る。',
+    text: '共鳴ゲージを4上昇させ、ブロックを50得る。',
     type: 'resonance',
     cost: 3,
     rarity: 'rare',
@@ -321,7 +321,7 @@ export const COMMON_CARDS: CardDef[] = [
   {
     id: CARD_IDS.catchBreath,
     name: '息継ぎ',
-    text: 'HPを3回復し、ブロックを3得る。',
+    text: 'HPを30回復し、ブロックを30得る。',
     type: 'support',
     cost: 1,
     rarity: 'common',
@@ -333,7 +333,7 @@ export const COMMON_CARDS: CardDef[] = [
   {
     id: CARD_IDS.greatHeal,
     name: '大治癒',
-    text: 'HPを18回復する。',
+    text: 'HPを180回復する。',
     type: 'support',
     cost: 3,
     rarity: 'common',
@@ -343,7 +343,7 @@ export const COMMON_CARDS: CardDef[] = [
   {
     id: CARD_IDS.intimidate,
     name: '威嚇',
-    text: '敵の攻撃力を2ラウンドのあいだ3下げる。',
+    text: '敵の攻撃力を2ラウンドのあいだ30下げる。',
     type: 'hinder',
     cost: 1,
     rarity: 'common',
@@ -355,7 +355,7 @@ export const COMMON_CARDS: CardDef[] = [
   {
     id: CARD_IDS.bind,
     name: '金縛り',
-    text: '敵の攻撃力を4ラウンドのあいだ6下げる。',
+    text: '敵の攻撃力を4ラウンドのあいだ60下げる。',
     type: 'hinder',
     cost: 3,
     rarity: 'common',
@@ -367,7 +367,7 @@ export const COMMON_CARDS: CardDef[] = [
   {
     id: CARD_IDS.minorOracle,
     name: '小さな託宣',
-    text: '敵に7ダメージを与え、スコアを10得る。',
+    text: '敵に70ダメージを与え、スコアを100得る。',
     type: 'oracle',
     cost: 1,
     rarity: 'rare',
@@ -390,7 +390,7 @@ export const COMMON_CARDS: CardDef[] = [
   {
     id: CARD_IDS.fightingSpirit,
     name: '闘志',
-    text: '自分の攻撃力を2ラウンドのあいだ2上げる。',
+    text: '自分の攻撃力を2ラウンドのあいだ20上げる。',
     type: 'support',
     cost: 1,
     rarity: 'common',
@@ -401,7 +401,7 @@ export const COMMON_CARDS: CardDef[] = [
   {
     id: CARD_IDS.renGeki,
     name: '連撃',
-    text: '敵に7ダメージを与え、神力を1得る。',
+    text: '敵に70ダメージを与え、神力を1得る。',
     type: 'attack',
     cost: 2,
     rarity: 'common',
@@ -429,7 +429,7 @@ export const COMMON_CARDS: CardDef[] = [
   {
     id: CARD_IDS.purifyingLight,
     name: '浄めの光',
-    text: 'HPを6回復し、敵の攻撃力を2ラウンドのあいだ3下げる。',
+    text: 'HPを60回復し、敵の攻撃力を2ラウンドのあいだ30下げる。',
     type: 'hinder',
     cost: 2,
     rarity: 'common',

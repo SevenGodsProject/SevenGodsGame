@@ -3,6 +3,7 @@ import { createInitialState } from './createInitialState'
 import { playCard } from './playCard'
 import { endRound } from './endRound'
 import { applyDivination } from './applyDivination'
+import { getFinalScore } from './score'
 
 export type ReduceResult = { state: GameState; events: GameEvent[] }
 
@@ -41,7 +42,8 @@ export function applyAction(
     result.events.push({
       t: 'GAME_ENDED',
       status: result.state.status,
-      totalScore: result.state.score.total,
+      // BASE-D：ユーザーへ見せるスコアは常に最終スコア（素点×finalScale）。
+      totalScore: getFinalScore(result.state.score),
     })
   }
 

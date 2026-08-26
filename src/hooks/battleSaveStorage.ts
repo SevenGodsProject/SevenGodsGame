@@ -51,16 +51,65 @@ export function saveBattle(state: GameState): void {
   }
 }
 
-/** 保存済みの進行中バトルがあれば返す。無い／壊れている／バージョン不一致ならnull */
+/**
+ * saveVersion 3（BASE-D導入前）のScoreState。
+ * migrateBattleSaveV3のためだけに残している型スナップショット。
+ */
+type ScoreStateV3 = {
+  damage?: number
+  combo?: number
+  apEfficiency?: number
+  roundBonus?: number
+  oracleBonus?: number
+  total?: number
+}
+
+/**
+ * saveVersion 3 → 4 への移行（STEP-SCORE2-D-PROTO）。
+ *
+ * 方針：旧セーブ（進行中バトル）は破棄せず読み込み継続できるようにする。
+ * - damage / combo はそのまま引き継ぐ（旧式はoverkill込み・×1.0だったため、
+ *   移行後の対局は「旧集計＋新集計」のハイブリッドになる。中断を跨いだ1戦
+ *   限りの妥協として許容し、totalの連続性を優先する）。
+ * - 旧式にしか無い項目（apEfficiency / oracleBonus / roundBonus）は`legacy`へ
+ *   畳み込む。保存されるのは`status==='playing'`のみのためroundBonusは実質常に0。
+ * - Mastery集計はv3に存在しないため0から開始する（移行対局のMastery評価は
+ *   過去ラウンド分を含まず過小になりうる。1戦限りの既知の制約）。
+ */
+export function migrateBattleSaveV3(state: GameState): GameState {
+  const old = state.score as unknown as ScoreStateV3
+  const damage = old.damage ?? 0
+  const combo = old.combo ?? 0
+  const legacy = (old.apEfficiency ?? 0) + (old.roundBonus ?? 0) + (old.oracleBonus ?? 0)
+  return {
+    ...state,
+    version: RULES.saveVersion,
+    score: {
+      damage,
+      combo,
+      victory: 0,
+      tempo: 0,
+      survival: 0,
+      difficultyBonus: 0,
+      legacy,
+      total: damage + combo + legacy,
+    },
+    mastery: { roundDamage: 0, bestRoundDamage: 0 },
+  }
+}
+
+/** 保存済みの進行中バトルがあれば返す。無い／壊れている／未知バージョンならnull */
 export function loadBattleSave(): GameState | null {
   try {
     const raw = localStorage.getItem(STORAGE_KEY)
     if (!raw) return null
     const parsed: unknown = JSON.parse(raw)
     if (!isSavedBattle(parsed)) return null
-    if (parsed.version !== RULES.saveVersion) return null
     if (parsed.state.status !== 'playing') return null
-    return parsed.state
+    if (parsed.version === RULES.saveVersion) return parsed.state
+    // v3セーブは移行して読み込む（勝手に破棄しない）。それ以外の未知版はnull。
+    if (parsed.version === 3) return migrateBattleSaveV3(parsed.state)
+    return null
   } catch {
     return null
   }

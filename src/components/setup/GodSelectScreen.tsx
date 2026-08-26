@@ -3,6 +3,8 @@ import type { Difficulty, GodId } from '../../core/types'
 import { GODS } from '../../core/data/gods'
 import { getOtomoDef } from '../../core/data/otomo'
 import { loadGodRecord } from '../../hooks/recordStorage'
+import { MASTERY_SELECT_HINT } from '../battle/masteryDisplay'
+import { formatScaled } from '../displayScale'
 import {
   ARCHETYPE_LABEL,
   computeGodStats,
@@ -231,8 +233,18 @@ export function GodSelectScreen({ difficulty, onDifficultyChange, onSelect, onBa
                   <div className="god-select-name">{god.nameJa}</div>
                   <div className="god-select-tagline">「{god.tagline}」</div>
                   <div className="god-select-tactics">{GOD_TACTICS[god.id]}</div>
-                  {record.bestScore > 0 && (
-                    <div className="god-select-record">自己ベスト {record.bestScore}（{record.wins}勝）</div>
+                  {/* STEP-SCORE2-D2a：神技（Mastery）の1行説明。戦う前から「この神で
+                      何を狙うか」が分かるようにする。prototypeは大耀のみ（表に無い神は非表示） */}
+                  {MASTERY_SELECT_HINT[god.id] && (
+                    <div className="god-select-mastery">{MASTERY_SELECT_HINT[god.id]}</div>
+                  )}
+                  {/* STEP-SCORE2-D-PROTO：新スコア式のベスト（bestBattleScore）を優先表示。
+                      新式の記録がまだ無ければ旧記録を暫定表示する（勝数は共通） */}
+                  {/* D2b：新式ベストは表示×10。旧形式のみの場合は当時のスケールのまま */}
+                  {(record.bestBattleScore > 0 || record.bestScore > 0) && (
+                    <div className="god-select-record">
+                      自己ベスト {record.bestBattleScore > 0 ? formatScaled(record.bestBattleScore) : record.bestScore}（{record.wins}勝）
+                    </div>
                   )}
                   <GodStatBars stats={stats} max={maxStats} specialNote={specialNoteByGodId.get(god.id) ?? null} />
                 </button>
