@@ -688,9 +688,11 @@
   text-align: center;
 }
 
+/* STEP-VISUAL-BATTLE-AUDIT（PLAN-A）：モバイルでもOTOMOの存在感を一段上げる
+   （84→96px、旧比1.14倍。縦スクロール増は約12pxに抑える）。 */
 .portrait img {
-  width: 84px;
-  height: 84px;
+  width: 96px;
+  height: 96px;
   object-fit: contain;
   border-radius: 12px;
   background: #05060d;
@@ -725,8 +727,9 @@
   position: absolute;
   top: 50%;
   left: 50%;
-  width: 114px;
-  height: 114px;
+  /* 96px化に追従（96×1.35≒130px、決定91の比率維持） */
+  width: 130px;
+  height: 130px;
   z-index: -1;
   border-radius: 50%;
   pointer-events: none;
@@ -1071,6 +1074,10 @@
 }
 
 .enemy-avatar-wrap::before {
+  /* STEP-VISUAL-ENEMY-SCALE：敵画像240px化に合わせ敵側オーラのみ追従
+     （200×1.35=270 → 240×1.35=324。プレイヤー側は270pxのまま） */
+  width: 324px;
+  height: 324px;
   background: conic-gradient(
     from 0deg,
     transparent 0deg,
@@ -1104,9 +1111,13 @@
   }
 }
 
+/* STEP-VISUAL-ENEMY-SCALE：CEO FB「敵が小さく迫力がない・上下余白が大きい」対応。
+   全art（512×512の正方形）に対し旧200×240は縦横比5:6のため上下に約20pxずつの
+   レターボックスが出ていた。箱をほぼ正方形（240×260）へ寄せて余白を削りつつ
+   一回り拡大する。background-size:containは維持（キャラを切らない）。 */
 .enemy-avatar {
-  width: 200px;
-  height: 240px;
+  width: 240px;
+  height: 260px;
   border-radius: 18px;
   background-color: #120821;
   background-size: contain;
@@ -2853,17 +2864,24 @@
     justify-content: center;
   }
 
+  /* STEP-VISUAL-BATTLE-AUDIT（PLAN-A）：CEO FB「神とOTOMOの左右の余白も気になる」対応。
+     旧150×180は敵280×300の約半分で、「操作している神」より「アイコン」に見えていた
+     （実測：パネル545px幅に対し左右余白198px・面積占有15%）。220×240（実描画220px
+     四方＝旧比1.47倍）へ拡大し、敵≒神＞OTOMOの視覚階層に近づける。敵より
+     わずかに小さいのは「脅威が正面に立つ」構図として意図的。 */
   .player-avatar {
-    width: 150px;
-    height: 180px;
+    width: 220px;
+    height: 240px;
   }
 
-  /* STEP-FINAL-D（改善A）：敵画像をPC限定で約+15%拡大（150×180→173×207、
-     縦横比は変更前と同じ5:6を維持）。初期候補値のため、次回の実機確認で
-     微調整の可能性がある。.player-avatarは意図的に対象外（CEO指示）。 */
+  /* STEP-VISUAL-ENEMY-SCALE：CEO FB「敵が小さく迫力がない」対応。
+     旧173×207（実描画キャラ173px四方）はPCの広い敵パネルに対して明確に小さく、
+     モバイル既定より小さい逆転すら起きていた。280×300（実描画280px四方＝
+     旧比1.62倍）へ拡大し、正方形artのレターボックスも20px→10pxへ削減。
+     containを維持しキャラは切らない。.player-avatarは対象外（従来どおり）。 */
   .enemy-avatar {
-    width: 173px;
-    height: 207px;
+    width: 280px;
+    height: 300px;
   }
 
   .enemy-avatar-wrap,
@@ -2871,16 +2889,17 @@
     padding: 0;
   }
 
+  /* 神オーラも拡大へ追従（旧比率205/150≒1.37を220pxへ適用して300px） */
   .player-avatar-wrap::before {
-    width: 205px;
-    height: 205px;
+    width: 300px;
+    height: 300px;
   }
 
-  /* オーラ環も画像拡大と同じ+15%（205px→236px）で追従させ、既存の
-     「オーラは画像幅の一定比率」という関係（決定91）を崩さないようにする。 */
+  /* オーラ環も敵画像拡大に追従（決定91の「オーラは画像幅の一定比率」を維持。
+     旧比率236/173≒1.36を280pxへ適用して380px）。 */
   .enemy-avatar-wrap::before {
-    width: 236px;
-    height: 236px;
+    width: 380px;
+    height: 380px;
   }
 
   /* STEP-FINAL-D（改善B）：OTOMOポートレート（84px固定）だけが敵/プレイヤー
@@ -2895,15 +2914,88 @@
      100pxを採用した（共鳴ゲージとの余白は0px＝ちょうど接する計算値だが、
      アウラはz-index:-1・半透明・blur(3px)のため実際の視覚的な衝突・
      文字被りは確認されていない）。 */
+  /* STEP-VISUAL-BATTLE-AUDIT（PLAN-A）：OTOMOを「装備アイコン」から「相棒」へ。
+     旧100pxは面積占有4.2%で存在感が薄かった。128px（旧比1.28倍）へ拡大。
+     神（220px）より必ず小さく保ち、神＞OTOMOの階層を維持する。 */
   .portrait img {
-    width: 100px;
-    height: 100px;
+    width: 128px;
+    height: 128px;
   }
 
   /* オーラ環も決定91の「画像幅×1.35」比率を維持したまま追従させる
-     （100px×1.35=135px）。 */
+     （128px×1.35≒173px）。 */
   .portrait-otomo::before {
-    width: 135px;
-    height: 135px;
+    width: 173px;
+    height: 173px;
   }
+}
+
+/* ============================================================
+   STEP-VISUAL-BATTLE-STAGE-LITE（PLAN-C Lite prototype、C-LITE-C案）
+   CEO FB「キャラが額縁・カードの中に入って見える／戦闘背景が隠れている」対応。
+   目標：「UIパネルの中のキャラ」→「背景世界の中に立つキャラ＋浮かぶ最小HUD」。
+   すべてCSSのみ（DOM・ロジック・サイズHierarchy 敵280≳神220>OTOMO128は不変）。
+   後置オーバーライドとして追記し、既存定義は消さない（ロールバック容易性優先）。
+   ============================================================ */
+
+/* (1) キャラ背後の黒箱を撤去。シルエットは黒箱ではなくsoft drop-shadow＋
+   陣営色のauraで背景から浮かせる（黒い四角で囲わない・背景全体も暗くしない） */
+.enemy-avatar {
+  background-color: transparent;
+  box-shadow: none;
+  filter: drop-shadow(0 12px 16px #000000cc) drop-shadow(0 0 26px #9b59b666);
+}
+
+.player-avatar {
+  background: transparent;
+  box-shadow: none;
+  filter: drop-shadow(0 12px 16px #000000cc) drop-shadow(0 0 22px #4dbd7455);
+}
+
+.portrait img {
+  background: transparent;
+  box-shadow: none;
+  filter: drop-shadow(0 8px 12px #000000cc) drop-shadow(0 0 14px #ffd16644);
+}
+
+/* 既存の終盤surge／溜めglow（box-shadow前提）も黒箱なしのdrop-shadow表現へ変換
+   （色・強弱の序列 mild<strong、charge=金 は既存踏襲。ロジック無変更） */
+.enemy-avatar.enemy-avatar-surge-mild {
+  box-shadow: none;
+  filter: drop-shadow(0 12px 16px #000000cc) drop-shadow(0 0 30px #9b59b6aa);
+}
+
+.enemy-avatar.enemy-avatar-surge-strong {
+  box-shadow: none;
+  filter: drop-shadow(0 12px 16px #000000cc) drop-shadow(0 0 38px #6a5acdcc);
+}
+
+.enemy-avatar.enemy-avatar-charging {
+  box-shadow: none;
+  filter: drop-shadow(0 12px 16px #000000cc) drop-shadow(0 0 32px #ffd166aa);
+}
+
+/* (2) 敵・神・OTOMOの3パネルを透明化し、背景が敵⇄神の背後まで連続して見えるように。
+   文字の可読性はパネル面ではなくtext-shadow（継承）で担保する。
+   HP bar・共鳴ゲージ・吹き出し・badgeは各自が背景を持つ「可読性の島」として残る。
+   .battle-hud／手札・カードUIは別クラスのため一切影響しない。 */
+.enemy-panel,
+.player-panel,
+.god-otomo-panel {
+  background: transparent;
+  border-color: transparent;
+  box-shadow: none;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  text-shadow:
+    0 1px 3px #000000dd,
+    0 0 10px #000000aa;
+}
+
+/* (3) 背景の減光オーバーレイを弱め、制作済みarena背景の可視率を上げる。
+   下端は手札エリアの可読性のため暗さを残す（段階のみ変更、構造は不変） */
+.battle-main {
+  background-image:
+    linear-gradient(180deg, #05060d22 0%, #05060d44 60%, #05060dcc 100%),
+    url('/assets/backgrounds/arena.jpg');
 }
