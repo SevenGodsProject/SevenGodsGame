@@ -109,6 +109,25 @@ export function runEnemyTurn(state: GameState): StepResult {
       }
     }
 
+    // 蒼毘Mastery「鉄壁」S4集計（STEP-SCORE2-G3。蒼毘使用時のみ）。
+    // fullyBlocked＝「actual>0の攻撃をblockが完全吸収しHP実害0」。
+    // debuffでamount=0になった攻撃はこの分岐のガードで除外される＝
+    // 「攻撃が届く前に消した」のは寿楽の領分であり、蒼毘の票（分母）にも入れない。
+    // 余剰block・block総量は評価せず、1攻撃＝1票。判定はapplyDamageと同じ
+    // combat resolution（block=min(player.block, amount)）に基づく。
+    if (next.godId === GOD_IDS.sobi && amount > 0) {
+      const wouldBlock = Math.min(next.player.block, amount)
+      const fully = amount - wouldBlock === 0
+      next = {
+        ...next,
+        mastery: {
+          ...next.mastery,
+          guardAttackCount: next.mastery.guardAttackCount + 1,
+          fullyBlockedCount: next.mastery.fullyBlockedCount + (fully ? 1 : 0),
+        },
+      }
+    }
+
     const result = applyDamage(next, 'self', amount)
     next = result.state
     events.push(...result.events)

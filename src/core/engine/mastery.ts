@@ -43,6 +43,16 @@ export function getJurakuMasteryRaw(state: GameState): number {
 }
 
 /**
+ * 蒼毘「鉄壁」の生値（STEP-SCORE2-G3、G2のS4定義）：
+ * 無傷受け率＝fullyBlockedCount ÷ guardAttackCount（1攻撃＝1票、量の重み付けなし）。
+ * 実害が届きえた攻撃（actual>0）が1回も無かった試合は0。
+ */
+export function getSobiMasteryRaw(state: GameState): number {
+  if (state.mastery.guardAttackCount <= 0) return 0
+  return state.mastery.fullyBlockedCount / state.mastery.guardAttackCount
+}
+
+/**
  * 現在の対局のMastery評価。対応する神技が未実装の神ではnull。
  * グレード閾値はRULES.mastery（正式採用値ではないprototype値）。
  */
@@ -64,6 +74,14 @@ export function getMastery(state: GameState): MasteryResult | null {
     const grade: MasteryGrade =
       sQualified && !easyCapped ? 'S' : raw >= t.a ? 'A' : raw >= t.b ? 'B' : 'C'
     return { title: '無力化', grade, raw, sGateMet, easyCapped }
+  }
+
+  if (state.godId === GOD_IDS.sobi) {
+    const raw = getSobiMasteryRaw(state)
+    const t = RULES.mastery.sobi
+    // G3 prototype：Sゲート・easy capなし（G2で難易度farmingフラットのため。実測後に判断）
+    const grade: MasteryGrade = raw >= t.s ? 'S' : raw >= t.a ? 'A' : raw >= t.b ? 'B' : 'C'
+    return { title: '鉄壁', grade, raw }
   }
 
   return null

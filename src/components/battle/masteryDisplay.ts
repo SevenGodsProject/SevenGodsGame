@@ -30,6 +30,8 @@ export const MASTERY_SELECT_HINT: Partial<Record<GodId, string>> = {
   [GOD_IDS.taiyo]: '神技「爆発」：1ラウンドで大ダメージを与えるほど評価UP',
   // STEP-SCORE2-G1b（決定113）：寿楽「無力化」prototype
   [GOD_IDS.juraku]: '神技「無力化」：敵の攻撃を弱めるほど評価UP',
+  // STEP-SCORE2-G3：蒼毘「鉄壁」prototype
+  [GOD_IDS.sobi]: '神技「鉄壁」：敵の攻撃を無傷で受け止めるほど評価UP',
 }
 
 /**
@@ -95,6 +97,29 @@ export function describeMastery(
     return {
       gradeLabel,
       description: `${godNameJa}「${mastery.title}」— 敵の攻撃を平均${percent}%削いだ！`,
+      goal,
+    }
+  }
+
+  // 蒼毘「鉄壁」（STEP-SCORE2-G3 prototype）
+  if (godId === GOD_IDS.sobi) {
+    const t = RULES.mastery.sobi
+    const goal = (() => {
+      switch (mastery.grade) {
+        case 'S':
+          return 'その盾、神業なり！'
+        case 'A':
+          return `Sまであと${gapToPercent(mastery.raw, t.s)}%`
+        case 'B':
+          return `Aまであと${gapToPercent(mastery.raw, t.a)}%`
+        case 'C':
+          // 寿楽G1cの教訓：Cでも次Gradeまでの距離を必ず示す
+          return `あと${gapToPercent(mastery.raw, t.b)}%でB（堂々）`
+      }
+    })()
+    return {
+      gradeLabel,
+      description: `${godNameJa}「${mastery.title}」— 敵の攻撃の${percent}%を無傷で受け止めた！`,
       goal,
     }
   }

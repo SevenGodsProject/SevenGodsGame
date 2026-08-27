@@ -128,6 +128,14 @@ export const RULES = {
      * easy以外、という行動・難易度ゲートを併用する。
      */
     juraku: { s: 0.9, a: 0.8, b: 0.5, strongHitRaw: 10 },
+    /**
+     * 蒼毘「鉄壁」（STEP-SCORE2-G3、G2のS4）：無傷受け率＝
+     * fullyBlockedCount ÷ guardAttackCount のグレード下限。
+     * G2校正（勝利時 B 55.3%／A 20.2%／S 4.2%）に基づくprototype検証用初期値であり
+     * 正式最終閾値ではない。easy capはG2で難易度farmingがほぼフラット
+     * （e/n/h=0.481/0.496/0.474）だったため現時点では設けない。
+     */
+    sobi: { s: 0.85, a: 0.65, b: 0.4 },
   },
 
   /**
@@ -153,7 +161,8 @@ export const RULES = {
    * セーブデータのバージョン。互換性維持のため必ず持たせる。
    * v4（STEP-SCORE2-D-PROTO）：ScoreStateをBASE-D構造へ変更し、MasteryStateを追加。
    * v5（STEP-SCORE2-G1b）：MasteryStateへ寿楽「無力化」用3フィールドを追加。
-   * v3/v4セーブはbattleSaveStorage.tsのmigrateで読み込み継続できる（破棄しない）。
+   * v6（STEP-SCORE2-G3）：MasteryStateへ蒼毘「鉄壁」用2フィールドを追加。
+   * v3〜v5セーブはbattleSaveStorage.tsのmigrateで読み込み継続できる（破棄しない）。
    */
-  saveVersion: 5,
+  saveVersion: 6,
 } as const

@@ -102,19 +102,23 @@ describe('battleSaveStorage（saveVersion 4・STEP-SCORE2-D-PROTO）', () => {
         attackCount: 4,
         reductionRateSum: 2.5,
         strongNeutralized: true,
+        guardAttackCount: 5,
+        fullyBlockedCount: 3,
       },
     }
     saveBattle(withMastery)
     const loaded = loadBattleSave()
     expect(loaded).not.toBeNull()
     expect(loaded?.version).toBe(RULES.saveVersion)
-    // resume後もMastery集計（大耀・寿楽とも）は失われない
+    // resume後もMastery集計（大耀・寿楽・蒼毘とも）は失われない
     expect(loaded?.mastery).toEqual({
       roundDamage: 8,
       bestRoundDamage: 33,
       attackCount: 4,
       reductionRateSum: 2.5,
       strongNeutralized: true,
+      guardAttackCount: 5,
+      fullyBlockedCount: 3,
     })
     expect(loaded?.score.total).toBe(withMastery.score.total)
   })
@@ -139,6 +143,8 @@ describe('battleSaveStorage（saveVersion 4・STEP-SCORE2-D-PROTO）', () => {
       attackCount: 0,
       reductionRateSum: 0,
       strongNeutralized: false,
+      guardAttackCount: 0,
+      fullyBlockedCount: 0,
     })
   })
 
@@ -165,15 +171,50 @@ describe('battleSaveStorage（saveVersion 4・STEP-SCORE2-D-PROTO）', () => {
     const loaded = loadBattleSave()
     expect(loaded).not.toBeNull()
     expect(loaded?.version).toBe(RULES.saveVersion)
-    // 大耀の集計は保持、寿楽の新フィールドはdefault
+    // 大耀の集計は保持、寿楽・蒼毘の新フィールドはdefault
     expect(loaded?.mastery).toEqual({
       roundDamage: 8,
       bestRoundDamage: 33,
       attackCount: 0,
       reductionRateSum: 0,
       strongNeutralized: false,
+      guardAttackCount: 0,
+      fullyBlockedCount: 0,
     })
     // 移行でBattle Scoreは一切変わらない
+    expect(loaded?.score).toEqual(modern.score)
+  })
+
+  it('v5セーブは破棄せず移行して読み込む（大耀・寿楽値保持・蒼毘フィールドはdefault-fill・スコア不変）', () => {
+    // v5形式：masteryは大耀2＋寿楽3の5フィールドのみ
+    const modern = startTestGame('save-v5-mig')
+    const v5State = {
+      ...modern,
+      version: 5,
+      mastery: {
+        roundDamage: 8,
+        bestRoundDamage: 33,
+        attackCount: 4,
+        reductionRateSum: 2.5,
+        strongNeutralized: true,
+      },
+    }
+    localStorage.setItem(
+      'sevengods.battleSave',
+      JSON.stringify({ version: 5, state: v5State }),
+    )
+    const loaded = loadBattleSave()
+    expect(loaded).not.toBeNull()
+    expect(loaded?.version).toBe(RULES.saveVersion)
+    expect(loaded?.mastery).toEqual({
+      roundDamage: 8,
+      bestRoundDamage: 33,
+      attackCount: 4,
+      reductionRateSum: 2.5,
+      strongNeutralized: true,
+      guardAttackCount: 0,
+      fullyBlockedCount: 0,
+    })
     expect(loaded?.score).toEqual(modern.score)
   })
 

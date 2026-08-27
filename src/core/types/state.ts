@@ -73,6 +73,14 @@ export type MasteryState = {
   reductionRateSum: number
   /** 寿楽S行動ゲート：raw>=10の強攻撃を半分以下まで抑えた実績が1回以上あるか */
   strongNeutralized: boolean
+  /**
+   * 蒼毘「鉄壁」用（STEP-SCORE2-G3、G2のS4定義）：実害が届きえた敵攻撃の回数。
+   * charge除外。debuffでactual=0になった攻撃は「攻撃が届く前に消えた」＝寿楽の
+   * 領分として分母にも入れない（1攻撃＝1票、攻撃量による重み付けなし）。
+   */
+  guardAttackCount: number
+  /** 蒼毘用：actual>0の攻撃をblockが完全吸収しHP実害0で受け切った回数 */
+  fullyBlockedCount: number
 }
 
 /**

@@ -101,6 +101,8 @@ export function createInitialState(
       attackCount: 0,
       reductionRateSum: 0,
       strongNeutralized: false,
+      guardAttackCount: 0,
+      fullyBlockedCount: 0,
     },
 
     cardsPlayedThisRound: 0,

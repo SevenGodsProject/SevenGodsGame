@@ -27,6 +27,8 @@ function taiyoState(bestRoundDamage: number, enemyMaxHp = 100): GameState {
       attackCount: 0,
       reductionRateSum: 0,
       strongNeutralized: false,
+      guardAttackCount: 0,
+      fullyBlockedCount: 0,
     },
   }
 }

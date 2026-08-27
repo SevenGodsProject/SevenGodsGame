@@ -51,10 +51,51 @@ describe('describeMastery（大耀「爆発」）', () => {
 })
 
 describe('神選択画面の神技1行', () => {
-  it('大耀・寿楽には神技説明があり、未実装の神には無い（prototype範囲）', () => {
+  it('大耀・寿楽・蒼毘には神技説明があり、未実装の神には無い（prototype範囲）', () => {
     expect(MASTERY_SELECT_HINT[GOD_IDS.taiyo]).toContain('爆発')
     expect(MASTERY_SELECT_HINT[GOD_IDS.juraku]).toContain('無力化')
+    expect(MASTERY_SELECT_HINT[GOD_IDS.sobi]).toContain('鉄壁')
     expect(MASTERY_SELECT_HINT[GOD_IDS.ebisu]).toBeUndefined()
+  })
+})
+
+describe('describeMastery（蒼毘「鉄壁」・STEP-SCORE2-G3）', () => {
+  function sobiResult(grade: MasteryResult['grade'], raw: number): MasteryResult {
+    return { title: '鉄壁', grade, raw }
+  }
+
+  it('表示%は内部rawとMath.roundで一致する（0.496→50%）', () => {
+    const d = describeMastery(sobiResult('B', 0.496), GOD_IDS.sobi, '蒼毘')
+    expect(d.description).toBe('蒼毘「鉄壁」— 敵の攻撃の50%を無傷で受け止めた！')
+  })
+
+  it('C：次Gradeまでの距離を表示（0.30→あと10%でB）', () => {
+    const d = describeMastery(sobiResult('C', 0.3), GOD_IDS.sobi, '蒼毘')
+    expect(d.gradeLabel).toBe('C（修行中）')
+    expect(d.description).toBe('蒼毘「鉄壁」— 敵の攻撃の30%を無傷で受け止めた！')
+    expect(d.goal).toBe('あと10%でB（堂々）')
+  })
+
+  it('B：Aまでの距離（0.50→Aまであと15%）', () => {
+    const d = describeMastery(sobiResult('B', 0.5), GOD_IDS.sobi, '蒼毘')
+    expect(d.goal).toBe('Aまであと15%')
+  })
+
+  it('A：Sまでの距離（0.65→Sまであと20%）', () => {
+    const d = describeMastery(sobiResult('A', 0.65), GOD_IDS.sobi, '蒼毘')
+    expect(d.goal).toBe('Sまであと20%')
+  })
+
+  it('S：「その盾、神業なり！」（0.90→90%）', () => {
+    const d = describeMastery(sobiResult('S', 0.9), GOD_IDS.sobi, '蒼毘')
+    expect(d.gradeLabel).toBe('S（神業）')
+    expect(d.description).toBe('蒼毘「鉄壁」— 敵の攻撃の90%を無傷で受け止めた！')
+    expect(d.goal).toBe('その盾、神業なり！')
+  })
+
+  it('境界の浮動小数点誤差：0.84→Sまであと1%', () => {
+    const d = describeMastery(sobiResult('A', 0.84), GOD_IDS.sobi, '蒼毘')
+    expect(d.goal).toBe('Sまであと1%')
   })
 })
 

@@ -100,6 +100,8 @@ export function migrateBattleSaveV3(state: GameState): GameState {
       attackCount: 0,
       reductionRateSum: 0,
       strongNeutralized: false,
+      guardAttackCount: 0,
+      fullyBlockedCount: 0,
     },
   }
 }
@@ -109,9 +111,32 @@ export function migrateBattleSaveV3(state: GameState): GameState {
  * v5でMasteryStateへ寿楽「無力化」用3フィールドが追加された。
  * 既存の大耀用集計（roundDamage/bestRoundDamage）は保持し、
  * 寿楽用フィールドはdefault-fillで補完する（旧saveを破棄しない）。
+ * v6導入後は続けてmigrateBattleSaveV5で蒼毘フィールドも補完される。
  * ※Battle Score（score）はv4と同一構造のため無変更＝移行でスコアは変わらない。
  */
 export function migrateBattleSaveV4(state: GameState): GameState {
+  const old = state.mastery as Partial<GameState['mastery']> | undefined
+  return migrateBattleSaveV5({
+    ...state,
+    mastery: {
+      roundDamage: old?.roundDamage ?? 0,
+      bestRoundDamage: old?.bestRoundDamage ?? 0,
+      attackCount: 0,
+      reductionRateSum: 0,
+      strongNeutralized: false,
+      guardAttackCount: 0,
+      fullyBlockedCount: 0,
+    },
+  })
+}
+
+/**
+ * saveVersion 5 → 6 への移行（STEP-SCORE2-G3）。
+ * v6でMasteryStateへ蒼毘「鉄壁」用2フィールドが追加された。
+ * 大耀・寿楽の既存集計はすべて保持し、蒼毘用フィールドのみdefault-fillする
+ * （旧saveを破棄しない）。Battle Score（score）は無変更＝移行でスコアは変わらない。
+ */
+export function migrateBattleSaveV5(state: GameState): GameState {
   const old = state.mastery as Partial<GameState['mastery']> | undefined
   return {
     ...state,
@@ -119,9 +144,11 @@ export function migrateBattleSaveV4(state: GameState): GameState {
     mastery: {
       roundDamage: old?.roundDamage ?? 0,
       bestRoundDamage: old?.bestRoundDamage ?? 0,
-      attackCount: 0,
-      reductionRateSum: 0,
-      strongNeutralized: false,
+      attackCount: old?.attackCount ?? 0,
+      reductionRateSum: old?.reductionRateSum ?? 0,
+      strongNeutralized: old?.strongNeutralized ?? false,
+      guardAttackCount: 0,
+      fullyBlockedCount: 0,
     },
   }
 }
@@ -135,7 +162,8 @@ export function loadBattleSave(): GameState | null {
     if (!isSavedBattle(parsed)) return null
     if (parsed.state.status !== 'playing') return null
     if (parsed.version === RULES.saveVersion) return parsed.state
-    // v3/v4セーブは移行して読み込む（勝手に破棄しない）。それ以外の未知版はnull。
+    // v3〜v5セーブは移行して読み込む（勝手に破棄しない）。それ以外の未知版はnull。
+    if (parsed.version === 5) return migrateBattleSaveV5(parsed.state)
     if (parsed.version === 4) return migrateBattleSaveV4(parsed.state)
     if (parsed.version === 3) return migrateBattleSaveV3(parsed.state)
     return null
