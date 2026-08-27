@@ -45,10 +45,11 @@ describe('formatEvent', () => {
     expect(text).toContain('unknown-stat')
   })
 
-  it('SCORE_GAINEDでreason=oracleを「神託」という日本語表示にする（金額は表示×10）', () => {
+  it('STEP-SCORE2-F2：発生しなくなったreason（oracle等）はフォールバックで安全に表示される', () => {
+    // BASE-Dでscore効果が無効化されoracle理由のSCORE_GAINEDは発生しないため、
+    // 専用ラベルは削除した。万一の未知reasonはフォールバックが受ける
     const text = formatEvent({ t: 'SCORE_GAINED', reason: 'oracle', amount: 200 })
-    expect(text).toBe('スコア+2,000（神託）')
-    expect(text).not.toContain('oracle')
+    expect(text).toBe('スコア+2,000（oracle）')
   })
 
   it('未知のreason文字列が来た場合は元の文字列にフォールバックする（安全側）', () => {

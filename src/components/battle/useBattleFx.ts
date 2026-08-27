@@ -51,10 +51,6 @@ export type BattleFx = {
    * 同時に更新されるため、EnemyPanelの突進演出・PlayerPanelの被弾演出の
    * 両方が「同じ1回の攻撃」に対して同じtierを参照できる。 */
   enemyAttackTier: PowerTier
-  /** 変わるたびに「神力を使い残した」トーストを再生させるキー（決定40） */
-  apPenaltyKey: number
-  /** 直近の使い残しペナルティのスコア減点量（負の値） */
-  apPenaltyAmount: number
   /** 蒼毘Visual Polish：変わるたびにbadge-blockのパルス演出を再生させるキー */
   blockGainKey: number
   /** スマホUX修正：変わるたびに「カード使用結果」の画面固定トーストを再生させるキー */
@@ -77,8 +73,6 @@ const INITIAL_FX: BattleFx = {
   godAttackKey: 0,
   enemyAttackKey: 0,
   enemyAttackTier: 'normal',
-  apPenaltyKey: 0,
-  apPenaltyAmount: 0,
   blockGainKey: 0,
   resultToastKey: 0,
   resultToastText: '',
@@ -121,8 +115,6 @@ export function useBattleFx(log: GameEvent[], apCurrent: number): BattleFx {
     let godAttack = 0
     let enemyAttack = 0
     let newEnemyAttackTier: PowerTier | null = null
-    let apPenalty = 0
-    let apPenaltyAmount = 0
     let blockGain = 0
     let resultToast = 0
     // STEP2-B（BattleMiniResult用の集計。既存のresultTexts等とは独立に集計するだけで
@@ -195,12 +187,9 @@ export function useBattleFx(log: GameEvent[], apCurrent: number): BattleFx {
       } else if (event.t === 'OTOMO_EVOLVED') {
         evolve += 1
         evolveForm = event.form
-      } else if (event.t === 'SCORE_GAINED' && event.reason === 'apEfficiency' && event.amount < 0) {
-        // 決定40：神力の使い残しペナルティ（決定不変ルール4のrules.ts側の値そのもの）を
-        // ログに埋もれさせず、画面上のトーストとしても一瞬強調する
-        apPenalty += 1
-        apPenaltyAmount = event.amount
       } else if (event.t === 'BLOCK_GAINED' && event.target === 'self' && event.amount > 0) {
+        // STEP-SCORE2-F2：旧apPenaltyトースト系（決定40）はBASE-Dのペナルティ廃止で
+        // 発火源イベント自体が消滅したため、集計・stateごと削除した
         // 蒼毘Visual Polish：既存のBLOCK_GAINEDイベント（これまでどのフックも
         // 未消費だった）を起点に、badge-blockの一瞬のパルスだけを追加する。
         // 数値・block加算処理そのもの（core/engine）は無変更、表示専用の対応。
@@ -257,7 +246,6 @@ export function useBattleFx(log: GameEvent[], apCurrent: number): BattleFx {
       evolve ||
       godAttack ||
       enemyAttack ||
-      apPenalty ||
       blockGain ||
       resultToast ||
       miniResult
@@ -272,8 +260,6 @@ export function useBattleFx(log: GameEvent[], apCurrent: number): BattleFx {
         godAttackKey: prev.godAttackKey + godAttack,
         enemyAttackKey: prev.enemyAttackKey + enemyAttack,
         enemyAttackTier: newEnemyAttackTier ?? prev.enemyAttackTier,
-        apPenaltyKey: prev.apPenaltyKey + apPenalty,
-        apPenaltyAmount: apPenalty ? apPenaltyAmount : prev.apPenaltyAmount,
         blockGainKey: prev.blockGainKey + blockGain,
         resultToastKey: prev.resultToastKey + resultToast,
         resultToastText: resultToast ? resultTexts.join(' / ') : prev.resultToastText,

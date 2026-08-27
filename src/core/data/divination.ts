@@ -27,10 +27,8 @@ export const DIVINATION_CHOICES: DivinationChoice[] = [
   },
   {
     name: '天啓の託宣',
-    text: '敵に30ダメージを与え、スコアを80得る。',
-    effects: [
-      { kind: 'damage', target: 'enemy', amount: 3 },
-      { kind: 'score', amount: 8 },
-    ],
+    // STEP-SCORE2-F2（B'）：旧score8はBASE-Dで無効化されたため、dmg3→4へ置換
+    text: '敵に40ダメージを与える。',
+    effects: [{ kind: 'damage', target: 'enemy', amount: 4 }],
   },
 ]

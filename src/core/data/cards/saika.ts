@@ -33,14 +33,16 @@ export const SAIKA_CARDS: CardDef[] = [
   {
     id: SAIKA_CARD_IDS.standingOvation,
     name: '喝采',
-    text: 'カードを1枚引き、スコアを200得る。',
+    // STEP-SCORE2-F2（B'）：旧score20はBASE-Dで無効化されたため、block2へ置換。
+    // resonance置換はF1 PLAN-Bで才華テール独占（84.6%）の主因と実証されたため禁止。
+    text: 'カードを1枚引き、ブロックを20得る。',
     type: 'support',
     cost: 1,
     rarity: 'rare',
     godId: GOD_IDS.saika,
     effects: [
       { kind: 'draw', amount: 1 },
-      { kind: 'score', amount: 20 },
+      { kind: 'block', amount: 2 },
     ],
   },
   {
@@ -59,14 +61,17 @@ export const SAIKA_CARDS: CardDef[] = [
   {
     id: SAIKA_CARD_IDS.encore,
     name: 'アンコール',
-    text: '神力を2得て、スコアを300得る。',
+    // STEP-SCORE2-F2（B'・PHASE1B確定）：旧score30をdraw1へ置換し「もう一手動ける」
+    // 体験の核にする。[gainAp3]案は才華上位1%を53.1→56.0%へ悪化させたため不採用
+    // （drawではなくAPがテールの燃料であることをPHASE1Bで実証済み）。
+    text: '神力を2得て、カードを1枚引く。',
     type: 'support',
     cost: 2,
     rarity: 'rare',
     godId: GOD_IDS.saika,
     effects: [
       { kind: 'gainAp', amount: 2 },
-      { kind: 'score', amount: 30 },
+      { kind: 'draw', amount: 1 },
     ],
   },
 ]

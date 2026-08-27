@@ -231,13 +231,15 @@ export const OTOMOS: OtomoDef[] = [
         { kind: 'block', amount: 8 },
       ],
     },
-    // 決定44・力の絆：「太っ腹型」。守りだけでなく、たまにはスコアも気前よく配る
+    // 決定44・力の絆：「太っ腹型」。STEP-SCORE2-F2（B'）：旧score30はBASE-Dで
+    // 無効化され「何も起きないburst」という完全dead効果になっていたため、
+    // 他OTOMOの力の絆と同格のdamage5＋おおらかな回復へ置換（F1で発火を実証済み）
     powerPathEffectsByForm: {
       spirit: [],
-      incarnate: [{ kind: 'score', amount: 30 }],
+      incarnate: [{ kind: 'damage', target: 'enemy', amount: 5 }],
       doji: [
-        { kind: 'score', amount: 30 },
         { kind: 'damage', target: 'enemy', amount: 5 },
+        { kind: 'heal', amount: 3 },
       ],
     },
   },

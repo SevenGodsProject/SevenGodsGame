@@ -35,14 +35,15 @@ export const EBISU_CARDS: CardDef[] = [
   {
     id: EBISU_CARD_IDS.fortune,
     name: '福授け',
-    text: 'HPを30回復し、スコアを300得る。',
+    // STEP-SCORE2-F2（B'）：旧score30はBASE-Dで無効化されたため、heal3→6へ強化
+    // （共通「癒し」heal5の下位互換化を解消）。resonance置換はF1で危険と実証済み。
+    text: 'HPを60回復する。',
     type: 'support',
     cost: 1,
     rarity: 'rare',
     godId: GOD_IDS.ebisu,
     effects: [
-      { kind: 'heal', amount: 3 },
-      { kind: 'score', amount: 30 },
+      { kind: 'heal', amount: 6 },
     ],
   },
   {

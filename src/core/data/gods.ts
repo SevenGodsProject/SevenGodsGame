@@ -17,14 +17,19 @@ export const GOD_IDS = {
  *
  * 決定9でMVPは全神共通の固定効果としていたが、決定20で七福神モチーフの
  * 性格・世界観が確定したため、その性格を反映した効果に差し替えた。
- * 恵比寿は自動シミュレーター（balanceSim.test.ts）が前提とする基準値
- * そのものなので、既存バランスを崩さないよう値を変更していない。
- * 他の6神は「ダメージ＋スコア200前後」を大まかな基準に、性格に応じて
- * 一部をブロック・回復・デバフ・ドロー等に振り替えている（値は仮）。
+ * STEP-SCORE2-F2（B'確定構成）：BASE-D（決定109）で`score`効果がBattle Scoreへ
+ * 加算されなくなったため、全神のburstから旧score（150〜200）を撤去し、
+ * その神らしい実効果（追撃AP・純火力・block・debuff等）へ置換した。
+ * 値はF1/F2の計160,000試合超のsimulationで検証済み（詳細はdocs/DECISIONS.md）。
+ * ※burst効果へ`resonance`を入れることは無限発動リスクのため全神で禁止。
  */
+// STEP-SCORE2-F2（B'確定構成）：BASE-D（決定109）でscore直接効果はBattle Scoreへ
+// 加算されなくなったため、旧score200を「一本釣り→追撃」（gainAp2）へ置換。
+// 大耀（純火力36）とは「決着の速さ」vs「瞬間の大きさ」で軸を分離する。
+// ※burst効果へのresonance追加は無限発動リスクのため全神で禁止（F1 PLAN-C実証）。
 const EBISU_RESONANCE_EFFECTS: Effect[] = [
   { kind: 'damage', target: 'enemy', amount: 25 },
-  { kind: 'score', amount: 200 },
+  { kind: 'gainAp', amount: 2 },
 ]
 
 const art = (id: string) => ({
@@ -68,10 +73,10 @@ export const GODS: GodDef[] = [
     name: '大耀',
     art: art('taiyo'),
     otomoId: OTOMO_IDS.kozuchi,
-    // 玉砕上等の一撃。スコアより実利、豪快に大ダメージを叩き込む
+    // 玉砕上等の一撃。7神最大の純ダメージ一本（B'：旧score170を火力へ集約、
+    // 神技「爆発」＝1R最大火力と完全整合）
     resonanceEffects: [
-      { kind: 'damage', target: 'enemy', amount: 32 },
-      { kind: 'score', amount: 170 },
+      { kind: 'damage', target: 'enemy', amount: 36 },
     ],
     motif: '大黒天：戦いを楽しむ豪快な戦術家肌。後輩思いの姉御肌',
     tagline: '退屈より、玉砕上等',
@@ -89,8 +94,7 @@ export const GODS: GodDef[] = [
     // 判明したため21に引き上げ。blockは維持し「守りながら攻める」路線は継続）
     resonanceEffects: [
       { kind: 'damage', target: 'enemy', amount: 21 },
-      { kind: 'block', amount: 15 },
-      { kind: 'score', amount: 170 },
+      { kind: 'block', amount: 20 },
     ],
     motif: '毘沙門天：寡黙で実直な守護者。仲間のためなら一歩も引かない硬派な武人',
     tagline: '誓いは違えぬ、盾となろう',
@@ -103,12 +107,13 @@ export const GODS: GodDef[] = [
     name: '才華',
     art: art('saika'),
     otomoId: OTOMO_IDS.kotone,
-    // アンコールの一撃。ダメージは控えめに、代わりに次の見せ場（手札・神力）を呼び込む
+    // アンコールの一撃。ダメージは控えめに、代わりに次の見せ場（手札・神力）を呼び込む。
+    // B'：旧score170は補償なしで削除（旧oracle/score優位がランキング偏重の主因だった
+    // ため。才華の個性は手数エンジンで既に十分＝決定108・F1で実証）
     resonanceEffects: [
       { kind: 'damage', target: 'enemy', amount: 12 },
       { kind: 'draw', amount: 2 },
       { kind: 'gainAp', amount: 2 },
-      { kind: 'score', amount: 170 },
     ],
     motif: '弁財天：天性のパフォーマー。目立つこと・魅せることが何より好き',
     tagline: '魅せてなんぼ、輝いてなんぼ',
@@ -126,8 +131,7 @@ export const GODS: GodDef[] = [
     // 判明したため23に引き上げ。debuffは維持し「封じて削る」路線は継続）
     resonanceEffects: [
       { kind: 'damage', target: 'enemy', amount: 23 },
-      { kind: 'debuff', target: 'enemy', stat: 'atk', amount: 4, rounds: 3 },
-      { kind: 'score', amount: 170 },
+      { kind: 'debuff', target: 'enemy', stat: 'atk', amount: 6, rounds: 3 },
     ],
     motif: '寿老人：長い年月を経た悪戯好きの老獪、されど中身は子供のように無邪気',
     tagline: '長生きの秘訣？　楽しむことさ',
@@ -141,10 +145,11 @@ export const GODS: GodDef[] = [
     art: art('fukuei'),
     otomoId: OTOMO_IDS.haku,
     // 幸運を掴む一撃。危険を恐れず攻め込みつつ、掴んだ幸運が身を守る
+    // B'：旧score170を「窮地からの反撃資源」（gainAp1）へ置換（逆転の神）
     resonanceEffects: [
       { kind: 'damage', target: 'enemy', amount: 22 },
       { kind: 'heal', amount: 6 },
-      { kind: 'score', amount: 170 },
+      { kind: 'gainAp', amount: 1 },
     ],
     motif: '福禄寿：怖いもの知らずの冒険家。幸運は自分から掴みにいく主義',
     tagline: '幸運は、待たずに掴みにいく',
@@ -159,12 +164,12 @@ export const GODS: GodDef[] = [
     otomoId: OTOMO_IDS.shofuku,
     // 包み込む一撃。ダメージは控えめに、代わりにHPとブロックをたっぷり配る
     // （決定26：当初ダメージ10だったが、笑蓮の火力不足による全戦略未撃破が
-    // 判明したため21に引き上げ。heal/block/scoreの「支援特化」路線は維持）
+    // 判明したため21に引き上げ。B'：旧score150をheal/block強化へ振替え、
+    // 「支援特化」路線を維持）
     resonanceEffects: [
       { kind: 'damage', target: 'enemy', amount: 21 },
-      { kind: 'heal', amount: 10 },
-      { kind: 'block', amount: 10 },
-      { kind: 'score', amount: 150 },
+      { kind: 'heal', amount: 12 },
+      { kind: 'block', amount: 12 },
     ],
     motif: '布袋：おおらかで面倒見のいい姉貴分。細かいことは気にせず誰でも受け入れる',
     tagline: '細かいことは、まあいいじゃない',

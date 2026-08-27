@@ -100,7 +100,9 @@ export const ARCHETYPE_LABEL: Record<GodArchetype, string> = {
  * 分類語は末尾に付けない。
  */
 export const GOD_TACTICS: Record<GodId, string> = {
-  [GOD_IDS.ebisu]: '大きな一撃と最高スコアで押し切る、扱いやすい構成',
+  // STEP-SCORE2-F2：旧「最高スコア」identity（burst score200前提）はBASE-Dで
+  // 消滅したため、「一本釣り・速攻」（burst＝一撃＋追撃の神力）へ更新
+  [GOD_IDS.ebisu]: '大きな一撃で素早く仕留める、扱いやすい速攻型',
   [GOD_IDS.taiyo]: '自分を鼓舞してから畳みかける、最大火力の一撃',
   [GOD_IDS.sobi]: 'ブロックを厚く重ねて受け止め、崩れず反撃する',
   [GOD_IDS.saika]: '神力とカードを増やし、1ラウンドに何枚も撃ち込む',

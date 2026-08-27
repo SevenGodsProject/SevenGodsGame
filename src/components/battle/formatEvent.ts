@@ -19,11 +19,11 @@ function statLabel(stat: string): string {
  * （素の`string`型）で内部キーがそのまま出ていた（例：「スコア+200（oracle）」）。
  * `statLabel`と同じ安全なフォールバック変換のみここに置く（`core/types`は変更しない）。
  */
+// STEP-SCORE2-F2：BASE-D移行で発生しなくなったreason（apEfficiency＝ペナルティ廃止、
+// oracle＝score効果無効化）のラベルを削除。未知のreasonはフォールバックで安全に表示される
 const SCORE_REASON_LABEL: Record<string, string> = {
   damage: 'ダメージ',
   combo: 'コンボ',
-  apEfficiency: '神力効率',
-  oracle: '神託',
 }
 
 function scoreReasonLabel(reason: string): string {

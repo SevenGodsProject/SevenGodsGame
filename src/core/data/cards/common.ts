@@ -113,14 +113,15 @@ export const COMMON_CARDS: CardDef[] = [
   {
     id: CARD_IDS.oracle,
     name: '神託',
-    text: '敵に250ダメージを与え、スコアを1,000得る。',
+    // STEP-SCORE2-F2：旧score100はBASE-Dで無効化されたため削除（実効果のみ維持）。
+    // 素の8.33dmg/APで依然トップ効率のため補償不要（決定109・SCORE2-Eで実証）
+    text: '敵に250ダメージを与える。',
     type: 'oracle',
     cost: 3,
     rarity: 'rare',
     // 効率 ×1.67。切り札は明確に得をさせる
     effects: [
       { kind: 'damage', target: 'enemy', amount: 25 },
-      { kind: 'score', amount: 100 },
     ],
   },
 
@@ -205,14 +206,14 @@ export const COMMON_CARDS: CardDef[] = [
   {
     id: CARD_IDS.prophecy,
     name: '予言',
-    text: 'カードを2枚引き、スコアを200得る。',
+    // STEP-SCORE2-F2：旧score20はBASE-Dで無効化されたため削除（draw2は維持）
+    text: 'カードを2枚引く。',
     type: 'oracle',
     cost: 2,
     rarity: 'rare',
-    // 神託より軽く、ダメージではなく手札とスコアで還元する神託の別解
+    // 神託より軽く、ダメージではなく手札で還元する神託の別解
     effects: [
       { kind: 'draw', amount: 2 },
-      { kind: 'score', amount: 20 },
     ],
   },
 
@@ -367,14 +368,14 @@ export const COMMON_CARDS: CardDef[] = [
   {
     id: CARD_IDS.minorOracle,
     name: '小さな託宣',
-    text: '敵に70ダメージを与え、スコアを100得る。',
+    // STEP-SCORE2-F2：旧score10はBASE-Dで無効化されたため削除（dmg7は維持）
+    text: '敵に70ダメージを与える。',
     type: 'oracle',
     cost: 1,
     rarity: 'rare',
     // 神託・予言より軽い、1APで撃てる神託カテゴリの入門札
     effects: [
       { kind: 'damage', target: 'enemy', amount: 7 },
-      { kind: 'score', amount: 10 },
     ],
   },
 
