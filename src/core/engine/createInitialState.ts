@@ -98,6 +98,9 @@ export function createInitialState(
     mastery: {
       roundDamage: 0,
       bestRoundDamage: 0,
+      attackCount: 0,
+      reductionRateSum: 0,
+      strongNeutralized: false,
     },
 
     cardsPlayedThisRound: 0,

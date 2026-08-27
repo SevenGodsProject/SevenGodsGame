@@ -28,9 +28,16 @@ export const MASTERY_GRADE_WORD: Record<MasteryGrade, string> = {
  */
 export const MASTERY_SELECT_HINT: Partial<Record<GodId, string>> = {
   [GOD_IDS.taiyo]: '神技「爆発」：1ラウンドで大ダメージを与えるほど評価UP',
+  // STEP-SCORE2-G1b（決定113）：寿楽「無力化」prototype
+  [GOD_IDS.juraku]: '神技「無力化」：敵の攻撃を弱めるほど評価UP',
 }
 
-/** C評価時の軽い励まし文（「あと○%」の失敗感を出さない。神ごとに用意する） */
+/**
+ * C評価時の軽い励まし文（「あと○%」の失敗感を出さない。神ごとに用意する）。
+ * STEP-SCORE2-G1c：寿楽はCEO初見FB「なぜCなのか・あとどれだけでBなのかが
+ * 分からない」を受け、励まし文ではなく「あと○%でB（堂々）」の距離表示へ変更した
+ * （このマップから削除）。大耀は現状維持。
+ */
 const MASTERY_C_ENCOURAGE: Partial<Record<GodId, string>> = {
   [GOD_IDS.taiyo]: '大耀らしい爆発力を、さらに高めよう',
 }
@@ -44,14 +51,18 @@ export type MasteryDisplay = {
   goal: string
 }
 
-/** 次Gradeまでの残り%（最低1%。「あと0%」という表示を避ける） */
+/**
+ * 次Gradeまでの残り%（最低1%。「あと0%」という表示を避ける）。
+ * (threshold - raw) * 100 は浮動小数点誤差で 5.000000000000004 のように
+ * わずかに超過することがあり、そのままceilすると+1%ずれるため微小値を引いて吸収する。
+ */
 function gapToPercent(raw: number, threshold: number): number {
-  return Math.max(1, Math.ceil((threshold - raw) * 100))
+  return Math.max(1, Math.ceil((threshold - raw) * 100 - 1e-9))
 }
 
 /**
  * 結果画面用の神技評価3行を組み立てる（勝利時のみ表示される前提）。
- * prototypeは大耀「爆発」専用の文面。7神展開時は神ごとの文面テーブルへ拡張する。
+ * 表示%は内部rawとMath.roundで数学的に一致させる（表示だけ盛らない）。
  */
 export function describeMastery(
   mastery: MasteryResult,
@@ -59,8 +70,37 @@ export function describeMastery(
   godNameJa: string,
 ): MasteryDisplay {
   const percent = Math.round(mastery.raw * 100)
-  const t = RULES.mastery.taiyo
+  const gradeLabel = `${mastery.grade}（${MASTERY_GRADE_WORD[mastery.grade]}）`
 
+  // 寿楽「無力化」（決定113 J-G prototype）
+  if (godId === GOD_IDS.juraku) {
+    const t = RULES.mastery.juraku
+    const goal = (() => {
+      switch (mastery.grade) {
+        case 'S':
+          return '強打を封じ、神業の無力化！'
+        case 'A':
+          // easy上限A／行動ゲート未達／平均不足の3ケースで、次の一歩を具体的に示す
+          if (mastery.easyCapped) return '「ふつう」以上の難易度でSに挑戦しよう'
+          if (!mastery.sGateMet) return 'Sには強打（100以上の攻撃）を半分以下に抑えよう'
+          return `Sまで平均あと${gapToPercent(mastery.raw, t.s)}%`
+        case 'B':
+          return `Aまで平均あと${gapToPercent(mastery.raw, t.a)}%`
+        case 'C':
+          // G1c（CEO初見FB対応）：Cでも次Gradeまでの距離を出す（UX-A案）。
+          // 「なぜCか」は説明行の実測%が、「どうすればBか」はこの行が担う。
+          return `あと${gapToPercent(mastery.raw, t.b)}%でB（堂々）`
+      }
+    })()
+    return {
+      gradeLabel,
+      description: `${godNameJa}「${mastery.title}」— 敵の攻撃を平均${percent}%削いだ！`,
+      goal,
+    }
+  }
+
+  // 大耀「爆発」（既定）
+  const t = RULES.mastery.taiyo
   const goal = (() => {
     switch (mastery.grade) {
       case 'S':
@@ -75,7 +115,7 @@ export function describeMastery(
   })()
 
   return {
-    gradeLabel: `${mastery.grade}（${MASTERY_GRADE_WORD[mastery.grade]}）`,
+    gradeLabel,
     description: `${godNameJa}「${mastery.title}」— 1ラウンドで敵HPの${percent}%を一気に削った！`,
     goal,
   }

@@ -94,7 +94,35 @@ export function migrateBattleSaveV3(state: GameState): GameState {
       legacy,
       total: damage + combo + legacy,
     },
-    mastery: { roundDamage: 0, bestRoundDamage: 0 },
+    mastery: {
+      roundDamage: 0,
+      bestRoundDamage: 0,
+      attackCount: 0,
+      reductionRateSum: 0,
+      strongNeutralized: false,
+    },
+  }
+}
+
+/**
+ * saveVersion 4 → 5 への移行（STEP-SCORE2-G1b）。
+ * v5でMasteryStateへ寿楽「無力化」用3フィールドが追加された。
+ * 既存の大耀用集計（roundDamage/bestRoundDamage）は保持し、
+ * 寿楽用フィールドはdefault-fillで補完する（旧saveを破棄しない）。
+ * ※Battle Score（score）はv4と同一構造のため無変更＝移行でスコアは変わらない。
+ */
+export function migrateBattleSaveV4(state: GameState): GameState {
+  const old = state.mastery as Partial<GameState['mastery']> | undefined
+  return {
+    ...state,
+    version: RULES.saveVersion,
+    mastery: {
+      roundDamage: old?.roundDamage ?? 0,
+      bestRoundDamage: old?.bestRoundDamage ?? 0,
+      attackCount: 0,
+      reductionRateSum: 0,
+      strongNeutralized: false,
+    },
   }
 }
 
@@ -107,7 +135,8 @@ export function loadBattleSave(): GameState | null {
     if (!isSavedBattle(parsed)) return null
     if (parsed.state.status !== 'playing') return null
     if (parsed.version === RULES.saveVersion) return parsed.state
-    // v3セーブは移行して読み込む（勝手に破棄しない）。それ以外の未知版はnull。
+    // v3/v4セーブは移行して読み込む（勝手に破棄しない）。それ以外の未知版はnull。
+    if (parsed.version === 4) return migrateBattleSaveV4(parsed.state)
     if (parsed.version === 3) return migrateBattleSaveV3(parsed.state)
     return null
   } catch {

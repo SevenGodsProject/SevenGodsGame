@@ -63,10 +63,16 @@ export type ScoreState = {
  * resume（決定29）を跨いでも失われないよう、イベントログではなくGameStateで持つ。
  */
 export type MasteryState = {
-  /** 現在のラウンドに敵へ与えた実効ダメージ合計（ラウンド開始でリセット） */
+  /** 現在のラウンドに敵へ与えた実効ダメージ合計（ラウンド開始でリセット。大耀「爆発」用） */
   roundDamage: number
-  /** 1ラウンド実効ダメージの試合内最大値 */
+  /** 1ラウンド実効ダメージの試合内最大値（大耀「爆発」用） */
   bestRoundDamage: number
+  /** 寿楽「無力化」用（決定113 J-G）：実際に発生した敵攻撃の回数（charge除外） */
+  attackCount: number
+  /** 寿楽用：各敵攻撃の軽減率(0〜1)の合計。raw＝attackCountで割った等重み平均 */
+  reductionRateSum: number
+  /** 寿楽S行動ゲート：raw>=10の強攻撃を半分以下まで抑えた実績が1回以上あるか */
+  strongNeutralized: boolean
 }
 
 /**

@@ -21,7 +21,13 @@ function taiyoState(bestRoundDamage: number, enemyMaxHp = 100): GameState {
     ...base,
     godId: GOD_IDS.taiyo,
     enemy: { ...base.enemy, maxHp: enemyMaxHp, hp: enemyMaxHp },
-    mastery: { roundDamage: 0, bestRoundDamage },
+    mastery: {
+      roundDamage: 0,
+      bestRoundDamage,
+      attackCount: 0,
+      reductionRateSum: 0,
+      strongNeutralized: false,
+    },
   }
 }
 

@@ -146,7 +146,9 @@ export function applyDamage(
     // Mastery集計（決定110プロトタイプ）：1ラウンド実効ダメージの最大値を追跡する。
     // スコアとは完全分離（bestRoundDamageはtotalへ一切影響しない）。
     const roundDamage = state.mastery.roundDamage + effective
+    // spreadで他神用フィールド（寿楽J-G等）を保持する（フル再構築だと消失するため）
     const mastery = {
+      ...state.mastery,
       roundDamage,
       bestRoundDamage: Math.max(state.mastery.bestRoundDamage, roundDamage),
     }

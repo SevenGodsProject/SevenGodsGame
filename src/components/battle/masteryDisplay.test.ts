@@ -51,9 +51,94 @@ describe('describeMastery（大耀「爆発」）', () => {
 })
 
 describe('神選択画面の神技1行', () => {
-  it('大耀には神技説明があり、未実装の神には無い（prototype範囲）', () => {
+  it('大耀・寿楽には神技説明があり、未実装の神には無い（prototype範囲）', () => {
     expect(MASTERY_SELECT_HINT[GOD_IDS.taiyo]).toContain('爆発')
+    expect(MASTERY_SELECT_HINT[GOD_IDS.juraku]).toContain('無力化')
     expect(MASTERY_SELECT_HINT[GOD_IDS.ebisu]).toBeUndefined()
+  })
+})
+
+describe('describeMastery（寿楽「無力化」・STEP-SCORE2-G1b）', () => {
+  function jurakuResult(
+    grade: MasteryResult['grade'],
+    raw: number,
+    extra: Partial<MasteryResult> = {},
+  ): MasteryResult {
+    return { title: '無力化', grade, raw, sGateMet: false, easyCapped: false, ...extra }
+  }
+
+  it('表示%は内部rawとMath.roundで一致する（0.804→80%）', () => {
+    const d = describeMastery(jurakuResult('A', 0.804), GOD_IDS.juraku, '寿楽')
+    expect(d.description).toBe('寿楽「無力化」— 敵の攻撃を平均80%削いだ！')
+  })
+
+  it('S表示：「強打を封じ、神業の無力化！」', () => {
+    const d = describeMastery(jurakuResult('S', 0.93, { sGateMet: true }), GOD_IDS.juraku, '寿楽')
+    expect(d.gradeLabel).toBe('S（神業）')
+    expect(d.goal).toBe('強打を封じ、神業の無力化！')
+  })
+
+  it('A（ゲート未達）：強打半減の行動目標を示す', () => {
+    const d = describeMastery(jurakuResult('A', 0.85), GOD_IDS.juraku, '寿楽')
+    expect(d.goal).toBe('Sには強打（100以上の攻撃）を半分以下に抑えよう')
+  })
+
+  it('A（ゲート達成・raw不足）：Sまでの平均%ギャップを示す', () => {
+    const d = describeMastery(
+      jurakuResult('A', 0.85, { sGateMet: true }),
+      GOD_IDS.juraku,
+      '寿楽',
+    )
+    expect(d.goal).toBe('Sまで平均あと5%')
+  })
+
+  it('A（easy上限）：難易度を上げる導線を示す', () => {
+    const d = describeMastery(
+      jurakuResult('A', 0.95, { sGateMet: true, easyCapped: true }),
+      GOD_IDS.juraku,
+      '寿楽',
+    )
+    expect(d.goal).toBe('「ふつう」以上の難易度でSに挑戦しよう')
+  })
+
+  it('B：Aまでの平均%ギャップ', () => {
+    const d = describeMastery(jurakuResult('B', 0.6), GOD_IDS.juraku, '寿楽')
+    expect(d.goal).toBe('Aまで平均あと20%')
+  })
+
+  // STEP-SCORE2-G1c：CEO初見FB「なぜCか・あとどれだけでBかが分からない」対応。
+  // CはUX-A案「あと○%でB（堂々）」で次Gradeまでの距離を必ず示す。
+  it('C：次Gradeまでの距離を表示（46%→あと4%でB）', () => {
+    const d = describeMastery(jurakuResult('C', 0.46), GOD_IDS.juraku, '寿楽')
+    expect(d.description).toBe('寿楽「無力化」— 敵の攻撃を平均46%削いだ！')
+    expect(d.goal).toBe('あと4%でB（堂々）')
+  })
+
+  // G1d：CEO実測ケース。B=0.50緩和により51%はB（堂々）になる
+  it('CEO実測51%：B（堂々）＋「Aまで平均あと29%」', () => {
+    const d = describeMastery(jurakuResult('B', 0.51), GOD_IDS.juraku, '寿楽')
+    expect(d.gradeLabel).toBe('B（堂々）')
+    expect(d.description).toBe('寿楽「無力化」— 敵の攻撃を平均51%削いだ！')
+    expect(d.goal).toBe('Aまで平均あと29%')
+  })
+
+  // G1d PHASE 3指定の11値（B=0.50/A=0.80）。gradeはgetMasteryの境界仕様
+  // （jurakuMastery.test.tsで検証済み）に対応。浮動小数点誤差込みで文言を固定する
+  it.each([
+    ['C', 0.0, false, 'あと50%でB（堂々）'],
+    ['C', 0.3, false, 'あと20%でB（堂々）'],
+    ['C', 0.49, false, 'あと1%でB（堂々）'],
+    ['C', 0.499999, false, 'あと1%でB（堂々）'],
+    ['B', 0.5, false, 'Aまで平均あと30%'],
+    ['B', 0.51, false, 'Aまで平均あと29%'],
+    ['B', 0.79, false, 'Aまで平均あと1%'],
+    ['B', 0.799999, false, 'Aまで平均あと1%'],
+    ['A', 0.8, true, 'Sまで平均あと10%'],
+    ['A', 0.89, true, 'Sまで平均あと1%'],
+    ['S', 0.9, true, '強打を封じ、神業の無力化！'],
+  ] as const)('grade=%s raw=%s の表示（境界・浮動小数点誤差込み）', (grade, raw, gate, expected) => {
+    const d = describeMastery(jurakuResult(grade, raw, { sGateMet: gate }), GOD_IDS.juraku, '寿楽')
+    expect(d.goal).toBe(expected)
   })
 })
 

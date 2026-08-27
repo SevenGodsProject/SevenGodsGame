@@ -96,14 +96,26 @@ describe('battleSaveStorage（saveVersion 4・STEP-SCORE2-D-PROTO）', () => {
     const base = startTestGame('save-v4')
     const withMastery: GameState = {
       ...base,
-      mastery: { roundDamage: 8, bestRoundDamage: 33 },
+      mastery: {
+        roundDamage: 8,
+        bestRoundDamage: 33,
+        attackCount: 4,
+        reductionRateSum: 2.5,
+        strongNeutralized: true,
+      },
     }
     saveBattle(withMastery)
     const loaded = loadBattleSave()
     expect(loaded).not.toBeNull()
     expect(loaded?.version).toBe(RULES.saveVersion)
-    // resume後もMastery集計（1ラウンド最大実効ダメージ）は失われない
-    expect(loaded?.mastery).toEqual({ roundDamage: 8, bestRoundDamage: 33 })
+    // resume後もMastery集計（大耀・寿楽とも）は失われない
+    expect(loaded?.mastery).toEqual({
+      roundDamage: 8,
+      bestRoundDamage: 33,
+      attackCount: 4,
+      reductionRateSum: 2.5,
+      strongNeutralized: true,
+    })
     expect(loaded?.score.total).toBe(withMastery.score.total)
   })
 
@@ -121,7 +133,13 @@ describe('battleSaveStorage（saveVersion 4・STEP-SCORE2-D-PROTO）', () => {
     expect(loaded?.score.victory).toBe(0)
     expect(loaded?.score.total).toBe(40 + 20 + 204)
     // v3にはMastery集計が無いため0から開始する（既知の1戦限りの制約）
-    expect(loaded?.mastery).toEqual({ roundDamage: 0, bestRoundDamage: 0 })
+    expect(loaded?.mastery).toEqual({
+      roundDamage: 0,
+      bestRoundDamage: 0,
+      attackCount: 0,
+      reductionRateSum: 0,
+      strongNeutralized: false,
+    })
   })
 
   it('migrateBattleSaveV3はtotal＝damage+combo+legacyになるよう再構成する', () => {
@@ -130,6 +148,33 @@ describe('battleSaveStorage（saveVersion 4・STEP-SCORE2-D-PROTO）', () => {
     expect(migrated.score.legacy).toBe(90)
     expect(migrated.score.total).toBe(40 + 20 + 90)
     expect(migrated.version).toBe(RULES.saveVersion)
+  })
+
+  it('v4セーブは破棄せず移行して読み込む（大耀値保持・寿楽フィールドはdefault-fill・スコア不変）', () => {
+    // v4形式：masteryは大耀用2フィールドのみ
+    const modern = startTestGame('save-v4-mig')
+    const v4State = {
+      ...modern,
+      version: 4,
+      mastery: { roundDamage: 8, bestRoundDamage: 33 },
+    }
+    localStorage.setItem(
+      'sevengods.battleSave',
+      JSON.stringify({ version: 4, state: v4State }),
+    )
+    const loaded = loadBattleSave()
+    expect(loaded).not.toBeNull()
+    expect(loaded?.version).toBe(RULES.saveVersion)
+    // 大耀の集計は保持、寿楽の新フィールドはdefault
+    expect(loaded?.mastery).toEqual({
+      roundDamage: 8,
+      bestRoundDamage: 33,
+      attackCount: 0,
+      reductionRateSum: 0,
+      strongNeutralized: false,
+    })
+    // 移行でBattle Scoreは一切変わらない
+    expect(loaded?.score).toEqual(modern.score)
   })
 
   it('未知のバージョン（v2以前・将来版）はnull（読み込まない）', () => {

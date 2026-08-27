@@ -119,6 +119,15 @@ export const RULES = {
   mastery: {
     /** 大耀「爆発」：1ラウンド最大実効ダメージ ÷ 敵最大HP のグレード下限 */
     taiyo: { s: 0.58, a: 0.45, b: 0.37 },
+    /**
+     * 寿楽「無力化」（決定113 J-G）：敵攻撃1回ごとの軽減率の等重み平均のグレード下限。
+     * B=0.50はSTEP-SCORE2-G1dで0.55から緩和した（CEO初見51%のみを根拠とせず、
+     * G1c再解析＝0.50〜0.55帯はstall/spam層でないこと・魔獣C率54.4%→46.7%改善・
+     * 「攻撃を半分以上削げたらB（堂々）」という説明可能性を根拠とする）。
+     * Sはさらに「raw>=strongHitRawの強攻撃を半分以下へ抑えた実績1回以上」かつ
+     * easy以外、という行動・難易度ゲートを併用する。
+     */
+    juraku: { s: 0.9, a: 0.8, b: 0.5, strongHitRaw: 10 },
   },
 
   /**
@@ -143,7 +152,8 @@ export const RULES = {
   /**
    * セーブデータのバージョン。互換性維持のため必ず持たせる。
    * v4（STEP-SCORE2-D-PROTO）：ScoreStateをBASE-D構造へ変更し、MasteryStateを追加。
-   * v3セーブはbattleSaveStorage.tsのmigrateで読み込み継続できる（破棄しない）。
+   * v5（STEP-SCORE2-G1b）：MasteryStateへ寿楽「無力化」用3フィールドを追加。
+   * v3/v4セーブはbattleSaveStorage.tsのmigrateで読み込み継続できる（破棄しない）。
    */
-  saveVersion: 4,
+  saveVersion: 5,
 } as const

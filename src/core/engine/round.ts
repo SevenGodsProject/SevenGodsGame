@@ -1,5 +1,6 @@
 import type { EnemyActionDef, GameEvent, GameState } from '../types'
 import { RULES } from '../data/rules'
+import { GOD_IDS } from '../data/gods'
 import { getEnemyDef } from '../data/enemies'
 import { performDraw } from './deck'
 import { applyDamage } from './effects'
@@ -86,6 +87,28 @@ export function runEnemyTurn(state: GameState): StepResult {
     const atkBuff = sumBuff(next.enemy.buffs, 'atk')
     const amount = Math.max(0, action.amount + atkBuff)
     events.push({ t: 'ENEMY_ACTED', kind: 'attack', amount })
+
+    // 寿楽Mastery「無力化」J-G集計（決定113。寿楽使用時のみ）。
+    // raw＝action.amount（難易度倍率済みの素の攻撃値）、actual＝amount（debuff適用後）。
+    // 攻撃1回ごとの軽減率(0〜1)を等重みで積算する（金額加重ではない）。
+    // 空撃ちdebuff（攻撃が来ないラウンドのdebuff）はここに到達しないため自動的に無得点。
+    // charge行動はattack分岐外のため除外。enemy ID/HPによる補正は行わない。
+    if (next.godId === GOD_IDS.juraku && action.amount > 0) {
+      const rate = Math.max(0, Math.min(1, (action.amount - amount) / action.amount))
+      const t = RULES.mastery.juraku
+      // S行動ゲート：raw>=10（内部値。表示×10で「100以上」）の強攻撃を半分以下へ
+      const strong = action.amount >= t.strongHitRaw && amount <= action.amount * 0.5
+      next = {
+        ...next,
+        mastery: {
+          ...next.mastery,
+          attackCount: next.mastery.attackCount + 1,
+          reductionRateSum: next.mastery.reductionRateSum + rate,
+          strongNeutralized: next.mastery.strongNeutralized || strong,
+        },
+      }
+    }
+
     const result = applyDamage(next, 'self', amount)
     next = result.state
     events.push(...result.events)
