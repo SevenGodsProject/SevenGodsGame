@@ -3,11 +3,19 @@ import type { Dispatch, SetStateAction } from 'react'
 import type { GameEvent, GodId } from '../../core/types'
 import { getGodDef } from '../../core/data/gods'
 import { formatScaled } from '../displayScale'
+import { MULTI_CUTIN_LEAD_MS, SPECIAL_IMPACT_MS, multiHitOffsetMs } from './enemyVfxTiming'
 
 export type FloatingNumber = {
   id: number
   text: string
   kind: 'damage' | 'heal' | 'block' | 'draw' | 'ap'
+  /** ENEMY-VFX-01：連撃/必殺のhitをテンポ付きで見せるためのCSS animation-delay（ms）。
+   * 表示タイミングだけを遅らせる。combat計算・GameStateには一切関与しない */
+  delayMs?: number
+  /** ENEMY-VFX-01：連撃の最終hit・必殺の一撃を大きく見せる強調フラグ */
+  emphasis?: boolean
+  /** ENEMY-VFX-01：連撃hitが同座標に重ならないよう、hitごとにleftをずらす */
+  leftPercent?: number
 }
 
 const LIFETIME_MS = 900
@@ -51,15 +59,47 @@ export function useFloatingNumbers(
       setter((prev) => [...prev, entry])
       window.setTimeout(() => {
         setter((prev) => prev.filter((n) => n.id !== entry.id))
-      }, LIFETIME_MS)
+      }, LIFETIME_MS + (entry.delayMs ?? 0))
     }
+
+    // ENEMY-VFX-01：このバッチが敵の連撃/必殺だったかを先に判定する。
+    // round.tsはENEMY_ACTED→hitごとのDAMAGE_DEALTの順でイベントを積むため、
+    // ENEMY_ACTEDのkind/labelを読むだけで後続のself被弾hitへ表示遅延を割り振れる。
+    // 判定はイベント列のみ（敵IDのswitchは使わない）＝将来の7敵展開でもこのまま動く。
+    const enemyActed = newEvents.find(
+      (e): e is Extract<GameEvent, { t: 'ENEMY_ACTED' }> => e.t === 'ENEMY_ACTED' && e.kind !== 'charge',
+    )
+    const isMulti = enemyActed?.kind === 'multiAttack'
+    const isSpecial = enemyActed?.kind === 'special' || (isMulti && !!enemyActed?.label)
+    const totalHits = isMulti
+      ? newEvents.filter((e) => e.t === 'DAMAGE_DEALT' && e.target === 'self').length
+      : 0
+    // ENEMY-VFX-02：カットイン付きはlead後、hitはTEMPO-B offset（enemyVfxTiming.ts）。
+    // 神滅甲タイプ（special単発）はビーム着弾（SPECIAL_IMPACT_MS）に同期する。
+    const cutinLead = isSpecial ? (isMulti ? MULTI_CUTIN_LEAD_MS : SPECIAL_IMPACT_MS) : 0
+    // 連撃hitのleftを 38%→50%→62% と振って重なりを防ぐ（3hit想定、2hitは38/50）
+    const multiLeft = (index: number) => 38 + Math.min(index, 2) * 12
+    let selfHitIndex = 0
 
     for (const event of newEvents) {
       if (event.t === 'DAMAGE_DEALT') {
         const setter = event.target === 'enemy' ? setEnemyNumbers : setPlayerNumbers
+        const isSelfHit = event.target === 'self' && enemyActed != null
+        const hitIndex = isSelfHit ? selfHitIndex++ : 0
+        const delayMs = isSelfHit ? cutinLead + (isMulti ? multiHitOffsetMs(hitIndex) : 0) : 0
+        // 強調＝必殺の単発着弾、または連撃の最終hit（「ドン→ドン→ドン！」の3発目）
+        const emphasis = isSelfHit && (enemyActed?.kind === 'special' || (isMulti && hitIndex === totalHits - 1 && totalHits >= 2))
+        const leftPercent = isSelfHit && isMulti ? multiLeft(hitIndex) : undefined
         // D2b：damage/block/healは表示×10。draw/AP（下のRESONANCE_BURST分岐）は倍率対象外
         if (event.amount > 0) {
-          spawn(setter, { id: nextId.current++, text: `-${formatScaled(event.amount)}`, kind: 'damage' })
+          spawn(setter, {
+            id: nextId.current++,
+            text: `-${formatScaled(event.amount)}`,
+            kind: 'damage',
+            delayMs,
+            emphasis,
+            leftPercent,
+          })
         }
         // 第二次完成フェーズP0-3：DAMAGE_DEALT.blockedは既存のデータとして
         // 存在していたが、これまでどのフックも読んでいなかった（未消費）。
@@ -74,7 +114,8 @@ export function useFloatingNumbers(
         // （formatEvent.ts）が同じ意味を「（N軽減）」と表現している言葉をそのまま
         // 流用し、色（#7fb2ff）はバッジと共通のまま維持している。
         if (event.blocked > 0) {
-          spawn(setter, { id: nextId.current++, text: `軽減${formatScaled(event.blocked)}`, kind: 'block' })
+          // 連撃/必殺では軽減表示にも同じ遅延を与え、hitと同じテンポで見せる
+          spawn(setter, { id: nextId.current++, text: `軽減${formatScaled(event.blocked)}`, kind: 'block', delayMs })
         }
       } else if (event.t === 'HEALED' && event.amount > 0) {
         spawn(setPlayerNumbers, { id: nextId.current++, text: `+${formatScaled(event.amount)}`, kind: 'heal' })

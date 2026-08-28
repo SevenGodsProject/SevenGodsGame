@@ -82,6 +82,18 @@ export const sfx = {
   otomoEvolve: () => arpeggio([392, 523, 659, 784, 988], 140, 60, { type: 'triangle', volume: 0.13 }),
   divination: () => arpeggio([660, 880], 90, 60, { type: 'sine', volume: 0.08 }),
   enemyTurn: () => tone(150, 100, { type: 'square', volume: 0.06 }),
+  /** ENEMY-VFX-02：連撃のhit音。hitごとにpitch/volumeを上げ（低→高→強impact）、
+   * delayMsで視覚のTEMPO-B（enemyVfxTiming.ts）と同期する。新規音源なしの合成音。 */
+  enemyMultiHit: (index: number, delayMs: number) => {
+    tone(110 + index * 40, 90, { type: 'square', volume: 0.08 + index * 0.03, delayMs })
+    // 3発目（index>=2）だけ低音の追い打ちを重ねて「ドン！」にする
+    if (index >= 2) tone(65, 220, { type: 'sawtooth', volume: 0.13, delayMs: delayMs + 25 })
+  },
+  /** ENEMY-VFX-02：神滅甲タイプ（special単発）の着弾impact。ビーム到達に同期 */
+  enemySpecialImpact: (delayMs: number) => {
+    tone(58, 300, { type: 'sawtooth', volume: 0.16, delayMs })
+    tone(150, 170, { type: 'square', volume: 0.09, delayMs: delayMs + 40 })
+  },
   victory: () => arpeggio([523, 659, 784, 1047], 220, 130, { type: 'triangle', volume: 0.13 }),
   defeat: () => arpeggio([440, 349, 293], 320, 180, { type: 'sawtooth', volume: 0.11 }),
 }

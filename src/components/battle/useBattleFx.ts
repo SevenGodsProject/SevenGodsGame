@@ -75,6 +75,23 @@ export type BattleFx = {
   miniResultKey: number
   /** 直近のアクションの構造化結果。該当する効果が無かった場合はnull */
   miniResult: MiniResultData | null
+  /** ENEMY-VFX-01：変わるたびに敵必殺カットイン（BattleEnemyCutin）を再生させるキー。
+   * ENEMY_ACTEDのkind==='special'または「labelを持つmultiAttack」（＝技名付き連撃）で
+   * 増える。判定はイベント列のみで、敵IDのswitchは持たない（7敵展開でもこのまま） */
+  enemySpecialKey: number
+  /** 直近の敵必殺技の技名（ENEMY_ACTED.label）。カットインの文言に使う */
+  enemySpecialName: string | null
+  /** 直近の敵必殺技のkind（'special'=単発大技／'multiAttack'=技名付き連撃）。
+   * 着弾ビーム（砲撃系の演出）はkind==='special'のみに出す等、演出の出し分けに使う */
+  enemySpecialKind: string | null
+  /** 直近の敵必殺技の合計amount（内部値。表示は×10） */
+  enemySpecialAmount: number
+  /** ENEMY-VFX-01：直近の敵攻撃バッチのself被弾hit数（連撃のテンポ演出用）。
+   * 1なら従来の単発被弾演出のまま */
+  multiHitCount: number
+  /** 直近の敵攻撃バッチが必殺（カットイン付き）だったか。被弾シェイク・
+   * フローティング数字をカットイン(0.9s)後へ遅らせる判定に使う */
+  specialHit: boolean
 }
 
 const INITIAL_FX: BattleFx = {
@@ -92,6 +109,12 @@ const INITIAL_FX: BattleFx = {
   resultToastText: '',
   miniResultKey: 0,
   miniResult: null,
+  enemySpecialKey: 0,
+  enemySpecialName: null,
+  enemySpecialKind: null,
+  enemySpecialAmount: 0,
+  multiHitCount: 0,
+  specialHit: false,
 }
 
 /**
@@ -152,6 +175,13 @@ export function useBattleFx(log: GameEvent[], apCurrent: number): BattleFx {
     // トーストにまとめる。core/engine・数値・効果処理は無変更、表示専用の追加。
     const resultTexts: string[] = []
 
+    // ENEMY-VFX-01：このバッチの敵必殺/連撃情報（表示専用）
+    let batchSpecial = false
+    let batchSpecialName: string | null = null
+    let batchSpecialKind: string | null = null
+    let batchSpecialAmount = 0
+    let batchMulti = false
+
     for (const event of newEvents) {
       if (event.t === 'DAMAGE_DEALT' && event.amount > 0) {
         // target='enemy'は「敵が被弾」＝神（プレイヤー側）が攻撃を実行した瞬間。
@@ -190,6 +220,16 @@ export function useBattleFx(log: GameEvent[], apCurrent: number): BattleFx {
         // STEP-UX5：この攻撃の予告時点の危険度（Intentが表示していたのと
         // 全く同じamount・全く同じ閾値関数）をそのままFXへ伝搬する。
         newEnemyAttackTier = getIntentPowerTier(event.amount)
+        // ENEMY-VFX-01：必殺技（special、または技名labelを持つ連撃）を検出して
+        // カットインの信号にする。連撃はkindだけで検出（数字テンポ演出用）。
+        // どちらもイベント列のみの判定で敵IDのswitchは持たない。
+        if (event.kind === 'multiAttack') batchMulti = true
+        if (event.kind === 'special' || (event.kind === 'multiAttack' && !!event.label)) {
+          batchSpecial = true
+          batchSpecialName = event.label ?? null
+          batchSpecialKind = event.kind
+          batchSpecialAmount = event.amount
+        }
       } else if (event.t === 'HEALED' && event.amount > 0) {
         heal += 1
         resultToast += 1
@@ -279,6 +319,13 @@ export function useBattleFx(log: GameEvent[], apCurrent: number): BattleFx {
         resultToastText: resultToast ? resultTexts.join(' / ') : prev.resultToastText,
         miniResultKey: miniResult ? prev.miniResultKey + 1 : prev.miniResultKey,
         miniResult: miniResult ?? prev.miniResult,
+        enemySpecialKey: batchSpecial ? prev.enemySpecialKey + 1 : prev.enemySpecialKey,
+        enemySpecialName: batchSpecial ? batchSpecialName : prev.enemySpecialName,
+        enemySpecialKind: batchSpecial ? batchSpecialKind : prev.enemySpecialKind,
+        enemySpecialAmount: batchSpecial ? batchSpecialAmount : prev.enemySpecialAmount,
+        // 敵攻撃バッチのときだけ更新（カード自傷等では従来の単発演出のまま）
+        multiHitCount: enemyAttack > 0 ? (batchMulti ? selfHit : Math.min(selfHit, 1)) : prev.multiHitCount,
+        specialHit: enemyAttack > 0 ? batchSpecial : prev.specialHit,
       }))
     }
   }, [log, apCurrent])

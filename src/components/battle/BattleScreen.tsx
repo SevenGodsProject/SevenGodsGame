@@ -17,6 +17,7 @@ import { CardView } from './CardView'
 import { BattleHud } from './BattleHud'
 import { BattleMiniResult } from './BattleMiniResult'
 import { BattleResonanceCutin } from './BattleResonanceCutin'
+import { BattleEnemyCutin } from './BattleEnemyCutin'
 import { EnemyPanel } from './EnemyPanel'
 import { PlayerPanel } from './PlayerPanel'
 import { GodOtomoPanel } from './GodOtomoPanel'
@@ -112,6 +113,30 @@ export function BattleScreen({ engine, onRematch, onReselect }: BattleScreenProp
     setCutinBurstBannerKey((k) => k + 1)
   }
 
+  // ENEMY-VFX-01：敵必殺技カットイン（CEO発案）。共鳴カットインと同じ
+  // 「keyの増分→表示→onComplete（CSS実測終了）でハンドオフ」パターンを複製する。
+  // onComplete後にenemyImpactKeyを進め、着弾ビーム（enemy-impact-beam）を再生する。
+  // 被弾シェイク・数字側はCSSのanimation-delay（hit-delay-cutin等）で同じ0.9sを
+  // 待つため、JSタイマーは持たない（決定80のタイミング一元化の家訓に従う）。
+  const [enemyCutinVisible, setEnemyCutinVisible] = useState(false)
+  const [enemyCutinActive, setEnemyCutinActive] = useState(false)
+  const shownEnemySpecialKeyRef = useRef(0)
+  const [enemyImpactKey, setEnemyImpactKey] = useState(0)
+  useEffect(() => {
+    if (fx.enemySpecialKey > shownEnemySpecialKeyRef.current) {
+      shownEnemySpecialKeyRef.current = fx.enemySpecialKey
+      // カットイン中はMiniResultを抑制（共鳴カットインのSTEP-R2処理10と同じ手法）
+      suppressedMiniResultKeyRef.current = fx.miniResultKey
+      setEnemyCutinVisible(true)
+      setEnemyCutinActive(true)
+    }
+  }, [fx.enemySpecialKey, fx.miniResultKey])
+  const handleEnemyCutinComplete = () => {
+    setEnemyCutinVisible(false)
+    setEnemyCutinActive(false)
+    setEnemyImpactKey((k) => k + 1)
+  }
+
   // 決定80（Phase 1）：sound.ts側のmutedフラグが既にsfx.xxx()を全て止めているため、
   // ここでの「ミュート中はlogを[]に見せる」二重防御は不要だった。しかも副作用として、
   // ミュート解除時にuseBattleSound内部のseenCountが0にリセットされ、logが元の長さに
@@ -138,7 +163,8 @@ export function BattleScreen({ engine, onRematch, onReselect }: BattleScreenProp
     state.status === 'playing' &&
     !isEnemyTurn &&
     !pendingCardUid &&
-    !cutinActive
+    !cutinActive &&
+    !enemyCutinActive
 
   const pendingCard = pendingCardUid ? state.hand.find((c) => c.uid === pendingCardUid) : undefined
   const pendingCardDef = pendingCard ? getCardDef(pendingCard.defId) : null
@@ -193,6 +219,8 @@ export function BattleScreen({ engine, onRematch, onReselect }: BattleScreenProp
           hitKey={fx.enemyHitKey}
           attackKey={fx.enemyAttackKey}
           attackTier={fx.enemyAttackTier}
+          multiHitCount={fx.multiHitCount}
+          specialHit={fx.specialHit}
           floatingNumbers={enemyNumbers}
         />
         <div className="ally-row">
@@ -204,6 +232,8 @@ export function BattleScreen({ engine, onRematch, onReselect }: BattleScreenProp
             attackKey={fx.godAttackKey}
             blockGainKey={fx.blockGainKey}
             enemyAttackTier={fx.enemyAttackTier}
+            multiHitCount={fx.multiHitCount}
+            specialHit={fx.specialHit}
             floatingNumbers={playerNumbers}
           />
           <GodOtomoPanel
@@ -236,6 +266,24 @@ export function BattleScreen({ engine, onRematch, onReselect }: BattleScreenProp
           ハンドオフは完全に無変更（信号源がcutinBurstBannerKeyに一本化されただけ）。 */}
       {cutinVisible && (
         <BattleResonanceCutin key={`cutin-${fx.burstKey}`} godId={state.godId} onComplete={handleCutinComplete} />
+      )}
+
+      {/* ENEMY-VFX-01：敵必殺技カットイン→着弾ビーム。カットインは0.9sで自動終了し、
+          onCompleteでビーム（0.45s）を発火する。被弾シェイク・ダメージ数字は
+          CSS側のanimation-delayで同じタイミングに揃う（表示のみ、combat不変）。 */}
+      {enemyCutinVisible && fx.enemySpecialName && (
+        <BattleEnemyCutin
+          key={`enemy-cutin-${fx.enemySpecialKey}`}
+          enemyDefId={state.enemy.defId}
+          specialName={fx.enemySpecialName}
+          amount={fx.enemySpecialAmount}
+          onComplete={handleEnemyCutinComplete}
+        />
+      )}
+      {/* 着弾ビームは砲撃系（kind==='special'＝神滅甲タイプ）のみ。連撃系の必殺
+          （双牙乱撃タイプ）はカットイン→3HITテンポ演出が本体のためビームを出さない */}
+      {enemyImpactKey > 0 && fx.enemySpecialKind === 'special' && (
+        <div key={`enemy-impact-${enemyImpactKey}`} className="enemy-impact-beam" aria-hidden="true" />
       )}
 
       {cutinBurstBannerKey > 0 && (

@@ -2,6 +2,7 @@ import { useEffect, useRef } from 'react'
 import type { GameEvent } from '../../core/types'
 import { sfx } from './sound'
 import { playJingle } from './bgm'
+import { MULTI_CUTIN_LEAD_MS, SPECIAL_IMPACT_MS, multiHitOffsetMs } from './enemyVfxTiming'
 
 /**
  * イベントログを見て効果音を鳴らすフック。
@@ -18,6 +19,17 @@ export function useBattleSound(log: GameEvent[]): void {
     seenCount.current = log.length
     if (newEvents.length === 0) return
 
+    // ENEMY-VFX-02：このバッチが敵の連撃/必殺なら、self被弾のSEを視覚timeline
+    // （enemyVfxTiming.ts）と同じdelayで鳴らす（useFloatingNumbers.tsと同じ
+    // イベント列判定。敵IDのswitchは持たない）。
+    const enemyActed = newEvents.find(
+      (e): e is Extract<GameEvent, { t: 'ENEMY_ACTED' }> => e.t === 'ENEMY_ACTED' && e.kind !== 'charge',
+    )
+    const seMulti = enemyActed?.kind === 'multiAttack'
+    const seSpecial = enemyActed?.kind === 'special' || (seMulti && !!enemyActed?.label)
+    const seLead = seSpecial ? (seMulti ? MULTI_CUTIN_LEAD_MS : SPECIAL_IMPACT_MS) : 0
+    let seHitIndex = 0
+
     for (const event of newEvents) {
       switch (event.t) {
         case 'CARD_PLAYED':
@@ -28,8 +40,16 @@ export function useBattleSound(log: GameEvent[]): void {
           break
         case 'DAMAGE_DEALT':
           if (event.amount > 0) {
-            if (event.target === 'enemy') sfx.damageEnemy()
-            else sfx.damageSelf()
+            if (event.target === 'enemy') {
+              sfx.damageEnemy()
+            } else if (seMulti) {
+              sfx.enemyMultiHit(seHitIndex, seLead + multiHitOffsetMs(seHitIndex))
+              seHitIndex += 1
+            } else if (seSpecial) {
+              sfx.enemySpecialImpact(seLead)
+            } else {
+              sfx.damageSelf()
+            }
           }
           break
         case 'HEALED':

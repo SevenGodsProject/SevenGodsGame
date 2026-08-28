@@ -2999,3 +2999,546 @@
     linear-gradient(180deg, #05060d22 0%, #05060d44 60%, #05060dcc 100%),
     url('/assets/backgrounds/arena.jpg');
 }
+
+/* ============================================================
+   ENEMY-VFX-01（CEO GO・Human Playtest向けprototype）：
+   敵必殺技カットイン＋連撃テンポ演出＋必殺充填・着弾ビーム。
+   すべて表示専用（core/engine・combat計算・GameStateに一切関与しない）。
+   既存定義は消さず末尾へ後置追記（C-LITE-C/Result系と同じロールバック容易方式）。
+   ============================================================ */
+
+/* --- 敵必殺カットイン（BattleEnemyCutin.tsx、ENEMY-VFX-02 cinematic strip版）。
+   骨格（z:4・onAnimationEndハンドオフ・操作ブロック）は共鳴カットイン踏襲。
+   A3で「小カード＝HUDの一部に見える」と判定されたため、画面横幅を使う
+   cinematic stripへ再設計。timelineはenemyVfxTiming.tsと一致：
+   T+0 darken/desaturate（180ms・完全暗転はしない）→ T+120 strip slide-in →
+   T+400 技名peak → T+870 flash（180ms）→ T+1050 終了（timer）。 --- */
+.enemy-cutin {
+  position: fixed;
+  inset: 0;
+  z-index: 4;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  overflow: hidden;
+  backdrop-filter: saturate(0.55) brightness(0.9);
+  animation:
+    enemy-cutin-dim 0.18s ease-out forwards,
+    enemy-cutin-timer 1.05s linear forwards;
+}
+
+@keyframes enemy-cutin-dim {
+  from {
+    background: #12030300;
+  }
+  to {
+    background: #180508cc;
+  }
+}
+
+@keyframes enemy-cutin-timer {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* 斜めの赤いスピードライン（危険・攻撃性）。常設せずカットイン中のみ */
+.enemy-cutin::before {
+  content: '';
+  position: absolute;
+  inset: -20%;
+  background: repeating-linear-gradient(
+    115deg,
+    transparent 0 42px,
+    #ff5c5c14 42px 46px,
+    transparent 46px 96px
+  );
+  animation: enemy-cutin-lines 0.9s linear forwards;
+}
+
+@keyframes enemy-cutin-lines {
+  from {
+    transform: translateX(-6%);
+    opacity: 0;
+  }
+  20% {
+    opacity: 1;
+  }
+  to {
+    transform: translateX(4%);
+    opacity: 0.6;
+  }
+}
+
+/* cinematic strip：PC=横幅約88%（最大980px）×高さ約30vh、モバイル=幅100%×約24vh。
+   左にportrait（Ken Burns 1.00→1.06）、右に技名を主役として大きく置く。 */
+.enemy-cutin-strip {
+  position: relative;
+  width: min(88vw, 980px);
+  height: clamp(150px, 30vh, 250px);
+  display: flex;
+  align-items: stretch;
+  gap: 20px;
+  padding: 12px 28px;
+  background: linear-gradient(100deg, #2a070bf2 0%, #4a0d14e0 48%, #2a070b00 100%);
+  border-top: 2px solid #ff5c5c66;
+  border-bottom: 2px solid #ff5c5c66;
+  box-shadow: 0 0 60px #ff5c5c33;
+  transform: translateX(-48px);
+  opacity: 0;
+  animation: enemy-cutin-strip-in 0.28s ease-out 0.12s forwards;
+}
+
+@keyframes enemy-cutin-strip-in {
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+.enemy-cutin-portrait-frame {
+  height: 100%;
+  aspect-ratio: 1 / 1;
+  flex: none;
+  overflow: hidden;
+  border-radius: 10px;
+  box-shadow: 0 0 30px 4px #ff5c5c66;
+}
+
+/* 静止画のままの軽いKen Burns（scale 1.00→1.06＋わずかなpan） */
+.enemy-cutin-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  animation: enemy-cutin-kenburns 1.05s ease-out forwards;
+}
+
+@keyframes enemy-cutin-kenburns {
+  from {
+    transform: scale(1);
+  }
+  to {
+    transform: scale(1.06) translateX(2%);
+  }
+}
+
+.enemy-cutin-caption {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 4px;
+}
+
+.enemy-cutin-enemy-name {
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  color: #ffb3b3;
+  text-shadow: 0 1px 3px #000;
+}
+
+/* 技名＝主役。T+280開始→T+400前後でpeak（scale 1.06）→静止 */
+.enemy-cutin-text {
+  font-size: clamp(26px, 5.4vw, 52px);
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  line-height: 1.15;
+  color: #ffe8e8;
+  text-shadow:
+    0 2px 0 #7a0e16,
+    0 4px 10px #000,
+    0 0 26px #ff5c5ccc;
+  opacity: 0;
+  transform: translateY(8px) scale(0.96);
+  animation: enemy-cutin-title 0.24s ease-out 0.28s forwards;
+  overflow-wrap: anywhere;
+}
+
+@keyframes enemy-cutin-title {
+  60% {
+    transform: translateY(0) scale(1.06);
+    opacity: 1;
+  }
+  to {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+  }
+}
+
+.enemy-cutin-amount {
+  font-size: 20px;
+  font-weight: 800;
+  color: #ffd9a1;
+  text-shadow: 0 1px 3px #000;
+  opacity: 0;
+  animation: enemy-cutin-title 0.2s ease-out 0.42s forwards;
+}
+
+/* カットイン最後のenergy flash（T+870〜1050）。ビーム発射へ連続させる転換点 */
+.enemy-cutin-flash {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 50% 45%, #ffe9d6ee 0%, #ff5c5c88 35%, transparent 70%);
+  opacity: 0;
+  animation: enemy-cutin-flash 0.18s ease-out 0.87s forwards;
+}
+
+@keyframes enemy-cutin-flash {
+  40% {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+@media (max-width: 640px) {
+  .enemy-cutin-strip {
+    width: 100vw;
+    height: clamp(120px, 24vh, 190px);
+    padding: 10px 14px;
+    gap: 12px;
+  }
+  .enemy-cutin-enemy-name {
+    font-size: 12px;
+    letter-spacing: 0.12em;
+  }
+  .enemy-cutin-amount {
+    font-size: 16px;
+  }
+}
+
+/* --- 必殺の着弾ビーム：カットインonComplete後に中央レーン（C-LITE-Cで
+   確保した敵⇄神の間）を左→右へ走る。0.45sの一過性でarenaを塞がない。 --- */
+.enemy-impact-beam {
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 42vh;
+  height: 10px;
+  z-index: 5;
+  pointer-events: none;
+  background: linear-gradient(90deg, #ff5c5c00 0%, #ffd9a1 30%, #ff5c5c 70%, #ff5c5c00 100%);
+  filter: drop-shadow(0 0 18px #ff5c5ccc);
+  transform-origin: left center;
+  animation: enemy-impact-beam 0.45s ease-in forwards;
+}
+
+@keyframes enemy-impact-beam {
+  0% {
+    transform: scaleX(0);
+    opacity: 1;
+  }
+  55% {
+    transform: scaleX(1);
+    opacity: 1;
+  }
+  100% {
+    transform: scaleX(1);
+    opacity: 0;
+  }
+}
+
+/* --- 連撃クレッシェンドシェイク（ENEMY-VFX-02・TEMPO-B「1・2・ドン！」）。
+   1本のkeyframesへ焼き込み、タイミングの真実をCSSに一元化（決定80の家訓）。
+   hit時刻はenemyVfxTiming.tsのMULTI_HIT_OFFSETS_MS=[0,180,500]と一致：
+   3hit＝duration 1.0s、0%/18%/50%。各hitに短いhold（hit stop風：HIT1=30ms、
+   HIT2=35ms、HIT3=70ms＝CSSでは変位を数%維持）を入れ、HIT3のみ振幅・閃光最大。
+   B3で「数字3回だけでは3発を感じない」と判定されたための身体感覚設計。 --- */
+@keyframes hit-shake-multi-2 {
+  0% { transform: translate(0, 0); }
+  3% { transform: translate(-5px, 2px); }
+  7% { transform: translate(-5px, 2px); }
+  13% { transform: translate(4px, -2px); }
+  19% { transform: translate(0, 0); }
+  25.7% { transform: translate(0, 0); }
+  29% { transform: translate(-9px, 3px); }
+  34% { transform: translate(-9px, 3px); }
+  41% { transform: translate(7px, -3px); }
+  50% { transform: translate(-4px, 2px); }
+  60% { transform: translate(0, 0); }
+  100% { transform: translate(0, 0); }
+}
+
+@keyframes impact-flash-multi-2 {
+  0%, 24%, 55%, 100% { filter: brightness(1); }
+  5% { filter: brightness(1.3); }
+  30% { filter: brightness(1.75); }
+}
+
+.hit-shake-multi-2 {
+  animation:
+    hit-shake-multi-2 0.7s linear,
+    impact-flash-multi-2 0.7s linear;
+}
+
+@keyframes hit-shake-multi-3 {
+  0% { transform: translate(0, 0); }
+  2% { transform: translate(-5px, 2px); }
+  5% { transform: translate(-5px, 2px); }
+  9% { transform: translate(4px, -2px); }
+  13% { transform: translate(0, 0); }
+  18% { transform: translate(-6px, 2px); }
+  21.5% { transform: translate(-6px, 2px); }
+  26% { transform: translate(5px, -2px); }
+  30% { transform: translate(0, 0); }
+  42% { transform: translate(0, 0); }
+  50% { transform: translate(-13px, 4px); }
+  57% { transform: translate(-13px, 4px); }
+  64% { transform: translate(10px, -4px); }
+  71% { transform: translate(-7px, 3px); }
+  79% { transform: translate(0, 0); }
+  100% { transform: translate(0, 0); }
+}
+
+@keyframes impact-flash-multi-3 {
+  0%, 14%, 31%, 44%, 75%, 100% { filter: brightness(1); }
+  4% { filter: brightness(1.25); }
+  20% { filter: brightness(1.4); }
+  51% { filter: brightness(1.95); }
+  57% { filter: brightness(1.95); }
+}
+
+.hit-shake-multi-3 {
+  animation:
+    hit-shake-multi-3 1s linear,
+    impact-flash-multi-3 1s linear;
+}
+
+/* --- 必殺の表示遅延（animation-delayのみ。combat計算・stateは確定済み）。
+   hit-delay-beam＝神滅甲タイプ：ビーム着弾1.26s（SPECIAL_IMPACT_MS）
+   hit-delay-multilead＝双牙乱撃タイプ：カットイン後1.1s（MULTI_CUTIN_LEAD_MS）
+   複合セレクタにするのは、.hit-shake-flash.hit-tier-huge（2クラス）の
+   animationショートハンド（delay 0s）にカスケードで勝つため。 --- */
+.hit-shake-flash.hit-delay-beam,
+.slash-fx.hit-delay-beam,
+.impact-ring.hit-delay-beam {
+  animation-delay: 1.26s;
+  animation-fill-mode: backwards;
+}
+
+.hit-shake-multi-2.hit-delay-multilead,
+.hit-shake-multi-3.hit-delay-multilead {
+  animation-delay: 1.1s;
+  animation-fill-mode: backwards;
+}
+
+/* --- 連撃のhitごとのslash trail（PlayerPanelのHPバー領域に重ねる）。
+   HIT1=左下→右上／HIT2=右下→左上／HIT3=双牙クロス（X字2本・太い）。
+   基本delayはTEMPO-B offset、.hit-delay-multileadでカットイン分1.1sを加算。 --- */
+.multi-slash {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 120%;
+  height: 4px;
+  border-radius: 2px;
+  background: linear-gradient(90deg, #ff5c5c00, #ffe8e8, #ff5c5c00);
+  filter: drop-shadow(0 0 8px #ff5c5ccc);
+  opacity: 0;
+  pointer-events: none;
+  animation: multi-slash-sweep 0.22s ease-out forwards;
+}
+
+@keyframes multi-slash-sweep {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -50%) rotate(var(--slash-angle, -24deg)) scaleX(0.2);
+  }
+  35% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -50%) rotate(var(--slash-angle, -24deg)) scaleX(1.15);
+  }
+}
+
+.multi-slash-1 {
+  --slash-angle: -24deg;
+  animation-delay: 0s;
+}
+
+.multi-slash-2 {
+  --slash-angle: 24deg;
+  animation-delay: 0.18s;
+}
+
+.multi-slash-3a,
+.multi-slash-3b {
+  height: 7px;
+  background: linear-gradient(90deg, #ff5c5c00, #fff2f2, #ffd9a1, #ff5c5c00);
+  filter: drop-shadow(0 0 14px #ff5c5c);
+  animation-delay: 0.5s;
+  animation-duration: 0.26s;
+}
+
+.multi-slash-3a {
+  --slash-angle: -32deg;
+}
+
+.multi-slash-3b {
+  --slash-angle: 32deg;
+}
+
+.multi-slash-1.hit-delay-multilead { animation-delay: 1.1s; }
+.multi-slash-2.hit-delay-multilead { animation-delay: 1.28s; }
+.multi-slash-3a.hit-delay-multilead,
+.multi-slash-3b.hit-delay-multilead { animation-delay: 1.6s; }
+
+/* --- 着弾impact ring：神滅甲=ビーム着弾（1.26s）、双牙乱撃=HIT3（lead+0.5s）。 --- */
+.impact-ring {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 90px;
+  height: 90px;
+  margin: -45px 0 0 -45px;
+  border: 3px solid #ffd9a1;
+  border-radius: 50%;
+  box-shadow:
+    0 0 24px #ff5c5ccc,
+    inset 0 0 18px #ff5c5c88;
+  opacity: 0;
+  pointer-events: none;
+  animation: impact-ring-burst 0.42s ease-out forwards;
+}
+
+@keyframes impact-ring-burst {
+  0% {
+    opacity: 1;
+    transform: scale(0.25);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.7);
+  }
+}
+
+.impact-ring-hit3 {
+  width: 120px;
+  height: 120px;
+  margin: -60px 0 0 -60px;
+  border-width: 4px;
+}
+
+.impact-ring-hit3.hit-delay-multilead {
+  animation-delay: 1.6s;
+  animation-fill-mode: backwards;
+}
+
+/* --- 連撃の敵側多段lunge（TEMPO-B一致）。敵は左、プレイヤーは右のため+xへ突く。
+   HIT3前に溜め（scale 1.08で引く）→最大の突き。 --- */
+@keyframes enemy-lunge-multi-3 {
+  0% { transform: translateX(0) scale(1); }
+  3% { transform: translateX(20px) scale(1.02); }
+  10% { transform: translateX(0) scale(1); }
+  18% { transform: translateX(16px) translateY(4px) scale(1.02); }
+  26% { transform: translateX(0) scale(1); }
+  40% { transform: translateX(-12px) scale(1.08); }
+  48% { transform: translateX(-12px) scale(1.08); }
+  53% { transform: translateX(30px) scale(1.05); }
+  60% { transform: translateX(24px) scale(1.03); }
+  75% { transform: translateX(0) scale(1); }
+  100% { transform: translateX(0) scale(1); }
+}
+
+.enemy-lunge-multi-3 {
+  animation: enemy-lunge-multi-3 1s ease-out;
+}
+
+@keyframes enemy-lunge-multi-2 {
+  0% { transform: translateX(0) scale(1); }
+  4% { transform: translateX(18px) scale(1.02); }
+  14% { transform: translateX(0) scale(1); }
+  25.7% { transform: translateX(0) scale(1); }
+  31% { transform: translateX(26px) scale(1.05); }
+  45% { transform: translateX(0) scale(1); }
+  100% { transform: translateX(0) scale(1); }
+}
+
+.enemy-lunge-multi-2 {
+  animation: enemy-lunge-multi-2 0.7s ease-out;
+}
+
+.enemy-lunge-multi-2.enemy-lunge-delay-multilead,
+.enemy-lunge-multi-3.enemy-lunge-delay-multilead {
+  animation-delay: 1.1s;
+  animation-fill-mode: backwards;
+}
+
+/* 神滅甲タイプ：敵の砲撃モーション（既存lunge）をカットイン終了（1.05s）に合わせる */
+.enemy-lunge-delay-cutinend {
+  animation-delay: 1.05s;
+  animation-fill-mode: backwards;
+}
+
+/* --- フローティング数字：連撃/必殺の遅延表示（inline animation-delay）中は
+   不可視で待つ。emphasis＝必殺の一撃・連撃の最終hitを大きく強く。 --- */
+.floating-number {
+  animation-fill-mode: backwards;
+}
+
+.floating-number-emphasis {
+  font-size: 34px;
+  animation-duration: 1.15s;
+  text-shadow:
+    0 2px 6px #000,
+    0 0 22px currentColor;
+}
+
+/* --- 必殺充填（次ラウンドが必殺技のcharge）：通常の溜めglow（金、
+   .enemy-avatar.enemy-avatar-charging）を紅蓮の強化オーラで上書きする。
+   EnemyPanel.tsxが敵定義テーブル（次roundのaction）からdata-drivenに付与。
+   既存chargingと同じbox-shadow方式（animationを足すとidle呼吸の
+   ショートハンドと衝突するため使わない。脈動は既存.intent-tier-chargeの
+   予告行パルスが担う）。 --- */
+.enemy-avatar.enemy-avatar-charging.enemy-avatar-charging-super {
+  box-shadow:
+    0 0 64px 18px #ff5c5ccc,
+    0 0 26px 6px #ffd9a188,
+    inset 0 0 34px #000000aa,
+    inset 0 0 0 1px #ff5c5c66;
+}
+
+/* --- accessibility：motion配慮（ENEMY-VFX-02）。シェイク・ビーム・slash・
+   ring・lunge・flash・Ken Burnsを止めるが、**3HITの情報は保持する**：
+   フローティング数字（-40/-40/-40）は同じdelayで順次表示され続ける
+   （float-upは小さな移動のため残置）。カットインはスライドせず即時表示。 --- */
+@media (prefers-reduced-motion: reduce) {
+  .enemy-impact-beam,
+  .multi-slash,
+  .impact-ring,
+  .enemy-cutin-flash {
+    animation: none;
+    opacity: 0;
+  }
+  .hit-shake-multi-2,
+  .hit-shake-multi-3,
+  .enemy-lunge-multi-2,
+  .enemy-lunge-multi-3 {
+    animation-name: none;
+  }
+  .enemy-cutin::before {
+    animation: none;
+    opacity: 0;
+  }
+  .enemy-cutin {
+    backdrop-filter: none;
+  }
+  .enemy-cutin-strip,
+  .enemy-cutin-text,
+  .enemy-cutin-amount {
+    animation-duration: 0.01s;
+    animation-delay: 0s;
+  }
+  .enemy-cutin-image {
+    animation: none;
+  }
+}

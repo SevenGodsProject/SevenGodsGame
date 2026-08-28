@@ -18,6 +18,10 @@ type EnemyPanelProps = {
   /** STEP-UX5：直近の敵攻撃の危険度tier（fx.enemyAttackTier）。突進モーションの
    * 「重さ」を、visualType由来の速度（lungeSpeedSuffix）とは独立に掛け合わせる。 */
   attackTier: PowerTier
+  /** ENEMY-VFX-02：直近の敵攻撃バッチのhit数。2以上なら連撃用の多段lungeへ */
+  multiHitCount: number
+  /** 直近の攻撃が必殺（カットイン付き）か。lungeをカットイン後へ遅らせる */
+  specialHit: boolean
   floatingNumbers: FloatingNumber[]
 }
 
@@ -28,7 +32,7 @@ type EnemyPanelProps = {
  * `impact-flash`＋斬撃エフェクトで応じる。決定40：ラウンドごとに敵の掛け声を
  * 吹き出しで表示する（`Math.random`は使わず`round`から決定論的に選ぶ）。
  */
-export function EnemyPanel({ enemy, round, hitKey, attackKey, attackTier, floatingNumbers }: EnemyPanelProps) {
+export function EnemyPanel({ enemy, round, hitKey, attackKey, attackTier, multiHitCount, specialHit, floatingNumbers }: EnemyPanelProps) {
   const def = getEnemyDef(enemy.defId)
   const line = def.battleCries[(round - 1) % def.battleCries.length]
 
@@ -37,7 +41,19 @@ export function EnemyPanel({ enemy, round, hitKey, attackKey, attackTier, floati
   // どちらも表示専用のクラス出し分けで、GameState・敵AIには一切触れない。
   const isLateSurge = (def.visualType === 'lateSurgeMild' || def.visualType === 'lateSurgeStrong') && round >= 5
   const surgeClass = isLateSurge ? (def.visualType === 'lateSurgeStrong' ? ' enemy-avatar-surge-strong' : ' enemy-avatar-surge-mild') : ''
-  const chargingClass = enemy.intent?.kind === 'charge' ? ' enemy-avatar-charging' : ''
+  // ENEMY-VFX-01：次ラウンドが必殺技（special／技名付きmultiAttack）へつながる
+  // chargeのときだけ、通常の溜めglowに「必殺充填」強化クラスを重ねる。
+  // 判定は敵定義テーブル（次roundのaction）を読むだけの表示専用・data-driven
+  // （敵IDのswitchなし。難易度倍率はダメージ値のみでkindは不変のためdefで判定できる）。
+  const nextAction = def.actions[round] ?? def.actions[def.actions.length - 1]
+  const nextIsSpecial =
+    nextAction.kind === 'special' || (nextAction.kind === 'multiAttack' && !!nextAction.special)
+  const chargingClass =
+    enemy.intent?.kind === 'charge'
+      ? nextIsSpecial
+        ? ' enemy-avatar-charging enemy-avatar-charging-super'
+        : ' enemy-avatar-charging'
+      : ''
   const lungeSpeedSuffix = def.visualType === 'fast' ? '-fast' : def.visualType === 'heavy' ? '-heavy' : ''
   // STEP-UX5：「動き方」（lungeSpeedSuffix、敵の個性＝visualType由来）と
   // 「攻撃の重さ」（attackTier、今回のIntent危険度由来）を別クラスとして
@@ -57,9 +73,18 @@ export function EnemyPanel({ enemy, round, hitKey, attackKey, attackTier, floati
       <div key={`line-${round}`} className="enemy-speech-bubble">
         {line}
       </div>
+      {/* ENEMY-VFX-02：連撃はhitごとの多段lunge（TEMPO-B。enemyVfxTiming.tsと一致する
+          keyframesをbattle.cssに焼き込み）。必殺はカットイン終了後へdelayする
+          （神滅甲=1050ms・双牙乱撃=1100ms。表示のみ、combatは確定済み）。 */}
       <div
         key={`atk-${attackKey}`}
-        className={`enemy-avatar-wrap${attackKey > 0 ? ` enemy-lunge${lungeSpeedSuffix}${lungeTierToken}` : ''}`}
+        className={`enemy-avatar-wrap${
+          attackKey > 0
+            ? multiHitCount >= 2
+              ? ` enemy-lunge-multi-${Math.min(multiHitCount, 3)}${specialHit ? ' enemy-lunge-delay-multilead' : ''}`
+              : ` enemy-lunge${lungeSpeedSuffix}${lungeTierToken}${specialHit ? ' enemy-lunge-delay-cutinend' : ''}`
+            : ''
+        }`}
       >
         <div className={`enemy-avatar${surgeClass}${chargingClass}`} style={{ backgroundImage: `url(${def.art})` }} />
       </div>
