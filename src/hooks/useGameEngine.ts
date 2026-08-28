@@ -9,8 +9,10 @@ import type {
   GodId,
   GrowthPath,
 } from '../core/types'
+import type { EnemyId } from '../core/types'
 import { applyAction } from '../core/engine'
-import { ENEMY_IDS, pickEnemyId } from '../core/data/enemies'
+import { ENEMY_IDS } from '../core/data/enemies'
+import { resolveStartEnemyId } from './startEnemy'
 import { clearBattleSave, saveBattle } from './battleSaveStorage'
 import { recordGameResult } from './recordStorage'
 import { recordOtomoBond, type OtomoBondRecord } from './otomoBondStorage'
@@ -66,6 +68,12 @@ export type UseGameEngine = {
     difficulty: Difficulty,
     bonusCopies?: Map<CardDefId, number>,
     otomoGrowthPath?: GrowthPath,
+    /**
+     * LANE-D（Enemy Select）：プレイヤーが選んだ対戦相手。null/省略なら
+     * 「神に委ねる」＝従来どおりシードから選出（`pickEnemyId`）。
+     * URLバックドア`?enemy=`は常にこの指定より優先される（`resolveStartEnemyId`参照）
+     */
+    enemyId?: EnemyId | null,
   ) => void
   /** 保存済みのGameStateからバトルを再開する（決定29） */
   resumeGame: (savedState: GameState) => void
@@ -148,6 +156,7 @@ export function useGameEngine(): UseGameEngine {
       difficulty: Difficulty,
       bonusCopies?: Map<CardDefId, number>,
       otomoGrowthPath?: GrowthPath,
+      enemyId?: EnemyId | null,
     ) => {
       setLog([])
       setError(null)
@@ -161,7 +170,8 @@ export function useGameEngine(): UseGameEngine {
         type: 'START_GAME',
         seed,
         godId,
-        enemyId: resolveForcedEnemyId() ?? pickEnemyId(seed),
+        // LANE-D：URLバックドア > プレイヤー選択 > シード選出（既存pickEnemyId）
+        enemyId: resolveStartEnemyId(resolveForcedEnemyId(), enemyId, seed),
         deck,
         difficulty,
         bonusCopies: bonusCopies ? Object.fromEntries(bonusCopies) : undefined,

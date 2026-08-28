@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import type { CardDefId, Difficulty, GodId, GrowthPath } from '../core/types'
+import type { CardDefId, Difficulty, EnemyId, GodId, GrowthPath } from '../core/types'
 import { useGameEngine } from '../hooks/useGameEngine'
 import { saveDeckPreference, loadDeckPreference } from '../hooks/deckPreferenceStorage'
 import { clearBattleSave, loadBattleSave } from '../hooks/battleSaveStorage'
@@ -9,12 +9,14 @@ import { playTrack } from './battle/bgm'
 import { computeSnapshot, type FeedbackSnapshot } from './feedback/feedbackSnapshot'
 import { HomeScreen } from './setup/HomeScreen'
 import { GodSelectScreen } from './setup/GodSelectScreen'
+import { EnemySelectScreen } from './setup/EnemySelectScreen'
 import { DeckBuilderScreen } from './setup/DeckBuilderScreen'
 import { OtomoGrowthScreen } from './setup/OtomoGrowthScreen'
 import { RecordScreen } from './setup/RecordScreen'
 import { BattleScreen } from './battle/BattleScreen'
 
-type SetupScreen = 'home' | 'godSelect' | 'deckBuild' | 'otomoGrowth' | 'record'
+// LANE-D：'enemySelect'を追加（HOME→GOD SELECT（＋難易度）→ENEMY SELECT→DECK→BATTLE）
+type SetupScreen = 'home' | 'godSelect' | 'enemySelect' | 'deckBuild' | 'otomoGrowth' | 'record'
 
 type GameFlowProps = {
   /** 「遊び方」ボタン（ホーム画面用）。トップバー分はAppが自前で持つ */
@@ -41,6 +43,8 @@ export function GameFlow({ onShowTutorial, onSnapshotChange }: GameFlowProps) {
   const [deck, setDeck] = useState<CardDefId[] | null>(null)
   const [difficulty, setDifficulty] = useState<Difficulty>('normal')
   const [otomoGrowthPath, setOtomoGrowthPath] = useState<GrowthPath>('guardian')
+  // LANE-D：Enemy Selectでの選択。null＝「神に委ねる」（従来どおりのシード選出）
+  const [selectedEnemyId, setSelectedEnemyId] = useState<EnemyId | null>(null)
 
   // 実プレイ・フィードバック基盤：画面遷移やラウンド進行のたびに、ヘッダーの
   // フィードバックボタンが添える「今の状況」をAppへ伝える（showTutorialと
@@ -75,6 +79,9 @@ export function GameFlow({ onShowTutorial, onSnapshotChange }: GameFlowProps) {
     setSetupScreen('godSelect')
     setGodId(null)
     setDeck(null)
+    // LANE-D：選び直しでは敵の選択もリセットする（前回の敵が残ると
+    // 「委ねたつもりが同じ敵と再戦」の混乱を招くため）
+    setSelectedEnemyId(null)
   }
 
   const screen = (() => {
@@ -107,17 +114,37 @@ export function GameFlow({ onShowTutorial, onSnapshotChange }: GameFlowProps) {
       if (setupScreen === 'record') {
         return <RecordScreen onBack={() => setSetupScreen('home')} />
       }
+      // LANE-D：神＋難易度の確定後、デッキ構築の前に挑む敵を選ぶ
+      if (setupScreen === 'enemySelect' && godId) {
+        return (
+          <EnemySelectScreen
+            onSelect={(enemyId) => {
+              setSelectedEnemyId(enemyId)
+              setSetupScreen('deckBuild')
+            }}
+            onBack={() => setSetupScreen('godSelect')}
+          />
+        )
+      }
       if (setupScreen === 'deckBuild' && godId) {
         return (
           <DeckBuilderScreen
             godId={godId}
+            enemyId={selectedEnemyId}
             otomoGrowthPath={otomoGrowthPath}
             onOtomoGrowthPathChange={setOtomoGrowthPath}
-            onBack={() => setSetupScreen('godSelect')}
+            onBack={() => setSetupScreen('enemySelect')}
             onConfirm={(confirmedDeck) => {
               setDeck(confirmedDeck)
               saveDeckPreference(godId, confirmedDeck)
-              engine.startGame(godId, confirmedDeck, difficulty, loadRewardBonuses(godId), otomoGrowthPath)
+              engine.startGame(
+                godId,
+                confirmedDeck,
+                difficulty,
+                loadRewardBonuses(godId),
+                otomoGrowthPath,
+                selectedEnemyId,
+              )
             }}
           />
         )
@@ -128,7 +155,7 @@ export function GameFlow({ onShowTutorial, onSnapshotChange }: GameFlowProps) {
           onDifficultyChange={setDifficulty}
           onSelect={(selectedGodId) => {
             setGodId(selectedGodId)
-            setSetupScreen('deckBuild')
+            setSetupScreen('enemySelect')
           }}
           onBack={() => setSetupScreen('home')}
         />
@@ -141,7 +168,18 @@ export function GameFlow({ onShowTutorial, onSnapshotChange }: GameFlowProps) {
         onRematch={() =>
           godId &&
           deck &&
-          engine.startGame(godId, deck, difficulty, loadRewardBonuses(godId), otomoGrowthPath)
+          // LANE-D（選択後の一貫性）：「もう一度」は直前に戦った敵（state.enemy.defId）
+          // と再戦する。「神に委ねる」で始めた対局や「続きから」再開後でも、
+          // リマッチ相手が突然すり替わらない（新しい敵と戦いたい時は
+          // 「神を選び直す」からEnemy Selectを通る）。URLバックドアは従来どおり最優先。
+          engine.startGame(
+            godId,
+            deck,
+            difficulty,
+            loadRewardBonuses(godId),
+            otomoGrowthPath,
+            engine.state?.enemy.defId ?? selectedEnemyId,
+          )
         }
         onReselect={backToGodSelect}
       />

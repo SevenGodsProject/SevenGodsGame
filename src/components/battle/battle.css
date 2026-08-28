@@ -2994,10 +2994,16 @@
 
 /* (3) 背景の減光オーバーレイを弱め、制作済みarena背景の可視率を上げる。
    下端は手札エリアの可読性のため暗さを残す（段階のみ変更、構造は不変） */
+/* LANE-D（Stage system contract）：背景画像をBattleScreenがinline注入する
+   `--stage-bg`（敵ごとのstage.bg）経由に変更。bg未指定の敵（現時点は全7敵）では
+   変数が注入されず、フォールバックの現行arena.jpgが使われるため、表示は
+   このcontract導入前と完全に同一。減光グラデーションの段階・重ね順は一切
+   変更しない。`--stage-accent`も同時に注入されるが、Battle側ではまだ未使用
+   （将来のstage演出用の口だけ確保）。 */
 .battle-main {
   background-image:
     linear-gradient(180deg, #05060d22 0%, #05060d44 60%, #05060dcc 100%),
-    url('/assets/backgrounds/arena.jpg');
+    var(--stage-bg, url('/assets/backgrounds/arena.jpg'));
 }
 
 /* ============================================================

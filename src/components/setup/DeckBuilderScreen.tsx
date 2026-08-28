@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react'
-import type { CardDef, CardDefId, GodId, GrowthPath } from '../../core/types'
+import type { CardDef, CardDefId, EnemyId, GodId, GrowthPath } from '../../core/types'
 import { RULES } from '../../core/data/rules'
+import { getEnemyDef } from '../../core/data/enemies'
 import { getGodDef } from '../../core/data/gods'
 import { getOtomoDef } from '../../core/data/otomo'
 import { getCardArt } from '../../core/data/cardArt'
@@ -10,10 +11,13 @@ import { loadRewardBonuses } from '../../hooks/rewardStorage'
 import { RARITY_STYLE, TYPE_STYLE } from '../battle/cardStyle'
 import { CardIcon } from '../battle/cardIcon'
 import { describeEffectList } from './otomoEffectText'
+import { ThreatStars } from './EnemySelectScreen'
 import './setup.css'
 
 type DeckBuilderScreenProps = {
   godId: GodId
+  /** LANE-D：Enemy Selectで選んだ対戦相手。null＝「神に委ねる」（ランダム） */
+  enemyId: EnemyId | null
   otomoGrowthPath: GrowthPath
   onOtomoGrowthPathChange: (path: GrowthPath) => void
   onConfirm: (deck: CardDefId[]) => void
@@ -65,12 +69,15 @@ function toDeck(counts: Map<CardDefId, number>): CardDefId[] {
  */
 export function DeckBuilderScreen({
   godId,
+  enemyId,
   otomoGrowthPath,
   onOtomoGrowthPathChange,
   onConfirm,
   onBack,
 }: DeckBuilderScreenProps) {
   const god = getGodDef(godId)
+  // LANE-D（選択後の一貫性）：Enemy Selectで選んだ相手をヘッダに常時表示する
+  const opponent = enemyId ? getEnemyDef(enemyId) : null
   const otomo = getOtomoDef(god.otomoId)
   const pool = useMemo(() => getCardPoolForGod(godId), [godId])
   const bonusCopies = useMemo(() => loadRewardBonuses(godId), [godId])
@@ -118,6 +125,47 @@ export function DeckBuilderScreen({
   return (
     <div className="setup-screen">
       <h1 className="setup-title">{god.nameJa}のデッキを編成しよう</h1>
+      {/* LANE-D：対戦相手チップ。スポイラーポリシーはEnemy Selectと同一
+          （HP・数値・行動表は出さない。名前・脅威度★・【型】のみ） */}
+      <div
+        className="opponent-chip"
+        style={
+          opponent
+            ? {
+                ['--enemy-accent-soft' as string]: `${opponent.stage.accent}55`,
+                ['--enemy-accent-glow' as string]: `${opponent.stage.accent}88`,
+              }
+            : undefined
+        }
+      >
+        {opponent ? (
+          <>
+            <img src={opponent.art} alt="" />
+            <span className="opponent-chip-body">
+              <span className="opponent-chip-label">対戦相手</span>
+              <span className="opponent-chip-name">{opponent.name}</span>
+              <span className="opponent-chip-meta">
+                <ThreatStars rank={opponent.rank} />
+                <span className="opponent-chip-type">【{opponent.typeLabel}】</span>
+              </span>
+            </span>
+          </>
+        ) : (
+          <>
+            <span className="opponent-chip-entrust-mark" aria-hidden="true">
+              ⛩
+            </span>
+            <span className="opponent-chip-body">
+              <span className="opponent-chip-label">対戦相手</span>
+              <span className="opponent-chip-name">神に委ねる</span>
+              <span className="opponent-chip-meta">
+                <span className="opponent-chip-type">バトル開始時に神々が決める</span>
+              </span>
+            </span>
+          </>
+        )}
+      </div>
+
       <p className="setup-subtitle">
         カードは{RULES.deck.size}枚ちょうど、同じカードは基本{RULES.deckBuilding.maxCopiesPerCard}
         枚まで編成できます（報酬カードで上限が増えたカードは、それ以上編成できます）。
@@ -248,7 +296,7 @@ export function DeckBuilderScreen({
 
       <div className="deck-builder-actions">
         <button type="button" onClick={onBack}>
-          神を選び直す
+          敵を選び直す
         </button>
         <button type="button" disabled={!validation.valid} onClick={() => onConfirm(deck)}>
           この構成でバトル開始

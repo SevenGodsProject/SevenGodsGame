@@ -39,6 +39,23 @@ export type EnemyActionDef =
  */
 export type EnemyVisualType = 'standard' | 'lateSurgeMild' | 'lateSurgeStrong' | 'fast' | 'heavy'
 
+/**
+ * LANE-D（Stage system architecture）：敵ごとの「戦いの舞台」の表示専用定義。
+ * - nameJa：舞台名（例「褪色の神殿」）。Enemy Select画面のフレーバー表示に使う
+ * - bg：戦闘背景画像のパス。未指定なら現行の共通背景（arena.jpg）へフォールバック
+ *   する（battle.css末尾の`var(--stage-bg, url('/assets/backgrounds/arena.jpg'))`）。
+ *   現時点では全敵未指定＝全敵で現行と完全に同一表示（背景画像は別途生成予定。
+ *   既存OTOMO背景は正式採用しない）
+ * - accent：敵の性格を表すアクセント色（#rrggbb）。Enemy Select画面のカード縁色や
+ *   将来のBattle側演出に使う（BattleScreenは`--stage-accent`として注入だけ行う）
+ * 戦闘ロジック・数値には一切関与しない。
+ */
+export type EnemyStageDef = {
+  nameJa: string
+  bg?: string
+  accent: string
+}
+
 /** 敵の「設計図」 */
 export type EnemyDef = {
   id: EnemyId
@@ -66,6 +83,15 @@ export type EnemyDef = {
   typeDescription: string
   /** 上記コメント参照。表示・CSS演出専用 */
   visualType: EnemyVisualType
+  /**
+   * LANE-D：脅威度（表示専用、1〜5）。Enemy Select画面の★表示に使う。
+   * 難易度★（金色）との混同を避けるため、UI側では紫紅系の色＋「脅威度」ラベルで
+   * 表示する。★5は将来のBoss用に予約（現行7体は1〜4のみ。テストで保証）。
+   * HP・行動テーブルとは独立した「体感の手強さ」の目安で、ロジックには使わない。
+   */
+  rank: number
+  /** LANE-D：戦いの舞台（表示専用）。詳細は`EnemyStageDef`のコメント参照 */
+  stage: EnemyStageDef
 }
 
 /** 盤面上の敵の状態 */

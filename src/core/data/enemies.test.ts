@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { ENEMIES, pickEnemyId } from './enemies'
+import { ENEMIES, ENEMY_IDS, pickEnemyId } from './enemies'
 
 describe('ENEMIES', () => {
   it('has a unique id per enemy', () => {
@@ -33,6 +33,43 @@ describe('ENEMIES', () => {
       expect(enemy.typeDescription.length).toBeGreaterThan(0)
       // BattleHud/EnemyPanelの1行表示を圧迫しないよう、短い説明であることを保証する
       expect(enemy.typeDescription.length).toBeLessThanOrEqual(30)
+    }
+  })
+
+  // LANE-D：Enemy Select＋Stage systemの表示専用メタデータが7体全てに揃っている
+  // ことを保証する。HP・actions（数値・行動テーブル）は引き続き対象外＝無変更。
+  it('gives every enemy a threat rank between 1 and 4 (★5 is reserved for future bosses) (LANE-D)', () => {
+    for (const enemy of ENEMIES) {
+      expect(Number.isInteger(enemy.rank)).toBe(true)
+      expect(enemy.rank).toBeGreaterThanOrEqual(1)
+      expect(enemy.rank).toBeLessThanOrEqual(4)
+    }
+  })
+
+  it('assigns the CEO-approved threat ranks (影1/鬼将2/魔獣2/怨霊3/龍神3/機工師4/道化4) (LANE-D)', () => {
+    const rankById = new Map(ENEMIES.map((e) => [e.id, e.rank]))
+    expect(rankById.get(ENEMY_IDS.trial)).toBe(1)
+    expect(rankById.get(ENEMY_IDS.oni)).toBe(2)
+    expect(rankById.get(ENEMY_IDS.juuma)).toBe(2)
+    expect(rankById.get(ENEMY_IDS.onryo)).toBe(3)
+    expect(rankById.get(ENEMY_IDS.ryujin)).toBe(3)
+    expect(rankById.get(ENEMY_IDS.karakuri)).toBe(4)
+    expect(rankById.get(ENEMY_IDS.doukeshi)).toBe(4)
+  })
+
+  it('gives every enemy a stage with a name and a #rrggbb accent (LANE-D)', () => {
+    for (const enemy of ENEMIES) {
+      expect(enemy.stage.nameJa.length).toBeGreaterThan(0)
+      expect(enemy.stage.accent).toMatch(/^#[0-9a-f]{6}$/i)
+    }
+  })
+
+  it('leaves every stage bg unspecified for now, so battle keeps the current arena.jpg fallback (LANE-D)', () => {
+    // battle.css末尾の`var(--stage-bg, url('/assets/backgrounds/arena.jpg'))`の
+    // フォールバックが全敵で効く＝現行表示と完全に同一、の回帰保証。
+    // 背景画像を正式採用する敵が現れたら、このテストをその敵だけ除外する形で更新する。
+    for (const enemy of ENEMIES) {
+      expect(enemy.stage.bg).toBeUndefined()
     }
   })
 })

@@ -40,6 +40,9 @@ export const ENEMIES: EnemyDef[] = [
     typeLabel: '標準・入門型',
     typeDescription: '基本を守れば戦える。終盤にやや攻撃が強まる。',
     visualType: 'lateSurgeMild',
+    // LANE-D：脅威度★・舞台（表示専用、CEO GO済み仕様の叩き台）。数値・AI無変更
+    rank: 1,
+    stage: { nameJa: '褪色の神殿', accent: '#6b5b95' },
     battleCries: [
       'その力、まことのものか見極めよう',
       'まだ終わらぬ…続けるがいい',
@@ -70,6 +73,8 @@ export const ENEMIES: EnemyDef[] = [
     typeLabel: '重撃型',
     typeDescription: '攻撃が重い。防御を切らさない。',
     visualType: 'standard',
+    rank: 2,
+    stage: { nameJa: '戦火の陣', accent: '#e5484d' },
     battleCries: [
       '吠えろ、我が斧よ！',
       '一撃で仕留めてくれる！',
@@ -100,6 +105,8 @@ export const ENEMIES: EnemyDef[] = [
     typeLabel: '遅咲き型',
     typeDescription: '終盤に攻撃が急激に強くなる。',
     visualType: 'lateSurgeStrong',
+    rank: 3,
+    stage: { nameJa: '藍花の廃社', accent: '#7a4fc4' },
     battleCries: [
       'まだ…まだ足りぬ…',
       '恨みは深く、蒼く燃える…',
@@ -131,6 +138,8 @@ export const ENEMIES: EnemyDef[] = [
     typeLabel: '溜め型',
     typeDescription: '溜めの次に大技。R5の主砲に備えよ。',
     visualType: 'standard',
+    rank: 4,
+    stage: { nameJa: '機巧工房', accent: '#9b59b6' },
     battleCries: [
       '照準、完了',
       '無駄のない一撃を',
@@ -167,6 +176,8 @@ export const ENEMIES: EnemyDef[] = [
     typeLabel: '連撃型',
     typeDescription: '毎ラウンド連撃。序盤から圧が激しい。',
     visualType: 'fast',
+    rank: 2,
+    stage: { nameJa: '月牙の霊峰', accent: '#9fb8e8' },
     battleCries: [
       'ガアアアッ！',
       '喰らい尽くしてやる…！',
@@ -199,6 +210,8 @@ export const ENEMIES: EnemyDef[] = [
     typeLabel: '耐久型',
     typeDescription: '高HP。7ラウンドで倒し切る火力配分が重要。',
     visualType: 'heavy',
+    rank: 3,
+    stage: { nameJa: '蒼海の宮', accent: '#1a3a6b' },
     battleCries: [
       '小さき者よ、海の重みを知るがいい',
       '悠久の時に比べれば、瞬きよ',
@@ -232,6 +245,8 @@ export const ENEMIES: EnemyDef[] = [
     typeLabel: 'トリック型',
     typeDescription: '不規則な溜め攻撃。毎ターン予告確認が重要。',
     visualType: 'standard',
+    rank: 4,
+    stage: { nameJa: '幻惑の舞台', accent: '#c0122f' },
     battleCries: [
       'さあ、遊びの時間だ！',
       '次はどっちが痛いかな〜？',

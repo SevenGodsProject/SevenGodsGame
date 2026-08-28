@@ -1,6 +1,10 @@
 import { beforeEach, describe, expect, it } from 'vitest'
 import { clearBattleSave, loadBattleSave, migrateBattleSaveV3, saveBattle } from './battleSaveStorage'
 import { startTestGame } from '../core/engine/testUtils'
+import { applyAction } from '../core/engine/reducer'
+import { ENEMIES } from '../core/data/enemies'
+import { GOD_IDS } from '../core/data/gods'
+import { STARTER_DECK } from '../core/data/decks'
 import type { GameState } from '../core/types'
 import { RULES } from '../core/data/rules'
 
@@ -66,6 +70,28 @@ describe('battleSaveStorage', () => {
   it('ignores malformed saved data', () => {
     localStorage.setItem('sevengods.battleSave', '{not valid json')
     expect(loadBattleSave()).toBeNull()
+  })
+
+  // LANE-D（Enemy Select）：enemy.defIdは決定32以来GameStateに含まれているため、
+  // Enemy Select導入にセーブmigrationは不要──という前提を7敵全部の
+  // save→resume往復で明示的に検証する（「再開したら別の敵になっていた」事故の防止）。
+  it('preserves enemy.defId through save/resume for all 7 enemies (LANE-D, no migration needed)', () => {
+    for (const enemy of ENEMIES) {
+      const { state } = applyAction(null, {
+        type: 'START_GAME',
+        seed: `save-enemy-${enemy.id}`,
+        godId: GOD_IDS.ebisu,
+        enemyId: enemy.id,
+        deck: STARTER_DECK,
+      })
+      saveBattle(state)
+      const loaded = loadBattleSave()
+      expect(loaded).not.toBeNull()
+      expect(loaded?.version).toBe(RULES.saveVersion)
+      expect(loaded?.enemy.defId).toBe(enemy.id)
+      expect(loaded?.enemy.name).toBe(enemy.name)
+      clearBattleSave()
+    }
   })
 })
 

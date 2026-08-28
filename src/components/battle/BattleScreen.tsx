@@ -3,6 +3,7 @@ import { RULES } from '../../core/data/rules'
 import { getFinalScore, getMastery } from '../../core/engine'
 import { formatScaled } from '../displayScale'
 import { getCardDef } from '../../core/data/cards'
+import { getEnemyDef } from '../../core/data/enemies'
 import { getGodDef } from '../../core/data/gods'
 import { getOtomoDef } from '../../core/data/otomo'
 import type { UseGameEngine } from '../../hooks/useGameEngine'
@@ -185,8 +186,21 @@ export function BattleScreen({ engine, onRematch, onReselect }: BattleScreenProp
   // 決定93（C-8）：AP表示のゲージ化。GodOtomoPanelの共鳴ゲージ比率計算と同じガード式。
   const apRatio = state.ap.max > 0 ? Math.min(1, state.ap.current / state.ap.max) : 0
 
+  // LANE-D（Stage system contract）：敵ごとの舞台をCSS変数としてルートへinline注入する。
+  // - --stage-bg：stage.bgが指定されている敵のみ注入。未指定なら変数自体を置かず、
+  //   battle.css末尾の`var(--stage-bg, url('/assets/backgrounds/arena.jpg'))`の
+  //   フォールバックが効いて現行と完全に同一表示になる（現時点では全7敵が未指定）
+  // - --stage-accent：常に注入する。Battle側ではまだ未使用（contractの口だけ用意。
+  //   将来のstage演出＝カード縁・グロー等で使う想定）
+  // 表示専用でロジック・数値には一切関与しない。
+  const stage = getEnemyDef(state.enemy.defId).stage
+  const stageVars = {
+    ['--stage-accent' as string]: stage.accent,
+    ...(stage.bg ? { ['--stage-bg' as string]: `url('${stage.bg}')` } : {}),
+  }
+
   return (
-    <div className="battle">
+    <div className="battle" style={stageVars}>
       <div className="battle-topbar">
         <span>ラウンド {state.round} / {RULES.totalRounds}</span>
         <span className="battle-topbar-ap">
