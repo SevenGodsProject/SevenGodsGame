@@ -3,7 +3,7 @@ import type { Dispatch, SetStateAction } from 'react'
 import type { GameEvent, GodId } from '../../core/types'
 import { getGodDef } from '../../core/data/gods'
 import { formatScaled } from '../displayScale'
-import { MULTI_CUTIN_LEAD_MS, SPECIAL_IMPACT_MS, multiHitOffsetMs } from './enemyVfxTiming'
+import { BURST_IMPACT_MS, MULTI_CUTIN_LEAD_MS, SPECIAL_IMPACT_MS, multiHitOffsetMs } from './enemyVfxTiming'
 
 export type FloatingNumber = {
   id: number
@@ -80,15 +80,29 @@ export function useFloatingNumbers(
     // 連撃hitのleftを 38%→50%→62% と振って重なりを防ぐ（3hit想定、2hitは38/50）
     const multiLeft = (index: number) => 38 + Math.min(index, 2) * 12
     let selfHitIndex = 0
+    // VFX-03：RESONANCE_BURST以降のイベント（神の一撃のダメージ、共鳴由来のdraw/AP）は
+    // 共鳴カットイン→burst-bannerの後ろ（BURST_IMPACT_MS）へ遅らせて表示する。
+    // effects.tsのapplyResonanceはRESONANCE_BURST→神resonanceEffects→OTOMO効果の順で
+    // イベントを積むため、バッチ内で「BURSTより後か」を見るだけで神の一撃を特定できる
+    // （RESONANCE_BURSTより前のDAMAGE_DEALT＝カード自身の効果は従来どおり即時）。
+    let afterBurst = false
 
     for (const event of newEvents) {
+      if (event.t === 'RESONANCE_BURST') afterBurst = true
       if (event.t === 'DAMAGE_DEALT') {
         const setter = event.target === 'enemy' ? setEnemyNumbers : setPlayerNumbers
         const isSelfHit = event.target === 'self' && enemyActed != null
+        const isBurstHit = afterBurst && event.target === 'enemy'
         const hitIndex = isSelfHit ? selfHitIndex++ : 0
-        const delayMs = isSelfHit ? cutinLead + (isMulti ? multiHitOffsetMs(hitIndex) : 0) : 0
-        // 強調＝必殺の単発着弾、または連撃の最終hit（「ドン→ドン→ドン！」の3発目）
-        const emphasis = isSelfHit && (enemyActed?.kind === 'special' || (isMulti && hitIndex === totalHits - 1 && totalHits >= 2))
+        const delayMs = isSelfHit
+          ? cutinLead + (isMulti ? multiHitOffsetMs(hitIndex) : 0)
+          : isBurstHit
+            ? BURST_IMPACT_MS
+            : 0
+        // 強調＝必殺の単発着弾、連撃の最終hit（「ドン→ドン→ドン！」の3発目）、神の一撃
+        const emphasis =
+          (isSelfHit && (enemyActed?.kind === 'special' || (isMulti && hitIndex === totalHits - 1 && totalHits >= 2))) ||
+          isBurstHit
         const leftPercent = isSelfHit && isMulti ? multiLeft(hitIndex) : undefined
         // D2b：damage/block/healは表示×10。draw/AP（下のRESONANCE_BURST分岐）は倍率対象外
         if (event.amount > 0) {
@@ -122,17 +136,20 @@ export function useFloatingNumbers(
       } else if (event.t === 'RESONANCE_BURST' && godId) {
         const resonanceEffects = getGodDef(godId).resonanceEffects
         for (const effect of resonanceEffects) {
+          // VFX-03：神の一撃（ダメージ数字）と同じ着弾タイミングに揃える
           if (effect.kind === 'draw' && effect.amount > 0) {
             spawn(setPlayerNumbers, {
               id: nextId.current++,
               text: `カード+${effect.amount}`,
               kind: 'draw',
+              delayMs: BURST_IMPACT_MS,
             })
           } else if (effect.kind === 'gainAp' && effect.amount > 0) {
             spawn(setPlayerNumbers, {
               id: nextId.current++,
               text: `神力+${effect.amount}`,
               kind: 'ap',
+              delayMs: BURST_IMPACT_MS,
             })
           }
         }

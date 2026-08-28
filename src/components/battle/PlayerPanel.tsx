@@ -27,6 +27,9 @@ type PlayerPanelProps = {
   /** ENEMY-VFX-01：直近の被弾が必殺（カットイン付き）だったか。シェイク・斬撃線を
    * カットイン0.9sの後ろへ遅らせる（表示のみ。combat計算には関与しない） */
   specialHit: boolean
+  /** VFX-03：直近の神攻撃が共鳴BURSTか（fx.burstHit）。攻撃モーション（god-lunge）を
+   * 共鳴カットイン終了＝burst-banner出現（BURST_GOD_ATTACK_MS）まで遅らせる */
+  burstHit: boolean
   floatingNumbers: FloatingNumber[]
 }
 
@@ -44,6 +47,7 @@ export function PlayerPanel({
   enemyAttackTier,
   multiHitCount,
   specialHit,
+  burstHit,
   floatingNumbers,
 }: PlayerPanelProps) {
   const god = getGodDef(godId)
@@ -68,9 +72,11 @@ export function PlayerPanel({
     <div className="panel player-panel">
       <div className="panel-title">{god.nameJa}</div>
       <p className="god-tagline">「{god.tagline}」</p>
+      {/* VFX-03：共鳴BURSTの一撃は「共鳴カットイン→✨神の一撃！バナー」の後ろ
+          （god-lunge-delay-burst＝RESONANCE_CUTIN_MS）で突進する。通常攻撃は従来どおり即時 */}
       <div
         key={`god-${attackKey}`}
-        className={`player-avatar-wrap${attackKey > 0 ? ' god-lunge' : ''}`}
+        className={`player-avatar-wrap${attackKey > 0 ? ` god-lunge${burstHit ? ' god-lunge-delay-burst' : ''}` : ''}`}
       >
         <img className="player-avatar" src={god.art.front} alt={god.nameJa} />
       </div>
@@ -92,8 +98,10 @@ export function PlayerPanel({
         <div key={`heal-${healKey}`} className={healKey > 0 ? 'heal-pulse' : undefined}>
           <HpBar current={player.hp} max={player.maxHp} color="#4dbd74" />
         </div>
-        {/* 単発被弾は従来の斬撃線。連撃はhitごとの専用slash（下）に置き換える */}
-        {hitKey > 0 && multiHitCount <= 1 && <div className={`slash-fx slash-fx-reverse${delayToken}`} />}
+        {/* 単発被弾は従来の斬撃線。連撃はhitごとの専用slash（下）に置き換える。
+            VFX-03：神滅甲タイプ（special単発＝砲撃）は斬撃技ではないためslashを出さず、
+            着弾は下のimpact-ring-beam（大リング）＋hugeシェイク＋閃光で表現する */}
+        {hitKey > 0 && multiHitCount <= 1 && !specialHit && <div className="slash-fx slash-fx-reverse" />}
         {/* ENEMY-VFX-02：連撃のhitごとのslash trail。HIT1=左下→右上／HIT2=右下→左上／
             HIT3=双牙クロス（X字2本・最大）。発生時刻はTEMPO-B（CSS側delayで一致） */}
         {hitKey > 0 && multiHitCount >= 2 && (
@@ -104,8 +112,9 @@ export function PlayerPanel({
             {multiHitCount >= 3 && <div className={`multi-slash multi-slash-3b${delayToken}`} />}
           </>
         )}
-        {/* 神滅甲タイプ：ビーム着弾のimpact ring（1260ms遅延、CSS側と一致） */}
-        {hitKey > 0 && specialHit && multiHitCount <= 1 && <div className="impact-ring hit-delay-beam" />}
+        {/* 神滅甲タイプ：ビーム着弾のimpact ring（1260ms遅延、CSS側と一致）。
+            VFX-03：slashの代わりに大リング（impact-ring-beam）で砲撃の着弾を表現する */}
+        {hitKey > 0 && specialHit && multiHitCount <= 1 && <div className="impact-ring impact-ring-beam hit-delay-beam" />}
         {/* 双牙乱撃タイプ：HIT3の大impact ring */}
         {hitKey > 0 && specialHit && multiHitCount >= 3 && <div className="impact-ring impact-ring-hit3 hit-delay-multilead" />}
         <FloatingNumbers numbers={floatingNumbers} />

@@ -70,16 +70,20 @@ function arpeggio(freqs: number[], durationMs: number, stepMs: number, opts: Ton
 export const sfx = {
   cardPlay: () => tone(320, 70, { type: 'square', volume: 0.07 }),
   cardDrawn: () => tone(520, 35, { type: 'square', volume: 0.03 }),
-  damageEnemy: () => {
-    tone(200, 90, { type: 'sawtooth', volume: 0.11 })
-    tone(130, 120, { type: 'sawtooth', volume: 0.07, delayMs: 40 })
+  /** VFX-03：delayMsは神BURSTの一撃（BURST_IMPACT_MS、enemyVfxTiming.ts）に着弾音を
+   * 同期させるための表示側オプション。省略時は従来どおり即時。 */
+  damageEnemy: (delayMs = 0) => {
+    tone(200, 90, { type: 'sawtooth', volume: 0.11, delayMs })
+    tone(130, 120, { type: 'sawtooth', volume: 0.07, delayMs: delayMs + 40 })
   },
   damageSelf: () => tone(90, 160, { type: 'square', volume: 0.13 }),
   heal: () => arpeggio([440, 660], 100, 70, { type: 'sine', volume: 0.09 }),
   block: () => tone(220, 60, { type: 'triangle', volume: 0.07 }),
   resonanceGain: () => tone(880, 55, { type: 'sine', volume: 0.05 }),
   resonanceBurst: () => arpeggio([523, 659, 784, 1047], 160, 70, { type: 'sine', volume: 0.12 }),
-  otomoEvolve: () => arpeggio([392, 523, 659, 784, 988], 140, 60, { type: 'triangle', volume: 0.13 }),
+  /** VFX-03：delayMsでevolve-banner（BURST_EVOLVE_MS）に成長音を同期させる。省略時は即時 */
+  otomoEvolve: (delayMs = 0) =>
+    arpeggio([392, 523, 659, 784, 988], 140, 60, { type: 'triangle', volume: 0.13, delayMs }),
   divination: () => arpeggio([660, 880], 90, 60, { type: 'sine', volume: 0.08 }),
   enemyTurn: () => tone(150, 100, { type: 'square', volume: 0.06 }),
   /** ENEMY-VFX-02：連撃のhit音。hitごとにpitch/volumeを上げ（低→高→強impact）、

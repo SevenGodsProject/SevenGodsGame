@@ -1409,6 +1409,16 @@
   animation: otomo-reaction-pop 0.5s ease-out;
 }
 
+/* VFX-03：🌱成長の瞬間は「成長グロー（evolve-glow）」と「OTOMOリアクション」が同じ
+   figureで同時に発生する。別々のクラスがanimationショートハンドを専有すると後勝ちで
+   片方が消えるため、複合クラスで両方を1つのリストに載せる（.hit-shake-flashと同じ手法）。
+   onAnimationEndの判定はanimationName==='otomo-reaction-pop'のみなので影響しない。 */
+.portrait-otomo.evolve-glow.otomo-reacting {
+  animation:
+    otomo-reaction-pop 0.5s ease-out,
+    evolve-glow 1.2s ease-out;
+}
+
 /* OTOMO名＋効果を、ポートレート画像に重ねて一瞬だけ見せるラベル。
    .portrait-otomoが既にposition:relative（決定91）のため新しい位置基準は
    増やさず、position:absoluteでポートレート中央に重ねるだけ。情報量を
@@ -3323,11 +3333,14 @@
    複合セレクタにするのは、.hit-shake-flash.hit-tier-huge（2クラス）の
    animationショートハンド（delay 0s）にカスケードで勝つため。 --- */
 .hit-shake-flash.hit-delay-beam,
-.slash-fx.hit-delay-beam,
 .impact-ring.hit-delay-beam {
   animation-delay: 1.26s;
   animation-fill-mode: backwards;
 }
+/* VFX-03：以前は.slash-fx.hit-delay-beamもここに並べていたが、slash-fxのanimationは
+   ::before側にあり要素側のdelayは効いていなかった（暗転中に空振り）。神滅甲は
+   斬撃技ではないためslash自体を出さず（PlayerPanel.tsx）、着弾は下の
+   .impact-ring-beam（大リング）＋hugeシェイク＋閃光で表現する。 */
 
 .hit-shake-multi-2.hit-delay-multilead,
 .hit-shake-multi-3.hit-delay-multilead {
@@ -3439,6 +3452,22 @@
   animation-fill-mode: backwards;
 }
 
+/* VFX-03：神滅甲タイプ（砲撃）の着弾リング。斬撃線の代替として双牙乱撃HIT3より
+   さらに大きく・熱く（白金の芯＋紅蓮の二重グロー）。タイミングはhit-delay-beam
+   （1.26s）のまま、ビーム到達と同時に広がる。 */
+.impact-ring-beam {
+  width: 150px;
+  height: 150px;
+  margin: -75px 0 0 -75px;
+  border-width: 5px;
+  border-color: #fff3d6;
+  box-shadow:
+    0 0 36px 6px #ff5c5cdd,
+    0 0 90px 18px #ff5c5c66,
+    inset 0 0 28px #ffd9a1aa;
+  animation-duration: 0.5s;
+}
+
 /* --- 連撃の敵側多段lunge（TEMPO-B一致）。敵は左、プレイヤーは右のため+xへ突く。
    HIT3前に溜め（scale 1.08で引く）→最大の突き。 --- */
 @keyframes enemy-lunge-multi-3 {
@@ -3479,10 +3508,41 @@
   animation-fill-mode: backwards;
 }
 
-/* 神滅甲タイプ：敵の砲撃モーション（既存lunge）をカットイン終了（1.05s）に合わせる */
-.enemy-lunge-delay-cutinend {
-  animation-delay: 1.05s;
+/* 神滅甲タイプ：敵の砲撃モーション（既存lunge）をカットイン終了（1.05s＝
+   enemyVfxTiming.ts ENEMY_CUTIN_TOTAL_MS）に合わせ、BEAM→着弾（1.26s）と連続させる。
+   VFX-03修正：以前はこのクラス（wrapper側）にanimation-delayを書いていたが、
+   lungeのanimationは子の.enemy-avatar（.enemy-lunge{,-fast,-heavy}[.enemy-lunge-tier-*]
+   .enemy-avatar のショートハンド＝idle＋lungeの2本）に宣言されているため一切効かず、
+   暗転中に空振りしていた。子要素側に、ショートハンドと同じ2本分のリストで
+   「idle=0s／lunge=1.05s」を上書きする（詳細度(0,3,0)＝tier複合ルールと同点、
+   後置で勝つ）。連撃（.enemy-lunge-multi-*＝wrapper自身にanimation）は無関係で不変。 */
+.enemy-lunge.enemy-lunge-delay-cutinend .enemy-avatar,
+.enemy-lunge-fast.enemy-lunge-delay-cutinend .enemy-avatar,
+.enemy-lunge-heavy.enemy-lunge-delay-cutinend .enemy-avatar {
+  animation-delay: 0s, 1.05s;
+  animation-fill-mode: none, backwards;
+}
+
+/* --- VFX-03：神BURST（共鳴7/7）の見せる順番（enemyVfxTiming.ts BURST_*と一致）。
+   cut-in 0.9s＋ハンドオフ0.2s → burst-banner出現（1.1s）と同時に神が突進（god-lunge、
+   delay 1.1s=BURST_GOD_ATTACK_MS）→ peak（35%≒160ms）で着弾＝敵シェイク・slash・
+   数字（delay 1.26s=BURST_IMPACT_MS）→ 約2.3sで🌱成長（JSハンドオフ）。
+   god-lungeのanimationは`.god-lunge img`のショートハンド（idle＋lungeの2本）に
+   あるため、同じ形で「idle=0s／lunge=1.1s」を子要素側に上書きする。
+   敵側slash-fxのanimationは::before側にあるため、::beforeへdelayを掛ける。 --- */
+.god-lunge.god-lunge-delay-burst img {
+  animation-delay: 0s, 1.1s;
+  animation-fill-mode: none, backwards;
+}
+
+.hit-shake-flash.hit-delay-burst {
+  animation-delay: 1.26s;
   animation-fill-mode: backwards;
+}
+
+.slash-fx.hit-delay-burst::before {
+  animation-delay: 1.26s;
+  animation-fill-mode: both;
 }
 
 /* --- フローティング数字：連撃/必殺の遅延表示（inline animation-delay）中は

@@ -235,6 +235,7 @@ export function BattleScreen({ engine, onRematch, onReselect }: BattleScreenProp
           attackTier={fx.enemyAttackTier}
           multiHitCount={fx.multiHitCount}
           specialHit={fx.specialHit}
+          burstHit={fx.burstHit}
           floatingNumbers={enemyNumbers}
         />
         <div className="ally-row">
@@ -248,13 +249,16 @@ export function BattleScreen({ engine, onRematch, onReselect }: BattleScreenProp
             enemyAttackTier={fx.enemyAttackTier}
             multiHitCount={fx.multiHitCount}
             specialHit={fx.specialHit}
+            burstHit={fx.burstHit}
             floatingNumbers={playerNumbers}
           />
+          {/* VFX-03：evolveRevealKey＝🌱成長バナーの表示回数。OTOMO立ち絵の新形態切替・
+              成長グロー・リアクションをこの瞬間に揃える（進化自体はstateで確定済み） */}
           <GodOtomoPanel
             godId={state.godId}
             otomo={state.otomo}
             resonance={state.resonance}
-            evolveKey={fx.evolveKey}
+            evolveRevealKey={evolveBannerKey}
             otomoGrowthPath={state.otomoGrowthPath}
             reactionKey={cutinBurstBannerKey}
           />

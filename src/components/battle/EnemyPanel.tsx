@@ -22,6 +22,9 @@ type EnemyPanelProps = {
   multiHitCount: number
   /** 直近の攻撃が必殺（カットイン付き）か。lungeをカットイン後へ遅らせる */
   specialHit: boolean
+  /** VFX-03：直近の被弾が共鳴BURST（神の一撃）か（fx.burstHit）。被弾シェイク・斬撃線を
+   * 共鳴カットイン→burst-bannerの後ろ（BURST_IMPACT_MS）へ遅らせる */
+  burstHit: boolean
   floatingNumbers: FloatingNumber[]
 }
 
@@ -32,7 +35,7 @@ type EnemyPanelProps = {
  * `impact-flash`＋斬撃エフェクトで応じる。決定40：ラウンドごとに敵の掛け声を
  * 吹き出しで表示する（`Math.random`は使わず`round`から決定論的に選ぶ）。
  */
-export function EnemyPanel({ enemy, round, hitKey, attackKey, attackTier, multiHitCount, specialHit, floatingNumbers }: EnemyPanelProps) {
+export function EnemyPanel({ enemy, round, hitKey, attackKey, attackTier, multiHitCount, specialHit, burstHit, floatingNumbers }: EnemyPanelProps) {
   const def = getEnemyDef(enemy.defId)
   const line = def.battleCries[(round - 1) % def.battleCries.length]
 
@@ -88,13 +91,16 @@ export function EnemyPanel({ enemy, round, hitKey, attackKey, attackTier, multiH
       >
         <div className={`enemy-avatar${surgeClass}${chargingClass}`} style={{ backgroundImage: `url(${def.art})` }} />
       </div>
+      {/* VFX-03：共鳴BURSTの一撃は「共鳴カットイン→✨神の一撃！バナー→神の突進」の
+          後ろ（hit-delay-burst＝BURST_IMPACT_MS）で被弾する。通常攻撃は従来どおり即時。
+          slash-fxのanimationは::before側にあるため、CSSも::beforeへdelayを掛けている */}
       <div
         key={`hit-${hitKey}`}
-        className={hitKey > 0 ? 'hit-shake-flash' : undefined}
+        className={hitKey > 0 ? `hit-shake-flash${burstHit ? ' hit-delay-burst' : ''}` : undefined}
         style={{ position: 'relative' }}
       >
         <HpBar current={enemy.hp} max={enemy.maxHp} color="#e5484d" />
-        {hitKey > 0 && <div className="slash-fx" />}
+        {hitKey > 0 && <div className={`slash-fx${burstHit ? ' hit-delay-burst' : ''}`} />}
         <FloatingNumbers numbers={floatingNumbers} />
       </div>
       {enemy.block > 0 && <div className="badge badge-block">🛡 {formatScaled(enemy.block)}</div>}

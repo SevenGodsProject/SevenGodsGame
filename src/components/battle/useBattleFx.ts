@@ -92,6 +92,10 @@ export type BattleFx = {
   /** 直近の敵攻撃バッチが必殺（カットイン付き）だったか。被弾シェイク・
    * フローティング数字をカットイン(0.9s)後へ遅らせる判定に使う */
   specialHit: boolean
+  /** VFX-03：直近の神攻撃（godAttackKey増分）が共鳴BURSTのバッチだったか。
+   * 神の攻撃モーション・敵側の被弾演出を共鳴カットイン→burst-bannerの後ろへ
+   * 遅らせる（enemyVfxTiming.tsのBURST_*）。表示のみ、combatは確定済み */
+  burstHit: boolean
 }
 
 const INITIAL_FX: BattleFx = {
@@ -115,6 +119,7 @@ const INITIAL_FX: BattleFx = {
   enemySpecialAmount: 0,
   multiHitCount: 0,
   specialHit: false,
+  burstHit: false,
 }
 
 /**
@@ -326,6 +331,10 @@ export function useBattleFx(log: GameEvent[], apCurrent: number): BattleFx {
         // 敵攻撃バッチのときだけ更新（カード自傷等では従来の単発演出のまま）
         multiHitCount: enemyAttack > 0 ? (batchMulti ? selfHit : Math.min(selfHit, 1)) : prev.multiHitCount,
         specialHit: enemyAttack > 0 ? batchSpecial : prev.specialHit,
+        // VFX-03：神攻撃バッチのときだけ更新。RESONANCE_BURSTを含むバッチ＝共鳴の一撃
+        // （カード自身のダメージと同バッチでも、1回のlunge/シェイクとしてburst側の
+        // タイミングに揃える。数字はイベント単位で個別に遅延＝useFloatingNumbers）
+        burstHit: godAttack > 0 ? burst > 0 : prev.burstHit,
       }))
     }
   }, [log, apCurrent])

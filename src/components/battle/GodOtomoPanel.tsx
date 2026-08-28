@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
-import type { GodId, GrowthPath, OtomoState } from '../../core/types'
+import type { GodId, GrowthPath, OtomoForm, OtomoState } from '../../core/types'
+import { OTOMO_FORM_ORDER } from '../../core/types'
 import { getOtomoDef } from '../../core/data/otomo'
 import { getGodDef } from '../../core/data/gods'
 import { describeEffectList } from '../setup/otomoEffectText'
@@ -14,8 +15,10 @@ type GodOtomoPanelProps = {
   godId: GodId
   otomo: OtomoState
   resonance: { value: number; max: number }
-  /** 変わるたびにOTOMOの成長グローを再生する */
-  evolveKey: number
+  /** VFX-03：evolve-banner（🌱成長）が表示された回数（BattleScreen.tsxのevolveBannerKey）。
+   * 立ち絵の新形態への切替・成長グロー・リアクションは、この「見せ場」のタイミングで行う
+   * （以前のevolveKey＝fx.evolveKeyは暗転の下で即時発動していたため置き換えた） */
+  evolveRevealKey: number
   /** STEP-UX2：現在選択中の育成方針（守り/力）。OTOMO自身の効果テキストを
       現在の形態・方針に合わせて算出するためだけに使う表示専用の値で、
       GameStateの読み取りのみ（reducer・core/engineには一切触れない）。 */
@@ -43,7 +46,14 @@ function getResonanceStage(value: number): '' | 'resonance-gauge-mid' | 'resonan
   return ''
 }
 
-export function GodOtomoPanel({ godId, otomo, resonance, evolveKey, otomoGrowthPath, reactionKey }: GodOtomoPanelProps) {
+export function GodOtomoPanel({
+  godId,
+  otomo,
+  resonance,
+  evolveRevealKey,
+  otomoGrowthPath,
+  reactionKey,
+}: GodOtomoPanelProps) {
   const otomoDef = getOtomoDef(otomo.defId)
   const ratio = resonance.max > 0 ? Math.min(1, resonance.value / resonance.max) : 0
   const resonanceStage = getResonanceStage(resonance.value)
@@ -54,6 +64,29 @@ export function GodOtomoPanel({ godId, otomo, resonance, evolveKey, otomoGrowthP
   // JSXへ手書きで複製しない（single source of truth）。神・数値・発動条件は
   // 一切変更していない、純粋な表示専用の追加。
   const resonanceEffectText = describeEffectList(getGodDef(godId).resonanceEffects) ?? '変化なし'
+
+  // VFX-03：共鳴BURSTの見せる順番（cut-in→神の一撃→着弾→🌱成長）に合わせ、
+  // OTOMOの立ち絵は「🌱成長バナー」（evolveRevealKey）が出るまで旧形態のまま見せる。
+  // engine上の進化（otomo.form）はカード使用の同一トランザクションで確定済みで
+  // ここでは一切触れない＝表示専用の遅延。
+  // 表示形態はローカルstateで持つ：propsから導出（evolveKey > evolveRevealKey）すると、
+  // GameState更新の描画→useBattleFxのeffectでevolveKeyが進む描画、の間の1フレームだけ
+  // 新形態が映るフリッカーが起きる（headless実測426→562msで再現）ため。
+  // 同期規則：①🌱成長バナーが出た瞬間に現在の形態へ更新 ②OTOMOが変わった／形態が
+  // 戻った（新規対局・再開）ときは即時同期（進化は決して戻らないので「戻り」＝別対局）。
+  const [displayedForm, setDisplayedForm] = useState<OtomoForm>(otomo.form)
+  const shownRevealKeyRef = useRef(0)
+  const displayedDefIdRef = useRef(otomo.defId)
+  useEffect(() => {
+    if (
+      otomo.defId !== displayedDefIdRef.current ||
+      OTOMO_FORM_ORDER.indexOf(otomo.form) < OTOMO_FORM_ORDER.indexOf(displayedForm)
+    ) {
+      displayedDefIdRef.current = otomo.defId
+      setDisplayedForm(otomo.form)
+    }
+  }, [otomo.defId, otomo.form, displayedForm])
+  const evolvePending = displayedForm !== otomo.form
 
   // STEP-UX2で蒼毘の百勝のみのプロトタイプとして導入し、STEP-UX2-Cのラベル
   // 折り返し修正を経て、STEP-UX3で全7OTOMOへ横展開した。「常時アニメーション
@@ -66,17 +99,29 @@ export function GodOtomoPanel({ godId, otomo, resonance, evolveKey, otomoGrowthP
   // ロジック・同じCSSで、神ごとの分岐は一切持たない（GOD_IDSでの神判定は
   // 削除済み）。GameState・reducer・core/engine・OTOMO効果の数値は一切
   // 変更していない、表示専用のローカルstateのみ。
+  // VFX-03：進化を伴うバーストでは、効果は進化後の形態で適用されている
+  // （effects.tsのapplyResonance：進化→神効果→OTOMO効果の順）ため、リアクションは
+  // 立ち絵が新形態になる「🌱成長」の瞬間（evolveRevealKey）に合わせて出す。
+  // 進化を伴わないバーストは従来どおりburst-bannerの瞬間（reactionKey）。
   const otomoOwnEffects =
     otomoGrowthPath === 'power' ? otomoDef.powerPathEffectsByForm[otomo.form] : otomoDef.effectsByForm[otomo.form]
   const otomoOwnEffectText = describeEffectList(otomoOwnEffects)
   const [reactionActive, setReactionActive] = useState(false)
   const shownReactionKeyRef = useRef(0)
   useEffect(() => {
-    if (otomoOwnEffectText && reactionKey > shownReactionKeyRef.current) {
+    if (reactionKey > shownReactionKeyRef.current) {
       shownReactionKeyRef.current = reactionKey
-      setReactionActive(true)
+      if (otomoOwnEffectText && !evolvePending) setReactionActive(true)
     }
-  }, [reactionKey, otomoOwnEffectText])
+  }, [reactionKey, evolvePending, otomoOwnEffectText])
+  useEffect(() => {
+    if (evolveRevealKey > shownRevealKeyRef.current) {
+      shownRevealKeyRef.current = evolveRevealKey
+      // 🌱成長の瞬間：立ち絵を新形態へ切替え、その形態の効果でリアクション
+      setDisplayedForm(otomo.form)
+      if (otomoOwnEffectText) setReactionActive(true)
+    }
+  }, [evolveRevealKey, otomo.form, otomoOwnEffectText])
   const handleReactionAnimationEnd = (event: React.AnimationEvent<HTMLElement>) => {
     if (event.target !== event.currentTarget) return
     if (event.animationName !== 'otomo-reaction-pop') return
@@ -88,14 +133,16 @@ export function GodOtomoPanel({ godId, otomo, resonance, evolveKey, otomoGrowthP
       <div className="panel-title">共鳴</div>
       <p className="resonance-effect-text">共鳴発動：{resonanceEffectText}</p>
       <div className="god-otomo-portraits">
+        {/* VFX-03：成長グロー（evolve-glow）は立ち絵切替と同じ「🌱成長」の瞬間に再生する
+            （keyをevolveRevealKeyに変更。以前はevolveKey＝暗転の下で発動していた） */}
         <figure
-          key={`otomo-${evolveKey}`}
-          className={`portrait portrait-otomo${evolveKey > 0 ? ' evolve-glow' : ''}${reactionActive ? ' otomo-reacting' : ''}`}
+          key={`otomo-${evolveRevealKey}`}
+          className={`portrait portrait-otomo${evolveRevealKey > 0 ? ' evolve-glow' : ''}${reactionActive ? ' otomo-reacting' : ''}`}
           onAnimationEnd={reactionActive ? handleReactionAnimationEnd : undefined}
         >
-          <img src={otomoDef.art[otomo.form]} alt={otomoDef.nameJa} />
+          <img src={otomoDef.art[displayedForm]} alt={otomoDef.nameJa} />
           <figcaption>
-            {otomoDef.nameJa}（{FORM_LABEL[otomo.form]}）
+            {otomoDef.nameJa}（{FORM_LABEL[displayedForm]}）
           </figcaption>
           {reactionActive && otomoOwnEffectText && (
             <div className="otomo-reaction-label">

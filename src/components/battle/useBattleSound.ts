@@ -2,7 +2,13 @@ import { useEffect, useRef } from 'react'
 import type { GameEvent } from '../../core/types'
 import { sfx } from './sound'
 import { playJingle } from './bgm'
-import { MULTI_CUTIN_LEAD_MS, SPECIAL_IMPACT_MS, multiHitOffsetMs } from './enemyVfxTiming'
+import {
+  BURST_EVOLVE_MS,
+  BURST_IMPACT_MS,
+  MULTI_CUTIN_LEAD_MS,
+  SPECIAL_IMPACT_MS,
+  multiHitOffsetMs,
+} from './enemyVfxTiming'
 
 /**
  * イベントログを見て効果音を鳴らすフック。
@@ -29,6 +35,10 @@ export function useBattleSound(log: GameEvent[]): void {
     const seSpecial = enemyActed?.kind === 'special' || (seMulti && !!enemyActed?.label)
     const seLead = seSpecial ? (seMulti ? MULTI_CUTIN_LEAD_MS : SPECIAL_IMPACT_MS) : 0
     let seHitIndex = 0
+    // VFX-03：RESONANCE_BURST以降の敵ダメージ（＝神の一撃）とOTOMO進化のSEは、
+    // 視覚timeline（cut-in→banner→着弾→進化）と同じdelayで鳴らす。
+    // カード自身の効果（RESONANCE_BURSTより前のDAMAGE_DEALT）は従来どおり即時。
+    let afterBurst = false
 
     for (const event of newEvents) {
       switch (event.t) {
@@ -41,7 +51,7 @@ export function useBattleSound(log: GameEvent[]): void {
         case 'DAMAGE_DEALT':
           if (event.amount > 0) {
             if (event.target === 'enemy') {
-              sfx.damageEnemy()
+              sfx.damageEnemy(afterBurst ? BURST_IMPACT_MS : 0)
             } else if (seMulti) {
               sfx.enemyMultiHit(seHitIndex, seLead + multiHitOffsetMs(seHitIndex))
               seHitIndex += 1
@@ -63,9 +73,10 @@ export function useBattleSound(log: GameEvent[]): void {
           break
         case 'RESONANCE_BURST':
           sfx.resonanceBurst()
+          afterBurst = true
           break
         case 'OTOMO_EVOLVED':
-          sfx.otomoEvolve()
+          sfx.otomoEvolve(afterBurst ? BURST_EVOLVE_MS : 0)
           break
         case 'DIVINATION_USED':
           sfx.divination()

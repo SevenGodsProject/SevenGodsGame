@@ -48,3 +48,41 @@ export function multiHitOffsetMs(index: number): number {
     (index - MULTI_HIT_OFFSETS_MS.length + 1) * 180
   )
 }
+
+/*
+ * ■ 神BURST（共鳴7/7）sequence（VFX-03）
+ *   combat（共鳴burst・神の一撃ダメージ・OTOMO進化）はカード使用の同一トランザクションで
+ *   確定済み。ここは「見せる順番」だけを揃える（GameState・score・Masteryは不変）。
+ *   T+0      共鳴7/7 → resonance cut-in（暗転→神キービジュアルslide-in、0.9s）
+ *   T+900    cut-in終了（onAnimationEnd）→ React再描画（実測≒200ms）→
+ *   T+1100   「✨ 神の一撃！」burst-banner（0.9s）出現
+ *            ＋ 神の攻撃モーション（god-lunge 0.45s、CSS delay=BURST_GOD_ATTACK_MS）
+ *   T+1260   着弾：敵側hit-shake＋slash＋フローティング数字（-360等、emphasis）＋SE
+ *            （god-lungeのpeak＝35%≒160ms後）
+ *   T+2000   burst-banner終了（onAnimationEnd）→ React再描画 →
+ *   T+2300   「🌱 成長」evolve-banner ＋ OTOMO立ち絵を新形態へ切替（evolve-glow）
+ *            ＋OTOMOリアクション＋SE（立ち絵切替はbanner keyのJSハンドオフ、SEのみ定数）
+ *   VFX-03以前は数字・god-lunge・evolve-glowがT+0（暗転の下）に出ていた。
+ *   ハンドオフ遅延（onAnimationEnd→setState→描画）はheadless/実機とも≒200ms前後で
+ *   実測されたため、JS/CSS側の定数は「バナーより先行しない」側へ丸めてある。
+ */
+
+/** 共鳴カットインの総時間（battle.cssのresonance-cutin-timer 0.9sと一致） */
+export const RESONANCE_CUTIN_MS = 900
+
+/** burst-bannerの表示時間（battle.cssのburst-flash 0.9sと一致） */
+export const BURST_BANNER_MS = 900
+
+/** cut-in終了→burst-banner出現までのReactハンドオフ余白（実測≒190〜200ms） */
+export const BURST_HANDOFF_MS = 200
+
+/** 神の攻撃モーション開始（＝burst-banner出現と同時。CSS .god-lunge-delay-burst 1.1sと一致） */
+export const BURST_GOD_ATTACK_MS = RESONANCE_CUTIN_MS + BURST_HANDOFF_MS
+
+/** 神の一撃の着弾（敵シェイク・slash・数字・SE）。god-lunge 0.45sのpeak（35%）≒160ms後。
+ * CSS .hit-delay-burst 1.26sと一致 */
+export const BURST_IMPACT_MS = BURST_GOD_ATTACK_MS + 160
+
+/** OTOMO進化の見せ場（evolve-banner出現）。立ち絵切替自体はbanner keyのハンドオフで
+ * 行うためJS側はSE用（banner 0.9s＋ハンドオフ余白） */
+export const BURST_EVOLVE_MS = BURST_GOD_ATTACK_MS + BURST_BANNER_MS + BURST_HANDOFF_MS + 100
