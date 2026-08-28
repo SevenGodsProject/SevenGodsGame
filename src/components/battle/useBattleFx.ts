@@ -1,6 +1,20 @@
 import { useEffect, useRef, useState } from 'react'
 import type { GameEvent, OtomoForm } from '../../core/types'
 import { getIntentPowerTier, type PowerTier } from './cardStyle'
+import { formatScaled } from '../displayScale'
+
+/**
+ * HOTFIX-DISPLAY-SCALE-TOAST：カード使用結果トーストの表示文言。
+ * 内部値はformatScaled（表示×10、displayScale.ts）で必ず変換する。
+ * Battle log（formatEvent.ts）・BattleMiniResult・useFloatingNumbersと同じ
+ * 共通formatterを使い、独自倍率処理は持たない。テストから直接検証できるよう
+ * 純関数としてhook外に置く。
+ */
+export const fxToastText = {
+  damage: (amount: number) => `⚔ 敵に${formatScaled(amount)}ダメージ`,
+  heal: (amount: number) => `💚 HP+${formatScaled(amount)}`,
+  block: (amount: number) => `🛡 ブロック+${formatScaled(amount)}`,
+} as const
 
 /**
  * STEP2-B（BattleMiniResult）：1回のアクション（カード使用／ラウンド終了＝敵ターン）で
@@ -146,7 +160,7 @@ export function useBattleFx(log: GameEvent[], apCurrent: number): BattleFx {
           enemyHit += 1
           godAttack += 1
           resultToast += 1
-          resultTexts.push(`⚔ 敵に${event.amount}ダメージ`)
+          resultTexts.push(fxToastText.damage(event.amount))
           mrEnemyDamage += event.amount
         } else {
           selfHit += 1
@@ -179,7 +193,7 @@ export function useBattleFx(log: GameEvent[], apCurrent: number): BattleFx {
       } else if (event.t === 'HEALED' && event.amount > 0) {
         heal += 1
         resultToast += 1
-        resultTexts.push(`💚 HP+${event.amount}`)
+        resultTexts.push(fxToastText.heal(event.amount))
         mrHeal += event.amount
       } else if (event.t === 'RESONANCE_BURST') {
         burst += 1
@@ -195,7 +209,7 @@ export function useBattleFx(log: GameEvent[], apCurrent: number): BattleFx {
         // 数値・block加算処理そのもの（core/engine）は無変更、表示専用の対応。
         blockGain += 1
         resultToast += 1
-        resultTexts.push(`🛡 ブロック+${event.amount}`)
+        resultTexts.push(fxToastText.block(event.amount))
         mrBlock += event.amount
       } else if (event.t === 'RESONANCE_GAINED') {
         // STEP2-B：既存イベント（これまでどのフックも未消費だった）をミニ結果表示に使う
