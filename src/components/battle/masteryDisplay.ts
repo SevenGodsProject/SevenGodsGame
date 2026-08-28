@@ -32,6 +32,8 @@ export const MASTERY_SELECT_HINT: Partial<Record<GodId, string>> = {
   [GOD_IDS.juraku]: '神技「無力化」：敵の攻撃を弱めるほど評価UP',
   // STEP-SCORE2-G3：蒼毘「鉄壁」prototype
   [GOD_IDS.sobi]: '神技「鉄壁」：敵の攻撃を無傷で受け止めるほど評価UP',
+  // G4：福永「大勝負」prototype
+  [GOD_IDS.fukuei]: '神技「大勝負」：身を削って攻め、どん底から立て直すほど評価UP',
 }
 
 /**
@@ -120,6 +122,35 @@ export function describeMastery(
     return {
       gradeLabel,
       description: `${godNameJa}「${mastery.title}」— 敵の攻撃の${percent}%を無傷で受け止めた！`,
+      goal,
+    }
+  }
+
+  // 福永「大勝負」（G4 prototype）
+  if (godId === GOD_IDS.fukuei) {
+    const t = RULES.mastery.fukuei
+    // risk gate未達のC（raw強制0）では%表示も距離表示も意味を持たないため、
+    // 「何をすれば評価対象になるか」（自傷カードでリスクを取る）を直接示す。
+    // gate達成済みなら寿楽G1cの教訓どおり、Cでも次Gradeまでの距離を出す。
+    const gateMet = mastery.riskGateMet ?? false
+    const goal = (() => {
+      switch (mastery.grade) {
+        case 'S':
+          return 'その勝負度胸、まさに神業！'
+        case 'A':
+          return `Sまであと${gapToPercent(mastery.raw, t.s)}%`
+        case 'B':
+          return `Aまであと${gapToPercent(mastery.raw, t.a)}%`
+        case 'C':
+          if (!gateMet) return '「一攫千金」など身を削るカードで大勝負を仕掛けよう'
+          return `あと${gapToPercent(mastery.raw, t.b)}%でB（堂々）`
+      }
+    })()
+    return {
+      gradeLabel,
+      description: gateMet
+        ? `${godNameJa}「${mastery.title}」— どん底からHPの${percent}%を立て直した！`
+        : `${godNameJa}「${mastery.title}」— まだ大勝負を仕掛けていない`,
       goal,
     }
   }

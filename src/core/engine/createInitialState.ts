@@ -103,6 +103,9 @@ export function createInitialState(
       strongNeutralized: false,
       guardAttackCount: 0,
       fullyBlockedCount: 0,
+      // 福永「大勝負」（G4 prototype）：最低HPは満タンで開始（無傷ならraw=0）
+      minHp: playerMaxHp,
+      riskCardEffDamage: 0,
     },
 
     cardsPlayedThisRound: 0,

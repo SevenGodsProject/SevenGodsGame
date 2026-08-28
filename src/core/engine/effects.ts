@@ -1,7 +1,7 @@
 import type { Effect, GameEvent, GameState, ScoreState } from '../types'
 import { OTOMO_FORM_ORDER } from '../types/otomo'
 import { RULES } from '../data/rules'
-import { getGodDef } from '../data/gods'
+import { getGodDef, GOD_IDS } from '../data/gods'
 import { getOtomoDef } from '../data/otomo'
 import { performDraw } from './deck'
 import { sumBuff } from './buffs'
@@ -184,9 +184,19 @@ export function applyDamage(
   const dealt = amount - blocked
   const hp = Math.max(0, state.player.hp - dealt)
 
+  // 福永Mastery「大勝負」G4集計（福永使用時のみ）：試合中最低HPを追跡する。
+  // 敵攻撃（round.ts）も自傷カード（playCard.ts）もこの分岐を通るため、
+  // ここが唯一の更新点になる。healで回復してもminHpは戻らない（最低値の記録）。
+  // 他神ではmasteryを触らない（神技の分離。既存3神と同じgate方式）。
+  const mastery =
+    state.godId === GOD_IDS.fukuei
+      ? { ...state.mastery, minHp: Math.min(state.mastery.minHp, hp) }
+      : state.mastery
+
   let nextState: GameState = {
     ...state,
     player: { ...state.player, hp, block: state.player.block - blocked },
+    mastery,
   }
   if (hp <= 0 && nextState.status === 'playing') {
     nextState = { ...nextState, status: 'lost' }

@@ -1,8 +1,9 @@
 import type { GameAction, GameEvent, GameState } from '../types'
 import { RULES } from '../data/rules'
 import { getCardDef } from '../data/cards'
+import { GOD_IDS } from '../data/gods'
 import { createRng } from '../rng/seededRandom'
-import { applyEffects, addScore } from './effects'
+import { applyEffect, applyEffects, addScore } from './effects'
 
 type PlayCardAction = Extract<GameAction, { type: 'PLAY_CARD' }>
 
@@ -58,6 +59,39 @@ export function playCard(
   }
 
   const rng = createRng(state.seed, state.rngCursor)
+
+  // 福永Mastery「大勝負」G4集計（福永使用時のみ）：自傷カード
+  // （効果に damage target:'self' を含むカード）が敵に与えた実効ダメージを
+  // riskCardEffDamageへ積算する。カード名でなく効果データで判定する（不変ルール3）。
+  // 効果を1つずつ適用し、damage target:'enemy'効果による敵HP減少分（＝block吸収・
+  // overkill除外後の実効値）だけを数える。同カードが共鳴burstを誘発しても、
+  // burst由来のダメージはdamage効果の外で起きるため混入しない。
+  const isRiskCard =
+    state.godId === GOD_IDS.fukuei &&
+    cardDef.effects.some((e) => e.kind === 'damage' && e.target === 'self')
+  if (isRiskCard) {
+    for (const effect of cardDef.effects) {
+      const enemyHpBefore = next.enemy.hp
+      const result = applyEffect(next, effect, rng)
+      next = result.state
+      events.push(...result.events)
+      if (effect.kind === 'damage' && effect.target === 'enemy') {
+        const effective = enemyHpBefore - next.enemy.hp
+        if (effective > 0) {
+          next = {
+            ...next,
+            mastery: {
+              ...next.mastery,
+              riskCardEffDamage: next.mastery.riskCardEffDamage + effective,
+            },
+          }
+        }
+      }
+    }
+    next = { ...next, rngCursor: state.rngCursor + rng.callCount() }
+    return { state: next, events }
+  }
+
   const result = applyEffects(next, cardDef.effects, rng)
   next = { ...result.state, rngCursor: state.rngCursor + rng.callCount() }
   events.push(...result.events)

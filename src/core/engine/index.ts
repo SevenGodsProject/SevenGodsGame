@@ -1,5 +1,5 @@
 export { applyAction } from './reducer'
 export type { ReduceResult } from './reducer'
 export { getFinalScore } from './score'
-export { getMastery, getTaiyoMasteryRaw } from './mastery'
+export { getMastery, getTaiyoMasteryRaw, getFukueiMasteryRaw, isFukueiRiskGateMet } from './mastery'
 export type { MasteryGrade, MasteryResult } from './mastery'

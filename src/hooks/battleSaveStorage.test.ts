@@ -104,13 +104,15 @@ describe('battleSaveStorage（saveVersion 4・STEP-SCORE2-D-PROTO）', () => {
         strongNeutralized: true,
         guardAttackCount: 5,
         fullyBlockedCount: 3,
+        minHp: 12,
+        riskCardEffDamage: 20,
       },
     }
     saveBattle(withMastery)
     const loaded = loadBattleSave()
     expect(loaded).not.toBeNull()
     expect(loaded?.version).toBe(RULES.saveVersion)
-    // resume後もMastery集計（大耀・寿楽・蒼毘とも）は失われない
+    // resume後もMastery集計（大耀・寿楽・蒼毘・福永とも）は失われない
     expect(loaded?.mastery).toEqual({
       roundDamage: 8,
       bestRoundDamage: 33,
@@ -119,6 +121,8 @@ describe('battleSaveStorage（saveVersion 4・STEP-SCORE2-D-PROTO）', () => {
       strongNeutralized: true,
       guardAttackCount: 5,
       fullyBlockedCount: 3,
+      minHp: 12,
+      riskCardEffDamage: 20,
     })
     expect(loaded?.score.total).toBe(withMastery.score.total)
   })
@@ -136,7 +140,8 @@ describe('battleSaveStorage（saveVersion 4・STEP-SCORE2-D-PROTO）', () => {
     expect(loaded?.score.legacy).toBe(204)
     expect(loaded?.score.victory).toBe(0)
     expect(loaded?.score.total).toBe(40 + 20 + 204)
-    // v3にはMastery集計が無いため0から開始する（既知の1戦限りの制約）
+    // v3にはMastery集計が無いため0から開始する（既知の1戦限りの制約）。
+    // 福永用minHpは保存時点の現在HPで初期化（過去の最低HPは復元できない）
     expect(loaded?.mastery).toEqual({
       roundDamage: 0,
       bestRoundDamage: 0,
@@ -145,6 +150,8 @@ describe('battleSaveStorage（saveVersion 4・STEP-SCORE2-D-PROTO）', () => {
       strongNeutralized: false,
       guardAttackCount: 0,
       fullyBlockedCount: 0,
+      minHp: loaded!.player.hp,
+      riskCardEffDamage: 0,
     })
   })
 
@@ -171,7 +178,7 @@ describe('battleSaveStorage（saveVersion 4・STEP-SCORE2-D-PROTO）', () => {
     const loaded = loadBattleSave()
     expect(loaded).not.toBeNull()
     expect(loaded?.version).toBe(RULES.saveVersion)
-    // 大耀の集計は保持、寿楽・蒼毘の新フィールドはdefault
+    // 大耀の集計は保持、寿楽・蒼毘・福永の新フィールドはdefault
     expect(loaded?.mastery).toEqual({
       roundDamage: 8,
       bestRoundDamage: 33,
@@ -180,6 +187,8 @@ describe('battleSaveStorage（saveVersion 4・STEP-SCORE2-D-PROTO）', () => {
       strongNeutralized: false,
       guardAttackCount: 0,
       fullyBlockedCount: 0,
+      minHp: loaded!.player.hp,
+      riskCardEffDamage: 0,
     })
     // 移行でBattle Scoreは一切変わらない
     expect(loaded?.score).toEqual(modern.score)
@@ -214,6 +223,8 @@ describe('battleSaveStorage（saveVersion 4・STEP-SCORE2-D-PROTO）', () => {
       strongNeutralized: true,
       guardAttackCount: 0,
       fullyBlockedCount: 0,
+      minHp: loaded!.player.hp,
+      riskCardEffDamage: 0,
     })
     expect(loaded?.score).toEqual(modern.score)
   })
@@ -241,7 +252,12 @@ describe('battleSaveStorage（saveVersion 4・STEP-SCORE2-D-PROTO）', () => {
     expect(loaded?.version).toBe(RULES.saveVersion)
     // 旧来の正当なintent（attack/charge）はそのまま保持される
     expect(loaded?.enemy.intent).toEqual({ kind: 'attack', amount: 12 })
-    expect(loaded?.mastery).toEqual(v6State.mastery)
+    // v6には無い福永用2フィールドはdefault-fillされ、既存3神の集計は全保持
+    expect(loaded?.mastery).toEqual({
+      ...v6State.mastery,
+      minHp: loaded!.player.hp,
+      riskCardEffDamage: 0,
+    })
     expect(loaded?.score).toEqual(modern.score)
     expect(loaded?.player.hp).toBe(modern.player.hp)
     expect(loaded?.round).toBe(modern.round)
@@ -260,6 +276,35 @@ describe('battleSaveStorage（saveVersion 4・STEP-SCORE2-D-PROTO）', () => {
     const loaded = loadBattleSave()
     expect(loaded).not.toBeNull()
     expect(loaded?.enemy.intent).toBeNull()
+  })
+
+  it('G4導入前のv7セーブ（福永フィールド欠落）はdefault-fillで補完される', () => {
+    // saveVersionを7のまま据え置いたG4 prototypeの暫定運用：
+    // version番号では区別できないため、フィールドの有無で補完する
+    const modern = startTestGame('save-v7-pre-g4')
+    const { minHp: _m, riskCardEffDamage: _r, ...oldMastery } = modern.mastery
+    const preG4 = { ...modern, player: { ...modern.player, hp: 17 }, mastery: oldMastery }
+    localStorage.setItem(
+      'sevengods.battleSave',
+      JSON.stringify({ version: RULES.saveVersion, state: preG4 }),
+    )
+    const loaded = loadBattleSave()
+    expect(loaded).not.toBeNull()
+    // minHpは保存時点の現在HP、riskCardEffDamageは0で初期化される
+    expect(loaded?.mastery.minHp).toBe(17)
+    expect(loaded?.mastery.riskCardEffDamage).toBe(0)
+  })
+
+  it('福永フィールドが揃ったv7セーブはfillで書き換えられない（無変更で返る）', () => {
+    const modern = startTestGame('save-v7-g4')
+    const withFields = {
+      ...modern,
+      mastery: { ...modern.mastery, minHp: 9, riskCardEffDamage: 31 },
+    }
+    saveBattle(withFields)
+    const loaded = loadBattleSave()
+    expect(loaded?.mastery.minHp).toBe(9)
+    expect(loaded?.mastery.riskCardEffDamage).toBe(31)
   })
 
   it('v3セーブはv3→…→v7へ連鎖移行され、現行バージョンで読み込まれる（経路維持）', () => {

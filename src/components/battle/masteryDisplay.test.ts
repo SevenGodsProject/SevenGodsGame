@@ -51,11 +51,55 @@ describe('describeMastery（大耀「爆発」）', () => {
 })
 
 describe('神選択画面の神技1行', () => {
-  it('大耀・寿楽・蒼毘には神技説明があり、未実装の神には無い（prototype範囲）', () => {
+  it('大耀・寿楽・蒼毘・福永には神技説明があり、未実装の神には無い（prototype範囲）', () => {
     expect(MASTERY_SELECT_HINT[GOD_IDS.taiyo]).toContain('爆発')
     expect(MASTERY_SELECT_HINT[GOD_IDS.juraku]).toContain('無力化')
     expect(MASTERY_SELECT_HINT[GOD_IDS.sobi]).toContain('鉄壁')
+    expect(MASTERY_SELECT_HINT[GOD_IDS.fukuei]).toContain('大勝負')
     expect(MASTERY_SELECT_HINT[GOD_IDS.ebisu]).toBeUndefined()
+  })
+})
+
+describe('describeMastery（福永「大勝負」・G4）', () => {
+  function fukueiResult(
+    grade: MasteryResult['grade'],
+    raw: number,
+    riskGateMet = true,
+  ): MasteryResult {
+    return { title: '大勝負', grade, raw, riskGateMet }
+  }
+
+  it('何を測ったかが1行の日本語文になる（立て直し62%）', () => {
+    const d = describeMastery(fukueiResult('S', 0.62), GOD_IDS.fukuei, '福永')
+    expect(d.description).toBe('福永「大勝負」— どん底からHPの62%を立て直した！')
+  })
+
+  it('S評価では達成文言（%目標は出さない）', () => {
+    const d = describeMastery(fukueiResult('S', 0.62), GOD_IDS.fukuei, '福永')
+    expect(d.goal).toBe('その勝負度胸、まさに神業！')
+    expect(d.goal).not.toContain('%')
+  })
+
+  it('A評価では「Sまであと○%」（0.60-0.47=13%）', () => {
+    const d = describeMastery(fukueiResult('A', 0.47), GOD_IDS.fukuei, '福永')
+    expect(d.goal).toBe('Sまであと13%')
+  })
+
+  it('B評価では「Aまであと○%」', () => {
+    const d = describeMastery(fukueiResult('B', 0.3), GOD_IDS.fukuei, '福永')
+    expect(d.goal).toBe('Aまであと10%')
+  })
+
+  it('gate達成済みのC評価では次Gradeまでの距離を出す（寿楽G1cの教訓）', () => {
+    const d = describeMastery(fukueiResult('C', 0.05), GOD_IDS.fukuei, '福永')
+    expect(d.goal).toBe('あと5%でB（堂々）')
+  })
+
+  it('gate未達のCでは%距離でなく「何をすれば評価対象か」を示す', () => {
+    const d = describeMastery(fukueiResult('C', 0, false), GOD_IDS.fukuei, '福永')
+    expect(d.description).toBe('福永「大勝負」— まだ大勝負を仕掛けていない')
+    expect(d.goal).toBe('「一攫千金」など身を削るカードで大勝負を仕掛けよう')
+    expect(d.goal).not.toContain('%')
   })
 })
 

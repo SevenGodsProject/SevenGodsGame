@@ -81,6 +81,19 @@ export type MasteryState = {
   guardAttackCount: number
   /** 蒼毘用：actual>0の攻撃をblockが完全吸収しHP実害0で受け切った回数 */
   fullyBlockedCount: number
+  /**
+   * 福永「大勝負」用（G4 prototype）：試合中に観測した自HPの最低値。
+   * 開始時は満タンHPで初期化し、被ダメージ（敵攻撃・自傷とも）のたびに更新する。
+   * 福永使用時のみ更新（他神では初期値のまま動かさない＝神技の分離）。
+   */
+  minHp: number
+  /**
+   * 福永用：自傷カード（効果に damage target:'self' を含むカード）由来の、
+   * 敵への実効与ダメージ合計（overkill・敵block吸収分は含まない）。
+   * risk gate判定（敵maxHpの10%以上）に使う。共鳴burst等、カード効果以外の
+   * ダメージは含まない。福永使用時のみ集計。
+   */
+  riskCardEffDamage: number
 }
 
 /**

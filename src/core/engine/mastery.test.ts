@@ -21,15 +21,8 @@ function taiyoState(bestRoundDamage: number, enemyMaxHp = 100): GameState {
     ...base,
     godId: GOD_IDS.taiyo,
     enemy: { ...base.enemy, maxHp: enemyMaxHp, hp: enemyMaxHp },
-    mastery: {
-      roundDamage: 0,
-      bestRoundDamage,
-      attackCount: 0,
-      reductionRateSum: 0,
-      strongNeutralized: false,
-      guardAttackCount: 0,
-      fullyBlockedCount: 0,
-    },
+    // 大耀に関係しないフィールド（寿楽・蒼毘・福永用）は開始時の初期値のまま
+    mastery: { ...base.mastery, roundDamage: 0, bestRoundDamage },
   }
 }
 

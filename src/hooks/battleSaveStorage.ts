@@ -102,6 +102,8 @@ export function migrateBattleSaveV3(state: GameState): GameState {
       strongNeutralized: false,
       guardAttackCount: 0,
       fullyBlockedCount: 0,
+      minHp: state.player.hp,
+      riskCardEffDamage: 0,
     },
   }
 }
@@ -126,6 +128,8 @@ export function migrateBattleSaveV4(state: GameState): GameState {
       strongNeutralized: false,
       guardAttackCount: 0,
       fullyBlockedCount: 0,
+      minHp: state.player.hp,
+      riskCardEffDamage: 0,
     },
   })
 }
@@ -148,8 +152,39 @@ export function migrateBattleSaveV5(state: GameState): GameState {
       strongNeutralized: old?.strongNeutralized ?? false,
       guardAttackCount: 0,
       fullyBlockedCount: 0,
+      minHp: state.player.hp,
+      riskCardEffDamage: 0,
     },
   })
+}
+
+/**
+ * 福永「大勝負」G4 prototype：MasteryStateの福永用2フィールド
+ * （minHp/riskCardEffDamage）が欠けているセーブをdefault-fillで補完する。
+ *
+ * saveVersionは7のまま据え置いたため、「G4導入前に保存されたv7セーブ」には
+ * この2フィールドが無い。version番号では区別できないので、フィールドの有無
+ * そのものを見て補完する（migrateBattleSaveV6経由のv3〜v6セーブと、
+ * 同一version=7のセーブの両方をここで吸収する）。
+ * minHpは保存時点の現在HPで初期化する：過去ラウンドの最低HPは復元できないため
+ * 「移行対局の立て直し幅は過去分を含まず過小になりうる」1戦限りの既知の制約
+ * （v3移行時のMastery 0開始と同じ方針。プレイヤーに不利益な破壊はしない）。
+ * 正式採用時にsaveVersionを8へbumpするかはレビューで判断する。
+ */
+export function fillFukueiMasteryFields(state: GameState): GameState {
+  const old = state.mastery as Partial<GameState['mastery']> | undefined
+  if (typeof old?.minHp === 'number' && typeof old?.riskCardEffDamage === 'number') {
+    return state
+  }
+  return {
+    ...state,
+    mastery: {
+      ...state.mastery,
+      minHp: typeof old?.minHp === 'number' ? old.minHp : state.player.hp,
+      riskCardEffDamage:
+        typeof old?.riskCardEffDamage === 'number' ? old.riskCardEffDamage : 0,
+    },
+  }
 }
 
 /**
@@ -172,11 +207,11 @@ export function migrateBattleSaveV6(state: GameState): GameState {
     intent && typeof intent === 'object' && validKinds.includes((intent as { kind?: string }).kind ?? '')
       ? intent
       : null
-  return {
+  return fillFukueiMasteryFields({
     ...state,
     version: RULES.saveVersion,
     enemy: { ...state.enemy, intent: normalizedIntent },
-  }
+  })
 }
 
 /** 保存済みの進行中バトルがあれば返す。無い／壊れている／未知バージョンならnull */
@@ -187,7 +222,9 @@ export function loadBattleSave(): GameState | null {
     const parsed: unknown = JSON.parse(raw)
     if (!isSavedBattle(parsed)) return null
     if (parsed.state.status !== 'playing') return null
-    if (parsed.version === RULES.saveVersion) return parsed.state
+    // 同一versionでも、G4導入前のv7セーブには福永用Masteryフィールドが無い
+    // ことがあるためfillで補完する（フィールドが揃っていれば無変更で返る）
+    if (parsed.version === RULES.saveVersion) return fillFukueiMasteryFields(parsed.state)
     // v3〜v6セーブは移行して読み込む（勝手に破棄しない）。それ以外の未知版はnull。
     if (parsed.version === 6) return migrateBattleSaveV6(parsed.state)
     if (parsed.version === 5) return migrateBattleSaveV5(parsed.state)

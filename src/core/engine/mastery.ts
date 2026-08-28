@@ -24,6 +24,8 @@ export type MasteryResult = {
   sGateMet?: boolean
   /** 寿楽のみ：raw・ゲートはS相当だがeasyのため上限Aに抑えられたか */
   easyCapped?: boolean
+  /** 福永のみ：risk gate（自傷カード由来の実効与ダメ≥敵maxHpの10%）を満たしたか */
+  riskGateMet?: boolean
 }
 
 /** 大耀「爆発」の生値：1ラウンド最大実効ダメージ ÷ 敵最大HP */
@@ -50,6 +52,30 @@ export function getJurakuMasteryRaw(state: GameState): number {
 export function getSobiMasteryRaw(state: GameState): number {
   if (state.mastery.guardAttackCount <= 0) return 0
   return state.mastery.fullyBlockedCount / state.mastery.guardAttackCount
+}
+
+/** 福永risk gate：自傷カード由来の敵への実効与ダメが敵maxHpの10%以上か */
+export function isFukueiRiskGateMet(state: GameState): boolean {
+  if (state.enemy.maxHp <= 0) return false
+  return (
+    state.mastery.riskCardEffDamage >=
+    state.enemy.maxHp * RULES.mastery.fukuei.riskGateRatio
+  )
+}
+
+/**
+ * 福永「大勝負」の生値（G4 prototype、LANE C research F17案）：
+ * (最終HP − 試合中最低HP) ÷ maxHp ＝「どん底からの立て直し幅」。
+ * ただしrisk gate（自傷カード由来の実効与ダメ ≥ 敵maxHpの10%）を満たさない
+ * 試合はraw=0（C）。敵に殴られること自体は評価しない——自らリスクを取り、
+ * そこから立て直したことだけを評価する（意図的被弾farmingの遮断）。
+ * 無傷（minHp=満タン）ならfinalHP−minHp≤0でraw=0。表示は勝利時のみ
+ * （GameOverOverlayがstatus==='won'でゲート。既存3神と同じ）。
+ */
+export function getFukueiMasteryRaw(state: GameState): number {
+  if (state.player.maxHp <= 0) return 0
+  if (!isFukueiRiskGateMet(state)) return 0
+  return Math.max(0, (state.player.hp - state.mastery.minHp) / state.player.maxHp)
 }
 
 /**
@@ -82,6 +108,16 @@ export function getMastery(state: GameState): MasteryResult | null {
     // G3 prototype：Sゲート・easy capなし（G2で難易度farmingフラットのため。実測後に判断）
     const grade: MasteryGrade = raw >= t.s ? 'S' : raw >= t.a ? 'A' : raw >= t.b ? 'B' : 'C'
     return { title: '鉄壁', grade, raw }
+  }
+
+  if (state.godId === GOD_IDS.fukuei) {
+    const raw = getFukueiMasteryRaw(state)
+    const t = RULES.mastery.fukuei
+    const riskGateMet = isFukueiRiskGateMet(state)
+    // G4 prototype：Sゲート・easy capなし（simulationでeasy farmingが確認されれば
+    // 蒼毘G3と同様に実測後へ判断を持ち越す）
+    const grade: MasteryGrade = raw >= t.s ? 'S' : raw >= t.a ? 'A' : raw >= t.b ? 'B' : 'C'
+    return { title: '大勝負', grade, raw, riskGateMet }
   }
 
   return null

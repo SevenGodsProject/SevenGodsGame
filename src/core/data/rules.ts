@@ -136,6 +136,17 @@ export const RULES = {
      * （e/n/h=0.481/0.496/0.474）だったため現時点では設けない。
      */
     sobi: { s: 0.85, a: 0.65, b: 0.4 },
+    /**
+     * 福永「大勝負」（G4 prototype）：raw＝(最終HP − 試合中最低HP) ÷ maxHp
+     * （どん底からの立て直し幅）のグレード下限。ただしrisk gate＝
+     * 「自傷カード由来の敵への実効与ダメージ ≥ 敵maxHp×riskGateRatio」を
+     * 満たさない試合はraw=0（C）。敵に殴られること自体は評価せず、
+     * 「自らリスクを取り、そこから立て直した」ことだけを評価する
+     * （意図的被弾farmingの遮断。LANE C research 50,400試合で検証済みのF17案）。
+     * 閾値はresearch閾値案をworktree simulation（本番engine実測）で確認した
+     * prototype検証用初期値であり正式最終値ではない。
+     */
+    fukuei: { s: 0.6, a: 0.4, b: 0.1, riskGateRatio: 0.1 },
   },
 
   /**
@@ -166,6 +177,11 @@ export const RULES = {
    *   state構造は不変（intentの取りうる形が増えただけ）。旧版アプリはv7セーブの
    *   新intentを読めないため番号を上げる。
    * v3〜v6セーブはbattleSaveStorage.tsのmigrateで読み込み継続できる（破棄しない）。
+   * G4 prototype：MasteryStateへ福永「大勝負」用2フィールド（minHp/
+   * riskCardEffDamage）を追加したが、番号は7のまま据え置き＋default-fill
+   * （battleSaveStorage.tsのfillFukueiMasteryFields）で補完する暫定運用。
+   * 正式採用時に8へbumpするかはレビューで判断（フィールド欠落セーブでも
+   * fillが吸収するため進行不能・NaNにはならない）。
    */
   saveVersion: 7,
 } as const
