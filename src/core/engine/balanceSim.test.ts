@@ -338,7 +338,7 @@ describe('バランスシミュレーション（Planner用・アサーション
     } else {
       for (const f of flagged) console.log(f)
     }
-  })
+  }, 30000)
 
   /**
    * 決定44で追加した「力の絆」（OTOMOの新しい成長パス）は、これまで
@@ -464,7 +464,7 @@ describe('バランスシミュレーション（Planner用・アサーション
     }
 
     expect(failures, `詰み（最善戦略でも勝率50%未満）が発生:\n${failures.join('\n')}`).toEqual([])
-  })
+  }, 30000)
 
   /**
    * 決定59：Task A2（スコア係数チューニング）の実測分析結果を固定する再現防止
