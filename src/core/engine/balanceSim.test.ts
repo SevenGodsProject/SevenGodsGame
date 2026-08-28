@@ -79,8 +79,17 @@ function utilityOf(instance: CardInstance): number {
   }, 0)
 }
 
+/** 予告されている被ダメージ合計（連撃・必殺技も含む。chargeは0） */
+function incomingOf(state: GameState): number {
+  const intent = state.enemy.intent
+  if (!intent) return 0
+  if (intent.kind === 'attack' || intent.kind === 'special') return intent.amount
+  if (intent.kind === 'multiAttack') return intent.hits.reduce((sum, h) => sum + h, 0)
+  return 0
+}
+
 function isDangerous(state: GameState): boolean {
-  const incoming = state.enemy.intent?.kind === 'attack' ? state.enemy.intent.amount : 0
+  const incoming = incomingOf(state)
   const projectedHpLoss = Math.max(0, incoming - state.player.block)
   return state.player.hp - projectedHpLoss < state.player.maxHp * 0.35
 }
@@ -110,7 +119,7 @@ function pickCard(state: GameState, strategy: Strategy): CardInstance | null {
   // 決定26：想定される被害以上のブロックが既にあるなら、defensive戦略でも
   // 無駄にブロックを積み増さない（でないと防御カードが豊富な神で「守るだけで
   // 一切攻撃しない」という非現実的な手詰まりが起きるため）
-  const incoming = state.enemy.intent?.kind === 'attack' ? state.enemy.intent.amount : 0
+  const incoming = incomingOf(state)
   const alreadyGuarded = state.player.block >= incoming
 
   if (strategy === 'defensive' || (strategy === 'balanced' && dangerous)) {

@@ -76,9 +76,15 @@ export function formatEvent(event: GameEvent): string {
     case 'BUFF_APPLIED':
       return `${event.target === 'enemy' ? '敵' : '自分'}の${statLabel(event.stat)}が${event.amount > 0 ? '+' : ''}${formatScaled(event.amount)}（${event.rounds}ラウンド）`
     case 'ENEMY_INTENT_SET':
-      return event.kind === 'attack' ? `敵の次の行動：攻撃${formatScaled(event.amount)}` : '敵の次の行動：溜め'
+      if (event.kind === 'attack') return `敵の次の行動：攻撃${formatScaled(event.amount)}`
+      if (event.kind === 'multiAttack') return `敵の次の行動：連撃${formatScaled(event.amount)}${event.label ? `「${event.label}」` : ''}`
+      if (event.kind === 'special') return `敵の次の行動：必殺技「${event.label ?? '???'}」${formatScaled(event.amount)}`
+      return '敵の次の行動：溜め'
     case 'ENEMY_ACTED':
-      return event.kind === 'attack' ? `敵が攻撃${formatScaled(event.amount)}` : '敵が溜めた'
+      if (event.kind === 'attack') return `敵が攻撃${formatScaled(event.amount)}`
+      if (event.kind === 'multiAttack') return `敵の連撃${event.label ? `「${event.label}」` : ''}（合計${formatScaled(event.amount)}）`
+      if (event.kind === 'special') return `敵の必殺技「${event.label ?? '???'}」${formatScaled(event.amount)}`
+      return '敵が溜めた'
     case 'SCORE_GAINED':
       return `スコア${event.amount >= 0 ? '+' : ''}${formatScaled(event.amount)}（${scoreReasonLabel(event.reason)}）`
     case 'ROUND_ENDED':

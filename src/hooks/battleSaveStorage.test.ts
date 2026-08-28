@@ -218,6 +218,59 @@ describe('battleSaveStorage（saveVersion 4・STEP-SCORE2-D-PROTO）', () => {
     expect(loaded?.score).toEqual(modern.score)
   })
 
+  it('v6セーブは破棄せず移行して読み込む（HP/deck/round/score/Mastery全保持・intent正規化のみ）', () => {
+    // ENEMY-IDENTITY-PROTOTYPE-02：v7はstate構造不変（intentの取りうる形が増えただけ）。
+    const modern = startTestGame('save-v6-mig')
+    const v6State = {
+      ...modern,
+      version: 6,
+      mastery: {
+        roundDamage: 8,
+        bestRoundDamage: 33,
+        attackCount: 4,
+        reductionRateSum: 2.5,
+        strongNeutralized: true,
+        guardAttackCount: 3,
+        fullyBlockedCount: 2,
+      },
+      enemy: { ...modern.enemy, intent: { kind: 'attack' as const, amount: 12 } },
+    }
+    localStorage.setItem('sevengods.battleSave', JSON.stringify({ version: 6, state: v6State }))
+    const loaded = loadBattleSave()
+    expect(loaded).not.toBeNull()
+    expect(loaded?.version).toBe(RULES.saveVersion)
+    // 旧来の正当なintent（attack/charge）はそのまま保持される
+    expect(loaded?.enemy.intent).toEqual({ kind: 'attack', amount: 12 })
+    expect(loaded?.mastery).toEqual(v6State.mastery)
+    expect(loaded?.score).toEqual(modern.score)
+    expect(loaded?.player.hp).toBe(modern.player.hp)
+    expect(loaded?.round).toBe(modern.round)
+    expect(loaded?.deck).toEqual(modern.deck)
+    expect(loaded?.godId).toBe(modern.godId)
+  })
+
+  it('v6セーブの未知kindのintentはnullへ正規化される（進行不能を防ぐ・runEnemyTurnが再導出）', () => {
+    const modern = startTestGame('save-v6-badintent')
+    const v6State = {
+      ...modern,
+      version: 6,
+      enemy: { ...modern.enemy, intent: { kind: 'mystery', foo: 1 } },
+    }
+    localStorage.setItem('sevengods.battleSave', JSON.stringify({ version: 6, state: v6State }))
+    const loaded = loadBattleSave()
+    expect(loaded).not.toBeNull()
+    expect(loaded?.enemy.intent).toBeNull()
+  })
+
+  it('v3セーブはv3→…→v7へ連鎖移行され、現行バージョンで読み込まれる（経路維持）', () => {
+    const payload = buildV3Payload()
+    localStorage.setItem('sevengods.battleSave', JSON.stringify(payload))
+    const loaded = loadBattleSave()
+    expect(loaded).not.toBeNull()
+    expect(loaded?.version).toBe(RULES.saveVersion)
+    expect(RULES.saveVersion).toBe(7)
+  })
+
   it('未知のバージョン（v2以前・将来版）はnull（読み込まない）', () => {
     const payload = buildV3Payload()
     localStorage.setItem('sevengods.battleSave', JSON.stringify({ ...payload, version: 99 }))

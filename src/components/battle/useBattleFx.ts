@@ -174,7 +174,7 @@ export function useBattleFx(log: GameEvent[], apCurrent: number): BattleFx {
             mrSelfInflictedDamage += event.amount
           }
         }
-      } else if (event.t === 'ENEMY_ACTED' && event.kind === 'attack') {
+      } else if (event.t === 'ENEMY_ACTED' && event.kind !== 'charge') {
         // 第二次完成フェーズP0-3：以前はDAMAGE_DEALT{target:'self', amount>0}の
         // 分岐内でenemyAttackも一緒に加算していたため、プレイヤーが完全ブロック
         // （dealt=0）した瞬間は敵の突進モーションそのものが再生されなかった

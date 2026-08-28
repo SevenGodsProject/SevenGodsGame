@@ -28,8 +28,9 @@ export type GameEvent =
   /** 共鳴発動のたびにOTOMOが成長する（決定19。精霊態→受肉態→童子） */
   | { t: 'OTOMO_EVOLVED'; form: OtomoForm }
   | { t: 'BUFF_APPLIED'; target: EffectTarget; stat: string; amount: number; rounds: number }
-  | { t: 'ENEMY_INTENT_SET'; kind: string; amount: number }
-  | { t: 'ENEMY_ACTED'; kind: string; amount: number }
+  /** label＝charge予告文またはspecial/multiAttackの技名（VFX層のカットイン文言用） */
+  | { t: 'ENEMY_INTENT_SET'; kind: string; amount: number; label?: string }
+  | { t: 'ENEMY_ACTED'; kind: string; amount: number; label?: string }
   | { t: 'SCORE_GAINED'; reason: string; amount: number }
   | { t: 'ROUND_ENDED'; round: number; unusedAp: number }
   | { t: 'GAME_ENDED'; status: GameStatus; totalScore: number }

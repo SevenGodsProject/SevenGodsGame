@@ -51,7 +51,8 @@ export function useBattleSound(log: GameEvent[]): void {
           sfx.divination()
           break
         case 'ENEMY_ACTED':
-          if (event.kind === 'attack') sfx.enemyTurn()
+          // ENEMY-IDENTITY-PROTOTYPE-02：連撃・必殺技も攻撃音を鳴らす（chargeのみ無音）
+          if (event.kind !== 'charge') sfx.enemyTurn()
           break
         case 'GAME_ENDED':
           if (event.status === 'won') {

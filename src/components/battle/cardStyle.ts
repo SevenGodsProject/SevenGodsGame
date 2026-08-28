@@ -86,9 +86,23 @@ export function getIntentPowerTier(amount: number): PowerTier {
  * 2種類のみ）の範囲内で完結しており、新しい行動種別・敵AI・攻撃値には
  * 一切関与しない表示専用ロジック。
  */
+/** 連撃hitsの表示（×10）。均一なら「40×3」、不均一なら「50+40」 */
+function formatMultiHits(hits: number[]): string {
+  const uniform = hits.every((h) => h === hits[0])
+  if (uniform) return `${formatScaled(hits[0])}×${hits.length}`
+  return hits.map((h) => formatScaled(h)).join('+')
+}
+
 export function formatEnemyIntent(intent: EnemyActionDef | null): string {
   if (!intent) return '行動予告なし'
   if (intent.kind === 'charge') return `⚡ ${intent.label}`
+  // ENEMY-IDENTITY-PROTOTYPE-02：必殺技は技名を、連撃はhit内訳を表示する。
+  // 数値は内部値のまま合算せず「40×3」形式にして、合計120の単発と誤認させない。
+  if (intent.kind === 'special') return `🔥 ${intent.name} ${formatScaled(intent.amount)}`
+  if (intent.kind === 'multiAttack') {
+    const hitsText = formatMultiHits(intent.hits)
+    return intent.special ? `🔥 ${intent.name ?? '連撃'} ${hitsText}` : `⚔ 連撃 ${hitsText}`
+  }
   // D2b：tier判定は内部値のまま、表示数値のみ×10（displayScale.ts）
   const tier = getIntentPowerTier(intent.amount)
   if (tier === 'huge') return `🔥 特大 ${formatScaled(intent.amount)}`
@@ -108,7 +122,13 @@ export function formatEnemyIntent(intent: EnemyActionDef | null): string {
 export function getIntentTierClass(intent: EnemyActionDef | null): string {
   if (!intent) return ''
   if (intent.kind === 'charge') return 'intent-tier-charge'
-  const tier = getIntentPowerTier(intent.amount)
+  // ENEMY-IDENTITY-PROTOTYPE-02：必殺技（special／special連撃）は常に最上位表示。
+  // 通常連撃は合計値で既存tierを判定する（40×3＝合計12なら💥強打相当）。
+  if (intent.kind === 'special') return 'intent-tier-huge'
+  const amount =
+    intent.kind === 'multiAttack' ? intent.hits.reduce((sum, h) => sum + h, 0) : intent.amount
+  if (intent.kind === 'multiAttack' && intent.special) return 'intent-tier-huge'
+  const tier = getIntentPowerTier(amount)
   if (tier === 'huge') return 'intent-tier-huge'
   if (tier === 'strong') return 'intent-tier-strong'
   return ''

@@ -162,7 +162,10 @@ export const RULES = {
    * v4（STEP-SCORE2-D-PROTO）：ScoreStateをBASE-D構造へ変更し、MasteryStateを追加。
    * v5（STEP-SCORE2-G1b）：MasteryStateへ寿楽「無力化」用3フィールドを追加。
    * v6（STEP-SCORE2-G3）：MasteryStateへ蒼毘「鉄壁」用2フィールドを追加。
-   * v3〜v5セーブはbattleSaveStorage.tsのmigrateで読み込み継続できる（破棄しない）。
+   * v7（ENEMY-IDENTITY-PROTOTYPE-02）：EnemyActionDefへmultiAttack/specialを追加。
+   *   state構造は不変（intentの取りうる形が増えただけ）。旧版アプリはv7セーブの
+   *   新intentを読めないため番号を上げる。
+   * v3〜v6セーブはbattleSaveStorage.tsのmigrateで読み込み継続できる（破棄しない）。
    */
-  saveVersion: 6,
+  saveVersion: 7,
 } as const

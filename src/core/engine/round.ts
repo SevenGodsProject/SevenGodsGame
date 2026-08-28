@@ -9,19 +9,58 @@ import type { Rng } from '../rng/seededRandom'
 
 type StepResult = { state: GameState; events: GameEvent[] }
 
+/** action合計値（charge=0）。intent表示・危険度tier・イベントamountの共通値 */
+export function enemyActionTotal(action: EnemyActionDef): number {
+  if (action.kind === 'attack' || action.kind === 'special') return action.amount
+  if (action.kind === 'multiAttack') return action.hits.reduce((sum, h) => sum + h, 0)
+  return 0
+}
+
+/** special/multiAttackの技名、chargeの予告文（VFXカットイン・ログ用） */
+export function enemyActionLabel(action: EnemyActionDef): string | undefined {
+  if (action.kind === 'charge') return action.label
+  if (action.kind === 'special') return action.name
+  if (action.kind === 'multiAttack') return action.name
+  return undefined
+}
+
 function intentEvent(action: EnemyActionDef): GameEvent {
-  return action.kind === 'attack'
-    ? { t: 'ENEMY_INTENT_SET', kind: 'attack', amount: action.amount }
-    : { t: 'ENEMY_INTENT_SET', kind: 'charge', amount: 0 }
+  return {
+    t: 'ENEMY_INTENT_SET',
+    kind: action.kind,
+    amount: enemyActionTotal(action),
+    label: enemyActionLabel(action),
+  }
 }
 
 function actionForRound(actions: EnemyActionDef[], round: number): EnemyActionDef {
   return actions[round - 1] ?? actions[actions.length - 1]
 }
 
-/** 決定39：難易度の敵攻撃力倍率を反映する（'charge'はダメージを持たないため対象外） */
+/**
+ * 決定39：難易度の敵攻撃力倍率を反映する（'charge'はダメージを持たないため対象外）。
+ * multiAttackは「合計をroundしてから各hitへ配分」する（合計保存丸め）。
+ * per-hit丸めは各hitが+1ずつ上振れし、hardで内部+1〜2ダメージとなって
+ * 才華/大耀のhard勝率を10pt級で崩すことをPROTOTYPE-01 simulationで確認済み。
+ * 配分はhit比例のfloor＋残りを先頭から+1（決定論・Math.random不使用）。
+ */
 function scaleEnemyAction(action: EnemyActionDef, multiplier: number): EnemyActionDef {
-  return action.kind === 'attack' ? { ...action, amount: Math.round(action.amount * multiplier) } : action
+  if (action.kind === 'attack' || action.kind === 'special') {
+    return { ...action, amount: Math.round(action.amount * multiplier) }
+  }
+  if (action.kind === 'multiAttack') {
+    const total = enemyActionTotal(action)
+    if (total <= 0) return action
+    const target = Math.round(total * multiplier)
+    const hits = action.hits.map((h) => Math.floor((h * target) / total))
+    let rest = target - hits.reduce((sum, h) => sum + h, 0)
+    for (let i = 0; rest > 0; i = (i + 1) % hits.length) {
+      hits[i] += 1
+      rest -= 1
+    }
+    return { ...action, hits }
+  }
+  return action
 }
 
 /** そのラウンドの敵の行動を、難易度補正込みで決める（予告表示・実行の両方がこれを使う） */
@@ -83,21 +122,41 @@ export function runEnemyTurn(state: GameState): StepResult {
 
   let next: GameState = { ...state, phase: 'enemyTurn' }
 
-  if (action.kind === 'attack') {
+  if (action.kind !== 'charge') {
+    // ENEMY-IDENTITY-PROTOTYPE-02：attack/special/multiAttackを共通の
+    // 「hitの列」として処理する。単発は要素1の列（従来と完全同値）。
+    const rawHits = action.kind === 'multiAttack' ? action.hits : [action.amount]
+    const rawTotal = enemyActionTotal(action)
     const atkBuff = sumBuff(next.enemy.buffs, 'atk')
-    const amount = Math.max(0, action.amount + atkBuff)
-    events.push({ t: 'ENEMY_ACTED', kind: 'attack', amount })
 
-    // 寿楽Mastery「無力化」J-G集計（決定113。寿楽使用時のみ）。
-    // raw＝action.amount（難易度倍率済みの素の攻撃値）、actual＝amount（debuff適用後）。
-    // 攻撃1回ごとの軽減率(0〜1)を等重みで積算する（金額加重ではない）。
-    // 空撃ちdebuff（攻撃が来ないラウンドのdebuff）はここに到達しないため自動的に無得点。
-    // charge行動はattack分岐外のため除外。enemy ID/HPによる補正は行わない。
-    if (next.godId === GOD_IDS.juraku && action.amount > 0) {
-      const rate = Math.max(0, Math.min(1, (action.amount - amount) / action.amount))
+    // debuff（負のatkBuff）は「action合計へ1回だけ」適用し、先頭hitから順に消費する。
+    // per-hit適用（各hitへ全額）は寿楽の-5が連撃4×3を全hit消滅させ、
+    // Mastery S率51%のfarming破綻を生むことをPROTOTYPE-01で確認済み（CEO決定3）。
+    // 正のatkBuff（敵強化）は先頭hitへ加算する。単発では従来のamount+atkBuffと同値。
+    const actualHits = [...rawHits]
+    if (atkBuff < 0) {
+      let pool = -atkBuff
+      for (let i = 0; i < actualHits.length && pool > 0; i++) {
+        const cut = Math.min(actualHits[i], pool)
+        actualHits[i] -= cut
+        pool -= cut
+      }
+    } else if (atkBuff > 0) {
+      actualHits[0] += atkBuff
+    }
+    const actualTotal = actualHits.reduce((sum, h) => sum + h, 0)
+    events.push({ t: 'ENEMY_ACTED', kind: action.kind, amount: actualTotal, label: enemyActionLabel(action) })
+
+    // 寿楽Mastery「無力化」J-G集計（決定113＋MODEL-B採用。寿楽使用時のみ）。
+    // 1 enemy action = 1 sample（multiAttackでもhitごとに数えない。CEO決定4）。
+    // raw＝action合計（難易度倍率済み）、actual＝debuff適用後の合計。
+    // specialも通常sampleとして含める。charge行動は分岐外のため除外。
+    // enemy ID/HPによる補正は行わない。
+    if (next.godId === GOD_IDS.juraku && rawTotal > 0) {
+      const rate = Math.max(0, Math.min(1, (rawTotal - actualTotal) / rawTotal))
       const t = RULES.mastery.juraku
       // S行動ゲート：raw>=10（内部値。表示×10で「100以上」）の強攻撃を半分以下へ
-      const strong = action.amount >= t.strongHitRaw && amount <= action.amount * 0.5
+      const strong = rawTotal >= t.strongHitRaw && actualTotal <= rawTotal * 0.5
       next = {
         ...next,
         mastery: {
@@ -109,15 +168,14 @@ export function runEnemyTurn(state: GameState): StepResult {
       }
     }
 
-    // 蒼毘Mastery「鉄壁」S4集計（STEP-SCORE2-G3。蒼毘使用時のみ）。
-    // fullyBlocked＝「actual>0の攻撃をblockが完全吸収しHP実害0」。
-    // debuffでamount=0になった攻撃はこの分岐のガードで除外される＝
-    // 「攻撃が届く前に消した」のは寿楽の領分であり、蒼毘の票（分母）にも入れない。
-    // 余剰block・block総量は評価せず、1攻撃＝1票。判定はapplyDamageと同じ
-    // combat resolution（block=min(player.block, amount)）に基づく。
-    if (next.godId === GOD_IDS.sobi && amount > 0) {
-      const wouldBlock = Math.min(next.player.block, amount)
-      const fully = amount - wouldBlock === 0
+    // 蒼毘Mastery「鉄壁」S4集計（STEP-SCORE2-G3＋MODEL-B採用。蒼毘使用時のみ）。
+    // 1 enemy action = 1 票。multiAttackは「全hitを完全吸収してHP実害0」のときのみ
+    // fullyBlocked（hitごとに票を数えない。CEO決定4）。specialも票に含める。
+    // debuffでactualTotal=0になったactionは分母にも入れない（寿楽の領分と分離）。
+    // 判定はapplyDamageと同じ逐次block pool消費に基づく。
+    if (next.godId === GOD_IDS.sobi && actualTotal > 0) {
+      const wouldBlock = Math.min(next.player.block, actualTotal)
+      const fully = actualTotal - wouldBlock === 0
       next = {
         ...next,
         mastery: {
@@ -128,11 +186,17 @@ export function runEnemyTurn(state: GameState): StepResult {
       }
     }
 
-    const result = applyDamage(next, 'self', amount)
-    next = result.state
-    events.push(...result.events)
+    // ダメージはhitごとに順に適用する（blockは同一poolから逐次消費）。
+    // DAMAGE_DEALTイベントもhitごとに出るため、連撃のVFX/ログは多段表示になる。
+    for (const hit of actualHits) {
+      if (hit <= 0) continue
+      const result = applyDamage(next, 'self', hit)
+      next = result.state
+      events.push(...result.events)
+      if (next.status !== 'playing') break
+    }
   } else {
-    events.push({ t: 'ENEMY_ACTED', kind: 'charge', amount: 0 })
+    events.push({ t: 'ENEMY_ACTED', kind: 'charge', amount: 0, label: action.label })
   }
 
   next = {

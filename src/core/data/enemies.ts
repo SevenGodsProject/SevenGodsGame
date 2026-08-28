@@ -129,7 +129,7 @@ export const ENEMIES: EnemyDef[] = [
     // 方式で、この1体だけ直接パスを指定する。数値・AIには一切触れていない）。
     art: '/assets/enemies/karakuri/art.webp',
     typeLabel: '溜め型',
-    typeDescription: '溜めの次に大技。予告を読んで備える。',
+    typeDescription: '溜めの次に大技。R5の主砲に備えよ。',
     visualType: 'standard',
     battleCries: [
       '照準、完了',
@@ -140,14 +140,19 @@ export const ENEMIES: EnemyDef[] = [
       '機構に、迷いはない',
       '精密に、仕留める',
     ],
-    // 技巧型。2回「溜め」てから大技を撃つ。予告を見てブロックを合わせる読み合いが核
+    // ENEMY-IDENTITY-PROTOTYPE-02（K-C2、CEO GO）：R4「⚠ 主砲充填開始」→
+    // R5必殺技「主砲・神滅甲」（内部24＝表示240）の2段telegraph型へ変更。
+    // R7配置（K-A/K-B）は平均撃破R5.7のため発動率0%＝不可視と実証され
+    // 棄却済み。R5・内部26（K-C）はhard勝率75.1%まで下がるため24へ調整
+    // （K-C2：hard 83.4%・発動率76.1%・発動前撃破23.9%）。
+    // 合計はbaseline 70→68。R2の溜め→R3主砲22の既存読み合いは維持する。
     actions: [
       { kind: 'attack', amount: 6 },
       { kind: 'charge', label: '砲身に魔力を溜めている…' },
       { kind: 'attack', amount: 22 },
+      { kind: 'charge', label: '⚠ 主砲充填開始…！' },
+      { kind: 'special', amount: 24, name: '主砲・神滅甲' },
       { kind: 'attack', amount: 7 },
-      { kind: 'charge', label: '砲身に魔力を溜めている…' },
-      { kind: 'attack', amount: 26 },
       { kind: 'attack', amount: 9 },
     ],
   },
@@ -159,8 +164,8 @@ export const ENEMIES: EnemyDef[] = [
     // （STEP-L1で軽加工候補を検証・A判定。左端の破片除去＋512×512化のみで、
     // 新規生成なし。datenshi/karakuri/doukeshi/oniと同じ最小変更方式）。
     art: '/assets/enemies/juuma/art.webp',
-    typeLabel: '速攻型',
-    typeDescription: '序盤から攻撃が激しい。',
+    typeLabel: '連撃型',
+    typeDescription: '毎ラウンド連撃。序盤から圧が激しい。',
     visualType: 'fast',
     battleCries: [
       'ガアアアッ！',
@@ -171,15 +176,19 @@ export const ENEMIES: EnemyDef[] = [
       '我が牙、受けてみよ！',
       '獲物は、もう目の前だ',
     ],
-    // 速攻型。HPは低いが最初から圧をかけてくる
+    // ENEMY-IDENTITY-PROTOTYPE-02（M-G、CEO GO）：全ラウンド連撃＋R3必殺技
+    // 「双牙乱撃」（内部4×3＝表示40×3）へ変更。各ラウンドの合計は
+    // baseline（9,10,12,13,14,15,16）と完全同値＝normal難易度のバランス不変。
+    // debuffは合計へ1回適用・難易度倍率は合計保存丸め・Masteryは1action=1sample
+    // （いずれもround.ts側で実装。per-hit方式の破綻はPROTOTYPE-01で実証済み）。
     actions: [
-      { kind: 'attack', amount: 9 },
-      { kind: 'attack', amount: 10 },
-      { kind: 'attack', amount: 12 },
-      { kind: 'attack', amount: 13 },
-      { kind: 'attack', amount: 14 },
-      { kind: 'attack', amount: 15 },
-      { kind: 'attack', amount: 16 },
+      { kind: 'multiAttack', hits: [5, 4] },
+      { kind: 'multiAttack', hits: [5, 5] },
+      { kind: 'multiAttack', hits: [4, 4, 4], name: '双牙乱撃', special: true },
+      { kind: 'multiAttack', hits: [7, 6] },
+      { kind: 'multiAttack', hits: [7, 7] },
+      { kind: 'multiAttack', hits: [8, 7] },
+      { kind: 'multiAttack', hits: [8, 8] },
     ],
   },
   {

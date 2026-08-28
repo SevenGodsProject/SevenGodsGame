@@ -10,8 +10,20 @@ import type { Buff } from './effect'
  */
 export type EnemyActionDef =
   | { kind: 'attack'; amount: number }
-  /** 将来用：溜め（次ラウンドに大技） */
+  /** 溜め（次ラウンドに大技）。telegraphの警告表示にもlabelを流用する */
   | { kind: 'charge'; label: string }
+  /**
+   * ENEMY-IDENTITY-PROTOTYPE-02：連撃。1回のenemy actionとして複数hitを順に与える。
+   * - Mastery集計は「1 action = 1 sample」（MODEL-B）。hitごとに票を数えない
+   * - debuff（敵atk低下）はaction合計へ1回だけ適用する（per-hit適用は寿楽Mastery
+   *   S率51%のfarming破綻をsimulationで確認済みのため禁止）
+   * - 難易度倍率は「合計をroundしてから各hitへ配分」（per-hit丸めはhard勝率を
+   *   大きく崩すことをsimulationで確認済み）
+   * - special: trueなら必殺技（🔥表示・nameを表示に使う）
+   */
+  | { kind: 'multiAttack'; hits: number[]; name?: string; special?: boolean }
+  /** 必殺技（単発）。charge予告の次ラウンドに撃つ大技。nameを🔥表示に使う */
+  | { kind: 'special'; amount: number; name: string }
 
 /**
  * STEP3-A：敵タイプ別の軽量CSS演出を出し分けるための表示専用タグ。

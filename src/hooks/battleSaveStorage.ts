@@ -138,9 +138,8 @@ export function migrateBattleSaveV4(state: GameState): GameState {
  */
 export function migrateBattleSaveV5(state: GameState): GameState {
   const old = state.mastery as Partial<GameState['mastery']> | undefined
-  return {
+  return migrateBattleSaveV6({
     ...state,
-    version: RULES.saveVersion,
     mastery: {
       roundDamage: old?.roundDamage ?? 0,
       bestRoundDamage: old?.bestRoundDamage ?? 0,
@@ -150,6 +149,33 @@ export function migrateBattleSaveV5(state: GameState): GameState {
       guardAttackCount: 0,
       fullyBlockedCount: 0,
     },
+  })
+}
+
+/**
+ * saveVersion 6 → 7 への移行（ENEMY-IDENTITY-PROTOTYPE-02）。
+ * v7ではEnemyActionDefへmultiAttack/specialが追加されたが、state構造自体は
+ * 不変のため、HP・deck・round・God・OTOMO・score・Masteryはすべて無変更で
+ * 引き継がれる。唯一の対応は`enemy.intent`の正規化：
+ * - v6以前の正当なintent（attack/charge）はそのまま保持する
+ * - 未知のkindを持つintentはnullへ落とす。intentがnullでもrunEnemyTurnが
+ *   `state.enemy.intent ?? nextEnemyAction(state)`で現在の敵テーブルから
+ *   行動を再導出するため、進行不能にはならない
+ * なお、敵テーブル自体が変わった敵（機工師・魔獣）の移行対局では、保存時に
+ * 予告済みだった旧行動が「そのラウンドに限り」実行される（プレイヤーに
+ * 予告した内容を守る側へ倒す。次ラウンド以降は新テーブルで進行する）。
+ */
+export function migrateBattleSaveV6(state: GameState): GameState {
+  const intent = state.enemy?.intent ?? null
+  const validKinds = ['attack', 'charge', 'multiAttack', 'special']
+  const normalizedIntent =
+    intent && typeof intent === 'object' && validKinds.includes((intent as { kind?: string }).kind ?? '')
+      ? intent
+      : null
+  return {
+    ...state,
+    version: RULES.saveVersion,
+    enemy: { ...state.enemy, intent: normalizedIntent },
   }
 }
 
@@ -162,7 +188,8 @@ export function loadBattleSave(): GameState | null {
     if (!isSavedBattle(parsed)) return null
     if (parsed.state.status !== 'playing') return null
     if (parsed.version === RULES.saveVersion) return parsed.state
-    // v3〜v5セーブは移行して読み込む（勝手に破棄しない）。それ以外の未知版はnull。
+    // v3〜v6セーブは移行して読み込む（勝手に破棄しない）。それ以外の未知版はnull。
+    if (parsed.version === 6) return migrateBattleSaveV6(parsed.state)
     if (parsed.version === 5) return migrateBattleSaveV5(parsed.state)
     if (parsed.version === 4) return migrateBattleSaveV4(parsed.state)
     if (parsed.version === 3) return migrateBattleSaveV3(parsed.state)
