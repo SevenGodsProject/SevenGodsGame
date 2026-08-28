@@ -11,10 +11,17 @@ export const OTOMO_IDS = {
   shofuku: otomoId('shofuku'),
 } as const
 
+/**
+ * STEP-VISUAL-OTOMO-TRANSPARENT-PHASE4：星雲背景を除去した透過版
+ * `<form>_transparent.webp`へ参照を切替（Battle Stage化・決定116の後続）。
+ * 旧`<form>.webp`（星雲焼き込み）はロールバック用に同ディレクトリへ温存
+ * （enemies刷新・決定99/100と同じ「併置・最小差分」方式）。
+ * `background.webp`は神選択画面用のため対象外。
+ */
 const art = (id: string) => ({
-  spirit: `/assets/otomo/${id}/spirit.webp`,
-  incarnate: `/assets/otomo/${id}/incarnate.webp`,
-  doji: `/assets/otomo/${id}/doji.webp`,
+  spirit: `/assets/otomo/${id}/spirit_transparent.webp`,
+  incarnate: `/assets/otomo/${id}/incarnate_transparent.webp`,
+  doji: `/assets/otomo/${id}/doji_transparent.webp`,
 })
 
 /**
