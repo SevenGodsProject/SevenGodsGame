@@ -1,9 +1,14 @@
 import type { Difficulty } from '../../core/types'
 import { GODS } from '../../core/data/gods'
 import { loadGodRecord, type GodRecord } from '../../hooks/recordStorage'
+import { bestResultOf, loadRecentDailyDays } from '../../hooks/dailyStorage'
+import { DailyStatusBadge } from './DailyStatusBadge'
+import { getEnemyDef } from '../../core/data/enemies'
+import { RULES } from '../../core/data/rules'
 import { formatScaled } from '../displayScale'
 import { ARCHETYPE_LABEL } from './godStyle'
 import './setup.css'
+import './daily.css'
 
 type RecordScreenProps = {
   onBack: () => void
@@ -37,12 +42,50 @@ function hasAnyRecord(record: GodRecord): boolean {
  * 1回だけ読む」設計・同じカードグリッドの視覚言語を踏襲する。
  */
 export function RecordScreen({ onBack }: RecordScreenProps) {
+  // DAILY-01：神域挑戦の直近7日。通常モードの神別自己ベストとは別のkeyから読む（混ぜない）
+  const dailyDays = loadRecentDailyDays(7)
   return (
     <div className="setup-screen">
       <h1 className="setup-title">戦績</h1>
       <p className="setup-subtitle">
         神ごとの自己ベストと対局数です（この端末に保存された記録の表示のみ。ランキングやオンライン通信はありません）。
       </p>
+
+      <section className="record-daily" aria-label="神域挑戦の記録">
+        <h2 className="record-daily-title">神域挑戦（直近7日）</h2>
+        {dailyDays.length === 0 ? (
+          <p className="record-daily-empty">まだ神域挑戦の記録がありません。ホームの「今日の神域挑戦」から挑めます。</p>
+        ) : (
+          <div style={{ overflowX: 'auto' }}>
+            <table className="record-daily-table">
+              <thead>
+                <tr>
+                  <th>日付</th>
+                  <th>今日の敵</th>
+                  <th className="num">今日のベスト</th>
+                  <th>勝敗</th>
+                  <th>使用神</th>
+                  <th className="num">挑戦</th>
+                </tr>
+              </thead>
+              <tbody>
+                {dailyDays.map((day) => (
+                  <tr key={day.dateKey}>
+                    <td>{day.dateKey}</td>
+                    <td>{getEnemyDef(day.enemyId).name}</td>
+                    <td className="num">{day.bestScore > 0 ? formatScaled(day.bestScore) : '—'}</td>
+                    <td>{(() => { const r = bestResultOf(day); return r ? <DailyStatusBadge status={r.status} /> : '—' })()}</td>
+                    <td>{day.bestGodId ? (GODS.find((g) => g.id === day.bestGodId)?.nameJa ?? '—') : '—'}</td>
+                    <td className="num">
+                      {day.attemptsUsed} / {RULES.daily.attemptsPerDay}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+      </section>
 
       <div className="record-grid">
         {GODS.map((god) => {

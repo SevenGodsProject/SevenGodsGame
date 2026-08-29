@@ -18,6 +18,8 @@ type DeckBuilderScreenProps = {
   godId: GodId
   /** LANE-D：Enemy Selectで選んだ対戦相手。null＝「神に委ねる」（ランダム） */
   enemyId: EnemyId | null
+  /** DAILY-01：神域挑戦（相手は今日のボス固定。★は神域強化状態の5を表示し、EnemyDef.rankは変えない） */
+  dailyChallenge?: boolean
   otomoGrowthPath: GrowthPath
   onOtomoGrowthPathChange: (path: GrowthPath) => void
   onConfirm: (deck: CardDefId[]) => void
@@ -74,6 +76,7 @@ export function DeckBuilderScreen({
   onOtomoGrowthPathChange,
   onConfirm,
   onBack,
+  dailyChallenge = false,
 }: DeckBuilderScreenProps) {
   const god = getGodDef(godId)
   // LANE-D（選択後の一貫性）：Enemy Selectで選んだ相手をヘッダに常時表示する
@@ -142,10 +145,10 @@ export function DeckBuilderScreen({
           <>
             <img src={opponent.art} alt="" />
             <span className="opponent-chip-body">
-              <span className="opponent-chip-label">対戦相手</span>
+              <span className="opponent-chip-label">{dailyChallenge ? '今日の神域挑戦・神域強化' : '対戦相手'}</span>
               <span className="opponent-chip-name">{opponent.name}</span>
               <span className="opponent-chip-meta">
-                <ThreatStars rank={opponent.rank} />
+                <ThreatStars rank={dailyChallenge ? 5 : opponent.rank} />
                 <span className="opponent-chip-type">【{opponent.typeLabel}】</span>
               </span>
             </span>

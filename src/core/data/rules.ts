@@ -169,6 +169,25 @@ export const RULES = {
   },
 
   /**
+   * DAILY-01：神域挑戦（Daily Challenge）。
+   * 「毎日、全員が同じ敵・同じseedに3回だけ挑戦し、神・OTOMO・デッキ・プレイングを
+   * 工夫してその日の最高スコアを狙う」モード（CEO決定 2026-08-29）。
+   * - 日付はJST 00:00固定（`timezoneOffsetMinutes`＝+9h）。端末タイムゾーンに依存しない
+   * - 敵は週次シャッフル巡回：JSTの週キー（月曜）からshuffleし、1週間で7体が必ず1回ずつ登場
+   * - 補正は`modifier`（難易度倍率に乗算）。難易度は'normal'基準・スコア倍率は付けない
+   *   （前回Daily監査：★スコア倍率は自然差2.6〜3.3%に対し過剰でfarm化するためDROP）。
+   *   数値は仮値で、balanceSim（全神で最良戦略勝率50%以上）を通してから確定する
+   * - `EnemyDef.rank`は変更しない。★★★★★「神域強化」はDailyモードの表示専用状態
+   */
+  daily: {
+    timezoneOffsetMinutes: 540,
+    attemptsPerDay: 3,
+    modifier: { enemyHpMul: 1.25, enemyAtkMul: 1.15 },
+    /** dailyStorageに保持する日数（古い日は自動剪定） */
+    retentionDays: 30,
+  },
+
+  /**
    * セーブデータのバージョン。互換性維持のため必ず持たせる。
    * v4（STEP-SCORE2-D-PROTO）：ScoreStateをBASE-D構造へ変更し、MasteryStateを追加。
    * v5（STEP-SCORE2-G1b）：MasteryStateへ寿楽「無力化」用3フィールドを追加。
@@ -182,6 +201,8 @@ export const RULES = {
    * （battleSaveStorage.tsのfillFukueiMasteryFields）で補完する暫定運用。
    * 正式採用時に8へbumpするかはレビューで判断（フィールド欠落セーブでも
    * fillが吸収するため進行不能・NaNにはならない）。
+   * v8（DAILY-01）：GameStateへ`mode`/`dailyKey`/`modifier`を追加。v7セーブは
+   *   `migrateBattleSaveV7`が`mode:'normal'`を補完して読み込み継続（福永fillも同経路）。
    */
-  saveVersion: 7,
+  saveVersion: 8,
 } as const

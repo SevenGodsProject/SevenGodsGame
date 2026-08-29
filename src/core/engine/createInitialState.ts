@@ -29,7 +29,10 @@ export function createInitialState(
   const difficulty = action.difficulty ?? 'normal'
   const preset = RULES.difficulty[difficulty]
   const playerMaxHp = RULES.player.maxHp + preset.playerMaxHpBonus
-  const enemyMaxHp = Math.round(enemyDef.maxHp * preset.enemyHpMultiplier)
+  // DAILY-01：神域強化の追加倍率は難易度倍率に乗算し、1回だけ丸める。
+  // 未指定（通常モード・既存テスト）は×1で従来と同じ値になる。
+  const modifier = action.modifier
+  const enemyMaxHp = Math.round(enemyDef.maxHp * preset.enemyHpMultiplier * (modifier?.enemyHpMul ?? 1))
 
   // 決定24：デッキの有効性はデッキ構築画面が事前に絞り込む前提だが、
   // playCard.tsと同じ方針で、ここでも不正な構成はバグとして早期に落とす。
@@ -76,6 +79,11 @@ export function createInitialState(
 
     godId: godDef.id,
     difficulty,
+    // DAILY-01：モードとDaily補正をstateに持たせる（毎ラウンドの敵行動倍率・
+    // 期限切れセーブ判定・決着時の記録先の分岐が、保存/再開後もこれを参照する）
+    mode: action.mode ?? 'normal',
+    ...(action.dailyKey ? { dailyKey: action.dailyKey } : {}),
+    ...(modifier ? { modifier } : {}),
     otomoGrowthPath: action.otomoGrowthPath ?? 'guardian',
     resonance: { value: 0, max: RULES.resonance.max },
     divination: { remaining: RULES.divination.count, usedThisRound: false },

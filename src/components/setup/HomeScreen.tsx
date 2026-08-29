@@ -14,6 +14,8 @@ type HomeScreenProps = {
   onShowOtomoGrowth: () => void
   /** Task E1：戦績画面を開く */
   onShowRecord: () => void
+  /** DAILY-01：今日の神域挑戦画面を開く */
+  onShowDaily: () => void
 }
 
 /** ホーム画面で見せる代表の神（決定16・18のMVP基準神と同じ恵比寿で統一） */
@@ -56,8 +58,10 @@ export function HomeScreen({
   onShowTutorial,
   onShowOtomoGrowth,
   onShowRecord,
+  onShowDaily,
 }: HomeScreenProps) {
   const savedGod = savedBattle ? GODS.find((g) => g.id === savedBattle.godId) : undefined
+  const savedIsDaily = savedBattle?.mode === 'daily'
 
   return (
     <div className="home-screen">
@@ -76,9 +80,15 @@ export function HomeScreen({
             </button>
             {savedBattle && savedGod && (
               <button type="button" className="home-cta-secondary" onClick={onResume}>
-                続きから（{savedGod.nameJa}・ラウンド{savedBattle.round}）
+                続きから（{savedIsDaily ? '神域挑戦・' : ''}
+                {savedGod.nameJa}・ラウンド{savedBattle.round}）
               </button>
             )}
+          </div>
+          <div className="home-cta-row">
+            <button type="button" className="home-cta-daily" onClick={onShowDaily}>
+              今日の神域挑戦 <span className="daily-stars">★★★★★</span>
+            </button>
           </div>
 
           <button type="button" className="home-howto-button" onClick={onShowTutorial}>

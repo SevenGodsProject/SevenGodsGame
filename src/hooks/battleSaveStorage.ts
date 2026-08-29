@@ -81,7 +81,8 @@ export function migrateBattleSaveV3(state: GameState): GameState {
   const damage = old.damage ?? 0
   const combo = old.combo ?? 0
   const legacy = (old.apEfficiency ?? 0) + (old.roundBonus ?? 0) + (old.oracleBonus ?? 0)
-  return {
+  // v3→v4→…→現行へ連鎖させる（DAILY-01：v8の`mode`補完はmigrateBattleSaveV7が担う）
+  return migrateBattleSaveV4({
     ...state,
     version: RULES.saveVersion,
     score: {
@@ -105,7 +106,7 @@ export function migrateBattleSaveV3(state: GameState): GameState {
       minHp: state.player.hp,
       riskCardEffDamage: 0,
     },
-  }
+  })
 }
 
 /**
@@ -207,10 +208,25 @@ export function migrateBattleSaveV6(state: GameState): GameState {
     intent && typeof intent === 'object' && validKinds.includes((intent as { kind?: string }).kind ?? '')
       ? intent
       : null
+  return migrateBattleSaveV7({
+    ...state,
+    enemy: { ...state.enemy, intent: normalizedIntent },
+  })
+}
+
+/**
+ * saveVersion 7 → 8 への移行（DAILY-01）。
+ * v8ではGameStateへ`mode`（'normal' | 'daily'）・`dailyKey`・`modifier`が追加された。
+ * v7以前のセーブは全て通常モードの対局なので`mode:'normal'`を補完するだけで、
+ * HP・deck・round・God・OTOMO・score・Masteryはすべて無変更で引き継がれる
+ * （`dailyKey`/`modifier`は通常モードでは持たないため付けない）。
+ * 福永フィールドのfill（G4）もここで同時に吸収する。
+ */
+export function migrateBattleSaveV7(state: GameState): GameState {
   return fillFukueiMasteryFields({
     ...state,
     version: RULES.saveVersion,
-    enemy: { ...state.enemy, intent: normalizedIntent },
+    mode: state.mode ?? 'normal',
   })
 }
 
@@ -222,10 +238,10 @@ export function loadBattleSave(): GameState | null {
     const parsed: unknown = JSON.parse(raw)
     if (!isSavedBattle(parsed)) return null
     if (parsed.state.status !== 'playing') return null
-    // 同一versionでも、G4導入前のv7セーブには福永用Masteryフィールドが無い
-    // ことがあるためfillで補完する（フィールドが揃っていれば無変更で返る）
-    if (parsed.version === RULES.saveVersion) return fillFukueiMasteryFields(parsed.state)
-    // v3〜v6セーブは移行して読み込む（勝手に破棄しない）。それ以外の未知版はnull。
+    // 同一versionでも欠落フィールドはfillで補完する（揃っていれば無変更で返る）
+    if (parsed.version === RULES.saveVersion) return migrateBattleSaveV7(parsed.state)
+    // v3〜v7セーブは移行して読み込む（勝手に破棄しない）。それ以外の未知版はnull。
+    if (parsed.version === 7) return migrateBattleSaveV7(parsed.state)
     if (parsed.version === 6) return migrateBattleSaveV6(parsed.state)
     if (parsed.version === 5) return migrateBattleSaveV5(parsed.state)
     if (parsed.version === 4) return migrateBattleSaveV4(parsed.state)

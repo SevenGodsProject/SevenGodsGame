@@ -333,13 +333,13 @@ describe('battleSaveStorage（saveVersion 4・STEP-SCORE2-D-PROTO）', () => {
     expect(loaded?.mastery.riskCardEffDamage).toBe(31)
   })
 
-  it('v3セーブはv3→…→v7へ連鎖移行され、現行バージョンで読み込まれる（経路維持）', () => {
+  it('v3セーブはv3→…→v8へ連鎖移行され、現行バージョンで読み込まれる（経路維持）', () => {
     const payload = buildV3Payload()
     localStorage.setItem('sevengods.battleSave', JSON.stringify(payload))
     const loaded = loadBattleSave()
     expect(loaded).not.toBeNull()
     expect(loaded?.version).toBe(RULES.saveVersion)
-    expect(RULES.saveVersion).toBe(7)
+    expect(RULES.saveVersion).toBe(8)
   })
 
   it('未知のバージョン（v2以前・将来版）はnull（読み込まない）', () => {
@@ -358,5 +358,56 @@ describe('battleSaveStorage（saveVersion 4・STEP-SCORE2-D-PROTO）', () => {
       JSON.stringify({ version: RULES.saveVersion, state: done }),
     )
     expect(loadBattleSave()).toBeNull()
+  })
+})
+
+describe('battleSaveStorage（saveVersion 8・DAILY-01）', () => {
+  it('v7セーブは破棄せず移行して読み込む（mode:normalを補完、他は全保持）', () => {
+    const modern = startTestGame('save-v7-mig')
+    const { mode: _mode, ...withoutMode } = modern
+    void _mode
+    const v7State = { ...withoutMode, version: 7 }
+    localStorage.setItem('sevengods.battleSave', JSON.stringify({ version: 7, state: v7State }))
+    const loaded = loadBattleSave()
+    expect(loaded).not.toBeNull()
+    expect(loaded?.version).toBe(RULES.saveVersion)
+    expect(loaded?.mode).toBe('normal')
+    expect(loaded?.dailyKey).toBeUndefined()
+    expect(loaded?.modifier).toBeUndefined()
+    expect(loaded?.score).toEqual(modern.score)
+    expect(loaded?.mastery).toEqual(modern.mastery)
+    expect(loaded?.deck).toEqual(modern.deck)
+    expect(loaded?.enemy).toEqual(modern.enemy)
+  })
+
+  it('神域挑戦（mode:daily）のセーブはdailyKey・modifierごと往復する', () => {
+    const modern = startTestGame('save-v8-daily')
+    const daily: GameState = {
+      ...modern,
+      mode: 'daily',
+      dailyKey: '2026-09-02',
+      modifier: { enemyHpMul: 1.25, enemyAtkMul: 1.15 },
+    }
+    saveBattle(daily)
+    const loaded = loadBattleSave()
+    expect(loaded?.mode).toBe('daily')
+    expect(loaded?.dailyKey).toBe('2026-09-02')
+    expect(loaded?.modifier).toEqual({ enemyHpMul: 1.25, enemyAtkMul: 1.15 })
+  })
+
+  it('v3セーブはv3→…→v8へ連鎖移行され、mode:normalで読み込まれる', () => {
+    const modern = startTestGame('save-v3-chain-v8')
+    const v3State = {
+      ...modern,
+      version: 3,
+      score: { damage: 10, combo: 5, apEfficiency: 3, roundBonus: 2, oracleBonus: 1, total: 21 },
+    }
+    const raw = v3State as unknown as Record<string, unknown>
+    delete raw.mastery
+    delete raw.mode
+    localStorage.setItem('sevengods.battleSave', JSON.stringify({ version: 3, state: v3State }))
+    const loaded = loadBattleSave()
+    expect(loaded?.version).toBe(RULES.saveVersion)
+    expect(loaded?.mode).toBe('normal')
   })
 })

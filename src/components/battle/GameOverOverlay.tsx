@@ -4,6 +4,7 @@ import { getOtomoDef } from '../../core/data/otomo'
 import { getFinalScore, type MasteryResult } from '../../core/engine'
 import { formatScaled } from '../displayScale'
 import { describeMastery } from './masteryDisplay'
+import type { DailyRecordResult } from '../../hooks/dailyStorage'
 
 const STATUS_LABEL: Record<Exclude<GameStatus, 'playing'>, string> = {
   won: '勝利',
@@ -68,6 +69,14 @@ type GameOverOverlayProps = {
   onRematch: () => void
   /** 神選択からやり直す（決定24：Phase 5） */
   onReselect: () => void
+  /**
+   * DAILY-01：神域挑戦の決着なら「今日のベスト」の情報（更新したか・更新前・残り回数）。
+   * 通常モードではnull/省略。通常の自己ベスト表示（newBest/prevBest）とは独立
+   */
+  daily?: DailyRecordResult | null
+  /** DAILY-01：「もう一度」ボタンの文言（残り回数の表示）と無効化（残り0） */
+  rematchLabel?: string
+  rematchDisabled?: boolean
 }
 
 export function GameOverOverlay({
@@ -82,6 +91,9 @@ export function GameOverOverlay({
   mastery,
   onRematch,
   onReselect,
+  daily = null,
+  rematchLabel,
+  rematchDisabled = false,
 }: GameOverOverlayProps) {
   const god = getGodDef(godId)
   const otomoDef = getOtomoDef(otomo.defId)
@@ -113,6 +125,23 @@ export function GameOverOverlay({
           </div>
         )}
         {newBest && <div className="game-over-new-best">✨ 自己ベスト更新！</div>}
+        {daily && (
+          <div className="game-over-daily">
+            {daily.isNewBest ? (
+              <>
+                ✨ <strong>今日のベスト更新！</strong>（{STATUS_LABEL[status]}・スコア {formatScaled(finalScore)}）
+              </>
+            ) : daily.prevBest > finalScore ? (
+              <>
+                今日のベストまであと<strong>{formatScaled(daily.prevBest - finalScore)}</strong>点（{STATUS_LABEL[status]}）
+              </>
+            ) : (
+              <>今日のベストと同点です（{STATUS_LABEL[status]}）</>
+            )}
+            <br />
+            神域挑戦の残り回数 <strong>{daily.attemptsLeft}</strong> 回
+          </div>
+        )}
         {bestGap !== null && <div className="game-over-best-gap">自己ベストまであと{formatScaled(bestGap)}点</div>}
         {otomoLevelUp && (
           <div className="game-over-otomo-levelup">
@@ -197,8 +226,8 @@ export function GameOverOverlay({
           <dd className="score-breakdown-subtotal">{formatScaled(Math.round(score.total))} → {formatScaled(finalScore)}</dd>
         </dl>
         <div className="game-over-actions">
-          <button type="button" onClick={onRematch}>
-            同じ構成でもう一度
+          <button type="button" onClick={onRematch} disabled={rematchDisabled}>
+            {rematchLabel ?? '同じ構成でもう一度'}
           </button>
           <button type="button" onClick={onReselect}>
             神・デッキを選び直す

@@ -104,11 +104,36 @@ export type MasteryState = {
  * これによりリプレイ・巻き戻し・自動テスト・将来のサーバー検証が
  * すべて可能になります。
  */
+/**
+ * 対局モード（DAILY-01）。
+ * - 'normal'：通常モード。敵・難易度をプレイヤーが選ぶ（既存挙動そのもの）
+ * - 'daily'：神域挑戦。全員が同じ日の同じ敵・同じseedに挑み、Daily補正（★★★★★ 神域強化）が掛かる
+ */
+export type GameMode = 'normal' | 'daily'
+
+/**
+ * Daily専用の敵補正（神域強化）。難易度倍率（`RULES.difficulty`）に乗算する。
+ * 通常モードでは未指定＝恒等（×1）で、既存の検証済みバランスと完全に一致する。
+ */
+export type BattleModifier = {
+  enemyHpMul: number
+  enemyAtkMul: number
+}
+
 export type GameState = {
   /** セーブデータ互換のためのバージョン */
   version: number
   /** 乱数の種。同じ種＋同じ操作なら必ず同じ結果になる */
   seed: string
+  /**
+   * 対局モード（DAILY-01、saveVersion 8）。省略はv7以前のセーブのみで、
+   * 読み込み時に`migrateBattleSaveV7`が'normal'を補完する。
+   */
+  mode?: GameMode
+  /** 'daily'のときの日付キー（JST `YYYY-MM-DD`）。日付が変わったセーブは再開しない */
+  dailyKey?: string
+  /** 'daily'のときの敵補正。通常モードでは持たない */
+  modifier?: BattleModifier
   /** 乱数を何回使ったか（リプレイ再現用） */
   rngCursor: number
 

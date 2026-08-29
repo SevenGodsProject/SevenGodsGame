@@ -35,6 +35,9 @@ type BattleScreenProps = {
   onRematch: () => void
   /** 決着後、神選択からやり直す */
   onReselect: () => void
+  /** DAILY-01：神域挑戦時の「もう一度」ボタンの文言・無効化（残り回数）。通常モードでは省略 */
+  rematchLabel?: string
+  rematchDisabled?: boolean
 }
 
 /**
@@ -44,7 +47,13 @@ type BattleScreenProps = {
  * ここではpropとして受け取らない（以前は`muted`を受け取りログを[]に見せる
  * 二重防御をしていたが、それがミュート解除時のSE一斉再生バグの原因だった）。
  */
-export function BattleScreen({ engine, onRematch, onReselect }: BattleScreenProps) {
+export function BattleScreen({
+  engine,
+  onRematch,
+  onReselect,
+  rematchLabel,
+  rematchDisabled,
+}: BattleScreenProps) {
   const {
     state,
     log,
@@ -54,6 +63,7 @@ export function BattleScreen({ engine, onRematch, onReselect }: BattleScreenProp
     newBest,
     prevBest,
     otomoBondChange,
+    dailyResult,
     playCard,
     endRound,
     divine,
@@ -202,7 +212,17 @@ export function BattleScreen({ engine, onRematch, onReselect }: BattleScreenProp
   return (
     <div className="battle" style={stageVars}>
       <div className="battle-topbar">
-        <span>ラウンド {state.round} / {RULES.totalRounds}</span>
+        <span>
+          ラウンド {state.round} / {RULES.totalRounds}
+          {state.mode === 'daily' && (
+            <>
+              {' '}
+              <span className="battle-daily-tag" title="神域挑戦：全員共通の敵・Seed・神域強化">
+                DAILY ★★★★★ 神域強化
+              </span>
+            </>
+          )}
+        </span>
         <span className="battle-topbar-ap">
           <span>神力 {state.ap.current} / {state.ap.max}</span>
           <span className="ap-gauge">
@@ -413,6 +433,9 @@ export function BattleScreen({ engine, onRematch, onReselect }: BattleScreenProp
           mastery={getMastery(state)}
           onRematch={onRematch}
           onReselect={onReselect}
+          daily={state.mode === 'daily' ? dailyResult : null}
+          rematchLabel={rematchLabel}
+          rematchDisabled={rematchDisabled}
         />
       )}
     </div>

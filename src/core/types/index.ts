@@ -20,6 +20,8 @@ export type {
   PlayerState,
   ScoreState,
   GameState,
+  GameMode,
+  BattleModifier,
 } from './state'
 export type { GameAction } from './action'
 export type { GameEvent } from './event'

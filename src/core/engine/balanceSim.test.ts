@@ -3,8 +3,18 @@ import { GODS } from '../data/gods'
 import { ENEMIES, ENEMY_IDS } from '../data/enemies'
 import { getCardDef } from '../data/cards'
 import { getRecommendedDeck } from '../data/deckBuilder'
-import type { CardDefId, CardInstance, Difficulty, EnemyId, GameState, GodId, GrowthPath } from '../types'
+import type {
+  BattleModifier,
+  CardDefId,
+  CardInstance,
+  Difficulty,
+  EnemyId,
+  GameState,
+  GodId,
+  GrowthPath,
+} from '../types'
 import { applyAction } from './reducer'
+import { RULES } from '../data/rules'
 
 /**
  * バランス確認用シミュレーター（Plannerツール）。
@@ -166,6 +176,8 @@ function playOneGame(
   enemyId: EnemyId,
   otomoGrowthPath: GrowthPath = 'guardian',
   difficulty: Difficulty = 'normal',
+  // DAILY-01：神域強化の検証用。未指定なら従来どおり（通常モード・恒等）
+  modifier?: BattleModifier,
 ): SimResult {
   let { state } = applyAction(null, {
     type: 'START_GAME',
@@ -175,6 +187,7 @@ function playOneGame(
     deck,
     otomoGrowthPath,
     difficulty,
+    ...(modifier ? { mode: 'daily' as const, dailyKey: '2026-09-02', modifier } : {}),
   })
 
   let guard = 0
@@ -481,6 +494,66 @@ describe('バランスシミュレーション（Planner用・アサーション
    * ハイリターンを保っていること——が将来の変更で意図せず崩れていないかを
    * 保証する。
    */
+  /**
+   * DAILY-01：神域強化（`RULES.daily.modifier`）の下でも、7敵×7神の全組み合わせで
+   * 少なくとも1戦略が50%以上の勝率を保つこと（決定58と同じ「詰み」基準）を保証する。
+   * Dailyは難易度normal基準＋HP/攻撃倍率のため、hard（×1.15/×1.15）よりHPが重い。
+   * あわせて神別の勝率・スコア分布（勝利時の平均/最小/最大の最終スコア）をログに出す
+   * （数値確定・神格差の把握用。CEO決定4：条件を満たさなければ倍率を調整する）。
+   */
+  it('DAILY-01：神域強化×全神×全敵で、少なくとも1戦略が50%以上の勝率を保つ（Daily詰み防止）', () => {
+    const strategies: Strategy[] = ['balanced', 'aggressive', 'defensive']
+    const modifier = RULES.daily.modifier
+    const failures: string[] = []
+    const lines: string[] = []
+    const SEEDS = 20
+
+    for (const enemy of ENEMIES) {
+      for (const god of GODS) {
+        const deck = getRecommendedDeck(god.id)
+        let best = 0
+        let bestStrategy: Strategy = 'balanced'
+        const perStrategy: string[] = []
+        for (const strategy of strategies) {
+          const results: SimResult[] = []
+          for (let i = 0; i < SEEDS; i++) {
+            results.push(
+              playOneGame(
+                `daily-${god.nameJa}-${enemy.id}-${strategy}-${i}`,
+                strategy,
+                god.id,
+                deck,
+                enemy.id,
+                'guardian',
+                'normal',
+                modifier,
+              ),
+            )
+          }
+          const won = results.filter((r) => r.status === 'won')
+          const winRate = (won.length / SEEDS) * 100
+          // SimResult.scoreは素点total。表示スコアは`getFinalScore`と同じ×finalScale
+          const finals = won.map((r) => Math.round(r.score * RULES.score.finalScale))
+          const avg = finals.length ? Math.round(finals.reduce((a, b) => a + b, 0) / finals.length) : 0
+          const min = finals.length ? Math.min(...finals) : 0
+          const max = finals.length ? Math.max(...finals) : 0
+          perStrategy.push(`${strategy}=${winRate.toFixed(0)}%（勝利時score avg${avg}/min${min}/max${max}）`)
+          if (winRate > best) {
+            best = winRate
+            bestStrategy = strategy
+          }
+        }
+        lines.push(`${enemy.name} × ${god.nameJa}: ${perStrategy.join(' / ')}`)
+        if (best < 50) {
+          failures.push(`${enemy.name} × ${god.nameJa}：最善戦略(${bestStrategy})でも勝率${best.toFixed(0)}%`)
+        }
+      }
+    }
+    console.log(`[DAILY-01 sim] modifier=${JSON.stringify(modifier)} seeds=${SEEDS}\n${lines.join('\n')}`)
+
+    expect(failures, `Daily詰み（最善戦略でも勝率50%未満）:\n${failures.join('\n')}`).toEqual([])
+  }, 60000)
+
   it('決定59：勝利スコアが敗北スコアを常に大きく上回ることを保証する（再現防止）', () => {
     const strategies: Strategy[] = ['balanced', 'aggressive', 'defensive']
     const wonScores: number[] = []

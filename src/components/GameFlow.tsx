@@ -4,7 +4,10 @@ import { useGameEngine } from '../hooks/useGameEngine'
 import { saveDeckPreference, loadDeckPreference } from '../hooks/deckPreferenceStorage'
 import { clearBattleSave, loadBattleSave } from '../hooks/battleSaveStorage'
 import { loadRewardBonuses } from '../hooks/rewardStorage'
+import { isExpiredDailySave, todayDailyKey } from '../hooks/dailyClock'
+import { dailyAttemptsLeft } from '../hooks/dailyStorage'
 import { getRecommendedDeck } from '../core/data/deckBuilder'
+import { dailyBossFor } from '../core/data/dailyBoss'
 import { playTrack } from './battle/bgm'
 import { computeSnapshot, type FeedbackSnapshot } from './feedback/feedbackSnapshot'
 import { HomeScreen } from './setup/HomeScreen'
@@ -13,16 +16,34 @@ import { EnemySelectScreen } from './setup/EnemySelectScreen'
 import { DeckBuilderScreen } from './setup/DeckBuilderScreen'
 import { OtomoGrowthScreen } from './setup/OtomoGrowthScreen'
 import { RecordScreen } from './setup/RecordScreen'
+import { DailyChallengeScreen } from './setup/DailyChallengeScreen'
 import { BattleScreen } from './battle/BattleScreen'
+import { ConfirmDialog } from './ConfirmDialog'
+import './setup/daily.css'
+import './polish.css'
 
 // LANE-D：'enemySelect'を追加（HOME→GOD SELECT（＋難易度）→ENEMY SELECT→DECK→BATTLE）
-type SetupScreen = 'home' | 'godSelect' | 'enemySelect' | 'deckBuild' | 'otomoGrowth' | 'record'
+// DAILY-01：'daily'を追加（HOME→DAILY→GOD SELECT（難易度なし）→DECK→BATTLE。敵選択は無い）
+type SetupScreen = 'home' | 'godSelect' | 'enemySelect' | 'deckBuild' | 'otomoGrowth' | 'record' | 'daily'
 
 type GameFlowProps = {
   /** 「遊び方」ボタン（ホーム画面用）。トップバー分はAppが自前で持つ */
   onShowTutorial: () => void
   /** 実プレイ・フィードバック基盤：ヘッダーのフィードバックボタンに添える現在のプレイ状況 */
   onSnapshotChange: (snapshot: FeedbackSnapshot) => void
+}
+
+/**
+ * 保存済みバトルを読み、期限切れの神域挑戦（別の日のseed）なら破棄してnullを返す。
+ * 通常モードのセーブは従来どおりそのまま返す。
+ */
+function loadResumableBattle() {
+  const saved = loadBattleSave()
+  if (saved && isExpiredDailySave(saved)) {
+    clearBattleSave()
+    return null
+  }
+  return saved
 }
 
 /**
@@ -34,10 +55,14 @@ type GameFlowProps = {
  * useGameEngineをここに引き上げることで、BattleScreenは「進行中のゲームを
  * 表示するだけ」のコンポーネントに専念でき、開始前の画面遷移ロジックと
  * 戦闘中の表示ロジックが混ざらずに済みます。
+ *
+ * DAILY-01：`dailyKey`がnullなら通常モード、日付キーが入っていれば神域挑戦の導線。
+ * 通常モードの遷移・startGame呼び出しは一切変えていない（Dailyは別関数
+ * `startDailyGame`で開始し、敵選択・難易度選択・URLバックドアを通らない）。
  */
 export function GameFlow({ onShowTutorial, onSnapshotChange }: GameFlowProps) {
   const engine = useGameEngine()
-  const [savedBattle, setSavedBattle] = useState(() => loadBattleSave())
+  const [savedBattle, setSavedBattle] = useState(() => loadResumableBattle())
   const [setupScreen, setSetupScreen] = useState<SetupScreen>('home')
   const [godId, setGodId] = useState<GodId | null>(null)
   const [deck, setDeck] = useState<CardDefId[] | null>(null)
@@ -45,6 +70,15 @@ export function GameFlow({ onShowTutorial, onSnapshotChange }: GameFlowProps) {
   const [otomoGrowthPath, setOtomoGrowthPath] = useState<GrowthPath>('guardian')
   // LANE-D：Enemy Selectでの選択。null＝「神に委ねる」（従来どおりのシード選出）
   const [selectedEnemyId, setSelectedEnemyId] = useState<EnemyId | null>(null)
+  // DAILY-01：神域挑戦の日付キー。null＝通常モード
+  const [dailyKey, setDailyKey] = useState<string | null>(null)
+  // 8/31 P0-1：進行中セーブがある状態で「神を選ぶ」「挑戦開始」を押したときの確認。
+  // 確認後に実行する処理を保持する（null＝ダイアログ非表示）。セーブが無ければ出さない
+  const [pendingDiscard, setPendingDiscard] = useState<{ proceed: () => void } | null>(null)
+  const guardDiscard = (proceed: () => void) => {
+    if (savedBattle) setPendingDiscard({ proceed })
+    else proceed()
+  }
 
   // 実プレイ・フィードバック基盤：画面遷移やラウンド進行のたびに、ヘッダーの
   // フィードバックボタンが添える「今の状況」をAppへ伝える（showTutorialと
@@ -70,7 +104,7 @@ export function GameFlow({ onShowTutorial, onSnapshotChange }: GameFlowProps) {
   // 反映する（loadBattleSave自体のロジックは変更せず再利用するだけ）。
   useEffect(() => {
     if (setupScreen === 'home') {
-      setSavedBattle(loadBattleSave())
+      setSavedBattle(loadResumableBattle())
     }
   }, [setupScreen])
 
@@ -82,6 +116,16 @@ export function GameFlow({ onShowTutorial, onSnapshotChange }: GameFlowProps) {
     // LANE-D：選び直しでは敵の選択もリセットする（前回の敵が残ると
     // 「委ねたつもりが同じ敵と再戦」の混乱を招くため）
     setSelectedEnemyId(null)
+    // DAILY-01：神域挑戦中の「選び直す」は、残り回数があれば同じ日の挑戦を続ける
+    // （dailyKeyは保持）。残り0ならDaily画面へ戻して「今日は終了」を見せる
+    if (dailyKey && dailyAttemptsLeft(dailyKey) <= 0) {
+      setSetupScreen('daily')
+    }
+  }
+
+  const goHome = () => {
+    setDailyKey(null)
+    setSetupScreen('home')
   }
 
   const screen = (() => {
@@ -93,16 +137,22 @@ export function GameFlow({ onShowTutorial, onSnapshotChange }: GameFlowProps) {
             onShowTutorial={onShowTutorial}
             onShowOtomoGrowth={() => setSetupScreen('otomoGrowth')}
             onShowRecord={() => setSetupScreen('record')}
-            onStartFresh={() => {
-              clearBattleSave()
-              setSetupScreen('godSelect')
-            }}
+            onShowDaily={() => setSetupScreen('daily')}
+            onStartFresh={() =>
+              guardDiscard(() => {
+                clearBattleSave()
+                setDailyKey(null)
+                setSetupScreen('godSelect')
+              })
+            }
             onResume={() => {
               if (!savedBattle) return
               setGodId(savedBattle.godId)
               setDeck(loadDeckPreference(savedBattle.godId) ?? getRecommendedDeck(savedBattle.godId))
               setDifficulty(savedBattle.difficulty)
               setOtomoGrowthPath(savedBattle.otomoGrowthPath)
+              // DAILY-01：神域挑戦の再開はその日付キーの導線に戻す（決着後の「もう一度」判定に使う）
+              setDailyKey(savedBattle.mode === 'daily' ? (savedBattle.dailyKey ?? null) : null)
               engine.resumeGame(savedBattle)
             }}
           />
@@ -114,7 +164,27 @@ export function GameFlow({ onShowTutorial, onSnapshotChange }: GameFlowProps) {
       if (setupScreen === 'record') {
         return <RecordScreen onBack={() => setSetupScreen('home')} />
       }
-      // LANE-D：神＋難易度の確定後、デッキ構築の前に挑む敵を選ぶ
+      // DAILY-01：神域挑戦の入口。「挑戦開始」で今日の日付キーを確定し、神選択へ
+      if (setupScreen === 'daily') {
+        return (
+          <DailyChallengeScreen
+            dateKey={todayDailyKey()}
+            onStart={() =>
+              guardDiscard(() => {
+                clearBattleSave()
+                setDailyKey(todayDailyKey())
+                setSelectedEnemyId(null)
+                setDifficulty('normal')
+                setGodId(null)
+                setDeck(null)
+                setSetupScreen('godSelect')
+              })
+            }
+            onBack={goHome}
+          />
+        )
+      }
+      // LANE-D：神＋難易度の確定後、デッキ構築の前に挑む敵を選ぶ（通常モードのみ）
       if (setupScreen === 'enemySelect' && godId) {
         return (
           <EnemySelectScreen
@@ -130,13 +200,26 @@ export function GameFlow({ onShowTutorial, onSnapshotChange }: GameFlowProps) {
         return (
           <DeckBuilderScreen
             godId={godId}
-            enemyId={selectedEnemyId}
+            // DAILY-01：神域挑戦の対戦相手は今日のボス固定（表示用。開始時の敵確定はstartDailyGameが行う）
+            enemyId={dailyKey ? dailyBossFor(dailyKey).enemyId : selectedEnemyId}
+            dailyChallenge={dailyKey !== null}
             otomoGrowthPath={otomoGrowthPath}
             onOtomoGrowthPathChange={setOtomoGrowthPath}
-            onBack={() => setSetupScreen('enemySelect')}
+            onBack={() => setSetupScreen(dailyKey ? 'daily' : 'enemySelect')}
             onConfirm={(confirmedDeck) => {
               setDeck(confirmedDeck)
               saveDeckPreference(godId, confirmedDeck)
+              if (dailyKey) {
+                const started = engine.startDailyGame(
+                  godId,
+                  confirmedDeck,
+                  dailyKey,
+                  loadRewardBonuses(godId),
+                  otomoGrowthPath,
+                )
+                if (!started) setSetupScreen('daily')
+                return
+              }
               engine.startGame(
                 godId,
                 confirmedDeck,
@@ -153,21 +236,42 @@ export function GameFlow({ onShowTutorial, onSnapshotChange }: GameFlowProps) {
         <GodSelectScreen
           difficulty={difficulty}
           onDifficultyChange={setDifficulty}
+          skipDifficulty={dailyKey !== null}
           onSelect={(selectedGodId) => {
             setGodId(selectedGodId)
-            setSetupScreen('enemySelect')
+            // DAILY-01：神域挑戦は敵選択を通らずデッキ構築へ
+            setSetupScreen(dailyKey ? 'deckBuild' : 'enemySelect')
           }}
-          onBack={() => setSetupScreen('home')}
+          onBack={dailyKey ? () => setSetupScreen('daily') : goHome}
         />
       )
     }
 
+    // DAILY-01：決着後の「もう一度」は同じ日の残り回数がある間だけ（同じ敵・同じseed）
+    const inDaily = engine.state.mode === 'daily'
+    const attemptsLeft = inDaily && dailyKey ? dailyAttemptsLeft(dailyKey) : null
     return (
       <BattleScreen
         engine={engine}
-        onRematch={() =>
-          godId &&
-          deck &&
+        rematchLabel={inDaily ? `もう一度挑戦（残り${attemptsLeft ?? 0}回）` : undefined}
+        rematchDisabled={inDaily ? (attemptsLeft ?? 0) <= 0 : false}
+        onRematch={() => {
+          if (!godId || !deck) return
+          if (inDaily) {
+            if (!dailyKey) return
+            const started = engine.startDailyGame(
+              godId,
+              deck,
+              dailyKey,
+              loadRewardBonuses(godId),
+              otomoGrowthPath,
+            )
+            if (!started) {
+              engine.resetGame()
+              setSetupScreen('daily')
+            }
+            return
+          }
           // LANE-D（選択後の一貫性）：「もう一度」は直前に戦った敵（state.enemy.defId）
           // と再戦する。「神に委ねる」で始めた対局や「続きから」再開後でも、
           // リマッチ相手が突然すり替わらない（新しい敵と戦いたい時は
@@ -180,11 +284,28 @@ export function GameFlow({ onShowTutorial, onSnapshotChange }: GameFlowProps) {
             otomoGrowthPath,
             engine.state?.enemy.defId ?? selectedEnemyId,
           )
-        }
+        }}
         onReselect={backToGodSelect}
       />
     )
   })()
 
-  return screen
+  return (
+    <>
+      {screen}
+      {pendingDiscard && (
+        <ConfirmDialog
+          title="新しい挑戦を始めますか？"
+          message={'現在の挑戦データは失われます。\n新しい挑戦を始めますか？'}
+          confirmLabel="新しく始める"
+          onCancel={() => setPendingDiscard(null)}
+          onConfirm={() => {
+            const { proceed } = pendingDiscard
+            setPendingDiscard(null)
+            proceed()
+          }}
+        />
+      )}
+    </>
+  )
 }

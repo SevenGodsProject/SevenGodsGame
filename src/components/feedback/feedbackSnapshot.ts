@@ -13,7 +13,7 @@ import { scaleDisplay } from '../displayScale'
  * 分離してテスト可能にしている。
  */
 export type FeedbackSnapshot = {
-  screen: 'ホーム' | '神選択' | '敵選択' | 'デッキ構築' | 'OTOMO育成' | '戦績' | 'バトル中' | '決着'
+  screen: 'ホーム' | '神選択' | '敵選択' | 'デッキ構築' | 'OTOMO育成' | '戦績' | '神域挑戦' | 'バトル中' | '決着'
   godName?: string
   difficultyLabel: string
   round?: number
@@ -39,7 +39,7 @@ function godNameJa(godId: GodId): string {
 
 export type SnapshotInput = {
   /** GameFlowのセットアップ画面。バトル中（stateがある）はここを見ない */
-  setupScreen: 'home' | 'godSelect' | 'enemySelect' | 'deckBuild' | 'otomoGrowth' | 'record'
+  setupScreen: 'home' | 'godSelect' | 'enemySelect' | 'deckBuild' | 'otomoGrowth' | 'record' | 'daily'
   godId: GodId | null
   difficulty: Difficulty
   state: GameState | null
@@ -69,7 +69,9 @@ export function computeSnapshot({ setupScreen, godId, difficulty, state }: Snaps
             ? 'デッキ構築'
             : setupScreen === 'otomoGrowth'
               ? 'OTOMO育成'
-              : '戦績'
+              : setupScreen === 'daily'
+                ? '神域挑戦'
+                : '戦績'
   return {
     screen,
     godName: godId ? godNameJa(godId) : undefined,

@@ -1,6 +1,7 @@
 import type { CardDefId, CardUid, EnemyId, GodId } from './ids'
 import type { Difficulty } from './difficulty'
 import type { GrowthPath } from './otomo'
+import type { BattleModifier, GameMode } from './state'
 
 /**
  * プレイヤーが行う「操作」。
@@ -32,6 +33,16 @@ export type GameAction =
       bonusCopies?: Partial<Record<CardDefId, number>>
       /** 省略時は'guardian'（決定44）。既存の呼び出し元・テストは未指定のままでよい */
       otomoGrowthPath?: GrowthPath
+      /**
+       * DAILY-01：省略時は'normal'。'daily'（神域挑戦）は敵・seed・補正を
+       * UI側（`startDailyGame`）が`dailyBossFor`で確定して渡す。既存の呼び出し元・
+       * テストは未指定のままでよい
+       */
+      mode?: GameMode
+      /** 'daily'のときの日付キー（JST `YYYY-MM-DD`）。期限切れセーブの判定に使う */
+      dailyKey?: string
+      /** 敵HP/攻撃の追加倍率（難易度倍率に乗算）。省略＝恒等 */
+      modifier?: BattleModifier
     }
   /** 手札からカードを使う */
   | { type: 'PLAY_CARD'; uid: CardUid }

@@ -1,0 +1,153 @@
+/*
+ * 8/31 P0 POLISH（CEO決定 2026-08-29）専用スタイル。
+ * setup.css / battle.css には触れず、①確認ダイアログ ②共鳴パネルの神技プレビュー
+ * の見た目だけをここに分離する。
+ */
+
+/* ---- P0-1：確認ダイアログ ---- */
+.confirm-dialog-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  background: rgba(3, 4, 12, 0.72);
+  backdrop-filter: blur(2px);
+}
+.confirm-dialog {
+  width: min(440px, 100%);
+  padding: 1.25rem 1.25rem 1rem;
+  border-radius: 16px;
+  border: 1px solid #ffd16688;
+  background: linear-gradient(180deg, #171a34, #0b0d1f);
+  box-shadow: 0 12px 40px #000c, 0 0 24px #ffd16622;
+  color: #e8e9f3;
+}
+.confirm-dialog-title {
+  margin: 0 0 0.5rem;
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: #ffe9b0;
+}
+.confirm-dialog-message {
+  margin: 0 0 1rem;
+  line-height: 1.7;
+  white-space: pre-line;
+}
+.confirm-dialog-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+}
+.confirm-dialog-actions button {
+  padding: 0.55rem 1.1rem;
+  border-radius: 999px;
+  border: 1px solid #ffffff33;
+  background: #ffffff10;
+  color: #e8e9f3;
+  font-weight: 700;
+  cursor: pointer;
+}
+.confirm-dialog-actions .confirm-dialog-danger {
+  border-color: #ff8a8a99;
+  background: linear-gradient(135deg, #7a2f3a, #4a1830);
+  color: #ffe1e1;
+}
+.confirm-dialog-actions button:hover {
+  filter: brightness(1.15);
+}
+
+/* ---- P0-2：共鳴パネル 神技プレビュー ---- */
+.burst-preview {
+  margin-top: 0.5rem;
+  padding: 0.55rem 0.7rem;
+  border-radius: 10px;
+  border: 1px solid #ffd16644;
+  background: #ffd1660f;
+  font-size: 0.82rem;
+  line-height: 1.5;
+  color: #dfe3f5;
+}
+.burst-preview-head {
+  font-weight: 800;
+  color: #ffe9b0;
+  margin-bottom: 0.25rem;
+}
+.burst-preview-head.burst-preview-ready {
+  color: #fff3c4;
+  text-shadow: 0 0 10px #ffd16699;
+}
+.burst-preview-row {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.4rem;
+  align-items: baseline;
+}
+.burst-preview-label {
+  color: #9fb8e8;
+  font-weight: 700;
+  white-space: nowrap;
+}
+.burst-preview-note {
+  color: #b9c0d8;
+  font-size: 0.75rem;
+}
+
+/* ---- P0-3：勝敗ラベル（Daily） ---- */
+.daily-status {
+  display: inline-block;
+  padding: 0.05rem 0.5rem;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  border: 1px solid transparent;
+  vertical-align: middle;
+}
+.daily-status-won {
+  color: #ffe9b0;
+  border-color: #ffd16688;
+  background: #ffd1661f;
+}
+.daily-status-lost {
+  color: #ffb3b3;
+  border-color: #ff8a8a66;
+  background: #ff5c5c1a;
+}
+.daily-status-finished {
+  color: #c9d0e8;
+  border-color: #8ab4ff66;
+  background: #8ab4ff1a;
+}
+.daily-bygod-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 0 0 1rem;
+  font-size: 0.92rem;
+  color: #dfe3f5;
+}
+.daily-bygod-table th,
+.daily-bygod-table td {
+  padding: 0.4rem 0.6rem;
+  border-bottom: 1px solid #ffffff14;
+  text-align: left;
+}
+.daily-bygod-table th {
+  color: #9aa3c4;
+  font-size: 0.78rem;
+  letter-spacing: 0.06em;
+  font-weight: 600;
+}
+.daily-bygod-table td.num {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  font-weight: 700;
+  color: #fff;
+}
+.daily-bygod-title {
+  margin: 0.25rem 0 0.4rem;
+  font-size: 0.95rem;
+  color: #ffe9b0;
+}

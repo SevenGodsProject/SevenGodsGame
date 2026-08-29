@@ -16,6 +16,8 @@ import { resolveStartEnemyId } from './startEnemy'
 import { clearBattleSave, saveBattle } from './battleSaveStorage'
 import { recordGameResult } from './recordStorage'
 import { recordOtomoBond, type OtomoBondRecord } from './otomoBondStorage'
+import { recordDailyResult, startDailyAttempt, type DailyRecordResult } from './dailyStorage'
+import { resolveDailyStart } from './startDaily'
 
 /**
  * ラウンド終了→次ラウンド開始の結果を見せる前に「敵のターン」を溜める時間（見せ方のみ。判定タイミングは変えない）。
@@ -62,6 +64,24 @@ export type UseGameEngine = {
   prevBest: number
   /** 直前の決着でOTOMOの育成記録がどう変わったか（決定74・Task C3、Lv到達演出の判定に使う） */
   otomoBondChange: { prevRecord: OtomoBondRecord; nextRecord: OtomoBondRecord } | null
+  /**
+   * DAILY-01：直前の決着が神域挑戦だった場合の結果（今日のベスト更新・残り回数）。
+   * 通常モードの決着ではnull。通常の`newBest`/`prevBest`はDailyでは更新しない
+   * （CEO決定5：Daily結果を通常の自己ベストへ混ぜない）
+   */
+  dailyResult: DailyRecordResult | null
+  /**
+   * DAILY-01：神域挑戦を開始する。敵・seed・難易度・補正は日付キーから
+   * `resolveDailyStart`が確定し、URLバックドア・敵選択・難易度選択は参照しない。
+   * 挑戦回数を1回消費する。残り0なら開始せずfalseを返す
+   */
+  startDailyGame: (
+    godId: GodId,
+    deck: CardDefId[],
+    dailyKey: string,
+    bonusCopies?: Map<CardDefId, number>,
+    otomoGrowthPath?: GrowthPath,
+  ) => boolean
   startGame: (
     godId: GodId,
     deck: CardDefId[],
@@ -101,6 +121,7 @@ export function useGameEngine(): UseGameEngine {
     prevRecord: OtomoBondRecord
     nextRecord: OtomoBondRecord
   } | null>(null)
+  const [dailyResult, setDailyResult] = useState<DailyRecordResult | null>(null)
 
   const commit = useCallback((result: { state: GameState; events: GameEvent[] }) => {
     setState(result.state)
@@ -112,11 +133,20 @@ export function useGameEngine(): UseGameEngine {
       saveBattle(result.state)
     } else {
       clearBattleSave()
-      // 決定48フォローアップ：決着した瞬間に神ごとの戦績（自己ベスト・勝敗数）を更新する。
-      // STEP-UX6-B：戻り値のprevBest（更新前の自己ベスト）も同時に保持する。
-      const recordResult = recordGameResult(result.state)
-      setNewBest(recordResult.isNewBest)
-      setPrevBest(recordResult.prevBest)
+      if (result.state.mode === 'daily') {
+        // DAILY-01：神域挑戦の決着は`sevengods.daily`にだけ記録し、通常モードの
+        // 神別自己ベスト（recordGameResult）は更新しない（CEO決定5）。
+        setDailyResult(recordDailyResult(result.state))
+        setNewBest(false)
+        setPrevBest(0)
+      } else {
+        // 決定48フォローアップ：決着した瞬間に神ごとの戦績（自己ベスト・勝敗数）を更新する。
+        // STEP-UX6-B：戻り値のprevBest（更新前の自己ベスト）も同時に保持する。
+        const recordResult = recordGameResult(result.state)
+        setNewBest(recordResult.isNewBest)
+        setPrevBest(recordResult.prevBest)
+        setDailyResult(null)
+      }
       // 決定70（Task C1）：決着した瞬間にOTOMO育成記録（表示専用）を更新する。
       // recordGameResultと同じ分岐・同じ1回性なので二重加算は発生しない
       // （詳細はotomoBondStorage.tsのコメントを参照）。
@@ -181,6 +211,45 @@ export function useGameEngine(): UseGameEngine {
     [dispatch],
   )
 
+  const startDailyGame = useCallback(
+    (
+      godId: GodId,
+      deck: CardDefId[],
+      dailyKey: string,
+      bonusCopies?: Map<CardDefId, number>,
+      otomoGrowthPath?: GrowthPath,
+    ): boolean => {
+      // DAILY-01：残り回数が無ければ開始しない（画面側もボタンを無効化するが二重に守る）
+      const attempt = startDailyAttempt(dailyKey)
+      if (!attempt.ok) return false
+      setLog([])
+      setError(null)
+      setIsEnemyTurn(false)
+      setPendingCardUid(null)
+      setNewBest(false)
+      setPrevBest(0)
+      setOtomoBondChange(null)
+      setDailyResult(null)
+      const daily = resolveDailyStart(dailyKey)
+      dispatch({
+        type: 'START_GAME',
+        seed: daily.seed,
+        godId,
+        // 共通条件：敵はdailyBossForの確定値のみ。`?enemy=`・敵選択・難易度選択は参照しない
+        enemyId: daily.enemyId,
+        deck,
+        difficulty: daily.difficulty,
+        bonusCopies: bonusCopies ? Object.fromEntries(bonusCopies) : undefined,
+        otomoGrowthPath,
+        mode: daily.mode,
+        dailyKey: daily.dailyKey,
+        modifier: daily.modifier,
+      })
+      return true
+    },
+    [dispatch],
+  )
+
   const playCard = useCallback(
     (uid: CardUid) => {
       // 判定はまだ行わない。まずアニメーションを見せてから、実際にPLAY_CARDを発行する
@@ -207,6 +276,7 @@ export function useGameEngine(): UseGameEngine {
     setNewBest(false)
     setPrevBest(0)
     setOtomoBondChange(null)
+    setDailyResult(null)
     setState(savedState)
   }, [])
 
@@ -219,6 +289,7 @@ export function useGameEngine(): UseGameEngine {
     setNewBest(false)
     setPrevBest(0)
     setOtomoBondChange(null)
+    setDailyResult(null)
   }, [])
 
   return {
@@ -230,6 +301,8 @@ export function useGameEngine(): UseGameEngine {
     newBest,
     prevBest,
     otomoBondChange,
+    dailyResult,
+    startDailyGame,
     startGame,
     resumeGame,
     resetGame,

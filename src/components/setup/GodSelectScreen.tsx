@@ -80,6 +80,11 @@ type GodSelectScreenProps = {
   difficulty: Difficulty
   onDifficultyChange: (difficulty: Difficulty) => void
   onSelect: (godId: GodId) => void
+  /**
+   * DAILY-01：神域挑戦では難易度を選ばない（ふつう基準＋神域強化で固定）。
+   * trueのとき神カードのクリックで即`onSelect`を呼び、②難易度ステップを出さない
+   */
+  skipDifficulty?: boolean
   /** 神一覧ステップからホームへ戻る（決定80フォローアップ：Phase 1⑥） */
   onBack: () => void
 }
@@ -118,7 +123,13 @@ function DifficultyStars({ stars }: { stars: number }) {
  * という契約）は変えず、ステップの見せ方だけをこのコンポーネント内の
  * ローカルstateで完結させている。
  */
-export function GodSelectScreen({ difficulty, onDifficultyChange, onSelect, onBack }: GodSelectScreenProps) {
+export function GodSelectScreen({
+  difficulty,
+  onDifficultyChange,
+  onSelect,
+  onBack,
+  skipDifficulty = false,
+}: GodSelectScreenProps) {
   const [pendingGodId, setPendingGodId] = useState<GodId | null>(null)
   const pendingGod = pendingGodId ? GODS.find((g) => g.id === pendingGodId) : undefined
 
@@ -200,6 +211,12 @@ export function GodSelectScreen({ difficulty, onDifficultyChange, onSelect, onBa
             選ぶ神によって、共鳴時の「神の一撃」とOTOMOの後押しが変わります。
           </p>
 
+          {skipDifficulty && (
+            <p className="daily-godselect-note">
+              神域挑戦：難易度は「ふつう」基準＋神域強化で固定です。神を選ぶとデッキ構築へ進みます。
+            </p>
+          )}
+
           <p className="god-select-legend">
             <strong>攻撃</strong>＝敵へのダメージ、<strong>防御</strong>＝ブロック・敵の弱体化で被ダメージを減らす効果、
             <strong>回復</strong>＝HPを回復する効果、<strong>支援</strong>＝カード・神力・自己強化など、戦いを有利にする効果。
@@ -216,7 +233,7 @@ export function GodSelectScreen({ difficulty, onDifficultyChange, onSelect, onBa
                   key={god.id}
                   type="button"
                   className="god-select-card"
-                  onClick={() => setPendingGodId(god.id)}
+                  onClick={() => (skipDifficulty ? onSelect(god.id) : setPendingGodId(god.id))}
                 >
                   <img
                     src={god.art.keyvisual}

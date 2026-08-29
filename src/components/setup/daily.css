@@ -1,0 +1,273 @@
+/*
+ * DAILY-01：神域挑戦（Daily Challenge）専用スタイル。
+ * setup.css（未commitのVISUAL POLISH差分が進行中）には触れず、Daily関連の見た目だけを
+ * ここに分離する。既存の .setup-screen / .setup-title / .home-cta-* の視覚言語を踏襲。
+ */
+
+/* ---- ホーム：今日の神域挑戦ボタン ---- */
+.home-cta-daily {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.7rem 1.3rem;
+  border-radius: 999px;
+  border: 1px solid #ffd16688;
+  background: linear-gradient(135deg, #3a1f5a, #6b2d3a);
+  color: #ffe9b0;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 0 18px #ffd16633;
+}
+.home-cta-daily:hover {
+  filter: brightness(1.12);
+}
+.home-cta-daily .daily-stars {
+  color: #ffd166;
+  letter-spacing: 0.08em;
+}
+
+/* ---- 神域挑戦画面 ---- */
+.daily-screen {
+  max-width: 880px;
+  margin: 0 auto;
+}
+.daily-boss-card {
+  display: grid;
+  grid-template-columns: minmax(160px, 240px) 1fr;
+  gap: 1.25rem;
+  padding: 1.25rem;
+  border-radius: 18px;
+  border: 1px solid var(--daily-accent, #ffd166) ;
+  background:
+    radial-gradient(ellipse at 20% 10%, color-mix(in srgb, var(--daily-accent, #ffd166) 28%, transparent) 0%, transparent 60%),
+    linear-gradient(180deg, #161a34cc, #0a0c1fcc);
+  box-shadow: 0 0 32px color-mix(in srgb, var(--daily-accent, #ffd166) 25%, transparent);
+}
+.daily-boss-art {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  object-fit: contain;
+  border-radius: 14px;
+  background: #0b0d1c;
+  filter: drop-shadow(0 8px 24px #000a);
+}
+.daily-boss-body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+.daily-boss-label {
+  font-size: 0.8rem;
+  letter-spacing: 0.2em;
+  color: #c9d0e8;
+}
+.daily-boss-name {
+  font-size: 1.7rem;
+  font-weight: 800;
+  color: #fff;
+  margin: 0;
+}
+.daily-boss-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.6rem;
+  color: #dfe3f5;
+}
+.daily-threat {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 1.15rem;
+  color: #ffd166;
+  letter-spacing: 0.08em;
+}
+.daily-chip {
+  display: inline-block;
+  padding: 0.15rem 0.6rem;
+  border-radius: 999px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  border: 1px solid #ffd166aa;
+  background: #ffd16622;
+  color: #ffe9b0;
+}
+.daily-chip-stage {
+  border-color: #8ab4ff88;
+  background: #8ab4ff1f;
+  color: #dbe6ff;
+}
+.daily-boss-hint {
+  color: #b9c0d8;
+  margin: 0;
+  font-size: 0.95rem;
+}
+
+.daily-facts {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 0.75rem;
+  margin: 1rem 0;
+}
+.daily-fact {
+  padding: 0.7rem 0.9rem;
+  border-radius: 12px;
+  background: #0d1026cc;
+  border: 1px solid #ffffff14;
+}
+.daily-fact-label {
+  display: block;
+  font-size: 0.75rem;
+  color: #9aa3c4;
+  letter-spacing: 0.08em;
+}
+.daily-fact-value {
+  display: block;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #fff;
+  font-variant-numeric: tabular-nums;
+}
+.daily-fact-value.daily-seed-id {
+  font-family: ui-monospace, 'Cascadia Mono', 'Consolas', monospace;
+  letter-spacing: 0.12em;
+  color: #ffd166;
+}
+.daily-fact-sub {
+  display: block;
+  font-size: 0.75rem;
+  color: #b9c0d8;
+}
+
+.daily-rules {
+  margin: 0.5rem 0 1.25rem;
+  padding: 0.9rem 1.1rem;
+  border-radius: 12px;
+  background: #ffffff08;
+  border: 1px dashed #ffd16655;
+  color: #dfe3f5;
+  line-height: 1.7;
+  font-size: 0.95rem;
+}
+.daily-rules strong {
+  color: #ffe9b0;
+}
+
+.daily-bygod {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem 0.8rem;
+  margin: 0 0 1rem;
+  padding: 0;
+  list-style: none;
+  color: #c9d0e8;
+  font-size: 0.9rem;
+}
+.daily-bygod li strong {
+  color: #fff;
+  font-variant-numeric: tabular-nums;
+}
+
+.daily-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  align-items: center;
+}
+.daily-actions .home-cta-primary[disabled] {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+.daily-note-exhausted {
+  color: #ffb3b3;
+  font-size: 0.9rem;
+}
+
+/* ---- 神選択（Daily）注記 ---- */
+.daily-godselect-note {
+  margin: 0 0 1rem;
+  padding: 0.6rem 0.9rem;
+  border-radius: 10px;
+  background: #ffd16618;
+  border: 1px solid #ffd16655;
+  color: #ffe9b0;
+  font-size: 0.9rem;
+}
+
+/* ---- バトルHUD：DAILYタグ ---- */
+.battle-daily-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.1rem 0.55rem;
+  border-radius: 999px;
+  border: 1px solid #ffd16699;
+  background: #ffd16622;
+  color: #ffe9b0;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  white-space: nowrap;
+}
+
+/* ---- 決着オーバーレイ：今日の神域挑戦 ---- */
+.game-over-daily {
+  margin: 0.4rem 0 0.6rem;
+  padding: 0.6rem 0.9rem;
+  border-radius: 10px;
+  border: 1px solid #ffd16666;
+  background: #ffd16614;
+  color: #ffe9b0;
+  font-size: 0.95rem;
+  text-align: center;
+}
+.game-over-daily strong {
+  color: #fff;
+}
+
+/* ---- 戦績：神域挑戦セクション ---- */
+.record-daily {
+  margin: 0 0 1.5rem;
+}
+.record-daily-title {
+  font-size: 1.1rem;
+  color: #ffe9b0;
+  margin: 0 0 0.5rem;
+}
+.record-daily-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+  color: #dfe3f5;
+}
+.record-daily-table th,
+.record-daily-table td {
+  padding: 0.4rem 0.6rem;
+  border-bottom: 1px solid #ffffff14;
+  text-align: left;
+  white-space: nowrap;
+}
+.record-daily-table th {
+  color: #9aa3c4;
+  font-weight: 600;
+  font-size: 0.8rem;
+  letter-spacing: 0.06em;
+}
+.record-daily-table td.num {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+.record-daily-empty {
+  color: #9aa3c4;
+  font-size: 0.9rem;
+}
+
+@media (max-width: 640px) {
+  .daily-boss-card {
+    grid-template-columns: 1fr;
+  }
+  .daily-boss-art {
+    max-width: 220px;
+    margin: 0 auto;
+  }
+}

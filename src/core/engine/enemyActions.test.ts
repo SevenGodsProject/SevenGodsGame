@@ -243,7 +243,7 @@ describe('intentイベント（telegraph）', () => {
 })
 
 describe('saveVersion', () => {
-  it('v7である', () => {
-    expect(RULES.saveVersion).toBe(7)
+  it('v8である（v7=multiAttack/special、v8=DAILY-01のmode/dailyKey/modifier）', () => {
+    expect(RULES.saveVersion).toBe(8)
   })
 })

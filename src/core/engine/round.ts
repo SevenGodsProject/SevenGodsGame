@@ -67,7 +67,11 @@ function scaleEnemyAction(action: EnemyActionDef, multiplier: number): EnemyActi
 function nextEnemyAction(state: GameState): EnemyActionDef {
   const enemyDef = getEnemyDef(state.enemy.defId)
   const raw = actionForRound(enemyDef.actions, state.round)
-  return scaleEnemyAction(raw, RULES.difficulty[state.difficulty].enemyAtkMultiplier)
+  // DAILY-01：神域強化の攻撃倍率は難易度倍率に乗算し、合計保存丸めを1回だけ行う。
+  // 通常モード（modifier無し）は×1で従来と完全に同じ値。
+  const multiplier =
+    RULES.difficulty[state.difficulty].enemyAtkMultiplier * (state.modifier?.enemyAtkMul ?? 1)
+  return scaleEnemyAction(raw, multiplier)
 }
 
 /**

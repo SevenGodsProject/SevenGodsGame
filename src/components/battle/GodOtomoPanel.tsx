@@ -4,6 +4,7 @@ import { OTOMO_FORM_ORDER } from '../../core/types'
 import { getOtomoDef } from '../../core/data/otomo'
 import { getGodDef } from '../../core/data/gods'
 import { describeEffectList } from '../setup/otomoEffectText'
+import '../polish.css'
 
 const FORM_LABEL: Record<OtomoState['form'], string> = {
   spirit: '精霊態',
@@ -64,6 +65,17 @@ export function GodOtomoPanel({
   // JSXへ手書きで複製しない（single source of truth）。神・数値・発動条件は
   // 一切変更していない、純粋な表示専用の追加。
   const resonanceEffectText = describeEffectList(getGodDef(godId).resonanceEffects) ?? '変化なし'
+
+  // 8/31 P0-2：「7に達したら何が起きるか」を初戦から分かるように常時表示する。
+  // 発動時の順序はeffects.tsのapplyResonance（進化→神の一撃→OTOMO効果）そのもの
+  // なので、OTOMO効果は「今の形態」ではなく「発動で成長した後の形態」（童子なら据え置き）
+  // のテーブルを、現在の育成方針（守り/力）で引く。表示専用でGameStateには触れない。
+  const burstFormIndex = OTOMO_FORM_ORDER.indexOf(otomo.form)
+  const burstForm: OtomoForm = OTOMO_FORM_ORDER[burstFormIndex + 1] ?? otomo.form
+  const burstOtomoEffects =
+    otomoGrowthPath === 'power' ? otomoDef.powerPathEffectsByForm[burstForm] : otomoDef.effectsByForm[burstForm]
+  const burstOtomoText = describeEffectList(burstOtomoEffects)
+  const remaining = Math.max(0, resonance.max - resonance.value)
 
   // VFX-03：共鳴BURSTの見せる順番（cut-in→神の一撃→着弾→🌱成長）に合わせ、
   // OTOMOの立ち絵は「🌱成長バナー」（evolveRevealKey）が出るまで旧形態のまま見せる。
@@ -131,7 +143,6 @@ export function GodOtomoPanel({
   return (
     <div className="panel god-otomo-panel">
       <div className="panel-title">共鳴</div>
-      <p className="resonance-effect-text">共鳴発動：{resonanceEffectText}</p>
       <div className="god-otomo-portraits">
         {/* VFX-03：成長グロー（evolve-glow）は立ち絵切替と同じ「🌱成長」の瞬間に再生する
             （keyをevolveRevealKeyに変更。以前はevolveKey＝暗転の下で発動していた） */}
@@ -158,6 +169,23 @@ export function GodOtomoPanel({
             共鳴 {resonance.value} / {resonance.max}
           </span>
         </div>
+      </div>
+      <div className="burst-preview" data-testid="burst-preview">
+        <div className={`burst-preview-head${remaining === 0 ? ' burst-preview-ready' : ''}`}>
+          {remaining > 0 ? `あと${remaining}で神技発動` : '神技発動！'}
+        </div>
+        <div className="burst-preview-row">
+          <span className="burst-preview-label">神の一撃</span>
+          <span>{resonanceEffectText}</span>
+        </div>
+        <div className="burst-preview-row">
+          <span className="burst-preview-label">
+            {otomoDef.nameJa}
+            {burstForm !== otomo.form ? `（${FORM_LABEL[burstForm]}に成長）` : `（${FORM_LABEL[burstForm]}）`}
+          </span>
+          <span>{burstOtomoText ?? '効果なし'}</span>
+        </div>
+        <div className="burst-preview-note">共鳴が7に達すると自動で発動します</div>
       </div>
     </div>
   )
