@@ -68,7 +68,17 @@ body::before {
     radial-gradient(1.5px 1.5px at 50% 5%, #ffffffaa, transparent),
     radial-gradient(1.5px 1.5px at 12% 88%, #ffffffaa, transparent);
   background-repeat: repeat;
-  background-size: 100% 100%;
+  /*
+   * VFX-04: ドリフトは background-position ではなく transform で行う。
+   * background-position のアニメーションは 20 枚の radial-gradient を毎フレーム再ラスタライズし
+   * rAF が約 10fps まで落ちていた（transform 化で 60fps に復帰。VFX-04 の計測記録を参照）。
+   * 移動量 (-60px, 40px) ぶんだけ上・右へ要素を拡張して画面端の露出を防ぎ、
+   * タイルサイズと初期位置は拡張前（= ビューポート基準）と同一に保つ。
+   */
+  inset: -40px -60px 0 0;
+  background-size: calc(100% - 60px) calc(100% - 40px);
+  background-position: 0 40px;
+  will-change: transform, opacity;
   animation:
     particle-drift 140s linear infinite,
     star-twinkle 5s ease-in-out infinite;
@@ -105,10 +115,10 @@ body::after {
 
 @keyframes particle-drift {
   from {
-    background-position: 0 0;
+    transform: translate(0, 0);
   }
   to {
-    background-position: -60px 40px;
+    transform: translate(-60px, 40px);
   }
 }
 
