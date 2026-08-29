@@ -1557,15 +1557,20 @@
   }
 }
 
+/* ENEMY SELECT VISUAL POLISH（CEO決定）：カードを「敵一覧」から
+   「7つの戦場を選ぶ画面」へ。visual hierarchy＝STAGE BG→LARGE ENEMY ART→
+   ★→NAME→TYPE→HINT→STAGE NAME。上部visual areaに敵を大きく立たせ、
+   「誰と戦うのか」が最初に目に入るようにする。 */
 .enemy-select-card {
   position: relative;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  gap: 5px;
-  padding: 12px 10px;
+  align-items: stretch;
+  gap: 0;
+  padding: 0;
   border: 1px solid var(--enemy-accent-soft, #ffffff1a);
   border-radius: 12px;
+  overflow: hidden;
   background: linear-gradient(165deg, #14152caa 0%, #0b0d17cc 100%);
   color: inherit;
   cursor: pointer;
@@ -1579,22 +1584,88 @@
     border-color 0.2s ease;
 }
 
-.enemy-select-card:hover {
+/* SELECTED/HOVER STATE：背景・敵artを隠さず、border＋glow＋右上accentマーカー
+   だけで明確化（過度な塗りでStage artを潰さない、CEO指示） */
+.enemy-select-card:hover,
+.enemy-select-card:focus-visible {
   border-color: var(--enemy-accent, #ffd166);
   transform: translateY(-3px);
   box-shadow:
     inset 0 1px 0 #ffffff10,
-    0 0 22px -4px var(--enemy-accent-glow, #ffd16688);
+    0 0 26px -4px var(--enemy-accent-glow, #ffd16688);
+  outline: none;
 }
 
-/* 透過512素材前提：黒箱で囲わず、accent色のdrop-shadowでシルエットを
-   浮かせる（battle.cssのC-LITE-Cと同じ視覚言語） */
-.enemy-select-art {
+.enemy-select-card::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  border-style: solid;
+  border-width: 0 22px 22px 0;
+  border-color: transparent var(--enemy-accent, #ffd166) transparent transparent;
+  opacity: 0;
+  transition: opacity 0.15s ease;
+  pointer-events: none;
+}
+
+.enemy-select-card:hover::after,
+.enemy-select-card:focus-visible::after {
+  opacity: 1;
+}
+
+.enemy-select-card:active {
+  transform: translateY(-1px) scale(0.99);
+}
+
+/* 上部visual area＝戦場。正式Stage背景（--enemy-stage-bg）が入るまでは
+   accent色の暗い情景グラデでfallback（適当な代替画像で完成扱いしない）。
+   background-positionは将来data-drivenで敵ごとに調整可能（stage.bg導入時に
+   bgPosCard等のdescriptor追加を想定）。 */
+.enemy-select-visual {
+  position: relative;
+  display: block;
   width: 100%;
-  max-width: 132px;
-  height: 108px;
+  aspect-ratio: 5 / 4;
+  background:
+    var(--enemy-stage-bg, radial-gradient(120% 90% at 50% 0%, var(--enemy-accent-soft, #22243c) 0%, transparent 62%))
+      center 30% / cover no-repeat,
+    linear-gradient(180deg, #191a30 0%, #0b0d17 100%);
+}
+
+/* 下端をカード背景色へ溶かし、info部の可読性を守るoverlay（背景を派手に
+   しても文字が読めなくなるのは禁止、CEO指示） */
+.enemy-select-visual::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, #0b0d1700 42%, #0b0d17cc 92%, #0b0d17 100%);
+  pointer-events: none;
+}
+
+/* 敵art＝visual areaの主役（旧: 132×108pxの約1.6倍）。透過512素材前提：
+   黒箱で囲わずaccent色drop-shadowでシルエットを浮かせる（battle.cssの
+   C-LITE-Cと同じ視覚言語）。--art-scaleは元画像の透過余白の個体差を
+   敵ごとに補正するためのフック（既定1、表示専用）。 */
+.enemy-select-art {
+  position: absolute;
+  left: 50%;
+  bottom: 4%;
+  height: 88%;
+  width: 92%;
+  transform: translateX(-50%) scale(var(--art-scale, 1));
+  transform-origin: 50% 100%;
   object-fit: contain;
-  filter: drop-shadow(0 8px 10px #000000aa) drop-shadow(0 0 14px var(--enemy-accent-glow, #9b59b644));
+  filter: drop-shadow(0 10px 12px #000000aa) drop-shadow(0 0 16px var(--enemy-accent-glow, #9b59b644));
+}
+
+/* 下部info block */
+.enemy-select-info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 8px 10px 12px;
 }
 
 .enemy-select-threat {
@@ -1672,27 +1743,37 @@
   color: var(--enemy-accent, #8b8fa8);
 }
 
-/* 8枚目「神に委ねる」：敵カードと同じ骨格のまま、金色破線＋鳥居マークで
-   「選ばない」選択肢だと分かるようにする */
+/* 8枚目「神に委ねる」：敵カード（敵＋戦場）とは別のvisual language＝
+   神域・鳥居・金の光・運命。金色破線＋光背の中に大鳥居。 */
 .enemy-select-card-entrust {
   border: 1px dashed #ffd16655;
-  justify-content: center;
 }
 
-.enemy-select-card-entrust:hover {
+.enemy-select-card-entrust:hover,
+.enemy-select-card-entrust:focus-visible {
   border-color: #ffd166;
   box-shadow:
     inset 0 1px 0 #ffffff10,
-    0 0 22px -4px #ffd16688;
+    0 0 26px -4px #ffd16688;
+}
+
+.enemy-select-card-entrust::after {
+  border-color: transparent #ffd166 transparent transparent;
+}
+
+/* 神域の光背：金のradial＋淡い光。敵カードのfallbackグラデとは別物に見せる */
+.enemy-select-visual-entrust {
+  background:
+    radial-gradient(90% 70% at 50% 42%, #ffd16633 0%, #ffd16608 45%, transparent 70%),
+    linear-gradient(180deg, #1b1830 0%, #0b0d17 100%);
+  display: grid;
+  place-items: center;
 }
 
 .enemy-select-entrust-mark {
-  display: grid;
-  place-items: center;
-  width: 100%;
-  height: 108px;
-  font-size: 52px;
-  filter: drop-shadow(0 0 14px #ffd16666);
+  font-size: 84px;
+  line-height: 1;
+  filter: drop-shadow(0 0 22px #ffd16688);
 }
 
 .enemy-select-back {
@@ -1761,4 +1842,24 @@
   height: 40px;
   font-size: 24px;
   filter: drop-shadow(0 0 8px #ffd16666);
+}
+
+/* ENEMY SELECT VISUAL POLISH：375px（2列grid）調整。敵artは大きいまま、
+   文字サイズだけ絞って名前・★・型・ヒントの可読性を確保する */
+@media (max-width: 700px) {
+  .enemy-select-name {
+    font-size: 13px;
+  }
+  .enemy-select-hint {
+    font-size: 10px;
+  }
+  .threat-stars {
+    font-size: 12px;
+  }
+  .enemy-select-entrust-mark {
+    font-size: 64px;
+  }
+  .enemy-select-info {
+    padding: 6px 8px 10px;
+  }
 }

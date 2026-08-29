@@ -65,33 +65,49 @@ export function EnemySelectScreen({ onSelect, onBack }: EnemySelectScreenProps) 
               ['--enemy-accent' as string]: enemy.stage.accent,
               ['--enemy-accent-soft' as string]: `${enemy.stage.accent}55`,
               ['--enemy-accent-glow' as string]: `${enemy.stage.accent}88`,
+              // VISUAL POLISH：正式Stage背景が入るまでは未指定＝accent色の
+              // 暗いグラデ（CSS側fallback）。適当な代替画像は使わない（CEO指示）
+              ...(enemy.stage.bg ? { ['--enemy-stage-bg' as string]: `url('${enemy.stage.bg}')` } : {}),
             }}
             onClick={() => onSelect(enemy.id)}
           >
-            <img className="enemy-select-art" src={enemy.art} alt="" loading="lazy" decoding="async" />
-            <span className="enemy-select-threat">
-              <span className="threat-label">脅威度</span>
-              <ThreatStars rank={enemy.rank} />
+            {/* VISUAL POLISH：カード上部＝戦場visual area。Stage背景（fallback=
+                accentグラデ）の上に敵artを大きく立たせ、「誰と戦うのか」を
+                最初に目に入れる。下部infoの可読性はoverlayグラデで守る。
+                artの見かけサイズは元画像の透過余白量で個体差が出るため、
+                --art-scaleで敵ごとに微調整できるフックを持つ（現状は全て1） */}
+            <span className="enemy-select-visual" aria-hidden="true">
+              <img className="enemy-select-art" src={enemy.art} alt="" loading="lazy" decoding="async" />
             </span>
-            <span className="enemy-select-name">{enemy.name}</span>
-            <span className="enemy-select-type">【{enemy.typeLabel}】</span>
-            <span className="enemy-select-hint">{enemy.typeDescription}</span>
-            <span className="enemy-select-stage">{enemy.stage.nameJa}</span>
+            <span className="enemy-select-info">
+              <span className="enemy-select-threat">
+                <span className="threat-label">脅威度</span>
+                <ThreatStars rank={enemy.rank} />
+              </span>
+              <span className="enemy-select-name">{enemy.name}</span>
+              <span className="enemy-select-type">【{enemy.typeLabel}】</span>
+              <span className="enemy-select-hint">{enemy.typeDescription}</span>
+              <span className="enemy-select-stage">{enemy.stage.nameJa}</span>
+            </span>
           </button>
         ))}
 
+        {/* 「神に委ねる」：敵カード（敵＋戦場）とは別のvisual language＝
+            神域・鳥居・金の光・運命。VISUAL POLISHで金の光背＋大鳥居に変更 */}
         <button
           type="button"
           className="enemy-select-card enemy-select-card-entrust"
           onClick={() => onSelect(null)}
         >
-          <span className="enemy-select-entrust-mark" aria-hidden="true">
-            ⛩
+          <span className="enemy-select-visual enemy-select-visual-entrust" aria-hidden="true">
+            <span className="enemy-select-entrust-mark">⛩</span>
           </span>
-          <span className="enemy-select-name">神に委ねる</span>
-          <span className="enemy-select-type">【おまかせ】</span>
-          <span className="enemy-select-hint">対戦相手は神々が選ぶ。何が出るかはお楽しみ。</span>
-          <span className="enemy-select-stage">舞台もまた、神のみぞ知る</span>
+          <span className="enemy-select-info">
+            <span className="enemy-select-name">神に委ねる</span>
+            <span className="enemy-select-type">【おまかせ】</span>
+            <span className="enemy-select-hint">対戦相手は神々が選ぶ。何が出るかはお楽しみ。</span>
+            <span className="enemy-select-stage">舞台もまた、神のみぞ知る</span>
+          </span>
         </button>
       </div>
 
