@@ -64,12 +64,25 @@ describe('ENEMIES', () => {
     }
   })
 
-  it('leaves every stage bg unspecified for now, so battle keeps the current arena.jpg fallback (LANE-D)', () => {
-    // battle.css末尾の`var(--stage-bg, url('/assets/backgrounds/arena.jpg'))`の
-    // フォールバックが全敵で効く＝現行表示と完全に同一、の回帰保証。
-    // 背景画像を正式採用する敵が現れたら、このテストをその敵だけ除外する形で更新する。
+  it('gives every enemy its own stage background under /assets/backgrounds/stages/ (決定124)', () => {
+    // 7ボス専用Stage Background。BattleScreenが`--stage-bg`として注入し、Enemy Selectも
+    // `--enemy-stage-bg`として同じ値を使う（表示専用。ロジック・数値には不関与）。
+    const bgs = ENEMIES.map((e) => e.stage.bg)
+    for (const bg of bgs) {
+      expect(bg).toBeDefined()
+      expect(bg).toMatch(/^\/assets\/backgrounds\/stages\/[0-9]{2}-[a-z-]+\.webp$/)
+    }
+    expect(new Set(bgs).size).toBe(ENEMIES.length)
+  })
+
+  it('ships the referenced stage background asset for every enemy', () => {
+    // `public/`配下の実ファイルをViteのglobで列挙し、stage.bgのパスが存在することを保証する
+    // （node:fsはapp側tsconfigに型が無いため使わない）
+    const shipped = Object.keys(import.meta.glob('../../../public/assets/backgrounds/stages/*.webp')).map((k) =>
+      k.replace('../../../public', ''),
+    )
     for (const enemy of ENEMIES) {
-      expect(enemy.stage.bg).toBeUndefined()
+      expect(shipped, `missing asset for ${enemy.name}: ${enemy.stage.bg}`).toContain(enemy.stage.bg)
     }
   })
 })
