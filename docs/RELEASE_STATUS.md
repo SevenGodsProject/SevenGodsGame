@@ -1,4 +1,4 @@
-# SEVEN GODS 8/31 Public Beta リリースステータス（2026-08-30 最終・RELEASED）
+# SEVEN GODS 8/31 Public Beta リリースステータス（2026-08-30 Phase 1「神階」追加・RELEASED）
 
 8/31公開版の「確定状態」を一目で確認するための要約です。新しい仕様判断は含みません（詳細・根拠は`docs/DECISIONS.md` 決定119〜125を参照）。
 
@@ -7,14 +7,14 @@
 | 項目 | 状態 |
 |---|---|
 | **Release** | SEVEN GODS 8/31 Public Beta |
-| **Production HEAD** | `1aab902` fix: prevent mobile auto focus after battle end |
-| **origin/master** | `1aab902`（local HEAD と完全一致、ahead/behind 0/0） |
+| **Production HEAD** | `5552ae4` feat: add shinkai stake ladder (神階Ⅰ〜Ⅶ)（80点化計画 Phase 1、決定126） |
+| **origin/master** | `5552ae4`（local HEAD と完全一致、ahead/behind 0/0） |
 | **Production URL** | https://seven-gods-game.vercel.app/ |
-| **Production bundle** | `assets/index-BgsBoGXW.js`（`git archive` の clean build と同一ハッシュを本番配信で確認） |
-| **Production QA** | PASS（2026-08-30、本番URL実測。下記「Production QA」参照） |
+| **Production bundle** | `assets/index-CYnzy73o.js`（`git archive 5552ae4` の clean build と同一ハッシュを本番配信で確認） |
+| **Production QA** | PASS（2026-08-30 夜、Phase 1 Production Release Gate。下記「Production QA」参照） |
 | **Final Verdict** | **RELEASED** |
 | **8/31 Release Status** | **READY** |
-| **Code Freeze** | ACTIVE（決定123。例外として決定124・125のみ追加採用済み。以後、ゲーム本体・PV・BGMは変更しない） |
+| **Code Freeze** | 解除（80点化計画へ移行。Phase 1「神階」を決定126で採用・本番反映。以後は CLAUDE.md §6 のAI自律判断ポリシーで Phase ごとに進める。PV・BGMは変更しない） |
 
 ## Production Release commits（`7f89e9e` 以降）
 
@@ -23,15 +23,18 @@
 | `8b2a980` | feat: add boss stage backgrounds | 決定124 |
 | `b38d1bb` | feat: improve mobile battle action visibility | 決定125 |
 | `1aab902` | fix: prevent mobile auto focus after battle end | 決定125フォローアップ |
+| `f579eb3` / `c260b07` | docs（RELEASE_STATUS・AI自律判断ポリシー） | — |
+| **`5552ae4`** | **feat: add shinkai stake ladder (神階Ⅰ〜Ⅶ)** — 80点化計画 Phase 1 | **決定126（AI判断・CEO承認deploy）** |
 
 （それ以前：`32697ee` feat: polish enemy select cards（決定123）＝8/31版の基盤、`7f89e9e` docs: mark 8/31 release ready）
 
-## Quality Gate（`1aab902` clean copy＝`git archive HEAD`）
+## Quality Gate（`5552ae4` clean copy＝`git archive HEAD`）
 
 - typecheck（`npx tsc -b --noEmit`）PASS
 - lint（`npx oxlint .`）PASS
-- tests **44 files / 537 tests** PASS（canonical。作業ツリーで`.claude/worktrees`の古いコピーが混入した件数は公式値ではない）
-- production build PASS（`index-BgsBoGXW.js` / `index-RvUI6q4I.css`）
+- tests **47 files / 567 tests** PASS（canonical。作業ツリーで`.claude/worktrees`の古いコピーが混入した件数は公式値ではない）
+- balanceSim「STAKE-01」神の公平性ゲート PASS（神階Ⅰ〜Ⅶ×7神×7敵×3戦略）
+- production build PASS（`index-CYnzy73o.js` / `index-BmAHiqae.css`）
 - normal smoke PASS／Daily smoke PASS／Daily e2e（実プレイで決着→Daily Result→戦績）PASS
 - 375px focused QA PASS／Desktop 1280 回帰 PASS
 - console error 0／HTTP 4xx/5xx 0
@@ -47,6 +50,8 @@
 | **Enemy Selectへの専用背景反映** | **READY** | 決定124。同じ`stage.bg`を`--enemy-stage-bg`として5:4 visual areaに表示（敵artと背景が同化しないことをQAで確認） |
 | **Mobile Battle Auto Focus** | **READY** | 決定125。`(max-width:700px)`のみ。**攻撃カード／Multi Hit／BURST／Enemy Attack／Enemy Special**（＋敵ダメージを伴う託宣）で敵パネルへスクロールし演出を可視化、演出後に使用直前のscrollYへ復帰。**Heal／BlockではAuto Focusしない**。復帰待ち中の**ユーザー操作（pointerdown/touchstart/wheel/keydown）でAuto Returnをキャンセル**。**prefers-reduced-motion**はinstant移動（フォーカス自体は維持）。Desktopは完全不変。engine・save・balance不接触 |
 | **battle終了後の不要なAuto Focus防止** | **READY** | 決定125フォローアップ（`1aab902`）。勝敗確定後（RewardOverlay/GameOverOverlay表示中）は新しいセッションを開始しない。セッション制御は`autoFocusSession.ts`（node環境の回帰テスト10件） |
+| **神階（しんかい）Ⅰ〜Ⅶ** | **RELEASED** | 決定126（Phase 1）。累積制約：Ⅰ参道＝託宣4回＋R5以降 敵ATK+20%＋敵ATK+10%／Ⅱ鳥居＝＋初期手札−1／Ⅲ拝殿＝＋敵HP+10%／Ⅳ本殿＝＋ブロック効率75%／Ⅴ奥宮＝＋回復効率60%／Ⅵ禁足地＝＋必殺・連撃+20%（機工師主砲は+10%上限）／Ⅶ高天原＝＋最終試練の選択（巨躯／猛威／静寂）。難易度「ふつう」固定・神ごと解放（むずかしい1回撃破→Ⅰ）・スコア×(1+0.08×段)・段別ベスト（`sevengods.stakes` v1）・saveVersion 9（v3〜v8連鎖移行）・Dailyとは完全分離 |
+| **Seed共有（挑戦状コピー・`?seed=&stake=`）** | **RELEASED** | 決定126。結果画面から段・神・敵・Seed・スコア・URLをコピー。真正性は自己申告 |
 | PV | VISUAL LOCK / FINAL | v3 FINAL承認済み。変更しない（新背景の収録はPV v2以降） |
 | BGM | license verified / unchanged | 決定120 |
 | VFX-04 背景ドリフト最適化 | 完了 | 決定119 |
@@ -62,14 +67,16 @@
 | Result（RewardOverlay「報酬カードを1枚選ぼう」） | PASS |
 | **Boss Backgrounds** | **7/7 PASS**（Enemy Select Desktop/375・Battle Desktop/375とも正しい専用背景、混線なし、asset 404なし） |
 | **Mobile Auto Focus**（375px） | **PASS**（通常攻撃／Multi Hit／BURST／Enemy Attack／Enemy Special の演出がviewport内、Heal/Blockはスクロールなし、手動キャンセル、reduced-motion、BURST撃破後の不要な復帰スクロールなし） |
-| Daily（本日ボス・★★★★★神域強化・Seed ID・専用背景・Auto Focus・attempt/score/seedルール不変） | PASS |
+| Daily（本日ボス・★★★★★神域強化・Seed ID・専用背景・Auto Focus・attempt/score/seedルール不変・**神階非干渉**） | PASS |
+| **神階**（未解放表示／到達チップ／Ⅲ選択とふつう固定／HUDタグ／save v9／続きから／勝利→倍率行・突破・段別ベスト・次段解放・挑戦状コピー／もう一度で段維持／戦績／`?seed=&stake=`／Ⅶ3択／375px） | **PASS 21/21** |
+| 通常モード かんたん／ふつう／むずかしい（神階なし・数値不変）／旧save（v7）→v9移行と続きから | PASS |
 | Desktop regression（1280pxでscrollY不変、Enemy Select/Battle 7体） | PASS |
 | console error | 0 |
 | HTTP 4xx/5xx | 0 |
 | BGM home／battle／victory／defeat | 4種とも HEAD 200 |
-| Production bundle | `assets/index-BgsBoGXW.js`（clean buildと一致） |
+| Production bundle | `assets/index-CYnzy73o.js`（clean buildと一致） |
 
-証跡：`Videos/SEVENGODS-PV-REVIEW/prod-final-0831/`（flows／stage／mobile／end）、`final-gate-0831/`、`minor-fix-gate/`
+証跡：`Videos/SEVENGODS-PV-REVIEW/shinkai-phase1/prod/`（flows／stage／mobile／end／stake／daily-e2e／p0）、8/31版の記録は `prod-final-0831/`・`final-gate-0831/`・`minor-fix-gate/`
 
 ## Known Non-blockers（MINOR / Post-release）
 
@@ -81,12 +88,16 @@
 4. **復帰位置の scroll anchoring 差**：Auto Focusは使用直前のscrollYへ正確に戻すが、その後のMiniResult消滅・手札枚数変化でブラウザ標準のscroll anchoringにより50〜80px程度ずれることがある（既存挙動）
 5. **701〜899px Battle縦スクロール**：PC幅701〜899pxで「ラウンドを終える」まで縦スクロールが必要（決定88で発見、横スクロール・重なりは無し）
 6. **Daily Phase 1：端末時計／localStorage依存**（決定121で了承済み。公開ランキング時にサーバー権威へ移行）
+7. **寿楽の一強**（神階Ⅶで最良戦略86%、蒼毘・笑蓮は36〜45%）：神階以前からの不均衡。神階のための緊急nerfはせず、次の独立したBalance Phaseで実測＋simulationに基づき扱う（CEO方針）
+8. **375pxの難易度画面が812→899px**（神階セレクタ追加分。フレーバー文は畳み済み）
+9. **挑戦状の真正性は自己申告**（サーバー無し）
 
 その他：stale `.claude/worktrees`（ローカル作業環境のみ。テスト件数混入の原因、削除は別途）
 
 ## Post-release Priorities（9月以降）
 
 ### P1（最優先）
+0. ~~神階（Stakes）~~ → Phase 1 として RELEASED（決定126）
 1. BURST任意発動
 2. SE実音源
 3. Daily共有
@@ -97,6 +108,8 @@
 - 神域行動
 - 神バランス
 - Mobile 1画面化（Battle redesign。決定125のAuto Focusはそれまでの対策）
+- 7神バランス（寿楽一強・蒼毘/笑蓮下位）＝独立したBalance Phase
+- 神階の拡張（Ⅴ以上での選択式、曜日Daily階位）
 - PV v2（新ステージ背景の収録・9:16版）
 
 ## Excluded Local Files（コミット対象外）
