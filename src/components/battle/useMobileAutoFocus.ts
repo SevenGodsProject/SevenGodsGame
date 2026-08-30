@@ -9,6 +9,7 @@ import {
   SPECIAL_IMPACT_MS,
   multiHitOffsetMs,
 } from './enemyVfxTiming'
+import { createAutoFocusController, type AutoFocusController } from './autoFocusSession'
 
 /**
  * 決定125：Mobile Battle Auto Focus（表示専用）。
@@ -27,6 +28,8 @@ import {
  *   復帰をキャンセルする（ユーザーと自動スクロールの「綱引き」を起こさない）
  * - prefers-reduced-motion では smooth を使わず instant（auto）で移動する。
  *   「動きを減らす設定だから攻撃結果が見えない」状態にはしない
+ * - 勝敗確定後（RewardOverlay/GameOverOverlay表示中）は新しいセッションを開始しない
+ *   （決定125フォローアップ。セッション制御の本体は`autoFocusSession.ts`）
  */
 export const MOBILE_FOCUS_QUERY = '(max-width: 700px)'
 const REDUCED_MOTION_QUERY = '(prefers-reduced-motion: reduce)'
@@ -62,10 +65,19 @@ function matches(query: string): boolean {
 
 const CANCEL_EVENTS = ['pointerdown', 'touchstart', 'wheel', 'keydown'] as const
 
-type FocusSession = {
-  savedY: number
-  timer: number | null
-  onUserInput: () => void
+/** window/document を `autoFocusSession.ts` の環境として配線する */
+function createBrowserController(): AutoFocusController {
+  return createAutoFocusController({
+    isMobile: () => matches(MOBILE_FOCUS_QUERY),
+    reducedMotion: () => matches(REDUCED_MOTION_QUERY),
+    findTarget: () => document.querySelector<HTMLElement>(FOCUS_TARGET_SELECTOR),
+    scrollY: () => window.scrollY,
+    scrollTo: (top, behavior) => window.scrollTo({ top, behavior }),
+    setTimeout: (fn, ms) => window.setTimeout(fn, ms),
+    clearTimeout: (id) => window.clearTimeout(id),
+    addCancelListener: (fn) => CANCEL_EVENTS.forEach((ev) => window.addEventListener(ev, fn, true)),
+    removeCancelListener: (fn) => CANCEL_EVENTS.forEach((ev) => window.removeEventListener(ev, fn, true)),
+  })
 }
 
 type UseMobileAutoFocusArgs = {
@@ -96,128 +108,71 @@ export function useMobileAutoFocus({
   enemySpecialKind,
   multiHitCount,
 }: UseMobileAutoFocusArgs): UseMobileAutoFocus {
-  const sessionRef = useRef<FocusSession | null>(null)
-
-  const endSession = useCallback(() => {
-    const s = sessionRef.current
-    if (!s) return
-    if (s.timer !== null) window.clearTimeout(s.timer)
-    for (const ev of CANCEL_EVENTS) window.removeEventListener(ev, s.onUserInput, true)
-    sessionRef.current = null
-  }, [])
-
-  /** 保持時間が過ぎたら使用直前のscrollYへ戻す（ユーザー操作があれば呼ばれない） */
-  const armReturn = useCallback(
-    (holdMs: number) => {
-      const s = sessionRef.current
-      if (!s) return
-      if (s.timer !== null) window.clearTimeout(s.timer)
-      s.timer = window.setTimeout(() => {
-        const savedY = s.savedY
-        endSession()
-        window.scrollTo({ top: savedY, behavior: matches(REDUCED_MOTION_QUERY) ? 'auto' : 'smooth' })
-      }, holdMs)
-    },
-    [endSession],
-  )
-
-  const scrollToTarget = (target: HTMLElement) =>
-    target.scrollIntoView({ block: 'start', behavior: matches(REDUCED_MOTION_QUERY) ? 'auto' : 'smooth' })
+  const controllerRef = useRef<AutoFocusController | null>(null)
+  if (controllerRef.current === null) controllerRef.current = createBrowserController()
+  const controller = controllerRef.current
 
   /**
-   * フォーカス中に敵パネルが目標位置から外れていたら寄せ直す。
-   * END_ROUND/PLAY_CARDのcommitで手札が入れ替わり文書の高さが変わると、進行中のsmooth scrollが
-   * 途中で打ち切られることがある（QAで実測：目標147pxに対し223pxで停止）。演出の本体
-   * （lunge・被弾・数字）が始まる攻撃確定のタイミングで一度だけ位置を確認する。
+   * 対局状態の反映。決着（won/lost/finished）後はセッションを終了し、以後は開始しない。
+   * この effect を他より先に宣言しておくことで、同じcommit内で「status='won'」と
+   * 「burstKey増分」が並んでも、statusの反映が先に走る。
    */
-  const reassert = useCallback(() => {
-    if (!sessionRef.current) return
-    const target = document.querySelector<HTMLElement>(FOCUS_TARGET_SELECTOR)
-    if (!target) return
-    // scroll-margin-top（battle.css: 8px）ぶんを許容し、それ以上ズレていれば寄せ直す
-    if (Math.abs(target.getBoundingClientRect().top) > 24) scrollToTarget(target)
-  }, [])
-
-  /**
-   * 敵パネルへフォーカスする。既にフォーカス中なら位置は動かさず保持時間だけ延長する
-   * （連続した攻撃・BURST・敵ターンの間、最初の「使用直前の位置」を保持し続ける）。
-   */
-  const focus = useCallback(
-    (holdMs: number) => {
-      if (!matches(MOBILE_FOCUS_QUERY)) return
-      const target = document.querySelector<HTMLElement>(FOCUS_TARGET_SELECTOR)
-      if (!target) return
-      if (!sessionRef.current) {
-        const session: FocusSession = {
-          savedY: window.scrollY,
-          timer: null,
-          onUserInput: () => endSession(),
-        }
-        for (const ev of CANCEL_EVENTS) window.addEventListener(ev, session.onUserInput, true)
-        sessionRef.current = session
-        scrollToTarget(target)
-      }
-      armReturn(holdMs)
-    },
-    [armReturn, endSession],
-  )
+  useEffect(() => {
+    controller.setStatus(status)
+  }, [status, controller])
 
   /** 攻撃カード：タップ直後（pendingCardUidが立った瞬間）にフォーカス */
   const seenPendingRef = useRef<string | null>(null)
   useEffect(() => {
     if (!pendingCardUid || seenPendingRef.current === pendingCardUid) return
     seenPendingRef.current = pendingCardUid
-    if (pendingCardDef && dealsEnemyDamage(pendingCardDef.effects)) focus(FOCUS_HOLD_CARD_MS)
-  }, [pendingCardUid, pendingCardDef, focus])
+    if (pendingCardDef && dealsEnemyDamage(pendingCardDef.effects)) controller.focus(FOCUS_HOLD_CARD_MS)
+  }, [pendingCardUid, pendingCardDef, controller])
 
   /** BURST：共鳴カットインの暗転中に移動し、神の一撃→OTOMO進化の終わりまで保持 */
   const seenBurstRef = useRef(burstKey)
   useEffect(() => {
     if (burstKey === seenBurstRef.current) return
     seenBurstRef.current = burstKey
-    focus(FOCUS_HOLD_BURST_MS)
-    reassert()
-  }, [burstKey, focus, reassert])
+    controller.focus(FOCUS_HOLD_BURST_MS)
+    controller.reassert()
+  }, [burstKey, controller])
 
   /** 敵ターン：ラウンド終了直後（「敵のターン」バナー中）に移動 */
   const seenEnemyTurnRef = useRef(false)
   useEffect(() => {
-    if (isEnemyTurn && !seenEnemyTurnRef.current) focus(FOCUS_HOLD_ENEMY_TURN_MS)
+    if (isEnemyTurn && !seenEnemyTurnRef.current) controller.focus(FOCUS_HOLD_ENEMY_TURN_MS)
     seenEnemyTurnRef.current = isEnemyTurn
-  }, [isEnemyTurn, focus])
+  }, [isEnemyTurn, controller])
 
-  /** 敵の攻撃種別が確定したら、その演出が終わるまで保持時間を延長 */
+  /** 敵の攻撃種別が確定したら、位置を再確認しつつその演出が終わるまで保持時間を延長 */
   const seenEnemyAttackRef = useRef(enemyAttackKey)
   useEffect(() => {
     if (enemyAttackKey === seenEnemyAttackRef.current) return
     seenEnemyAttackRef.current = enemyAttackKey
-    if (!sessionRef.current) return
-    reassert()
-    armReturn(multiHitCount > 1 ? focusHoldMultiHitMs(multiHitCount) : FOCUS_HOLD_ENEMY_NORMAL_MS)
-  }, [enemyAttackKey, multiHitCount, armReturn, reassert])
+    controller.reassert()
+    controller.extend(multiHitCount > 1 ? focusHoldMultiHitMs(multiHitCount) : FOCUS_HOLD_ENEMY_NORMAL_MS)
+  }, [enemyAttackKey, multiHitCount, controller])
 
   const seenEnemySpecialRef = useRef(enemySpecialKey)
   useEffect(() => {
     if (enemySpecialKey === seenEnemySpecialRef.current) return
     seenEnemySpecialRef.current = enemySpecialKey
-    if (!sessionRef.current) return
-    reassert()
-    armReturn(enemySpecialKind === 'special' ? FOCUS_HOLD_ENEMY_SPECIAL_MS : focusHoldMultiHitMs(Math.max(2, multiHitCount)))
-  }, [enemySpecialKey, enemySpecialKind, multiHitCount, armReturn, reassert])
+    controller.reassert()
+    controller.extend(
+      enemySpecialKind === 'special' ? FOCUS_HOLD_ENEMY_SPECIAL_MS : focusHoldMultiHitMs(Math.max(2, multiHitCount)),
+    )
+  }, [enemySpecialKey, enemySpecialKind, multiHitCount, controller])
 
-  /** 決着（勝敗/未撃破）後はオーバーレイに切り替わるため、復帰スクロールはしない */
-  useEffect(() => {
-    if (status !== 'playing') endSession()
-  }, [status, endSession])
-
-  useEffect(() => endSession, [endSession])
+  /** unmount時はセッションを終了（復帰スクロールはしない） */
+  useEffect(() => () => controller.end(), [controller])
 
   const focusForDivination = useCallback(
     (choiceIndex: number) => {
       const choice = DIVINATION_CHOICES[choiceIndex]
-      if (choice && dealsEnemyDamage(choice.effects)) focus(FOCUS_HOLD_CARD_MS)
+      if (choice && dealsEnemyDamage(choice.effects)) controller.focus(FOCUS_HOLD_CARD_MS)
     },
-    [focus],
+    [controller],
   )
 
   return { focusForDivination }
