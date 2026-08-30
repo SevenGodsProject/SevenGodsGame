@@ -28,6 +28,8 @@ type GodOtomoPanelProps = {
       演出を再生するためのキー（BattleScreen.tsxのcutinBurstBannerKeyを
       そのまま渡すだけ。新しいGameState・タイマーは一切追加しない）。 */
   reactionKey: number
+  /** 決定128：7/7 到達（BURST）の瞬間にゲージを満たして発光させるキー（fx.burstKey）。省略可 */
+  readyFlashKey?: number
 }
 
 /**
@@ -54,6 +56,7 @@ export function GodOtomoPanel({
   evolveRevealKey,
   otomoGrowthPath,
   reactionKey,
+  readyFlashKey = 0,
 }: GodOtomoPanelProps) {
   const otomoDef = getOtomoDef(otomo.defId)
   const ratio = resonance.max > 0 ? Math.min(1, resonance.value / resonance.max) : 0
@@ -162,7 +165,7 @@ export function GodOtomoPanel({
           )}
         </figure>
       </div>
-      <div className={`resonance-gauge-wrap ${resonanceStage}`.trim()}>
+      <div key={`ready-${readyFlashKey}`} className={`resonance-gauge-wrap ${resonanceStage}${readyFlashKey > 0 ? ' resonance-gauge-ready-flash' : ''}`.trim()}>
         <div className="resonance-gauge">
           <div className="resonance-gauge-fill" style={{ width: `${ratio * 100}%` }} />
           <span className="resonance-gauge-label">

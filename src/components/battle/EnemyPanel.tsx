@@ -6,6 +6,7 @@ import { formatEnemyIntent, getIntentTierClass, type PowerTier } from './cardSty
 import { HpBar } from './HpBar'
 import { FloatingNumbers } from './FloatingNumbers'
 import type { FloatingNumber } from './useFloatingNumbers'
+import { feelTierClass, type FeelTier } from './feelTier'
 
 type EnemyPanelProps = {
   enemy: EnemyState
@@ -26,6 +27,8 @@ type EnemyPanelProps = {
    * 共鳴カットイン→burst-bannerの後ろ（BURST_IMPACT_MS）へ遅らせる */
   burstHit: boolean
   floatingNumbers: FloatingNumber[]
+  /** 決定128：被弾演出の段階（L1〜L4）。省略時はL2（従来の見た目） */
+  hitTier?: FeelTier
 }
 
 /**
@@ -35,7 +38,7 @@ type EnemyPanelProps = {
  * `impact-flash`＋斬撃エフェクトで応じる。決定40：ラウンドごとに敵の掛け声を
  * 吹き出しで表示する（`Math.random`は使わず`round`から決定論的に選ぶ）。
  */
-export function EnemyPanel({ enemy, round, hitKey, attackKey, attackTier, multiHitCount, specialHit, burstHit, floatingNumbers }: EnemyPanelProps) {
+export function EnemyPanel({ enemy, round, hitKey, attackKey, attackTier, multiHitCount, specialHit, burstHit, floatingNumbers, hitTier = 2 }: EnemyPanelProps) {
   const def = getEnemyDef(enemy.defId)
   const line = def.battleCries[(round - 1) % def.battleCries.length]
 
@@ -96,11 +99,11 @@ export function EnemyPanel({ enemy, round, hitKey, attackKey, attackTier, multiH
           slash-fxのanimationは::before側にあるため、CSSも::beforeへdelayを掛けている */}
       <div
         key={`hit-${hitKey}`}
-        className={hitKey > 0 ? `hit-shake-flash${burstHit ? ' hit-delay-burst' : ''}` : undefined}
+        className={hitKey > 0 ? `hit-shake-flash ${feelTierClass('hit-tier', hitTier)}${burstHit ? ' hit-delay-burst' : ''}` : undefined}
         style={{ position: 'relative' }}
       >
         <HpBar current={enemy.hp} max={enemy.maxHp} color="#e5484d" />
-        {hitKey > 0 && <div className={`slash-fx${burstHit ? ' hit-delay-burst' : ''}`} />}
+        {hitKey > 0 && <div className={`slash-fx ${feelTierClass('slash', hitTier)}${burstHit ? ' hit-delay-burst' : ''}`} />}
         <FloatingNumbers numbers={floatingNumbers} />
       </div>
       {enemy.block > 0 && <div className="badge badge-block">🛡 {formatScaled(enemy.block)}</div>}

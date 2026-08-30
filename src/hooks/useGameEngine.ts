@@ -123,6 +123,11 @@ export type UseGameEngine = {
    * 通常モードの決着でnullになり得る（神階0かつ通常/かんたん）。Dailyでは常にnull
    */
   stakeResult: StakeResultOutcome | null
+  /**
+   * 決定128：新規開始（startGame／startDailyGame）ごとに増える。「続きから」では増えない。
+   * BattleScreen が Boss Entrance を出す条件に使う（表示専用）
+   */
+  battleStartKey: number
   /** 保存済みのGameStateからバトルを再開する（決定29） */
   resumeGame: (savedState: GameState) => void
   /** 進行中／決着済みのゲームを未開始状態に戻す（神選択からやり直すため） */
@@ -151,6 +156,7 @@ export function useGameEngine(): UseGameEngine {
   } | null>(null)
   const [dailyResult, setDailyResult] = useState<DailyRecordResult | null>(null)
   const [stakeResult, setStakeResult] = useState<StakeResultOutcome | null>(null)
+  const [battleStartKey, setBattleStartKey] = useState(0)
 
   const commit = useCallback((result: { state: GameState; events: GameEvent[] }) => {
     setState(result.state)
@@ -235,6 +241,7 @@ export function useGameEngine(): UseGameEngine {
       const seed = resolveForcedSeed() ?? `seed-${Date.now()}`
       // 決定126：URLバックドア`?stake=` > 画面の選択。神階>0は「ふつう」基準に固定
       const resolvedStake = resolveForcedStake() ?? (isStakeLevel(stake) ? stake : 0)
+      setBattleStartKey((k) => k + 1)
       dispatch({
         type: 'START_GAME',
         seed,
@@ -273,6 +280,7 @@ export function useGameEngine(): UseGameEngine {
     setStakeResult(null)
       setStakeResult(null)
       const daily = resolveDailyStart(dailyKey)
+      setBattleStartKey((k) => k + 1)
       dispatch({
         type: 'START_GAME',
         seed: daily.seed,
@@ -347,6 +355,7 @@ export function useGameEngine(): UseGameEngine {
     otomoBondChange,
     dailyResult,
     stakeResult,
+    battleStartKey,
     startDailyGame,
     startGame,
     resumeGame,

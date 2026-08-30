@@ -3,6 +3,7 @@ import type { Dispatch, SetStateAction } from 'react'
 import type { GameEvent, GodId } from '../../core/types'
 import { getGodDef } from '../../core/data/gods'
 import { formatScaled } from '../displayScale'
+import { damageFeelTier, type FeelTier } from './feelTier'
 import { BURST_IMPACT_MS, MULTI_CUTIN_LEAD_MS, SPECIAL_IMPACT_MS, multiHitOffsetMs } from './enemyVfxTiming'
 
 export type FloatingNumber = {
@@ -16,6 +17,8 @@ export type FloatingNumber = {
   emphasis?: boolean
   /** ENEMY-VFX-01：連撃hitが同座標に重ならないよう、hitごとにleftをずらす */
   leftPercent?: number
+  /** 決定128：演出段階（数字サイズ）。damageのみ。省略＝L2 */
+  tier?: FeelTier
 }
 
 const LIFETIME_MS = 900
@@ -113,6 +116,7 @@ export function useFloatingNumbers(
             delayMs,
             emphasis,
             leftPercent,
+            tier: damageFeelTier(event.amount, { burst: isBurstHit, special: isSelfHit && emphasis }),
           })
         }
         // 第二次完成フェーズP0-3：DAMAGE_DEALT.blockedは既存のデータとして

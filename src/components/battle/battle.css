@@ -3621,3 +3621,317 @@
     scroll-margin-top: 8px;
   }
 }
+
+
+/* ============================================================
+   決定128：Game Feel Phase — 演出強度4段階（L1〜L4）・BURST READY・
+   Boss Entrance・撃破の一拍・勝利ステージング・敗北理由・reduced-motion。
+   すべて transform / opacity のみ（filter 不使用、粒子なし）。
+   ============================================================ */
+
+/* --- 自分→敵の被弾：段階別シェイク（既存 .hit-shake-flash を基準に振幅を上下） --- */
+@keyframes hit-shake-l1 {
+  0% { transform: translate(0, 0); }
+  30% { transform: translate(-2px, 1px); }
+  60% { transform: translate(2px, -1px); }
+  100% { transform: translate(0, 0); }
+}
+@keyframes hit-shake-l3 {
+  0% { transform: translate(0, 0); }
+  15% { transform: translate(-7px, 3px) rotate(-0.6deg); }
+  35% { transform: translate(6px, -3px) rotate(0.5deg); }
+  55% { transform: translate(-4px, 2px); }
+  75% { transform: translate(3px, -1px); }
+  100% { transform: translate(0, 0); }
+}
+@keyframes hit-shake-l4 {
+  0% { transform: translate(0, 0) scale(1); }
+  10% { transform: translate(-11px, 5px) rotate(-1deg) scale(1.02); }
+  25% { transform: translate(10px, -5px) rotate(0.8deg) scale(1.02); }
+  40% { transform: translate(-7px, 3px) rotate(-0.4deg); }
+  55% { transform: translate(5px, -2px); }
+  70% { transform: translate(-3px, 1px); }
+  100% { transform: translate(0, 0) scale(1); }
+}
+.hit-shake-flash.hit-tier-l1 {
+  animation-name: hit-shake-l1, impact-flash;
+  animation-duration: 0.28s, 0.25s;
+}
+.hit-shake-flash.hit-tier-l3 {
+  animation-name: hit-shake-l3, impact-flash-strong;
+  animation-duration: 0.5s, 0.4s;
+}
+.hit-shake-flash.hit-tier-l4 {
+  animation-name: hit-shake-l4, impact-flash-huge;
+  animation-duration: 0.7s, 0.55s;
+}
+/* 斬撃エフェクトの大きさ（::before側のanimationは不変、ラッパーの scale のみ） */
+.slash-fx.slash-l1 { transform: scale(0.8); opacity: 0.85; }
+.slash-fx.slash-l3 { transform: scale(1.25); }
+.slash-fx.slash-l4 { transform: scale(1.55); }
+
+/* --- 浮遊ダメージ数字：段階別サイズ（既存 .floating-number-emphasis は残す） --- */
+.floating-number-l1 { font-size: 15px; opacity: 0.9; }
+.floating-number-l2 { font-size: 19px; }
+.floating-number-l3 {
+  font-size: 26px;
+  font-weight: 800;
+  text-shadow: 0 0 10px #ff9a4a99, 0 2px 4px #000000cc;
+}
+.floating-number-l4 {
+  font-size: 34px;
+  font-weight: 900;
+  letter-spacing: 0.02em;
+  text-shadow: 0 0 16px #ffd166cc, 0 0 32px #ff6b3a88, 0 2px 4px #000000dd;
+  animation-name: float-up-l4;
+}
+@keyframes float-up-l4 {
+  0% { opacity: 0; transform: translate(-50%, 0) scale(0.6); }
+  12% { opacity: 1; transform: translate(-50%, -6px) scale(1.35); }
+  30% { transform: translate(-50%, -14px) scale(1.05); }
+  100% { opacity: 0; transform: translate(-50%, -48px) scale(1); }
+}
+
+/* --- BURST READY：7/7 到達の瞬間、ゲージが満ちて発光（カットインの直前に見せる） --- */
+@keyframes resonance-ready-flash {
+  0% { box-shadow: 0 0 0 0 #ffd16600; transform: scale(1); }
+  20% { box-shadow: 0 0 24px 6px #ffd166cc, 0 0 48px 12px #c39bff66; transform: scale(1.03); }
+  60% { box-shadow: 0 0 14px 3px #ffd16688; transform: scale(1.01); }
+  100% { box-shadow: 0 0 0 0 #ffd16600; transform: scale(1); }
+}
+.resonance-gauge-ready-flash .resonance-gauge {
+  animation: resonance-ready-flash 0.9s ease-out;
+}
+.resonance-gauge-ready-flash .resonance-gauge-fill {
+  width: 100% !important;
+  transition: none;
+}
+
+/* --- Boss Entrance（LEVEL 4、約1.5s、操作は奪わない） --- */
+.boss-entrance {
+  position: fixed;
+  inset: 0;
+  z-index: 5;
+  pointer-events: none;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  animation: boss-entrance-fade 1.5s ease-in-out forwards;
+}
+@keyframes boss-entrance-fade {
+  0% { opacity: 0; }
+  8% { opacity: 1; }
+  78% { opacity: 1; }
+  100% { opacity: 0; }
+}
+.boss-entrance-bg {
+  position: absolute;
+  inset: -4%;
+  background: #05060d center / cover no-repeat;
+  animation: boss-entrance-bg 1.5s ease-out forwards;
+}
+.boss-entrance-bg::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, #05060dcc 0%, #05060d88 45%, #05060dee 100%);
+}
+@keyframes boss-entrance-bg {
+  0% { transform: scale(1.08); }
+  100% { transform: scale(1); }
+}
+.boss-entrance-body {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  text-align: center;
+  padding: 0 16px;
+}
+.boss-entrance-stage {
+  font-size: 13px;
+  letter-spacing: 0.3em;
+  color: #c9cbe0;
+  animation: boss-entrance-rise 0.5s ease-out both;
+}
+.boss-entrance-art {
+  width: min(46vw, 260px);
+  aspect-ratio: 1;
+  background: center / contain no-repeat;
+  filter: none;
+  animation: boss-entrance-art 0.6s cubic-bezier(0.2, 0.9, 0.3, 1.2) both;
+  animation-delay: 0.1s;
+}
+@keyframes boss-entrance-art {
+  0% { opacity: 0; transform: translateY(24px) scale(0.85); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+.boss-entrance-name {
+  font-size: clamp(26px, 6vw, 40px);
+  font-weight: 900;
+  letter-spacing: 0.12em;
+  color: #fff;
+  text-shadow: 0 0 18px #ffd16688, 0 2px 6px #000000ee;
+  animation: boss-entrance-rise 0.5s ease-out both;
+  animation-delay: 0.3s;
+}
+.boss-entrance-meta {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+  font-size: 13px;
+  color: #e8e9f2;
+  animation: boss-entrance-rise 0.5s ease-out both;
+  animation-delay: 0.45s;
+}
+.boss-entrance-threat { color: #d05ce3; letter-spacing: 1px; }
+.boss-entrance-threat-empty { color: #ffffff33; }
+.boss-entrance-tag {
+  padding: 1px 8px;
+  border-radius: 999px;
+  border: 1px solid #ffd16677;
+  color: #ffd166;
+  font-size: 11px;
+  font-weight: 700;
+}
+.boss-entrance-start {
+  margin-top: 6px;
+  font-size: 13px;
+  letter-spacing: 0.4em;
+  color: #ffd166;
+  animation: boss-entrance-rise 0.4s ease-out both;
+  animation-delay: 0.7s;
+}
+@keyframes boss-entrance-rise {
+  0% { opacity: 0; transform: translateY(10px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+.boss-entrance-reduced,
+.boss-entrance-reduced .boss-entrance-bg,
+.boss-entrance-reduced .boss-entrance-art,
+.boss-entrance-reduced .boss-entrance-name,
+.boss-entrance-reduced .boss-entrance-meta,
+.boss-entrance-reduced .boss-entrance-stage,
+.boss-entrance-reduced .boss-entrance-start {
+  animation: none;
+  opacity: 1;
+  transform: none;
+}
+.boss-entrance-reduced { animation: boss-entrance-fade-reduced 0.9s linear forwards; }
+@keyframes boss-entrance-fade-reduced {
+  0%, 80% { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+/* --- 撃破の一拍（勝利直後、報酬の前に1秒） --- */
+.victory-beat {
+  position: fixed;
+  inset: 0;
+  z-index: 7;
+  display: grid;
+  place-items: center;
+  pointer-events: none;
+  background: radial-gradient(circle, #ffd16622, transparent 60%);
+  animation: victory-beat-bg 1s ease-out forwards;
+}
+.victory-beat span {
+  font-size: clamp(40px, 10vw, 72px);
+  font-weight: 900;
+  letter-spacing: 0.18em;
+  color: #ffd166;
+  text-shadow: 0 0 24px #ffd166aa, 0 0 60px #ff9a4a66, 0 3px 8px #000000ee;
+  animation: victory-beat-pop 1s cubic-bezier(0.2, 0.9, 0.3, 1.2) forwards;
+}
+@keyframes victory-beat-pop {
+  0% { opacity: 0; transform: scale(0.4) rotate(-4deg); }
+  20% { opacity: 1; transform: scale(1.15) rotate(1deg); }
+  45% { transform: scale(1) rotate(0); }
+  85% { opacity: 1; }
+  100% { opacity: 0; transform: scale(1.05); }
+}
+@keyframes victory-beat-bg {
+  0% { opacity: 0; }
+  20% { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+/* --- 勝利リザルトのステージング：撃破→一拍→神域制覇→スコア→記録→ボタン --- */
+.game-over-card-won .game-over-status { animation: result-rise 0.4s ease-out both; }
+.game-over-card-won .game-over-conquer { animation: result-rise 0.5s ease-out both; animation-delay: 0.25s; }
+.game-over-card-won .game-over-portrait { animation: result-rise 0.5s ease-out both; animation-delay: 0.4s; }
+.game-over-card-won .game-over-score { animation: result-rise 0.5s ease-out both; animation-delay: 0.6s; }
+.game-over-card-won .game-over-new-best,
+.game-over-card-won .game-over-stake,
+.game-over-card-won .game-over-daily,
+.game-over-card-won .game-over-otomo-levelup,
+.game-over-card-won .game-over-mastery { animation: result-rise 0.5s ease-out both; animation-delay: 1.4s; }
+.game-over-card-won .score-breakdown { animation: result-rise 0.5s ease-out both; animation-delay: 1.6s; }
+.game-over-card-won .game-over-share,
+.game-over-card-won .game-over-actions { animation: result-rise 0.5s ease-out both; animation-delay: 1.9s; }
+@keyframes result-rise {
+  0% { opacity: 0; transform: translateY(10px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+.game-over-conquer {
+  margin: 2px 0 6px;
+  font-size: 13px;
+  letter-spacing: 0.35em;
+  color: #ffd166;
+  text-shadow: 0 0 12px #ffd16666;
+}
+.game-over-score-rolling {
+  font-variant-numeric: tabular-nums;
+  color: #ffd166;
+  text-shadow: 0 0 14px #ffd16666;
+}
+
+/* --- 敗北理由 --- */
+.game-over-defeat-cause {
+  margin: 6px 0 4px;
+  padding: 6px 10px;
+  border-radius: 8px;
+  background: #e5484d1a;
+  border: 1px solid #e5484d55;
+  color: #f4b0b3;
+  font-size: 13px;
+  line-height: 1.5;
+}
+.game-over-defeat-cause strong { color: #fff; }
+
+/* --- prefers-reduced-motion：揺れ・斬撃・登場・一拍・ステージングを最小化（内容は全て表示） --- */
+@media (prefers-reduced-motion: reduce) {
+  .hit-shake-flash,
+  .hit-shake-flash.hit-tier-l1,
+  .hit-shake-flash.hit-tier-l3,
+  .hit-shake-flash.hit-tier-l4 {
+    animation-name: impact-flash;
+    animation-duration: 0.3s;
+  }
+  .slash-fx,
+  .slash-fx::before {
+    animation-duration: 0.01s !important;
+    opacity: 0.4;
+  }
+  .floating-number-l4 { animation-name: float-up; }
+  .resonance-gauge-ready-flash .resonance-gauge { animation-duration: 0.3s; }
+  .victory-beat { animation-duration: 0.6s; }
+  .victory-beat span { animation: none; opacity: 1; }
+  .game-over-card-won .game-over-status,
+  .game-over-card-won .game-over-conquer,
+  .game-over-card-won .game-over-portrait,
+  .game-over-card-won .game-over-score,
+  .game-over-card-won .game-over-new-best,
+  .game-over-card-won .game-over-stake,
+  .game-over-card-won .game-over-daily,
+  .game-over-card-won .game-over-otomo-levelup,
+  .game-over-card-won .game-over-mastery,
+  .game-over-card-won .score-breakdown,
+  .game-over-card-won .game-over-share,
+  .game-over-card-won .game-over-actions {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+}

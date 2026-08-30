@@ -4,6 +4,7 @@ import { getCardPoolForGod } from '../../core/data/deckBuilder'
 import { getCardArt } from '../../core/data/cardArt'
 import { RARITY_STYLE, TYPE_STYLE } from './cardStyle'
 import { CardIcon } from './cardIcon'
+import { sfx } from './sound'
 import { pickRewardCandidates } from './rewardPicker'
 
 type RewardOverlayProps = {
@@ -28,6 +29,7 @@ export function RewardOverlay({ godId, seed, onPick, onSkip }: RewardOverlayProp
 
   const choose = (id: CardDefId) => {
     setPicked(id)
+    sfx.reward() // 決定128：Reward（獲得）の音
     window.setTimeout(() => onPick(id), 260)
   }
 

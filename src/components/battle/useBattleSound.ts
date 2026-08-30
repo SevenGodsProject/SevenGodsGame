@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react'
 import type { GameEvent } from '../../core/types'
 import { sfx } from './sound'
+import { damageFeelTier } from './feelTier'
 import { playJingle } from './bgm'
 import {
   BURST_EVOLVE_MS,
@@ -51,14 +52,15 @@ export function useBattleSound(log: GameEvent[]): void {
         case 'DAMAGE_DEALT':
           if (event.amount > 0) {
             if (event.target === 'enemy') {
-              sfx.damageEnemy(afterBurst ? BURST_IMPACT_MS : 0)
+              // 決定128：与ダメージ量で L1〜L4（BURST は L4）。着弾タイミングは従来どおり
+              sfx.damageEnemy(damageFeelTier(event.amount, { burst: afterBurst }), afterBurst ? BURST_IMPACT_MS : 0)
             } else if (seMulti) {
               sfx.enemyMultiHit(seHitIndex, seLead + multiHitOffsetMs(seHitIndex))
               seHitIndex += 1
             } else if (seSpecial) {
               sfx.enemySpecialImpact(seLead)
             } else {
-              sfx.damageSelf()
+              sfx.damageSelf(damageFeelTier(event.amount) >= 3)
             }
           }
           break
@@ -72,7 +74,8 @@ export function useBattleSound(log: GameEvent[]): void {
           sfx.resonanceGain()
           break
         case 'RESONANCE_BURST':
-          sfx.resonanceBurst()
+          // 決定128：7/7 到達＝READY の上昇音。着弾音は後続の DAMAGE_DEALT（L4）が担う
+          sfx.burstReady()
           afterBurst = true
           break
         case 'OTOMO_EVOLVED':
@@ -83,7 +86,8 @@ export function useBattleSound(log: GameEvent[]): void {
           break
         case 'ENEMY_ACTED':
           // ENEMY-IDENTITY-PROTOTYPE-02：連撃・必殺技も攻撃音を鳴らす（chargeのみ無音）
-          if (event.kind !== 'charge') sfx.enemyTurn()
+          if (event.kind === 'charge') sfx.enemyCharge() // 決定128：溜めは警告音、それ以外は敵ターン音
+          else sfx.enemyTurn()
           break
         case 'GAME_ENDED':
           if (event.status === 'won') {

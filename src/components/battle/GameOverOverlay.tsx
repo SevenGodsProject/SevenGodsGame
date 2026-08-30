@@ -9,7 +9,9 @@ import type { StakeResultOutcome } from '../../hooks/stakeStorage'
 import type { GameState } from '../../core/types'
 import { getStakeLevelDef, stakeLabel, stakeScoreScale } from '../../core/data/stakes'
 import { buildShareText, copyToClipboard } from './shareText'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+import { describeDefeatCause, type DefeatCause } from './defeatCause'
+import { getEnemyDef } from '../../core/data/enemies'
 
 const STATUS_LABEL: Record<Exclude<GameStatus, 'playing'>, string> = {
   won: '勝利',
@@ -86,6 +88,8 @@ type GameOverOverlayProps = {
   stakeResult?: StakeResultOutcome | null
   /** 決定126（Seed共有）：挑戦状テキストを作るための決着済みGameState */
   shareState?: GameState | null
+  /** 決定128：敗北理由（lost のときだけ表示）。BattleScreen がログから導出して渡す */
+  defeatCause?: DefeatCause | null
 }
 
 export function GameOverOverlay({
@@ -105,6 +109,7 @@ export function GameOverOverlay({
   rematchDisabled = false,
   stakeResult = null,
   shareState = null,
+  defeatCause = null,
 }: GameOverOverlayProps) {
   const god = getGodDef(godId)
   const otomoDef = getOtomoDef(otomo.defId)
@@ -114,6 +119,28 @@ export function GameOverOverlay({
   const stake = shareState?.stake ?? 0
   const finalScore = getFinalScore(score, stake)
   const stakeScale = stakeScoreScale(stake)
+  // 決定128：勝利時はスコアを約0.8秒でロールアップ（reduced-motion なら即表示）。表示専用
+  const reduced = typeof window !== 'undefined' && typeof window.matchMedia === 'function' && window.matchMedia('(prefers-reduced-motion: reduce)').matches
+  const [shownScore, setShownScore] = useState(status === 'won' && !reduced ? 0 : finalScore)
+  useEffect(() => {
+    if (status !== 'won' || reduced) {
+      setShownScore(finalScore)
+      return undefined
+    }
+    const start = performance.now()
+    const delay = 600
+    const duration = 800
+    let raf = 0
+    const tick = (now: number) => {
+      const t = Math.min(1, Math.max(0, (now - start - delay) / duration))
+      const eased = 1 - Math.pow(1 - t, 3)
+      setShownScore(Math.round(finalScore * eased))
+      if (t < 1) raf = window.requestAnimationFrame(tick)
+    }
+    raf = window.requestAnimationFrame(tick)
+    return () => window.cancelAnimationFrame(raf)
+  }, [status, finalScore, reduced])
+  const defeatText = status === 'lost' ? describeDefeatCause(defeatCause, getEnemyDef(enemy.defId).name) : null
   // 決定126（Seed共有）：コピー結果の表示（idle→copied/failed、数秒で戻す）
   const [copyState, setCopyState] = useState<'idle' | 'copied' | 'failed'>('idle')
   const handleShare = async () => {
@@ -146,7 +173,16 @@ export function GameOverOverlay({
             {showCloseCall && '　あと一歩だった！'}
           </div>
         )}
-        {newBest && <div className="game-over-new-best">✨ 自己ベスト更新！</div>}
+        {status === 'won' && <div className="game-over-conquer">神域制覇</div>}
+        {defeatText && (
+          <div className="game-over-defeat-cause">
+            敗因：<strong>{defeatText}</strong>
+            <br />
+            予告を見て、その一撃の前に守るか、先に倒し切ろう。
+          </div>
+        )}
+        {/* 決定128：「自己ベスト更新」は勝利時のみ祝う（敗北で初記録が付いても祝わない） */}
+        {newBest && status === 'won' && <div className="game-over-new-best">✨ 自己ベスト更新！</div>}
         {daily && (
           <div className="game-over-daily">
             {daily.isNewBest ? (
@@ -185,7 +221,7 @@ export function GameOverOverlay({
             <img className="game-over-portrait-otomo" src={otomoDef.art[otomo.form]} alt={otomoDef.nameJa} />
           </div>
         )}
-        <div className="score-total">スコア {formatScaled(finalScore)}</div>
+        <div className={`score-total game-over-score${status === 'won' && shownScore < finalScore ? ' game-over-score-rolling' : ''}`}>スコア {formatScaled(shownScore)}</div>
         {/* STEP-SCORE2-D2a：神技評価の3行構成。CEO実測「A/Sって何かわからない」への対応。
             gradeに和語補助、何を測ったかの1行、次Grade目標（C評価は励まし文）を表示する */}
         {status === 'won' && mastery && (() => {

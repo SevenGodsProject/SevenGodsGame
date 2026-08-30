@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { RULES } from '../../core/data/rules'
 import { getFinalScore, getMastery } from '../../core/engine'
 import { formatScaled } from '../displayScale'
@@ -12,6 +12,9 @@ import { addRewardBonus } from '../../hooks/rewardStorage'
 import { detectOtomoLevelUp } from '../setup/otomoGrowthDisplay'
 import { useBattleFx } from './useBattleFx'
 import { useMobileAutoFocus } from './useMobileAutoFocus'
+import { BossEntrance } from './BossEntrance'
+import { deriveDefeatCause } from './defeatCause'
+import { preloadSe, sfx } from './sound'
 import { useBattleSound } from './useBattleSound'
 import { useFloatingNumbers } from './useFloatingNumbers'
 import { CAST_FX, getEnemyDamagePowerTier, TYPE_STYLE } from './cardStyle'
@@ -67,6 +70,7 @@ export function BattleScreen({
     otomoBondChange,
     dailyResult,
     stakeResult,
+    battleStartKey,
     playCard,
     endRound,
     divine,
@@ -174,6 +178,34 @@ export function BattleScreen({
     enemySpecialKind: fx.enemySpecialKind,
     multiHitCount: fx.multiHitCount,
   })
+
+  // 決定128（Game Feel）：Boss Entrance。新規開始（battleStartKey 増分）のときだけ約1.5秒表示し、
+  // 「続きから」再開では出さない。SE のプリロードもここで行う（初回再生の遅延を無くす）。
+  const [entranceKey, setEntranceKey] = useState(0)
+  const seenStartKeyRef = useRef(0)
+  useEffect(() => {
+    if (battleStartKey > seenStartKeyRef.current) {
+      seenStartKeyRef.current = battleStartKey
+      preloadSe()
+      setEntranceKey(battleStartKey)
+      sfx.bossEntrance()
+    }
+  }, [battleStartKey])
+  const handleEntranceDone = useCallback(() => setEntranceKey(0), [])
+
+  // 決定128：撃破の一拍。勝利が確定した直後に約1秒「撃破！」を見せてから報酬→結果へ進む
+  // （決定43の報酬→結果の順序は変えない）。表示専用。
+  const [victoryBeat, setVictoryBeat] = useState(false)
+  const seenWonSeedRef = useRef<string | null>(null)
+  useEffect(() => {
+    if (state?.status === 'won' && seenWonSeedRef.current !== state.seed) {
+      seenWonSeedRef.current = state.seed
+      setVictoryBeat(true)
+      const t = window.setTimeout(() => setVictoryBeat(false), 1000)
+      return () => window.clearTimeout(t)
+    }
+    return undefined
+  }, [state?.status, state?.seed])
 
   // 決定43：報酬カードは勝利1回につき1回だけ提示する。新しいバトル（seedが変わる）
   // のたびにリセットする（再開・「もう一度」でも新しいseedが発行されるため）。
@@ -288,6 +320,7 @@ export function BattleScreen({
           specialHit={fx.specialHit}
           burstHit={fx.burstHit}
           floatingNumbers={enemyNumbers}
+          hitTier={fx.enemyHitTier}
         />
         <div className="ally-row">
           <PlayerPanel
@@ -312,6 +345,7 @@ export function BattleScreen({
             evolveRevealKey={evolveBannerKey}
             otomoGrowthPath={state.otomoGrowthPath}
             reactionKey={cutinBurstBannerKey}
+            readyFlashKey={fx.burstKey}
           />
         </div>
         {castStyle && pendingCardDef && (
@@ -443,7 +477,17 @@ export function BattleScreen({
         ))}
       </div>
 
-      {state.status === 'won' && !rewardDone && (
+      {entranceKey > 0 && (
+        <BossEntrance key={`entrance-${entranceKey}`} enemyId={state.enemy.defId} stake={state.stake} daily={state.mode === 'daily'} onDone={handleEntranceDone} />
+      )}
+
+      {victoryBeat && (
+        <div className="victory-beat" aria-hidden="true" data-testid="victory-beat">
+          <span>撃破！</span>
+        </div>
+      )}
+
+      {state.status === 'won' && !rewardDone && !victoryBeat && (
         <RewardOverlay
           godId={state.godId}
           seed={state.seed}
@@ -455,7 +499,7 @@ export function BattleScreen({
         />
       )}
 
-      {state.status !== 'playing' && (state.status !== 'won' || rewardDone) && (
+      {state.status !== 'playing' && (state.status !== 'won' || rewardDone) && !victoryBeat && (
         <GameOverOverlay
           status={state.status}
           score={state.score}
@@ -471,6 +515,7 @@ export function BattleScreen({
           daily={state.mode === 'daily' ? dailyResult : null}
           stakeResult={stakeResult}
           shareState={state}
+          defeatCause={state.status === 'lost' ? deriveDefeatCause(log, state.round) : null}
           rematchLabel={rematchLabel}
           rematchDisabled={rematchDisabled}
         />

@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import type { GameEvent, OtomoForm } from '../../core/types'
 import { getIntentPowerTier, type PowerTier } from './cardStyle'
+import { damageFeelTier, type FeelTier } from './feelTier'
 import { formatScaled } from '../displayScale'
 
 /**
@@ -96,6 +97,8 @@ export type BattleFx = {
    * 神の攻撃モーション・敵側の被弾演出を共鳴カットイン→burst-bannerの後ろへ
    * 遅らせる（enemyVfxTiming.tsのBURST_*）。表示のみ、combatは確定済み */
   burstHit: boolean
+  /** 決定128：直近の自分→敵の被弾の演出段階（L1〜L4。同バッチ最大ダメージ、BURSTはL4） */
+  enemyHitTier: FeelTier
 }
 
 const INITIAL_FX: BattleFx = {
@@ -120,6 +123,7 @@ const INITIAL_FX: BattleFx = {
   multiHitCount: 0,
   specialHit: false,
   burstHit: false,
+  enemyHitTier: 2,
 }
 
 /**
@@ -152,6 +156,7 @@ export function useBattleFx(log: GameEvent[], apCurrent: number): BattleFx {
     let selfHit = 0
     let heal = 0
     let burst = 0
+    let maxEnemyHitAmount = 0
     let evolve = 0
     let evolveForm: OtomoForm | null = null
     let godAttack = 0
@@ -194,6 +199,7 @@ export function useBattleFx(log: GameEvent[], apCurrent: number): BattleFx {
         if (event.target === 'enemy') {
           enemyHit += 1
           godAttack += 1
+          maxEnemyHitAmount = Math.max(maxEnemyHitAmount, event.amount)
           resultToast += 1
           resultTexts.push(fxToastText.damage(event.amount))
           mrEnemyDamage += event.amount
@@ -335,6 +341,7 @@ export function useBattleFx(log: GameEvent[], apCurrent: number): BattleFx {
         // （カード自身のダメージと同バッチでも、1回のlunge/シェイクとしてburst側の
         // タイミングに揃える。数字はイベント単位で個別に遅延＝useFloatingNumbers）
         burstHit: godAttack > 0 ? burst > 0 : prev.burstHit,
+        enemyHitTier: enemyHit > 0 ? damageFeelTier(maxEnemyHitAmount, { burst: burst > 0 }) : prev.enemyHitTier,
       }))
     }
   }, [log, apCurrent])
