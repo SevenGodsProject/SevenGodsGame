@@ -3608,3 +3608,16 @@
     animation: none;
   }
 }
+
+/* ============================================================
+   決定125：Mobile Battle Auto Focus（useMobileAutoFocus.ts）。
+   375px級の縦積みで敵ダメージカード／BURST／敵ターンのときだけ敵パネルへ
+   scrollIntoView(block:'start')する。上端に少し余白を残し、パネル枠が画面端に
+   密着しないようにするだけの最小調整（レイアウト・演出座標は不変）。
+   Desktop（>700px）ではフォーカス自体が発火しないためこの値は使われない。
+   ============================================================ */
+@media (max-width: 700px) {
+  .enemy-panel {
+    scroll-margin-top: 8px;
+  }
+}

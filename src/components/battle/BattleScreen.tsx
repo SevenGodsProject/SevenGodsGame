@@ -10,6 +10,7 @@ import type { UseGameEngine } from '../../hooks/useGameEngine'
 import { addRewardBonus } from '../../hooks/rewardStorage'
 import { detectOtomoLevelUp } from '../setup/otomoGrowthDisplay'
 import { useBattleFx } from './useBattleFx'
+import { useMobileAutoFocus } from './useMobileAutoFocus'
 import { useBattleSound } from './useBattleSound'
 import { useFloatingNumbers } from './useFloatingNumbers'
 import { CAST_FX, getEnemyDamagePowerTier, TYPE_STYLE } from './cardStyle'
@@ -154,6 +155,24 @@ export function BattleScreen({
   // 戻った瞬間にその対局の全イベントのSEが一斉に再生されるバグを引き起こしていた。
   useBattleSound(log)
 
+  // 決定125：Mobile Battle Auto Focus。375px級の縦積みでは手札と敵パネルが約1,000px離れ、
+  // 攻撃VFX・被弾・ダメージ数字が画面外で再生されて見えないため、敵ダメージカード／
+  // BURST／敵ターン／敵ダメージ託宣のときだけ敵パネルへスクロールし、演出後に元の位置へ
+  // 戻す（表示専用。Desktopでは何もしない。engineは遅延させない）。
+  // 旧方針「強制スクロールはしない」（下のresult-toastのコメント）はCEOが明示的に撤回した。
+  const pendingForFocus = pendingCardUid ? state?.hand.find((c) => c.uid === pendingCardUid) : undefined
+  const { focusForDivination } = useMobileAutoFocus({
+    status: state?.status ?? 'playing',
+    pendingCardUid,
+    pendingCardDef: pendingForFocus ? getCardDef(pendingForFocus.defId) : null,
+    burstKey: fx.burstKey,
+    isEnemyTurn,
+    enemyAttackKey: fx.enemyAttackKey,
+    enemySpecialKey: fx.enemySpecialKey,
+    enemySpecialKind: fx.enemySpecialKind,
+    multiHitCount: fx.multiHitCount,
+  })
+
   // 決定43：報酬カードは勝利1回につき1回だけ提示する。新しいバトル（seedが変わる）
   // のたびにリセットする（再開・「もう一度」でも新しいseedが発行されるため）。
   const [rewardDone, setRewardDone] = useState(false)
@@ -237,7 +256,9 @@ export function BattleScreen({
 
       {/* スマホUX修正：手札位置までスクロールした状態でカードを使っても、
           攻撃/回復/防御の結果がその場で分かるようにするfixedトースト。
-          強制スクロールはしない（ユーザー明示指示）。ap-penalty-toastと同じ
+          導入時は「強制スクロールはしない（ユーザー明示指示）」方針だったが、決定125で
+          CEOが撤回し、敵ダメージ/BURST/敵ターン時のみuseMobileAutoFocusが敵パネルへ
+          スクロールする（このトーストは回復・防御の結果表示として引き続き有効）。ap-penalty-toastと同じ
           「keyを増分してCSSアニメーションを再生させる」パターンを複製している。 */}
       {fx.resultToastKey > 0 && (
         <div key={`result-toast-${fx.resultToastKey}`} className="result-toast">
@@ -395,7 +416,11 @@ export function BattleScreen({
         remaining={state.divination.remaining}
         usedThisRound={state.divination.usedThisRound}
         playable={isPlayerTurn}
-        onChoose={divine}
+        onChoose={(i) => {
+          // 決定125：敵ダメージを伴う託宣（天啓）だけ敵パネルへフォーカス。engine呼び出しは即時
+          focusForDivination(i)
+          divine(i)
+        }}
       />
 
       <button type="button" className="end-round-button" disabled={!isPlayerTurn} onClick={endRound}>
