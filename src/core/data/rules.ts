@@ -204,5 +204,25 @@ export const RULES = {
    * v8（DAILY-01）：GameStateへ`mode`/`dailyKey`/`modifier`を追加。v7セーブは
    *   `migrateBattleSaveV7`が`mode:'normal'`を補完して読み込み継続（福永fillも同経路）。
    */
-  saveVersion: 8,
+  /**
+   * 決定126：神階（しんかい）Ⅰ〜Ⅶ。累積方式・「ふつう」基準固定。
+   * 各値は決定論シミュレーション（約33,000試合、v3ラダー）で
+   * Ⅰ89／Ⅱ80／Ⅲ67／Ⅳ61／Ⅴ48／Ⅵ44／Ⅶ29〜39%（balanced基準）を確認した組み合わせ。
+   * healEfficiencyは福永（自傷＋回復）対策で 0.5→0.6 に緩和、必殺倍率は機工師の主砲に上限。
+   */
+  stakes: {
+    scoreScalePerLevel: 0.08,
+    divinationCount: 4,
+    lateRoundFrom: 5,
+    lateRoundAtkMul: 1.2,
+    enemyAtkStep: 1.1,
+    enemyHpStep: 1.1,
+    initialHandMinus: 1,
+    blockEfficiency: 0.75,
+    healEfficiency: 0.6,
+    specialMul: 1.2,
+    specialMulCapKarakuri: 1.1,
+    unlockDifficulty: 'hard' as const,
+  },
+  saveVersion: 9,
 } as const

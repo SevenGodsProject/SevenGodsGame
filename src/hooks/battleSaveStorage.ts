@@ -223,11 +223,20 @@ export function migrateBattleSaveV6(state: GameState): GameState {
  * 福永フィールドのfill（G4）もここで同時に吸収する。
  */
 export function migrateBattleSaveV7(state: GameState): GameState {
-  return fillFukueiMasteryFields({
-    ...state,
-    version: RULES.saveVersion,
-    mode: state.mode ?? 'normal',
-  })
+  return migrateBattleSaveV8(
+    fillFukueiMasteryFields({
+      ...state,
+      mode: state.mode ?? 'normal',
+    }),
+  )
+}
+
+/**
+ * v8→v9（決定126：神階）。`stake`/`stakeChoice`はoptionalで未定義＝通常（0）として
+ * engineが解釈するため、値の補完は不要。versionを現行に揃えるだけ（v3〜v8の連鎖の終端）。
+ */
+export function migrateBattleSaveV8(state: GameState): GameState {
+  return { ...state, version: RULES.saveVersion }
 }
 
 /** 保存済みの進行中バトルがあれば返す。無い／壊れている／未知バージョンならnull */
@@ -240,6 +249,7 @@ export function loadBattleSave(): GameState | null {
     if (parsed.state.status !== 'playing') return null
     // 同一versionでも欠落フィールドはfillで補完する（揃っていれば無変更で返る）
     if (parsed.version === RULES.saveVersion) return migrateBattleSaveV7(parsed.state)
+    if (parsed.version === 8) return migrateBattleSaveV7(parsed.state)
     // v3〜v7セーブは移行して読み込む（勝手に破棄しない）。それ以外の未知版はnull。
     if (parsed.version === 7) return migrateBattleSaveV7(parsed.state)
     if (parsed.version === 6) return migrateBattleSaveV6(parsed.state)

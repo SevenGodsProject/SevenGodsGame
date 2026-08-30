@@ -7,6 +7,7 @@ import { getOtomoDef } from '../data/otomo'
 import { createRng } from '../rng/seededRandom'
 import { buildDeckInstances } from './deck'
 import { startRound } from './round'
+import { isStakeLevel, resolveStakeRules } from '../data/stakes'
 
 type StartGameAction = Extract<GameAction, { type: 'START_GAME' }>
 
@@ -32,7 +33,12 @@ export function createInitialState(
   // DAILY-01：神域強化の追加倍率は難易度倍率に乗算し、1回だけ丸める。
   // 未指定（通常モード・既存テスト）は×1で従来と同じ値になる。
   const modifier = action.modifier
-  const enemyMaxHp = Math.round(enemyDef.maxHp * preset.enemyHpMultiplier * (modifier?.enemyHpMul ?? 1))
+  // 決定126：神階の累積ルール（level 0＝恒等）。Dailyでは指定されない
+  const stake = isStakeLevel(action.stake) ? action.stake : 0
+  const stakeRules = resolveStakeRules(stake, action.stakeChoice)
+  const enemyMaxHp = Math.round(
+    enemyDef.maxHp * preset.enemyHpMultiplier * (modifier?.enemyHpMul ?? 1) * stakeRules.enemyHpMul,
+  )
 
   // 決定24：デッキの有効性はデッキ構築画面が事前に絞り込む前提だが、
   // playCard.tsと同じ方針で、ここでも不正な構成はバグとして早期に落とす。
@@ -84,9 +90,10 @@ export function createInitialState(
     mode: action.mode ?? 'normal',
     ...(action.dailyKey ? { dailyKey: action.dailyKey } : {}),
     ...(modifier ? { modifier } : {}),
+    ...(stake > 0 ? { stake, ...(action.stakeChoice ? { stakeChoice: action.stakeChoice } : {}) } : {}),
     otomoGrowthPath: action.otomoGrowthPath ?? 'guardian',
     resonance: { value: 0, max: RULES.resonance.max },
-    divination: { remaining: RULES.divination.count, usedThisRound: false },
+    divination: { remaining: stakeRules.divinationCount, usedThisRound: false },
 
     deck: shuffledDeck,
     hand: [],
@@ -123,7 +130,7 @@ export function createInitialState(
 
   const events: GameEvent[] = [{ t: 'GAME_STARTED' }]
 
-  const firstRound = startRound(base, rng, RULES.deck.initialHand)
+  const firstRound = startRound(base, rng, Math.max(1, RULES.deck.initialHand - stakeRules.initialHandMinus))
   const state: GameState = { ...firstRound.state, rngCursor: rng.callCount() }
   events.push(...firstRound.events)
 

@@ -22,7 +22,8 @@ export type {
   GameState,
   GameMode,
   BattleModifier,
-} from './state'
+  StakeChoiceId,
+ } from './state'
 export type { GameAction } from './action'
 export type { GameEvent } from './event'
 export type { DivinationChoice } from './divination'

@@ -243,7 +243,7 @@ describe('intentイベント（telegraph）', () => {
 })
 
 describe('saveVersion', () => {
-  it('v8である（v7=multiAttack/special、v8=DAILY-01のmode/dailyKey/modifier）', () => {
-    expect(RULES.saveVersion).toBe(8)
+  it('v9である（v7=multiAttack/special、v8=DAILY-01のmode/dailyKey/modifier、v9=決定126の神階stake/stakeChoice）', () => {
+    expect(RULES.saveVersion).toBe(9)
   })
 })

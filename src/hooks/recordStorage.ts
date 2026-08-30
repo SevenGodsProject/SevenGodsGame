@@ -128,7 +128,7 @@ export function recordGameResult(state: GameState): { isNewBest: boolean; prevBe
   // BASE-D（STEP-SCORE2-D-PROTO）：自己ベストは新式のBattle Score（最終スコア）で
   // 比較・更新する。旧bestScoreは温存し、以後は更新しない（新旧スケールの混在比較を
   // 避けるため。決定109の記録方針比較で「新フィールド追加・旧記録温存」案を採用）。
-  const finalScore = getFinalScore(state.score)
+  const finalScore = getFinalScore(state.score, state.stake)
   const isNewBest = finalScore > prev.bestBattleScore
 
   const next: GodRecord = {

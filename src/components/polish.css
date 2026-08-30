@@ -151,3 +151,53 @@
   font-size: 0.95rem;
   color: #ffe9b0;
 }
+
+/* 決定126：神階 — Battle HUDタグ・結果画面の到達表示・挑戦状コピー */
+.battle-stake-tag {
+  display: inline-block;
+  padding: 1px 8px;
+  border-radius: 999px;
+  border: 1px solid #ffd16677;
+  background: #2a241088;
+  color: #ffd166;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  vertical-align: middle;
+}
+.game-over-stake {
+  margin: 8px 0 4px;
+  font-size: 13px;
+  line-height: 1.6;
+}
+.game-over-stake p {
+  margin: 2px 0;
+}
+.game-over-stake-unlock,
+.game-over-stake-clear {
+  color: #ffd166;
+  font-weight: 700;
+}
+.game-over-stake-best {
+  color: #ffd166;
+}
+.game-over-stake-gap {
+  color: #a9adc4;
+}
+.game-over-share {
+  margin: 8px 0 2px;
+  text-align: center;
+}
+.game-over-share-button {
+  padding: 8px 14px;
+  border: 1px solid #c39bff77;
+  border-radius: 999px;
+  background: #1a1430cc;
+  color: #e8e9f2;
+  font-size: 12px;
+  cursor: pointer;
+}
+.game-over-share-button:disabled {
+  opacity: 0.8;
+  cursor: default;
+}

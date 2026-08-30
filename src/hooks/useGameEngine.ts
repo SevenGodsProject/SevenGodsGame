@@ -9,7 +9,9 @@ import type {
   GodId,
   GrowthPath,
 } from '../core/types'
-import type { EnemyId } from '../core/types'
+import type { EnemyId, StakeChoiceId } from '../core/types'
+import { isStakeLevel } from '../core/data/stakes'
+import { recordStakeResult, type StakeResultOutcome } from './stakeStorage'
 import { applyAction } from '../core/engine'
 import { ENEMY_IDS } from '../core/data/enemies'
 import { resolveStartEnemyId } from './startEnemy'
@@ -39,6 +41,23 @@ function resolveForcedEnemyId() {
   const slug = new URLSearchParams(window.location.search).get('enemy')
   if (!slug || !(slug in ENEMY_IDS)) return null
   return ENEMY_IDS[slug as keyof typeof ENEMY_IDS]
+}
+/**
+ * 決定126（Seed共有）：`?seed=<文字列>`で通常モードのシードを固定する。同じシード・同じ神・
+ * 同じ神階なら初手・託宣結果まで同一（決定論エンジン）。Dailyでは参照しない。
+ * 英数字・ハイフンのみ、64文字まで（それ以外は無視して通常どおり発行）
+ */
+function resolveForcedSeed(): string | null {
+  const seed = new URLSearchParams(window.location.search).get('seed')
+  if (!seed || !/^[A-Za-z0-9_-]{1,64}$/.test(seed)) return null
+  return seed
+}
+/** 決定126（Seed共有）：`?stake=1..7`で神階を固定する（解放状態に関わらず挑戦できる共有用バックドア） */
+function resolveForcedStake(): number | null {
+  const raw = new URLSearchParams(window.location.search).get('stake')
+  if (raw === null) return null
+  const n = Number(raw)
+  return isStakeLevel(n) && n > 0 ? n : null
 }
 /**
  * カードが手札から消える前に、使用アニメーションを見せる時間（見せ方のみ）。
@@ -94,7 +113,16 @@ export type UseGameEngine = {
      * URLバックドア`?enemy=`は常にこの指定より優先される（`resolveStartEnemyId`参照）
      */
     enemyId?: EnemyId | null,
+    /** 決定126：神階（0＝通常）。URLバックドア`?stake=`が優先される */
+    stake?: number,
+    /** 決定126：神階Ⅶの最終試練の選択 */
+    stakeChoice?: StakeChoiceId | null,
   ) => void
+  /**
+   * 決定126：直近の決着の神階記録（通常モードで神階>0、またはむずかしい撃破時）。
+   * 通常モードの決着でnullになり得る（神階0かつ通常/かんたん）。Dailyでは常にnull
+   */
+  stakeResult: StakeResultOutcome | null
   /** 保存済みのGameStateからバトルを再開する（決定29） */
   resumeGame: (savedState: GameState) => void
   /** 進行中／決着済みのゲームを未開始状態に戻す（神選択からやり直すため） */
@@ -122,6 +150,7 @@ export function useGameEngine(): UseGameEngine {
     nextRecord: OtomoBondRecord
   } | null>(null)
   const [dailyResult, setDailyResult] = useState<DailyRecordResult | null>(null)
+  const [stakeResult, setStakeResult] = useState<StakeResultOutcome | null>(null)
 
   const commit = useCallback((result: { state: GameState; events: GameEvent[] }) => {
     setState(result.state)
@@ -146,6 +175,10 @@ export function useGameEngine(): UseGameEngine {
         setNewBest(recordResult.isNewBest)
         setPrevBest(recordResult.prevBest)
         setDailyResult(null)
+    setStakeResult(null)
+      setStakeResult(null)
+        // 決定126：神階の到達・段別ベスト・むずかしい撃破（解放）を記録する
+        setStakeResult(recordStakeResult(result.state))
       }
       // 決定70（Task C1）：決着した瞬間にOTOMO育成記録（表示専用）を更新する。
       // recordGameResultと同じ分岐・同じ1回性なので二重加算は発生しない
@@ -187,6 +220,8 @@ export function useGameEngine(): UseGameEngine {
       bonusCopies?: Map<CardDefId, number>,
       otomoGrowthPath?: GrowthPath,
       enemyId?: EnemyId | null,
+      stake?: number,
+      stakeChoice?: StakeChoiceId | null,
     ) => {
       setLog([])
       setError(null)
@@ -195,7 +230,11 @@ export function useGameEngine(): UseGameEngine {
       setNewBest(false)
       setPrevBest(0)
       setOtomoBondChange(null)
-      const seed = `seed-${Date.now()}`
+      setStakeResult(null)
+      // 決定126：Seed共有（`?seed=`）。無ければ従来どおり時刻から発行
+      const seed = resolveForcedSeed() ?? `seed-${Date.now()}`
+      // 決定126：URLバックドア`?stake=` > 画面の選択。神階>0は「ふつう」基準に固定
+      const resolvedStake = resolveForcedStake() ?? (isStakeLevel(stake) ? stake : 0)
       dispatch({
         type: 'START_GAME',
         seed,
@@ -203,9 +242,10 @@ export function useGameEngine(): UseGameEngine {
         // LANE-D：URLバックドア > プレイヤー選択 > シード選出（既存pickEnemyId）
         enemyId: resolveStartEnemyId(resolveForcedEnemyId(), enemyId, seed),
         deck,
-        difficulty,
+        difficulty: resolvedStake > 0 ? 'normal' : difficulty,
         bonusCopies: bonusCopies ? Object.fromEntries(bonusCopies) : undefined,
         otomoGrowthPath,
+        ...(resolvedStake > 0 ? { stake: resolvedStake, ...(stakeChoice ? { stakeChoice } : {}) } : {}),
       })
     },
     [dispatch],
@@ -230,6 +270,8 @@ export function useGameEngine(): UseGameEngine {
       setPrevBest(0)
       setOtomoBondChange(null)
       setDailyResult(null)
+    setStakeResult(null)
+      setStakeResult(null)
       const daily = resolveDailyStart(dailyKey)
       dispatch({
         type: 'START_GAME',
@@ -277,6 +319,7 @@ export function useGameEngine(): UseGameEngine {
     setPrevBest(0)
     setOtomoBondChange(null)
     setDailyResult(null)
+    setStakeResult(null)
     setState(savedState)
   }, [])
 
@@ -290,6 +333,7 @@ export function useGameEngine(): UseGameEngine {
     setPrevBest(0)
     setOtomoBondChange(null)
     setDailyResult(null)
+    setStakeResult(null)
   }, [])
 
   return {
@@ -302,6 +346,7 @@ export function useGameEngine(): UseGameEngine {
     prevBest,
     otomoBondChange,
     dailyResult,
+    stakeResult,
     startDailyGame,
     startGame,
     resumeGame,

@@ -6,6 +6,7 @@ import { getOtomoDef } from '../data/otomo'
 import { performDraw } from './deck'
 import { sumBuff } from './buffs'
 import type { Rng } from '../rng/seededRandom'
+import { resolveStakeRules } from '../data/stakes'
 
 export type EffectResult = { state: GameState; events: GameEvent[] }
 
@@ -43,21 +44,25 @@ export function applyEffect(
     }
 
     case 'block': {
+      // 決定126：神階Ⅳ以降はブロック効率が下がる（イベントには実効値を載せ、UIの表示と一致させる）
+      const gained = Math.round(effect.amount * resolveStakeRules(state.stake, state.stakeChoice).blockEfficiency)
       const events: GameEvent[] = [
-        { t: 'BLOCK_GAINED', target: 'self', amount: effect.amount },
+        { t: 'BLOCK_GAINED', target: 'self', amount: gained },
       ]
       return {
         state: {
           ...state,
-          player: { ...state.player, block: state.player.block + effect.amount },
+          player: { ...state.player, block: state.player.block + gained },
         },
         events,
       }
     }
 
     case 'heal': {
+      // 決定126：神階Ⅴ以降は回復効率が下がる（Math.round）
+      const effective = Math.round(effect.amount * resolveStakeRules(state.stake, state.stakeChoice).healEfficiency)
       const healed = Math.min(
-        effect.amount,
+        effective,
         state.player.maxHp - state.player.hp,
       )
       return {

@@ -2,6 +2,8 @@ import type { Difficulty } from '../../core/types'
 import { GODS } from '../../core/data/gods'
 import { loadGodRecord, type GodRecord } from '../../hooks/recordStorage'
 import { bestResultOf, loadRecentDailyDays } from '../../hooks/dailyStorage'
+import { loadGodStakeRecord } from '../../hooks/stakeStorage'
+import { STAKE_LEVELS, getStakeLevelDef } from '../../core/data/stakes'
 import { DailyStatusBadge } from './DailyStatusBadge'
 import { getEnemyDef } from '../../core/data/enemies'
 import { RULES } from '../../core/data/rules'
@@ -91,6 +93,9 @@ export function RecordScreen({ onBack }: RecordScreenProps) {
         {GODS.map((god) => {
           const record = loadGodRecord(god.id)
           const played = hasAnyRecord(record)
+          // 決定126：神階の到達と段別ベスト（別キー。通常の自己ベストには混ぜない）
+          const stakeRec = loadGodStakeRecord(god.id)
+          const stakeBests = STAKE_LEVELS.filter((lv) => (stakeRec.bestByStake[String(lv.level)] ?? 0) > 0)
           return (
             <div className="record-card" key={god.id}>
               <div className="record-card-head">
@@ -144,6 +149,27 @@ export function RecordScreen({ onBack }: RecordScreenProps) {
                       <span className="record-stat-label">最速撃破</span>
                     </div>
                   </div>
+                  {(stakeRec.maxCleared > 0 || stakeBests.length > 0) && (
+                    <div className="record-stake">
+                      <div className="record-stake-reach">
+                        神階 最高到達{' '}
+                        <strong>
+                          {stakeRec.maxCleared > 0
+                            ? `${getStakeLevelDef(stakeRec.maxCleared)?.numeral} ${getStakeLevelDef(stakeRec.maxCleared)?.nameJa}`
+                            : '—'}
+                        </strong>
+                      </div>
+                      {stakeBests.length > 0 && (
+                        <div className="record-stake-bests">
+                          {stakeBests.map((lv) => (
+                            <span key={lv.level} className="record-stake-best">
+                              {lv.numeral} {formatScaled(stakeRec.bestByStake[String(lv.level)] ?? 0)}
+                            </span>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  )}
                 </>
               ) : (
                 <div className="record-empty">まだ記録がありません</div>

@@ -5,6 +5,11 @@ import { getFinalScore, type MasteryResult } from '../../core/engine'
 import { formatScaled } from '../displayScale'
 import { describeMastery } from './masteryDisplay'
 import type { DailyRecordResult } from '../../hooks/dailyStorage'
+import type { StakeResultOutcome } from '../../hooks/stakeStorage'
+import type { GameState } from '../../core/types'
+import { getStakeLevelDef, stakeLabel, stakeScoreScale } from '../../core/data/stakes'
+import { buildShareText, copyToClipboard } from './shareText'
+import { useState } from 'react'
 
 const STATUS_LABEL: Record<Exclude<GameStatus, 'playing'>, string> = {
   won: '勝利',
@@ -77,6 +82,10 @@ type GameOverOverlayProps = {
   /** DAILY-01：「もう一度」ボタンの文言（残り回数の表示）と無効化（残り0） */
   rematchLabel?: string
   rematchDisabled?: boolean
+  /** 決定126：神階の到達・段別ベスト（通常モードのみ。nullなら表示しない） */
+  stakeResult?: StakeResultOutcome | null
+  /** 決定126（Seed共有）：挑戦状テキストを作るための決着済みGameState */
+  shareState?: GameState | null
 }
 
 export function GameOverOverlay({
@@ -94,12 +103,25 @@ export function GameOverOverlay({
   daily = null,
   rematchLabel,
   rematchDisabled = false,
+  stakeResult = null,
+  shareState = null,
 }: GameOverOverlayProps) {
   const god = getGodDef(godId)
   const otomoDef = getOtomoDef(otomo.defId)
   // BASE-D：ユーザーへ見せるスコアは最終スコア（素点合計×1.3）。内訳は素点を
   // 四捨五入して表示する（perDamageが小数のためdamageのみ端数がありうる）。
-  const finalScore = getFinalScore(score)
+  // 決定126：神階倍率を含む最終スコア（stake 0 なら従来どおり）
+  const stake = shareState?.stake ?? 0
+  const finalScore = getFinalScore(score, stake)
+  const stakeScale = stakeScoreScale(stake)
+  // 決定126（Seed共有）：コピー結果の表示（idle→copied/failed、数秒で戻す）
+  const [copyState, setCopyState] = useState<'idle' | 'copied' | 'failed'>('idle')
+  const handleShare = async () => {
+    if (!shareState) return
+    const ok = await copyToClipboard(buildShareText(shareState, finalScore))
+    setCopyState(ok ? 'copied' : 'failed')
+    window.setTimeout(() => setCopyState('idle'), 2500)
+  }
   // STEP-UX6-B：敗北／未撃破時のみ、敵の残りHPで「あと一歩だった」を伝える
   // （決定64「敗北時は祝祭感を出さない」方針とは別軸の情報表示のため、
   // 勝利演出とは競合しない）。残りHP率10%以下の時だけ煽り文言を追加する
@@ -219,12 +241,49 @@ export function GameOverOverlay({
               <dd>{formatScaled(score.legacy)}</dd>
             </>
           )}
+          {stake > 0 && (
+            <>
+              <dt>
+                神階倍率
+                <span className="score-breakdown-hint">{stakeLabel(stake)}</span>
+              </dt>
+              <dd>×{stakeScale.toFixed(2)}</dd>
+            </>
+          )}
           <dt className="score-breakdown-subtotal">
-            小計 ×1.3
-            <span className="score-breakdown-hint">最終スコア＝小計の1.3倍</span>
+            小計 ×1.3{stake > 0 ? ` ×${stakeScale.toFixed(2)}` : ''}
+            <span className="score-breakdown-hint">最終スコア＝小計の1.3倍{stake > 0 ? '×神階倍率' : ''}</span>
           </dt>
           <dd className="score-breakdown-subtotal">{formatScaled(Math.round(score.total))} → {formatScaled(finalScore)}</dd>
         </dl>
+        {stakeResult && (stakeResult.stake > 0 || stakeResult.hardClearedNow) && (
+          <div className="game-over-stake">
+            {stakeResult.hardClearedNow && <p className="game-over-stake-unlock">⛩ 神階が解放された！ 次は神階Ⅰ「参道」へ</p>}
+            {stakeResult.clearedNew && stakeResult.stake > 0 && (
+              <p className="game-over-stake-clear">
+                ⛩ {stakeLabel(stakeResult.stake)} 突破！
+                {stakeResult.stake < 7
+                  ? ` 次は神階${getStakeLevelDef(stakeResult.stake + 1)?.numeral ?? ''}「${getStakeLevelDef(stakeResult.stake + 1)?.nameJa ?? ''}」`
+                  : ' 高天原に至った。'}
+              </p>
+            )}
+            {stakeResult.stake > 0 && !stakeResult.clearedNew && stakeResult.isNewStakeBest && (
+              <p className="game-over-stake-best">✨ {stakeLabel(stakeResult.stake)} の自己ベスト更新！</p>
+            )}
+            {stakeResult.stake > 0 && !stakeResult.isNewStakeBest && stakeResult.prevStakeBest > finalScore && (
+              <p className="game-over-stake-gap">
+                {stakeLabel(stakeResult.stake)} のベストまであと<strong>{formatScaled(stakeResult.prevStakeBest - finalScore)}</strong>点
+              </p>
+            )}
+          </div>
+        )}
+        {shareState && (
+          <div className="game-over-share">
+            <button type="button" className="game-over-share-button" onClick={handleShare} disabled={copyState !== 'idle'}>
+              {copyState === 'copied' ? 'コピーしました' : copyState === 'failed' ? 'コピーできませんでした' : '挑戦状をコピー（Seed・神階・スコア）'}
+            </button>
+          </div>
+        )}
         <div className="game-over-actions">
           <button type="button" onClick={onRematch} disabled={rematchDisabled}>
             {rematchLabel ?? '同じ構成でもう一度'}

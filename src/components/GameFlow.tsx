@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import type { CardDefId, Difficulty, EnemyId, GodId, GrowthPath } from '../core/types'
+import type { CardDefId, Difficulty, EnemyId, GodId, GrowthPath, StakeChoiceId } from '../core/types'
 import { useGameEngine } from '../hooks/useGameEngine'
 import { saveDeckPreference, loadDeckPreference } from '../hooks/deckPreferenceStorage'
 import { clearBattleSave, loadBattleSave } from '../hooks/battleSaveStorage'
@@ -67,6 +67,9 @@ export function GameFlow({ onShowTutorial, onSnapshotChange }: GameFlowProps) {
   const [godId, setGodId] = useState<GodId | null>(null)
   const [deck, setDeck] = useState<CardDefId[] | null>(null)
   const [difficulty, setDifficulty] = useState<Difficulty>('normal')
+  // 決定126：神階（0＝通常）。神階>0は「ふつう」基準に固定（useGameEngine側でも保証）
+  const [stake, setStake] = useState(0)
+  const [stakeChoice, setStakeChoice] = useState<StakeChoiceId | null>(null)
   const [otomoGrowthPath, setOtomoGrowthPath] = useState<GrowthPath>('guardian')
   // LANE-D：Enemy Selectでの選択。null＝「神に委ねる」（従来どおりのシード選出）
   const [selectedEnemyId, setSelectedEnemyId] = useState<EnemyId | null>(null)
@@ -227,6 +230,8 @@ export function GameFlow({ onShowTutorial, onSnapshotChange }: GameFlowProps) {
                 loadRewardBonuses(godId),
                 otomoGrowthPath,
                 selectedEnemyId,
+                stake,
+                stakeChoice,
               )
             }}
           />
@@ -237,6 +242,10 @@ export function GameFlow({ onShowTutorial, onSnapshotChange }: GameFlowProps) {
           difficulty={difficulty}
           onDifficultyChange={setDifficulty}
           skipDifficulty={dailyKey !== null}
+          stake={dailyKey ? 0 : stake}
+          onStakeChange={dailyKey ? undefined : setStake}
+          stakeChoice={stakeChoice}
+          onStakeChoiceChange={dailyKey ? undefined : setStakeChoice}
           onSelect={(selectedGodId) => {
             setGodId(selectedGodId)
             // DAILY-01：神域挑戦は敵選択を通らずデッキ構築へ
@@ -276,6 +285,7 @@ export function GameFlow({ onShowTutorial, onSnapshotChange }: GameFlowProps) {
           // と再戦する。「神に委ねる」で始めた対局や「続きから」再開後でも、
           // リマッチ相手が突然すり替わらない（新しい敵と戦いたい時は
           // 「神を選び直す」からEnemy Selectを通る）。URLバックドアは従来どおり最優先。
+          // 決定126：「もう一度」は同じ神階・同じ最終試練で再戦する（state側の値を優先）
           engine.startGame(
             godId,
             deck,
@@ -283,6 +293,8 @@ export function GameFlow({ onShowTutorial, onSnapshotChange }: GameFlowProps) {
             loadRewardBonuses(godId),
             otomoGrowthPath,
             engine.state?.enemy.defId ?? selectedEnemyId,
+            engine.state?.stake ?? stake,
+            engine.state?.stakeChoice ?? stakeChoice,
           )
         }}
         onReselect={backToGodSelect}

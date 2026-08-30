@@ -115,6 +115,9 @@ export type GameMode = 'normal' | 'daily'
  * Daily専用の敵補正（神域強化）。難易度倍率（`RULES.difficulty`）に乗算する。
  * 通常モードでは未指定＝恒等（×1）で、既存の検証済みバランスと完全に一致する。
  */
+/** 決定126：神階Ⅶ「高天原」の最終試練の選択（race=敵HP+／pressure=敵ATK+／tempo=R1神力−1） */
+export type StakeChoiceId = 'race' | 'pressure' | 'tempo'
+
 export type BattleModifier = {
   enemyHpMul: number
   enemyAtkMul: number
@@ -134,6 +137,13 @@ export type GameState = {
   dailyKey?: string
   /** 'daily'のときの敵補正。通常モードでは持たない */
   modifier?: BattleModifier
+  /**
+   * 決定126：神階（0＝通常、1〜7＝Ⅰ〜Ⅶ）。engineは `resolveStakeRules(stake, stakeChoice)` で
+   * 累積ルールを解決する。旧セーブ（v8以前）は未定義＝0として扱う
+   */
+  stake?: number
+  /** 神階Ⅶの最終試練の選択。Ⅶ以外では未使用 */
+  stakeChoice?: StakeChoiceId
   /** 乱数を何回使ったか（リプレイ再現用） */
   rngCursor: number
 

@@ -6,6 +6,7 @@ import { performDraw } from './deck'
 import { applyDamage } from './effects'
 import { sumBuff, tickBuffs } from './buffs'
 import type { Rng } from '../rng/seededRandom'
+import { resolveStakeRules, specialMultiplierFor } from '../data/stakes'
 
 type StepResult = { state: GameState; events: GameEvent[] }
 
@@ -69,8 +70,17 @@ function nextEnemyAction(state: GameState): EnemyActionDef {
   const raw = actionForRound(enemyDef.actions, state.round)
   // DAILY-01：神域強化の攻撃倍率は難易度倍率に乗算し、合計保存丸めを1回だけ行う。
   // 通常モード（modifier無し）は×1で従来と完全に同じ値。
+  // 決定126：神階の累積ルール。難易度倍率×Daily修正子×神階ATK×後半激化×必殺・連撃倍率を
+  // 1つの倍率にまとめてから合計保存丸め（決定118のengine恒久ルール(b)）で適用する。
+  const stakeRules = resolveStakeRules(state.stake, state.stakeChoice)
+  const lateMul = stakeRules.lateRoundFrom !== null && state.round >= stakeRules.lateRoundFrom ? stakeRules.lateRoundAtkMul : 1
+  const specialMul = raw.kind === 'special' || raw.kind === 'multiAttack' ? specialMultiplierFor(stakeRules, state.enemy.defId) : 1
   const multiplier =
-    RULES.difficulty[state.difficulty].enemyAtkMultiplier * (state.modifier?.enemyAtkMul ?? 1)
+    RULES.difficulty[state.difficulty].enemyAtkMultiplier *
+    (state.modifier?.enemyAtkMul ?? 1) *
+    stakeRules.enemyAtkMul *
+    lateMul *
+    specialMul
   return scaleEnemyAction(raw, multiplier)
 }
 
@@ -88,7 +98,9 @@ export function startRound(
   drawCount: number = RULES.deck.drawPerRound,
 ): StepResult {
   const events: GameEvent[] = []
-  const apAmount = RULES.ap.perRound[state.round - 1]
+  // 決定126：神階Ⅶ「静寂の試練」＝ラウンド1の神力−1（0未満にはしない）
+  const stakeRules = resolveStakeRules(state.stake, state.stakeChoice)
+  const apAmount = Math.max(0, RULES.ap.perRound[state.round - 1] - (state.round === 1 ? stakeRules.round1ApMinus : 0))
   const intent = nextEnemyAction(state)
 
   let next: GameState = {

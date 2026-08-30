@@ -1,4 +1,5 @@
 import { beforeEach, describe, expect, it } from 'vitest'
+import { ENEMY_IDS as STAKE_TEST_ENEMY_IDS } from '../core/data/enemies'
 import { clearBattleSave, loadBattleSave, migrateBattleSaveV3, saveBattle } from './battleSaveStorage'
 import { startTestGame } from '../core/engine/testUtils'
 import { applyAction } from '../core/engine/reducer'
@@ -333,13 +334,13 @@ describe('battleSaveStorage（saveVersion 4・STEP-SCORE2-D-PROTO）', () => {
     expect(loaded?.mastery.riskCardEffDamage).toBe(31)
   })
 
-  it('v3セーブはv3→…→v8へ連鎖移行され、現行バージョンで読み込まれる（経路維持）', () => {
+  it('v3セーブはv3→…→v9へ連鎖移行され、現行バージョンで読み込まれる（経路維持）', () => {
     const payload = buildV3Payload()
     localStorage.setItem('sevengods.battleSave', JSON.stringify(payload))
     const loaded = loadBattleSave()
     expect(loaded).not.toBeNull()
     expect(loaded?.version).toBe(RULES.saveVersion)
-    expect(RULES.saveVersion).toBe(8)
+    expect(RULES.saveVersion).toBe(9)
   })
 
   it('未知のバージョン（v2以前・将来版）はnull（読み込まない）', () => {
@@ -409,5 +410,29 @@ describe('battleSaveStorage（saveVersion 8・DAILY-01）', () => {
     const loaded = loadBattleSave()
     expect(loaded?.version).toBe(RULES.saveVersion)
     expect(loaded?.mode).toBe('normal')
+  })
+})
+
+describe('battleSaveStorage（saveVersion 9・決定126 神階）', () => {
+  it('v8セーブ（stake無し）はv9へ移行され、stakeは未定義＝通常として扱われる', () => {
+    Object.defineProperty(globalThis, 'localStorage', { value: new MemoryStorage(), configurable: true, writable: true })
+    const state = applyAction(null, { type: 'START_GAME', seed: 'v8-to-v9', godId: GOD_IDS.ebisu, enemyId: STAKE_TEST_ENEMY_IDS.trial, deck: STARTER_DECK }).state
+    const v8 = { ...state, version: 8 }
+    delete (v8 as { stake?: number }).stake
+    localStorage.setItem('sevengods.battleSave', JSON.stringify({ version: 8, state: v8 }))
+    const loaded = loadBattleSave()
+    expect(loaded).not.toBeNull()
+    expect(loaded?.version).toBe(9)
+    expect(loaded?.stake).toBeUndefined()
+    expect(loaded?.mode).toBe('normal')
+  })
+
+  it('v9セーブは神階フィールドを保ったまま往復する', () => {
+    Object.defineProperty(globalThis, 'localStorage', { value: new MemoryStorage(), configurable: true, writable: true })
+    const state = applyAction(null, { type: 'START_GAME', seed: 'v9-stake', godId: GOD_IDS.ebisu, enemyId: STAKE_TEST_ENEMY_IDS.trial, deck: STARTER_DECK, stake: 7, stakeChoice: 'tempo' }).state
+    saveBattle(state)
+    const loaded = loadBattleSave()
+    expect(loaded?.stake).toBe(7)
+    expect(loaded?.stakeChoice).toBe('tempo')
   })
 })

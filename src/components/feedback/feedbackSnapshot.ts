@@ -54,7 +54,7 @@ export function computeSnapshot({ setupScreen, godId, difficulty, state }: Snaps
       difficultyLabel: DIFFICULTY_LABEL[state.difficulty],
       round: state.round,
       // D2b：フィードバックにはユーザーが見ているのと同じ表示値（×10）を載せる
-      score: scaleDisplay(getFinalScore(state.score)),
+      score: scaleDisplay(getFinalScore(state.score, state.stake)),
       otomoFormLabel: OTOMO_FORM_LABEL[state.otomo.form],
     }
   }

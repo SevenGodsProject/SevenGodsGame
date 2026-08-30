@@ -1,7 +1,7 @@
 import type { CardDefId, CardUid, EnemyId, GodId } from './ids'
 import type { Difficulty } from './difficulty'
 import type { GrowthPath } from './otomo'
-import type { BattleModifier, GameMode } from './state'
+import type { BattleModifier, GameMode, StakeChoiceId } from './state'
 
 /**
  * プレイヤーが行う「操作」。
@@ -33,6 +33,10 @@ export type GameAction =
       bonusCopies?: Partial<Record<CardDefId, number>>
       /** 省略時は'guardian'（決定44）。既存の呼び出し元・テストは未指定のままでよい */
       otomoGrowthPath?: GrowthPath
+      /** 決定126：神階（0〜7）。未指定＝0 */
+      stake?: number
+      /** 決定126：神階Ⅶの最終試練の選択 */
+      stakeChoice?: StakeChoiceId
       /**
        * DAILY-01：省略時は'normal'。'daily'（神域挑戦）は敵・seed・補正を
        * UI側（`startDailyGame`）が`dailyBossFor`で確定して渡す。既存の呼び出し元・

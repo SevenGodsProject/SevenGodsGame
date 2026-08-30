@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react'
-import type { Difficulty, GodId } from '../../core/types'
+import type { Difficulty, GodId, StakeChoiceId } from '../../core/types'
+import { StakeSelector } from './StakeSelector'
 import { GODS } from '../../core/data/gods'
 import { getOtomoDef } from '../../core/data/otomo'
 import { loadGodRecord } from '../../hooks/recordStorage'
@@ -87,6 +88,11 @@ type GodSelectScreenProps = {
   skipDifficulty?: boolean
   /** 神一覧ステップからホームへ戻る（決定80フォローアップ：Phase 1⑥） */
   onBack: () => void
+  /** 決定126：神階（0＝通常）。難易度ステップの下で選ぶ。Dailyでは非表示 */
+  stake?: number
+  onStakeChange?: (stake: number) => void
+  stakeChoice?: StakeChoiceId | null
+  onStakeChoiceChange?: (choice: StakeChoiceId) => void
 }
 
 const DIFFICULTY_OPTIONS: { value: Difficulty; label: string; description: string; stars: number }[] = [
@@ -129,6 +135,10 @@ export function GodSelectScreen({
   onSelect,
   onBack,
   skipDifficulty = false,
+  stake = 0,
+  onStakeChange,
+  stakeChoice = null,
+  onStakeChoiceChange,
 }: GodSelectScreenProps) {
   const [pendingGodId, setPendingGodId] = useState<GodId | null>(null)
   const pendingGod = pendingGodId ? GODS.find((g) => g.id === pendingGodId) : undefined
@@ -184,9 +194,13 @@ export function GodSelectScreen({
                 key={opt.value}
                 type="button"
                 role="radio"
-                aria-checked={difficulty === opt.value}
-                className={`difficulty-option${difficulty === opt.value ? ' difficulty-option-active' : ''}`}
-                onClick={() => onDifficultyChange(opt.value)}
+                aria-checked={stake > 0 ? opt.value === 'normal' : difficulty === opt.value}
+                className={`difficulty-option${(stake > 0 ? opt.value === 'normal' : difficulty === opt.value) ? ' difficulty-option-active' : ''}${stake > 0 ? ' difficulty-option-fixed' : ''}`}
+                onClick={() => {
+                  // 決定126：難易度を選び直したら神階は解除（神階は「ふつう」基準に固定のため両立しない）
+                  if (stake > 0) onStakeChange?.(0)
+                  onDifficultyChange(opt.value)
+                }}
               >
                 <span className="difficulty-option-head">
                   <span className="difficulty-option-label">{opt.label}</span>
@@ -196,6 +210,16 @@ export function GodSelectScreen({
               </button>
             ))}
           </div>
+
+          {onStakeChange && onStakeChoiceChange && (
+            <StakeSelector
+              godId={pendingGod.id}
+              stake={stake}
+              onStakeChange={onStakeChange}
+              stakeChoice={stakeChoice}
+              onStakeChoiceChange={onStakeChoiceChange}
+            />
+          )}
 
           <button type="button" className="god-select-confirm" onClick={() => onSelect(pendingGod.id)}>
             この構成で始める

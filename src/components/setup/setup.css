@@ -1863,3 +1863,199 @@
     padding: 6px 8px 10px;
   }
 }
+
+/* ============================================================
+   決定126：神階（しんかい）Ⅰ〜Ⅶ セレクタ（StakeSelector.tsx）。
+   難易度画面の下に置く。375pxでも段チップは4列×2段で収まる。
+   ============================================================ */
+.stake-select {
+  margin-top: 14px;
+  padding: 12px 14px;
+  border: 1px solid #ffffff1a;
+  border-radius: 12px;
+  background: linear-gradient(165deg, #12142aaa 0%, #0b0d17cc 100%);
+}
+.stake-select-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.stake-select-title {
+  font-weight: 700;
+  color: #ffd166;
+  letter-spacing: 0.04em;
+}
+.stake-select-reach,
+.stake-select-lock {
+  font-size: 12px;
+  color: #a9adc4;
+}
+.stake-select-flavor,
+.stake-detail-flavor {
+  margin: 8px 0 0;
+  font-size: 12px;
+  color: #a9adc4;
+  line-height: 1.6;
+}
+.stake-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 6px;
+  margin-top: 10px;
+}
+.stake-chip {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  min-height: 44px;
+  padding: 6px 4px;
+  border: 1px solid #ffffff1f;
+  border-radius: 10px;
+  background: #0b0d17cc;
+  color: #e8e9f2;
+  cursor: pointer;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease,
+    transform 0.15s ease;
+}
+.stake-chip:hover:not(:disabled) {
+  border-color: #ffd16688;
+}
+.stake-chip-cleared {
+  border-color: #ffd16655;
+  background: linear-gradient(180deg, #2a2410cc 0%, #0b0d17cc 100%);
+}
+.stake-chip-cleared .stake-chip-numeral {
+  color: #ffd166;
+  text-shadow: 0 0 8px #ffd16666;
+}
+.stake-chip-active {
+  border-color: #ffd166;
+  box-shadow: 0 0 14px -3px #ffd166aa;
+  transform: translateY(-1px);
+}
+.stake-chip-locked {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+.stake-chip-none {
+  justify-content: center;
+  font-size: 12px;
+}
+.stake-chip-numeral {
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 1;
+}
+.stake-chip-name {
+  font-size: 11px;
+  color: #c9cbe0;
+}
+.stake-chip-lockmark {
+  position: absolute;
+  top: 2px;
+  right: 4px;
+  font-size: 9px;
+}
+.stake-detail {
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px dashed #ffffff1a;
+}
+.stake-detail-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 8px;
+}
+.stake-detail-scale {
+  font-size: 12px;
+  color: #ffd166;
+}
+.stake-detail-rules {
+  margin: 8px 0 0;
+  padding-left: 18px;
+  font-size: 12px;
+  line-height: 1.6;
+  color: #e8e9f2;
+  columns: 2;
+  column-gap: 12px;
+}
+.stake-detail-note {
+  margin: 8px 0 0;
+  font-size: 11px;
+  color: #a9adc4;
+}
+.stake-choice {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 6px;
+  margin-top: 8px;
+}
+.stake-choice-option {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 8px 6px;
+  border: 1px solid #ffffff1f;
+  border-radius: 10px;
+  background: #0b0d17cc;
+  color: inherit;
+  cursor: pointer;
+}
+.stake-choice-active {
+  border-color: #c39bff;
+  box-shadow: 0 0 12px -3px #c39bffaa;
+}
+.stake-choice-name {
+  font-size: 12px;
+  font-weight: 700;
+}
+.stake-choice-rule {
+  font-size: 11px;
+  color: #a9adc4;
+}
+.difficulty-option-fixed {
+  opacity: 0.55;
+}
+.difficulty-option-fixed.difficulty-option-active {
+  opacity: 1;
+}
+.record-stake {
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px dashed #ffffff1a;
+  font-size: 12px;
+  color: #a9adc4;
+}
+.record-stake-reach strong {
+  color: #ffd166;
+}
+.record-stake-bests {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 10px;
+  margin-top: 4px;
+  color: #c9cbe0;
+}
+@media (max-width: 420px) {
+  .stake-detail-rules {
+    columns: 1;
+  }
+  .stake-chip-name {
+    font-size: 10px;
+  }
+}
+
+@media (max-width: 420px) {
+  /* 決定126：375pxでは難易度画面を長くしないため、段のフレーバー文は畳む（ルール行は残す） */
+  .stake-detail-flavor,
+  .stake-select-flavor {
+    display: none;
+  }
+}

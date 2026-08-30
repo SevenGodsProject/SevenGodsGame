@@ -3,6 +3,7 @@ import { GODS } from '../data/gods'
 import { ENEMIES, ENEMY_IDS } from '../data/enemies'
 import { getCardDef } from '../data/cards'
 import { getRecommendedDeck } from '../data/deckBuilder'
+import type { StakeChoiceId } from '../types'
 import type {
   BattleModifier,
   CardDefId,
@@ -178,6 +179,9 @@ function playOneGame(
   difficulty: Difficulty = 'normal',
   // DAILY-01：神域強化の検証用。未指定なら従来どおり（通常モード・恒等）
   modifier?: BattleModifier,
+  // 決定126：神階の検証用（0/未指定＝通常）
+  stake?: number,
+  stakeChoice?: StakeChoiceId,
 ): SimResult {
   let { state } = applyAction(null, {
     type: 'START_GAME',
@@ -188,6 +192,7 @@ function playOneGame(
     otomoGrowthPath,
     difficulty,
     ...(modifier ? { mode: 'daily' as const, dailyKey: '2026-09-02', modifier } : {}),
+    ...(stake ? { stake, ...(stakeChoice ? { stakeChoice } : {}) } : {}),
   })
 
   let guard = 0
@@ -698,6 +703,72 @@ describe('バランスシミュレーション（Planner用・アサーション
     for (const strategy of strategies) {
       const arr = samples.filter((s) => s.strategy === strategy)
       console.log(`${strategy}: ${arr.length}件, 平均スコア${avg(arr.map((s) => s.score)).toFixed(1)}`)
+    }
+  })
+
+  it('決定126 STAKE-01：神階Ⅰ〜Ⅶ×7神×7敵で、各神に少なくとも1戦略が段別の下限勝率を満たす（神の公平性ゲート）', () => {
+    // 段別の下限（balanced基準の設計ターゲット Ⅰ85〜90 … Ⅶ25〜35% に対し、
+    // 「最弱神でも理論的にクリア可能」を保証する床。Ⅶは最終試練3択の最良値で判定）
+    const FLOOR: Record<number, number> = { 1: 55, 2: 45, 3: 35, 4: 30, 5: 20, 6: 15, 7: 10 }
+    const SEEDS = 6
+    const strategies: Strategy[] = ['aggressive', 'balanced', 'defensive']
+    const choices: Array<StakeChoiceId | undefined> = [undefined, 'race', 'tempo']
+    const lines: string[] = []
+    const failures: string[] = []
+    const overall: number[] = []
+    for (let stake = 1; stake <= 7; stake++) {
+      let totalW = 0
+      let totalN = 0
+      const godCells: string[] = []
+      for (const god of GODS) {
+        const deck = getRecommendedDeck(god.id)
+        let bestGod = 0
+        let bestLabel = ''
+        for (const choice of stake === 7 ? choices : [undefined]) {
+          for (const strategy of strategies) {
+            let w = 0
+            let n = 0
+            for (const enemy of ENEMIES) {
+              for (let i = 0; i < SEEDS; i++) {
+                const r = playOneGame(
+                  `stake-${stake}-${god.id}-${enemy.id}-${strategy}-${choice ?? 'p'}-${i}`,
+                  strategy,
+                  god.id,
+                  deck,
+                  enemy.id,
+                  'guardian',
+                  'normal',
+                  undefined,
+                  stake,
+                  choice,
+                )
+                n++
+                if (r.status === 'won') w++
+              }
+            }
+            const rate = (w / n) * 100
+            if (rate > bestGod) {
+              bestGod = rate
+              bestLabel = `${strategy.slice(0, 3)}${choice ? '/' + choice : ''}`
+            }
+            if (!choice || choice === 'race') {
+              totalW += w
+              totalN += n
+            }
+          }
+        }
+        godCells.push(`${god.nameJa} ${bestGod.toFixed(0)}%(${bestLabel})`)
+        if (bestGod < FLOOR[stake]) failures.push(`神階${stake} ${god.nameJa}: best ${bestGod.toFixed(0)}% < floor ${FLOOR[stake]}%`)
+      }
+      const overallRate = (totalW / totalN) * 100
+      overall.push(overallRate)
+      lines.push(`神階${stake}: overall ${overallRate.toFixed(0)}% | ${godCells.join(' / ')}`)
+    }
+    console.log('\n--- STAKE-01 神階Ⅰ〜Ⅶ（7敵×' + SEEDS + 'seeds×3戦略、Ⅶは3択の最良） ---\n' + lines.join('\n'))
+    expect(failures, failures.join('\n')).toEqual([])
+    // 難易度曲線は単調（ノイズ許容 +5pt）
+    for (let i = 1; i < overall.length; i++) {
+      expect(overall[i]).toBeLessThanOrEqual(overall[i - 1] + 5)
     }
   })
 })

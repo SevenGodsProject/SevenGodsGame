@@ -6,6 +6,7 @@ import { getCardDef } from '../../core/data/cards'
 import { getEnemyDef } from '../../core/data/enemies'
 import { getGodDef } from '../../core/data/gods'
 import { getOtomoDef } from '../../core/data/otomo'
+import { stakeLabel } from '../../core/data/stakes'
 import type { UseGameEngine } from '../../hooks/useGameEngine'
 import { addRewardBonus } from '../../hooks/rewardStorage'
 import { detectOtomoLevelUp } from '../setup/otomoGrowthDisplay'
@@ -65,6 +66,7 @@ export function BattleScreen({
     prevBest,
     otomoBondChange,
     dailyResult,
+    stakeResult,
     playCard,
     endRound,
     divine,
@@ -241,6 +243,14 @@ export function BattleScreen({
               </span>
             </>
           )}
+          {(state.stake ?? 0) > 0 && (
+            <>
+              {' '}
+              <span className="battle-stake-tag" title="神階：累積の制約つき（ふつう基準）">
+                {stakeLabel(state.stake)}
+              </span>
+            </>
+          )}
         </span>
         <span className="battle-topbar-ap">
           <span>神力 {state.ap.current} / {state.ap.max}</span>
@@ -248,7 +258,7 @@ export function BattleScreen({
             <span className="ap-gauge-fill" style={{ width: `${apRatio * 100}%` }} />
           </span>
         </span>
-        <span>スコア {formatScaled(getFinalScore(state.score))}</span>
+        <span>スコア {formatScaled(getFinalScore(state.score, state.stake))}</span>
       </div>
 
       {/* BASE-D（決定109）：未使用APペナルティ廃止に伴い、ap-penalty-toastの表示を
@@ -459,6 +469,8 @@ export function BattleScreen({
           onRematch={onRematch}
           onReselect={onReselect}
           daily={state.mode === 'daily' ? dailyResult : null}
+          stakeResult={stakeResult}
+          shareState={state}
           rematchLabel={rematchLabel}
           rematchDisabled={rematchDisabled}
         />

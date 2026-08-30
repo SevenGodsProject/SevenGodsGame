@@ -43,7 +43,7 @@ export function applyAction(
       t: 'GAME_ENDED',
       status: result.state.status,
       // BASE-D：ユーザーへ見せるスコアは常に最終スコア（素点×finalScale）。
-      totalScore: getFinalScore(result.state.score),
+      totalScore: getFinalScore(result.state.score, result.state.stake),
     })
   }
 
