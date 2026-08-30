@@ -1,4 +1,4 @@
-# SEVEN GODS 8/31 Public Beta リリースステータス（2026-08-30 Phase 1「神階」追加・RELEASED）
+# SEVEN GODS 8/31 Public Beta リリースステータス（2026-08-31 Phase 2「Game Feel」追加・RELEASED）
 
 8/31公開版の「確定状態」を一目で確認するための要約です。新しい仕様判断は含みません（詳細・根拠は`docs/DECISIONS.md` 決定119〜125を参照）。
 
@@ -7,11 +7,11 @@
 | 項目 | 状態 |
 |---|---|
 | **Release** | SEVEN GODS 8/31 Public Beta |
-| **Production HEAD** | `5552ae4` feat: add shinkai stake ladder (神階Ⅰ〜Ⅶ)（80点化計画 Phase 1、決定126） |
-| **origin/master** | `5552ae4`（local HEAD と完全一致、ahead/behind 0/0） |
+| **Production HEAD** | `38d706a` feat: add game feel phase (tiered feedback, SE, boss entrance, victory/defeat)（80点化計画 Phase 2、決定128） |
+| **origin/master** | `38d706a`（local HEAD と完全一致、ahead/behind 0/0） |
 | **Production URL** | https://seven-gods-game.vercel.app/ |
-| **Production bundle** | `assets/index-CYnzy73o.js`（`git archive 5552ae4` の clean build と同一ハッシュを本番配信で確認） |
-| **Production QA** | PASS（2026-08-30 夜、Phase 1 Production Release Gate。下記「Production QA」参照） |
+| **Production bundle** | `assets/index-BWFlr5zp.js`（`git archive 38d706a` の clean build と同一ハッシュを本番配信で確認） |
+| **Production QA** | PASS（2026-08-31、Phase 2 Production Release Gate。下記「Production QA」参照） |
 | **Final Verdict** | **RELEASED** |
 | **8/31 Release Status** | **READY** |
 | **Code Freeze** | 解除（80点化計画へ移行。Phase 1「神階」を決定126で採用・本番反映。以後は CLAUDE.md §6 のAI自律判断ポリシーで Phase ごとに進める。PV・BGMは変更しない） |
@@ -24,17 +24,19 @@
 | `b38d1bb` | feat: improve mobile battle action visibility | 決定125 |
 | `1aab902` | fix: prevent mobile auto focus after battle end | 決定125フォローアップ |
 | `f579eb3` / `c260b07` | docs（RELEASE_STATUS・AI自律判断ポリシー） | — |
-| **`5552ae4`** | **feat: add shinkai stake ladder (神階Ⅰ〜Ⅶ)** — 80点化計画 Phase 1 | **決定126（AI判断・CEO承認deploy）** |
+| `5552ae4` | feat: add shinkai stake ladder (神階Ⅰ〜Ⅶ) — 80点化計画 Phase 1 | 決定126 |
+| `de69404` / `c260b07` | docs | — |
+| **`38d706a`** | **feat: add game feel phase (tiered feedback, SE, boss entrance, victory/defeat)** — 80点化計画 Phase 2 | **決定128（AI判断・CEO Audio QA PASS→deploy承認）** |
 
 （それ以前：`32697ee` feat: polish enemy select cards（決定123）＝8/31版の基盤、`7f89e9e` docs: mark 8/31 release ready）
 
-## Quality Gate（`5552ae4` clean copy＝`git archive HEAD`）
+## Quality Gate（`38d706a` clean copy＝`git archive HEAD`）
 
 - typecheck（`npx tsc -b --noEmit`）PASS
 - lint（`npx oxlint .`）PASS
-- tests **47 files / 567 tests** PASS（canonical。作業ツリーで`.claude/worktrees`の古いコピーが混入した件数は公式値ではない）
+- tests **50 files / 577 tests** PASS（canonical。作業ツリーで`.claude/worktrees`の古いコピーが混入した件数は公式値ではない）
 - balanceSim「STAKE-01」神の公平性ゲート PASS（神階Ⅰ〜Ⅶ×7神×7敵×3戦略）
-- production build PASS（`index-CYnzy73o.js` / `index-BmAHiqae.css`）
+- production build PASS（`index-BWFlr5zp.js` / `index-BuuelT8Q.css`）
 - normal smoke PASS／Daily smoke PASS／Daily e2e（実プレイで決着→Daily Result→戦績）PASS
 - 375px focused QA PASS／Desktop 1280 回帰 PASS
 - console error 0／HTTP 4xx/5xx 0
@@ -52,6 +54,8 @@
 | **battle終了後の不要なAuto Focus防止** | **READY** | 決定125フォローアップ（`1aab902`）。勝敗確定後（RewardOverlay/GameOverOverlay表示中）は新しいセッションを開始しない。セッション制御は`autoFocusSession.ts`（node環境の回帰テスト10件） |
 | **神階（しんかい）Ⅰ〜Ⅶ** | **RELEASED** | 決定126（Phase 1）。累積制約：Ⅰ参道＝託宣4回＋R5以降 敵ATK+20%＋敵ATK+10%／Ⅱ鳥居＝＋初期手札−1／Ⅲ拝殿＝＋敵HP+10%／Ⅳ本殿＝＋ブロック効率75%／Ⅴ奥宮＝＋回復効率60%／Ⅵ禁足地＝＋必殺・連撃+20%（機工師主砲は+10%上限）／Ⅶ高天原＝＋最終試練の選択（巨躯／猛威／静寂）。難易度「ふつう」固定・神ごと解放（むずかしい1回撃破→Ⅰ）・スコア×(1+0.08×段)・段別ベスト（`sevengods.stakes` v1）・saveVersion 9（v3〜v8連鎖移行）・Dailyとは完全分離 |
 | **Seed共有（挑戦状コピー・`?seed=&stake=`）** | **RELEASED** | 決定126。結果画面から段・神・敵・Seed・スコア・URLをコピー。真正性は自己申告 |
+| **Game Feel（演出強度4段階・自作SE・BURST READY・Boss Entrance・勝利/敗北演出）** | **RELEASED** | 決定128。与ダメ量で L1〜L4（シェイク・斬撃・数字・SE音量）、自作WAV 20本（`docs/SE_ASSETS.md`、外部素材ゼロ）、7/7到達でゲージ発光＋上昇音、新規開始時の Boss Entrance（約1.5s・操作を奪わない・続きからでは非表示）、撃破の一拍→報酬→「神域制覇」→スコアロールアップ、敗因表示、「自己ベスト更新」は勝利時のみ、reduced-motion 対応。CEO ローカル Audio QA PASS |
+| **BURST任意発動** | **不採用** | 決定127（約50,000試合でオラクルでも+0.5pt）。7/7自動発動を維持。カードシナジー＋共鳴経済の再設計時に再検討 |
 | PV | VISUAL LOCK / FINAL | v3 FINAL承認済み。変更しない（新背景の収録はPV v2以降） |
 | BGM | license verified / unchanged | 決定120 |
 | VFX-04 背景ドリフト最適化 | 完了 | 決定119 |
@@ -69,14 +73,15 @@
 | **Mobile Auto Focus**（375px） | **PASS**（通常攻撃／Multi Hit／BURST／Enemy Attack／Enemy Special の演出がviewport内、Heal/Blockはスクロールなし、手動キャンセル、reduced-motion、BURST撃破後の不要な復帰スクロールなし） |
 | Daily（本日ボス・★★★★★神域強化・Seed ID・専用背景・Auto Focus・attempt/score/seedルール不変・**神階非干渉**） | PASS |
 | **神階**（未解放表示／到達チップ／Ⅲ選択とふつう固定／HUDタグ／save v9／続きから／勝利→倍率行・突破・段別ベスト・次段解放・挑戦状コピー／もう一度で段維持／戦績／`?seed=&stake=`／Ⅶ3択／375px） | **PASS 21/21** |
+| **Game Feel**（Boss Entrance 表示・1.5sで消える・操作非阻害・続きからでは非表示／L2・L4 の段階クラス／7/7 ゲージ発光＋カットイン／撃破の一拍→報酬→神域制覇→スコアロール→自己ベスト／敗因表示・敗北時は自己ベスト非表示／溜め警告音経路／reduced-motion／375px 登場・overflowなし・Auto Focus／SE 20本配信） | **PASS 19/19** |
 | 通常モード かんたん／ふつう／むずかしい（神階なし・数値不変）／旧save（v7）→v9移行と続きから | PASS |
 | Desktop regression（1280pxでscrollY不変、Enemy Select/Battle 7体） | PASS |
 | console error | 0 |
 | HTTP 4xx/5xx | 0 |
 | BGM home／battle／victory／defeat | 4種とも HEAD 200 |
-| Production bundle | `assets/index-CYnzy73o.js`（clean buildと一致） |
+| Production bundle | `assets/index-BWFlr5zp.js`（clean buildと一致） |
 
-証跡：`Videos/SEVENGODS-PV-REVIEW/shinkai-phase1/prod/`（flows／stage／mobile／end／stake／daily-e2e／p0）、8/31版の記録は `prod-final-0831/`・`final-gate-0831/`・`minor-fix-gate/`
+証跡：`Videos/SEVENGODS-PV-REVIEW/gamefeel-phase2/prod/`（feel／flows／stage／mobile／end／stake／daily-e2e／p0）、Phase 1 は `shinkai-phase1/prod/`、8/31版は `prod-final-0831/`・`final-gate-0831/`・`minor-fix-gate/`
 
 ## Known Non-blockers（MINOR / Post-release）
 
@@ -91,6 +96,8 @@
 7. **寿楽の一強**（神階Ⅶで最良戦略86%、蒼毘・笑蓮は36〜45%）：神階以前からの不均衡。神階のための緊急nerfはせず、次の独立したBalance Phaseで実測＋simulationに基づき扱う（CEO方針）
 8. **375pxの難易度画面が812→899px**（神階セレクタ追加分。フレーバー文は畳み済み）
 9. **挑戦状の真正性は自己申告**（サーバー無し）
+10. **SE は数式合成の自作音源**：収録素材ほどの質感はない（CEO Audio QA では「以前より大幅に良い」でPASS）。有料/収録素材への差し替えは CEO 判断事項
+11. **Boss Entrance 中もカードは押せる**（操作を奪わない方針。登場と同時に攻撃すると演出が重なる＝許容）
 
 その他：stale `.claude/worktrees`（ローカル作業環境のみ。テスト件数混入の原因、削除は別途）
 
@@ -98,8 +105,8 @@
 
 ### P1（最優先）
 0. ~~神階（Stakes）~~ → Phase 1 として RELEASED（決定126）
-1. BURST任意発動
-2. SE実音源
+1. ~~BURST任意発動~~ → 不採用（決定127）。カードシナジー＋共鳴経済の再設計と同時に再検討
+2. ~~SE実音源~~ → Phase 2 として自作SEで RELEASED（決定128）
 3. Daily共有
 4. 戦略深度改善
 （＋上記Known Non-blockers 1のsettle補正）
