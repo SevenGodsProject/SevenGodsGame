@@ -805,6 +805,18 @@
   flex-grow: 1;
 }
 
+/* Phase 3 FINAL SPEC v0.1：条件付き追加効果の1行。戦闘中の`.card-view-bonus`と
+   同じ「本文より一段小さい・破線で区切る」形にして、同じ情報だと分かるようにする
+   （`.deck-builder-card-bonus`は報酬による編成上限+Nの表示で既に使われているため別名）。 */
+.deck-builder-card-effect-bonus {
+  font-size: 11px;
+  line-height: 1.35;
+  color: #d8c48a;
+  margin-top: 2px;
+  padding-top: 3px;
+  border-top: 1px dashed #ffffff1f;
+}
+
 .deck-builder-card-stepper {
   display: flex;
   align-items: center;

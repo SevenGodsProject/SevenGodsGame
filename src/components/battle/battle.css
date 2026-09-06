@@ -2514,6 +2514,17 @@
   color: #b8bfe0;
 }
 
+/* Phase 3 FINAL SPEC v0.1：報酬3択でも、選ぶ前に条件付き追加効果を読めるようにする
+   （戦闘中の`.card-view-bonus`と同じ形・同じ文言） */
+.reward-card-effect-bonus {
+  font-size: 10px;
+  line-height: 1.35;
+  color: #d8c48a;
+  margin-top: 3px;
+  padding-top: 3px;
+  border-top: 1px dashed #ffffff1f;
+}
+
 .reward-skip {
   padding: 8px 20px;
   border-radius: 999px;

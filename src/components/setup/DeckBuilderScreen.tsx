@@ -10,6 +10,7 @@ import { loadDeckPreference } from '../../hooks/deckPreferenceStorage'
 import { loadRewardBonuses } from '../../hooks/rewardStorage'
 import { RARITY_STYLE, TYPE_STYLE } from '../battle/cardStyle'
 import { CardIcon } from '../battle/cardIcon'
+import { formatCardBonus } from '../cardBonusText'
 import { describeEffectList } from './otomoEffectText'
 import { ThreatStars } from './EnemySelectScreen'
 import './setup.css'
@@ -258,6 +259,12 @@ export function DeckBuilderScreen({
                         {hasBonus && <div className="deck-builder-card-bonus">報酬で上限+{maxCopies - RULES.deckBuilding.maxCopiesPerCard}</div>}
                         <div className="deck-builder-card-name">{card.name}</div>
                         <div className="deck-builder-card-text">{card.text}</div>
+                        {/* Phase 3 FINAL SPEC v0.1：条件付き追加効果。カードを「選ぶ時点」で
+                            追加効果が分かるように、戦闘中の手札と同じ文言を1行だけ出す
+                            （盤面が無い画面なので、成立中の強調はしない） */}
+                        {card.bonus && (
+                          <div className="deck-builder-card-effect-bonus">{formatCardBonus(card)}</div>
+                        )}
                         <div className="deck-builder-card-stepper">
                           <button
                             type="button"

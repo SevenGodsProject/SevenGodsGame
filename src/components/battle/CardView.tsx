@@ -4,6 +4,7 @@ import { getGodDef } from '../../core/data/gods'
 import { getCardArt } from '../../core/data/cardArt'
 import { RARITY_STYLE, TYPE_STYLE } from './cardStyle'
 import { CardIcon } from './cardIcon'
+import { formatCardBonus } from '../cardBonusText'
 
 type CardViewProps = {
   instance: CardInstance
@@ -90,8 +91,7 @@ export function CardView({ instance, affordable, playable, playing, bonusReady =
             「今使えば追加が出る」ことを分かるようにする（新しい常設UIは足さない） */}
         {def.bonus && (
           <div className={`card-view-bonus${bonusReady ? ' card-view-bonus-ready' : ''}`}>
-            {bonusReady ? '⚡ ' : '＋ '}
-            {def.bonus.textJa}
+            {formatCardBonus(def, bonusReady)}
           </div>
         )}
       </div>
