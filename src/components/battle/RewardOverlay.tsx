@@ -6,6 +6,7 @@ import { RARITY_STYLE, TYPE_STYLE } from './cardStyle'
 import { CardIcon } from './cardIcon'
 import { sfx } from './sound'
 import { pickRewardCandidates } from './rewardPicker'
+import { formatCardBonus } from '../cardBonusText'
 
 type RewardOverlayProps = {
   godId: GodId
@@ -71,6 +72,10 @@ export function RewardOverlay({ godId, seed, onPick, onSkip }: RewardOverlayProp
                   {card.godId && <div className="reward-card-god">専用</div>}
                   <div className="reward-card-name">{card.name}</div>
                   <div className="reward-card-text">{card.text}</div>
+                  {/* Phase 3 FINAL SPEC v0.1：3択で選ぶ前に条件付き追加効果を読めるようにする */}
+                  {card.bonus && (
+                    <div className="reward-card-effect-bonus">{formatCardBonus(card)}</div>
+                  )}
                 </div>
               </button>
             )

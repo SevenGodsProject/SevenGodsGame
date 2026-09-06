@@ -211,8 +211,18 @@ RULESETS.push(
   withVariant('F-B100', '蒼毘 残ブロック100%反撃（笑蓮100%）', 1.0, 1.0),
 )
 // FINAL SPEC v0.1 候補（narrow pilot 確定値）：蒼毘 残ブロック100%反撃／笑蓮 HP80%以上で+50%／福永 HP50%以下で+50%／条件付き4枚
+// 実装後の再測定用：ルール層を一切かぶせず、本番engine（applyAction）そのものを測る
+RULESETS.push({
+  name: 'PROD', notes: '本番engine直結（ルール層なし＝実装済みのPassive/bonusを実測）',
+  passives: [], condEffects: {}, cardOverrides: {}, deckMode: 'recommended', stakeFix: 'none',
+})
 RULESETS.push({
   name: 'FINAL', notes: 'FINAL SPEC v0.1：Passive 3神（蒼毘100%・笑蓮80%・福永50%）＋条件付き4枚',
   passives: [sobiPassive(1.0), shourenPassive(0.8), PASSIVES[GOD_IDS.fukuei]],
   condEffects: COND_EFFECTS_4, cardOverrides: {}, deckMode: 'recommended', stakeFix: 'none',
+})
+// 実装後の前後比較用：本番engineのまま kill switch を切って「Phase 3導入前」を再現する
+RULESETS.push({
+  name: 'PRE', notes: 'Phase 3導入前（kill switchでPassive/bonusを無効化した本番engine）',
+  passives: [], condEffects: {}, cardOverrides: {}, deckMode: 'recommended', stakeFix: 'none', godIdentityOff: true,
 })

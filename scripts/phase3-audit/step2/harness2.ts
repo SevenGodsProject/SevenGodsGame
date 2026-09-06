@@ -16,9 +16,11 @@ import { applyAction } from '../../../src/core/engine/reducer'
 import { runEnemyTurn, finishRound } from '../../../src/core/engine/round'
 import { applyEffects } from '../../../src/core/engine/effects'
 import { getFinalScore } from '../../../src/core/engine/score'
+import { getMastery } from '../../../src/core/engine/mastery'
 import { createRng } from '../../../src/core/rng/seededRandom'
 import { OTOMO_FORM_ORDER } from '../../../src/core/types/otomo'
 import { RULES } from '../../../src/core/data/rules'
+import { getGodDef } from '../../../src/core/data/gods'
 import type { CardDefId, CardInstance, Effect, GameEvent, GameState, GodId, EnemyId, StakeChoiceId, Difficulty, GrowthPath } from '../../../src/core/types'
 import {
   getCardDef, getRecommendedDeck, getCardPoolForGod, GOD_IDS, cardDamage, cardHeal, cardBlock,
@@ -64,6 +66,8 @@ export type RuleSet = {
   cardOverrides: Partial<Record<CardDefId, Effect[]>>
   deckMode: 'recommended' | 'unified' | 'median'
   stakeFix: 'none' | 'soften' | 'replace'
+  /** 実装後の前後比較用：RULES.godIdentityのkill switchを切って「Phase 3導入前」を再現する */
+  godIdentityOff?: boolean
   notes?: string
 }
 
@@ -84,6 +88,13 @@ export function activate(rules: RuleSet): void {
     const orig = def.effects
     def.effects = effects!
     restoreFns.push(() => { def.effects = orig })
+  }
+  if (rules.godIdentityOff) {
+    const gi = RULES.godIdentity as unknown as { passivesEnabled: boolean; cardBonusEnabled: boolean }
+    const origGi = { p: gi.passivesEnabled, c: gi.cardBonusEnabled }
+    gi.passivesEnabled = false
+    gi.cardBonusEnabled = false
+    restoreFns.push(() => { gi.passivesEnabled = origGi.p; gi.cardBonusEnabled = origGi.c })
   }
   const st = RULES.stakes as unknown as { blockEfficiency: number; healEfficiency: number; lateRoundAtkMul: number }
   const orig = { b: st.blockEfficiency, h: st.healEfficiency, l: st.lateRoundAtkMul }
@@ -191,8 +202,16 @@ export function step(state: GameState, action: Action): StepResult {
     const r = applyAction(state, action)
     return { state: r.state, events: r.events }
   }
-  // END_ROUND：runEnemyTurn → passive → finishRound → passive(roundStart)
+  // END_ROUND
   if (state.status !== 'playing' || state.phase !== 'playerTurn') throw new Error('今はラウンドを終えられません')
+  // ルール層のafterEnemyTurn passiveが無い場合（＝本番engineをそのまま測るPRODモード含む）は
+  // engineの `endRound`（applyAction）へ丸ごと委譲する。Phase 3実装後は蒼毘の反撃が
+  // engine側の endRound に入っているため、ここで runEnemyTurn/finishRound を直接呼ぶと
+  // 本番の挙動を取りこぼす（＝ハーネスが本番と別物になる）。
+  if (!passives.some((p) => p.afterEnemyTurn) && !passives.some((p) => p.roundStart)) {
+    const r = applyAction(state, { type: 'END_ROUND' })
+    return { state: r.state, events: r.events }
+  }
   const enemy = runEnemyTurn(state)
   let next = enemy.state
   const events = [...enemy.events]
@@ -225,6 +244,8 @@ export type Metrics2 = {
   divinationUses: { round: number; choice: number }[]
   resonanceGained: number
   condTriggers: number
+  /** 神技評価（Mastery）。対応する神技を持たない神ではnull（表示は勝利時のみ） */
+  mastery: { title: string; grade: string; raw: number; sGateMet?: boolean; riskGateMet?: boolean } | null
 }
 
 export type RunOpts = {
@@ -266,7 +287,7 @@ export function runGame2(opts: RunOpts, agent: Agent2): Metrics2 {
     status: 'finished', round: 0, finalScore: 0, rawScore: 0, playerHp: 0, cardsPlayed: {}, cardsSeen: {}, cardsPlayedTotal: 0,
     dmgCard: 0, dmgBurst: 0, dmgDiv: 0, dmgPassive: 0, blockGained: 0, blockAbsorbed: 0, unusedBlock: 0, healed: 0, healRequested: 0,
     drawExtra: 0, apGained: 0, apSpent: 0, debuffApplied: 0, debuffEffective: 0, enemyRawDamage: 0, bursts: 0, burstRounds: [],
-    otomoFinalForm: 0, divinationUses: [], resonanceGained: 0, condTriggers: 0,
+    otomoFinalForm: 0, divinationUses: [], resonanceGained: 0, condTriggers: 0, mastery: null,
   }
   let { state, events } = applyAction(null, {
     type: 'START_GAME', seed: opts.seed, godId: opts.godId, enemyId: opts.enemyId, deck: opts.deck,
@@ -317,6 +338,10 @@ export function runGame2(opts: RunOpts, agent: Agent2): Metrics2 {
   m.finalScore = getFinalScore(state.score, state.stake)
   m.playerHp = state.player.hp
   m.otomoFinalForm = OTOMO_FORM_ORDER.indexOf(state.otomo.form)
+  const mastery = getMastery(state)
+  m.mastery = mastery
+    ? { title: mastery.title, grade: mastery.grade, raw: mastery.raw, sGateMet: mastery.sGateMet, riskGateMet: mastery.riskGateMet }
+    : null
   return m
 }
 
@@ -341,6 +366,8 @@ function evaluate(after: GameState, before: GameState, p: Profile): number {
 
 function isCommutative(defId: CardDefId): boolean {
   if (active.condEffects[defId]?.length) return false
+  // Phase 3実装後：本番データ側の bonus も順序依存（blocked等は積んだ量で成立が変わる）
+  if (getCardDef(defId).bonus) return false
   return getCardDef(defId).effects.every((e) => e.kind === 'damage' || e.kind === 'block' || e.kind === 'heal' || e.kind === 'debuff')
 }
 
@@ -348,8 +375,9 @@ type Step = Exclude<Action, { type: 'END_ROUND' }>
 export function planRound2(state: GameState, p: Profile, budget = 400): Step[] {
   let best: { score: number; steps: Step[] } = { score: -Infinity, steps: [] }
   let leaves = 0
-  // passiveがある神は順序依存が増えるため可換省略を弱める
-  const hasPassive = active.passives.some((x) => x.godId === state.godId)
+  // passiveがある神は順序依存が増えるため可換省略を弱める（本番実装済みのGodDef.passiveも見る）
+  const hasPassive =
+    active.passives.some((x) => x.godId === state.godId) || !!getGodDef(state.godId).passive
   const dfs = (s: GameState, steps: Step[], lastComm: string | null) => {
     if (leaves >= budget) return
     const end = s.status === 'playing' ? step(s, { type: 'END_ROUND' }).state : s

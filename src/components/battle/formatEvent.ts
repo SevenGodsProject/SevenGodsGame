@@ -1,5 +1,6 @@
-import type { GameEvent, GameStatus, OtomoForm } from '../../core/types'
+import type { BonusCond, GameEvent, GameStatus, OtomoForm } from '../../core/types'
 import { getCardDef } from '../../core/data/cards'
+import { getGodPassiveDef } from '../../core/data/gods'
 import { DIVINATION_CHOICES } from '../../core/data/divination'
 import { STAT_LABEL } from '../setup/godStyle'
 import { formatScaled } from '../displayScale'
@@ -42,6 +43,18 @@ const OTOMO_FORM_LABEL: Record<OtomoForm, string> = {
   incarnate: '受肉態',
   doji: '童子',
 }
+
+/**
+ * Phase 3 FINAL SPEC v0.1：条件付き追加効果の「成立した条件」の表示名。
+ * `BUFF_APPLIED.stat`と同じ理由（coreは意味づけを持たず、表示側で日本語にする）で
+ * ここに置く。`BonusCond`が増えるとこのRecordがコンパイルエラーになる。
+ */
+const BONUS_COND_LABEL: Record<BonusCond, string> = {
+  blocked: '追加効果（予告以上のブロック）',
+  enemyBig: '追加効果（敵の大技）',
+  lowHp: '追加効果（HP半分以下）',
+}
+
 
 /** GameEvent を、イベントログに出すための短い日本語に変換します */
 export function formatEvent(event: GameEvent): string {
@@ -93,5 +106,12 @@ export function formatEvent(event: GameEvent): string {
       return `決着：${STATUS_LABEL[event.status]}（スコア${formatScaled(event.totalScore)}）`
     case 'DIVINATION_USED':
       return `「${DIVINATION_CHOICES[event.choiceIndex].name}」を受けた（残り${event.remaining}回）`
+    // Phase 3 FINAL SPEC v0.1：条件付き追加効果・神の得意技。
+    // 直後に続く効果イベント（DAMAGE_DEALT等）がその中身なので、ここでは「何が起きたか」だけを出す
+    case 'BONUS_TRIGGERED':
+      return `「${getCardDef(event.defId).name}」の${BONUS_COND_LABEL[event.when]}`
+    case 'PASSIVE_TRIGGERED':
+      // 「神技」は共鳴BURST・Mastery評価で既に使っている語のため、Passiveは「得意技」と呼び分ける
+      return `得意技「${getGodPassiveDef(event.passiveId).nameJa}」発動！`
   }
 }

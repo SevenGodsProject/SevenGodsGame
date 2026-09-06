@@ -27,6 +27,13 @@ export const SHOUREN_CARDS: CardDef[] = [
     godId: GOD_IDS.shouren,
     // 息吹(2AP・12heal)よりわずかに控えめな、専用の大回復
     effects: [{ kind: 'heal', amount: 11 }],
+    // Phase 3 FINAL SPEC v0.1：「危ないときに回復する」ことが共鳴（＝反撃の準備）に繋がる。
+    // 得意技「無傷の慈愛」（HP8割以上で攻撃+50%）へ戻るための一手でもある
+    bonus: {
+      when: 'lowHp',
+      effects: [{ kind: 'resonance', amount: 2 }],
+      textJa: 'HPが半分以下なら、共鳴ゲージ+2。',
+    },
   },
   {
     id: SHOUREN_CARD_IDS.deepEmbrace,
@@ -56,6 +63,12 @@ export const SHOUREN_CARDS: CardDef[] = [
       { kind: 'heal', amount: 4 },
       { kind: 'block', amount: 4 },
     ],
+    // Phase 3 FINAL SPEC v0.1：予告を読んで固め切れたときだけ手札が伸びる
+    bonus: {
+      when: 'blocked',
+      effects: [{ kind: 'draw', amount: 1 }],
+      textJa: 'ブロックが敵の予告以上なら、カードを1枚引く。',
+    },
   },
   {
     id: SHOUREN_CARD_IDS.gentleBlow,

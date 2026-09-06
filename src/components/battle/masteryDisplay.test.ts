@@ -1,229 +1,202 @@
 import { describe, expect, it } from 'vitest'
 import type { MasteryResult } from '../../core/engine'
+import type { GodId } from '../../core/types'
 import { GOD_IDS } from '../../core/data/gods'
-import { describeMastery, MASTERY_GRADE_WORD, MASTERY_SELECT_HINT } from './masteryDisplay'
+import { RULES } from '../../core/data/rules'
+import { describeMastery, MASTERY_AXIS_NOTE, MASTERY_GRADE_WORD, MASTERY_SELECT_HINT } from './masteryDisplay'
 
-/** STEP-SCORE2-D2a：神技評価の表示コピー（純粋関数）の検証 */
+/**
+ * 神技評価の表示コピー（純粋関数）の検証。
+ *
+ * Human Play QA（2026-09-06）の指摘「なぜCか・次に何をすればいいか分からない」への
+ * 修正後の形式を保証する：
+ *   ① 現在値と次ランクの目標値が同じ行に並ぶ（差分表現「あと○%」は使わない）
+ *   ② 指標の上げ方が1行で出る
+ *   ③ 4神とも同じフォーマット（大耀だけ距離が出ない、という例外を作らない）
+ *   ④ スコアとは別軸だと分かるラベルがある
+ */
 
-function taiyoResult(grade: MasteryResult['grade'], raw: number): MasteryResult {
-  return { title: '爆発', grade, raw }
-}
+const taiyo = (grade: MasteryResult['grade'], raw: number): MasteryResult => ({ title: '爆発', grade, raw })
+const sobi = (grade: MasteryResult['grade'], raw: number): MasteryResult => ({ title: '鉄壁', grade, raw })
+const juraku = (
+  grade: MasteryResult['grade'],
+  raw: number,
+  extra: Partial<MasteryResult> = {},
+): MasteryResult => ({ title: '無力化', grade, raw, sGateMet: false, ...extra })
+const fukuei = (
+  grade: MasteryResult['grade'],
+  raw: number,
+  riskGateMet = true,
+): MasteryResult => ({ title: '大勝負', grade, raw, riskGateMet })
 
-describe('describeMastery（大耀「爆発」）', () => {
-  it('Gradeに和語補助が付く（A→A（見事））', () => {
-    const d = describeMastery(taiyoResult('A', 0.47), GOD_IDS.taiyo, '大耀')
-    expect(d.gradeLabel).toBe('A（見事）')
+describe('差分表現の廃止（旧「あと○%でB」を出さない）', () => {
+  it('4神のどのランクでも「あと」で始まる距離表現を使わない', () => {
+    const cases: [MasteryResult, GodId][] = [
+      [taiyo('C', 0.2), GOD_IDS.taiyo],
+      [taiyo('B', 0.4), GOD_IDS.taiyo],
+      [sobi('C', 0.2), GOD_IDS.sobi],
+      [sobi('A', 0.7), GOD_IDS.sobi],
+      [juraku('C', 0.3), GOD_IDS.juraku],
+      [fukuei('B', 0.2), GOD_IDS.fukuei],
+    ]
+    for (const [m, god] of cases) {
+      const d = describeMastery(m, god)
+      expect(d.progress).not.toMatch(/あと/)
+      expect(d.hint).not.toMatch(/^あと/)
+    }
+  })
+})
+
+describe('現在値と次ランク閾値の表示', () => {
+  it('蒼毘C：現在20%と、Bの目標40%が同じ行に出る', () => {
+    const d = describeMastery(sobi('C', 0.2), GOD_IDS.sobi)
+    expect(d.gradeLabel).toBe('C（修行中）')
+    expect(d.metricLabel).toBe('無傷で受け止めた割合')
+    expect(d.progress).toBe('20% → B（堂々）は 40%')
+    expect(d.hint).toBe('敵の予告以上のブロックを積むと「無傷」になります')
   })
 
-  it('何を測ったかが1行の日本語文になる（47%）', () => {
-    const d = describeMastery(taiyoResult('A', 0.47), GOD_IDS.taiyo, '大耀')
-    expect(d.description).toBe('大耀「爆発」— 1ラウンドで敵HPの47%を一気に削った！')
+  it('蒼毘B：次はA（65%）', () => {
+    expect(describeMastery(sobi('B', 0.5), GOD_IDS.sobi).progress).toBe('50% → A（見事）は 65%')
   })
 
-  it('A評価では次Grade目標「Sまであと11%」（0.58-0.47）', () => {
-    const d = describeMastery(taiyoResult('A', 0.47), GOD_IDS.taiyo, '大耀')
-    expect(d.goal).toBe('Sまであと11%')
+  it('蒼毘A：次はS（85%）', () => {
+    expect(describeMastery(sobi('A', 0.7), GOD_IDS.sobi).progress).toBe('70% → S（神業）は 85%')
   })
 
-  it('B評価では「Aまであと○%」', () => {
-    const d = describeMastery(taiyoResult('B', 0.4), GOD_IDS.taiyo, '大耀')
-    expect(d.goal).toBe('Aまであと5%')
+  it('蒼毘S：最高ランクでは目標値を出さない', () => {
+    const d = describeMastery(sobi('S', 0.9), GOD_IDS.sobi)
+    expect(d.progress).toBe('90% → 最高ランク達成！')
+    expect(d.progress).not.toMatch(/は \d+%/)
   })
 
-  it('S評価では達成文言（%目標は出さない）', () => {
-    const d = describeMastery(taiyoResult('S', 0.62), GOD_IDS.taiyo, '大耀')
-    expect(d.goal).toBe('神業達成！')
-    expect(d.goal).not.toContain('%')
+  it('表示%は内部rawとMath.roundで一致する（0.496→50%）', () => {
+    expect(describeMastery(sobi('B', 0.496), GOD_IDS.sobi).progress).toBe('50% → A（見事）は 65%')
   })
 
-  it('C評価では失敗感の強い「あと○%」を出さず、励まし文にする（圧対策）', () => {
-    const d = describeMastery(taiyoResult('C', 0.2), GOD_IDS.taiyo, '大耀')
-    expect(d.goal).toBe('大耀らしい爆発力を、さらに高めよう')
-    expect(d.goal).not.toContain('あと')
-    expect(d.goal).not.toContain('%')
+  it('閾値ちょうどでも矛盾しない（B閾値0.40でB）', () => {
+    expect(describeMastery(sobi('B', RULES.mastery.sobi.b), GOD_IDS.sobi).progress).toBe(
+      '40% → A（見事）は 65%',
+    )
+  })
+})
+
+describe('大耀「爆発」— 例外状態をなくす（旧実装ではCで距離が出なかった）', () => {
+  it('C：他の神と同じ形式で目標値（37%）が出る', () => {
+    const d = describeMastery(taiyo('C', 0.3), GOD_IDS.taiyo)
+    expect(d.metricLabel).toBe('1ラウンドで削った敵HPの割合')
+    expect(d.progress).toBe('30% → B（堂々）は 37%')
+    expect(d.hint).toBe('1ラウンドに火力を集中させるほど割合が上がります')
   })
 
-  it('境界ちょうどでも「あと0%」にはならない（最低1%）', () => {
-    // raw 0.579 → S(0.58)まで実際は0.1%だが、表示は最低1%
-    const d = describeMastery(taiyoResult('A', 0.579), GOD_IDS.taiyo, '大耀')
-    expect(d.goal).toBe('Sまであと1%')
+  it('B/A/Sも同じ形式', () => {
+    expect(describeMastery(taiyo('B', 0.4), GOD_IDS.taiyo).progress).toBe('40% → A（見事）は 45%')
+    expect(describeMastery(taiyo('A', 0.5), GOD_IDS.taiyo).progress).toBe('50% → S（神業）は 58%')
+    expect(describeMastery(taiyo('S', 0.6), GOD_IDS.taiyo).progress).toBe('60% → 最高ランク達成！')
+  })
+
+  it('閾値は変更していない（B=0.37 / A=0.45 / S=0.58）', () => {
+    expect(RULES.mastery.taiyo).toEqual({ s: 0.58, a: 0.45, b: 0.37 })
+  })
+})
+
+describe('寿楽「無力化」— ゲート・難易度上限はヒント側で説明する', () => {
+  it('C：目標50%と上げ方', () => {
+    const d = describeMastery(juraku('C', 0.3), GOD_IDS.juraku)
+    expect(d.progress).toBe('30% → B（堂々）は 50%')
+    expect(d.hint).toBe('大技の前に敵の攻撃力を下げるほど割合が上がります')
+  })
+
+  it('A（強打ゲート未達）：数値目標は出しつつ、ゲート条件をヒントで示す', () => {
+    const d = describeMastery(juraku('A', 0.92, { sGateMet: false }), GOD_IDS.juraku)
+    expect(d.progress).toBe('92% → S（神業）は 90%')
+    expect(d.hint).toBe('Sは強打（予告100以上）を半分以下に抑えると届きます')
+  })
+
+  it('A（かんたん上限）：難易度を上げる導線を示す', () => {
+    const d = describeMastery(
+      juraku('A', 0.95, { sGateMet: true, easyCapped: true }),
+      GOD_IDS.juraku,
+    )
+    expect(d.hint).toBe('「かんたん」では上限A。ふつう以上でSに挑戦できます')
+  })
+
+  it('A（ゲート達成・上限なし）：通常のヒントに戻る', () => {
+    const d = describeMastery(juraku('A', 0.85, { sGateMet: true }), GOD_IDS.juraku)
+    expect(d.progress).toBe('85% → S（神業）は 90%')
+    expect(d.hint).toBe('大技の前に敵の攻撃力を下げるほど割合が上がります')
+  })
+})
+
+describe('福永「大勝負」— risk gate 未達は現在値に注記する', () => {
+  it('gate未達C：評価対象外であることを現在値に付け、条件をヒントで示す', () => {
+    const d = describeMastery(fukuei('C', 0, false), GOD_IDS.fukuei)
+    expect(d.progress).toBe('0%（まだ評価対象外） → B（堂々）は 10%')
+    expect(d.hint).toBe('身を削る札で敵HPの1割を削ると評価対象になります')
+  })
+
+  it('gate達成C：注記なしで通常の形式', () => {
+    const d = describeMastery(fukuei('C', 0.05, true), GOD_IDS.fukuei)
+    expect(d.progress).toBe('5% → B（堂々）は 10%')
+    expect(d.hint).toBe('身を削る札で攻め、そこからHPを取り戻すと上がります')
+  })
+
+  it('B：次はA（40%）', () => {
+    expect(describeMastery(fukuei('B', 0.2), GOD_IDS.fukuei).progress).toBe('20% → A（見事）は 40%')
+  })
+})
+
+describe('全神共通の表示ルール', () => {
+  const ALL: [GodId, MasteryResult][] = [
+    [GOD_IDS.taiyo, taiyo('C', 0.3)],
+    [GOD_IDS.sobi, sobi('C', 0.2)],
+    [GOD_IDS.juraku, juraku('C', 0.3)],
+    [GOD_IDS.fukuei, fukuei('C', 0.05, true)],
+  ]
+
+  it('4神とも「指標名・現在値→目標・上げ方」の3要素が埋まる', () => {
+    for (const [god, m] of ALL) {
+      const d = describeMastery(m, god)
+      expect(d.metricLabel.length).toBeGreaterThan(0)
+      expect(d.progress).toMatch(/^\d+%.* → .*は \d+%$/)
+      expect(d.hint.length).toBeGreaterThan(0)
+    }
+  })
+
+  it('ヒントはスマホで一読できる長さ（30字以内）', () => {
+    const variants: [GodId, MasteryResult][] = [
+      ...ALL,
+      [GOD_IDS.juraku, juraku('A', 0.92, { sGateMet: false })],
+      [GOD_IDS.juraku, juraku('A', 0.95, { sGateMet: true, easyCapped: true })],
+      [GOD_IDS.fukuei, fukuei('C', 0, false)],
+    ]
+    for (const [god, m] of variants) {
+      expect(describeMastery(m, god).hint.length).toBeLessThanOrEqual(30)
+    }
+  })
+
+  it('スコアと混同されないラベルがある（金額・点ではなく戦い方だと明示）', () => {
+    expect(MASTERY_AXIS_NOTE).toBe('スコアとは別。戦い方で決まります')
+    expect(MASTERY_AXIS_NOTE.length).toBeLessThanOrEqual(20)
+  })
+
+  it('表示にスコア由来の語（点・スコア）を混ぜない', () => {
+    for (const [god, m] of ALL) {
+      const d = describeMastery(m, god)
+      expect(`${d.metricLabel}${d.progress}${d.hint}`).not.toMatch(/スコア|点/)
+    }
   })
 })
 
 describe('神選択画面の神技1行', () => {
-  it('大耀・寿楽・蒼毘・福永には神技説明があり、未実装の神には無い（prototype範囲）', () => {
-    expect(MASTERY_SELECT_HINT[GOD_IDS.taiyo]).toContain('爆発')
-    expect(MASTERY_SELECT_HINT[GOD_IDS.juraku]).toContain('無力化')
-    expect(MASTERY_SELECT_HINT[GOD_IDS.sobi]).toContain('鉄壁')
-    expect(MASTERY_SELECT_HINT[GOD_IDS.fukuei]).toContain('大勝負')
+  it('大耀・寿楽・蒼毘・福永には神技説明があり、未実装の神には無い', () => {
+    expect(MASTERY_SELECT_HINT[GOD_IDS.taiyo]).toBeTruthy()
+    expect(MASTERY_SELECT_HINT[GOD_IDS.juraku]).toBeTruthy()
+    expect(MASTERY_SELECT_HINT[GOD_IDS.sobi]).toBeTruthy()
+    expect(MASTERY_SELECT_HINT[GOD_IDS.fukuei]).toBeTruthy()
     expect(MASTERY_SELECT_HINT[GOD_IDS.ebisu]).toBeUndefined()
-  })
-})
-
-describe('describeMastery（福永「大勝負」・G4）', () => {
-  function fukueiResult(
-    grade: MasteryResult['grade'],
-    raw: number,
-    riskGateMet = true,
-  ): MasteryResult {
-    return { title: '大勝負', grade, raw, riskGateMet }
-  }
-
-  it('何を測ったかが1行の日本語文になる（立て直し62%）', () => {
-    const d = describeMastery(fukueiResult('S', 0.62), GOD_IDS.fukuei, '福永')
-    expect(d.description).toBe('福永「大勝負」— どん底からHPの62%を立て直した！')
-  })
-
-  it('S評価では達成文言（%目標は出さない）', () => {
-    const d = describeMastery(fukueiResult('S', 0.62), GOD_IDS.fukuei, '福永')
-    expect(d.goal).toBe('その勝負度胸、まさに神業！')
-    expect(d.goal).not.toContain('%')
-  })
-
-  it('A評価では「Sまであと○%」（0.60-0.47=13%）', () => {
-    const d = describeMastery(fukueiResult('A', 0.47), GOD_IDS.fukuei, '福永')
-    expect(d.goal).toBe('Sまであと13%')
-  })
-
-  it('B評価では「Aまであと○%」', () => {
-    const d = describeMastery(fukueiResult('B', 0.3), GOD_IDS.fukuei, '福永')
-    expect(d.goal).toBe('Aまであと10%')
-  })
-
-  it('gate達成済みのC評価では次Gradeまでの距離を出す（寿楽G1cの教訓）', () => {
-    const d = describeMastery(fukueiResult('C', 0.05), GOD_IDS.fukuei, '福永')
-    expect(d.goal).toBe('あと5%でB（堂々）')
-  })
-
-  it('gate未達のCでは%距離でなく「何をすれば評価対象か」を示す', () => {
-    const d = describeMastery(fukueiResult('C', 0, false), GOD_IDS.fukuei, '福永')
-    expect(d.description).toBe('福永「大勝負」— まだ大勝負を仕掛けていない')
-    expect(d.goal).toBe('「一攫千金」など身を削るカードで大勝負を仕掛けよう')
-    expect(d.goal).not.toContain('%')
-  })
-})
-
-describe('describeMastery（蒼毘「鉄壁」・STEP-SCORE2-G3）', () => {
-  function sobiResult(grade: MasteryResult['grade'], raw: number): MasteryResult {
-    return { title: '鉄壁', grade, raw }
-  }
-
-  it('表示%は内部rawとMath.roundで一致する（0.496→50%）', () => {
-    const d = describeMastery(sobiResult('B', 0.496), GOD_IDS.sobi, '蒼毘')
-    expect(d.description).toBe('蒼毘「鉄壁」— 敵の攻撃の50%を無傷で受け止めた！')
-  })
-
-  it('C：次Gradeまでの距離を表示（0.30→あと10%でB）', () => {
-    const d = describeMastery(sobiResult('C', 0.3), GOD_IDS.sobi, '蒼毘')
-    expect(d.gradeLabel).toBe('C（修行中）')
-    expect(d.description).toBe('蒼毘「鉄壁」— 敵の攻撃の30%を無傷で受け止めた！')
-    expect(d.goal).toBe('あと10%でB（堂々）')
-  })
-
-  it('B：Aまでの距離（0.50→Aまであと15%）', () => {
-    const d = describeMastery(sobiResult('B', 0.5), GOD_IDS.sobi, '蒼毘')
-    expect(d.goal).toBe('Aまであと15%')
-  })
-
-  it('A：Sまでの距離（0.65→Sまであと20%）', () => {
-    const d = describeMastery(sobiResult('A', 0.65), GOD_IDS.sobi, '蒼毘')
-    expect(d.goal).toBe('Sまであと20%')
-  })
-
-  it('S：「その盾、神業なり！」（0.90→90%）', () => {
-    const d = describeMastery(sobiResult('S', 0.9), GOD_IDS.sobi, '蒼毘')
-    expect(d.gradeLabel).toBe('S（神業）')
-    expect(d.description).toBe('蒼毘「鉄壁」— 敵の攻撃の90%を無傷で受け止めた！')
-    expect(d.goal).toBe('その盾、神業なり！')
-  })
-
-  it('境界の浮動小数点誤差：0.84→Sまであと1%', () => {
-    const d = describeMastery(sobiResult('A', 0.84), GOD_IDS.sobi, '蒼毘')
-    expect(d.goal).toBe('Sまであと1%')
-  })
-})
-
-describe('describeMastery（寿楽「無力化」・STEP-SCORE2-G1b）', () => {
-  function jurakuResult(
-    grade: MasteryResult['grade'],
-    raw: number,
-    extra: Partial<MasteryResult> = {},
-  ): MasteryResult {
-    return { title: '無力化', grade, raw, sGateMet: false, easyCapped: false, ...extra }
-  }
-
-  it('表示%は内部rawとMath.roundで一致する（0.804→80%）', () => {
-    const d = describeMastery(jurakuResult('A', 0.804), GOD_IDS.juraku, '寿楽')
-    expect(d.description).toBe('寿楽「無力化」— 敵の攻撃を平均80%削いだ！')
-  })
-
-  it('S表示：「強打を封じ、神業の無力化！」', () => {
-    const d = describeMastery(jurakuResult('S', 0.93, { sGateMet: true }), GOD_IDS.juraku, '寿楽')
-    expect(d.gradeLabel).toBe('S（神業）')
-    expect(d.goal).toBe('強打を封じ、神業の無力化！')
-  })
-
-  it('A（ゲート未達）：強打半減の行動目標を示す', () => {
-    const d = describeMastery(jurakuResult('A', 0.85), GOD_IDS.juraku, '寿楽')
-    expect(d.goal).toBe('Sには強打（100以上の攻撃）を半分以下に抑えよう')
-  })
-
-  it('A（ゲート達成・raw不足）：Sまでの平均%ギャップを示す', () => {
-    const d = describeMastery(
-      jurakuResult('A', 0.85, { sGateMet: true }),
-      GOD_IDS.juraku,
-      '寿楽',
-    )
-    expect(d.goal).toBe('Sまで平均あと5%')
-  })
-
-  it('A（easy上限）：難易度を上げる導線を示す', () => {
-    const d = describeMastery(
-      jurakuResult('A', 0.95, { sGateMet: true, easyCapped: true }),
-      GOD_IDS.juraku,
-      '寿楽',
-    )
-    expect(d.goal).toBe('「ふつう」以上の難易度でSに挑戦しよう')
-  })
-
-  it('B：Aまでの平均%ギャップ', () => {
-    const d = describeMastery(jurakuResult('B', 0.6), GOD_IDS.juraku, '寿楽')
-    expect(d.goal).toBe('Aまで平均あと20%')
-  })
-
-  // STEP-SCORE2-G1c：CEO初見FB「なぜCか・あとどれだけでBかが分からない」対応。
-  // CはUX-A案「あと○%でB（堂々）」で次Gradeまでの距離を必ず示す。
-  it('C：次Gradeまでの距離を表示（46%→あと4%でB）', () => {
-    const d = describeMastery(jurakuResult('C', 0.46), GOD_IDS.juraku, '寿楽')
-    expect(d.description).toBe('寿楽「無力化」— 敵の攻撃を平均46%削いだ！')
-    expect(d.goal).toBe('あと4%でB（堂々）')
-  })
-
-  // G1d：CEO実測ケース。B=0.50緩和により51%はB（堂々）になる
-  it('CEO実測51%：B（堂々）＋「Aまで平均あと29%」', () => {
-    const d = describeMastery(jurakuResult('B', 0.51), GOD_IDS.juraku, '寿楽')
-    expect(d.gradeLabel).toBe('B（堂々）')
-    expect(d.description).toBe('寿楽「無力化」— 敵の攻撃を平均51%削いだ！')
-    expect(d.goal).toBe('Aまで平均あと29%')
-  })
-
-  // G1d PHASE 3指定の11値（B=0.50/A=0.80）。gradeはgetMasteryの境界仕様
-  // （jurakuMastery.test.tsで検証済み）に対応。浮動小数点誤差込みで文言を固定する
-  it.each([
-    ['C', 0.0, false, 'あと50%でB（堂々）'],
-    ['C', 0.3, false, 'あと20%でB（堂々）'],
-    ['C', 0.49, false, 'あと1%でB（堂々）'],
-    ['C', 0.499999, false, 'あと1%でB（堂々）'],
-    ['B', 0.5, false, 'Aまで平均あと30%'],
-    ['B', 0.51, false, 'Aまで平均あと29%'],
-    ['B', 0.79, false, 'Aまで平均あと1%'],
-    ['B', 0.799999, false, 'Aまで平均あと1%'],
-    ['A', 0.8, true, 'Sまで平均あと10%'],
-    ['A', 0.89, true, 'Sまで平均あと1%'],
-    ['S', 0.9, true, '強打を封じ、神業の無力化！'],
-  ] as const)('grade=%s raw=%s の表示（境界・浮動小数点誤差込み）', (grade, raw, gate, expected) => {
-    const d = describeMastery(jurakuResult(grade, raw, { sGateMet: gate }), GOD_IDS.juraku, '寿楽')
-    expect(d.goal).toBe(expected)
+    expect(MASTERY_SELECT_HINT[GOD_IDS.saika]).toBeUndefined()
+    expect(MASTERY_SELECT_HINT[GOD_IDS.shouren]).toBeUndefined()
   })
 })
 

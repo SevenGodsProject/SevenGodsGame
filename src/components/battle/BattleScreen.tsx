@@ -1,6 +1,8 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { RULES } from '../../core/data/rules'
 import { getFinalScore, getMastery } from '../../core/engine'
+import { previewBonusTrigger } from '../../core/engine/cardBonus'
+import { isGodPassiveArmed } from '../../core/engine/godPassive'
 import { formatScaled } from '../displayScale'
 import { getCardDef } from '../../core/data/cards'
 import { getEnemyDef } from '../../core/data/enemies'
@@ -346,6 +348,7 @@ export function BattleScreen({
             otomoGrowthPath={state.otomoGrowthPath}
             reactionKey={cutinBurstBannerKey}
             readyFlashKey={fx.burstKey}
+            passiveArmed={isGodPassiveArmed(state)}
           />
         </div>
         {castStyle && pendingCardDef && (
@@ -445,6 +448,7 @@ export function BattleScreen({
             affordable={getCardDef(instance.defId).cost + (instance.costModifier ?? 0) <= state.ap.current}
             playable={isPlayerTurn}
             playing={pendingCardUid === instance.uid}
+            bonusReady={isPlayerTurn && previewBonusTrigger(state, getCardDef(instance.defId))}
             onPlay={() => playCard(instance.uid)}
           />
         ))}

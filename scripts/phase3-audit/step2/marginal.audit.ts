@@ -23,6 +23,8 @@ const RULESET = process.env.RULESET ?? 'C0'
 const COND = (process.env.COND ?? 'stress') as 'stress' | 's7' | 's4'
 const SEEDS = Number(process.env.SEEDS ?? 32)
 const rs = rulesetByName(RULESET)
+/** 別ルールセット同士を同一seedで比べるための共通タグ（未指定ならルールセット名） */
+const SEEDTAG = process.env.SEEDTAG ?? RULESET
 const GODS_FILTER = process.env.GODS ? process.env.GODS.split(",") : null
 
 function staticValuePerAp(id: CardDefId): number {
@@ -55,7 +57,7 @@ describe(`Step2.5 marginal value ${RULESET} ${COND}`, () => {
     const out: Record<string, unknown> = { ruleset: RULESET, cond: COND, seeds: SEEDS, gods: {} as Record<string, unknown> }
     const md: string[] = [`# Step 2.5 marginal value — ${RULESET}（${rs.notes}） / ${COND} / N=${SEEDS * 7} paired games per card`]
     const seeds: string[] = []
-    for (let s = 0; s < SEEDS; s++) for (let e = 0; e < 7; e++) seeds.push(`m25-${RULESET}-${COND}-${s}#${e}`)
+    for (let s = 0; s < SEEDS; s++) for (let e = 0; e < 7; e++) seeds.push(`m25-${SEEDTAG}-${COND}-${s}#${e}`)
 
     for (const god of GOD_ORDER) {
       if (GODS_FILTER && !GODS_FILTER.includes(god)) continue

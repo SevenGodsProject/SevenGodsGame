@@ -188,6 +188,46 @@ export const RULES = {
   },
 
   /**
+   * Phase 3「神格」FINAL SPEC v0.1：神の得意技（Passive）の数値。
+   *
+   * 3神のみが得意技を持つ（蒼毘・笑蓮・福永）。値は約36万試合の決定論シミュレーション
+   * （Step 2 約25万／Step 2.5 約11.3万）と最終narrow pilotで確定した：
+   * - 蒼毘 counterRatio：50%/75%/100%を比較し、共通ブロックカードが蒼毘だけ
+   *   他神より高価値になる最小の係数として100%を採用（50%では共通ブロック札が
+   *   負のまま、勝率影響は+1.4ptで最大化ではない）
+   * - 笑蓮 hpRatio：100%/90%/80%/70%を比較し、専用カードの有意負価値が最も減り、
+   *   かつ「常時攻撃バフ」化しない最小の緩和として80%を採用（70%は回復カードが再び死ぬ）
+   * - 福永 hpRatio：0.5（Mastery「大勝負」のrisk gateと同じ「半分以下」）
+   */
+  godPassive: {
+    /** 蒼毘「反撃の構え」：敵ターン終了時、残ブロック×counterRatio（切り捨て）を敵へ。minBlock未満は不発 */
+    sobi: { counterRatio: 1.0, minBlock: 1 },
+    /** 笑蓮「無傷の慈愛」：HP ≥ ceil(maxHp×hpRatio) のとき、攻撃カードの素ダメージ×bonusRatio（切り捨て）を追加 */
+    shouren: { hpRatio: 0.8, bonusRatio: 0.5 },
+    /** 福永「大勝負」：HP ≤ floor(maxHp×hpRatio) のとき、攻撃カードの素ダメージ×bonusRatio（切り捨て）を追加 */
+    fukuei: { hpRatio: 0.5, bonusRatio: 0.5 },
+  },
+
+  /**
+   * Phase 3 FINAL SPEC v0.1：カードの条件付き追加効果（`CardDef.bonus`）の判定値。
+   * enemyBigThreshold は内部値（表示は×10）。R5以降の大技・必殺技・連撃合計が主な対象。
+   */
+  cardBonus: {
+    enemyBigThreshold: 10,
+    lowHpRatio: 0.5,
+  },
+
+  /**
+   * Phase 3 FINAL SPEC v0.1：ロールバック用のkill switch。
+   * どちらもfalseにすると、engineの挙動はPhase 3導入前と完全に一致する
+   * （godIdentity.test.tsで保証）。本番障害時はこの2値の変更だけで即時無効化できる。
+   */
+  godIdentity: {
+    passivesEnabled: true,
+    cardBonusEnabled: true,
+  },
+
+  /**
    * セーブデータのバージョン。互換性維持のため必ず持たせる。
    * v4（STEP-SCORE2-D-PROTO）：ScoreStateをBASE-D構造へ変更し、MasteryStateを追加。
    * v5（STEP-SCORE2-G1b）：MasteryStateへ寿楽「無力化」用3フィールドを追加。

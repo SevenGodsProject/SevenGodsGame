@@ -305,6 +305,22 @@
   line-height: 1.4;
 }
 
+/* Phase 3 FINAL SPEC v0.1：神の得意技（Passive）の1行説明。
+   得意技を持つ3神だけに出る。tactics（戦い方）より一段目立つ金色で、
+   「この神だけのルール」であることを色で区別する。 */
+.god-select-passive {
+  font-size: 11px;
+  color: #d8c48a;
+  text-align: center;
+  line-height: 1.4;
+  margin-top: 2px;
+}
+
+.god-select-passive-name {
+  color: #ffd166;
+  margin-right: 4px;
+}
+
 /* STEP-SCORE2-D2a：神技（Mastery）の1行説明。tacticsより一段目立つ紫トーンで、
    「戦い方の説明」と「神技の目標」を色で区別する。prototypeは大耀のみ表示 */
 .god-select-mastery {
@@ -787,6 +803,18 @@
   font-size: 12px;
   color: #a9adc4;
   flex-grow: 1;
+}
+
+/* Phase 3 FINAL SPEC v0.1：条件付き追加効果の1行。戦闘中の`.card-view-bonus`と
+   同じ「本文より一段小さい・破線で区切る」形にして、同じ情報だと分かるようにする
+   （`.deck-builder-card-bonus`は報酬による編成上限+Nの表示で既に使われているため別名）。 */
+.deck-builder-card-effect-bonus {
+  font-size: 11px;
+  line-height: 1.35;
+  color: #d8c48a;
+  margin-top: 2px;
+  padding-top: 3px;
+  border-top: 1px dashed #ffffff1f;
 }
 
 .deck-builder-card-stepper {

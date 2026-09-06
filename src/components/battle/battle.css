@@ -2303,6 +2303,57 @@
   flex: 1;
 }
 
+/* Phase 3 FINAL SPEC v0.1：カードの条件付き追加効果。本文より一段小さく、
+   条件を満たしている手札だけ金色に光らせて「今使えば追加が出る」を伝える。
+   新しいパネル・ゲージは足さず、既存のカード内に1行だけ追加する。 */
+.card-view-bonus {
+  font-size: 10px;
+  line-height: 1.35;
+  color: #8e96bd;
+  margin-top: 2px;
+  border-top: 1px dashed #ffffff1f;
+  padding-top: 3px;
+}
+
+.card-view-bonus-ready {
+  color: #ffd166;
+  text-shadow: 0 0 6px #ffd16655;
+  border-top-color: #ffd16644;
+}
+
+/* Phase 3 FINAL SPEC v0.1：神の得意技バッジ（得意技を持つ3神のみ表示）。
+   条件成立中は発光させ、「今この神らしい状態にある」ことを一目で分かるようにする。 */
+.god-passive-badge {
+  align-self: center;
+  margin: 2px 0 4px;
+  padding: 2px 8px;
+  border: 1px solid #ffffff22;
+  border-radius: 999px;
+  background: #ffffff0d;
+  font-size: 10px;
+  color: #9aa3cc;
+  white-space: nowrap;
+}
+
+.god-passive-armed {
+  border-color: #ffd16688;
+  background: #ffd1661a;
+  color: #ffd9a0;
+  box-shadow: 0 0 10px -2px #ffd16666;
+}
+
+.god-passive-armed-mark {
+  margin-left: 6px;
+  font-size: 9px;
+  color: #ffd166;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .god-passive-armed {
+    box-shadow: none;
+  }
+}
+
 /* 決定43：勝利後の報酬カード選択画面。GameOverOverlayと同じ全面オーバーレイの型を踏襲。
    決定63（Task B2）：position:absoluteだと`.battle`（スクロール可能な戦闘画面全体、
    スマホでは2500px超）を基準に中央配置されてしまい、決着時のスクロール位置によっては
@@ -2461,6 +2512,17 @@
 .reward-card-text {
   font-size: 11px;
   color: #b8bfe0;
+}
+
+/* Phase 3 FINAL SPEC v0.1：報酬3択でも、選ぶ前に条件付き追加効果を読めるようにする
+   （戦闘中の`.card-view-bonus`と同じ形・同じ文言） */
+.reward-card-effect-bonus {
+  font-size: 10px;
+  line-height: 1.35;
+  color: #d8c48a;
+  margin-top: 3px;
+  padding-top: 3px;
+  border-top: 1px dashed #ffffff1f;
 }
 
 .reward-skip {
@@ -2664,12 +2726,17 @@
 /* STEP-SCORE2-D-PROTO（決定110）→D2a：神技評価（Mastery）の3行表示。
    Battle Scoreとは別軸の評価であることが分かるよう、スコアの金色ではなく
    共鳴系の紫トーンを使う。新規アニメーションはしない。 */
+/* Human Play QA（2026-09-06）：スコア内訳の直後に置き、区切り線と余白で
+   「スコアとは別の軸」であることを見た目でも分ける（誤読対策）。 */
 .game-over-mastery {
   font-size: 13px;
   color: #c9b8f0;
   display: flex;
   flex-direction: column;
   gap: 2px;
+  margin-top: 10px;
+  padding-top: 8px;
+  border-top: 1px solid #ffffff1a;
 }
 .game-over-mastery strong {
   font-size: 16px;
@@ -2687,8 +2754,15 @@
 }
 .game-over-mastery-goal {
   font-size: 12px;
+  color: #cfc4ec;
+}
+
+/* 「現在値 → 次ランクの目標値」だけを金色で強調する（差分表現は使わない） */
+.game-over-mastery-progress {
+  font-size: 13px;
   font-weight: 700;
   color: #ffd166;
+  text-shadow: none;
 }
 
 /* BASE-D：内訳の最終行（小計×1.3→最終スコア）を通常項目より控えめに区切る */
@@ -3866,8 +3940,9 @@
 .game-over-card-won .game-over-stake,
 .game-over-card-won .game-over-daily,
 .game-over-card-won .game-over-otomo-levelup,
-.game-over-card-won .game-over-mastery { animation: result-rise 0.5s ease-out both; animation-delay: 1.4s; }
-.game-over-card-won .score-breakdown { animation: result-rise 0.5s ease-out both; animation-delay: 1.6s; }
+/* 神技評価はスコア内訳の後ろへ移したため、せり上がる順番も入れ替える */
+.game-over-card-won .score-breakdown { animation: result-rise 0.5s ease-out both; animation-delay: 1.4s; }
+.game-over-card-won .game-over-mastery { animation: result-rise 0.5s ease-out both; animation-delay: 1.6s; }
 .game-over-card-won .game-over-share,
 .game-over-card-won .game-over-actions { animation: result-rise 0.5s ease-out both; animation-delay: 1.9s; }
 @keyframes result-rise {

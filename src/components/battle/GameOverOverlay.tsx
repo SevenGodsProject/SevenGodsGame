@@ -3,7 +3,7 @@ import { getGodDef } from '../../core/data/gods'
 import { getOtomoDef } from '../../core/data/otomo'
 import { getFinalScore, type MasteryResult } from '../../core/engine'
 import { formatScaled } from '../displayScale'
-import { describeMastery } from './masteryDisplay'
+import { describeMastery, MASTERY_AXIS_NOTE } from './masteryDisplay'
 import type { DailyRecordResult } from '../../hooks/dailyStorage'
 import type { StakeResultOutcome } from '../../hooks/stakeStorage'
 import type { GameState } from '../../core/types'
@@ -222,21 +222,6 @@ export function GameOverOverlay({
           </div>
         )}
         <div className={`score-total game-over-score${status === 'won' && shownScore < finalScore ? ' game-over-score-rolling' : ''}`}>スコア {formatScaled(shownScore)}</div>
-        {/* STEP-SCORE2-D2a：神技評価の3行構成。CEO実測「A/Sって何かわからない」への対応。
-            gradeに和語補助、何を測ったかの1行、次Grade目標（C評価は励まし文）を表示する */}
-        {status === 'won' && mastery && (() => {
-          const display = describeMastery(mastery, godId, god.nameJa)
-          return (
-            <div className="game-over-mastery">
-              <div className="game-over-mastery-grade">
-                神技評価 <strong>{display.gradeLabel}</strong>
-                <span className="score-breakdown-hint">スコアとは別の、その神らしい戦い方の評価</span>
-              </div>
-              <div className="game-over-mastery-desc">{display.description}</div>
-              <div className="game-over-mastery-goal">{display.goal}</div>
-            </div>
-          )
-        })()}
         <dl className="score-breakdown">
           <dt>
             実効ダメージ
@@ -292,6 +277,24 @@ export function GameOverOverlay({
           </dt>
           <dd className="score-breakdown-subtotal">{formatScaled(Math.round(score.total))} → {formatScaled(finalScore)}</dd>
         </dl>
+        {/* 神技評価。Human Play QA（2026-09-06）で「スコアの続き」と誤読されたため、
+            スコア内訳の“後”へ移し、区切り線を入れて別の軸であることを見た目でも示す。
+            3行構成：ランク／現在値→次ランクの目標値／上げ方1行（差分表現は使わない） */}
+        {status === 'won' && mastery && (() => {
+          const display = describeMastery(mastery, godId)
+          return (
+            <div className="game-over-mastery">
+              <div className="game-over-mastery-grade">
+                神技評価 <strong>{display.gradeLabel}</strong>
+                <span className="score-breakdown-hint">{MASTERY_AXIS_NOTE}</span>
+              </div>
+              <div className="game-over-mastery-desc">
+                {display.metricLabel} <strong className="game-over-mastery-progress">{display.progress}</strong>
+              </div>
+              <div className="game-over-mastery-goal">{display.hint}</div>
+            </div>
+          )
+        })()}
         {stakeResult && (stakeResult.stake > 0 || stakeResult.hardClearedNow) && (
           <div className="game-over-stake">
             {stakeResult.hardClearedNow && <p className="game-over-stake-unlock">⛩ 神階が解放された！ 次は神階Ⅰ「参道」へ</p>}

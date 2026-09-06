@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import type { GameEvent, OtomoForm } from '../../core/types'
+import { getGodPassiveDef } from '../../core/data/gods'
 import { getIntentPowerTier, type PowerTier } from './cardStyle'
 import { damageFeelTier, type FeelTier } from './feelTier'
 import { formatScaled } from '../displayScale'
@@ -15,6 +16,8 @@ export const fxToastText = {
   damage: (amount: number) => `⚔ 敵に${formatScaled(amount)}ダメージ`,
   heal: (amount: number) => `💚 HP+${formatScaled(amount)}`,
   block: (amount: number) => `🛡 ブロック+${formatScaled(amount)}`,
+  /** Phase 3 FINAL SPEC v0.1：神の得意技が発動した瞬間の一言（新SE・新VFXは追加しない） */
+  passive: (nameJa: string) => `✨ 得意技「${nameJa}」`,
 } as const
 
 /**
@@ -270,6 +273,11 @@ export function useBattleFx(log: GameEvent[], apCurrent: number): BattleFx {
         mrDrawCount += 1
       } else if (event.t === 'BUFF_APPLIED') {
         mrBuffs.push({ target: event.target, stat: event.stat, amount: event.amount, rounds: event.rounds })
+      } else if (event.t === 'PASSIVE_TRIGGERED') {
+        // Phase 3 FINAL SPEC v0.1：得意技の発動を既存トースト経路に1件だけ流す。
+        // ダメージ自体は後続のDAMAGE_DEALTが既存のGame Feel 4段階で演出する。
+        resultToast += 1
+        resultTexts.push(fxToastText.passive(getGodPassiveDef(event.passiveId).nameJa))
       }
     }
 
