@@ -16,6 +16,7 @@ import { applyAction } from '../../../src/core/engine/reducer'
 import { runEnemyTurn, finishRound } from '../../../src/core/engine/round'
 import { applyEffects } from '../../../src/core/engine/effects'
 import { getFinalScore } from '../../../src/core/engine/score'
+import { getMastery } from '../../../src/core/engine/mastery'
 import { createRng } from '../../../src/core/rng/seededRandom'
 import { OTOMO_FORM_ORDER } from '../../../src/core/types/otomo'
 import { RULES } from '../../../src/core/data/rules'
@@ -243,6 +244,8 @@ export type Metrics2 = {
   divinationUses: { round: number; choice: number }[]
   resonanceGained: number
   condTriggers: number
+  /** 神技評価（Mastery）。対応する神技を持たない神ではnull（表示は勝利時のみ） */
+  mastery: { title: string; grade: string; raw: number; sGateMet?: boolean; riskGateMet?: boolean } | null
 }
 
 export type RunOpts = {
@@ -284,7 +287,7 @@ export function runGame2(opts: RunOpts, agent: Agent2): Metrics2 {
     status: 'finished', round: 0, finalScore: 0, rawScore: 0, playerHp: 0, cardsPlayed: {}, cardsSeen: {}, cardsPlayedTotal: 0,
     dmgCard: 0, dmgBurst: 0, dmgDiv: 0, dmgPassive: 0, blockGained: 0, blockAbsorbed: 0, unusedBlock: 0, healed: 0, healRequested: 0,
     drawExtra: 0, apGained: 0, apSpent: 0, debuffApplied: 0, debuffEffective: 0, enemyRawDamage: 0, bursts: 0, burstRounds: [],
-    otomoFinalForm: 0, divinationUses: [], resonanceGained: 0, condTriggers: 0,
+    otomoFinalForm: 0, divinationUses: [], resonanceGained: 0, condTriggers: 0, mastery: null,
   }
   let { state, events } = applyAction(null, {
     type: 'START_GAME', seed: opts.seed, godId: opts.godId, enemyId: opts.enemyId, deck: opts.deck,
@@ -335,6 +338,10 @@ export function runGame2(opts: RunOpts, agent: Agent2): Metrics2 {
   m.finalScore = getFinalScore(state.score, state.stake)
   m.playerHp = state.player.hp
   m.otomoFinalForm = OTOMO_FORM_ORDER.indexOf(state.otomo.form)
+  const mastery = getMastery(state)
+  m.mastery = mastery
+    ? { title: mastery.title, grade: mastery.grade, raw: mastery.raw, sGateMet: mastery.sGateMet, riskGateMet: mastery.riskGateMet }
+    : null
   return m
 }
 

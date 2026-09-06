@@ -24,7 +24,15 @@ FINAL SPEC v0.1 の範囲のみを実装した。仕様外の追加はしてい�
 commit：
 - `db0ed62 feat: add god identity v0.1 (3 god passives + 4 conditional card effects)`
 - `aed17b6 fix: label god passives as 得意技 and add pre/post audit harness modes`
-- `fix: show card bonus when choosing cards, not only when playing them`（本レポートを含むコミット）
+- `fd5aeec fix: show card bonus when choosing cards, not only when playing them`
+- `fix: rewrite the mastery result readout as current → next-rank goal`（本レポート更新を含むコミット。Human Play QA 由来の評価UX修正）
+
+### 関連監査文書
+
+| 文書 | 内容 | 扱い |
+| --- | --- | --- |
+| `docs/MASTERY_RATING_UX_AUDIT.md` | 「勝ってもずっとC」の原因監査。神技評価はスコアと独立で、**Bに必要なスコアは0点**。2,016試合の分布あり | 文言修正を Phase 3 に含めて実施済み。閾値変更は Phase 4（§5 の 2b・2c） |
+| `docs/VISUAL_QA_CHARACTER_ASSET_AUDIT.md` | 「キャラだけ解像感が低い」の原因監査。主因は敵WebP変換での輪郭 −30〜49%で、DPR不足ではない | **Phase 3 には含めない。** release 後の別branchで対応（§5 末尾） |
 
 ---
 
@@ -109,11 +117,20 @@ WAIVED の理由：
 | --- | --- | --- |
 | 1 | **Reward / Common Card Preference** | 共通32枚の God間順位相関 0.61、全神上位8札1枚、報酬合意損失 0.47pt。案：報酬3択の提示重みを神別にする／共通カードの一部に状態条件 bonus を付ける（`godIs` のような神直接参照は禁止）。計測器は `marginal.audit.ts` |
 | 2 | **専用カードの負価値整理（Gate 3 WAIVED分）** | 大耀 豪快な一撃／姉御の号令／後輩想い、寿楽 からかい半分、笑蓮 懐の深さ／福袋／笑って許す の7枚。数値のみで判断が変わらない札は整理、判断を変えられる札は条件付き効果を検討 |
+| 2b | **大耀「爆発」の閾値見直し（Balance）** | Human Play QA 由来。2,016試合の分布で、大耀だけ上級プレイでもC 52.4%／標準44.6%／初心者78.4%。raw平均 0.33〜0.39 が B閾値 0.37 に張り付き、BURSTが出ない試合は自動的にCになる。B 0.37→0.32〜0.34 への引き下げ、または「BURSTを含む1ラウンド」前提の指標再設計を検討する。**Phase 3 では閾値を変更していない**。根拠：`docs/MASTERY_RATING_UX_AUDIT.md` §4・§8 |
+| 2c | **寿楽「無力化」の敵依存** | 標準の腕前で 銀甲の機工師 75%・双牙の魔獣 62.5% がC。単発の大技には定数デバフの割合が稼げない。設計どおりの性質でもあるため、指標側を直すか敵側を直すかを Balance Phase で判断 |
 | 3 | **笑蓮の第2波（必要時のみ）** | 残3枚が −2.7〜−3.1pt。`RULES.godPassive.shouren.hpRatio`（0.8→0.85）または 懐の深さ／おおらかな一打への条件付き効果 |
 | 4 | **OTOMO再設計** | 進化がIdentityに寄与していない（試合終了時の形態 平均0.5〜1.3＝incarnate止まり、doji到達不能） |
 | 5 | **おすすめデッキの神別再設計** | 統一は不採用（神階崩壊／Identity破壊）。得意技に合わせた設計と3AP火力札の上限 |
 | 6 | **神階Ⅷ／Ⅶ選択の拡張** | 蒼毘・寿楽が神階Ⅶ normal で96〜100%に達し、上の目標が無い |
 | 7 | 得意技「大勝負」と神技評価「大勝負」の同名解消 | ラベル（得意技／神技）で区別済みだが名称は重複。改名するならIP・世界観の観点でCEO確認 |
+
+### release 後の別branchで対応するもの
+
+| 項目 | 内容 |
+| --- | --- |
+| **キャラクター画質（`feat/visual-quality-assets` 予定）** | 敵アセットの WebP 再変換（現行は原画より輪郭が30〜49%劣化。うち3体は384→512のアップスケール込み）、神の 640px 化（未使用の1600×1600アルファ版が既にある）、OTOMO の 256px 化。**画像の再生成は行わない**。ユーザーが実際に落とす画像は 9,461KB → 約1,680KB（−82%）になる見込み。根拠：`docs/VISUAL_QA_CHARACTER_ASSET_AUDIT.md`。Phase 3 のリリースには含めない |
+| Daily Ranking | Phase 4 最優先候補として維持。今回は実装しない |
 
 ---
 

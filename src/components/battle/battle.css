@@ -2726,12 +2726,17 @@
 /* STEP-SCORE2-D-PROTO（決定110）→D2a：神技評価（Mastery）の3行表示。
    Battle Scoreとは別軸の評価であることが分かるよう、スコアの金色ではなく
    共鳴系の紫トーンを使う。新規アニメーションはしない。 */
+/* Human Play QA（2026-09-06）：スコア内訳の直後に置き、区切り線と余白で
+   「スコアとは別の軸」であることを見た目でも分ける（誤読対策）。 */
 .game-over-mastery {
   font-size: 13px;
   color: #c9b8f0;
   display: flex;
   flex-direction: column;
   gap: 2px;
+  margin-top: 10px;
+  padding-top: 8px;
+  border-top: 1px solid #ffffff1a;
 }
 .game-over-mastery strong {
   font-size: 16px;
@@ -2749,8 +2754,15 @@
 }
 .game-over-mastery-goal {
   font-size: 12px;
+  color: #cfc4ec;
+}
+
+/* 「現在値 → 次ランクの目標値」だけを金色で強調する（差分表現は使わない） */
+.game-over-mastery-progress {
+  font-size: 13px;
   font-weight: 700;
   color: #ffd166;
+  text-shadow: none;
 }
 
 /* BASE-D：内訳の最終行（小計×1.3→最終スコア）を通常項目より控えめに区切る */
@@ -3928,8 +3940,9 @@
 .game-over-card-won .game-over-stake,
 .game-over-card-won .game-over-daily,
 .game-over-card-won .game-over-otomo-levelup,
-.game-over-card-won .game-over-mastery { animation: result-rise 0.5s ease-out both; animation-delay: 1.4s; }
-.game-over-card-won .score-breakdown { animation: result-rise 0.5s ease-out both; animation-delay: 1.6s; }
+/* 神技評価はスコア内訳の後ろへ移したため、せり上がる順番も入れ替える */
+.game-over-card-won .score-breakdown { animation: result-rise 0.5s ease-out both; animation-delay: 1.4s; }
+.game-over-card-won .game-over-mastery { animation: result-rise 0.5s ease-out both; animation-delay: 1.6s; }
 .game-over-card-won .game-over-share,
 .game-over-card-won .game-over-actions { animation: result-rise 0.5s ease-out both; animation-delay: 1.9s; }
 @keyframes result-rise {
