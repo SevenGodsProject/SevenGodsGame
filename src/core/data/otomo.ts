@@ -17,11 +17,17 @@ export const OTOMO_IDS = {
  * 旧`<form>.webp`（星雲焼き込み）はロールバック用に同ディレクトリへ温存
  * （enemies刷新・決定99/100と同じ「併置・最小差分」方式）。
  * `background.webp`は神選択画面用のため対象外。
+ *
+ * STEP-VISUAL-ASSETS：`<form>_transparent.webp`は1600pxだが、実表示は最大でも
+ * `.portrait img`の96px（GameOver 72px・成長画面ギャラリー24px）。DPR3でも288pxで
+ * 足りるため配信用を320pxへ縮小した（同一表示サイズでのPSNR 34.9dB@288/38.9dB@192）。
+ * 精霊態の半透明発光を潰さないようシャープ処理は一切かけていない。
+ * 1600px版は上と同じくロールバック用に温存。
  */
 const art = (id: string) => ({
-  spirit: `/assets/otomo/${id}/spirit_transparent.webp`,
-  incarnate: `/assets/otomo/${id}/incarnate_transparent.webp`,
-  doji: `/assets/otomo/${id}/doji_transparent.webp`,
+  spirit: `/assets/otomo/${id}/spirit_320.webp`,
+  incarnate: `/assets/otomo/${id}/incarnate_320.webp`,
+  doji: `/assets/otomo/${id}/doji_320.webp`,
 })
 
 /**
