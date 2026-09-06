@@ -111,6 +111,7 @@ export function formatEvent(event: GameEvent): string {
     case 'BONUS_TRIGGERED':
       return `「${getCardDef(event.defId).name}」の${BONUS_COND_LABEL[event.when]}`
     case 'PASSIVE_TRIGGERED':
-      return `神技「${getGodPassiveDef(event.passiveId).nameJa}」発動！`
+      // 「神技」は共鳴BURST・Mastery評価で既に使っている語のため、Passiveは「得意技」と呼び分ける
+      return `得意技「${getGodPassiveDef(event.passiveId).nameJa}」発動！`
   }
 }

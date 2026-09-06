@@ -278,7 +278,7 @@ export function GodSelectScreen({
                       持たない神には何も足さない（「得意技なし」とは書かない） */}
                   {god.passive && (
                     <div className="god-select-passive">
-                      <span className="god-select-passive-name">神技「{god.passive.nameJa}」</span>
+                      <span className="god-select-passive-name">得意技「{god.passive.nameJa}」</span>
                       {god.passive.textJa}
                     </div>
                   )}

@@ -17,7 +17,7 @@ export const fxToastText = {
   heal: (amount: number) => `💚 HP+${formatScaled(amount)}`,
   block: (amount: number) => `🛡 ブロック+${formatScaled(amount)}`,
   /** Phase 3 FINAL SPEC v0.1：神の得意技が発動した瞬間の一言（新SE・新VFXは追加しない） */
-  passive: (nameJa: string) => `✨ 神技「${nameJa}」`,
+  passive: (nameJa: string) => `✨ 得意技「${nameJa}」`,
 } as const
 
 /**

@@ -160,7 +160,7 @@ export function GodOtomoPanel({
           title={godPassive.textJa}
           data-testid="god-passive-badge"
         >
-          神技 {godPassive.nameJa}
+          得意技 {godPassive.nameJa}
           {passiveArmed && <span className="god-passive-armed-mark">発動中</span>}
         </div>
       )}

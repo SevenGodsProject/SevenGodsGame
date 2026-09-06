@@ -65,6 +65,8 @@ export type RuleSet = {
   cardOverrides: Partial<Record<CardDefId, Effect[]>>
   deckMode: 'recommended' | 'unified' | 'median'
   stakeFix: 'none' | 'soften' | 'replace'
+  /** 実装後の前後比較用：RULES.godIdentityのkill switchを切って「Phase 3導入前」を再現する */
+  godIdentityOff?: boolean
   notes?: string
 }
 
@@ -85,6 +87,13 @@ export function activate(rules: RuleSet): void {
     const orig = def.effects
     def.effects = effects!
     restoreFns.push(() => { def.effects = orig })
+  }
+  if (rules.godIdentityOff) {
+    const gi = RULES.godIdentity as unknown as { passivesEnabled: boolean; cardBonusEnabled: boolean }
+    const origGi = { p: gi.passivesEnabled, c: gi.cardBonusEnabled }
+    gi.passivesEnabled = false
+    gi.cardBonusEnabled = false
+    restoreFns.push(() => { gi.passivesEnabled = origGi.p; gi.cardBonusEnabled = origGi.c })
   }
   const st = RULES.stakes as unknown as { blockEfficiency: number; healEfficiency: number; lateRoundAtkMul: number }
   const orig = { b: st.blockEfficiency, h: st.healEfficiency, l: st.lateRoundAtkMul }

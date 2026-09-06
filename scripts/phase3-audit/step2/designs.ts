@@ -221,3 +221,8 @@ RULESETS.push({
   passives: [sobiPassive(1.0), shourenPassive(0.8), PASSIVES[GOD_IDS.fukuei]],
   condEffects: COND_EFFECTS_4, cardOverrides: {}, deckMode: 'recommended', stakeFix: 'none',
 })
+// 実装後の前後比較用：本番engineのまま kill switch を切って「Phase 3導入前」を再現する
+RULESETS.push({
+  name: 'PRE', notes: 'Phase 3導入前（kill switchでPassive/bonusを無効化した本番engine）',
+  passives: [], condEffects: {}, cardOverrides: {}, deckMode: 'recommended', stakeFix: 'none', godIdentityOff: true,
+})
