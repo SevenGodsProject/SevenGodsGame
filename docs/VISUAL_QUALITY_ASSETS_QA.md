@@ -140,3 +140,90 @@ preview サーバーと Chrome を起動したまま `npm test` を回すと、`
 - **OTOMO**：鯛丸 — 精霊態（半透明の発光が潰れていないか）
 
 確認観点：顔・輪郭・髪・衣装・透明エッジ・背景との解像感差。大量の再戦は不要で、1 戦の開始画面で判断できる。
+
+---
+
+## 9. Production Release（2026-09-06）
+
+**CEO Human Visual QA：PASS**（恵比寿／双牙の魔獣／鯛丸・精霊態をローカル preview で確認）→ Production Release GO。
+
+### 9-1. リリース手順
+
+| 項目 | 値 |
+|---|---|
+| merge | `feat/visual-quality-assets`（`32a062a`）→ master へ `--no-ff` merge（**`01ac6f8`**） |
+| push | `bab4eb3..01ac6f8 master -> master` |
+| master / origin/master | ともに `01ac6f8`（**ahead/behind 0/0**） |
+| merge 内容 | 39 files（新規 asset 32＋`gods.ts`/`enemies.ts`/`otomo.ts`＋テスト2＋docs2）。`.claude/settings.local.json`・`敵画像/`・`scripts/phase3-audit/out/` は **0件**（差分検査で確認） |
+| deploy | Vercel Production 自動 deploy 完了 |
+
+### 9-2. 本番 bundle 検証
+
+| 項目 | 結果 |
+|---|---|
+| JS | `assets/index-Sm3K62_I.js` 376,179 B — ローカル clean build と **sha256 一致**（`776b2d6b87a7d3ec…`） |
+| CSS | `assets/index-CDbAuk7l.css` 96,423 B — 同じく **sha256 一致**（`4ee6657aa8439ee1…`）。ハッシュはリリース前 master と同一＝**CSS 変更ゼロを本番でも再確認** |
+| bundle 内の新パス | `front_640.webp` 1（テンプレート）／`art_hq.webp` 4／`spirit_320`・`incarnate_320`・`doji_320` 各1 |
+| bundle 内の旧パス | `front.png` **0**／`_transparent.webp` **0**／敵の `art.png` **0** |
+
+### 9-3. 本番 asset 検証
+
+| 対象 | 件数 | HTTP | Content-Type | リポジトリとの一致 |
+|---|---|---|---|---|
+| 神 `front_640.webp` | **7/7** | 200 | image/webp | sha256 一致 |
+| 敵 `art_hq.webp` | **4/4** | 200 | image/webp | sha256 一致 |
+| 敵 据え置き `art.webp` | 3/3 | 200 | image/webp | （無変更） |
+| OTOMO `*_320.webp` | **21/21** | 200 | image/webp | sha256 一致 |
+| **合計** | **32/32** | **全200・4xx/5xx 0件** | — | **byte 単位で全件一致（mismatch 0）** |
+
+### 9-4. 容量（本番実測）
+
+| グループ | before | after | 差 |
+|---|---|---|---|
+| 神 front（7） | 1,897.6 KB | 682.7 KB | -64.0% |
+| 敵 art（7・据え置き3体を含む） | 1,206.0 KB | 547.7 KB | -54.6% |
+| OTOMO 3形態（21） | 6,357.0 KB | 432.0 KB | -93.2% |
+| **合計** | **9,460.6 KB** | **1,662.4 KB** | **-82.4%** |
+
+- 目標 1,662.4 KB に対し**実測 1,662.4 KB（完全一致）**
+- 1バトルの実ダウンロード（神1・敵1・OTOMO1形態＝恵比寿／双牙の魔獣／鯛丸・精霊態）：**800.0 KB → 203.0 KB（-74.6%）**
+
+### 9-5. テスト（リリース後の master）
+
+`npx vitest run --dir src` → **54 files / 614 tests 全 PASS**（16.70s）。
+決定129 で QA infrastructure backlog としていた `balanceSim` STAKE-01 のタイムアウトは、
+preview サーバーを停止した状態では**再現せず PASS**（環境要因であることが再確認された）。
+
+### 9-6. Production Visual QA（**未実施 / PENDING**）
+
+ブラウザ実機での本番 Visual QA は、**PC再起動後に Chrome 拡張（Claude in Chrome）が未接続**の
+ため実行できなかった（`tabs_context_mcp` が3回とも "Browser extension is not connected"）。
+**本番側の不具合ではない。** 以下が未消化：
+
+- 恵比寿／双牙の魔獣／鯛丸・精霊態の**本番実機での表示確認**
+- 代表 別1組（別の神・敵・OTOMO）の表示確認
+- alpha edge／battle layout／animation の実機確認
+- console error・network error の実機計測
+- save / resume の実機確認
+
+**代替として担保できている範囲**：CEO の Human Visual QA（ローカル preview、同一ビルド・同一
+バイナリのアセット）が PASS。本番の bundle と 32 アセットは**ローカル検証物と byte 単位で一致**
+しており、描画結果が異なる余地は無い。加えて実ファイル存在チェックのテスト3件と 614 tests が
+PASS。**この状態を「未消化」として明示し、PASS 扱いにはしない。**
+
+### 9-7. Known Risk（更新）
+
+1. **試練の影・銀甲の機工師・乱舞の道化は今回変更していない。** より高品質な原本が存在しない
+   ためで、**FAIL ではなく将来の Asset Art Quality backlog**。改善には元絵の再入手または
+   再生成が必要＝CLAUDE.md §6-3 の CEO 判断事項。
+2. **asset 変換用スクリプトが残っていない。** 今回の変換は一時スクリプトで実行し、リポジトリに
+   commit しなかったため、**同じ変換を再現できない**。成果物は全て commit 済みで今回の
+   リリースには影響しないが、**再現可能な asset pipeline（`scripts/assets/` 配下への変換
+   スクリプト整備）を maintenance backlog** とする。
+3. 敵は原画自体が 384〜512px のため DPR2 デスクトップ（560px 必要）には届かない（継続）。
+4. 神 640px は DPR3 かつ 900px 幅以上で 97% 充足（継続）。
+5. 旧アセットはロールバック用に温存するためリポジトリ容量は減らない（ユーザーDL量には影響なし）。
+
+### 9-8. リリース判定
+
+**P0：0件／P1：0件／rollback：不要／status：RELEASED**（Production Visual QA のみ PENDING）
