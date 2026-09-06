@@ -1,4 +1,4 @@
-# SEVEN GODS 8/31 Public Beta リリースステータス（2026-08-31 Phase 2「Game Feel」追加・RELEASED）
+# SEVEN GODS 8/31 Public Beta リリースステータス（2026-09-06 Phase 3「神格」追加・RELEASED）
 
 8/31公開版の「確定状態」を一目で確認するための要約です。新しい仕様判断は含みません（詳細・根拠は`docs/DECISIONS.md` 決定119〜125を参照）。
 
@@ -7,11 +7,11 @@
 | 項目 | 状態 |
 |---|---|
 | **Release** | SEVEN GODS 8/31 Public Beta |
-| **Production HEAD** | `38d706a` feat: add game feel phase (tiered feedback, SE, boss entrance, victory/defeat)（80点化計画 Phase 2、決定128） |
-| **origin/master** | `38d706a`（local HEAD と完全一致、ahead/behind 0/0） |
+| **Production HEAD** | `7f4b08a` Merge branch 'feat/god-identity-v0.1' — Phase 3「神格」God Identity v0.1（決定129） |
+| **origin/master** | `7f4b08a`（local master と完全一致、ahead/behind 0/0） |
 | **Production URL** | https://seven-gods-game.vercel.app/ |
-| **Production bundle** | `assets/index-BWFlr5zp.js`（`git archive 38d706a` の clean build と同一ハッシュを本番配信で確認） |
-| **Production QA** | PASS（2026-08-31、Phase 2 Production Release Gate。下記「Production QA」参照） |
+| **Production bundle** | `assets/index-B07HTdRy.js`（376,162B。master のクリーンビルドと**バイト単位で一致**することを本番配信で確認） |
+| **Production QA** | 自動化分 PASS（2026-09-06、Phase 3 Production Release Gate）。勝利画面・報酬・Daily・神階の実プレイ確認は検証機のCPU占有により未実施（下記「Phase 3 Production QA」参照） |
 | **Final Verdict** | **RELEASED** |
 | **8/31 Release Status** | **READY** |
 | **Code Freeze** | 解除（80点化計画へ移行。Phase 1「神階」を決定126で採用・本番反映。以後は CLAUDE.md §6 のAI自律判断ポリシーで Phase ごとに進める。PV・BGMは変更しない） |
@@ -27,6 +27,8 @@
 | `5552ae4` | feat: add shinkai stake ladder (神階Ⅰ〜Ⅶ) — 80点化計画 Phase 1 | 決定126 |
 | `de69404` / `c260b07` | docs | — |
 | **`38d706a`** | **feat: add game feel phase (tiered feedback, SE, boss entrance, victory/defeat)** — 80点化計画 Phase 2 | **決定128（AI判断・CEO Audio QA PASS→deploy承認）** |
+| `db0ed62` / `aed17b6` / `fd5aeec` / `59a31a2` | feat/fix: god identity v0.1（得意技3種・条件付きカード4枚・カード選択時のボーナス表示・神技評価の表示作り直し） | 決定129 |
+| **`7f4b08a`** | **Merge branch 'feat/god-identity-v0.1'** — 80点化計画 Phase 3「神格」 | **決定129（AI判断・CEO Human Play QA PASS→deploy承認）** |
 
 （それ以前：`32697ee` feat: polish enemy select cards（決定123）＝8/31版の基盤、`7f89e9e` docs: mark 8/31 release ready）
 
@@ -83,6 +85,22 @@
 
 証跡：`Videos/SEVENGODS-PV-REVIEW/gamefeel-phase2/prod/`（feel／flows／stage／mobile／end／stake／daily-e2e／p0）、Phase 1 は `shinkai-phase1/prod/`、8/31版は `prod-final-0831/`・`final-gate-0831/`・`minor-fix-gate/`
 
+## Phase 3 Production QA（本番URL、2026-09-06）
+
+CEO の Human Play QA（蒼毘で神技評価 A／「敵の攻撃の67%を無傷で受け止めた」）で PASS。以下は deploy 後に本番URLで自動確認した分。
+
+- 本番 bundle `assets/index-B07HTdRy.js` が master のクリーンビルドと**バイト単位で一致**（376,162B）
+- 旧表示の文字列（`Sまであと` / `Aまであと` / `でB（堂々）` / `神業達成`）は本番 bundle に **0 件**。新表示の文字列（`最高ランク達成！` / `スコアとは別。戦い方で決まります` / 4神の指標名）は全て存在
+- ホーム起動／神選択／得意技3種（反撃の構え・大勝負・無傷の慈愛）と神技評価4種の1行説明
+- デッキ編成画面での条件付きボーナス表示（Known Risk 1 の修正。`＋ ブロックが敵の予告以上なら、敵に60ダメージ。` ほか）
+- 戦闘：敵Intent／7ラウンド・神力逓増／ブロック／託宣／共鳴ゲージ／OTOMO／スコア
+- 得意技「反撃の構え」の発動（ブロック130・予告50 → 残り80をそのまま反撃ダメージ）とログ表示
+- 条件付きボーナス「不動の構え」（`blocked`）の発動とログ「「不動の構え」の追加効果（予告以上のブロック）」、「一喝」（`enemyBig`）の ⚡/＋ 状態表示
+- save/resume（リロード後にホームへ「続きから（蒼毘・ラウンド6）」）
+- ページ由来の console error 0／HTTP は 200・304 のみでネットワークエラー 0（記録された警告は MetaMask 拡張由来）
+
+**未実施（本番側の不具合ではない）**：勝利画面の神技評価表示・報酬3択のボーナス表示・Daily・神階の実プレイ確認。検証機で Roblox が全画面かつ CPU を 130〜208%（4スレッド換算）占有し、Chrome タブが `visibilityState: hidden` になって `setTimeout` が集中スロットリングされたため、カード使用の280msアニメーションが解決せず自動操作を完走できなかった。勝利画面の新表示は CEO の Human Play QA で実機確認済み、報酬のボーナス表示は同一の表示関数（`formatCardBonus`）の unit test で担保。
+
 ## Known Non-blockers（MINOR / Post-release）
 
 いずれも **8/31 blockerではない**（CEO承認済み）。対応は9月以降。
@@ -99,6 +117,12 @@
 10. **SE は数式合成の自作音源**：収録素材ほどの質感はない（CEO Audio QA では「以前より大幅に良い」でPASS）。有料/収録素材への差し替えは CEO 判断事項
 11. **Boss Entrance 中もカードは押せる**（操作を奪わない方針。登場と同時に攻撃すると演出が重なる＝許容）
 
+12. **Gate 3 は WAIVED RISK**（決定129）。PASS とは表記しない
+13. **共通カードの差別化は UNRESOLVED RISK**（決定129）。Phase 3 の目標から外したのではなく、未解消のまま正式記録する
+14. **大耀の神技評価が C に偏る**（専門プレイでも 52.4% が C）。閾値は変更せず Phase 4 backlog
+15. **寿楽の神技評価が敵依存**。Phase 4 backlog
+16. **`balanceSim` STAKE-01 の timeout 脆弱性**：`it()` に明示タイムアウトが無く既定 5000ms を使う一方、CPU が空いていても実測 2.4 秒で余裕が約2倍しかない。CPU 高負荷時は超過する（ENVIRONMENTAL TIMEOUT / NON-BLOCKING）。今回タイムアウト値は変更せず **QA infrastructure backlog**
+
 その他：stale `.claude/worktrees`（ローカル作業環境のみ。テスト件数混入の原因、削除は別途）
 
 ## Post-release Priorities（9月以降）
@@ -107,8 +131,10 @@
 0. ~~神階（Stakes）~~ → Phase 1 として RELEASED（決定126）
 1. ~~BURST任意発動~~ → 不採用（決定127）。カードシナジー＋共鳴経済の再設計と同時に再検討
 2. ~~SE実音源~~ → Phase 2 として自作SEで RELEASED（決定128）
-3. Daily共有
-4. 戦略深度改善
+3. **Daily Ranking**（Phase 4 最優先候補）
+4. **Visual Quality**（`feat/visual-quality-assets`：敵WebPの再生成。決定129のリリース後対応）
+5. Daily共有
+6. 戦略深度改善
 （＋上記Known Non-blockers 1のsettle補正）
 
 ### P2
