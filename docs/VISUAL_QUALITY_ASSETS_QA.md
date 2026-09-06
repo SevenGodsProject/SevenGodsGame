@@ -194,22 +194,45 @@ preview サーバーと Chrome を起動したまま `npm test` を回すと、`
 決定129 で QA infrastructure backlog としていた `balanceSim` STAKE-01 のタイムアウトは、
 preview サーバーを停止した状態では**再現せず PASS**（環境要因であることが再確認された）。
 
-### 9-6. Production Visual QA（**未実施 / PENDING**）
+### 9-6. Production Visual QA（**PASS**・2026-09-07 実施）
 
-ブラウザ実機での本番 Visual QA は、**PC再起動後に Chrome 拡張（Claude in Chrome）が未接続**の
-ため実行できなかった（`tabs_context_mcp` が3回とも "Browser extension is not connected"）。
-**本番側の不具合ではない。** 以下が未消化：
+Chrome 拡張の再接続後、本番 URL（https://seven-gods-game.vercel.app/ ）で実機 QA を実施。
+実行前に `localStorage` を退避し、終了後に元の save（蒼毘・ラウンド6／試練の影）へ完全復元した。
 
-- 恵比寿／双牙の魔獣／鯛丸・精霊態の**本番実機での表示確認**
-- 代表 別1組（別の神・敵・OTOMO）の表示確認
-- alpha edge／battle layout／animation の実機確認
-- console error・network error の実機計測
-- save / resume の実機確認
+**確認した2組**
 
-**代替として担保できている範囲**：CEO の Human Visual QA（ローカル preview、同一ビルド・同一
-バイナリのアセット）が PASS。本番の bundle と 32 アセットは**ローカル検証物と byte 単位で一致**
-しており、描画結果が異なる余地は無い。加えて実ファイル存在チェックのテスト3件と 614 tests が
-PASS。**この状態を「未消化」として明示し、PASS 扱いにはしない。**
+| 区分 | 組1（CEO 指定） | 組2（代表・別1組） |
+|---|---|---|
+| 神 | 恵比寿 `front_640.webp` | 蒼毘 `front_640.webp` |
+| 敵 | 双牙の魔獣 `art_hq.webp`（`art.png` から再変換） | 藍花の怨霊 `art_hq.webp`（PNG→WebP 再エンコード） |
+| OTOMO | 鯛丸・精霊態 `spirit_320.webp` | 百勝・精霊態 `spirit_320.webp` |
+
+**結果**
+
+| 項目 | 結果 |
+|---|---|
+| 神表示 | PASS。顔・髪・衣装・輪郭ともジャギーなし。旧 `front.png` にあった髪・輪郭の階段状のギザつきは解消 |
+| 敵表示 | PASS。顔・輪郭・武器・体表ディテールとも良好。敵選択画面でも7体すべてが正常描画 |
+| OTOMO表示 | PASS。**精霊態の半透明の発光・粒子が潰れていない**（シャープ処理なしの方針どおり） |
+| alpha edge | PASS。白フチ・黒フチ・欠けとも**確認されず**。ステージ背景に対して自然に合成されている |
+| 背景との解像感差 | PASS。キャラクターだけ粗く見える状態は解消 |
+| 過剰シャープ | PASS。不自然なシャープ化なし |
+| battle layout | PASS。神 221×241／223×243 CSS px、OTOMO 128×128 CSS px。既存の階層（敵 ≳ 神 > OTOMO）を維持 |
+| animation | PASS。ラウンド進行・被弾演出・HPバー・敵セリフとも正常 |
+| broken image | **0**（`naturalWidth === 0` の img は両組とも 0件） |
+| 実解像度 | 神 natural 640×640／OTOMO natural 320×320／敵は CSS background で `art_hq.webp` を参照 |
+| 旧アセットの残存フェッチ | **0**（`front.png`／`_transparent.webp`／敵 `art.png`・旧 `art.webp` はいずれも1件も要求されない） |
+| console error | **0**（記録された6件の警告はすべて `chrome-extension://`（MetaMask）由来。ページ由来のエラー・例外は 0） |
+| network error | 画像・JS・CSS・SE の **全200**、4xx/5xx は **0**（下記 BGM の項を除く） |
+| save / resume | PASS。ラウンド2で離脱 → リロード → 「続きから（恵比寿・ラウンド2）」→ 復帰後も新アセットで正常描画（HP 210/300・ラウンド 2/7 を保持） |
+
+**非ブロッカーの観測（本パッチとは無関係）**
+
+`/assets/bgm/home.mp3`（6.07 MB）が一部のページロードで **HTTP 503** を返した（3ロード中2回。
+残り1回と `battle.mp3` は 206 で正常）。curl での直接取得は **3/3 で 200・6,073,315 B** を返す。
+BGM ファイルは 2026-08-13 以降変更されておらず、**今回の merge 差分にも含まれない**。
+大容量 mp3 の range リクエストに対する CDN 側の一時的な事象と判断し、
+**Visual Quality Patch の P0/P1 には該当しない**。BGM 配信の安定化は別課題として backlog に記録する。
 
 ### 9-7. Known Risk（更新）
 
@@ -223,7 +246,12 @@ PASS。**この状態を「未消化」として明示し、PASS 扱いにはし
 3. 敵は原画自体が 384〜512px のため DPR2 デスクトップ（560px 必要）には届かない（継続）。
 4. 神 640px は DPR3 かつ 900px 幅以上で 97% 充足（継続）。
 5. 旧アセットはロールバック用に温存するためリポジトリ容量は減らない（ユーザーDL量には影響なし）。
+6. **`/assets/bgm/home.mp3`（6.07 MB）が一部のロードで HTTP 503 を返す**（9-6 参照）。BGM は
+   本パッチの変更対象外（2026-08-13 以降未変更）で Visual Quality の P0/P1 ではないが、
+   **BGM 配信の安定化を別課題として backlog** に記録する。
 
 ### 9-8. リリース判定
 
-**P0：0件／P1：0件／rollback：不要／status：RELEASED**（Production Visual QA のみ PENDING）
+**P0：0件／P1：0件／rollback：不要／status：RELEASED**
+
+Production Visual QA も 2026-09-07 に **PASS**（9-6）。Visual Quality Patch は全 Step 完了。
