@@ -1,5 +1,5 @@
 import { godId } from '../types/ids'
-import type { Effect, GodDef, GodId } from '../types'
+import type { Effect, GodDef, GodId, GodPassive, GodPassiveId } from '../types'
 import { OTOMO_IDS } from './otomo'
 
 export const GOD_IDS = {
@@ -99,6 +99,13 @@ export const GODS: GodDef[] = [
     motif: '毘沙門天：寡黙で実直な守護者。仲間のためなら一歩も引かない硬派な武人',
     tagline: '誓いは違えぬ、盾となろう',
     archetype: 'defense',
+    // Phase 3 FINAL SPEC v0.1：「守る」を「攻める」に変換する得意技。
+    // 予告に合わせてブロックを積む判断が、そのまま火力になる（読み外して余った盾も無駄にならない）
+    passive: {
+      id: 'sobi_counter',
+      nameJa: '反撃の構え',
+      textJa: '敵の攻撃を受け切って残ったブロックを、そのまま敵へダメージとして返す',
+    },
   },
   {
     id: GOD_IDS.saika,
@@ -154,6 +161,13 @@ export const GODS: GodDef[] = [
     motif: '福禄寿：怖いもの知らずの冒険家。幸運は自分から掴みにいく主義',
     tagline: '幸運は、待たずに掴みにいく',
     archetype: 'attack',
+    // Phase 3 FINAL SPEC v0.1：「窮地」を「攻める」に変換する得意技（笑蓮の鏡像）。
+    // 回復して立て直すか、このまま殴り切るかの判断が生まれる
+    passive: {
+      id: 'fukuei_gamble',
+      nameJa: '大勝負',
+      textJa: 'HPが半分以下のとき、攻撃カードのダメージ+50%',
+    },
   },
   {
     id: GOD_IDS.shouren,
@@ -174,6 +188,13 @@ export const GODS: GodDef[] = [
     motif: '布袋：おおらかで面倒見のいい姉貴分。細かいことは気にせず誰でも受け入れる',
     tagline: '細かいことは、まあいいじゃない',
     archetype: 'support',
+    // Phase 3 FINAL SPEC v0.1：「回復して無傷を保つ」を「攻める」に変換する得意技（福永の鏡像）。
+    // 閾値8割は最終pilotで確定（10割は専用カードが死に、7割は常時バフ化する）
+    passive: {
+      id: 'shouren_pristine',
+      nameJa: '無傷の慈愛',
+      textJa: 'HPが8割以上のとき、攻撃カードのダメージ+50%',
+    },
   },
 ]
 
@@ -183,6 +204,23 @@ export function getGodDef(id: GodId): GodDef {
   const def = GOD_BY_ID.get(id)
   if (!def) {
     throw new Error(`神の定義が見つかりません: ${id}`)
+  }
+  return def
+}
+
+/**
+ * Phase 3 FINAL SPEC v0.1：得意技idから、その定義（名前・説明）を引く。
+ * `PASSIVE_TRIGGERED`イベントは神IDを持たない（idだけで一意）ため、
+ * 表示側が名前を手書きで複製しないようにこの引き当てを用意する。
+ */
+const GOD_PASSIVE_BY_ID = new Map<GodPassiveId, GodPassive>(
+  GODS.flatMap((g) => (g.passive ? [[g.passive.id, g.passive] as const] : [])),
+)
+
+export function getGodPassiveDef(id: GodPassiveId): GodPassive {
+  const def = GOD_PASSIVE_BY_ID.get(id)
+  if (!def) {
+    throw new Error(`神技の定義が見つかりません: ${id}`)
   }
   return def
 }

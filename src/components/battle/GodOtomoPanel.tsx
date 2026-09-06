@@ -30,6 +30,11 @@ type GodOtomoPanelProps = {
   reactionKey: number
   /** 決定128：7/7 到達（BURST）の瞬間にゲージを満たして発光させるキー（fx.burstKey）。省略可 */
   readyFlashKey?: number
+  /**
+   * Phase 3 FINAL SPEC v0.1：神の得意技の条件を今満たしているか（表示専用）。
+   * 判定は`core/engine/godPassive.ts`の`isGodPassiveArmed`だけが行う。
+   */
+  passiveArmed?: boolean
 }
 
 /**
@@ -57,8 +62,11 @@ export function GodOtomoPanel({
   otomoGrowthPath,
   reactionKey,
   readyFlashKey = 0,
+  passiveArmed = false,
 }: GodOtomoPanelProps) {
   const otomoDef = getOtomoDef(otomo.defId)
+  // Phase 3 FINAL SPEC v0.1：得意技を持つ3神だけバッジを出す（持たない神は何も足さない）
+  const godPassive = getGodDef(godId).passive
   const ratio = resonance.max > 0 ? Math.min(1, resonance.value / resonance.max) : 0
   const resonanceStage = getResonanceStage(resonance.value)
   // 第二次完成フェーズP0-4：神ごとに個性化されたresonanceEffects（gods.ts）を
@@ -146,6 +154,16 @@ export function GodOtomoPanel({
   return (
     <div className="panel god-otomo-panel">
       <div className="panel-title">共鳴</div>
+      {godPassive && (
+        <div
+          className={`god-passive-badge${passiveArmed ? ' god-passive-armed' : ''}`}
+          title={godPassive.textJa}
+          data-testid="god-passive-badge"
+        >
+          神技 {godPassive.nameJa}
+          {passiveArmed && <span className="god-passive-armed-mark">発動中</span>}
+        </div>
+      )}
       <div className="god-otomo-portraits">
         {/* VFX-03：成長グロー（evolve-glow）は立ち絵切替と同じ「🌱成長」の瞬間に再生する
             （keyをevolveRevealKeyに変更。以前はevolveKey＝暗転の下で発動していた） */}

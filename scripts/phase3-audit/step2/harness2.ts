@@ -19,6 +19,7 @@ import { getFinalScore } from '../../../src/core/engine/score'
 import { createRng } from '../../../src/core/rng/seededRandom'
 import { OTOMO_FORM_ORDER } from '../../../src/core/types/otomo'
 import { RULES } from '../../../src/core/data/rules'
+import { getGodDef } from '../../../src/core/data/gods'
 import type { CardDefId, CardInstance, Effect, GameEvent, GameState, GodId, EnemyId, StakeChoiceId, Difficulty, GrowthPath } from '../../../src/core/types'
 import {
   getCardDef, getRecommendedDeck, getCardPoolForGod, GOD_IDS, cardDamage, cardHeal, cardBlock,
@@ -191,8 +192,16 @@ export function step(state: GameState, action: Action): StepResult {
     const r = applyAction(state, action)
     return { state: r.state, events: r.events }
   }
-  // END_ROUND：runEnemyTurn → passive → finishRound → passive(roundStart)
+  // END_ROUND
   if (state.status !== 'playing' || state.phase !== 'playerTurn') throw new Error('今はラウンドを終えられません')
+  // ルール層のafterEnemyTurn passiveが無い場合（＝本番engineをそのまま測るPRODモード含む）は
+  // engineの `endRound`（applyAction）へ丸ごと委譲する。Phase 3実装後は蒼毘の反撃が
+  // engine側の endRound に入っているため、ここで runEnemyTurn/finishRound を直接呼ぶと
+  // 本番の挙動を取りこぼす（＝ハーネスが本番と別物になる）。
+  if (!passives.some((p) => p.afterEnemyTurn) && !passives.some((p) => p.roundStart)) {
+    const r = applyAction(state, { type: 'END_ROUND' })
+    return { state: r.state, events: r.events }
+  }
   const enemy = runEnemyTurn(state)
   let next = enemy.state
   const events = [...enemy.events]
@@ -341,6 +350,8 @@ function evaluate(after: GameState, before: GameState, p: Profile): number {
 
 function isCommutative(defId: CardDefId): boolean {
   if (active.condEffects[defId]?.length) return false
+  // Phase 3実装後：本番データ側の bonus も順序依存（blocked等は積んだ量で成立が変わる）
+  if (getCardDef(defId).bonus) return false
   return getCardDef(defId).effects.every((e) => e.kind === 'damage' || e.kind === 'block' || e.kind === 'heal' || e.kind === 'debuff')
 }
 
@@ -348,8 +359,9 @@ type Step = Exclude<Action, { type: 'END_ROUND' }>
 export function planRound2(state: GameState, p: Profile, budget = 400): Step[] {
   let best: { score: number; steps: Step[] } = { score: -Infinity, steps: [] }
   let leaves = 0
-  // passiveがある神は順序依存が増えるため可換省略を弱める
-  const hasPassive = active.passives.some((x) => x.godId === state.godId)
+  // passiveがある神は順序依存が増えるため可換省略を弱める（本番実装済みのGodDef.passiveも見る）
+  const hasPassive =
+    active.passives.some((x) => x.godId === state.godId) || !!getGodDef(state.godId).passive
   const dfs = (s: GameState, steps: Step[], lastComm: string | null) => {
     if (leaves >= budget) return
     const end = s.status === 'playing' ? step(s, { type: 'END_ROUND' }).state : s

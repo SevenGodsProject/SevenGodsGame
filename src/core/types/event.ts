@@ -2,6 +2,8 @@ import type { CardDefId, CardUid } from './ids'
 import type { EffectTarget } from './effect'
 import type { GameStatus } from './state'
 import type { OtomoForm } from './otomo'
+import type { BonusCond } from './card'
+import type { GodPassiveId } from './god'
 
 /**
  * ゲーム内で「起きた出来事」の記録。
@@ -36,3 +38,13 @@ export type GameEvent =
   | { t: 'GAME_ENDED'; status: GameStatus; totalScore: number }
   /** 託宣を使った（決定21） */
   | { t: 'DIVINATION_USED'; choiceIndex: number; remaining: number }
+  /**
+   * Phase 3 FINAL SPEC v0.1：カードの条件付き追加効果（`CardDef.bonus`）が成立した。
+   * 直後に続く効果イベント（DAMAGE_DEALT等）が、その追加分。
+   */
+  | { t: 'BONUS_TRIGGERED'; defId: CardDefId; when: BonusCond }
+  /**
+   * Phase 3 FINAL SPEC v0.1：神の得意技（Passive）が発動した。
+   * `amount`はバフ適用前の名目値（表示用。実ダメージは後続のDAMAGE_DEALTを見る）。
+   */
+  | { t: 'PASSIVE_TRIGGERED'; passiveId: GodPassiveId; amount: number }

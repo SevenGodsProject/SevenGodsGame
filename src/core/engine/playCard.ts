@@ -4,6 +4,8 @@ import { getCardDef } from '../data/cards'
 import { GOD_IDS } from '../data/gods'
 import { createRng } from '../rng/seededRandom'
 import { applyEffect, applyEffects, addScore } from './effects'
+import { evaluateBonusCond } from './cardBonus'
+import { passiveNominalAmount, resolveGodPassive } from './godPassive'
 
 type PlayCardAction = Extract<GameAction, { type: 'PLAY_CARD' }>
 
@@ -88,13 +90,41 @@ export function playCard(
         }
       }
     }
-    next = { ...next, rngCursor: state.rngCursor + rng.callCount() }
-    return { state: next, events }
+  } else {
+    const result = applyEffects(next, cardDef.effects, rng)
+    next = result.state
+    events.push(...result.events)
   }
 
-  const result = applyEffects(next, cardDef.effects, rng)
-  next = { ...result.state, rngCursor: state.rngCursor + rng.callCount() }
-  events.push(...result.events)
+  // Phase 3 FINAL SPEC v0.1：カードの条件付き追加効果（bonus）。
+  // 本体効果のあとに1回だけ条件を評価する。福永Masteryの`riskCardEffDamage`には
+  // 本体効果分だけを数える（上のループの外なので、bonus由来のダメージは混入しない）。
+  if (RULES.godIdentity.cardBonusEnabled && cardDef.bonus && next.status === 'playing') {
+    if (evaluateBonusCond(cardDef.bonus.when, state, next)) {
+      events.push({ t: 'BONUS_TRIGGERED', defId: cardDef.id, when: cardDef.bonus.when })
+      const bonusResult = applyEffects(next, cardDef.bonus.effects, rng)
+      next = bonusResult.state
+      events.push(...bonusResult.events)
+    }
+  }
 
+  // Phase 3 FINAL SPEC v0.1：神の得意技（afterPlay）。HP条件は「カードを使う前」の盤面で判定する
+  // （回復カードで条件を満たしてから同じカードの攻撃部分を強化する、といった順序依存を作らない）。
+  const passive = resolveGodPassive(state.godId)
+  if (passive?.afterPlay && next.status === 'playing') {
+    const extra = passive.afterPlay(state, next, cardDef)
+    if (extra.length > 0) {
+      events.push({
+        t: 'PASSIVE_TRIGGERED',
+        passiveId: passive.def.id,
+        amount: passiveNominalAmount(extra),
+      })
+      const passiveResult = applyEffects(next, extra, rng)
+      next = passiveResult.state
+      events.push(...passiveResult.events)
+    }
+  }
+
+  next = { ...next, rngCursor: state.rngCursor + rng.callCount() }
   return { state: next, events }
 }

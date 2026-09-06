@@ -11,6 +11,11 @@ type CardViewProps = {
   playable: boolean
   /** クリックされてから実際に手札を離れるまでの、使用演出中かどうか */
   playing: boolean
+  /**
+   * Phase 3 FINAL SPEC v0.1：このカードの条件付き追加効果が、今使えば成立するか。
+   * 判定は`core/engine/cardBonus.ts`の`previewBonusTrigger`だけが行う（表示専用）。
+   */
+  bonusReady?: boolean
   onPlay: () => void
 }
 
@@ -22,7 +27,7 @@ type CardViewProps = {
  * 透かしアイコンで質感を出す。神専用カードは、その神の立ち絵を
  * 背景に薄く敷いて特別感を足す（SGG Creator Kitは二次創作・商用利用許可済み）。
  */
-export function CardView({ instance, affordable, playable, playing, onPlay }: CardViewProps) {
+export function CardView({ instance, affordable, playable, playing, bonusReady = false, onPlay }: CardViewProps) {
   const def = getCardDef(instance.defId)
   const style = TYPE_STYLE[def.type]
   const rarity = RARITY_STYLE[def.rarity]
@@ -81,6 +86,14 @@ export function CardView({ instance, affordable, playable, playing, onPlay }: Ca
           {style.label}
         </div>
         <div className="card-view-text">{def.text}</div>
+        {/* Phase 3 FINAL SPEC v0.1：条件付き追加効果。条件を満たしている手札は光らせて
+            「今使えば追加が出る」ことを分かるようにする（新しい常設UIは足さない） */}
+        {def.bonus && (
+          <div className={`card-view-bonus${bonusReady ? ' card-view-bonus-ready' : ''}`}>
+            {bonusReady ? '⚡ ' : '＋ '}
+            {def.bonus.textJa}
+          </div>
+        )}
       </div>
     </button>
   )

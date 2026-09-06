@@ -274,6 +274,14 @@ export function GodSelectScreen({
                   <div className="god-select-name">{god.nameJa}</div>
                   <div className="god-select-tagline">「{god.tagline}」</div>
                   <div className="god-select-tactics">{GOD_TACTICS[god.id]}</div>
+                  {/* Phase 3 FINAL SPEC v0.1：神の得意技（Passive）。持つのは3神だけで、
+                      持たない神には何も足さない（「得意技なし」とは書かない） */}
+                  {god.passive && (
+                    <div className="god-select-passive">
+                      <span className="god-select-passive-name">神技「{god.passive.nameJa}」</span>
+                      {god.passive.textJa}
+                    </div>
+                  )}
                   {/* STEP-SCORE2-D2a：神技（Mastery）の1行説明。戦う前から「この神で
                       何を狙うか」が分かるようにする。prototypeは大耀のみ（表に無い神は非表示） */}
                   {MASTERY_SELECT_HINT[god.id] && (

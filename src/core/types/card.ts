@@ -13,6 +13,30 @@ export type CardType =
 export type Rarity = 'common' | 'rare' | 'legend'
 
 /**
+ * 条件付き追加効果（bonus）の条件（Phase 3「神格」FINAL SPEC v0.1）。
+ *
+ * ★不変ルール3の維持：カード名で分岐（`if (card.name === '...')`）せず、
+ * 「どの条件で」「どの効果が増えるか」をデータ（`CardDef.bonus`）で表す。
+ * 評価は`engine/cardBonus.ts`の1関数だけが行い、engineに大量のifを増やさない。
+ *
+ * - blocked  … 本体効果の適用「後」、ブロックが敵の予告ダメージ以上（予告0＝溜め等では不成立）
+ * - enemyBig … カードを使う「前」、敵の予告ダメージ合計が`RULES.cardBonus.enemyBigThreshold`以上
+ * - lowHp    … カードを使う「前」、HPが最大の`RULES.cardBonus.lowHpRatio`以下（切り捨て）
+ */
+export type BonusCond = 'blocked' | 'enemyBig' | 'lowHp'
+
+/**
+ * カード1枚が持てる条件付き追加効果（1枚につき最大1つ）。
+ * 本体`effects`を適用したあとに条件を1回だけ評価し、成立していれば`effects`を追加で適用する。
+ */
+export type CardBonus = {
+  when: BonusCond
+  effects: Effect[]
+  /** カード説明の追加行（プレイヤー向け。表示値は内部値×10） */
+  textJa: string
+}
+
+/**
  * カードの「設計図」。1種類につき1つだけ存在します。
  * 例：「一撃」というカードの定義。
  */
@@ -30,6 +54,8 @@ export type CardDef = {
   godId?: GodId
   /** 画像ファイル名（未設定なら色で代用） */
   art?: string
+  /** 条件付き追加効果（Phase 3 FINAL SPEC v0.1。持たないカードは未設定） */
+  bonus?: CardBonus
 }
 
 /**

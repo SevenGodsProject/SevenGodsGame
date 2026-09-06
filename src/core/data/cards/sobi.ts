@@ -27,6 +27,13 @@ export const SOBI_CARDS: CardDef[] = [
     godId: GOD_IDS.sobi,
     // 鉄壁の構え(2AP・12block)よりわずかに硬い、専用の盾
     effects: [{ kind: 'block', amount: 13 }],
+    // Phase 3 FINAL SPEC v0.1：予告に合わせて固める判断そのものを火力に変える。
+    // Step 2.5の対応標本で −10.3pt（現行）→ +2.2pt へ転じた蒼毘の看板カード
+    bonus: {
+      when: 'blocked',
+      effects: [{ kind: 'damage', target: 'enemy', amount: 6 }],
+      textJa: 'ブロックが敵の予告以上なら、敵に60ダメージ。',
+    },
   },
   {
     id: SOBI_CARD_IDS.oathOfShield,
@@ -65,5 +72,12 @@ export const SOBI_CARDS: CardDef[] = [
     godId: GOD_IDS.sobi,
     // 呪縛(2AP・-5×3round・効率×1.5)の専用上位版
     effects: [{ kind: 'debuff', target: 'enemy', stat: 'atk', amount: 6, rounds: 3 }],
+    // Phase 3 FINAL SPEC v0.1：「大技の直前に置く」判断に報酬を与える。
+    // Step 2.5の対応標本で −6.7pt（現行）→ +3.6pt
+    bonus: {
+      when: 'enemyBig',
+      effects: [{ kind: 'damage', target: 'enemy', amount: 6 }],
+      textJa: '敵の予告が100以上なら、敵に60ダメージ。',
+    },
   },
 ]
