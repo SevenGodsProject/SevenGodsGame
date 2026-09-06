@@ -37,7 +37,12 @@ const art = (id: string) => ({
   // 神選択画面・プレイヤーアバターで白い矩形が目立っていたための対応。
   // backは戦闘画面等どこからも参照されていないため、元のwebpのまま残している。
   main: `/assets/gods/${id}/main.png`,
-  front: `/assets/gods/${id}/front.png`,
+  // STEP-VISUAL-ASSETS：配信用は640px WebPへ切替。旧`front.png`（480px）は
+  // ロールバック用に温存（enemies刷新・決定99/100と同じ「併置・最小差分」方式）。
+  // 中身は`main.webp`（1600px・front.pngと同一の絵、PSNR 36dB）のRGBに
+  // front.pngのアルファを合わせたもので、絵柄・ポーズ・構図は一切変えていない。
+  // ※同ディレクトリの`front.webp`は別ポーズの立ち絵なので使用しない。
+  front: `/assets/gods/${id}/front_640.webp`,
   back: `/assets/gods/${id}/back.webp`,
   // 七神キービジュアル採用：原本（public/assets/reference/gods/）から生成した
   // 軽量WebP派生版。原本ファイル名・godIdが一致しているため機械的に導出できる。

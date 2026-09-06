@@ -11,7 +11,20 @@ export const ENEMY_IDS = {
   doukeshi: enemyId('enemy_07'),
 } as const
 
-const art = (slug: string) => `/assets/enemies/${slug}/art.png`
+/**
+ * STEP-VISUAL-ASSETS：7体すべてがWebPになり`art()`ヘルパーは不要になったため撤去。
+ *
+ * 重要（今後この付近を触る人向け）：`datenshi`・`karakuri`・`doukeshi`の
+ * `art.png`は「旧デザイン」であって、現行`art.webp`の高画質版ではない。
+ * 決定99/100でCEOが別イラストへ差し替えた際の差し替え前の絵が
+ * ロールバック用に残っているだけで、両者は別のキャラクター画像である
+ * （同一表示サイズでのPSNRは約8dB＝完全な別画像）。
+ * この3体をart.pngから再変換すると、一度捨てたデザインに戻ってしまうため、
+ * 画質改善目的でart.pngをsourceに使ってはならない。
+ * `oni`・`juuma`のみart.pngが現行art.webpの真のsource（決定99/100ではなく
+ * commit 5b1e1b7の軽加工）なので、そちらは再変換の対象になる。
+ */
+
 
 /**
  * 決定32：敵のバリエーション化。CEOがChatGPT/Geminiで生成した7体分のイラストを
@@ -69,7 +82,10 @@ export const ENEMIES: EnemyDef[] = [
     // STEP-L2：敵アセット最終調整の第一弾としてoniもPNGからWebPへ本番切り替え
     // （STEP-L1で軽加工候補を検証・A判定。新規生成は行わず、512×512化・余白調整
     // のみ。datenshi/karakuri/doukeshiと同じ最小変更方式。数値・AIには一切触れていない）。
-    art: '/assets/enemies/oni/art.webp',
+    // STEP-VISUAL-ASSETS：そのSTEP-L1の加工（bbox抽出→360×435→(76,39)へ配置）を
+    // 可逆なart.pngから再実行し、圧縮による劣化分だけを取り戻した。配置は旧art.webpと
+    // 完全一致（512×512／本体360×435@(76,39)）で、表示位置・サイズは不変。
+    art: '/assets/enemies/oni/art_hq.webp',
     typeLabel: '重撃型',
     typeDescription: '攻撃が重い。防御を切らさない。',
     visualType: 'standard',
@@ -101,7 +117,9 @@ export const ENEMIES: EnemyDef[] = [
     id: ENEMY_IDS.onryo,
     name: '藍花の怨霊',
     maxHp: 95,
-    art: art('onryo'),
+    // STEP-VISUAL-ASSETS：PNGのままだった2体（onryo・ryujin）をWebPへ。
+    // 寸法・構図は無変更の純粋な再エンコードで、アルファは完全可逆（PSNR ∞）。
+    art: '/assets/enemies/onryo/art_hq.webp',
     typeLabel: '遅咲き型',
     typeDescription: '終盤に攻撃が急激に強くなる。',
     visualType: 'lateSurgeStrong',
@@ -172,7 +190,10 @@ export const ENEMIES: EnemyDef[] = [
     // STEP-L2：敵アセット最終調整の第二弾としてjuumaもPNGからWebPへ本番切り替え
     // （STEP-L1で軽加工候補を検証・A判定。左端の破片除去＋512×512化のみで、
     // 新規生成なし。datenshi/karakuri/doukeshi/oniと同じ最小変更方式）。
-    art: '/assets/enemies/juuma/art.webp',
+    // STEP-VISUAL-ASSETS：oniと同じくart.pngから加工を再実行（本体のみ抽出→
+    // 428×432→(45,41)へ配置。破片は本体と非接触のため自動的に除外される）。
+    // 配置は旧art.webpと完全一致。同一表示サイズのPSNRは23.6dB→35.0dBへ改善。
+    art: '/assets/enemies/juuma/art_hq.webp',
     typeLabel: '連撃型',
     typeDescription: '毎ラウンド連撃。序盤から圧が激しい。',
     visualType: 'fast',
@@ -206,7 +227,8 @@ export const ENEMIES: EnemyDef[] = [
     id: ENEMY_IDS.ryujin,
     name: '蒼海の龍神',
     maxHp: 103,
-    art: art('ryujin'),
+    // STEP-VISUAL-ASSETS：onryoと同じく寸法・構図無変更の再エンコード。
+    art: '/assets/enemies/ryujin/art_hq.webp',
     typeLabel: '耐久型',
     typeDescription: '高HP。7ラウンドで倒し切る火力配分が重要。',
     visualType: 'heavy',

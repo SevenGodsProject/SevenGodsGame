@@ -61,3 +61,26 @@ describe('OTOMOS', () => {
     }
   })
 })
+
+describe('character art assets (STEP-VISUAL-ASSETS)', () => {
+  // 決定124のstage背景テストと同じ方式：`public/`配下の実ファイルをViteのglobで
+  // 列挙し、参照パスが実在することを保証する（broken imageの回帰防止）。
+  const shipped = (glob: Record<string, unknown>) =>
+    Object.keys(glob).map((k) => k.replace('../../../public', ''))
+
+  it('ships the front art referenced by every god', () => {
+    const files = shipped(import.meta.glob('../../../public/assets/gods/*/front_640.webp'))
+    for (const god of GODS) {
+      expect(files, `missing front art for ${god.nameJa}: ${god.art.front}`).toContain(god.art.front)
+    }
+  })
+
+  it('ships every OTOMO form art', () => {
+    const files = shipped(import.meta.glob('../../../public/assets/otomo/*/*_320.webp'))
+    for (const otomo of OTOMOS) {
+      for (const form of OTOMO_FORM_ORDER) {
+        expect(files, `missing ${form} art for ${otomo.nameJa}`).toContain(otomo.art[form])
+      }
+    }
+  })
+})

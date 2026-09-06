@@ -99,3 +99,18 @@ describe('pickEnemyId', () => {
     }
   })
 })
+
+describe('enemy art assets (STEP-VISUAL-ASSETS)', () => {
+  it('ships the art referenced by every enemy', () => {
+    // 7体すべてWebP。datenshi/karakuri/doukeshiは決定99/100の刷新後の絵をそのまま
+    // 使い続けており（art.pngは別デザインの旧絵なのでsourceにしない）、
+    // oni/juuma/onryo/ryujinのみart.pngから再変換したart_hq.webpを参照する。
+    const shipped = Object.keys(import.meta.glob('../../../public/assets/enemies/*/*.webp')).map((k) =>
+      k.replace('../../../public', ''),
+    )
+    for (const enemy of ENEMIES) {
+      expect(enemy.art).toMatch(/^\/assets\/enemies\/[a-z]+\/art(_hq)?\.webp$/)
+      expect(shipped, `missing art for ${enemy.name}: ${enemy.art}`).toContain(enemy.art)
+    }
+  })
+})
