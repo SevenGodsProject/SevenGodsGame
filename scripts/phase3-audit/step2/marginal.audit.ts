@@ -23,6 +23,7 @@ const RULESET = process.env.RULESET ?? 'C0'
 const COND = (process.env.COND ?? 'stress') as 'stress' | 's7' | 's4'
 const SEEDS = Number(process.env.SEEDS ?? 32)
 const rs = rulesetByName(RULESET)
+const GODS_FILTER = process.env.GODS ? process.env.GODS.split(",") : null
 
 function staticValuePerAp(id: CardDefId): number {
   const d = getCardDef(id)
@@ -57,6 +58,7 @@ describe(`Step2.5 marginal value ${RULESET} ${COND}`, () => {
     for (let s = 0; s < SEEDS; s++) for (let e = 0; e < 7; e++) seeds.push(`m25-${RULESET}-${COND}-${s}#${e}`)
 
     for (const god of GOD_ORDER) {
+      if (GODS_FILTER && !GODS_FILTER.includes(god)) continue
       const base = getRecommendedDeck(god)
       const filler = pickFiller(base)
       const base19 = [...base]

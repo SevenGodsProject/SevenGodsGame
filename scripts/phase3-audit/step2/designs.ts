@@ -179,3 +179,40 @@ export const RULESETS_V2: RuleSet[] = [
 ]
 RULESETS.push(...RULESETS_V2)
 RULESETS.push({ name: 'C3-6v2-Fs', passives: V2(G3), condEffects: COND_EFFECTS_6, cardOverrides: {}, deckMode: 'recommended', stakeFix: 'soften', notes: 'F：Passive 3神＋条件6枚（現行デッキ）＋神階Ⅳ85%／Ⅴ75%' })
+
+// ---------------------------------------------------------------------------
+// FINAL narrow pilots（Step 2.5 → FINAL SPEC）：笑蓮 閾値 / 蒼毘 係数 のみ
+// ---------------------------------------------------------------------------
+export function shourenPassive(ratio: number): Passive {
+  return {
+    godId: GOD_IDS.shouren, nameJa: '無傷の慈愛', textJa: `HPが最大の${Math.round(ratio * 100)}%以上のとき、攻撃カードのダメージ+50%。`,
+    afterPlay: ({ before, card }) => {
+      const dmg = cardDamage(card.defId)
+      if (before.player.hp >= before.player.maxHp * ratio && dmg > 0) return [{ kind: 'damage', target: 'enemy', amount: Math.floor(dmg * 0.5) }]
+      return []
+    },
+  }
+}
+export function sobiPassive(coef: number): Passive {
+  return {
+    godId: GOD_IDS.sobi, nameJa: '反撃の構え', textJa: `敵の攻撃を受け切って残ったブロックの${Math.round(coef * 100)}%を、敵へダメージとして返す。`,
+    afterEnemyTurn: (s) => { const d = Math.floor(s.player.block * coef); return d >= 1 ? [{ kind: 'damage', target: 'enemy', amount: d }] : [] },
+  }
+}
+const withVariant = (name: string, notes: string, shourenRatio: number, sobiCoef: number): RuleSet => ({
+  name, notes, passives: [sobiPassive(sobiCoef), shourenPassive(shourenRatio), PASSIVES[GOD_IDS.fukuei]],
+  condEffects: COND_EFFECTS_4, cardOverrides: {}, deckMode: 'recommended', stakeFix: 'none',
+})
+RULESETS.push(
+  withVariant('F-S90', '笑蓮 HP90%以上で+50%（蒼毘50%）', 0.9, 0.5),
+  withVariant('F-S80', '笑蓮 HP80%以上で+50%（蒼毘50%）', 0.8, 0.5),
+  withVariant('F-S70', '笑蓮 HP70%以上で+50%（蒼毘50%）', 0.7, 0.5),
+  withVariant('F-B75', '蒼毘 残ブロック75%反撃（笑蓮100%）', 1.0, 0.75),
+  withVariant('F-B100', '蒼毘 残ブロック100%反撃（笑蓮100%）', 1.0, 1.0),
+)
+// FINAL SPEC v0.1 候補（narrow pilot 確定値）：蒼毘 残ブロック100%反撃／笑蓮 HP80%以上で+50%／福永 HP50%以下で+50%／条件付き4枚
+RULESETS.push({
+  name: 'FINAL', notes: 'FINAL SPEC v0.1：Passive 3神（蒼毘100%・笑蓮80%・福永50%）＋条件付き4枚',
+  passives: [sobiPassive(1.0), shourenPassive(0.8), PASSIVES[GOD_IDS.fukuei]],
+  condEffects: COND_EFFECTS_4, cardOverrides: {}, deckMode: 'recommended', stakeFix: 'none',
+})
