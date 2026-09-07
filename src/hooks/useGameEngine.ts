@@ -90,15 +90,23 @@ export type UseGameEngine = {
    */
   dailyResult: DailyRecordResult | null
   /**
-   * DAILY-01：神域挑戦を開始する。敵・seed・難易度・補正は日付キーから
-   * `resolveDailyStart`が確定し、URLバックドア・敵選択・難易度選択は参照しない。
-   * 挑戦回数を1回消費する。残り0なら開始せずfalseを返す
+   * DAILY-01 / Phase 4.1：神域挑戦を開始する。
+   *
+   * **`bonusCopies`を引数に取らない**ことが公平性の実装そのものである
+   * （`resolveDailyStart`が`forcedId`を取らないのと同じ設計）。決定43の報酬ボーナス
+   * （＝プレイ量に応じてlocalStorageへ積み上がる「同じカードを3枚積める」権利）は
+   * プレイヤーごとに異なる永続進行であり、Dailyの「全員共通の条件」と両立しない。
+   * Phase 4.0監査（決定131）で、この差だけで1,000人規模の順位が平均14.8・最大45
+   * 動くと実測したため、Dailyでは**渡す経路自体を型から消す**。
+   * 通常モード（`startGame`）は従来どおり`bonusCopies`を受け取り、決定43は無変更。
+   *
+   * 敵・seed・難易度・補正は日付キーから`resolveDailyStart`が確定し、URLバックドア・
+   * 敵選択・難易度選択は参照しない。挑戦回数を1回消費する。残り0なら開始せずfalseを返す。
    */
   startDailyGame: (
     godId: GodId,
     deck: CardDefId[],
     dailyKey: string,
-    bonusCopies?: Map<CardDefId, number>,
     otomoGrowthPath?: GrowthPath,
   ) => boolean
   startGame: (
@@ -263,7 +271,6 @@ export function useGameEngine(): UseGameEngine {
       godId: GodId,
       deck: CardDefId[],
       dailyKey: string,
-      bonusCopies?: Map<CardDefId, number>,
       otomoGrowthPath?: GrowthPath,
     ): boolean => {
       // DAILY-01：残り回数が無ければ開始しない（画面側もボタンを無効化するが二重に守る）
@@ -289,7 +296,9 @@ export function useGameEngine(): UseGameEngine {
         enemyId: daily.enemyId,
         deck,
         difficulty: daily.difficulty,
-        bonusCopies: bonusCopies ? Object.fromEntries(bonusCopies) : undefined,
+        // Phase 4.1：Dailyは`bonusCopies`を一切乗せない（＝全員が同じ編成ルール）。
+        // 省略時はcreateInitialStateが空Mapとして扱い、validateDeckは
+        // `RULES.deckBuilding.maxCopiesPerCard`（2枚）で判定する
         otomoGrowthPath,
         mode: daily.mode,
         dailyKey: daily.dailyKey,

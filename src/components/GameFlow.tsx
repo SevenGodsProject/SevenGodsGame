@@ -213,11 +213,13 @@ export function GameFlow({ onShowTutorial, onSnapshotChange }: GameFlowProps) {
               setDeck(confirmedDeck)
               saveDeckPreference(godId, confirmedDeck)
               if (dailyKey) {
+                // Phase 4.1：Dailyは報酬ボーナス（決定43）を渡さない。
+                // `startDailyGame`が`bonusCopies`を引数に取らない設計になっているため、
+                // ここで渡し忘れ／渡し直しが起きる余地がない（型で担保）
                 const started = engine.startDailyGame(
                   godId,
                   confirmedDeck,
                   dailyKey,
-                  loadRewardBonuses(godId),
                   otomoGrowthPath,
                 )
                 if (!started) setSetupScreen('daily')
@@ -268,11 +270,11 @@ export function GameFlow({ onShowTutorial, onSnapshotChange }: GameFlowProps) {
           if (!godId || !deck) return
           if (inDaily) {
             if (!dailyKey) return
+            // Phase 4.1：「もう一度挑戦」も同じく報酬ボーナスなし（1〜3回目で条件が変わらない）
             const started = engine.startDailyGame(
               godId,
               deck,
               dailyKey,
-              loadRewardBonuses(godId),
               otomoGrowthPath,
             )
             if (!started) {

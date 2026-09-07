@@ -129,6 +129,10 @@ export function DailyChallengeScreen({ dateKey, onStart, onBack }: DailyChalleng
       <div className="daily-rules">
         <strong>全員共通の条件：</strong>敵・Seed・神域強化（敵HP ×{RULES.daily.modifier.enemyHpMul}・攻撃 ×
         {RULES.daily.modifier.enemyAtkMul}、難易度は「ふつう」基準）。
+        {/* Phase 4.1：編成ルールも「全員共通の条件」であることを明記する。
+            神域挑戦では報酬カードの追加編成上限（通常モードの3枚積み）を使わない */}
+        <strong>編成ルールも全員同じ</strong>で、同じカードは
+        {RULES.deckBuilding.maxCopiesPerCard}枚まで（通常モードの報酬ボーナスは使いません）。
         <br />
         <strong>自由に選べるもの：</strong>神・OTOMOの絆・デッキ。敵選択と難易度選択はありません。
         <br />

@@ -1,32 +1,10 @@
-import type { BattleModifier, Difficulty, EnemyId, GameMode } from '../core/types'
-import { RULES } from '../core/data/rules'
-import { dailyBossFor } from '../core/data/dailyBoss'
-
-export type DailyStart = {
-  mode: GameMode
-  dailyKey: string
-  enemyId: EnemyId
-  seed: string
-  difficulty: Difficulty
-  modifier: BattleModifier
-}
-
 /**
  * DAILY-01：神域挑戦のSTART_GAME材料を日付キーだけから確定する純関数。
  *
- * `resolveStartEnemyId`（通常モード）と違い、URLバックドア`?enemy=`・プレイヤーの
- * 敵選択・難易度選択は**一切参照しない**。全員が同じ敵・同じseed・同じ補正で
- * 戦うことがモードの前提であり、ここで例外を作ると「共通条件」が崩れるため。
- * 引数に`forcedId`等を受け取らない設計そのものが、無効化の実装になっている。
+ * Phase 4.1で実体を`src/core/data/dailyStart.ts`へ移した（`src/core/replay`が
+ * 同じ関数を必要とし、core → hooks の逆流依存を作れないため）。
+ * ここは既存の import パス（UI・テスト・Phase 4.0監査ハーネス）を壊さないための
+ * 再エクスポートだけを行う。挙動は移動前と完全に同一。
  */
-export function resolveDailyStart(dailyKey: string): DailyStart {
-  const boss = dailyBossFor(dailyKey)
-  return {
-    mode: 'daily',
-    dailyKey,
-    enemyId: boss.enemyId,
-    seed: boss.seed,
-    difficulty: 'normal',
-    modifier: { ...RULES.daily.modifier },
-  }
-}
+export { resolveDailyStart } from '../core/data/dailyStart'
+export type { DailyStart } from '../core/data/dailyStart'

@@ -84,10 +84,30 @@ export function DeckBuilderScreen({
   const opponent = enemyId ? getEnemyDef(enemyId) : null
   const otomo = getOtomoDef(god.otomoId)
   const pool = useMemo(() => getCardPoolForGod(godId), [godId])
-  const bonusCopies = useMemo(() => loadRewardBonuses(godId), [godId])
-  const [counts, setCounts] = useState<Map<CardDefId, number>>(() =>
-    toCounts(loadDeckPreference(godId) ?? getRecommendedDeck(godId)),
+  /**
+   * Phase 4.1（Daily公平性）：神域挑戦では報酬ボーナス（決定43）を**使わない**。
+   *
+   * Dailyの開始経路（`startDailyGame`）が`bonusCopies`を渡さない以上、構築画面だけが
+   * 3枚積みを許すと「画面上は組めるのに開始時の`validateDeck`で弾かれてDailyが起動
+   * できない」という不整合になる。上限判定（`getMaxCopies`）と検証（`validateDeck`）の
+   * 両方がこの1つの値を見ているため、ここを空Mapにするだけで画面と開始条件が一致する。
+   * 通常モードは従来どおり`loadRewardBonuses`を読む（決定43は無変更）。
+   */
+  const bonusCopies = useMemo(
+    () => (dailyChallenge ? new Map<CardDefId, number>() : loadRewardBonuses(godId)),
+    [godId, dailyChallenge],
   )
+  const [counts, setCounts] = useState<Map<CardDefId, number>>(() => {
+    // 決定27：この神の前回編成を初期表示する。ただしDailyでは、通常モードで
+    // 報酬ボーナスを使って組んだ3枚積みデッキが復元されると初期状態で不正になり、
+    // プレイヤーが自力で直すまで開始できない。Dailyの編成ルールで不正な保存デッキは
+    // おすすめ構成へフォールバックする（おすすめ構成は全神とも1種2枚以内で常にlegal）。
+    const preferred = loadDeckPreference(godId)
+    if (preferred && (!dailyChallenge || validateDeck(preferred, godId).valid)) {
+      return toCounts(preferred)
+    }
+    return toCounts(getRecommendedDeck(godId))
+  })
 
   const deck = useMemo(() => toDeck(counts), [counts])
   const validation = useMemo(() => validateDeck(deck, godId, bonusCopies), [deck, godId, bonusCopies])
