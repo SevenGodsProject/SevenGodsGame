@@ -20,24 +20,33 @@ import { RULES } from './deps'
 
 export const ATTEMPTS_PER_DAY = RULES.daily.attemptsPerDay
 
-/**
- * スキーマ本体。冪等（何度流してもよい）に書いてあるので、
- * マイグレーションの仕組みが要るまではこれをそのまま適用すればよい。
- */
-export function buildRankingSchemaSql(): string {
-  return `-- SEVEN GODS Daily Ranking schema (generated from RULES; do not edit by hand)
--- 生成元: src/server/ranking/schema.ts
+/** DDLの先頭に付ける注記。SQL文ではないので単独では実行しない */
+const SCHEMA_HEADER = `-- SEVEN GODS Daily Ranking schema (generated from RULES; do not edit by hand)
+-- 生成元: src/server/ranking/schema.ts`
 
-CREATE TABLE IF NOT EXISTS players (
+/**
+ * スキーマ本体を**1文ずつ**返す。冪等（何度流してもよい）。
+ *
+ * ★なぜ配列を正とするのか（Phase 4.4 follow-up）
+ * Neon の HTTP ドライバ（`sql.query`）は拡張問い合わせプロトコルを使うため、
+ * `;` で区切った複数文をまとめて渡せない
+ * （`cannot insert multiple commands into a prepared statement`）。
+ * 適用側が1文ずつ流せるよう分割済みの形を正とし、`buildRankingSchemaSql()` は
+ * これを連結して返す（出力内容は従来と同一）。
+ * 文字列を後から `;` で機械分割する方式は、DDL中に `;` を含む定数が入った瞬間に
+ * 壊れるため採らない。
+ */
+export function buildRankingSchemaStatements(): string[] {
+  return [
+    `CREATE TABLE IF NOT EXISTS players (
   -- 端末が生成した匿名ID（乱数16進）。氏名・メール・SNS等は扱わない
   player_id     text        PRIMARY KEY,
   created_at    timestamptz NOT NULL DEFAULT now(),
   -- レート制限用。当日ぶんだけ保持し、日が変われば0から数え直す
   attempt_day   date,
   attempt_count integer     NOT NULL DEFAULT 0
-);
-
-CREATE TABLE IF NOT EXISTS daily_runs (
+)`,
+    `CREATE TABLE IF NOT EXISTS daily_runs (
   -- JSTの日付キー 'YYYY-MM-DD'。敵とseedはここから再導出できるので列に持たない
   daily_key     text        NOT NULL,
   player_id     text        NOT NULL REFERENCES players (player_id) ON DELETE CASCADE,
@@ -61,11 +70,21 @@ CREATE TABLE IF NOT EXISTS daily_runs (
   --    「countしてからinsert」のraceに依存せずDB側で保証する）
   CONSTRAINT daily_runs_attempt_range CHECK (attempt_no BETWEEN 1 AND ${ATTEMPTS_PER_DAY}),
   CONSTRAINT daily_runs_attempt_unique UNIQUE (daily_key, player_id, attempt_no)
-);
-
--- リーダーボード取得用
+)`,
+    `-- リーダーボード取得用
 CREATE INDEX IF NOT EXISTS daily_runs_board_idx
-  ON daily_runs (daily_key, score DESC, submitted_at ASC);
+  ON daily_runs (daily_key, score DESC, submitted_at ASC)`,
+  ]
+}
+
+/**
+ * スキーマ本体をひと続きのSQLとして返す（`.sql` へ書き出す・psqlへ流す用）。
+ * ドライバ経由で適用するときは `buildRankingSchemaStatements()` を1文ずつ実行する。
+ */
+export function buildRankingSchemaSql(): string {
+  return `${SCHEMA_HEADER}
+
+${buildRankingSchemaStatements().join(';\n\n')};
 `
 }
 

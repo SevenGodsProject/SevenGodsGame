@@ -7,7 +7,7 @@ import { toReplayInput } from '../../core/replay'
 import { playRecordedDailyRun } from '../../core/replay/replayTestUtils'
 import { getLeaderboard } from './leaderboard'
 import { createPostgresRankingStore, type SqlExecutor } from './postgresStore'
-import { buildRankingSchemaSql, ATTEMPTS_PER_DAY } from './schema'
+import { buildRankingSchemaSql, buildRankingSchemaStatements, ATTEMPTS_PER_DAY } from './schema'
 import { submitRun } from './submit'
 import type { RankingStore } from './store'
 import type { SubmitRequest } from './types'
@@ -52,6 +52,22 @@ let sql: SqlExecutor | null = null
 let store: RankingStore | null = null
 let driverError: string | null = null
 
+/**
+ * 失敗メッセージから接続文字列を消す。
+ * 例：`neon()` は不正なURLを渡されると **接続文字列そのものを本文に含めた**
+ * エラーを投げる。そのまま `expect` のメッセージやCIログへ流すと秘密が漏れるため、
+ * ここで必ず伏字にしてから外へ出す（このファイルの方針：値は持ち出さない）。
+ */
+function redactSecret(message: string): string {
+  let out = message
+  if (typeof CONNECTION === 'string' && CONNECTION.length > 0) {
+    out = out.split(CONNECTION).join('<REDACTED>')
+  }
+  return out
+    .replace(/Connection string:.*/gs, 'Connection string: <REDACTED>')
+    .replace(/postgres(?:ql)?:\/\/\S+/gi, '<REDACTED>')
+}
+
 async function connect(): Promise<SqlExecutor | null> {
   if (!enabled) return null
   try {
@@ -59,15 +75,20 @@ async function connect(): Promise<SqlExecutor | null> {
     // 指定子を変数にしてあるのは、未インストールでも型チェック・ビルドを壊さないため
     const specifier = '@neondatabase/serverless'
     const mod = (await import(/* @vite-ignore */ specifier)) as {
-      neon: (url: string) => (text: string, params?: unknown[]) => Promise<unknown>
+      neon: (url: string) => {
+        query: (text: string, params?: unknown[]) => Promise<unknown>
+      }
     }
     const client = mod.neon(CONNECTION as string)
+    // ★`client(text, params)` ではなく `client.query(...)`。
+    // neon serverless v1 の呼び出し可能形はタグ付きテンプレート専用で、
+    // 素の文字列を渡すと「use sql.query(...)」と即エラーになる（Phase 4.4 follow-up）。
     return (async <T>(text: string, params?: unknown[]) => {
-      const rows = await client(text, params)
+      const rows = await client.query(text, params)
       return rows as T[]
     }) as SqlExecutor
   } catch (e) {
-    driverError = e instanceof Error ? e.message : String(e)
+    driverError = redactSecret(e instanceof Error ? e.message : String(e))
     return null
   }
 }
@@ -100,8 +121,19 @@ function newPlayer(): string {
 
 beforeAll(async () => {
   sql = await connect()
-  if (!sql) return
-  await sql(buildRankingSchemaSql())
+  if (!enabled) return
+  // 接続文字列が設定されているのに繋がらない場合は、ここで**理由を明示して**落とす。
+  // 黙って `store` を null のままにすると、全テストが
+  // 「Cannot read properties of null」という無関係な例外で落ちて原因が見えなくなる。
+  if (!sql) {
+    throw new Error(
+      `RANKING_DATABASE_URL は設定されていますが、ドライバを初期化できませんでした: ${driverError ?? '原因不明'}`,
+    )
+  }
+  // ★1文ずつ適用する。Neon の HTTP ドライバは `;` 区切りの複数文をまとめて実行できない
+  for (const statement of buildRankingSchemaStatements()) {
+    await sql(statement)
+  }
   store = createPostgresRankingStore(sql)
 })
 
