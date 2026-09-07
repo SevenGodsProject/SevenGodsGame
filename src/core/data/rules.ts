@@ -203,8 +203,20 @@ export const RULES = {
      * ゲームルールではない）。理論上の上限は「7ラウンド × (山札20枚を2巡＝40回の
      * PLAY_CARD ＋ 託宣1回) ＋ END_ROUND 7回」＝約336。実プレイは30〜60程度
      * （Phase 4.0監査の想定）なので、正当な試合を落とさない余裕を持たせて400とする。
+     * Phase 4.2で本番記録経路を通した1,470runの実分布（max 34・P99 30）でも再確認した。
      */
     maxActions: 400,
+    /**
+     * Phase 4.2：送信待ちrun（`sevengods.pendingRuns`）の保持上限。
+     * ランキングBackendはまだ無く、Phase 4.3以降の送信失敗時の再送のために
+     * 決着済みReplayInputをローカルへ溜める。無限に溜めないための上限。
+     */
+    pendingRuns: {
+      /** 保持するrunの最大数（超えたら古い順に捨てる） */
+      maxRuns: 20,
+      /** 保持日数（JSTの日付キー基準。これより古いDailyのrunは剪定する） */
+      retentionDays: 7,
+    },
   },
 
   /**

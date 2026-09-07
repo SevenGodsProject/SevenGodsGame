@@ -1,9 +1,11 @@
-import type { CardInstance, CardDefId, GameState, GodId, GrowthPath } from '../types'
+import type { CardInstance, CardDefId, GameAction, GameState, GodId, GrowthPath } from '../types'
+import { cardUid } from '../types/ids'
 import { getCardDef } from '../data/cards'
 import { DIVINATION_CHOICES } from '../data/divination'
 import { resolveDailyStart } from '../data/dailyStart'
 import { applyAction } from '../engine/reducer'
 import type { ReplayAction } from './types'
+import { applyAndRecord, type DailyRunLog } from './runLog'
 
 /**
  * Phase 4.1：テスト専用の「実プレイ再現」ドライバ。
@@ -104,4 +106,126 @@ export function playDailyRun(options: LiveRunOptions): LiveRun {
   }
 
   return { actions, state }
+}
+
+/**
+ * Phase 4.2：**本番の記録経路（`applyAndRecord`）を通した**1試合ランナー。
+ *
+ * `useGameEngine.dispatch` と同じ形で呼ぶ：
+ *   - `applyAndRecord(state, action, log, clientRunId)` を try/catch で包む
+ *   - 例外が出たら state も log も進めない（＝受理された操作だけが記録される）
+ * これにより「テスト用に組み立てたログ」ではなく「本番と同じ経路が出したログ」を
+ * 検証できる（Phase 4.2 Step 5 の要件）。
+ */
+export type RecordedRun = {
+  /** 本番の記録経路が生成した行動ログ */
+  log: DailyRunLog
+  /** ライブ実行の最終GameState */
+  state: GameState
+  /** エンジンに拒否された操作の回数（記録に残ってはいけない） */
+  rejected: number
+}
+
+export type RecordedRunOptions = LiveRunOptions & {
+  clientRunId?: string
+  /**
+   * 各ラウンドで「拒否されるはずの操作」を混ぜる（誤操作・二度押しの再現）。
+   * 記録に残らないことを確認するために使う。
+   */
+  injectRejected?: boolean
+}
+
+/** `useGameEngine.dispatch` と同じ境界。拒否された操作は state も log も進めない */
+function productionDispatch(
+  state: GameState | null,
+  action: GameAction,
+  log: DailyRunLog | null,
+  clientRunId?: string,
+): { state: GameState | null; log: DailyRunLog | null; accepted: boolean } {
+  try {
+    const { result, log: nextLog } = applyAndRecord(state, action, log, clientRunId)
+    return { state: result.state, log: nextLog, accepted: true }
+  } catch {
+    return { state, log, accepted: false }
+  }
+}
+
+export function playRecordedDailyRun(options: RecordedRunOptions): RecordedRun {
+  const {
+    dailyKey,
+    godId,
+    deck,
+    otomoGrowthPath,
+    policySeed,
+    useDivination = true,
+    clientRunId = 'test-run-0000000000000000000000',
+    injectRejected = false,
+  } = options
+  const rand = lcg(policySeed)
+  const daily = resolveDailyStart(dailyKey)
+
+  // TSの制御フロー解析が閉包内の代入を追えないため、可変な入れ物にまとめる
+  const box: { state: GameState | null; log: DailyRunLog | null; rejected: number } = {
+    state: null,
+    log: null,
+    rejected: 0,
+  }
+
+  const send = (action: GameAction): GameState | null => {
+    const out = productionDispatch(box.state, action, box.log, clientRunId)
+    if (!out.accepted) box.rejected++
+    box.state = out.state
+    box.log = out.log
+    return out.state
+  }
+
+  // 本番の `startDailyGame` と同じ START_GAME（bonusCopies も stake も渡さない）
+  let state = send({
+    type: 'START_GAME',
+    seed: daily.seed,
+    godId,
+    enemyId: daily.enemyId,
+    deck,
+    difficulty: daily.difficulty,
+    otomoGrowthPath,
+    mode: daily.mode,
+    dailyKey: daily.dailyKey,
+    modifier: daily.modifier,
+  })
+
+  let roundGuard = 0
+  while (state !== null && state.status === 'playing' && roundGuard++ < 32) {
+    if (injectRejected) {
+      // 手札に無いカード（誤操作・二度押し相当）。必ず拒否される
+      state = send({ type: 'PLAY_CARD', uid: cardUid('c-not-in-hand') })
+      // 存在しない託宣（不正な選択）。必ず拒否される
+      state = send({ type: 'USE_DIVINATION', choiceIndex: 99 })
+      if (state === null) break
+    }
+
+    if (
+      useDivination &&
+      state.divination.remaining > 0 &&
+      !state.divination.usedThisRound &&
+      rand() % 4 === 0
+    ) {
+      state = send({ type: 'USE_DIVINATION', choiceIndex: rand() % DIVINATION_CHOICES.length })
+      if (state === null || state.status !== 'playing') break
+    }
+
+    let playGuard = 0
+    for (;;) {
+      if (state === null || state.status !== 'playing' || playGuard++ >= 64) break
+      const playable = state.hand.filter((card) => costOf(card) <= (state as GameState).ap.current)
+      if (playable.length === 0) break
+      if (rand() % 8 === 0) break
+      state = send({ type: 'PLAY_CARD', uid: playable[rand() % playable.length].uid })
+    }
+
+    if (state === null || state.status !== 'playing') break
+    state = send({ type: 'END_ROUND' })
+  }
+
+  if (!box.state || !box.log) throw new Error('記録付きの試合を進められませんでした')
+  return { log: box.log, state: box.state, rejected: box.rejected }
 }
