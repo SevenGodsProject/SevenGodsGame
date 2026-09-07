@@ -11,8 +11,15 @@ import type { RankingRun, SubmitRejectionCode, SubmitRequest, SubmitResult } fro
  *   3. 提出試行のレート制限
  *   4. 日付の検査（今日のDaily以外は受け付けない）
  *   5. **本番エンジンでリプレイ**して結果を計算する
- *   6. 1日の挑戦回数（`RULES.daily.attemptsPerDay`）の検査
- *   7. 保存
+ *   6. 1日の挑戦回数の**事前**判定（速い経路。権限はここではない）
+ *   7. 保存 ——**ここが上限判定の最終権限**
+ *
+ * ★Phase 4.4：「countしてからinsert」に依存しない（Known Risk #3の解消）
+ * 6の事前判定だけに頼ると、2つの提出が同時に来たときどちらも
+ * 「今2件だから3件目にできる」と判断して4件入りうる。そこで最終判定は
+ * `store.insertRun` の戻り値に委ね、`attempts-exceeded` が返ったら
+ * 事前判定を通っていても拒否する。Postgres実装ではDBのCHECK制約と
+ * UNIQUE制約がこれを不可分に保証する（`schema.ts`）。
  *
  * ★冪等判定をレート制限より先に置く理由
  * 送信に成功したがレスポンスを受け取れなかったクライアントは、同じ `clientRunId` で
@@ -113,13 +120,13 @@ export async function submitRun(
     return reject('REPLAY_REJECTED', replayed.message, replayed.code)
   }
 
-  // --- 6. 1日の挑戦回数 ---
+  // --- 6. 1日の挑戦回数（事前判定：無駄な書き込みを避けるための速い経路） ---
   const priorRuns = await store.listPlayerRuns(dailyKey, request.playerId)
   if (priorRuns.length >= RULES.daily.attemptsPerDay) {
     return reject('ATTEMPTS_EXCEEDED', '本日の挑戦回数を使い切っています')
   }
 
-  // --- 7. 保存（保存するのは計算値だけ） ---
+  // --- 7. 保存（保存するのは計算値だけ／ここが上限判定の最終権限） ---
   const run: RankingRun = {
     dailyKey,
     playerId: request.playerId,
@@ -132,7 +139,25 @@ export async function submitRun(
     actionCount: replayed.outcome.actionCount,
     submittedAt: now,
   }
-  await store.insertRun(run)
+  const inserted = await store.insertRun(run)
+  if (!inserted.ok) {
+    // 事前判定を通ったあとで競り負けた／同じIDが差し込まれた場合はここで確定する
+    if (inserted.reason === 'attempts-exceeded') {
+      return reject('ATTEMPTS_EXCEEDED', '本日の挑戦回数を使い切っています')
+    }
+    // 同時に同じclientRunIdが入った＝相手の登録が正。冪等な再送として扱う
+    const stored = await store.findRun(dailyKey, request.clientRunId)
+    if (!stored) return reject('RUN_ID_CONFLICT', '挑戦の登録に失敗しました')
+    const runs = await store.listPlayerRuns(dailyKey, request.playerId)
+    return {
+      ok: true,
+      accepted: 'duplicate',
+      outcome: replayed.outcome,
+      run: stored,
+      bestScore: Math.max(...runs.map((r) => r.score)),
+      runsUsed: runs.length,
+    }
+  }
 
   const runs = [...priorRuns, run]
   return {

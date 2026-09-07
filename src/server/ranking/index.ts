@@ -11,7 +11,10 @@ export type { SubmitDeps } from './submit'
 export { getLeaderboard } from './leaderboard'
 export type { LeaderboardOptions } from './leaderboard'
 export { createMemoryRankingStore } from './store'
-export type { RankingStore } from './store'
+export type { InsertRunResult, RankingStore } from './store'
+export { createPostgresRankingStore, ensurePlayerSql } from './postgresStore'
+export type { SqlExecutor } from './postgresStore'
+export { buildRankingSchemaSql, buildPruneSql, ATTEMPTS_PER_DAY } from './schema'
 export type {
   Leaderboard,
   LeaderboardRow,

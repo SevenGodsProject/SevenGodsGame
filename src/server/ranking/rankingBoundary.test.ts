@@ -68,7 +68,8 @@ function crawl(entry: string): { files: string[]; bare: string[] } {
     const file = queue.shift() as string
     if (seen.has(file) || !(file in SOURCES)) continue
     seen.add(file)
-    for (const spec of importSpecifiers(SOURCES[file])) {
+    // コメント内のサンプルコード（「接続はこう書く」等）をimportと誤認しない
+    for (const spec of importSpecifiers(stripComments(SOURCES[file]))) {
       if (spec.startsWith('.')) {
         // CSS・画像などTS以外のアセットは依存グラフの対象外
         if (/\.(css|svg|png|jpe?g|webp|mp3|wav|json)$/.test(spec)) continue
