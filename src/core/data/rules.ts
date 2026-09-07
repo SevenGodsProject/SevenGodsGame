@@ -220,6 +220,33 @@ export const RULES = {
   },
 
   /**
+   * Phase 4.3：Daily ランキングBackendの調整値。
+   * ゲームの挙動には一切影響しない（engineはこの値を参照しない）。
+   */
+  ranking: {
+    /**
+     * ★kill switch：クライアントからサーバーへ提出を行うか。
+     * Phase 4.3では **false**。ランキングBackendの本番環境（Neon等）は
+     * CEO判断待ちで未契約であり、送信先が存在しないため。
+     * trueにするのは、Backendの本番稼働をCEOが承認した後（Phase 4.4）。
+     */
+    submissionEnabled: false,
+    /** リーダーボードで返す最大件数 */
+    leaderboardLimit: 100,
+    /**
+     * 1プレイヤー・1日あたりに受け付ける提出**試行**の上限（受理・拒否とも数える）。
+     * 総当たりでリプレイを叩き続ける行為を抑えるための門番。
+     * 正当な利用は1日3回（`daily.attemptsPerDay`）＋再送数回なので十分な余裕がある。
+     */
+    maxSubmitAttemptsPerDay: 30,
+    /**
+     * プレイヤーIDとして受け付ける文字列の長さ（16進）。
+     * 端末で生成する乱数のみ。氏名・メール等は一切扱わない
+     */
+    playerIdLength: 32,
+  },
+
+  /**
    * Phase 3「神格」FINAL SPEC v0.1：神の得意技（Passive）の数値。
    *
    * 3神のみが得意技を持つ（蒼毘・笑蓮・福永）。値は約36万試合の決定論シミュレーション
