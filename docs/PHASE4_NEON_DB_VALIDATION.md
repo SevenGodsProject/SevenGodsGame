@@ -7,6 +7,13 @@
 
 ---
 
+> **更新（2026-09-08）：Step 1 のブロックが解除され、実DB検証13件が全PASSしました。**
+> 現在の状態は **§16〜§18** を参照してください。§0〜§15 は 2026-09-07 時点の記録として原文のまま残しています。
+> Phase 4.4 の **Final PASS は credential ローテーション後の再実行が条件**（§16-5）。
+> **Production Release は NO-GO**（§17 の Production Security / Fairness Gate が未監査・§18）。
+
+---
+
 ## 0. 結論の要約（先に正直に）
 
 | 区分 | 状態 |
@@ -369,3 +376,137 @@ Daily seed・3回制限・JST reset・saveVersion(9)・score式・神balance い
 | 3 | `api/` の薄いラッパー ＋ `submissionEnabled = true` | Vercel 利用条件の確認（CEO 指示④） |
 | 4 | ランキングUI（同順位・同点人数・パーセンタイル） | `assignRanks`（実装済み） |
 | 5 | 実機QA → Production 公開 | **CEO 承認（§6-3 #8）** |
+
+---
+
+## 16. 実DB検証の実行結果（2026-09-08・Step 1 ブロック解除後）
+
+- **区分**：AI判断（CLAUDE.md §6-2）。CEO は Secrets監査・実DB再監査・回帰の実施を承認。merge / push / deploy / Vercel変更 / Production API有効化はいずれも**禁止指示のもと未実施**
+- **接続情報の扱い**：接続文字列は環境変数 `RANKING_DATABASE_URL` としてシェルにのみ渡し、**ファイル・docs・commit のいずれにも書いていない**。本書にも値は記載しない
+- **接続先**：Neon Free（pooled connection・TLS必須）
+
+### 16-1. 実DB統合テスト（Known Risk 1・2 の解消）
+
+`src/server/ranking/postgres.integration.test.ts` を実DBに対して実行：
+
+| 項目 | 結果 |
+|---|---|
+| Test Files | **1 passed (1)** |
+| Tests | **13 passed / 1 skipped (14)** |
+| Duration | 14.45s |
+
+skip 1件は `describe.skipIf(enabled)`（実DB有効時は動かない「スキップ理由」ブロック）であり、**想定どおりの挙動**。実DB本体の13件は全PASS。
+
+これにより Known Risk を2件解消した：
+
+| Known Risk | 従前 | 現在 |
+|---|---|---|
+| 1. 実DB未検証（CHECK/UNIQUE の SQLSTATE、`INSERT ... SELECT` の原子性、Neon ドライバ挙動） | 未確認 | **解消**。実DB13件で確認済み |
+| 2. Neon serverless ドライバの API 形（`neon(url)(text, params)`）未検証 | 未確認 | **解消**。`f5c5aba` の修正形で実DB動作を確認 |
+
+### 16-2. 全体回帰（実DB有効のまま実行）
+
+| 項目 | 結果 |
+|---|---|
+| `npx vitest run` | **241 files passed / 2,949 passed ＋ 1 skipped（計2,950）** 76.83s |
+| `npx tsc -b` | **PASS**（exit 0） |
+| `npx oxlint` | **PASS**（exit 0。警告2件は `scripts/phase3-audit/` の既存・Phase 4.4 と無関係） |
+| clean build（`dist`・`*.tsbuildinfo` 削除後に `npm run build`） | **PASS**（2.33s） |
+
+§12（DB無効時）との差分は**説明可能な範囲に完全に一致**している：
+
+| | §12（DB無効） | §16（DB有効） | 差 |
+|---|---|---|---|
+| passed | 2,937 | **2,949** | **+12** |
+| skipped | 13 | **1** | **−12** |
+| 合計 | 2,950 | 2,950 | **0** |
+
+実DBブロックの13件が skip→pass、プレースホルダ1件が pass→skip。**新規failure・新規skipはゼロ**。
+
+DB接続を読むテストは実質 `postgres.integration.test.ts` の1本のみであることも再確認した
+（`concurrency.test.ts` はコメントでの言及、`secrets.test.ts` は**検知用パターン**としての出現）。
+
+### 16-3. バンドル（クライアント無変更の再確認）
+
+| | Phase 4.3 / 4.4 記録 | 今回の clean build |
+|---|---|---|
+| CSS | `index-CDbAuk7l.css` 96.42 kB | **同一** |
+| JS | `index-CLjXu-bP.js` 383,570 B | **同一ハッシュ・同一バイト数** |
+
+`dist` に対する混入検査も実施し、`neon.tech` / `RANKING_DATABASE_URL` / `neondb` / `connectionString` / `npg_` の**いずれも0件**。クライアントへは一切届いていない。
+
+### 16-4. Secrets 監査（再実施・値は非表示）
+
+| 検査範囲 | 手法 | 結果 |
+|---|---|---|
+| 作業ツリー全体（`node_modules` / `.git` 除く） | 実credentialの完全一致検索（パスワード・エンドポイント・ホスト） | **0件** |
+| git履歴 全132コミット・全ref | `git log --all -S`（pickaxe）×3パターン | **0件** |
+| git履歴 全132コミット・blobレベル | 認証情報付きURL形式 `postgres(ql)?://user:pass@` の総当たり | **0件** |
+| git履歴 全132コミット・blobレベル | 高リスクトークン形式（`npg_` / `sk-` / `ghp_` / `AKIA` / `xox*`） | **0件** |
+| `.env` 系ファイル | ディスク実在・`git ls-files` | **ディスク上に存在せず・tracked 0件** |
+| `.gitignore` | `.env` / `.env.*` / `*.pem` / `*.key` / `*.local` | **設定済み**（§10-1 の対応が有効） |
+| stash / reflog | `git stash list` | **0件** |
+| クライアントバンドル | `dist` 混入検査 | **0件**（§16-3） |
+
+`neon.tech` を含む5ファイル（`docs/DECISIONS.md`・`docs/PHASE4_NEON_DB_VALIDATION.md`・`replayBoundary.test.ts`・`failure.test.ts`・`rankingBoundary.test.ts`）はいずれも**プレースホルダまたは検知用パターン**であり、実エンドポイントとは一致しない（完全一致検索で0件）。
+
+`src/server/ranking/secrets.test.ts` の `npg_` は**値ではなく検知用の正規表現**。同ファイルは「srcに接続文字列が埋め込まれていない」「接続情報は環境変数からしか読まない」「クライアント側へ入り込む経路が無い」「ログへ出す記述が無い」を機械検査する常設ガードとして機能している。
+
+> **結論：旧credential はコード・docs・git履歴のいずれにも含まれていない。** 露出はチャット経路のみであり、リポジトリ側の対処は不要。
+
+### 16-5. credential ローテーション（CEO承認済み・未実施）
+
+CEO判断により、現行の Neon ロールパスワードは**露出済み資格情報**として扱い、**Production公開前に必ずローテーション**する。
+
+**ローテーション後、以下を再実行して同一結果を確認するまで Phase 4.4 を Final PASS としない：**
+
+```
+npx vitest run src/server/ranking/postgres.integration.test.ts
+# 期待値： Test Files 1 passed / Tests 13 passed | 1 skipped (14)
+```
+
+新しい接続文字列も `.env` に置かず、環境変数としてのみ渡すこと（`.gitignore` は設定済みだが、そもそも書かないのが最も安全）。
+
+### 16-6. 依存関係の状態（**自動修正は行っていない**）
+
+`npm audit` の結果は以下のとおり。CEO指示により `npm audit fix` および脆弱性の自動修正は**実行していない**。
+
+| 項目 | 内容 |
+|---|---|
+| 検出 | **1 high** — `nanoid` < 3.3.18（GHSA-2v37-7h3g-55p8。size=0 のカスタムジェネレータが無限ループしうる） |
+| 依存経路 | `vite@8.2.0` → `postcss@8.5.25` → `nanoid@3.3.16` |
+| production 到達性 | **無し**。`npm ls nanoid --omit=dev` は空（= devDependency 経由のビルド時のみ） |
+| 出荷物への影響 | **無し**。`dist` はビルド成果物であり `nanoid` を同梱しない |
+| AI判断 | **Phase 4.4 の GO/NO-GO 条件にしない**。ビルド時限定かつ本番依存に到達しないため。`vite` の upstream 更新に追随する形で解消するのが正道で、`npm audit fix` による強制上書きは vite/postcss のツリーを壊すリスクの方が大きい |
+
+`@neondatabase/serverless` は **devDependency** に置かれており、クライアントバンドルにも production 依存にも入らない（§16-3 と整合）。
+
+---
+
+## 17. Production Security / Fairness Gate（**次Phaseの Gate 候補**・本Phaseでは実装しない）
+
+CEO指示により、以下は **Phase 4.4 に混ぜて大改修せず**、次Phaseの独立Gateとして整理する。
+いずれも「技術的に動くか」ではなく「**公開して不正・不公平が起きないか**」を問う項目であり、Phase 4.4 の実DB技術Gateとは別物である。
+
+| # | Gate項目 | 現状 | 想定される破られ方 | 次Phaseで問うこと |
+|---|---|---|---|---|
+| **PSF-1** | 匿名identityの不正リセット／偽装対策 | 匿名IDは端末単位（localStorage）。Known Risk 5 として既知 | localStorage を消すだけで新規プレイヤーとして再登録でき、3回制限を無限に回避できる。他人の `playerId` を騙る経路は `BAD_IDENTITY` で塞いであるが、**自分を増やす**のは塞げていない | サーバー側で identity を発行・署名するか、コストを非対称にする（proof-of-work／レート制限／端末指紋）。完全防御は不可能なので**「どこまでを許容するか」の線引きを先に決める** |
+| **PSF-2** | 3 attempts/day を「提出回数」ではなく**実プレイ開始時点**で保証できるか | DB制約（`CHECK (attempt_no BETWEEN 1 AND 3)` ＋ `UNIQUE (daily_key, player_id, attempt_no)`）は**提出**に対して効いている | プレイは何度でもでき、**良い結果が出た3回だけを提出**できる（実質的な引き直し無制限）。現行設計は「3回提出」であって「3回勝負」ではない | 開始時に枠を確保する設計（start API で `attempt_no` を先取り）に変えるか、現行の「best of 3 submissions」を仕様として明示するか。**ゲーム性の根幹に触れるため §6-3 #1 該当の可能性あり** |
+| **PSF-3** | rules / game version の固定 | `saveVersion(9)`・`RULES` はクライアント側に存在。ランキングは replay 検証を通す | バランス調整で `RULES` を変えると、**同一 daily_key の過去スコアと新スコアが比較不能**になる。replay 検証も旧ruleでは再現しなくなる | ランキング行に `rulesVersion` を持たせ、異なるバージョンを同一ボードで混ぜない。または daily_key に rulesVersion を含める |
+| **PSF-4** | 日付跨ぎ提出 | `dailyKeyOf()` による JST reset は実装済み。stale Daily の提出は拒否される | 23:59 に開始して 00:01 に提出した場合の帰属、端末時計の改変、サーバー時刻との乖離 | 「開始時刻の daily_key」と「提出時刻の daily_key」の不一致をどう扱うか（許容窓／開始時刻をサーバー発行にする）を決めて固定する |
+| **PSF-5** | rate limit / abuse 対策 | 無し。`api/` 自体が未作成 | 提出エンドポイントへの大量リクエスト、Neon Free のクォータ枯渇（= 実質DoS）、`daily_runs` の肥大化 | IP/identity 単位のレート制限、Vercel 側の保護、`buildPruneSql` の定期実行（Known Risk 4）をセットで設計する |
+
+> **AI判断**：PSF-2 は「best of 3 submissions」と「3回勝負」でゲーム体験が本質的に変わるため、
+> 実装着手前に **CEO判断（§6-3 #1）** を仰ぐ必要があると考える。他の4項目は §6-2 の範囲で設計・実装可能。
+
+---
+
+## 18. 判定（2026-09-08 時点）
+
+| Gate | 判定 |
+|---|---|
+| Phase 4.4 実DB技術Gate | **暫定 PASS**（実DB13件・全体回帰・型・lint・clean build すべて通過） |
+| Phase 4.4 Final PASS | **未達**。credential ローテーション後の再実行（§16-5）が条件 |
+| Production Release | **NO-GO**。§17 の PSF-1〜5 が未監査であり、CEO指示により明示的に NO-GO とする |
+
+merge / push / deploy / Vercel変更 / Production API有効化：**いずれも未実施**。branch は `feat/daily-ranking-phase4` を維持。
