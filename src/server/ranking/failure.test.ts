@@ -228,14 +228,34 @@ describe('制約違反の扱い（ticket）', () => {
     closedReason: null,
   }
 
-  it('CHECK違反（枠の上限）は attempts-exceeded として返る', async () => {
-    const store = createPostgresRankingStore(async () => {
-      throw pgError('23514', 'violates check constraint "daily_tickets_attempt_range"')
+  it('CHECK違反は制約名で判別する：範囲制約だけが attempts-exceeded', async () => {
+    const named = createPostgresRankingStore(async () => {
+      throw pgError('23514', 'violates check constraint', 'daily_tickets_attempt_range')
     })
-    expect(await store.insertTicket({ ...ticket, playerId: me.playerId })).toEqual({
+    expect(await named.insertTicket({ ...ticket, playerId: me.playerId })).toEqual({
       ok: false,
       reason: 'attempts-exceeded',
     })
+    // 別の CHECK（closed_reason）が落ちたのを「回数超過」と読み替えない
+    const other = createPostgresRankingStore(async () => {
+      throw pgError('23514', 'violates check constraint', 'daily_tickets_closed_reason_check')
+    })
+    await expect(other.insertTicket({ ...ticket, playerId: me.playerId })).rejects.toThrow()
+  })
+
+  it('制約名が取れないドライバでは、消費済みの枠を数えてから判断する', async () => {
+    const withCount = (n: number) =>
+      createPostgresRankingStore(async <T,>(text: string) => {
+        if (text.includes('INSERT INTO daily_tickets')) throw pgError('23514', 'check')
+        if (text.includes('count(*) AS n')) return [{ n }] as T[]
+        return [] as T[]
+      })
+    expect(await withCount(RULES.daily.attemptsPerDay).insertTicket({ ...ticket, playerId: me.playerId })).toEqual({
+      ok: false,
+      reason: 'attempts-exceeded',
+    })
+    // 枠が残っているのに CHECK が落ちた＝内部矛盾なので投げ直す
+    await expect(withCount(1).insertTicket({ ...ticket, playerId: me.playerId })).rejects.toThrow()
   })
 
   it('主キー違反は duplicate-run-id、部分UNIQUE違反は attempt-taken として返る', async () => {

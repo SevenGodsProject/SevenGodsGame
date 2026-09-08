@@ -1,3 +1,5 @@
+import { RULES } from './deps'
+import { CONSTRAINT_NAMES } from './schema'
 import type { InsertRunResult, InsertTicketResult, RankingStore } from './store'
 import type { RunTicket, TicketClosedReason } from './ticket'
 import type { RankingRun } from './types'
@@ -196,11 +198,30 @@ export function createPostgresRankingStore(sql: SqlExecutor): RankingStore {
         return { ok: true }
       } catch (error) {
         const state = sqlStateOf(error)
-        if (state === CHECK_VIOLATION) return { ok: false, reason: 'attempts-exceeded' }
+        const constraint = constraintOf(error)
+        if (state === CHECK_VIOLATION) {
+          // ★23514 を無条件に「回数超過」と読まない。
+          // daily_tickets には CHECK が2つある（attempt_no の範囲／closed_reason の値）。
+          // 名前が取れれば範囲制約のときだけ回数超過と判定し、それ以外は内部矛盾として投げ直す
+          if (constraint === CONSTRAINT_NAMES.ticketsAttemptRange) {
+            return { ok: false, reason: 'attempts-exceeded' }
+          }
+          if (constraint !== null) throw error
+          // 名前を載せないドライバのための読み直し：消費済みの枠を数えて判断する
+          const used = await sql<{ n: number | string }>(
+            `SELECT count(*) AS n FROM daily_tickets
+              WHERE daily_key = $1 AND player_id = $2
+                AND closed_reason IS DISTINCT FROM 'voided'`,
+            [ticket.dailyKey, ticket.playerId],
+          )
+          if (num(used[0].n) >= RULES.daily.attemptsPerDay) {
+            return { ok: false, reason: 'attempts-exceeded' }
+          }
+          throw error
+        }
         if (state === UNIQUE_VIOLATION) {
-          const constraint = constraintOf(error)
-          if (constraint?.includes('attempt_unique')) return { ok: false, reason: 'attempt-taken' }
-          if (constraint?.includes('pkey')) return { ok: false, reason: 'duplicate-run-id' }
+          if (constraint === CONSTRAINT_NAMES.ticketsAttemptUnique) return { ok: false, reason: 'attempt-taken' }
+          if (constraint === CONSTRAINT_NAMES.ticketsPkey) return { ok: false, reason: 'duplicate-run-id' }
           // 制約名が取れないドライバのための読み直し
           const existing = await sql<{ one: number }>(
             `SELECT 1 AS one FROM daily_tickets WHERE daily_key = $1 AND client_run_id = $2`,
@@ -275,8 +296,8 @@ export function createPostgresRankingStore(sql: SqlExecutor): RankingStore {
         const state = sqlStateOf(error)
         if (state === UNIQUE_VIOLATION) {
           const constraint = constraintOf(error)
-          if (constraint?.includes('attempt_unique')) return { ok: false, reason: 'attempt-taken' }
-          if (constraint?.includes('pkey')) return { ok: false, reason: 'duplicate' }
+          if (constraint === CONSTRAINT_NAMES.runsAttemptUnique) return { ok: false, reason: 'attempt-taken' }
+          if (constraint === CONSTRAINT_NAMES.runsPkey) return { ok: false, reason: 'duplicate' }
           const existing = await sql<{ one: number }>(
             `SELECT 1 AS one FROM daily_runs WHERE daily_key = $1 AND client_run_id = $2`,
             [run.dailyKey, run.clientRunId],

@@ -1,0 +1,10 @@
+[
+  "CREATE TABLE IF NOT EXISTS daily_days (\n  daily_key    text        PRIMARY KEY,\n  game_version text        NOT NULL,\n  created_at   timestamptz NOT NULL DEFAULT now()\n)",
+  "CREATE TABLE IF NOT EXISTS daily_tickets (\n  daily_key     text        NOT NULL,\n  player_id     text        NOT NULL,\n  client_run_id text        NOT NULL,\n  attempt_no    smallint    NOT NULL,\n  issued_at     timestamptz NOT NULL,\n  expires_at    timestamptz NOT NULL,\n  game_version  text        NOT NULL,\n  closed_reason text,\n  CONSTRAINT daily_tickets_pkey PRIMARY KEY (daily_key, client_run_id),\n  CONSTRAINT daily_tickets_attempt_range CHECK (attempt_no BETWEEN 1 AND 3),\n  CONSTRAINT daily_tickets_closed_reason_check CHECK (closed_reason IN ('abandoned', 'voided')),\n  CONSTRAINT daily_tickets_daily_key_fkey FOREIGN KEY (daily_key)\n    REFERENCES daily_days (daily_key) ON DELETE CASCADE,\n  CONSTRAINT daily_tickets_player_id_fkey FOREIGN KEY (player_id)\n    REFERENCES players (player_id) ON DELETE CASCADE\n)",
+  "CREATE UNIQUE INDEX IF NOT EXISTS daily_tickets_attempt_unique\n  ON daily_tickets (daily_key, player_id, attempt_no)\n  WHERE closed_reason IS DISTINCT FROM 'voided'",
+  "ALTER TABLE daily_runs ADD COLUMN IF NOT EXISTS game_version text",
+  "UPDATE daily_runs SET game_version = 'legacy-4.4' WHERE game_version IS NULL",
+  "ALTER TABLE daily_runs ALTER COLUMN game_version SET NOT NULL",
+  "DO $$\nBEGIN\n  IF NOT EXISTS (\n    SELECT 1 FROM pg_constraint\n     WHERE conname = 'daily_runs_ticket_fk' AND conrelid = 'daily_runs'::regclass\n  ) THEN\n    ALTER TABLE daily_runs\n      ADD CONSTRAINT daily_runs_ticket_fk\n      FOREIGN KEY (daily_key, client_run_id)\n      REFERENCES daily_tickets (daily_key, client_run_id)\n      ON DELETE CASCADE\n      NOT VALID;\n  END IF;\nEND $$",
+  "CREATE INDEX IF NOT EXISTS daily_runs_board_idx\n  ON daily_runs (daily_key, score DESC, submitted_at ASC)"
+]

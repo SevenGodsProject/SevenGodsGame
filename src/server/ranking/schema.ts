@@ -23,6 +23,22 @@ import { RULES } from './deps'
 
 export const ATTEMPTS_PER_DAY = RULES.daily.attemptsPerDay
 
+/**
+ * 制約・indexの名前。DDL（下）とエラー処理（`postgresStore.ts`）の両方がこれを見る。
+ * Postgres は違反した制約の名前をエラーに載せてくるので、**同じ SQLSTATE でも
+ * どの制約が落ちたか**を名前で判別できる（23514 を無条件に「回数超過」と読まない）。
+ */
+export const CONSTRAINT_NAMES = {
+  ticketsPkey: 'daily_tickets_pkey',
+  ticketsAttemptRange: 'daily_tickets_attempt_range',
+  ticketsClosedReason: 'daily_tickets_closed_reason_check',
+  ticketsAttemptUnique: 'daily_tickets_attempt_unique',
+  runsPkey: 'daily_runs_pkey',
+  runsAttemptRange: 'daily_runs_attempt_range',
+  runsAttemptUnique: 'daily_runs_attempt_unique',
+  runsTicketFk: 'daily_runs_ticket_fk',
+} as const
+
 /** DDLの先頭に付ける注記。SQL文ではないので単独では実行しない */
 const SCHEMA_HEADER = `-- SEVEN GODS Daily Ranking schema (generated from RULES; do not edit by hand)
 -- 生成元: src/server/ranking/schema.ts`
@@ -69,7 +85,8 @@ export function buildRankingSchemaStatements(): string[] {
   game_version  text        NOT NULL,
   -- NULL＝進行中。'abandoned'＝別の挑戦を始めたので放棄（枠は消費）
   -- 'voided'＝deployで無効化（枠は**返還**）
-  closed_reason text        CHECK (closed_reason IN ('abandoned', 'voided')),
+  closed_reason text
+    CONSTRAINT ${CONSTRAINT_NAMES.ticketsClosedReason} CHECK (closed_reason IN ('abandoned', 'voided')),
 
   CONSTRAINT daily_tickets_pkey PRIMARY KEY (daily_key, client_run_id),
   CONSTRAINT daily_tickets_attempt_range CHECK (attempt_no BETWEEN 1 AND ${ATTEMPTS_PER_DAY})
