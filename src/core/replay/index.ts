@@ -31,5 +31,13 @@ export { resumeRunLog, deepEqual } from './resume'
 export type { ResumeRunLogResult } from './resume'
 
 /** Phase 4.2：順位付けの規則（同点＝同順位。Phase 4.3/4.4が使う） */
+export {
+  getGameVersion,
+  dataFingerprint,
+  rankingImpactSnapshot,
+  stableStringify,
+  resetGameVersionCache,
+} from './gameVersion'
+
 export { assignRanks } from './ranking'
 export type { RankableEntry, RankedEntry } from './ranking'

@@ -97,6 +97,47 @@ describe('秘密情報の混入検査（Step 10）', () => {
     }
   })
 
+  it('playerSecret をログへ出す記述が無い（Phase 4.6）', () => {
+    const LF = String.fromCharCode(10)
+    const hits: string[] = []
+    for (const [file, source] of Object.entries(SOURCES)) {
+      for (const line of stripComments(source).split(LF)) {
+        if (!/console[.](log|info|warn|error|debug)/.test(line)) continue
+        if (/[Ss]ecret/.test(line)) hits.push(`${file}: console with secret`)
+      }
+    }
+    expect(hits).toEqual([])
+  })
+
+  it('playerSecret を保存・URLへ載せる経路が無い（Phase 4.6）', () => {
+    for (const [file, raw] of Object.entries(SOURCES)) {
+      if (file.includes('.test.')) continue
+      const source = stripComments(raw)
+
+      // localStorage へ書くのは端末側の identity モジュールだけ
+      if (/setItem[(][^)]*[Ss]ecret/.test(source)) {
+        expect(file, `${file} が秘密を保存している`).toBe(
+          'src/hooks/anonymousPlayerId.ts',
+        )
+      }
+      // URL（query string）へ載せない。履歴・Referer・アクセスログに残るため
+      expect(source, `${file} が秘密をURLへ載せている`).not.toMatch(/[?&]playerSecret=/)
+      // 保存するrunの型にも秘密の置き場所が無い
+      if (file === 'src/server/ranking/types.ts') {
+        const runType = source.slice(source.indexOf('export type RankingRun'))
+        expect(runType.slice(0, runType.indexOf('}'))).not.toContain('Secret')
+      }
+    }
+  })
+
+  it('DBスキーマに秘密の列が無い（Phase 4.6）', async () => {
+    const { buildRankingSchemaSql } = await import('./schema')
+    const ddl = buildRankingSchemaSql().toLowerCase()
+    for (const forbidden of ['secret', 'password', 'token', 'email']) {
+      expect(ddl, `列に ${forbidden} が含まれている`).not.toContain(forbidden)
+    }
+  })
+
   it('接続情報をログへ出す記述が無い', () => {
     const hits: string[] = []
     for (const [file, source] of Object.entries(SOURCES)) {

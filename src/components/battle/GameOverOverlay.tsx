@@ -2,6 +2,7 @@ import type { EnemyState, GameStatus, GodId, OtomoState, ScoreState } from '../.
 import { getGodDef } from '../../core/data/gods'
 import { getOtomoDef } from '../../core/data/otomo'
 import { getFinalScore, type MasteryResult } from '../../core/engine'
+import { RULES } from '../../core/data/rules'
 import { formatScaled } from '../displayScale'
 import { describeMastery, MASTERY_AXIS_NOTE } from './masteryDisplay'
 import type { DailyRecordResult } from '../../hooks/dailyStorage'
@@ -81,6 +82,11 @@ type GameOverOverlayProps = {
    * 通常モードではnull/省略。通常の自己ベスト表示（newBest/prevBest）とは独立
    */
   daily?: DailyRecordResult | null
+  /**
+   * Phase 4.6（決定139 §12）：この神域挑戦がランキングに記録されるか。
+   * false のときは「遊べたが記録は残らない」ことを、結果画面で必ず伝える。
+   */
+  dailyRanked?: boolean
   /** DAILY-01：「もう一度」ボタンの文言（残り回数の表示）と無効化（残り0） */
   rematchLabel?: string
   rematchDisabled?: boolean
@@ -105,6 +111,7 @@ export function GameOverOverlay({
   onRematch,
   onReselect,
   daily = null,
+  dailyRanked = false,
   rematchLabel,
   rematchDisabled = false,
   stakeResult = null,
@@ -198,6 +205,14 @@ export function GameOverOverlay({
             )}
             <br />
             神域挑戦の残り回数 <strong>{daily.attemptsLeft}</strong> 回
+            {RULES.ranking.submissionEnabled && !dailyRanked && (
+              <>
+                <br />
+                <span className="game-over-unranked">
+                  この挑戦はランキングに記録されません（記録は端末に残ります）
+                </span>
+              </>
+            )}
           </div>
         )}
         {bestGap !== null && <div className="game-over-best-gap">自己ベストまであと{formatScaled(bestGap)}点</div>}

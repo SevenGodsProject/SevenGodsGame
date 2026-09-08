@@ -1,7 +1,8 @@
 import { beforeEach, describe, expect, it } from 'vitest'
 import { RULES } from '../../core/data/rules'
 import { GOD_IDS } from '../../core/data/gods'
-import { getLeaderboard } from './leaderboard'
+import { getGameVersion } from '../../core/replay'
+import { clearLeaderboardCache, getLeaderboard } from './leaderboard'
 import { createMemoryRankingStore } from './store'
 import type { RankingRun } from './types'
 
@@ -22,6 +23,8 @@ function run(playerId: string, score: number, submittedAt?: number): RankingRun 
     dailyKey: DAILY_KEY,
     playerId,
     clientRunId: String(seq).padStart(32, '0'),
+    attemptNo: ((seq - 1) % RULES.daily.attemptsPerDay) + 1,
+    gameVersion: getGameVersion(),
     godId: GOD_IDS.ebisu,
     score,
     win: true,
@@ -122,5 +125,60 @@ describe('getLeaderboard', () => {
     const byRank = new Map<number, number>()
     for (const r of board.rows) byRank.set(r.rank, (byRank.get(r.rank) ?? 0) + 1)
     for (const r of board.rows) expect(r.tiedCount).toBe(byRank.get(r.rank))
+  })
+})
+
+describe('短期キャッシュ（Phase 4.6：Neon Free の保護）', () => {
+  it('nowを渡すと、cache秒数の間はDBを読み直さない', async () => {
+    clearLeaderboardCache(store)
+    await seed(run('p1', 800))
+    let reads = 0
+    const counting = {
+      ...store,
+      async listDayRuns(dailyKey: string) {
+        reads++
+        return store.listDayRuns(dailyKey)
+      },
+    }
+    const t0 = 1_000_000
+    await getLeaderboard(DAILY_KEY, counting, { now: t0 })
+    for (let i = 0; i < 20; i++) {
+      await getLeaderboard(DAILY_KEY, counting, { now: t0 + i * 100 })
+    }
+    expect(reads, '猶予の間に何度もDBを読んでいる').toBe(1)
+
+    // 猶予を過ぎたら読み直す
+    await getLeaderboard(DAILY_KEY, counting, {
+      now: t0 + RULES.ranking.leaderboardCacheSeconds * 1000 + 1,
+    })
+    expect(reads).toBe(2)
+    clearLeaderboardCache(counting)
+  })
+
+  it('nowを渡さなければキャッシュしない（既存の呼び出しは挙動が変わらない）', async () => {
+    clearLeaderboardCache(store)
+    await seed(run('p1', 800))
+    let reads = 0
+    const counting = {
+      ...store,
+      async listDayRuns(dailyKey: string) {
+        reads++
+        return store.listDayRuns(dailyKey)
+      },
+    }
+    await getLeaderboard(DAILY_KEY, counting)
+    await getLeaderboard(DAILY_KEY, counting)
+    expect(reads).toBe(2)
+  })
+
+  it('別のstoreのキャッシュは混ざらない', async () => {
+    const other = createMemoryRankingStore()
+    await seed(run('p1', 800))
+    const t0 = 2_000_000
+    const a = await getLeaderboard(DAILY_KEY, store, { now: t0 })
+    const b = await getLeaderboard(DAILY_KEY, other, { now: t0 })
+    expect(a.totalPlayers).toBe(1)
+    expect(b.totalPlayers).toBe(0)
+    clearLeaderboardCache(store)
   })
 })

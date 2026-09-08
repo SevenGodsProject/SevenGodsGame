@@ -23,6 +23,7 @@ import { applyAndRecord, resumeRunLog, toReplayInput, type DailyRunLog } from '.
 import { createClientRunId } from './clientRunId'
 import { clearRunLog, loadRunLog, saveRunLog } from './dailyRunLogStorage'
 import { enqueuePendingRun } from './pendingRunStorage'
+import { clearTicket, loadTicketFor } from './rankingTicketStorage'
 
 /**
  * ラウンド終了→次ラウンド開始の結果を見せる前に「敵のターン」を溜める時間（見せ方のみ。判定タイミングは変えない）。
@@ -111,6 +112,14 @@ export type UseGameEngine = {
     deck: CardDefId[],
     dailyKey: string,
     otomoGrowthPath?: GrowthPath,
+    /**
+     * Phase 4.6：サーバーで確保した挑戦枠。
+     *
+     * 省略すると従来どおり「ランキングとは無関係のDaily」として始まる
+     * （kill switch が閉じている間は常にこちら）。渡す場合、`clientRunId` は
+     * **ticketと同じ値**でなければならない（提出時に突き合わせるため）。
+     */
+    session?: DailyRunSession | null,
   ) => boolean
   startGame: (
     godId: GodId,
@@ -145,6 +154,14 @@ export type UseGameEngine = {
    * （ゲームの続行は妨げないが、そのrunは検証できないため提出対象外になる）。
    */
   dailyRunLogAvailable: boolean
+  /**
+   * Phase 4.6：進行中のDaily runがランキング対象か。
+   *
+   * false でも対局・保存・再開は従来どおり動く（決定139 §12 の
+   * 「サーバー障害でもゲーム本体を壊さない」）。UIはこの値で
+   * 「ランキング対象外」を明示する。Daily以外では常にfalse。
+   */
+  dailyRanked: boolean
   /** 保存済みのGameStateからバトルを再開する（決定29） */
   resumeGame: (savedState: GameState) => void
   /** 進行中／決着済みのゲームを未開始状態に戻す（神選択からやり直すため） */
@@ -159,6 +176,21 @@ export type UseGameEngine = {
  * ここより下の層（core）は Phaser も React も知らない、という不変ルールを守るため、
  * 「つなぐ」役目はこのフックだけに閉じ込めます。
  */
+/**
+ * Phase 4.6（決定139 §4・§12）：サーバーで確保した挑戦枠の情報。
+ *
+ * ランキング対象のDailyは **start（枠の予約）→ ticketの控え → START_GAME** の順で始まる。
+ * この型は「その順序を既に通ってきた」ことの証で、`clientRunId` はサーバーが
+ * 発行済みの枠と同じ値でなければならない。
+ *
+ * `ranked: false` は「サーバーが落ちている・kill switchが閉じている・枠を使い切った」
+ * のいずれか。この場合でもDailyは従来どおり遊べる（ランキングに載らないだけ）。
+ */
+export type DailyRunSession = {
+  clientRunId: string
+  ranked: boolean
+}
+
 export function useGameEngine(): UseGameEngine {
   const [state, setState] = useState<GameState | null>(null)
   const [log, setLog] = useState<GameEvent[]>([])
@@ -183,6 +215,7 @@ export function useGameEngine(): UseGameEngine {
    */
   const runLogRef = useRef<DailyRunLog | null>(null)
   const [dailyRunLogAvailable, setDailyRunLogAvailable] = useState(false)
+  const [dailyRanked, setDailyRanked] = useState(false)
 
   const commit = useCallback((result: { state: GameState; events: GameEvent[] }, runLog: DailyRunLog | null) => {
     setState(result.state)
@@ -212,6 +245,8 @@ export function useGameEngine(): UseGameEngine {
           )
         }
         clearRunLog()
+        // 決着した run の ticket 控えは役目を終える（提出待ちは pendingRuns が持つ）
+        clearTicket()
         runLogRef.current = null
         setDailyRunLogAvailable(false)
         // DAILY-01：神域挑戦の決着は`sevengods.daily`にだけ記録し、通常モードの
@@ -317,6 +352,7 @@ export function useGameEngine(): UseGameEngine {
       deck: CardDefId[],
       dailyKey: string,
       otomoGrowthPath?: GrowthPath,
+      session?: DailyRunSession | null,
     ): boolean => {
       // DAILY-01：残り回数が無ければ開始しない（画面側もボタンを無効化するが二重に守る）
       const attempt = startDailyAttempt(dailyKey)
@@ -334,12 +370,19 @@ export function useGameEngine(): UseGameEngine {
       // Phase 4.2：このrunのIDを1度だけ発行する。中断・再開しても、将来の再送でも
       // 同じIDのままなので、サーバー側は二重submitを冪等に扱える。
       // 乱数が使えない環境ではIDを発行できない＝記録なしで進行する（提出対象外）。
+      // Phase 4.6：ランキング対象なら、IDは既にサーバーへ登録済みのものを使う。
+      // ここで振り直すと、確保した枠と結びつかない提出物になってしまう。
       let clientRunId: string | undefined
-      try {
-        clientRunId = createClientRunId()
-      } catch {
-        clientRunId = undefined
+      if (session) {
+        clientRunId = session.clientRunId
+      } else {
+        try {
+          clientRunId = createClientRunId()
+        } catch {
+          clientRunId = undefined
+        }
       }
+      setDailyRanked(session?.ranked === true)
       runLogRef.current = null
       setDailyRunLogAvailable(false)
       clearRunLog()
@@ -403,9 +446,13 @@ export function useGameEngine(): UseGameEngine {
     if (recovered.ok) {
       runLogRef.current = recovered.log
       setDailyRunLogAvailable(true)
+      // Phase 4.6：この run の ticket が控えてあれば、再開後もランキング対象のまま。
+      // ticketは開始時に保存済みなので、reloadでもクラッシュ後でも拾える（決定139 §12）
+      setDailyRanked(loadTicketFor(recovered.log.clientRunId, recovered.log.dailyKey) !== null)
     } else {
       runLogRef.current = null
       setDailyRunLogAvailable(false)
+      setDailyRanked(false)
       if (recovered.reason !== 'not-daily') clearRunLog()
     }
     setState(savedState)
@@ -441,6 +488,7 @@ export function useGameEngine(): UseGameEngine {
     stakeResult,
     battleStartKey,
     dailyRunLogAvailable,
+    dailyRanked,
     startDailyGame,
     startGame,
     resumeGame,

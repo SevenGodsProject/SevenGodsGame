@@ -4010,3 +4010,16 @@
     transform: none;
   }
 }
+
+/*
+ * Phase 4.6（決定139 §12）：ランキング対象外だった神域挑戦の但し書き。
+ * 結果そのものは通常どおり祝う（遊んだ事実は変わらない）ので、
+ * 主張は控えめにし、色だけで「記録は残らない」ことを分かるようにする。
+ */
+.game-over-unranked {
+  display: inline-block;
+  margin-top: 4px;
+  font-size: 0.78rem;
+  line-height: 1.5;
+  color: #b0b0b0;
+}

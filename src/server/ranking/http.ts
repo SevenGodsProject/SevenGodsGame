@@ -1,11 +1,12 @@
 import { RULES, isValidDailyKey } from './deps'
 import { getLeaderboard } from './leaderboard'
+import { startRun, type StartRejectionCode, type StartRequest } from './start'
 import type { RankingStore } from './store'
 import { submitRun } from './submit'
 import type { SubmitRequest, SubmitRejectionCode } from './types'
 
 /**
- * Phase 4.3：HTTPの受け口（フレームワーク非依存）。
+ * Phase 4.3〜4.6：HTTPの受け口（フレームワーク非依存）。
  *
  * Vercel Functions・Node・Deno のどれで動かすことになっても、ホスティング側の
  * ラッパーは「Requestをこの形に詰め替えて、返ってきた `{status, body}` を返す」だけで済む。
@@ -16,6 +17,11 @@ import type { SubmitRequest, SubmitRejectionCode } from './types'
  * リポジトリ直下に `api/` を作るとVercelが次のdeployで自動的にエンドポイントを公開してしまい、
  * 「deployしない」という制約を、merge時に意図せず破ることになるため。
  * 公開用の薄いラッパーはBackend本番稼働が承認された時点で追加する（docs参照）。
+ *
+ * ★Phase 4.6 で増えたもの
+ *   - `POST /ranking/start`（挑戦枠の予約）
+ *   - bodyの大きさの門番（`maxBodyBytes`）。JSON解析やリプレイ検証より**前**に切る
+ *   - リーダーボードのキャッシュヘッダ（CDN・ブラウザにも同じ猶予を伝える）
  */
 
 export type RankingHttpRequest = {
@@ -25,16 +31,25 @@ export type RankingHttpRequest = {
   /** JSONとしてパース済みのbody（GETではundefined） */
   body?: unknown
   query?: Record<string, string | undefined>
+  /**
+   * 受信した生bodyのバイト数。ホスティング側のラッパーが渡す。
+   * 省略された場合は大きさの検査を行わない（`maxActions` などの後段の門番は効く）。
+   */
+  bodyBytes?: number
 }
 
 export type RankingHttpResponse = {
   status: number
   body: unknown
+  /** 応答ヘッダ（CDN・ブラウザ向け。無い場合は付けない） */
+  headers?: Record<string, string>
 }
 
 export type RankingHttpDeps = {
   store: RankingStore
   now: number
+  /** 現在deployされているコードの版。省略時は `getGameVersion()` */
+  gameVersion?: string
 }
 
 /** 拒否理由 → HTTPステータス。運用のログ・監視がそのまま使える粒度にする */
@@ -43,8 +58,28 @@ const STATUS_BY_CODE: Record<SubmitRejectionCode, number> = {
   RUN_ID_CONFLICT: 409,
   RATE_LIMITED: 429,
   ATTEMPTS_EXCEEDED: 409,
-  STALE_DAILY_KEY: 409,
+  NO_TICKET: 404,
+  TICKET_CLOSED: 409,
+  TICKET_EXPIRED: 410,
+  RULES_VERSION_MISMATCH: 409,
   REPLAY_REJECTED: 422,
+}
+
+const START_STATUS_BY_CODE: Record<StartRejectionCode, number> = {
+  BAD_IDENTITY: 400,
+  ATTEMPTS_EXCEEDED: 409,
+  RULES_VERSION_LOCKED: 423,
+  RETRY: 503,
+}
+
+function isStartRequest(value: unknown): value is StartRequest {
+  if (!value || typeof value !== 'object') return false
+  const v = value as Record<string, unknown>
+  return (
+    typeof v.playerId === 'string' &&
+    typeof v.playerSecret === 'string' &&
+    typeof v.clientRunId === 'string'
+  )
 }
 
 function isSubmitRequest(value: unknown): value is SubmitRequest {
@@ -52,10 +87,16 @@ function isSubmitRequest(value: unknown): value is SubmitRequest {
   const v = value as Record<string, unknown>
   return (
     typeof v.playerId === 'string' &&
+    typeof v.playerSecret === 'string' &&
     typeof v.clientRunId === 'string' &&
     !!v.input &&
     typeof v.input === 'object'
   )
+}
+
+/** 大きすぎるbodyは、解析も検証もせずに切る（決定139 §7-2 T12） */
+function tooLarge(request: RankingHttpRequest): boolean {
+  return typeof request.bodyBytes === 'number' && request.bodyBytes > RULES.ranking.maxBodyBytes
 }
 
 export async function handleRankingRequest(
@@ -64,13 +105,55 @@ export async function handleRankingRequest(
 ): Promise<RankingHttpResponse> {
   const path = request.path.replace(/\/+$/, '')
 
-  if (path.endsWith('/ranking/submit')) {
+  if (path.endsWith('/ranking/start')) {
     if (request.method !== 'POST') {
       return { status: 405, body: { error: 'method_not_allowed' } }
     }
     // ★kill switch：Backendの本番稼働がCEO承認されるまでは受け付けない
     if (!RULES.ranking.submissionEnabled) {
       return { status: 503, body: { error: 'submission_disabled' } }
+    }
+    if (tooLarge(request)) {
+      return { status: 413, body: { error: 'payload_too_large' } }
+    }
+    if (!isStartRequest(request.body)) {
+      return { status: 400, body: { error: 'bad_request' } }
+    }
+    const result = await startRun(request.body, deps)
+    if (!result.ok) {
+      return {
+        status: START_STATUS_BY_CODE[result.code],
+        body: { error: result.code, message: result.message },
+      }
+    }
+    return {
+      status: result.reused ? 200 : 201,
+      body: {
+        dailyKey: result.ticket.dailyKey,
+        clientRunId: result.ticket.clientRunId,
+        attemptNo: result.ticket.attemptNo,
+        attemptsUsed: result.attemptsUsed,
+        attemptsPerDay: RULES.daily.attemptsPerDay,
+        issuedAt: result.ticket.issuedAt,
+        expiresAt: result.ticket.expiresAt,
+        gameVersion: result.ticket.gameVersion,
+        state: result.state,
+        reused: result.reused,
+        abandoned: result.abandoned,
+        serverNow: result.serverNow,
+      },
+    }
+  }
+
+  if (path.endsWith('/ranking/submit')) {
+    if (request.method !== 'POST') {
+      return { status: 405, body: { error: 'method_not_allowed' } }
+    }
+    if (!RULES.ranking.submissionEnabled) {
+      return { status: 503, body: { error: 'submission_disabled' } }
+    }
+    if (tooLarge(request)) {
+      return { status: 413, body: { error: 'payload_too_large' } }
     }
     if (!isSubmitRequest(request.body)) {
       return { status: 400, body: { error: 'bad_request' } }
@@ -90,6 +173,7 @@ export async function handleRankingRequest(
         score: result.outcome.score,
         win: result.outcome.win,
         round: result.outcome.round,
+        attemptNo: result.run.attemptNo,
         bestScore: result.bestScore,
         runsUsed: result.runsUsed,
         attemptsPerDay: RULES.daily.attemptsPerDay,
@@ -113,8 +197,17 @@ export async function handleRankingRequest(
     const board = await getLeaderboard(dailyKey, deps.store, {
       limit,
       playerId: request.query?.playerId,
+      now: deps.now,
     })
-    return { status: 200, body: board }
+    const seconds = RULES.ranking.leaderboardCacheSeconds
+    return {
+      status: 200,
+      body: board,
+      headers: {
+        // CDN・ブラウザにも同じ猶予を伝える。集計はサーバー側でも同じ秒数だけ使い回す
+        'cache-control': `public, s-maxage=${seconds}, stale-while-revalidate=${seconds * 4}`,
+      },
+    }
   }
 
   return { status: 404, body: { error: 'not_found' } }

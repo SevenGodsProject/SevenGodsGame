@@ -71,6 +71,7 @@ export function BattleScreen({
     prevBest,
     otomoBondChange,
     dailyResult,
+    dailyRanked,
     stakeResult,
     battleStartKey,
     playCard,
@@ -517,6 +518,7 @@ export function BattleScreen({
           onRematch={onRematch}
           onReselect={onReselect}
           daily={state.mode === 'daily' ? dailyResult : null}
+          dailyRanked={dailyRanked}
           stakeResult={stakeResult}
           shareState={state}
           defeatCause={state.status === 'lost' ? deriveDefeatCause(log, state.round) : null}

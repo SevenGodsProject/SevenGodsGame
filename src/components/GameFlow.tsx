@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import type { CardDefId, Difficulty, EnemyId, GodId, GrowthPath, StakeChoiceId } from '../core/types'
 import { useGameEngine } from '../hooks/useGameEngine'
 import { saveDeckPreference, loadDeckPreference } from '../hooks/deckPreferenceStorage'
@@ -6,6 +6,7 @@ import { clearBattleSave, loadBattleSave } from '../hooks/battleSaveStorage'
 import { loadRewardBonuses } from '../hooks/rewardStorage'
 import { isExpiredDailySave, todayDailyKey } from '../hooks/dailyClock'
 import { dailyAttemptsLeft } from '../hooks/dailyStorage'
+import { prepareDailyStart, unrankedMessage } from '../hooks/dailySessionStart'
 import { getRecommendedDeck } from '../core/data/deckBuilder'
 import { dailyBossFor } from '../core/data/dailyBoss'
 import { playTrack } from './battle/bgm'
@@ -75,6 +76,21 @@ export function GameFlow({ onShowTutorial, onSnapshotChange }: GameFlowProps) {
   const [selectedEnemyId, setSelectedEnemyId] = useState<EnemyId | null>(null)
   // DAILY-01：神域挑戦の日付キー。null＝通常モード
   const [dailyKey, setDailyKey] = useState<string | null>(null)
+  /**
+   * Phase 4.6：神域挑戦の開始処理中フラグ。
+   *
+   * サーバーへ枠を予約しに行っている間、決定ボタンの二度押しで**別々のIDが並走**
+   * しないよう入口を1つに絞る（決定139 §12「二重クリック」）。
+   *
+   * ★stateではなくrefで持つ理由
+   * stateの更新は再レンダリングを待つので、同じtickの中で2回呼ばれると
+   * どちらも「まだ開始していない」と判断してしまう。そうなると別々の
+   * `clientRunId` で2回startが飛び、**1回の操作で枠を2つ失う**。
+   * refなら代入が即座に見えるので、その隙間が構造的に存在しない。
+   */
+  const startingDailyRef = useRef(false)
+  /** ランキング対象外で始まったときの案内文（対象なら null） */
+  const [unrankedNotice, setUnrankedNotice] = useState<string | null>(null)
   // 8/31 P0-1：進行中セーブがある状態で「神を選ぶ」「挑戦開始」を押したときの確認。
   // 確認後に実行する処理を保持する（null＝ダイアログ非表示）。セーブが無ければ出さない
   const [pendingDiscard, setPendingDiscard] = useState<{ proceed: () => void } | null>(null)
@@ -110,6 +126,44 @@ export function GameFlow({ onShowTutorial, onSnapshotChange }: GameFlowProps) {
       setSavedBattle(loadResumableBattle())
     }
   }, [setupScreen])
+
+  /**
+   * Phase 4.6（決定139 §8）：神域挑戦を始める。
+   *
+   * **start（枠の予約）→ ticketの控え → START_GAME** の順を守る。
+   * kill switch が閉じている間は通信が起きないので、従来どおり即座に始まる。
+   * サーバーへ届かない場合も「ランキング対象外」として遊べる（ゲームは止めない）。
+   * 止めるのは、サーバーが「本日は3回すべて終えている」と答えたときだけ。
+   */
+  const beginDailyChallenge = async (
+    selectedGodId: GodId,
+    confirmedDeck: CardDefId[],
+    key: string,
+  ) => {
+    if (startingDailyRef.current) return
+    startingDailyRef.current = true
+    try {
+      const plan = await prepareDailyStart(key)
+      if (plan.blocked) {
+        setUnrankedNotice(unrankedMessage('attempts-exceeded'))
+        setSetupScreen('daily')
+        return
+      }
+      // サーバーが決めた日付を正とする（デッキ構築中にJSTの日付が変わった場合に効く）
+      if (plan.dailyKey !== key) setDailyKey(plan.dailyKey)
+      setUnrankedNotice(plan.unrankedReason ? unrankedMessage(plan.unrankedReason) : null)
+      const started = engine.startDailyGame(
+        selectedGodId,
+        confirmedDeck,
+        plan.dailyKey,
+        otomoGrowthPath,
+        plan.session,
+      )
+      if (!started) setSetupScreen('daily')
+    } finally {
+      startingDailyRef.current = false
+    }
+  }
 
   const backToGodSelect = () => {
     engine.resetGame()
@@ -172,6 +226,7 @@ export function GameFlow({ onShowTutorial, onSnapshotChange }: GameFlowProps) {
         return (
           <DailyChallengeScreen
             dateKey={todayDailyKey()}
+            notice={unrankedNotice}
             onStart={() =>
               guardDiscard(() => {
                 clearBattleSave()
@@ -215,14 +270,9 @@ export function GameFlow({ onShowTutorial, onSnapshotChange }: GameFlowProps) {
               if (dailyKey) {
                 // Phase 4.1：Dailyは報酬ボーナス（決定43）を渡さない。
                 // `startDailyGame`が`bonusCopies`を引数に取らない設計になっているため、
-                // ここで渡し忘れ／渡し直しが起きる余地がない（型で担保）
-                const started = engine.startDailyGame(
-                  godId,
-                  confirmedDeck,
-                  dailyKey,
-                  otomoGrowthPath,
-                )
-                if (!started) setSetupScreen('daily')
+                // ここで渡し忘れ／渡し直しが起きる余地がない（型で担保）。
+                // Phase 4.6：先にサーバーへ枠を予約してから START_GAME する
+                void beginDailyChallenge(godId, confirmedDeck, dailyKey)
                 return
               }
               engine.startGame(
@@ -271,16 +321,8 @@ export function GameFlow({ onShowTutorial, onSnapshotChange }: GameFlowProps) {
           if (inDaily) {
             if (!dailyKey) return
             // Phase 4.1：「もう一度挑戦」も同じく報酬ボーナスなし（1〜3回目で条件が変わらない）
-            const started = engine.startDailyGame(
-              godId,
-              deck,
-              dailyKey,
-              otomoGrowthPath,
-            )
-            if (!started) {
-              engine.resetGame()
-              setSetupScreen('daily')
-            }
+            // Phase 4.6：ここも必ず枠の予約を通す（提出だけで枠を作れないのと対）
+            void beginDailyChallenge(godId, deck, dailyKey)
             return
           }
           // LANE-D（選択後の一貫性）：「もう一度」は直前に戦った敵（state.enemy.defId）

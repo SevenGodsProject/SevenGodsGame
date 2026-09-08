@@ -18,8 +18,14 @@ import type { GodId, ReplayInput, VerifiedOutcome } from './deps'
 
 /** 提出リクエスト。クライアントが送ってよいのはこれだけ */
 export type SubmitRequest = {
-  /** 端末で生成した匿名ID（乱数16進）。氏名・メール等は扱わない */
+  /** 公開ID＝SHA-256(playerSecret) の先頭32桁。氏名・メール等は扱わない */
   playerId: string
+  /**
+   * Phase 4.6：端末が持つ秘密。**サーバーは保存しない**（照合に使って捨てる）。
+   * これが無いと、リーダーボードで公開されている `playerId` を名乗るだけで
+   * 他人の枠とレート制限を食い潰せてしまう（決定139 T1）。
+   */
+  playerSecret: string
   /** run識別子。再送しても同じ値なので、サーバーは冪等に扱える */
   clientRunId: string
   /** Phase 4.1の契約どおり、開始条件と操作ログだけ */
@@ -31,6 +37,10 @@ export type RankingRun = {
   dailyKey: string
   playerId: string
   clientRunId: string
+  /** その日の何回目か。**ticketが決めた番号**をそのまま写す（提出順では決まらない） */
+  attemptNo: number
+  /** 検証したときのコードの版。後からの再検証と、同一ボード内の条件一致に使う */
+  gameVersion: string
   godId: GodId
   /** 検証済みスコア */
   score: number
@@ -52,8 +62,17 @@ export type SubmitRejectionCode =
   | 'RATE_LIMITED'
   /** その日の挑戦回数（`RULES.daily.attemptsPerDay`）を使い切っている */
   | 'ATTEMPTS_EXCEEDED'
-  /** 今日以外のDailyを提出しようとした */
-  | 'STALE_DAILY_KEY'
+  /**
+   * この run の ticket が無い。挑戦を開始していない、別の日を名乗った、
+   * 端末時計を偽装した——のいずれでもここに落ちる（`STALE_DAILY_KEY` の後継）
+   */
+  | 'NO_TICKET'
+  /** ticket が既に閉じている（別の挑戦を開始した／deployで無効化された） */
+  | 'TICKET_CLOSED'
+  /** ticket の期限が切れている */
+  | 'TICKET_EXPIRED'
+  /** 発行時と現在でコードの版が違う（＝比較不能）。**枠は返還する** */
+  | 'RULES_VERSION_MISMATCH'
   /** リプレイ検証に落ちた（内訳は `replayCode` に入る） */
   | 'REPLAY_REJECTED'
 

@@ -2,6 +2,7 @@ import { GODS } from '../../core/data/gods'
 import { getEnemyDef } from '../../core/data/enemies'
 import { dailyBossFor } from '../../core/data/dailyBoss'
 import { RULES } from '../../core/data/rules'
+import { rankedStartNotice } from '../../hooks/dailySessionStart'
 import { bestResultOf, bestResultsByGod, dailyAttemptsLeft, loadDailyDay } from '../../hooks/dailyStorage'
 import { formatScaled } from '../displayScale'
 import { DailyStatusBadge } from './DailyStatusBadge'
@@ -15,6 +16,11 @@ type DailyChallengeScreenProps = {
   /** 「挑戦開始」→ 神選択へ（難易度ステップは無し） */
   onStart: () => void
   onBack: () => void
+  /**
+   * Phase 4.6：直前の挑戦がランキング対象外になった場合の案内。
+   * サーバー障害・更新直後・回数切れなど。null なら何も出さない。
+   */
+  notice?: string | null
 }
 
 /** Daily専用の★表示。`EnemyDef.rank`ではなく「神域強化状態＝5」を常に満たす */
@@ -32,7 +38,12 @@ function godName(godId: string | null): string {
  * 敵選択・難易度選択はDailyには無い（挑戦開始→神選択→デッキ→バトル）。
  * 「ランキング」の語はオンライン実装まで使わない（決定73の免責と同じ方針）。
  */
-export function DailyChallengeScreen({ dateKey, onStart, onBack }: DailyChallengeScreenProps) {
+export function DailyChallengeScreen({
+  dateKey,
+  onStart,
+  onBack,
+  notice = null,
+}: DailyChallengeScreenProps) {
   const boss = dailyBossFor(dateKey)
   const def = getEnemyDef(boss.enemyId)
   const day = loadDailyDay(dateKey)
@@ -140,6 +151,16 @@ export function DailyChallengeScreen({ dateKey, onStart, onBack }: DailyChalleng
       </div>
 
       <div className="daily-actions">
+        {notice && (
+          <p className="daily-notice" role="status">
+            {notice}
+          </p>
+        )}
+        {/*
+          Phase 4.6（決定139 §12）：枠を失う条件を**始める前に**伝える。
+          「始めたら戻らない」ことを知らずに開始して1回を失う体験を作らない。
+        */}
+        {!exhausted && <p className="daily-attempt-warning">{rankedStartNotice(attemptsLeft)}</p>}
         <button type="button" className="home-cta-primary" onClick={onStart} disabled={exhausted}>
           {exhausted ? '今日の挑戦は終了' : `挑戦開始（残り${attemptsLeft}回）`}
         </button>

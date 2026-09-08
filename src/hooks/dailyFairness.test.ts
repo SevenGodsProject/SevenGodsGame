@@ -285,10 +285,20 @@ describe('UI配線ガード：Daily開始経路に報酬ボーナスが復活し
     return calls
   }
 
-  it('GameFlow：startDailyGameの呼び出しがloadRewardBonusesを渡さない', () => {
+  it('GameFlow：Daily開始経路がloadRewardBonusesを渡さない', () => {
     const source = read('components/GameFlow.tsx')
+
+    // Phase 4.6：Dailyの開始は `beginDailyChallenge`（枠の予約 → START_GAME）へ集約された。
+    // 呼び出し口は「デッキ確定」と「もう一度挑戦」の2つのままで、
+    // engine.startDailyGame を直接呼ぶ場所は1つだけになる。
+    const entryPoints = callArgs(source, 'beginDailyChallenge')
+    expect(entryPoints.length, 'Dailyの開始経路が見つからない').toBe(2)
+    for (const call of entryPoints) {
+      expect(call).not.toContain('loadRewardBonuses')
+    }
+
     const calls = callArgs(source, 'engine.startDailyGame')
-    expect(calls.length, 'startDailyGameの呼び出しが見つからない').toBe(2)
+    expect(calls.length, 'startDailyGameの呼び出しは1か所に集約されている').toBe(1)
     for (const call of calls) {
       expect(call).not.toContain('loadRewardBonuses')
     }
