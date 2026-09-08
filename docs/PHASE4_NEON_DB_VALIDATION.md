@@ -9,7 +9,7 @@
 
 > **更新（2026-09-08）：Step 1 のブロックが解除され、実DB検証13件が全PASSしました。**
 > 現在の状態は **§16〜§18** を参照してください。§0〜§15 は 2026-09-07 時点の記録として原文のまま残しています。
-> Phase 4.4 の **Final PASS は credential ローテーション後の再実行が条件**（§16-5）。
+> **Phase 4.4 は Final PASS（2026-09-08）。** credential ローテーション後の再検証を完了（§19）。
 > **Production Release は NO-GO**（§17 の Production Security / Fairness Gate が未監査・§18）。
 
 ---
@@ -510,3 +510,54 @@ CEO指示により、以下は **Phase 4.4 に混ぜて大改修せず**、次Ph
 | Production Release | **NO-GO**。§17 の PSF-1〜5 が未監査であり、CEO指示により明示的に NO-GO とする |
 
 merge / push / deploy / Vercel変更 / Production API有効化：**いずれも未実施**。branch は `feat/daily-ranking-phase4` を維持。
+
+---
+
+## 19. ローテーション後の再検証（2026-09-08・**Phase 4.4 Final PASS**）
+
+§16-5 で Final PASS の条件としていた「credential ローテーション後の再実行」を実施した。
+
+### 19-1. ローテーションの確認（値は非表示で検証）
+
+| 検査 | 結果 |
+|---|---|
+| 露出した旧パスワードを含むか | **含まない**（＝ローテーション済み） |
+| エンドポイント | 旧と同一（パスワードのみ更新＝Neon の正しい挙動） |
+| ロール | `neondb_owner`（変更なし） |
+| pooled connection | yes |
+| TLS（`sslmode=require`） | yes |
+
+接続文字列はクリップボードから環境変数へ直接渡し、**チャット・ファイル・docs・commit のいずれにも記録していない**。
+
+### 19-2. 実DB再検証の結果
+
+```
+npx vitest run src/server/ranking/postgres.integration.test.ts
+```
+
+| 項目 | 期待値（§16-5） | 実測 | 判定 |
+|---|---|---|---|
+| Test Files | 1 passed | **1 passed (1)** | 一致 |
+| Tests | 13 passed / 1 skipped | **13 passed / 1 skipped (14)** | 一致 |
+| Duration | — | 14.91s（初回 14.45s） | — |
+
+**新credentialでも期待値と完全一致。** ローテーションによる破壊は無い。
+
+### 19-3. 判定の更新（§18 を更新する）
+
+| Gate | §18（ローテーション前） | **現在** |
+|---|---|---|
+| Phase 4.4 実DB技術Gate | 暫定 PASS | **PASS** |
+| Phase 4.4 **Final PASS** | 未達 | **達成** |
+| Production Release | NO-GO | **NO-GO（据え置き）** |
+
+> **Production Release が NO-GO である理由は変わっていない。**
+> §17 の Production Security / Fairness Gate（PSF-1〜5）が未監査であり、
+> これは実DB技術Gateとは別物である。Phase 4.4 の完了は「DBが正しく動く」ことの証明であって、
+> 「公開して不正・不公平が起きない」ことの証明ではない。
+
+### 19-4. 残す運用上の注意
+
+- 露出した旧パスワードは無効化された前提で扱うが、**Neon側で旧パスワードが確実に失効しているか**は CEO のコンソール確認に依存する（本検証では「新credentialが旧と異なる」ことまでしか機械的に確認できない）
+- 新credentialも `.env` に置かず、環境変数としてのみ渡す運用を継続する
+- merge / push / deploy / Vercel変更 / Production API有効化は**引き続き未実施**
