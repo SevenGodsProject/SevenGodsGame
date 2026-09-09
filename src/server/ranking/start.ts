@@ -1,6 +1,6 @@
-import { RULES, dailyKeyOf, getGameVersion } from './deps'
-import { verifyIdentity } from './identity'
-import type { RankingStore } from './store'
+import { RULES, dailyKeyOf, getGameVersion } from './deps.js'
+import { verifyIdentity } from './identity.js'
+import type { RankingStore } from './store.js'
 import {
   consumesAttempt,
   expiryOf,
@@ -8,7 +8,7 @@ import {
   ticketStateOf,
   type RunTicket,
   type TicketState,
-} from './ticket'
+} from './ticket.js'
 
 /**
  * Phase 4.6（決定139 §4-4・§9・§12）：挑戦の開始＝**枠の予約**。

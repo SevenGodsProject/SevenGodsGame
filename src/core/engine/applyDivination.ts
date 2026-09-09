@@ -1,7 +1,7 @@
-import type { GameAction, GameEvent, GameState } from '../types'
-import { DIVINATION_CHOICES } from '../data/divination'
-import { createRng } from '../rng/seededRandom'
-import { applyEffects } from './effects'
+import type { GameAction, GameEvent, GameState } from '../types/index.js'
+import { DIVINATION_CHOICES } from '../data/divination.js'
+import { createRng } from '../rng/seededRandom.js'
+import { applyEffects } from './effects.js'
 
 type UseDivinationAction = Extract<GameAction, { type: 'USE_DIVINATION' }>
 

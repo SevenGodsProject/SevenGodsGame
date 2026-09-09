@@ -1,6 +1,6 @@
-import { godId } from '../types/ids'
-import type { Effect, GodDef, GodId, GodPassive, GodPassiveId } from '../types'
-import { OTOMO_IDS } from './otomo'
+import { godId } from '../types/ids.js'
+import type { Effect, GodDef, GodId, GodPassive, GodPassiveId } from '../types/index.js'
+import { OTOMO_IDS } from './otomo.js'
 
 export const GOD_IDS = {
   ebisu: godId('ebisu'),

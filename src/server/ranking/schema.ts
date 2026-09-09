@@ -1,4 +1,4 @@
-import { RULES } from './deps'
+import { RULES } from './deps.js'
 
 /**
  * Phase 4.4〜4.6：Postgres（Neon）のスキーマ。

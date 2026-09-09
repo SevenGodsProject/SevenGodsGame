@@ -1,6 +1,6 @@
-import type { BattleModifier, Difficulty, EnemyId, GameMode } from '../types'
-import { RULES } from './rules'
-import { dailyBossFor } from './dailyBoss'
+import type { BattleModifier, Difficulty, EnemyId, GameMode } from '../types/index.js'
+import { RULES } from './rules.js'
+import { dailyBossFor } from './dailyBoss.js'
 
 export type DailyStart = {
   mode: GameMode

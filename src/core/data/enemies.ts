@@ -1,5 +1,5 @@
-import { enemyId } from '../types/ids'
-import type { EnemyDef, EnemyId } from '../types'
+import { enemyId } from '../types/ids.js'
+import type { EnemyDef, EnemyId } from '../types/index.js'
 
 export const ENEMY_IDS = {
   trial: enemyId('enemy_01'),

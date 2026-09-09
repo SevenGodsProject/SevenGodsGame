@@ -1,4 +1,4 @@
-import { RULES } from './deps'
+import { RULES } from './deps.js'
 
 /**
  * Phase 4.6（決定139 §10・§11）：run ticket（挑戦枠の予約）の型と状態機械。

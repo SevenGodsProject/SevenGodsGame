@@ -1,10 +1,10 @@
-import type { GameState } from '../types'
-import { RULES } from '../data/rules'
-import { isValidDailyKey, seedIdOf } from '../data/dailyBoss'
-import { resolveDailyStart } from '../data/dailyStart'
-import { validateDeck } from '../data/deckBuilder'
-import { applyAction } from '../engine/reducer'
-import { getFinalScore } from '../engine/score'
+import type { GameState } from '../types/index.js'
+import { RULES } from '../data/rules.js'
+import { isValidDailyKey, seedIdOf } from '../data/dailyBoss.js'
+import { resolveDailyStart } from '../data/dailyStart.js'
+import { validateDeck } from '../data/deckBuilder.js'
+import { applyAction } from '../engine/reducer.js'
+import { getFinalScore } from '../engine/score.js'
 import {
   REPLAY_ACTION_TYPES,
   type ReplayAction,
@@ -13,7 +13,7 @@ import {
   type ReplayRejectionCode,
   type ReplayResult,
   type VerifiedOutcome,
-} from './types'
+} from './types.js'
 
 /**
  * Phase 4.1：行動ログから対局を再現し、結果を**サーバー側で計算し直す**検証器。

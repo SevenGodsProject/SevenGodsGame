@@ -1,7 +1,7 @@
-import type { BonusCond, CardDef, GameState } from '../types'
-import { RULES } from '../data/rules'
-import { resolveStakeRules } from '../data/stakes'
-import { enemyActionTotal } from './round'
+import type { BonusCond, CardDef, GameState } from '../types/index.js'
+import { RULES } from '../data/rules.js'
+import { resolveStakeRules } from '../data/stakes.js'
+import { enemyActionTotal } from './round.js'
 
 /**
  * Phase 3「神格」FINAL SPEC v0.1：カードの条件付き追加効果（`CardDef.bonus`）の条件評価。

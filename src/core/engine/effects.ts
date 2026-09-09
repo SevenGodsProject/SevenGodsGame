@@ -1,12 +1,12 @@
-import type { Effect, GameEvent, GameState, ScoreState } from '../types'
-import { OTOMO_FORM_ORDER } from '../types/otomo'
-import { RULES } from '../data/rules'
-import { getGodDef, GOD_IDS } from '../data/gods'
-import { getOtomoDef } from '../data/otomo'
-import { performDraw } from './deck'
-import { sumBuff } from './buffs'
-import type { Rng } from '../rng/seededRandom'
-import { resolveStakeRules } from '../data/stakes'
+import type { Effect, GameEvent, GameState, ScoreState } from '../types/index.js'
+import { OTOMO_FORM_ORDER } from '../types/otomo.js'
+import { RULES } from '../data/rules.js'
+import { getGodDef, GOD_IDS } from '../data/gods.js'
+import { getOtomoDef } from '../data/otomo.js'
+import { performDraw } from './deck.js'
+import { sumBuff } from './buffs.js'
+import type { Rng } from '../rng/seededRandom.js'
+import { resolveStakeRules } from '../data/stakes.js'
 
 export type EffectResult = { state: GameState; events: GameEvent[] }
 

@@ -1,5 +1,5 @@
-import { cardDefId } from '../../types/ids'
-import type { CardDef } from '../../types/card'
+import { cardDefId } from '../../types/ids.js'
+import type { CardDef } from '../../types/card.js'
 
 /**
  * 共通カードのID一覧。

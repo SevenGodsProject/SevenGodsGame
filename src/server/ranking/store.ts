@@ -1,7 +1,7 @@
-import { RULES } from './deps'
-import type { RunTicket, TicketClosedReason } from './ticket'
-import { consumesAttempt } from './ticket'
-import type { RankingRun } from './types'
+import { RULES } from './deps.js'
+import type { RunTicket, TicketClosedReason } from './ticket.js'
+import { consumesAttempt } from './ticket.js'
+import type { RankingRun } from './types.js'
 
 /**
  * Phase 4.3〜4.6：保存層のポート（差し替え可能な口）。

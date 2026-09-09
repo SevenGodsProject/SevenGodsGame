@@ -1,6 +1,6 @@
-import type { GameState } from '../types'
-import { runReplay } from './replay'
-import { toReplayInput, type DailyRunLog } from './runLog'
+import type { GameState } from '../types/index.js'
+import { runReplay } from './replay.js'
+import { toReplayInput, type DailyRunLog } from './runLog.js'
 
 /**
  * Phase 4.2 Step 7：中断・再開（決定29）を跨いだ行動ログの引き継ぎ。

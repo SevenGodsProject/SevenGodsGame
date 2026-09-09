@@ -1,8 +1,8 @@
-import { RULES, getGameVersion, isValidDailyKey, runReplay } from './deps'
-import { verifyIdentity } from './identity'
-import type { RankingStore } from './store'
-import { ticketStateOf } from './ticket'
-import type { RankingRun, SubmitRejectionCode, SubmitRequest, SubmitResult } from './types'
+import { RULES, getGameVersion, isValidDailyKey, runReplay } from './deps.js'
+import { verifyIdentity } from './identity.js'
+import type { RankingStore } from './store.js'
+import { ticketStateOf } from './ticket.js'
+import type { RankingRun, SubmitRejectionCode, SubmitRequest, SubmitResult } from './types.js'
 
 /**
  * Phase 4.3〜4.6：提出の受理。**ここがランキングの信頼の全て**。

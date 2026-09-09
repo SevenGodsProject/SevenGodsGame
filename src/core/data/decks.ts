@@ -1,5 +1,5 @@
-import type { CardDefId } from '../types/ids'
-import { CARD_IDS, EBISU_CARD_IDS } from './cards'
+import type { CardDefId } from '../types/ids.js'
+import { CARD_IDS, EBISU_CARD_IDS } from './cards/index.js'
 
 /**
  * MVP Ver 0.1 の初期デッキ（20枚）。

@@ -1,5 +1,5 @@
-import type { EnemyId } from './ids'
-import type { Buff } from './effect'
+import type { EnemyId } from './ids.js'
+import type { Buff } from './effect.js'
 
 /**
  * 敵の行動。

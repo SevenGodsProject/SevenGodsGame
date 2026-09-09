@@ -1,8 +1,8 @@
-import { RULES } from '../data/rules'
-import { ALL_CARDS } from '../data/cards'
-import { ENEMIES } from '../data/enemies'
-import { GODS } from '../data/gods'
-import { OTOMOS } from '../data/otomo'
+import { RULES } from '../data/rules.js'
+import { ALL_CARDS } from '../data/cards/index.js'
+import { ENEMIES } from '../data/enemies.js'
+import { GODS } from '../data/gods.js'
+import { OTOMOS } from '../data/otomo.js'
 
 /**
  * Phase 4.6（決定139 §5-2）：ランキングの比較可能性を守るための「版」。

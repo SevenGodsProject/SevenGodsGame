@@ -1,8 +1,8 @@
-import { RULES } from './deps'
-import { CONSTRAINT_NAMES } from './schema'
-import type { InsertRunResult, InsertTicketResult, RankingStore } from './store'
-import type { RunTicket, TicketClosedReason } from './ticket'
-import type { RankingRun } from './types'
+import { RULES } from './deps.js'
+import { CONSTRAINT_NAMES } from './schema.js'
+import type { InsertRunResult, InsertTicketResult, RankingStore } from './store.js'
+import type { RunTicket, TicketClosedReason } from './ticket.js'
+import type { RankingRun } from './types.js'
 
 /**
  * Phase 4.4〜4.6：`RankingStore` の Postgres（Neon）実装。

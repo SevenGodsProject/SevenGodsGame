@@ -1,10 +1,10 @@
-import type { GodId } from './ids'
-import type { Buff } from './effect'
-import type { CardInstance } from './card'
-import type { Difficulty } from './difficulty'
-import type { GrowthPath } from './otomo'
-import type { EnemyState } from './enemy'
-import type { OtomoState } from './otomo'
+import type { GodId } from './ids.js'
+import type { Buff } from './effect.js'
+import type { CardInstance } from './card.js'
+import type { Difficulty } from './difficulty.js'
+import type { GrowthPath } from './otomo.js'
+import type { EnemyState } from './enemy.js'
+import type { OtomoState } from './otomo.js'
 
 /** 1ラウンドの進行段階 */
 export type RoundPhase =

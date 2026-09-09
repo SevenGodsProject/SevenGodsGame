@@ -1,7 +1,7 @@
-import type { CardDefId, CardUid, EnemyId, GodId } from './ids'
-import type { Difficulty } from './difficulty'
-import type { GrowthPath } from './otomo'
-import type { BattleModifier, GameMode, StakeChoiceId } from './state'
+import type { CardDefId, CardUid, EnemyId, GodId } from './ids.js'
+import type { Difficulty } from './difficulty.js'
+import type { GrowthPath } from './otomo.js'
+import type { BattleModifier, GameMode, StakeChoiceId } from './state.js'
 
 /**
  * プレイヤーが行う「操作」。

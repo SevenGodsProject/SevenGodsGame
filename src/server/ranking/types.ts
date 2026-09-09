@@ -1,4 +1,4 @@
-import type { GodId, ReplayInput, VerifiedOutcome } from './deps'
+import type { GodId, ReplayInput, VerifiedOutcome } from './deps.js'
 
 /**
  * Phase 4.3：Daily ランキングBackendの型。

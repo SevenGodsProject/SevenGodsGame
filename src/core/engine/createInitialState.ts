@@ -1,13 +1,13 @@
-import type { CardDefId, GameAction, GameEvent, GameState } from '../types'
-import { RULES } from '../data/rules'
-import { validateDeck } from '../data/deckBuilder'
-import { getEnemyDef } from '../data/enemies'
-import { getGodDef } from '../data/gods'
-import { getOtomoDef } from '../data/otomo'
-import { createRng } from '../rng/seededRandom'
-import { buildDeckInstances } from './deck'
-import { startRound } from './round'
-import { isStakeLevel, resolveStakeRules } from '../data/stakes'
+import type { CardDefId, GameAction, GameEvent, GameState } from '../types/index.js'
+import { RULES } from '../data/rules.js'
+import { validateDeck } from '../data/deckBuilder.js'
+import { getEnemyDef } from '../data/enemies.js'
+import { getGodDef } from '../data/gods.js'
+import { getOtomoDef } from '../data/otomo.js'
+import { createRng } from '../rng/seededRandom.js'
+import { buildDeckInstances } from './deck.js'
+import { startRound } from './round.js'
+import { isStakeLevel, resolveStakeRules } from '../data/stakes.js'
 
 type StartGameAction = Extract<GameAction, { type: 'START_GAME' }>
 

@@ -1,9 +1,9 @@
-import type { GameAction, GameEvent, GameState } from '../types'
-import { createInitialState } from './createInitialState'
-import { playCard } from './playCard'
-import { endRound } from './endRound'
-import { applyDivination } from './applyDivination'
-import { getFinalScore } from './score'
+import type { GameAction, GameEvent, GameState } from '../types/index.js'
+import { createInitialState } from './createInitialState.js'
+import { playCard } from './playCard.js'
+import { endRound } from './endRound.js'
+import { applyDivination } from './applyDivination.js'
+import { getFinalScore } from './score.js'
 
 export type ReduceResult = { state: GameState; events: GameEvent[] }
 

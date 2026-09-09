@@ -5,8 +5,8 @@
  * スコア・勝敗・HP・rngCursorを**サーバー側で計算する**ための入口。
  * ランキングBackend（Phase 4.3以降）はこのモジュールだけを import すればよい。
  */
-export { runReplay } from './replay'
-export { REPLAY_ACTION_TYPES } from './types'
+export { runReplay } from './replay.js'
+export { REPLAY_ACTION_TYPES } from './types.js'
 export type {
   ReplayAction,
   ReplayInput,
@@ -14,7 +14,7 @@ export type {
   ReplayRejectionCode,
   ReplayResult,
   VerifiedOutcome,
-} from './types'
+} from './types.js'
 
 /** Phase 4.2：実プレイの記録（clientが行動ログを組み立てるための最小API） */
 export {
@@ -23,12 +23,12 @@ export {
   createRunLog,
   isLoggableAction,
   toReplayInput,
-} from './runLog'
-export type { DailyRunLog, RecordResult } from './runLog'
+} from './runLog.js'
+export type { DailyRunLog, RecordResult } from './runLog.js'
 
 /** Phase 4.2：中断・再開を跨いだ記録の引き継ぎ */
-export { resumeRunLog, deepEqual } from './resume'
-export type { ResumeRunLogResult } from './resume'
+export { resumeRunLog, deepEqual } from './resume.js'
+export type { ResumeRunLogResult } from './resume.js'
 
 /** Phase 4.2：順位付けの規則（同点＝同順位。Phase 4.3/4.4が使う） */
 export {
@@ -37,7 +37,7 @@ export {
   rankingImpactSnapshot,
   stableStringify,
   resetGameVersionCache,
-} from './gameVersion'
+} from './gameVersion.js'
 
-export { assignRanks } from './ranking'
-export type { RankableEntry, RankedEntry } from './ranking'
+export { assignRanks } from './ranking.js'
+export type { RankableEntry, RankedEntry } from './ranking.js'

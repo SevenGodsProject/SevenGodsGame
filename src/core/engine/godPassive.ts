@@ -1,6 +1,6 @@
-import type { CardDef, Effect, GameState, GodId, GodPassive, GodPassiveId } from '../types'
-import { RULES } from '../data/rules'
-import { getGodDef } from '../data/gods'
+import type { CardDef, Effect, GameState, GodId, GodPassive, GodPassiveId } from '../types/index.js'
+import { RULES } from '../data/rules.js'
+import { getGodDef } from '../data/gods.js'
 
 /**
  * Phase 3「神格」FINAL SPEC v0.1：神の得意技（Passive）。

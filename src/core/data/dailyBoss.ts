@@ -1,7 +1,7 @@
-import type { EnemyId } from '../types'
-import { ENEMY_IDS } from './enemies'
-import { RULES } from './rules'
-import { createRng } from '../rng/seededRandom'
+import type { EnemyId } from '../types/index.js'
+import { ENEMY_IDS } from './enemies.js'
+import { RULES } from './rules.js'
+import { createRng } from '../rng/seededRandom.js'
 
 /**
  * DAILY-01：神域挑戦の「今日のボス」と共有seedを決める純関数群。

@@ -52,7 +52,8 @@ function importSpecifiers(source: string): string[] {
 }
 
 function resolveModule(fromFile: string, specifier: string): string | null {
-  const base = resolvePath(fromFile, specifier)
+  // Node の ESM 解決に合わせて `.js` を付けてあるので、実体（.ts）へ戻してから探す
+  const base = resolvePath(fromFile, specifier.replace(/.js$/, ''))
   for (const candidate of [`${base}.ts`, `${base}.tsx`, `${base}/index.ts`]) {
     if (candidate in SOURCES) return candidate
   }
@@ -338,5 +339,35 @@ describe('api/ は Node の ESM 解決で動く形になっている（Phase 4.8
       }
     }
     expect(offenders, `解決できない相対import: ${offenders.join(', ')}`).toEqual([])
+  })
+})
+
+describe('src/server から到達する範囲も Node の ESM で動く（Phase 4.8）', () => {
+  /**
+   * ★2026-09-09 に Preview で踏んだ事故の再発防止（2件目）
+   * Vercel は関数を**束ねない**。`api/` から辿り着く `src/server` と `src/core` も
+   * 1ファイルずつ JS へ変換されて `/var/task/src/...` に置かれ、ESM として読み込まれる。
+   * そのため到達する全ファイルの相対importに拡張子が要る。
+   * 拡張子を1つ落とすだけで、ローカルは全て緑のまま Production API だけが 500 になる。
+   */
+  it('ランキングBackendから到達する全ファイルの相対importに拡張子が付いている', () => {
+    const offenders: string[] = []
+    for (const file of server.files) {
+      for (const spec of importSpecifiers(stripComments(SOURCES[file]))) {
+        if (!spec.startsWith('.') || spec.includes('?')) continue
+        if (/\.(css|svg|png|jpe?g|webp|mp3|wav|json)$/.test(spec)) continue
+        if (!spec.endsWith('.js')) offenders.push(`${file}: ${spec}`)
+      }
+    }
+    expect(
+      offenders,
+      `拡張子の無い相対import（Vercel上で ERR_MODULE_NOT_FOUND になります）: ${offenders.join(', ')}`,
+    ).toEqual([])
+  })
+
+  it('その範囲がちゃんと広い（クロールが空振りしていない）', () => {
+    expect(server.files.length).toBeGreaterThan(50)
+    expect(server.files.some((f) => f.startsWith('core/'))).toBe(true)
+    expect(server.files.some((f) => f.startsWith('server/'))).toBe(true)
   })
 })

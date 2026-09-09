@@ -1,4 +1,4 @@
-import { RULES } from './data/rules'
+import { RULES } from './data/rules.js'
 
 /**
  * Phase 4.6（決定139 §3）：匿名identityの導出。**クライアントとサーバーの共有実装**。

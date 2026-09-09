@@ -16,4 +16,4 @@
  * 照合に使って捨てる。DBに列は無く（`schema.ts`）、ログにも応答にも出さない
  * （`secrets.test.ts` が機械検査している）。
  */
-export { derivePlayerId, verifyIdentity, isPlayerId, isPlayerSecret } from './deps'
+export { derivePlayerId, verifyIdentity, isPlayerId, isPlayerSecret } from './deps.js'

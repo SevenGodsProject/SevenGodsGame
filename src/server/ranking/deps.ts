@@ -8,14 +8,14 @@
  * ★borrowするのは「検証」と「規則」だけ。UI・localStorage・React には触れない。
  */
 
-export { runReplay, assignRanks, getGameVersion } from '../../core/replay'
-export type { ReplayInput, VerifiedOutcome, RankableEntry, RankedEntry } from '../../core/replay'
-export { dailyKeyOf, isValidDailyKey } from '../../core/data/dailyBoss'
-export { RULES } from '../../core/data/rules'
+export { runReplay, assignRanks, getGameVersion } from '../../core/replay/index.js'
+export type { ReplayInput, VerifiedOutcome, RankableEntry, RankedEntry } from '../../core/replay/index.js'
+export { dailyKeyOf, isValidDailyKey } from '../../core/data/dailyBoss.js'
+export { RULES } from '../../core/data/rules.js'
 export {
   derivePlayerId,
   verifyIdentity,
   isPlayerId,
   isPlayerSecret,
-} from '../../core/identity'
-export type { GodId } from '../../core/types'
+} from '../../core/identity.js'
+export type { GodId } from '../../core/types/index.js'

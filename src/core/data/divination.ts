@@ -1,4 +1,4 @@
-import type { DivinationChoice } from '../types'
+import type { DivinationChoice } from '../types/index.js'
 
 /**
  * 託宣の3択（決定21）。

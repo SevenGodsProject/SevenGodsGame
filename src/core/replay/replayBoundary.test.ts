@@ -65,7 +65,8 @@ function importSpecifiers(source: string): string[] {
 }
 
 function resolveModule(fromFile: string, specifier: string): string | null {
-  const base = resolvePath(fromFile, specifier)
+  // Node の ESM 解決に合わせて `.js` を付けてあるので、実体（.ts）へ戻してから探す
+  const base = resolvePath(fromFile, specifier.replace(/.js$/, ''))
   for (const candidate of [`${base}.ts`, `${base}.tsx`, `${base}/index.ts`]) {
     if (candidate in SOURCES) return candidate
   }

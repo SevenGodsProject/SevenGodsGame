@@ -1,6 +1,6 @@
-import { RULES, assignRanks } from './deps'
-import type { RankingStore } from './store'
-import type { Leaderboard, LeaderboardRow, RankingRun } from './types'
+import { RULES, assignRanks } from './deps.js'
+import type { RankingStore } from './store.js'
+import type { Leaderboard, LeaderboardRow, RankingRun } from './types.js'
 
 /**
  * Phase 4.3：リーダーボードの組み立て。

@@ -1,12 +1,12 @@
-import type { EnemyActionDef, GameEvent, GameState } from '../types'
-import { RULES } from '../data/rules'
-import { GOD_IDS } from '../data/gods'
-import { getEnemyDef } from '../data/enemies'
-import { performDraw } from './deck'
-import { applyDamage } from './effects'
-import { sumBuff, tickBuffs } from './buffs'
-import type { Rng } from '../rng/seededRandom'
-import { resolveStakeRules, specialMultiplierFor } from '../data/stakes'
+import type { EnemyActionDef, GameEvent, GameState } from '../types/index.js'
+import { RULES } from '../data/rules.js'
+import { GOD_IDS } from '../data/gods.js'
+import { getEnemyDef } from '../data/enemies.js'
+import { performDraw } from './deck.js'
+import { applyDamage } from './effects.js'
+import { sumBuff, tickBuffs } from './buffs.js'
+import type { Rng } from '../rng/seededRandom.js'
+import { resolveStakeRules, specialMultiplierFor } from '../data/stakes.js'
 
 type StepResult = { state: GameState; events: GameEvent[] }
 

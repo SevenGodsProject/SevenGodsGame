@@ -7,7 +7,7 @@ import type {
   GodId,
   GrowthPath,
   ScoreState,
-} from '../types'
+} from '../types/index.js'
 
 /**
  * リプレイで再生できる操作。

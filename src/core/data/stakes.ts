@@ -1,6 +1,6 @@
-import type { EnemyId } from '../types'
-import { RULES } from './rules'
-import { ENEMY_IDS } from './enemies'
+import type { EnemyId } from '../types/index.js'
+import { RULES } from './rules.js'
+import { ENEMY_IDS } from './enemies.js'
 
 /**
  * 決定126：神階（しんかい）Ⅰ〜Ⅶ — Stakes型チャレンジシステム。

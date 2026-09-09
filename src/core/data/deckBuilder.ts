@@ -1,5 +1,5 @@
-import type { CardDef, CardDefId, CardType, GodId } from '../types'
-import { RULES } from './rules'
+import type { CardDef, CardDefId, CardType, GodId } from '../types/index.js'
+import { RULES } from './rules.js'
 import {
   ALL_CARDS,
   getCardDef,
@@ -8,9 +8,9 @@ import {
   SOBI_CARD_IDS,
   SAIKA_CARD_IDS,
   JURAKU_CARD_IDS,
-} from './cards'
-import { STARTER_DECK } from './decks'
-import { DEFAULT_GOD_ID, GOD_IDS } from './gods'
+} from './cards/index.js'
+import { STARTER_DECK } from './decks.js'
+import { DEFAULT_GOD_ID, GOD_IDS } from './gods.js'
 
 /**
  * デッキ構築（決定24、Phase 5）。

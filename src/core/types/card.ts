@@ -1,5 +1,5 @@
-import type { CardDefId, CardUid, GodId } from './ids'
-import type { Effect } from './effect'
+import type { CardDefId, CardUid, GodId } from './ids.js'
+import type { Effect } from './effect.js'
 
 /** 企画書5章のカード分類 */
 export type CardType =

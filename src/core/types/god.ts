@@ -1,5 +1,5 @@
-import type { GodId, OtomoId } from './ids'
-import type { Effect } from './effect'
+import type { GodId, OtomoId } from './ids.js'
+import type { Effect } from './effect.js'
 
 /** 立ち絵の3枚（決定18：SGG Creator Kit準拠） */
 export type GodArt = {

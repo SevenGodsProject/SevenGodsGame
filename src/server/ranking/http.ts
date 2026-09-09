@@ -1,9 +1,9 @@
-import { RULES, isValidDailyKey } from './deps'
-import { getLeaderboard } from './leaderboard'
-import { startRun, type StartRejectionCode, type StartRequest } from './start'
-import type { RankingStore } from './store'
-import { submitRun } from './submit'
-import type { SubmitRequest, SubmitRejectionCode } from './types'
+import { RULES, isValidDailyKey } from './deps.js'
+import { getLeaderboard } from './leaderboard.js'
+import { startRun, type StartRejectionCode, type StartRequest } from './start.js'
+import type { RankingStore } from './store.js'
+import { submitRun } from './submit.js'
+import type { SubmitRequest, SubmitRejectionCode } from './types.js'
 
 /**
  * Phase 4.3〜4.6：HTTPの受け口（フレームワーク非依存）。

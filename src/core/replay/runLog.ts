@@ -1,8 +1,8 @@
-import type { CardDefId, GameAction, GameState, GodId, GrowthPath } from '../types'
-import { RULES } from '../data/rules'
-import { applyAction } from '../engine/reducer'
-import type { ReduceResult } from '../engine/reducer'
-import { REPLAY_ACTION_TYPES, type ReplayAction, type ReplayInput } from './types'
+import type { CardDefId, GameAction, GameState, GodId, GrowthPath } from '../types/index.js'
+import { RULES } from '../data/rules.js'
+import { applyAction } from '../engine/reducer.js'
+import type { ReduceResult } from '../engine/reducer.js'
+import { REPLAY_ACTION_TYPES, type ReplayAction, type ReplayInput } from './types.js'
 
 /**
  * Phase 4.2：Daily実プレイの行動ログ。

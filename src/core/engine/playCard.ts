@@ -1,11 +1,11 @@
-import type { GameAction, GameEvent, GameState } from '../types'
-import { RULES } from '../data/rules'
-import { getCardDef } from '../data/cards'
-import { GOD_IDS } from '../data/gods'
-import { createRng } from '../rng/seededRandom'
-import { applyEffect, applyEffects, addScore } from './effects'
-import { evaluateBonusCond } from './cardBonus'
-import { passiveNominalAmount, resolveGodPassive } from './godPassive'
+import type { GameAction, GameEvent, GameState } from '../types/index.js'
+import { RULES } from '../data/rules.js'
+import { getCardDef } from '../data/cards/index.js'
+import { GOD_IDS } from '../data/gods.js'
+import { createRng } from '../rng/seededRandom.js'
+import { applyEffect, applyEffects, addScore } from './effects.js'
+import { evaluateBonusCond } from './cardBonus.js'
+import { passiveNominalAmount, resolveGodPassive } from './godPassive.js'
 
 type PlayCardAction = Extract<GameAction, { type: 'PLAY_CARD' }>
 

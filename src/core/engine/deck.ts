@@ -1,7 +1,7 @@
-import type { CardDefId, CardInstance, GameEvent, GameState } from '../types'
-import { cardUid } from '../types/ids'
-import { RULES } from '../data/rules'
-import type { Rng } from '../rng/seededRandom'
+import type { CardDefId, CardInstance, GameEvent, GameState } from '../types/index.js'
+import { cardUid } from '../types/ids.js'
+import { RULES } from '../data/rules.js'
+import type { Rng } from '../rng/seededRandom.js'
 
 /**
  * デッキ定義（CardDefIdの配列）から、盤面で扱う実体（CardInstance）を作ります。
