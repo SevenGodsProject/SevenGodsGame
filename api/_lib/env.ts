@@ -36,6 +36,12 @@ export type RankingEnv = {
   databaseUrl: string | null
   /** kill switch を開けるか。production では常に false */
   submissionUnlocked: boolean
+  /**
+   * `RANKING_PREVIEW_UNLOCK` が有効な値だったか（production 判定を**する前**の姿）。
+   * 「変数を入れたのに開かない」が、値の間違いなのか production だからなのかを
+   * 切り分けるためだけに持つ。production ではこの値を外へ出さない。
+   */
+  unlockRequested: boolean
   /** 'production' | 'preview' | 'development' | null（Vercel が入れる） */
   vercelEnv: string | null
 }
@@ -48,9 +54,20 @@ export type RankingEnv = {
  */
 type ProcessLike = { process?: { env?: Record<string, string | undefined> } }
 
+/**
+ * 環境変数を1つ読む。
+ *
+ * ★前後の空白を落とす
+ * ダッシュボードへ貼り付けると改行や空白が混じることがある。`"1\n"` を「無効」と読むのは
+ * 意地悪なだけで、安全性には何も足さない。空白だけの値は trim 後に空文字になるので、
+ * 「`' '` は有効化しない」という性質はそのまま保たれる。
+ * 接続文字列も同様に trim してよい（URLに前後の空白は意味を持たない）。
+ */
 function read(name: string): string | null {
   const value = (globalThis as ProcessLike).process?.env?.[name]
-  return typeof value === 'string' && value.length > 0 ? value : null
+  if (typeof value !== 'string') return null
+  const trimmed = value.trim()
+  return trimmed.length > 0 ? trimmed : null
 }
 
 export function readRankingEnv(): RankingEnv {
@@ -61,6 +78,7 @@ export function readRankingEnv(): RankingEnv {
     apiEnabled: read('RANKING_API_ENABLED') === ENABLED,
     databaseUrl: read('RANKING_DATABASE_URL'),
     submissionUnlocked: unlockRequested && vercelEnv !== 'production',
+    unlockRequested,
     vercelEnv,
   }
 }

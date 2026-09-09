@@ -125,6 +125,32 @@ function queryOf(request: Request): Record<string, string | undefined> {
   return out
 }
 
+/**
+ * `submission_disabled` を返すとき、**production 以外に限って**理由の内訳を添える。
+ *
+ * ★なぜ要るか
+ * 「Preview に `RANKING_PREVIEW_UNLOCK` を入れたのに開かない」となったとき、
+ * 値が違うのか・production 判定に落ちたのか・そもそも届いていないのかを、
+ * ダッシュボードで値を覗きに行かずに切り分けられるようにする（Phase 4.8 の Preview QA で実際に詰まった）。
+ *
+ * ★production では絶対に付けない
+ * 門番の内部状態は運用情報なので、本番の応答には1バイトも出さない。
+ * 秘密そのものは元より含まない（真偽値と環境名だけ）。
+ */
+function withGateHint(body: unknown, ctx: RankingRouteContext): unknown {
+  if (ctx.env.vercelEnv === 'production') return body
+  if (!body || typeof body !== 'object') return body
+  if ((body as { error?: unknown }).error !== 'submission_disabled') return body
+  return {
+    ...(body as Record<string, unknown>),
+    gate: {
+      unlockRequested: ctx.env.unlockRequested,
+      submissionUnlocked: ctx.env.submissionUnlocked,
+      vercelEnv: ctx.env.vercelEnv,
+    },
+  }
+}
+
 export async function handleRankingHttp(
   request: Request,
   ctx: RankingRouteContext,
@@ -162,7 +188,7 @@ export async function handleRankingHttp(
         submissionEnabled: ctx.env.submissionUnlocked ? true : undefined,
       },
     )
-    return json(response.status, response.body, response.headers)
+    return json(response.status, withGateHint(response.body, ctx), response.headers)
   } catch (error) {
     // ★メッセージを出さない。ドライバの例外は接続文字列を含みうる（Phase 4.4）
     console.error('ranking route failed', {

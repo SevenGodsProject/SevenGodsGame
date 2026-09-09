@@ -63,6 +63,21 @@ describe('既定は「閉」', () => {
     }
   })
 
+  it('前後の空白は落として読む（貼り付け事故を無効扱いにしない）', () => {
+    set({ [KEY_API]: ' 1 ', [KEY_UNLOCK]: '\n1\n', [KEY_ENV]: 'preview' })
+    const env = readRankingEnv()
+    expect(env.apiEnabled).toBe(true)
+    expect(env.submissionUnlocked).toBe(true)
+    expect(env.unlockRequested).toBe(true)
+  })
+
+  it('空白だけの値は trim 後に空になるので、有効化しない', () => {
+    set({ [KEY_API]: '   ', [KEY_UNLOCK]: '\n\t ', [KEY_ENV]: 'preview' })
+    const env = readRankingEnv()
+    expect(env.apiEnabled).toBe(false)
+    expect(env.submissionUnlocked).toBe(false)
+  })
+
   it("'1' でだけ開く", () => {
     set({ [KEY_API]: '1' })
     expect(readRankingEnv().apiEnabled).toBe(true)
@@ -80,10 +95,11 @@ describe('kill switch の unlock は production では効かない', () => {
     expect(readRankingEnv().submissionUnlocked).toBe(true)
   })
 
-  it('★production では開かない', () => {
+  it('★production では開かない（要求されたことは記録する）', () => {
     set({ [KEY_API]: '1', [KEY_UNLOCK]: '1', [KEY_ENV]: 'production' })
     const env = readRankingEnv()
     expect(env.submissionUnlocked).toBe(false)
+    expect(env.unlockRequested).toBe(true)
     expect(env.vercelEnv).toBe('production')
   })
 

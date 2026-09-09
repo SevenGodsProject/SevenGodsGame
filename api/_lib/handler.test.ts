@@ -46,6 +46,7 @@ function env(overrides: Partial<RankingEnv> = {}): RankingEnv {
     apiEnabled: true,
     databaseUrl: FAKE_DSN,
     submissionUnlocked: false,
+    unlockRequested: false,
     vercelEnv: 'production',
     ...overrides,
   }
@@ -184,6 +185,30 @@ describe('門番2：kill switch（submissionEnabled=false のまま）', () => {
     const board = await bodyOf(response)
     expect(board.dailyKey).toBe(DAILY_KEY)
     expect(board.totalPlayers).toBe(0)
+  })
+
+  it('production の submission_disabled には門番の内訳を付けない', async () => {
+    const response = await handleRankingHttp(
+      post('/api/ranking/start', startBody()),
+      ctx('/api/ranking/start', { unlockRequested: true, vercelEnv: 'production' }),
+    )
+    expect(response.status).toBe(503)
+    expect(await bodyOf(response)).toEqual({ error: 'submission_disabled' })
+  })
+
+  it('preview の submission_disabled には切り分け用の内訳を付ける', async () => {
+    const response = await handleRankingHttp(
+      post('/api/ranking/start', startBody()),
+      ctx('/api/ranking/start', { unlockRequested: false, vercelEnv: 'preview' }),
+    )
+    expect(response.status).toBe(503)
+    const body = await bodyOf(response)
+    expect(body.error).toBe('submission_disabled')
+    expect(body.gate).toEqual({
+      unlockRequested: false,
+      submissionUnlocked: false,
+      vercelEnv: 'preview',
+    })
   })
 
   it('rules.ts の定数は false のまま（Phase 4.8 で触っていない）', () => {
