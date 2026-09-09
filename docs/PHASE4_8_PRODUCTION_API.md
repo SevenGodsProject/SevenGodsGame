@@ -17,8 +17,9 @@ Production 公開・本番API有効化は本Gateでは行わない。
 | API-6 既存仕様の非破壊（normal / Daily / saveVersion 9 / seed / 3回） | **PASS** |
 | API-7 回帰（test / tsc / lint / build） | **PASS** |
 | API-8 Preview QA 手順 | **PASS**（`docs/PHASE4_8_PREVIEW_QA_RUNBOOK.md`） |
-| API-9 Neon 実機での API 疎通 | **未実施**（Preview QA の手順3〜4。接続文字列が手元に無いため） |
-| **総合** | **CONDITIONAL PASS** — Preview 実機確認（API-9）が残る |
+| API-9 Neon 実機での API 疎通 | **未実施**（Preview QA 手順3〜4。CEOのVercel環境変数設定が必要） |
+| API-10 Preview 実機で「既定で閉じている」ことの確認 | **PASS**（2026-09-09・手順2。3本とも `api_disabled`） |
+| **総合** | **CONDITIONAL PASS** — Preview で閉状態まで確認済み。DB接続後の疎通（API-9）が残る |
 
 **Production：NO-GO**（据え置き）。merge / push / deploy / Vercel設定変更 / `submissionEnabled=true` はいずれも未実施。
 
@@ -146,9 +147,9 @@ Preview で実地に start→submit を流すために、`rules.ts` の定数を
 
 | 項目 | 結果 |
 |---|---|
-| 全体 | **248 files / 3,092 passed / 18 skipped** |
+| 全体 | **248 files / 3,094 passed / 18 skipped** |
 | Phase 4.7 時点 | 245 files / 3,045 passed / 18 skipped |
-| 増分 | **+3 files / +47 tests**（うち API 層 35、境界・秘密の guard 12） |
+| 増分 | **+3 files / +49 tests**（API 層 35、境界・秘密の guard 14） |
 | skip 18件 | 実DB統合テスト。`RANKING_DATABASE_URL` を渡したときだけ走る |
 
 新規・更新したテスト：
@@ -158,7 +159,7 @@ Preview で実地に start→submit を流すために、`rules.ts` の定数を
 | `api/_lib/handler.test.ts` | 23 | 門番3枚・64KB・405/400/500・秘密の非漏洩・Preview で一周 |
 | `api/_lib/env.test.ts` | 9 | 既定は閉／`'1'` 以外を受け付けない／**production では unlock を無視** |
 | `api/_tests/routes.test.ts` | 3 | production と同じ配線（`rankingRoute`→`process.env`）で3本とも閉じている |
-| `src/server/ranking/rankingBoundary.test.ts` | 11 → 20 | 「`api/` を作っていない」を廃止し、**`api/` の形の検査**へ置換 |
+| `src/server/ranking/rankingBoundary.test.ts` | 11 → 24 | 「`api/` を作っていない」を廃止し、**`api/` の形の検査**と **ESM 拡張子の門番2種**へ置換 |
 | `src/server/ranking/secrets.test.ts` | 8 → 11 | 走査範囲に `api/` を追加。接続情報を読むのは2ファイルのみ、と固定 |
 
 ### 4-2. 静的検査・ビルド
@@ -205,11 +206,72 @@ Preview で実地に start→submit を流すために、`rules.ts` の定数を
 
 ---
 
+## 4-6. Preview 実機で判明したこと：**Vercel は関数を束ねない**
+
+Preview へ push した直後、3本とも `500 FUNCTION_INVOCATION_FAILED` になった。
+ローカルは全て緑（3,092 passed・tsc・lint・build すべて PASS）だったので、
+**ローカルでは原理的に検出できない種類の失敗**だった。記録として残す。
+
+### 何が起きたか
+
+Runtime Logs に出ていたのは2段階の同じ誤り。
+
+```
+① Error [ERR_MODULE_NOT_FOUND]: Cannot find module '/var/task/api/_lib/handler'
+     imported from /var/task/api/ranking/leaderboard.js
+② Error [ERR_MODULE_NOT_FOUND]: Cannot find module '/var/task/src/server/ranking/http'
+     imported from /var/task/src/server/ranking/index.js
+```
+
+つまり Vercel は `api/` の TypeScript を **1ファイルずつ JS へ変換して配置するだけで、束ねない**。
+`api/` から辿り着く `src/server` と `src/core` も同じように `/var/task/src/...` へ個別に置かれる。
+そしてルート `package.json` が `"type": "module"` なので、出来上がった JS は **ESM として読み込まれ、
+Node の ESM 解決は拡張子を補完しない**。拡張子の無い相対importは、その場で落ちる。
+
+### なぜローカルで気づけなかったか
+
+| 経路 | 解決方式 | 拡張子なし |
+|---|---|---|
+| vitest / vite | bundler 解決 | **通る** |
+| `tsc -b`（`moduleResolution: bundler`） | bundler 解決 | **通る** |
+| Vercel 実行時（Node ESM） | Node 解決 | **落ちる** |
+
+ローカルの3系統すべてが bundler 解決なので、**全部緑のまま本番だけ 500** になる。
+これは「テストを足せば防げた」類ではなく、**実機に出すまで観測できない**性質の差だった。
+
+### 直し方
+
+`api/` と、そこから到達する `src` の全ファイル（64ファイル・242箇所）の相対importに
+**明示的な `.js` を付けた**（ディレクトリ指定は `/index.js`）。指定子だけの変更で、ロジックは動かしていない。
+
+代替案として「生成した bundle をコミットする」も検討したが却下した。
+生成物がリポジトリに入り、`src/core` を触るたびに差分が出て、実体との乖離を別途テストで守る必要がある。
+拡張子を付ける方は Node ESM の標準的な書き方で、生成物が増えず、
+`src/server` が「どの Node ホストでも動く」という Phase 4.3 からの設計目標にも合う。
+
+### 再発防止
+
+境界テストに2つの門番を足した。どちらも**わざと壊して落ちることを確認済み**。
+
+1. `api/` の相対importに拡張子が付いていること
+2. **ランキングBackendから到達する全ファイル**（64ファイル）の相対importに拡張子が付いていること
+
+拡張子を1つ落とすだけでローカルは緑のまま本番が落ちるので、この2つが唯一の防波堤になる。
+
+### 副産物として確認できたこと
+
+- Deployment の Output に `api/ranking/{start,submit,leaderboard}` が **Function として3本**登録されていた
+  → **Known Risk 1（web シグネチャ検出）は解消**。`export const GET/POST` は正しく拾われている
+- Vercel のプランは **Hobby**
+- クライアントバンドルは `index-CmKdoYU5.js`・389.90 kB のまま**1バイトも変わっていない**
+
+---
+
 ## 5. Known Risks
 
 | # | 内容 | 影響 | 緩和 |
 |---|---|---|---|
-| 1 | **Vercel の web シグネチャ検出が実機未検証**。`export const POST = (req: Request) => Response` を Vercel が web handler として拾うことをローカルでは確かめられない | 拾われないと全ルートが 500 か 404 | Preview QA 手順2が最初にこれを検出する（3本とも `503 api_disabled` が返れば検出は成功している）。落ちた場合は Node シグネチャ（`(req,res)`）へ切り替える |
+| 1 | ~~Vercel の web シグネチャ検出が実機未検証~~ → **解消（2026-09-09）**。Output に3本が Function として登録され、実機で `api_disabled` を返した | — | — |
 | 2 | `api/` を作ったので、**次に master へ merge して deploy すると3本が本番に現れる** | 環境変数が無い限り 503 なので実害は無いが、URLの存在は露出する | 門番1（既定で閉）＋ Preview QA 手順5（Production が閉じていることの確認） |
 | 3 | leaderboard の GET は kill switch の外側。Production で API を開けた時点で**誰でも読める** | ランキング機能として意図どおりだが、Neon Free の egress を消費する | `s-maxage=15` の CDN キャッシュ＋サーバー側15秒キャッシュ。公開判断は §6-3 #8 |
 | 4 | `containsSecret` は「64桁の16進」を秘密とみなす。将来そういう値を正当に返す設計にすると 500 になる | 誤検知で応答が落ちる | 現行の応答には該当が無いことをテストで確認済み。増えたらテストが先に落ちる |
@@ -231,8 +293,15 @@ Preview で実地に start→submit を流すために、`rules.ts` の定数を
 
 ---
 
-## 7. 次の1手
+## 7. 次の1手（CEO操作）
 
-`docs/PHASE4_8_PREVIEW_QA_RUNBOOK.md` の**手順1（Preview への push）にCEO承認**をもらう。
-push 後は手順2〜5をスクリプトで流せる（1回あたり数分）。
-手順5（Production が閉じていることの確認）まで ok なら、API-9 が閉じて Phase 4.8 は PASS になる。
+Preview の手順2までは通った。ここから先は **Vercel の画面での操作**が要る。
+
+1. **Deployment Protection を通す**（RUNBOOK 手順1.5）
+   Settings → Deployment Protection → Protection Bypass for Automation で secret を作る。
+   Hobby プランで見当たらない場合は、Vercel Authentication を一時的に Preview だけ無効にする。
+2. **Preview スコープに環境変数を2つ**（RUNBOOK 手順3）
+   `RANKING_API_ENABLED=1` と `RANKING_DATABASE_URL=<Neon 接続文字列>`。**Production には付けない。**
+3. 再デプロイ後、手順3 → 手順4 → 手順5 をスクリプトで流す。
+
+3つとも Production には触れない操作である。

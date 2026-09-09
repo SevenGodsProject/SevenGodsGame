@@ -110,7 +110,7 @@ QA中だけ外し、終わったら戻すこと。
 
 ---
 
-## 手順2：何も入れていない状態で「閉じている」ことを確かめる
+## 手順2：何も入れていない状態で「閉じている」ことを確かめる — 2026-09-09 **PASS**
 
 ```
 node scripts/phase48-api/preview-qa.mjs --base-url https://<preview>.vercel.app --stage closed
@@ -119,6 +119,24 @@ node scripts/phase48-api/preview-qa.mjs --base-url https://<preview>.vercel.app 
 期待値：`3/3 ok`（3本とも `503 api_disabled`）。終了コード 0。
 
 **ここで200が返るなら、その先へ進まない。** 門番1が効いていない＝設計どおりでない。
+
+**実施記録（2026-09-09・commit `d4eb575`）**
+
+Deployment Protection が有効なため、スクリプトではなく**ログイン済みブラウザ**で3本を確認した。
+3本とも本文は `{"error":"api_disabled"}`。
+
+| URL | 応答 |
+|---|---|
+| `/api/ranking/leaderboard?dailyKey=2026-09-09` | `{"error":"api_disabled"}` |
+| `/api/ranking/start` | `{"error":"api_disabled"}` |
+| `/api/ranking/submit` | `{"error":"api_disabled"}` |
+| `/`（アプリ本体） | 正常表示（タイトル画面・神選択まで確認） |
+
+同時刻の Production（`seven-gods-game.vercel.app`）は3本とも **404**・ルートは 200。
+`api/` は master に無いので、Production には**エンドポイントが存在しない**。
+
+> ここに至るまでに2回 500 で落ちている。原因と対処は
+> `docs/PHASE4_8_PRODUCTION_API.md` §4-6 に記録した（Vercel は関数を束ねない）。
 
 ---
 
