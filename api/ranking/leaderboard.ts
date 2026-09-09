@@ -1,4 +1,4 @@
-import { rankingRoute } from '../_lib/handler'
+import { rankingRoute } from '../_lib/handler.js'
 
 /**
  * Phase 4.8：`GET /api/ranking/leaderboard?dailyKey=YYYY-MM-DD[&limit=&playerId=]`

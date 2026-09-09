@@ -214,7 +214,7 @@ describe('api/ の境界（Phase 4.8）', () => {
     for (const file of ROUTE_FILES) {
       const code = stripComments(API_SOURCES[file])
       expect(code, `${file} が rankingRoute を経由していない`).toContain(
-        "rankingRoute } from '../_lib/handler'",
+        "rankingRoute } from '../_lib/handler.js'",
       )
       // 判定・保存・接続をルート側で書いていないこと
       for (const token of ['process.env', 'process?.env', 'neon(', 'RULES.', 'if (']) {
@@ -293,5 +293,50 @@ describe('api/ が deploy で余計なものを公開しない（Phase 4.8）', 
       (m) => (m as { default: string }).default,
     )
     expect(ignore).toContain('*.test.ts')
+  })
+})
+
+describe('api/ は Node の ESM 解決で動く形になっている（Phase 4.8）', () => {
+  /**
+   * ★実機で踏んだ事故の再発防止（2026-09-09）
+   * Vercel は `api/` の TypeScript を**束ねずに**1ファイルずつ JS へ変換する。
+   * ルート `package.json` が `"type": "module"` なので、出来上がった JS は ESM として動き、
+   * Node の ESM 解決は**拡張子を補完しない**。拡張子なしの相対importは実行時に
+   * `ERR_MODULE_NOT_FOUND` で落ちる（＝関数が起動できず 500）。
+   * ローカルの vitest / tsc は bundler 解決なので、この違いを見逃す。だからここで固定する。
+   */
+  it('相対importに拡張子が付いている（拡張子なしは実行時に落ちる）', () => {
+    const offenders: string[] = []
+    for (const [file, raw] of Object.entries(API_SOURCES)) {
+      for (const spec of importSpecifiers(stripComments(raw))) {
+        if (!spec.startsWith('.')) continue
+        // `?raw` のような Vite 固有の指定子はテスト専用なので対象外
+        if (spec.includes('?')) continue
+        if (!spec.endsWith('.js')) offenders.push(`${file}: ${spec}`)
+      }
+    }
+    expect(offenders, `拡張子の無い相対import: ${offenders.join(', ')}`).toEqual([])
+  })
+
+  it('ディレクトリをそのまま指していない（ESM は index を補完しない）', () => {
+    const offenders: string[] = []
+    for (const [file, raw] of Object.entries(API_SOURCES)) {
+      for (const spec of importSpecifiers(stripComments(raw))) {
+        if (!spec.startsWith('.') || spec.includes('?')) continue
+        // `../../src/core/replay.js` のように、実体がディレクトリだと解決できない
+        const target = resolvePath(file, spec).replace(/\.js$/, '')
+        const asFile = `${target.replace(/^api\//, '')}`
+        if (file.startsWith('api/') && target.startsWith('src/')) {
+          // src 側は SOURCES（src起点）で存在を確かめる
+          const key = target.replace(/^src\//, '')
+          if (!(`${key}.ts` in SOURCES) && !(`${key}.tsx` in SOURCES)) {
+            offenders.push(`${file}: ${spec}`)
+          }
+        } else if (file.startsWith('api/') && !(`${target}.ts` in API_SOURCES)) {
+          offenders.push(`${file}: ${spec} (${asFile})`)
+        }
+      }
+    }
+    expect(offenders, `解決できない相対import: ${offenders.join(', ')}`).toEqual([])
   })
 })

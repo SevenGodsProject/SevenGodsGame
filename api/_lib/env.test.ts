@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it } from 'vitest'
-import { readRankingEnv } from './env'
+import { readRankingEnv } from './env.js'
 
 /**
  * Phase 4.8：環境変数の門番。

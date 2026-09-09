@@ -1,4 +1,4 @@
-import { rankingRoute } from '../_lib/handler'
+import { rankingRoute } from '../_lib/handler.js'
 
 /**
  * Phase 4.8：`POST /api/ranking/submit` — 行動ログの提出と検証。

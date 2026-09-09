@@ -1,4 +1,4 @@
-import { rankingRoute } from '../_lib/handler'
+import { rankingRoute } from '../_lib/handler.js'
 
 /**
  * Phase 4.8：`POST /api/ranking/start` — 挑戦枠の予約（run ticket の発行）。

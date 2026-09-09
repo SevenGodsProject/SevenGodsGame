@@ -1,12 +1,12 @@
 import { neon } from '@neondatabase/serverless'
-import { RULES } from '../../src/core/data/rules'
+import { RULES } from '../../src/core/data/rules.js'
 import {
   createPostgresRankingStore,
   handleRankingRequest,
   type RankingStore,
   type SqlExecutor,
-} from '../../src/server/ranking/index'
-import { readRankingEnv, type RankingEnv } from './env'
+} from '../../src/server/ranking/index.js'
+import { readRankingEnv, type RankingEnv } from './env.js'
 
 /**
  * Phase 4.8：Daily ランキング Production API の本体（Vercel Functions）。

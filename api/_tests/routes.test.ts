@@ -1,7 +1,7 @@
 import { afterEach, describe, expect, it } from 'vitest'
-import * as leaderboard from '../ranking/leaderboard'
-import * as start from '../ranking/start'
-import * as submit from '../ranking/submit'
+import * as leaderboard from '../ranking/leaderboard.js'
+import * as start from '../ranking/start.js'
+import * as submit from '../ranking/submit.js'
 
 /**
  * Phase 4.8：公開される3本のルートそのものの検査。
