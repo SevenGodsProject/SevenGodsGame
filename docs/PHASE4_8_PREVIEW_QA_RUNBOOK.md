@@ -163,6 +163,43 @@ node scripts/phase48-api/preview-qa.mjs --base-url https://<preview>.vercel.app 
 
 **この段階が最も重要**：DBに繋がっていて読めるのに、提出だけは止まっている、という状態を目視する。
 
+### 実施記録（2026-09-09・**PASS**）
+
+CEO が Preview スコープに2つの変数を投入。Deployment Protection は有効のままなので、
+**ログイン済みブラウザの同一オリジン fetch** で確認した。
+
+| 検査 | 応答 | 判定 |
+|---|---|---|
+| `GET /api/ranking/leaderboard?dailyKey=<今日>` | `{"dailyKey":"2026-09-09","totalPlayers":0,"rows":[],"self":null}` | **ok**（Neon から実データを読めている） |
+| 同上＋`limit=1&playerId=…` | 200・同じ形 | ok |
+| `dailyKey=yesterday` | `400 {"error":"bad_daily_key"}` | ok |
+| `dailyKey` 無し | `400 {"error":"bad_daily_key"}` | ok |
+| `POST /api/ranking/start` | `503 {"error":"submission_disabled"}` | **ok**（kill switch 健在） |
+| `POST /api/ranking/submit` | `503 {"error":"submission_disabled"}` | ok |
+| `GET /api/ranking/start` | `405 {"error":"method_not_allowed"}` | ok |
+| `POST /api/ranking/leaderboard` | `405 {"error":"method_not_allowed"}` | ok |
+| 壊れたJSON | `400 {"error":"bad_request"}` | ok |
+| 64KB超（ASCII） | `413 {"error":"payload_too_large"}` | ok |
+| 64KB超（マルチバイト「あ」×25,000） | `413 {"error":"payload_too_large"}` | **ok**（文字数でなくバイト数で測れている） |
+
+**環境変数のスコープも画面で確認した**（値は表示していない）。
+
+| 変数 | スコープ |
+|---|---|
+| `RANKING_API_ENABLED` | **Preview**／branch `feat/daily-ranking-phase4` |
+| `RANKING_DATABASE_URL` | **Preview**／branch `feat/daily-ranking-phase4` |
+| `RANKING_PREVIEW_UNLOCK` | **未登録**（だから提出が 503 のまま＝正常） |
+
+Production スコープには**1つも入っていない**。branch 単位まで絞られており、依頼した範囲より安全側。
+
+> **これで「Neon 実機疎通」が取れた。** 関数が migration 済みの Neon に接続し、
+> `daily_runs` を読んで正しい形のボードを返している（決定142 の schema がそのまま効いている）。
+> 残るは書き込み経路（start→submit）で、それが手順4。
+
+**応答ヘッダ（`cache-control: s-maxage=15` 等）はこの段階では未確認。**
+ブラウザの同一オリジン fetch を使う経路ではヘッダを読み出せなかったため、
+bypass secret を入れて `--stage read` を流したときに確認する。
+
 ---
 
 ## 手順4：Preview だけ提出を開ける

@@ -17,9 +17,10 @@ Production 公開・本番API有効化は本Gateでは行わない。
 | API-6 既存仕様の非破壊（normal / Daily / saveVersion 9 / seed / 3回） | **PASS** |
 | API-7 回帰（test / tsc / lint / build） | **PASS** |
 | API-8 Preview QA 手順 | **PASS**（`docs/PHASE4_8_PREVIEW_QA_RUNBOOK.md`） |
-| API-9 Neon 実機での API 疎通 | **未実施**（Preview QA 手順3〜4。CEOのVercel環境変数設定が必要） |
+| API-9 Neon 実機での API 疎通 | **読み取り経路 PASS**（2026-09-09・手順3。leaderboard が Neon から実データを返した）／書き込み経路は手順4待ち |
 | API-10 Preview 実機で「既定で閉じている」ことの確認 | **PASS**（2026-09-09・手順2。3本とも `api_disabled`） |
-| **総合** | **CONDITIONAL PASS** — Preview で閉状態まで確認済み。DB接続後の疎通（API-9）が残る |
+| API-11 Preview 実機で kill switch が閉じたまま読めること | **PASS**（2026-09-09・手順3。leaderboard 200／start・submit 503／413・405・400 も期待どおり） |
+| **総合** | **CONDITIONAL PASS** — Preview の手順3まで通過。残るは提出経路（手順4）のみ |
 
 **Production：NO-GO**（据え置き）。merge / push / deploy / Vercel設定変更 / `submissionEnabled=true` はいずれも未実施。
 
@@ -295,13 +296,18 @@ Node の ESM 解決は拡張子を補完しない**。拡張子の無い相対im
 
 ## 7. 次の1手（CEO操作）
 
-Preview の手順2までは通った。ここから先は **Vercel の画面での操作**が要る。
+手順3まで通過。残っているのは**変数を1つ足すだけ**。
 
-1. **Deployment Protection を通す**（RUNBOOK 手順1.5）
-   Settings → Deployment Protection → Protection Bypass for Automation で secret を作る。
-   Hobby プランで見当たらない場合は、Vercel Authentication を一時的に Preview だけ無効にする。
-2. **Preview スコープに環境変数を2つ**（RUNBOOK 手順3）
-   `RANKING_API_ENABLED=1` と `RANKING_DATABASE_URL=<Neon 接続文字列>`。**Production には付けない。**
-3. 再デプロイ後、手順3 → 手順4 → 手順5 をスクリプトで流す。
+Vercel → `seven-gods-game` → Settings → Environment Variables → Add
 
-3つとも Production には触れない操作である。
+| 変数 | 値 | スコープ |
+|---|---|---|
+| `RANKING_PREVIEW_UNLOCK` | `1` | **Preview のみ**（できれば branch `feat/daily-ranking-phase4` に限定） |
+
+追加したら Preview を再デプロイし、手順4（start→submit→leaderboard の一周・3回勝負・4回目 409）を実施する。
+**Production スコープには付けないこと。** なお仮に付いても `api/` が master に無いので本番は 404 のままで、
+さらに `VERCEL_ENV=production` では `env.ts` がこの変数を無視する（二重の防御）。
+
+Deployment Protection の bypass secret を併せて用意できると、手順4以降を
+`scripts/phase48-api/preview-qa.mjs --stage full` で自動実行でき、応答ヘッダも確認できる。
+無い場合はブラウザ経由で同じ検査を続ける。
