@@ -48,7 +48,7 @@ npm run build
 
 ---
 
-## 手順1：Preview へ push（**CEO承認が必要**）
+## 手順1：Preview へ push（**CEO承認が必要**）— 2026-09-09 実施済み
 
 ```
 git push -u origin feat/daily-ranking-phase4
@@ -57,6 +57,56 @@ git push -u origin feat/daily-ranking-phase4
 Vercel が Preview deployment を作る。**この時点で環境変数はまだ入れない。**
 
 > `master` への merge は行わない。Production は一切変わらない。
+
+**実施記録（2026-09-09）**
+
+| 項目 | 値 |
+|---|---|
+| push した commit | `e744660` |
+| Preview URL | `https://seven-gods-game-git-feat-daily-ranking-phase4-seven-gods-games.vercel.app` |
+| Vercel build | **success**（GitHub の commit status より） |
+| `origin/master` | `489352c` のまま（変化なし・PRも作っていない） |
+| Production の `/api/ranking/*` | **404**（`api/` は master に無いので存在しない）＝Production は無影響 |
+
+---
+
+## 手順1.5：Deployment Protection を通す（**CEO操作**）
+
+Vercel の Preview deployment は既定で **Deployment Protection（Vercel Authentication）**に守られている。
+ブラウザでログインしていれば見られるが、**スクリプトからは関数まで届かない**。
+2026-09-09 に実測した挙動は次のとおりで、`/api/*` もアプリ本体も同じように止められる。
+
+| リクエスト | 保護時の応答 |
+|---|---|
+| GET | `302` → `vercel.com/sso-api` |
+| POST | `401` ＋ `{"protection":{...,"vercel_auth_enabled":true},"error":{"code":"401"}}` |
+
+**重要**：この応答は**存在しないパスでも同じ**なので、保護されたままでは
+「ルートが出来ているか」を確かめられない（実測：`/api/definitely-not-a-route` も `302`）。
+手順2が意味を持たなくなるため、先にここを解く。
+
+### 推奨：Protection Bypass for Automation
+
+Vercel → プロジェクト `seven-gods-game` → **Settings** → **Deployment Protection** →
+**Protection Bypass for Automation** で secret を生成する。
+Preview は人に対しては保護されたまま、ヘッダを持つ自動化だけが通れる。
+**Production の設定は触らない。**
+
+生成した secret は環境変数として渡す（引数にしない。履歴とプロセス一覧に残るため）。
+
+```
+$env:VERCEL_AUTOMATION_BYPASS_SECRET = '<secret>'
+```
+
+QAランナーは、この変数があれば `x-vercel-protection-bypass` ヘッダを自動で付ける。
+無ければ「Deployment Protection に阻まれました」と明示して止まる。
+
+### 代替：Preview の保護を外す
+
+**Settings → Deployment Protection → Vercel Authentication** を
+「Production のみ」または無効にする。secret は要らないが、**Preview URL を知る人が誰でも触れる**ようになる。
+手順4で `RANKING_PREVIEW_UNLOCK` を入れたあとは、その人たちが挑戦枠を消費できてしまう（Known Risk 7）。
+QA中だけ外し、終わったら戻すこと。
 
 ---
 

@@ -32,6 +32,19 @@ function arg(name, fallback = null) {
 const BASE = (arg('base-url') ?? '').replace(/\/+$/, '')
 const STAGE = arg('stage', 'auto')
 
+/**
+ * Vercel の Deployment Protection（Preview のSSO）を通り抜けるための秘密。
+ *
+ * ★環境変数からしか読まない。コマンドライン引数にしないのは、
+ * 引数はシェルの履歴・プロセス一覧・CIのログに残るため。値は出力しない。
+ *   Windows: $env:VERCEL_AUTOMATION_BYPASS_SECRET = '<secret>'
+ *   bash   : export VERCEL_AUTOMATION_BYPASS_SECRET='<secret>'
+ */
+const BYPASS = process.env.VERCEL_AUTOMATION_BYPASS_SECRET ?? null
+const BYPASS_HEADERS = BYPASS
+  ? { 'x-vercel-protection-bypass': BYPASS, 'x-vercel-set-bypass-cookie': 'true' }
+  : {}
+
 if (!BASE) {
   console.error('使い方: node scripts/phase48-api/preview-qa.mjs --base-url https://<preview>.vercel.app [--stage closed|read|full]')
   process.exit(2)
@@ -81,7 +94,12 @@ async function call(method, path, { body, headers } = {}) {
   try {
     response = await fetch(`${BASE}${path}`, {
       method,
-      headers: { ...(body ? { 'content-type': 'application/json' } : {}), ...(headers ?? {}) },
+      redirect: 'manual',
+      headers: {
+        ...(body ? { 'content-type': 'application/json' } : {}),
+        ...BYPASS_HEADERS,
+        ...(headers ?? {}),
+      },
       body: body === undefined ? undefined : typeof body === 'string' ? body : JSON.stringify(body),
     })
   } catch (error) {
@@ -102,7 +120,16 @@ async function call(method, path, { body, headers } = {}) {
   } catch {
     // HTMLが返ってきた等。error に形を残す（中身は出さない）
   }
-  return { status: response.status, json, text, headers: response.headers }
+  // Vercel の Deployment Protection は、関数へ届く**前**にリクエストを止める。
+  // 止め方が2通りあるので両方を見る：
+  //   GET  … 302 で `vercel.com/sso-api` へ飛ばす
+  //   POST … 401 ＋ `{"protection":{...},"error":{"code":"401"}}`
+  // これを「APIが壊れている」と読み違えないよう、専用の状態として区別する
+  const location = response.headers.get('location') ?? ''
+  const blocked =
+    (response.status === 302 && location.includes('vercel.com/sso-api')) ||
+    (response.status === 401 && json !== null && typeof json.protection === 'object')
+  return { status: response.status, json, text, headers: response.headers, blocked }
 }
 
 /** 応答のどこにも秘密が出ていないこと */
@@ -119,12 +146,22 @@ function expectStatus(name, response, expected, expectedError) {
     record(name, false, `到達できません（${response.unreachable}）— base-url と deploy の状態を確認してください`)
     return false
   }
+  if (response.blocked) {
+    record(
+      name,
+      false,
+      'Vercel の Deployment Protection に阻まれました（関数まで届いていません）。' +
+        'Protection Bypass for Automation の secret を VERCEL_AUTOMATION_BYPASS_SECRET に入れて再実行してください',
+    )
+    return false
+  }
+  const actualError = typeof response.json?.error === 'string' ? response.json.error : null
   const okStatus = response.status === expected
-  const okError = expectedError === undefined || response.json?.error === expectedError
+  const okError = expectedError === undefined || actualError === expectedError
   record(
     name,
     okStatus && okError,
-    `status=${response.status}${response.json?.error ? ` error=${response.json.error}` : ''}${
+    `status=${response.status}${actualError ? ` error=${actualError}` : ''}${
       okStatus && okError ? '' : ` （期待 ${expected}${expectedError ? ` / ${expectedError}` : ''}）`
     }`,
   )
