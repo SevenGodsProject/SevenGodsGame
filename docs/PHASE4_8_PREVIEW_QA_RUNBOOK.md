@@ -345,6 +345,14 @@ Preview を全開にした直後に確認した。**Production は完全に閉�
 ## 手順6：後片付け
 
 1. `RANKING_PREVIEW_UNLOCK` を Preview から**外す**（QAが終わったら開けたままにしない）
+
+   > **★外すだけでは閉まらない。必ず再デプロイする。**
+   > Vercel は環境変数を**ビルド時に焼き込む**ので、変数を消しても
+   > 既に動いている deployment は**消す前の値を持ったまま**動き続ける。
+   > 手順4で「足しても効かない」を踏んだのと同じ話が、そのまま裏返しで起きる。
+   > 2026-09-09 の実測：変数を削除した直後の Preview は、まだ `start` に **201** を返していた。
+   > branch へ commit を1つ積む（空コミットでよい）か、ダッシュボードの Redeploy で閉じること。
+   > 閉じたことは `start` が `503 submission_disabled` を返すことで確認する。
 2. Preview で作った ticket / run は消さなくてよい
    Phase 4.6 の剪定（`pruneBefore`、`RULES.daily.retentionDays` 日より古い日を削除）と
    `daily_days` の CASCADE で自然に片付く。**QA で DELETE を手打ちしない**
