@@ -267,6 +267,37 @@ node scripts/phase48-api/preview-qa.mjs --base-url https://<preview>.vercel.app 
 | **4回目の start** | **409 `ATTEMPTS_EXCEEDED`** |
 | leaderboard | 200・応答に秘密が出ない |
 
+### 実施記録（2026-09-09・**PASS**）
+
+Deployment Protection が有効なままなので、ログイン済みブラウザの同一オリジン fetch で実施。
+identity はブラウザ内でその場に生成し、行動ログは `fixture.test.ts` の生成物（1.3 KB・24 action）を使った。
+
+| 検査 | 応答 | 判定 |
+|---|---|---|
+| start（1回目） | **201**・`attemptNo:1`・`attemptsUsed:1`・`attemptsPerDay:3`・`state:"open"`・`gameVersion:"1.da595899c6a9db43"` | ok |
+| 同じ `clientRunId` で再送 | **200**・`reused:true`・`attemptNo` は 1 のまま（枠を食わない） | ok |
+| 他人の秘密で start | **400 `BAD_IDENTITY`** | ok |
+| **submit（本物の行動ログ）** | **201**・`accepted:"stored"`・**`score:262`**・`win:false`・`round:7`・`bestScore:262`・`runsUsed:1` | **ok** |
+| 同じ run を再送 | **200**（冪等。保存は増えない） | ok |
+| ticket 無しの submit | **404 `NO_TICKET`** | ok |
+| start 2回目・3回目 | **201**（`attempt2`・`attempt3`） | ok |
+| **start 4回目** | **409 `ATTEMPTS_EXCEEDED`** | **ok**（1日3回がDB制約で守られている） |
+| 64KB超の submit | **413 `payload_too_large`** | ok |
+| 全応答の秘密混入 | **0件**（本文・ヘッダとも） | ok |
+
+**leaderboard の一周も確認**（`playerId` 付き）：
+
+```json
+{"dailyKey":"2026-09-09","totalPlayers":1,
+ "rows":[{"playerId":"3574b035…","godId":"ebisu","score":262,"win":false,"round":7,
+          "rank":1,"tiedCount":1,"topPercent":100,"pointsToNextRank":null}],
+ "self":{…同じ…}}
+```
+
+**意義**：スコア 262 は**サーバーが行動ログを再生して自分で計算した値**で、クライアントは申告していない。
+それが Neon に保存され、`assignRanks`（決定133）を通って順位が付き、`self` として返っている。
+＝ Phase 4.1〜4.7 で積み上げた検証・ticket・順位付けが、**実機で一本につながった**。
+
 ### 手動で確かめること（スクリプトでは見られない）
 
 1. **Vercel の Function ログに秘密が出ていない**
@@ -292,6 +323,22 @@ node scripts/phase48-api/preview-qa.mjs --base-url https://<production>.vercel.a
 期待値：`3/3 ok`（Production は `503 api_disabled`）。
 
 **ここで200が返ったら、直ちに Production の環境変数を外し、CEOへ報告する。**
+
+### 実施記録（2026-09-09・**PASS**）
+
+Preview を全開にした直後に確認した。**Production は完全に閉じたまま**。
+
+| リクエスト | 応答 |
+|---|---|
+| `GET /api/ranking/start` | **404** |
+| `GET /api/ranking/submit` | **404** |
+| `GET /api/ranking/leaderboard` | **404** |
+| `POST /api/ranking/start` | **404** |
+| `GET /`（ゲーム本体） | 200 |
+
+`api/` は master に無いので、そもそもエンドポイントが存在しない。
+環境変数も3つとも Preview スコープ（branch 限定）で、Production スコープには1つも無い。
+`origin/master` は `489352c` のまま動いていない。
 
 ---
 

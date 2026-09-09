@@ -17,12 +17,15 @@ Production 公開・本番API有効化は本Gateでは行わない。
 | API-6 既存仕様の非破壊（normal / Daily / saveVersion 9 / seed / 3回） | **PASS** |
 | API-7 回帰（test / tsc / lint / build） | **PASS** |
 | API-8 Preview QA 手順 | **PASS**（`docs/PHASE4_8_PREVIEW_QA_RUNBOOK.md`） |
-| API-9 Neon 実機での API 疎通 | **読み取り経路 PASS**（2026-09-09・手順3。leaderboard が Neon から実データを返した）／書き込み経路は手順4待ち |
+| API-9 Neon 実機での API 疎通 | **PASS**（2026-09-09・手順3〜4。読み取り・書き込みとも実機で成立） |
 | API-10 Preview 実機で「既定で閉じている」ことの確認 | **PASS**（2026-09-09・手順2。3本とも `api_disabled`） |
-| API-11 Preview 実機で kill switch が閉じたまま読めること | **PASS**（2026-09-09・手順3。leaderboard 200／start・submit 503／413・405・400 も期待どおり） |
-| **総合** | **CONDITIONAL PASS** — Preview の手順3まで通過。残るは提出経路（手順4）のみ |
+| API-11 Preview 実機で kill switch が閉じたまま読めること | **PASS**（2026-09-09・手順3） |
+| API-12 Preview 実機で start→submit→leaderboard が一周すること | **PASS**（2026-09-09・手順4。submit 201・score 262・rank 1／4回目 409／ticket無し 404） |
+| API-13 Production が閉じたままであること | **PASS**（2026-09-09・手順5。4経路とも 404、ルート 200） |
+| **総合** | **PASS** — Preview QA 手順0〜5をすべて通過 |
 
-**Production：NO-GO**（据え置き）。merge / push / deploy / Vercel設定変更 / `submissionEnabled=true` はいずれも未実施。
+**Production：NO-GO**（据え置き）。公開判断は §6-3 #8 の CEO 事項であり、本Gateの範囲外。
+merge / Production deploy / Production環境変数 / `submissionEnabled=true` はいずれも未実施。
 
 ---
 
@@ -294,20 +297,32 @@ Node の ESM 解決は拡張子を補完しない**。拡張子の無い相対im
 
 ---
 
-## 7. 次の1手（CEO操作）
+## 7. 次の1手
 
-手順3まで通過。残っているのは**変数を1つ足すだけ**。
+Preview QA は手順0〜5をすべて通過した。**Phase 4.8 は PASS。**
 
-Vercel → `seven-gods-game` → Settings → Environment Variables → Add
+### すぐやる後片付け（CEO操作・手順6）
 
-| 変数 | 値 | スコープ |
+1. **`RANKING_PREVIEW_UNLOCK` を Preview から外す**
+   開けたままにしない。Deployment Protection が効いているので露出は限定的だが、
+   QA が終わったら閉じるのが既定の運用（Known Risk 7）。
+   `RANKING_API_ENABLED` と `RANKING_DATABASE_URL` は次のQAでも使うので残してよい。
+2. Neon に残ったQAデータ（テスト用 player 2件・run 1件・ticket 数件・`daily_days` の当日行）は
+   **消さなくてよい**。`pruneBefore` と CASCADE で自然に片付く。DELETE を手打ちしない。
+
+### 次のPhaseへ
+
+残っているのは**公開そのものの判断**で、いずれも §6-3 の CEO 事項。
+
+| # | 事項 | 根拠 |
 |---|---|---|
-| `RANKING_PREVIEW_UNLOCK` | `1` | **Preview のみ**（できれば branch `feat/daily-ranking-phase4` に限定） |
+| 1 | `master` への merge と Production deploy | §6-3 #8 |
+| 2 | Production スコープへの `RANKING_API_ENABLED` / `RANKING_DATABASE_URL` 投入 | §6-3 #8 |
+| 3 | `RULES.ranking.submissionEnabled = true`（クライアントの送信を開く） | ランキングの本番公開そのもの |
+| 4 | `VALIDATE CONSTRAINT daily_runs_ticket_fk` | 決定141 §20 |
 
-追加したら Preview を再デプロイし、手順4（start→submit→leaderboard の一周・3回勝負・4回目 409）を実施する。
-**Production スコープには付けないこと。** なお仮に付いても `api/` が master に無いので本番は 404 のままで、
-さらに `VERCEL_ENV=production` では `env.ts` がこの変数を無視する（二重の防御）。
+技術面で先に片付けておくべきものは、AI側で進められる：
 
-Deployment Protection の bypass secret を併せて用意できると、手順4以降を
-`scripts/phase48-api/preview-qa.mjs --stage full` で自動実行でき、応答ヘッダも確認できる。
-無い場合はブラウザ経由で同じ検査を続ける。
+- **リーダーボードのUIが無い**（サーバーのみ実装済み）。公開するなら画面が要る
+- Neon Free のクォータ実測（CU-hours / egress）と、上限に達したときの縮退方針
+- レート制限（identity 量産は アプリ側では止められない。決定139 §3-3）
