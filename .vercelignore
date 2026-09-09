@@ -1,0 +1,15 @@
+# Phase 4.8：deploy に載せないもの。
+# `api/` 配下の .ts はすべて Function になるため、テストが混ざると
+# `/api/.../*.test` という関数が公開され、vitest を import している分 build も落ちる。
+# ディレクトリ名（`api/_tests/`）でも避けてあるが、ここでも二重に止める。
+*.test.ts
+*.test.tsx
+**/__tests__/**
+
+# 監査・解析の出力（成果物ではない）
+scripts/phase3-audit/out/
+scripts/phase47-migration/
+
+# ローカル専用
+.claude/
+docs/

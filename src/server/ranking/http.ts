@@ -50,6 +50,16 @@ export type RankingHttpDeps = {
   now: number
   /** 現在deployされているコードの版。省略時は `getGameVersion()` */
   gameVersion?: string
+  /**
+   * Phase 4.8：kill switch の実効値。**省略時は `RULES.ranking.submissionEnabled`**（＝false）。
+   *
+   * ★なぜ注入できるようにするか
+   * Preview 環境で start→submit の一連の流れを実地に検証するには、その deployment に限って
+   * 提出を通す必要がある。`rules.ts` の定数を true にすると **本番にもそのまま乗ってしまう**ので、
+   * コードは false のまま、**環境ごとの値**をここへ渡す形にした（`api/_lib/env.ts`）。
+   * production では環境変数を読んでも開かないようにしてある（同ファイルの `submissionUnlocked`）。
+   */
+  submissionEnabled?: boolean
 }
 
 /** 拒否理由 → HTTPステータス。運用のログ・監視がそのまま使える粒度にする */
@@ -99,6 +109,11 @@ function tooLarge(request: RankingHttpRequest): boolean {
   return typeof request.bodyBytes === 'number' && request.bodyBytes > RULES.ranking.maxBodyBytes
 }
 
+/** kill switch の実効値。既定は `rules.ts` の定数（＝false） */
+function submissionOpen(deps: RankingHttpDeps): boolean {
+  return deps.submissionEnabled ?? RULES.ranking.submissionEnabled
+}
+
 export async function handleRankingRequest(
   request: RankingHttpRequest,
   deps: RankingHttpDeps,
@@ -110,7 +125,7 @@ export async function handleRankingRequest(
       return { status: 405, body: { error: 'method_not_allowed' } }
     }
     // ★kill switch：Backendの本番稼働がCEO承認されるまでは受け付けない
-    if (!RULES.ranking.submissionEnabled) {
+    if (!submissionOpen(deps)) {
       return { status: 503, body: { error: 'submission_disabled' } }
     }
     if (tooLarge(request)) {
@@ -149,7 +164,7 @@ export async function handleRankingRequest(
     if (request.method !== 'POST') {
       return { status: 405, body: { error: 'method_not_allowed' } }
     }
-    if (!RULES.ranking.submissionEnabled) {
+    if (!submissionOpen(deps)) {
       return { status: 503, body: { error: 'submission_disabled' } }
     }
     if (tooLarge(request)) {

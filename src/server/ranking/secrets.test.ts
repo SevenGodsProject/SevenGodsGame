@@ -28,16 +28,29 @@ function resolveFromHere(specifier: string): string {
   return out.join('/')
 }
 
-/** src配下の全ソース（テスト自身も含む） */
-const SOURCES: Record<string, string> = Object.fromEntries(
-  Object.entries(
+/**
+ * src配下の全ソース（テスト自身も含む）＋ Phase 4.8 で追加した `api/`。
+ *
+ * ★`api/` も必ず含める
+ * Production API は接続文字列を実際に読む唯一の本番コードなので、
+ * ここを検査の外に置くと、この機械検査そのものが意味を失う。
+ */
+const SOURCES: Record<string, string> = Object.fromEntries([
+  ...Object.entries(
     import.meta.glob('../../**/*.{ts,tsx}', {
       query: '?raw',
       import: 'default',
       eager: true,
     }) as Record<string, string>,
-  ).map(([key, value]) => [resolveFromHere(key), value]),
-)
+  ).map(([key, value]) => [resolveFromHere(key), value] as const),
+  ...Object.entries(
+    import.meta.glob('../../../api/**/*.ts', {
+      query: '?raw',
+      import: 'default',
+      eager: true,
+    }) as Record<string, string>,
+  ).map(([key, value]) => [key.replace(/^(\.\.\/)+/, ''), value] as const),
+])
 
 /** 秘密情報「らしさ」のパターン。名前だけの言及（DATABASE_URLという文字列）は対象外 */
 const SECRET_PATTERNS: { name: string; re: RegExp }[] = [
@@ -75,8 +88,39 @@ describe('秘密情報の混入検査（Step 10）', () => {
       expect(source, `${file} が環境変数以外から接続情報を読んでいる`).toContain('process?.env')
       expect(source).not.toContain('readFileSync')
     }
-    // 読み取り箇所は実DB統合テストの1か所だけ
-    expect(readers).toEqual(['src/server/ranking/postgres.integration.test.ts'])
+    // 読み取り箇所は2か所だけ：実DB統合テストと、Production API の門番
+    expect(readers.sort()).toEqual([
+      'api/_lib/env.ts',
+      'src/server/ranking/postgres.integration.test.ts',
+    ])
+  })
+
+  it('接続情報がクライアントバンドルへ届く経路が無い（VITE_ 接頭辞を使っていない）', () => {
+    for (const [file, raw] of Object.entries(SOURCES)) {
+      const source = stripComments(raw)
+      // Vite は `VITE_` で始まる環境変数だけをクライアントへ埋め込む。
+      // 接続情報にこの接頭辞を付けてしまうと、バンドルへそのまま入る
+      expect(source, `${file} が VITE_ 接頭辞で秘密を読んでいる`).not.toMatch(
+        /VITE_[A-Z_]*(DATABASE|SECRET|TOKEN|KEY|PASSWORD)/,
+      )
+    }
+  })
+
+  it('Production API は接続情報も例外メッセージもログへ出さない（Phase 4.8）', () => {
+    const handler = stripComments(SOURCES['api/_lib/handler.ts'])
+    expect(handler).toBeDefined()
+    // ドライバの例外は接続文字列を含みうる（Phase 4.4 で実際に踏んだ）。
+    // ログに出してよいのは例外の「名前」だけで、message / stack は出さない
+    expect(handler).not.toContain('error.message')
+    expect(handler).not.toContain('error.stack')
+    expect(handler).not.toContain('String(error)')
+    expect(handler).toContain('error.name')
+  })
+
+  it('Production API の応答が秘密を運ばないことを検査している（Phase 4.8）', () => {
+    const handler = stripComments(SOURCES['api/_lib/handler.ts'])
+    // 送信直前の最終確認が実装に存在すること
+    expect(handler).toContain('containsSecret')
   })
 
   it('サーバー実装は接続情報を受け取らない（SQL実行関数を注入される側）', () => {
@@ -89,8 +133,11 @@ describe('秘密情報の混入検査（Step 10）', () => {
   })
 
   it('接続情報がクライアント側のコードへ入り込む経路が無い', () => {
+    // サーバー側（`src/server/`）と、Production API の門番1ファイルだけが例外。
+    // `api/` を丸ごと除外しないのは、ルート側から直に読む抜け道を作らせないため
+    const allowed = new Set(['api/_lib/env.ts'])
     for (const [file, raw] of Object.entries(SOURCES)) {
-      if (file.startsWith('src/server/')) continue
+      if (file.startsWith('src/server/') || allowed.has(file)) continue
       expect(stripComments(raw), `${file} が接続情報を参照している`).not.toContain(
         'RANKING_DATABASE_URL',
       )

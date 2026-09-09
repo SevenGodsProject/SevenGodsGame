@@ -10,7 +10,7 @@ import { describe, it, expect } from 'vitest'
  *   3. **ブラウザ側（App→components→hooks）が `src/server` を import しない**
  *      ——サーバー専用の検証コードがバンドルに混ざると、意味が無いどころか
  *      「クライアントで検証している」という誤解を生む
- *   4. `api/` を作っていない（Vercelが自動でエンドポイントを公開してしまうため）
+ *   4. Phase 4.8：`api/` は作ったが、**既定で閉じている**（末尾の describe で検査）
  *   5. Backendが未契約の間は、クライアントが送信しない（kill switch）
  */
 
@@ -164,11 +164,6 @@ describe('クライアントは Backend を取り込まない', () => {
 })
 
 describe('deployの安全弁', () => {
-  it('リポジトリ直下に api/ を作っていない（Vercelが自動公開してしまうため）', () => {
-    const apiFiles = Object.keys(SOURCES).filter((f) => f.startsWith('../api/') || f.startsWith('api/'))
-    expect(apiFiles).toEqual([])
-  })
-
   it('クライアントの送信は kill switch で止まっている（Backend未契約のため）', async () => {
     const { RULES } = await import('../../core/data/rules')
     expect(RULES.ranking.submissionEnabled).toBe(false)
@@ -178,5 +173,125 @@ describe('deployの安全弁', () => {
     expect(toPosix('a\\b')).toBe('a/b')
     expect(server.files.length).toBeGreaterThan(10)
     expect(app.files.length).toBeGreaterThan(10)
+  })
+})
+
+/**
+ * Phase 4.8：`api/`（Vercel Functions）の境界。
+ *
+ * ★Phase 4.3〜4.7 では「`api/` を作らない」ことが安全弁だった。
+ * 作った瞬間に、次の deploy でエンドポイントが公開されてしまうためである。
+ * Phase 4.8 で `api/` を作ったので、安全弁を**「作らない」から「既定で閉じている」へ**置き換える。
+ * ここではその置き換えが本当に成立しているかを、ソースの形から機械検査する。
+ */
+const API_SOURCES: Record<string, string> = Object.fromEntries(
+  Object.entries(
+    import.meta.glob('../../../api/**/*.ts', {
+      query: '?raw',
+      import: 'default',
+      eager: true,
+    }) as Record<string, string>,
+  ).map(([key, value]) => [key.replace(/^(\.\.\/)+/, ''), value]),
+)
+
+/** Vercel がURLとして公開するファイル（先頭が `_` のものはルートにならない） */
+const ROUTE_FILES = Object.keys(API_SOURCES).filter(
+  (f) => !f.includes('/_') && !f.includes('.test.'),
+)
+
+describe('api/ の境界（Phase 4.8）', () => {
+  it('3本のルートと、共有コードが揃っている', () => {
+    expect(ROUTE_FILES.sort()).toEqual([
+      'api/ranking/leaderboard.ts',
+      'api/ranking/start.ts',
+      'api/ranking/submit.ts',
+    ])
+    expect(Object.keys(API_SOURCES)).toContain('api/_lib/handler.ts')
+    expect(Object.keys(API_SOURCES)).toContain('api/_lib/env.ts')
+  })
+
+  it('公開されるルートは薄い（rankingRoute を呼ぶだけで、独自ロジックを持たない）', () => {
+    for (const file of ROUTE_FILES) {
+      const code = stripComments(API_SOURCES[file])
+      expect(code, `${file} が rankingRoute を経由していない`).toContain(
+        "rankingRoute } from '../_lib/handler'",
+      )
+      // 判定・保存・接続をルート側で書いていないこと
+      for (const token of ['process.env', 'process?.env', 'neon(', 'RULES.', 'if (']) {
+        expect(code, `${file} が独自ロジックを持っている: ${token}`).not.toContain(token)
+      }
+    }
+  })
+
+  it('共有コードは _lib/ にあり、URLとして公開されない', () => {
+    const shared = Object.keys(API_SOURCES).filter(
+      (f) => f.includes('handler') || f.includes('env'),
+    )
+    for (const file of shared) {
+      expect(file, `${file} が公開されるパスにある`).toContain('api/_lib/')
+    }
+  })
+
+  it('env を読むのは _lib/env.ts だけ（門番を迂回できない）', () => {
+    const readers = Object.keys(API_SOURCES).filter((f) => {
+      if (f.includes('.test.')) return false
+      return /process\??\.env/.test(stripComments(API_SOURCES[f]))
+    })
+    expect(readers).toEqual(['api/_lib/env.ts'])
+  })
+
+  it('すべてのルートが門番（apiEnabled）の内側にある', () => {
+    const handler = stripComments(API_SOURCES['api/_lib/handler.ts'])
+    // 門番は「最初の分岐」でなければならない（DBに触れる前に落とす）
+    const gate = handler.indexOf('ctx.env.apiEnabled')
+    const dbUse = handler.indexOf('ctx.resolveStore')
+    expect(gate).toBeGreaterThan(-1)
+    expect(gate, '保存層に触れてから門番を見ている').toBeLessThan(dbUse)
+  })
+
+  it('UI層・ブラウザ専用のものを取り込まない', () => {
+    for (const [file, raw] of Object.entries(API_SOURCES)) {
+      if (file.includes('.test.')) continue
+      const code = stripComments(raw)
+      for (const token of ['/components/', '/hooks/', 'react', 'phaser', 'localStorage', 'document']) {
+        expect(code, `${file} が ${token} を参照している`).not.toContain(token)
+      }
+    }
+  })
+
+  it('kill switch を rules.ts 側で開けていない（環境変数からしか開かない）', () => {
+    for (const [file, raw] of Object.entries(API_SOURCES)) {
+      const code = stripComments(raw)
+      expect(code, `${file} が rules.ts の kill switch を書き換えている`).not.toContain(
+        'submissionEnabled =',
+      )
+    }
+    const handler = stripComments(API_SOURCES['api/_lib/handler.ts'])
+    // 渡すのは env が決めた値だけ。true を直書きしない
+    expect(handler).toContain('ctx.env.submissionUnlocked')
+  })
+})
+
+describe('api/ が deploy で余計なものを公開しない（Phase 4.8）', () => {
+  it('公開されるパスにテストファイルが無い（Vercelが .test も関数にしてしまう）', () => {
+    const leaked = Object.keys(API_SOURCES).filter(
+      (f) => f.includes('.test.') && !f.includes('/_'),
+    )
+    expect(leaked, `deploy で公開されてしまうテスト: ${leaked.join(', ')}`).toEqual([])
+  })
+
+  it('テストは _ 付きディレクトリに置いてある', () => {
+    const tests = Object.keys(API_SOURCES).filter((f) => f.includes('.test.'))
+    expect(tests.length).toBeGreaterThan(0)
+    for (const file of tests) {
+      expect(file, `${file} がルート化されるパスにある`).toMatch(/api\/_[^/]+\//)
+    }
+  })
+
+  it('.vercelignore がテストを二重に除外している', async () => {
+    const ignore = await import('../../../.vercelignore?raw').then(
+      (m) => (m as { default: string }).default,
+    )
+    expect(ignore).toContain('*.test.ts')
   })
 })
