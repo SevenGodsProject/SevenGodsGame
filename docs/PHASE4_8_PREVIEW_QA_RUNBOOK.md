@@ -210,6 +210,45 @@ bypass secret を入れて `--stage read` を流したときに確認する。
 
 **Preview スコープだけ**に追加して再デプロイ。
 
+> ### ★2つの落とし穴（2026-09-09 に両方踏んだ）
+>
+> **① 変数を足しただけでは効かない。**
+> Vercel の環境変数は**追加後にビルドされた deployment にしか入らない**。
+> 追加したら必ず再デプロイする（ダッシュボードの Redeploy、または branch へ commit を1つ積む）。
+>
+> **② 値は厳密に `1`。**
+> `true` / `yes` / `on` は**無効**として扱う（誤入力で門が開かないための設計）。
+> 前後の空白と改行だけは落とすので、`"1\n"` は有効。
+>
+> **切り分け方**：production 以外では `submission_disabled` の応答に内訳が付く。
+>
+> ```json
+> {"error":"submission_disabled",
+>  "gate":{"unlockRequested":false,"submissionUnlocked":false,"vercelEnv":"preview"}}
+> ```
+>
+> | 読み方 | 意味 |
+> |---|---|
+> | `vercelEnv` が `preview` 以外 | スコープ違い。Preview の deployment を見ていない |
+> | `unlockRequested: false` | **値が `1` になっていない**（または再デプロイ前） |
+> | `unlockRequested: true` かつ `submissionUnlocked: false` | production 判定に落ちている（設計どおり） |
+>
+> この内訳は **production では付かない**（門番の内部状態を本番の応答に出さないため）。
+
+### submit を実地に通すための fixture
+
+`submit` には本物のエンジンで遊んだ行動ログが要る。ブラウザ側では作れないので、
+ローカルで生成してその JSON だけを POST する。
+
+```
+QA_FIXTURE_OUT=<出力先>/qa-input.json QA_DAILY_KEY=<今日> \
+  npx vitest run scripts/phase48-api/fixture.test.ts
+```
+
+生成物は `ReplayInput` だけで、**identity を含まない**（`ReplayInput` は identity に依存しない）。
+`playerId` / `playerSecret` はブラウザ側でその場に作らせるので、秘密はファイルにもログにも出ない。
+実測でおよそ 1.3 KB・24 action。
+
 ```
 node scripts/phase48-api/preview-qa.mjs --base-url https://<preview>.vercel.app --stage full
 ```
