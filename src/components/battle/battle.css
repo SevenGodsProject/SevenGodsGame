@@ -4023,3 +4023,53 @@
   line-height: 1.5;
   color: #b0b0b0;
 }
+
+/* -------------------------------------------------------------------------
+   Phase 4.9：神域挑戦の決着画面から「今日のランキング」への導線。
+   `.game-over-daily` の内側にだけ現れる＝通常モードには一切出ない。
+   ------------------------------------------------------------------------- */
+.game-over-daily-rank {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.35rem;
+  margin-top: 0.5rem;
+  padding-top: 0.5rem;
+  border-top: 1px dashed #ffffff1f;
+}
+
+.game-over-daily-score {
+  font-size: 0.92rem;
+  color: #dfe3f5;
+  font-variant-numeric: tabular-nums;
+}
+
+.game-over-daily-score strong {
+  color: #fff;
+  font-size: 1.05rem;
+}
+
+/* タップ領域を 44px 確保する（Apple HIG）。文字リンクに見えるが押しやすくする */
+.game-over-rank-link {
+  min-height: 44px;
+  padding: 0.5rem 1.1rem;
+  border: 1px solid #ffd16666;
+  border-radius: 999px;
+  background: #ffd1660f;
+  color: #ffe9b0;
+  font-size: 0.88rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.game-over-rank-link:hover {
+  background: #ffd16620;
+}
+
+.game-over-rank-note {
+  font-size: 0.72rem;
+  line-height: 1.5;
+  color: #9aa3c4;
+  text-align: center;
+  overflow-wrap: anywhere;
+}

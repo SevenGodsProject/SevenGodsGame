@@ -96,6 +96,11 @@ type GameOverOverlayProps = {
   shareState?: GameState | null
   /** 決定128：敗北理由（lost のときだけ表示）。BattleScreen がログから導出して渡す */
   defeatCause?: DefeatCause | null
+  /**
+   * Phase 4.9：神域挑戦のときだけ出す「今日のランキングを見る」の遷移先。
+   * 通常モードでは渡さない（＝ボタンが現れない）。
+   */
+  onOpenRanking?: () => void
 }
 
 export function GameOverOverlay({
@@ -117,6 +122,7 @@ export function GameOverOverlay({
   stakeResult = null,
   shareState = null,
   defeatCause = null,
+  onOpenRanking,
 }: GameOverOverlayProps) {
   const god = getGodDef(godId)
   const otomoDef = getOtomoDef(otomo.defId)
@@ -213,6 +219,26 @@ export function GameOverOverlay({
                 </span>
               </>
             )}
+            {/*
+              Phase 4.9：神域挑戦のときだけ、最終スコアと今日のランキングへの導線を出す。
+              通常モードには `daily` が null で渡るので、この節ごと現れない。
+              提出が閉じている間は「順位が付く」と誤解させないよう、文言を分ける。
+            */}
+            <div className="game-over-daily-rank">
+              <span className="game-over-daily-score">
+                今日のスコア <strong>{formatScaled(finalScore)}</strong> 点
+              </span>
+              {onOpenRanking && (
+                <button type="button" className="game-over-rank-link" onClick={onOpenRanking}>
+                  今日のランキングを見る
+                </button>
+              )}
+              {!RULES.ranking.submissionEnabled && (
+                <span className="game-over-rank-note">
+                  ランキングへの登録はまだ開始していません（閲覧のみ）
+                </span>
+              )}
+            </div>
           </div>
         )}
         {bestGap !== null && <div className="game-over-best-gap">自己ベストまであと{formatScaled(bestGap)}点</div>}

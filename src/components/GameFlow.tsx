@@ -316,6 +316,9 @@ export function GameFlow({ onShowTutorial, onSnapshotChange }: GameFlowProps) {
         engine={engine}
         rematchLabel={inDaily ? `もう一度挑戦（残り${attemptsLeft ?? 0}回）` : undefined}
         rematchDisabled={inDaily ? (attemptsLeft ?? 0) <= 0 : false}
+        // Phase 4.9：神域挑戦のときだけ、決着画面から今日のランキングへ戻れる。
+        // 通常モードでは undefined を渡すのでボタン自体が現れない
+        onOpenRanking={inDaily && dailyKey ? () => setSetupScreen('daily') : undefined}
         onRematch={() => {
           if (!godId || !deck) return
           if (inDaily) {

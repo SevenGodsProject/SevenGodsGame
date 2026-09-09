@@ -5,6 +5,7 @@ import { RULES } from '../../core/data/rules'
 import { rankedStartNotice } from '../../hooks/dailySessionStart'
 import { bestResultOf, bestResultsByGod, dailyAttemptsLeft, loadDailyDay } from '../../hooks/dailyStorage'
 import { formatScaled } from '../displayScale'
+import { DailyRankingPanel } from './DailyRankingPanel'
 import { DailyStatusBadge } from './DailyStatusBadge'
 import './setup.css'
 import './daily.css'
@@ -107,6 +108,14 @@ export function DailyChallengeScreen({
           <span className="daily-fact-sub">3回のうち最高スコアが「今日のベスト」</span>
         </div>
       </div>
+
+      {/*
+        Phase 4.9：ランキングは `daily-facts`（自己ベスト・残り回数）の**直後**に置く。
+        あの3枚は既に「今日の自分」を示しており、順位はその自然な続き
+        （自分 → 全体の中の自分 → 神別の履歴 → ルール → 開始）。
+        ボスより上には出さない。ここは挑戦する画面であって、順位表ではない。
+      */}
+      <DailyRankingPanel dateKey={dateKey} />
 
       {byGod.length > 0 && (
         <>

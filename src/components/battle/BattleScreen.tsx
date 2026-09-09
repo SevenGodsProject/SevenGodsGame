@@ -45,6 +45,8 @@ type BattleScreenProps = {
   /** DAILY-01：神域挑戦時の「もう一度」ボタンの文言・無効化（残り回数）。通常モードでは省略 */
   rematchLabel?: string
   rematchDisabled?: boolean
+  /** Phase 4.9：神域挑戦の決着画面から「今日のランキング」へ戻る。通常モードでは省略 */
+  onOpenRanking?: () => void
 }
 
 /**
@@ -60,6 +62,7 @@ export function BattleScreen({
   onReselect,
   rematchLabel,
   rematchDisabled,
+  onOpenRanking,
 }: BattleScreenProps) {
   const {
     state,
@@ -524,6 +527,7 @@ export function BattleScreen({
           defeatCause={state.status === 'lost' ? deriveDefeatCause(log, state.round) : null}
           rematchLabel={rematchLabel}
           rematchDisabled={rematchDisabled}
+          onOpenRanking={state.mode === 'daily' ? onOpenRanking : undefined}
         />
       )}
     </div>
