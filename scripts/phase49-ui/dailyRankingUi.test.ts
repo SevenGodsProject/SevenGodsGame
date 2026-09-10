@@ -77,10 +77,33 @@ describe('通常モードへ漏らさない', () => {
     expect(stripJs(battleScreenSource)).toContain("state.mode === 'daily' ? onOpenRanking : undefined")
   })
 
+  /** GameFlow が BattleScreen に渡す `onOpenRanking` の中身だけを取り出す */
+  function rankingHandlerSource(): string {
+    const code = stripJs(gameFlowSource)
+    const start = code.indexOf('onOpenRanking={')
+    expect(start).toBeGreaterThan(-1)
+    const end = code.indexOf('onRematch={', start)
+    expect(end).toBeGreaterThan(start)
+    return code.slice(start, end)
+  }
+
   it('GameFlow も daily のときしか導線を渡さない', () => {
-    expect(stripJs(gameFlowSource)).toContain(
-      "onOpenRanking={inDaily && dailyKey ? () => setSetupScreen('daily') : undefined}",
-    )
+    const handler = rankingHandlerSource()
+    expect(handler).toContain('inDaily && dailyKey')
+    expect(handler).toContain(': undefined')
+  })
+
+  /**
+   * Preview実機で踏んだ不具合の再発防止。
+   * `screen` は `engine.state` がある間ずっと BattleScreen を返すので、
+   * `setSetupScreen('daily')` だけではボタンが「押しても何も起きない」ものになる。
+   */
+  it('ランキング導線はバトルを畳んでから Daily 画面へ戻す', () => {
+    const handler = rankingHandlerSource()
+    expect(handler).toContain('engine.resetGame()')
+    expect(handler).toContain("setSetupScreen('daily')")
+    // 順序が逆だと state が残ったままになる
+    expect(handler.indexOf('engine.resetGame()')).toBeLessThan(handler.indexOf("setSetupScreen('daily')"))
   })
 
   it('通常モードの既存表示（自己ベスト差・神階）に触っていない', () => {

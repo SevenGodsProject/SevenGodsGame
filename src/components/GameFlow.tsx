@@ -317,8 +317,19 @@ export function GameFlow({ onShowTutorial, onSnapshotChange }: GameFlowProps) {
         rematchLabel={inDaily ? `もう一度挑戦（残り${attemptsLeft ?? 0}回）` : undefined}
         rematchDisabled={inDaily ? (attemptsLeft ?? 0) <= 0 : false}
         // Phase 4.9：神域挑戦のときだけ、決着画面から今日のランキングへ戻れる。
-        // 通常モードでは undefined を渡すのでボタン自体が現れない
-        onOpenRanking={inDaily && dailyKey ? () => setSetupScreen('daily') : undefined}
+        // 通常モードでは undefined を渡すのでボタン自体が現れない。
+        // ★`engine.resetGame()` を必ず先に呼ぶ。`screen` は `engine.state` があるかぎり
+        // BattleScreen を返すため、`setSetupScreen` だけではバトル画面が載ったままになり、
+        // ボタンが何も起きない見た目になる（Preview実機で踏んだ）。決着後に押す導線なので、
+        // `backToGodSelect` と同じくバトルの状態は畳んでから戻す
+        onOpenRanking={
+          inDaily && dailyKey
+            ? () => {
+                engine.resetGame()
+                setSetupScreen('daily')
+              }
+            : undefined
+        }
         onRematch={() => {
           if (!godId || !deck) return
           if (inDaily) {
