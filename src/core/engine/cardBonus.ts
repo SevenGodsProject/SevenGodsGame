@@ -43,6 +43,15 @@ export function evaluateBonusCond(
         before.player.hp <=
         Math.floor(before.player.maxHp * RULES.cardBonus.lowHpRatio)
       )
+    case 'combo':
+      // 「このラウンド2枚目以降」。使う前の枚数を見るので、1枚目では成立しない。
+      // `endRound`が`cardsPlayedThisRound`を0へ戻すため、ラウンドをまたいで持ち越さない。
+      return before.cardsPlayedThisRound >= RULES.cardBonus.comboMinCardsPlayed
+    case 'charged':
+      // 「共鳴が4以上」。★使う前のゲージで判定する（`card.ts`の仕様コメント）。
+      // 後で見ると共鳴を上げるカードが自分の条件を満たしてしまい、
+      // 「先に共振を置いてから撃つ」という順番の判断が消える。
+      return before.resonance.value >= RULES.cardBonus.chargedThreshold
   }
 }
 
@@ -51,7 +60,8 @@ export function evaluateBonusCond(
  *
  * `blocked`だけは本体効果の適用後を見る条件なので、そのカードが得るブロック量
  * （神階Ⅳ以降の効率も`effects.ts`と同じ式で反映）を足した値で判定する。
- * 他の条件は使用前の盤面だけで決まるため、そのまま`evaluateBonusCond`を使う。
+ * 他の条件（`enemyBig` / `lowHp` / `combo` / `charged`）は使用前の盤面だけで決まるため、
+ * そのまま`evaluateBonusCond`を使う＝**手札の⚡表示と実際の成立が必ず一致する**。
  */
 export function previewBonusTrigger(state: GameState, def: CardDef): boolean {
   if (!def.bonus) return false

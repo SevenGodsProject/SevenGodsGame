@@ -24,6 +24,12 @@ import { dataFingerprint, getGameVersion, rankingImpactSnapshot, stableStringify
 /**
  * 固定リプレイ。ハーネスに依存しないよう、生成済みの操作列をそのまま埋め込む
  * （`playRecordedDailyRun` の実装が変わっても、この入力は変わらない）。
+ *
+ * ★Phase 5-A（決定154）で入力ごと作り直した。
+ * カードの効きが変わると、前の操作列は**そもそも再生できなくなる**ことがある
+ * （敵が早く倒れて、そのあとの END_ROUND が拒否される）。そうなると結果を比べる
+ * 以前の問題なので、入力と期待値をセットで差し替えるしかない。
+ * 再生成は `scripts/phase5a-cards/cardsAudit.test.ts`（`P5A_GOLDEN=1`）で行う。
  */
 // ブランド型（CardDefId/GodId/CardUid）を素の文字列で書けるようにまとめてcastする。
 // 中身の正しさは `runReplay` が本番と同じ検査で保証するので、型の緩さは検証を弱めない。
@@ -32,7 +38,6 @@ const GOLDEN_INPUT = {
   mode: 'daily',
   dailyKey: '2026-09-09',
   godId: 'ebisu',
-  otomoGrowthPath: 'guardian',
   deck: [
     'card_ebisu_attack_01',
     'card_ebisu_attack_01',
@@ -53,40 +58,45 @@ const GOLDEN_INPUT = {
     'card_common_resonance_02',
     'card_common_oracle_01',
     'card_common_oracle_02',
-    'card_common_oracle_03',
+    'card_common_oracle_03'
   ],
+  otomoGrowthPath: 'guardian',
   actions: [
-    { type: 'PLAY_CARD', uid: 'c18' },
-    { type: 'END_ROUND' },
-    { type: 'PLAY_CARD', uid: 'c9' },
-    { type: 'END_ROUND' },
-    { type: 'PLAY_CARD', uid: 'c5' },
-    { type: 'PLAY_CARD', uid: 'c6' },
+    { type: 'USE_DIVINATION', choiceIndex: 0 },
     { type: 'PLAY_CARD', uid: 'c19' },
     { type: 'END_ROUND' },
-    { type: 'USE_DIVINATION', choiceIndex: 1 },
-    { type: 'PLAY_CARD', uid: 'c12' },
-    { type: 'PLAY_CARD', uid: 'c7' },
-    { type: 'PLAY_CARD', uid: 'c4' },
-    { type: 'END_ROUND' },
+    { type: 'PLAY_CARD', uid: 'c9' },
+    { type: 'PLAY_CARD', uid: 'c10' },
     { type: 'PLAY_CARD', uid: 'c8' },
+    { type: 'END_ROUND' },
+    { type: 'USE_DIVINATION', choiceIndex: 1 },
+    { type: 'PLAY_CARD', uid: 'c5' },
+    { type: 'PLAY_CARD', uid: 'c7' },
+    { type: 'PLAY_CARD', uid: 'c6' },
+    { type: 'END_ROUND' },
+    { type: 'PLAY_CARD', uid: 'c1' },
+    { type: 'PLAY_CARD', uid: 'c12' },
+    { type: 'PLAY_CARD', uid: 'c18' },
+    { type: 'END_ROUND' },
+    { type: 'USE_DIVINATION', choiceIndex: 1 },
+    { type: 'PLAY_CARD', uid: 'c16' },
+    { type: 'PLAY_CARD', uid: 'c11' },
+    { type: 'PLAY_CARD', uid: 'c13' },
+    { type: 'END_ROUND' },
     { type: 'PLAY_CARD', uid: 'c15' },
     { type: 'PLAY_CARD', uid: 'c14' },
+    { type: 'PLAY_CARD', uid: 'c14' },
     { type: 'END_ROUND' },
-    { type: 'PLAY_CARD', uid: 'c16' },
-    { type: 'PLAY_CARD', uid: 'c0' },
-    { type: 'PLAY_CARD', uid: 'c3' },
-    { type: 'END_ROUND' },
+    { type: 'PLAY_CARD', uid: 'c4' },
     { type: 'PLAY_CARD', uid: 'c17' },
-    { type: 'PLAY_CARD', uid: 'c11' },
-    { type: 'PLAY_CARD', uid: 'c1' },
-    { type: 'END_ROUND' },
-  ],
+    { type: 'PLAY_CARD', uid: 'c0' },
+    { type: 'END_ROUND' }
+  ]
 } as unknown as ReplayInput
 
 /** 版と結果は**必ずセットで**更新する（片方だけ直すと検出の意味が無くなる） */
 const GOLDEN = {
-  gameVersion: '1.da595899c6a9db43',
+  gameVersion: '1.b783d71956fe9327',
   outcome: {
     enemyId: 'enemy_06',
     seedId: 'B6PW1T',
@@ -94,11 +104,11 @@ const GOLDEN = {
     status: 'lost',
     win: false,
     round: 7,
-    score: 317,
+    score: 345,
     playerHp: 0,
-    enemyHp: 9,
-    rngCursor: 19,
-    actionCount: 25,
+    enemyHp: 8,
+    rngCursor: 33,
+    actionCount: 29,
   },
 }
 

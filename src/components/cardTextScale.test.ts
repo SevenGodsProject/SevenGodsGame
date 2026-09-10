@@ -51,6 +51,29 @@ describe('カード本文と表示スケールの整合（D2b）', () => {
   }
 })
 
+/**
+ * Phase 5-A（決定154）：条件付き追加効果（`bonus.textJa`）にも同じ検査を広げる。
+ *
+ * bonus は20枚に増え、そのうち16枚は共通カード。本体と同じく手書きの文なので、
+ * 「effect 3 なのに本文30ではなく3と書いた」類の事故が起こりうる。
+ * 本体だけ機械検査して追加効果を見逃すと、**プレイヤーが読む数字の半分が無検査**になる。
+ */
+describe('条件付き追加効果の本文と表示スケールの整合（Phase 5-A）', () => {
+  for (const card of ALL_CARDS) {
+    if (!card.bonus) continue
+    it(`${card.name}（${card.id}）の追加効果の文がeffect値×表示倍率と一致する`, () => {
+      for (const effect of card.bonus!.effects) {
+        for (const expected of expectedNumbersInText(effect)) {
+          expect(
+            card.bonus!.textJa.includes(expected),
+            `「${card.name}」の追加効果「${card.bonus!.textJa}」に ${effect.kind} の期待数値 ${expected} が見つからない`,
+          ).toBe(true)
+        }
+      }
+    })
+  }
+})
+
 describe('託宣本文と表示スケールの整合（D2b）', () => {
   for (const choice of DIVINATION_CHOICES) {
     it(`${choice.name}の本文がeffect値×表示倍率と一致する`, () => {

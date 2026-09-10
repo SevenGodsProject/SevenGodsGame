@@ -22,8 +22,15 @@ export type Rarity = 'common' | 'rare' | 'legend'
  * - blocked  … 本体効果の適用「後」、ブロックが敵の予告ダメージ以上（予告0＝溜め等では不成立）
  * - enemyBig … カードを使う「前」、敵の予告ダメージ合計が`RULES.cardBonus.enemyBigThreshold`以上
  * - lowHp    … カードを使う「前」、HPが最大の`RULES.cardBonus.lowHpRatio`以下（切り捨て）
+ * - combo    … カードを使う「前」、このラウンドで既に1枚以上使っている（＝2枚目以降）
+ * - charged  … カードを使う「前」、共鳴ゲージが`RULES.cardBonus.chargedThreshold`以上
+ *
+ * Phase 5-A（決定153）で `combo` / `charged` を追加した。どちらも**使う前**の盤面で
+ * 判定する（`blocked`だけが本体効果の適用後を見る）。とくに `charged` を「後」で見ると、
+ * 共鳴を上げるカード自身が自分の条件を満たしてしまい、「先に共振を置く」という
+ * 順番の判断が消えるため、**自己成立させない**ことを仕様として固定する。
  */
-export type BonusCond = 'blocked' | 'enemyBig' | 'lowHp'
+export type BonusCond = 'blocked' | 'enemyBig' | 'lowHp' | 'combo' | 'charged'
 
 /**
  * カード1枚が持てる条件付き追加効果（1枚につき最大1つ）。

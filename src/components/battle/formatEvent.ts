@@ -53,6 +53,9 @@ const BONUS_COND_LABEL: Record<BonusCond, string> = {
   blocked: '追加効果（予告以上のブロック）',
   enemyBig: '追加効果（敵の大技）',
   lowHp: '追加効果（HP半分以下）',
+  // Phase 5-A（決定153）。カード本文の条件文（`bonus.textJa`）と同じ言い方に揃える
+  combo: '追加効果（2枚目以降）',
+  charged: '追加効果（共鳴4以上）',
 }
 
 

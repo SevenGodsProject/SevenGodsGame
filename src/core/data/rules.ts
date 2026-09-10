@@ -328,6 +328,18 @@ export const RULES = {
   cardBonus: {
     enemyBigThreshold: 10,
     lowHpRatio: 0.5,
+    /**
+     * Phase 5-A（決定153）：`charged` の下限。共鳴ゲージ（最大7）がこの値以上で成立。
+     * 4＝「半分より上」。3以下だと初手から常に立ってしまい条件の意味が消え、
+     * 5以上だと発動（7）までの窓が2しか無く、狙う余地が無くなる。
+     */
+    chargedThreshold: 4,
+    /**
+     * Phase 5-A（決定153）：`combo` の下限。このラウンドで既に使った枚数がこの値以上で成立。
+     * 1＝「2枚目以降」。スコアの連携加点（`score.comboSteps`）と同じ「2枚目から」の
+     * 考え方に揃えてあるが、別々の調整値として持つ（片方を動かしても他方が動かない）。
+     */
+    comboMinCardsPlayed: 1,
   },
 
   /**
