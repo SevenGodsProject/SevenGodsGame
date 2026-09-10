@@ -354,3 +354,65 @@ DBには一切書いていない（`GET` 以外は発行していない）。
 
 **残っているのは提出QAだけ**：`RANKING_PREVIEW_UNLOCK` を Preview に入れて（**入れたら必ず再デプロイ**）
 実際に1回遊び、自分の順位が本当に付くところを見る。これは CEO の画面操作が要るため、ここで停止する。
+
+---
+
+## 9. 提出QA（2026-09-10・`RANKING_PREVIEW_UNLOCK` を入れた状態）
+
+CEO が Preview スコープへ `RANKING_PREVIEW_UNLOCK` を投入し再デプロイ（ダッシュボードには
+「何かがうまくいかなかった」と出たが、**deployment は作成され success で完了**していた。
+alias が配信するバンドルは修正入りの `index-KIPcXCu_.js` で、`POST /api/ranking/start` に
+空bodyを投げると 503 ではなく **400 `bad_request`** ＝ kill switch を通過していることで確認）。
+
+### 9-1. やり方
+
+**実際に UI で1回遊び、その本物の行動ログを提出した。**
+クライアントの `RULES.ranking.submissionEnabled` は false のままなので、ゲーム自身は
+start / submit を打たない（＝この kill switch が生きていることの裏返しでもある）。
+そこで Phase 4.8 の QA と同じく **API を直接叩く**が、payload は合成せず、
+実プレイが `sevengods.pendingRuns` に残した `ReplayInput` をそのまま送った。
+identity も端末が持っている本物（`sevengods.playerSecret` から導いた公開ID）を使ったので、
+**画面に出る「あなた」の行と提出したrunが同一人物**になる。秘密は表示も保存もしていない。
+
+### 9-2. 結果
+
+| 項目 | 結果 |
+|---|---|
+| **ticket発行** | `POST /api/ranking/start` **201**・`attemptNo 1`・`state open`・TTL **90分**・`dailyKey` はサーバーが決定（2026-09-10） |
+| **gameVersion** | **`1.da595899c6a9db43`**（Phase 4.8 と同一＝決定142 の day-lock と衝突なし） |
+| **attempt消費** | start 後 `attemptsUsed 1/3`、submit 後 `runsUsed 1/3`、UI の残り挑戦回数 **0/3** |
+| 実プレイ | 恵比寿・R7 敗北・行動17手・deck 20枚・payload **1,069 bytes**（64KB 制限に対して十分小さい） |
+| **server-computed score** | **205**（表示 2,050）＝**クライアント表示と完全一致**。サーバーが独立にリプレイしても同じ点になる |
+| **submit成功** | **201**・`accepted: stored`・`win false`・`round 7`・`bestScore 205` |
+| **leaderboard反映** | `GET /api/ranking/leaderboard` が `totalPlayers 1`・自分の行1件を返す |
+| **自分の順位** | `rank 1`・`tiedCount 1`・`topPercent 100`・`pointsToNextRank null` |
+| 秘密の非漏洩 | start / submit / leaderboard の**すべての応答**で `playerSecret` 文字列も `playerSecret` というキー名も出ない |
+
+### 9-3. 画面側（Preview 実機）
+
+決着画面 →「今日のランキングを見る」→ 神域挑戦の画面へ遷移（`da1e481` の修正が効いている）。
+
+* 今日のランキング：**参加 1人／1位 2,050点／上位 100%**、一覧に **「あなた・恵比寿・2,050・未撃破・R7」**
+* 今日の自己ベスト：**2,050（敗北）・使用神：恵比寿**
+* 残り挑戦回数：**0 / 3**
+* 神別の今日のベスト：恵比寿 2,050・敗北・R7
+
+### 9-4. 注意（この表示は正しい）
+
+パネル下部の「現在は閲覧のみです。今日の挑戦結果はまだランキングに登録されません。」は
+**出たままで正しい**。この文言はクライアントの `submissionEnabled`（false）を見ており、
+本来の構成ではゲームは提出しない。今回サーバーに記録が入ったのは、QAとして
+API を直接叩いたためで、製品としての挙動が矛盾しているわけではない。
+`submissionEnabled=true` にした時点でこの但し書きは自動的に消える。
+
+### 9-5. Production 非影響（提出QA後に再確認）
+
+`/` 200、`/api/ranking/{leaderboard,start,submit}` **4経路とも 404**、配信バンドルは
+`index-Sm3K62_I.js`（決定130 の本番バンドルと同一）、Production の最新 deployment は
+**2026-09-06 / `489352c`** のまま。master も `489352c` で無変更。
+
+### 9-6. 次（CEO操作が要るため停止）
+
+Preview の Neon には**今日のテスト記録が1件入った状態**（playerId `29b377e2…`・205点）。
+`RANKING_PREVIEW_UNLOCK` を**外して再デプロイ**すれば提出は再び閉じる。
+記録自体は Phase 4.6 の剪定と `daily_days` の CASCADE で自然に消えるため、DELETE はしない。
