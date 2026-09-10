@@ -416,3 +416,48 @@ API を直接叩いたためで、製品としての挙動が矛盾している�
 Preview の Neon には**今日のテスト記録が1件入った状態**（playerId `29b377e2…`・205点）。
 `RANKING_PREVIEW_UNLOCK` を**外して再デプロイ**すれば提出は再び閉じる。
 記録自体は Phase 4.6 の剪定と `daily_days` の CASCADE で自然に消えるため、DELETE はしない。
+
+---
+
+## 10. Phase 4.9 CLOSE（2026-09-11）
+
+### 10-1. 後片付けの実測
+
+`RANKING_PREVIEW_UNLOCK` を Preview から削除したうえで再ビルドし、閉じたことを確認した。
+
+| 経路 | 実測（alias／固有URL `ivgm7myq5` の**両方**） |
+|---|---|
+| `POST /api/ranking/start {}` | **503 `submission_disabled`**（gate: `unlockRequested:false` / `submissionUnlocked:false` / `vercelEnv:preview`） |
+| `POST /api/ranking/submit {}` | **503 `submission_disabled`**（同上） |
+| `GET /api/ranking/leaderboard` | **200**（2026-09-11＝0人、2026-09-10＝1人・205点が健在） |
+
+### 10-2. 3回かかった理由（次に同じ穴に落ちないために）
+
+削除後の再ビルドを **3本**（`c4cdf86` → `b3e5b27` → `9d43a43`）打って、ようやく閉じた。
+1本目・2本目の時点では**まだ変数が残っており**、真新しいビルドが値を取り込んでいた。
+
+* **Vercel は同じキー名を複数行持てる。** この構成は「Preview かつ branch 限定」だったため、
+  Preview 全体の行とブランチ指定の行が別々に存在し得る。**1行消しても閉じない。**
+* 決定147 は「外すだけでは閉まらない（再デプロイが要る）」を記録していたが、
+  **「行が1つとは限らない」**は書いていなかった。ここを追記する。
+* **判定は `POST {}` の応答で行う。** `start` は method → kill switch → サイズ → body形状 の順なので、
+  **閉じていれば 503、開いていれば 400 `bad_request`** になる。DBには何も書かない。
+  `readBody`（kill switch より前）は正しいJSONを通すので、`{}` が 400 を返したら
+  「通過した」と読んでよい。GET は 405 で、これはゲートの状態を示さない。
+* 閉じている間は応答に `gate` の内訳（production では付かない）が入るので、
+  **原因の切り分けはダッシュボードを見に行かずに応答だけでできる。**
+
+### 10-3. CLOSE 時点の状態
+
+| 項目 | 値 |
+|---|---|
+| branch / HEAD | `feat/daily-ranking-phase4` / `9d43a43`（origin と一致） |
+| master / origin/master | **`489352c`**（Phase 4.9 では一度も触っていない） |
+| Production | `/` 200、`/api/ranking/*` **404**（3経路）、バンドル `index-Sm3K62_I.js`（決定130 と同一） |
+| Production 最新 deploy | 2026-09-06 `489352c` |
+| `submissionEnabled` | **false** |
+| Preview 提出口 | **閉**（503） |
+| Preview 読み取り | 開（`RANKING_API_ENABLED` / `RANKING_DATABASE_URL` は次フェーズでも使うため残置） |
+| Neon | schema 変更なし・DELETE なし。2026-09-10 のテスト記録1件は剪定と CASCADE で自然消滅する |
+
+**Phase 4.9：CLOSE（総合 PASS）。Production は NO-GO 据え置き。**
