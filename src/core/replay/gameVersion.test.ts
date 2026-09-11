@@ -96,7 +96,8 @@ const GOLDEN_INPUT = {
 
 /** 版と結果は**必ずセットで**更新する（片方だけ直すと検出の意味が無くなる） */
 const GOLDEN = {
-  gameVersion: '1.b783d71956fe9327',
+  // Phase 5-B（決定155）：`RULES.stakes` の3値を変えたので版だけ変わる（Dailyは神階0なので結果は同じ）
+  gameVersion: '1.c256855486fe5952',
   outcome: {
     enemyId: 'enemy_06',
     seedId: 'B6PW1T',

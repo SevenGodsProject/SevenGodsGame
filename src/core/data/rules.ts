@@ -374,14 +374,21 @@ export const RULES = {
    * 各値は決定論シミュレーション（約33,000試合、v3ラダー）で
    * Ⅰ89／Ⅱ80／Ⅲ67／Ⅳ61／Ⅴ48／Ⅵ44／Ⅶ29〜39%（balanced基準）を確認した組み合わせ。
    * healEfficiencyは福永（自傷＋回復）対策で 0.5→0.6 に緩和、必殺倍率は機工師の主砲に上限。
+   *
+   * Phase 5-B（決定155）：共通16枚の条件付き追加効果（Phase 5-A）で神階Ⅶが 49%→67% へ
+   * 緩んだため、敵側の3値だけを小さく締めて Phase 5-A 前のカーブへ戻した
+   * （lateRoundAtkMul 1.2→1.3、enemyAtkStep 1.1→1.15、enemyHpStep 1.1→1.15）。
+   * 同一seedの感度分析（`scripts/phase5b-stakes/`）で、この組み合わせだけが全神階で
+   * 実装前 ±5pt に収まり、bonus成立・「順番を変える判断」の頻度を落とさなかった。
+   * HP+とATK+を同時に同量だけ積むのは、決定126の「防御神と攻撃神の公平性」の原則を守るため。
    */
   stakes: {
     scoreScalePerLevel: 0.08,
     divinationCount: 4,
     lateRoundFrom: 5,
-    lateRoundAtkMul: 1.2,
-    enemyAtkStep: 1.1,
-    enemyHpStep: 1.1,
+    lateRoundAtkMul: 1.3,
+    enemyAtkStep: 1.15,
+    enemyHpStep: 1.15,
     initialHandMinus: 1,
     blockEfficiency: 0.75,
     healEfficiency: 0.6,
