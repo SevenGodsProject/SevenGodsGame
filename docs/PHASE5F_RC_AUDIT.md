@@ -1,9 +1,11 @@
-# Phase 5-F — Phase 5 統合リプレイ性／Release Candidate 監査
+# Phase 5-F — Phase 5 統合リプレイ性／Release Candidate 監査（決定160・PASS / CLOSE）
 
 Phase 5（5-A 共通カード条件、5-B 神階再センタリング、5-D 予告連動の加護、5-E 加護の効率例外、5-C 専用カード条件）が
 PASS / CLOSE した時点で、**Phase 5 開始前と現在を同じハーネス・同じ seed で比べ**、「何度も攻略したくなるゲーム」に
 近づいたか、そして現 branch を Production Release Candidate として扱えるかを判定した記録。本番コードは変更していない。
-成果物はこの文書と `scripts/phase5f-rc/phase5Compare.test.ts`（`P5F_RUN=1`）。決定160 は未記録。
+成果物はこの文書と `scripts/phase5f-rc/phase5Compare.test.ts`（`P5F_RUN=1`）。
+
+**2026-09-12 追記：CEO が RC 判定 B を承認。blocker（`.claude/settings.local.json` の追跡）を解除し、Phase 5-F・Phase 5 全体を PASS / CLOSE、feature branch を Release Candidate とした（決定160）。RC 状態は §14。**
 
 ---
 
@@ -288,3 +290,57 @@ Replay Motivation（もう1戦したい理由）：**60 / 100**。神×敵×神�
 2. リリース準備（CEO 判断）：master merge、Production deploy は JST 0:00 直後、Production env・submissionEnabled は据え置き
 3. RC 後の小さな UX 改善候補（順に）：敗因の1行、共鳴パネルの「発動後0に戻る」1行、デッキ構築の内部スクロール
 4. 次の Gameplay 候補（CEO 判断）：神託残0（神託4→5＋敵側再センタリング）、福永／大耀の手組みデッキ
+
+---
+
+## 14. Release Candidate 状態（2026-09-12・決定160・PASS / CLOSE）
+
+CEO が RC 判定 B を承認。blocker 1件を修正し、**Phase 5-F を PASS / CLOSE、Phase 5 全体を PASS / CLOSE、feature branch を Release Candidate** とした。§0〜§13 は監査時点の記録として残す。
+
+### 14-1. blocker の修正：`.claude/settings.local.json` の追跡解除
+
+| 項目 | 結果 |
+|---|---|
+| 原因 | 2026-08-15 の checkpoint commit から git 管理下にあった（Phase 5 の commit は一度も触れていない）。リポジトリの `.gitignore` に規則が無く、保護はこの PC のグローバル ignore（`~/.config/git/ignore`）だけだった |
+| 対応 | `git rm --cached` で **index からのみ**外した。ローカルファイルは残存し、内容は不変（前後でハッシュ一致）。内容は commit に含めていない |
+| ignore | `.gitignore` に `.claude/settings.local.json` の1行だけを追加。`.claude/` 全体は無視しない（`.claude/settings.json` などの共有設定は対象外のまま） |
+| 確認 | `git ls-files .claude` は空、`git status` に再追加候補として出ない、`git check-ignore` はリポジトリの `.gitignore:36` で一致 |
+| 注意 | 過去の commit に残る旧版の内容は、履歴を書き換えないため残る。この commit を pull した**他の clone では、そのファイルが作業ツリーから削除される**（この PC のファイルは残る） |
+
+### 14-2. RC 条件
+
+| 条件 | 結果 |
+|---|---|
+| Phase 5 gameplay blocker | なし |
+| tests | src **81 files / 1113 passed / 18 skipped / 0 failed**、api 3 files / 39 passed |
+| tsc / lint / clean build | PASS / PASS（エラー0） / PASS |
+| deterministic replay / golden replay | PASS（golden の決着不変） |
+| saveVersion | **9** |
+| gameVersion | **`1.80c6eda23ed082dc`** |
+| Daily seed / Daily 3回 | 不変（`dailyBoss.ts`・`dailyStart.ts` は Phase 5 開始以降無変更、`RULES.daily.attemptsPerDay` = 3） |
+| Ranking | dormant（`RULES.ranking.submissionEnabled` = false、`api/` と `src/server/` は Phase 5 開始以降無変更） |
+| Production env / Neon | 変更なし |
+| `.claude/settings.local.json` | 追跡解除済み・`.gitignore` で保護 |
+| master / Production | master = origin/master = `489352c`（未変更）、Production deploy 未実施 |
+
+### 14-3. Phase 5 の確定構成（すべて PASS / CLOSE）
+
+| Phase | 内容 | 決定 |
+|---|---|---|
+| 5-A | 共通カード16枚の条件・順序判断 | 154 |
+| 5-B | 神階難易度の再センタリング | 155 |
+| 5-D | Enemy Intent 連動の加護 | 157 |
+| 5-E | 加護の blockEfficiency 例外＋`DIVINATION_CHOICES` の gameVersion 指紋 | 158 |
+| 5-C | 大耀2枚＋蒼毘1枚の専用条件 | 159 |
+| 5-F | 統合リプレイ性 / RC 監査 | 160 |
+
+プレイループ：「最大ダメージ札を出す」→「**予告を見る → 神託を選ぶ → 条件を確認 → 順序を組む**」。
+Meaningful Choice 36.5 → 53.5、Replay Motivation 60 / 100、Phase 5 総合点 68 → 78 / 100。
+
+### 14-4. Known Risks（RC blocker にしない。次回以降の改善候補）
+
+恵比寿の神格が薄い／笑蓮の専用札比率が低い／大耀の共鳴4〜6 vs 7 の判断が伝わりにくい／神託残0 41%／報酬3択が弱い／OTOMO の判断が弱い／デッキ構築差が薄い／機工師の固定方策勝率が低い／高神階の一部に手札不足の敗北／神の一撃・大技演出の「間」／敗因表示が無い。
+
+### 14-5. 次Step
+1. リリース準備（CEO 判断）：master merge、Production 反映は **JST 0:00 直後**（gameVersion 変更のため）、Production env・`submissionEnabled` は据え置き、ランキング公開は別判断
+2. RC 後の小さな UX 改善候補：敗因の1行、共鳴パネルの「発動後0に戻る」1行、デッキ構築の内部スクロール
