@@ -14,8 +14,13 @@ import type { StakeChoiceId } from '../../src/core/data/stakes.js'
 import type { CardBonus, CardDef, CardDefId, CardInstance, EnemyId, GameState, GodId } from '../../src/core/types/index.js'
 
 /**
- * Phase 5-C：神専用カードの条件付き追加効果（bonus）の設計比較（本番コードは変えず、
- * 実行時に `CardDef.bonus` を差し替えて候補を再現する。終了時に必ず元へ戻す）。
+ * Phase 5-C：神専用カードの条件付き追加効果（bonus）の設計比較（実行時に `CardDef.bonus` を差し替えて
+ * 候補を再現する。終了時に必ず元へ戻す）。
+ *
+ * ★Phase 5-C 実装後（決定159）の読み方
+ *   本番のカードデータには 大耀「姉御の号令」「豪快な一撃」・蒼毘「反撃の刃」の bonus が入っている。
+ *   BASE と各候補は、まずその3枚の bonus を外して **Phase 5-E の状態** に戻してから候補を足す。
+ *   PROD は本番のデータそのまま。PILOT（5-E＋3枚）と PROD が完全一致することが、実装＝設計の確認になる。
  *   P5C_RUN=1 npx vitest run scripts/phase5c-god-cards/godCardsAudit.test.ts --reporter=verbose
  *   P5C_CONFIGS="BASE,F1"   対象を絞る
  *   P5C_SEEDS=6            seed数
@@ -41,7 +46,8 @@ const RUN = process.env.P5C_RUN === '1'
 type Strategy = 'balanced' | 'aggressive' | 'defensive'
 type Policy = 'blind' | 'aware' | 'lookahead'
 type Mod = { card: CardDefId; bonus: CardBonus }
-type Config = { name: string; mods: Mod[] }
+/** production=true なら本番のカードデータのまま（Phase 5-C 実装後）。false なら 5-C の3枚の bonus を外した Phase 5-E から始める */
+type Config = { name: string; mods: Mod[]; production?: boolean }
 
 // --- 候補 ------------------------------------------------------------------------
 
@@ -81,12 +87,26 @@ const CONFIGS: Config[] = [
   { name: 'T8', mods: [T8] },
   { name: 'T67', mods: [T6, T7] },
   { name: 'T68', mods: [T6, T8] },
+  // Phase 5-C 実装後の比較：本番そのまま、と3枚を1枚ずつ
+  { name: 'PROD', mods: [], production: true },
+  { name: 'CMD', mods: [T6] },
+  { name: 'BOLD', mods: [T7] },
+  { name: 'BLADE', mods: [S1] },
 ]
 const COMBOS: Record<string, string[]> = { ALL: ['F12', 'T23', 'S1'], PA: ['F1', 'T1', 'S1'], PB: ['F4', 'T7', 'S1'], PC: ['F14', 'T67', 'S1'], PILOT: ['T67', 'S1'] }
 
 const originals = new Map<CardDefId, CardBonus | undefined>()
+/** Phase 5-C で本番に入った3枚 */
+const PHASE5C_CARDS: CardDefId[] = [TAIYO_CARD_IDS.sisterlyCommand, TAIYO_CARD_IDS.boldStrike, SOBI_CARD_IDS.counterBlade]
 function applyConfig(cfg: Config) {
   restoreAll()
+  if (!cfg.production) {
+    for (const id of PHASE5C_CARDS) {
+      const def = getCardDef(id) as { bonus?: CardBonus }
+      if (!originals.has(id)) originals.set(id, def.bonus)
+      delete def.bonus
+    }
+  }
   for (const m of cfg.mods) {
     const def = getCardDef(m.card) as { bonus?: CardBonus }
     if (!originals.has(m.card)) originals.set(m.card, def.bonus)

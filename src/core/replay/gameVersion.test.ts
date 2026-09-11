@@ -103,7 +103,8 @@ const GOLDEN = {
   // この操作列は R1 冒頭で加護を1回使うが、決着（R7敗北・score 345）は同じなので版だけ変わる
   // Phase 5-E（決定158）：指紋に DIVINATION_CHOICES を追加し、加護の効率例外（RULES.divination）を入れた。
   // 2つを同じ変更にまとめて版の更新を1回にした。Daily は神階0で効率がかからないので決着は同じ
-  gameVersion: '1.5aac9529b1a59ad3',
+  // Phase 5-C（決定159）：大耀2枚・蒼毘1枚に bonus を追加（カードデータは指紋対象）。この操作列は恵比寿なので決着は同じ
+  gameVersion: '1.80c6eda23ed082dc',
   outcome: {
     enemyId: 'enemy_06',
     seedId: 'B6PW1T',

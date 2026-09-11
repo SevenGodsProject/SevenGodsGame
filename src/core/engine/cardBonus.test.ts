@@ -2,7 +2,7 @@ import { afterEach, describe, expect, it } from 'vitest'
 import { RULES } from '../data/rules'
 import { GOD_IDS } from '../data/gods'
 import { ENEMY_IDS } from '../data/enemies'
-import { ALL_CARDS, CARD_IDS, SHOUREN_CARD_IDS, SOBI_CARD_IDS } from '../data/cards'
+import { ALL_CARDS, CARD_IDS, SHOUREN_CARD_IDS, SOBI_CARD_IDS, TAIYO_CARD_IDS } from '../data/cards'
 import { getCardPoolForGod } from '../data/deckBuilder'
 import { cardUid } from '../types/ids'
 import type { CardDefId, GameState, GodId } from '../types'
@@ -64,7 +64,7 @@ afterEach(() => {
 })
 
 describe('bonusを持つカードのデータ（scope外へ広がっていないこと）', () => {
-  it('条件付き追加効果を持つのは神専用4枚＋共通16枚の計20枚で、残り40枚は無変更', () => {
+  it('条件付き追加効果を持つのは神専用7枚＋共通16枚の計23枚で、残り37枚は無変更', () => {
     const withBonus = ALL_CARDS.filter((c) => c.bonus)
     expect(withBonus.map((c) => c.id).sort()).toEqual(
       [
@@ -73,6 +73,10 @@ describe('bonusを持つカードのデータ（scope外へ広がっていない
         SOBI_CARD_IDS.sternRebuke,
         SHOUREN_CARD_IDS.bagOfFortune,
         SHOUREN_CARD_IDS.laughItOff,
+        // Phase 5-C（決定159）：神専用3枚（大耀2・蒼毘1。福永・他4神は無変更）
+        TAIYO_CARD_IDS.boldStrike,
+        TAIYO_CARD_IDS.sisterlyCommand,
+        SOBI_CARD_IDS.counterBlade,
         // Phase 5-A（決定153）：共通の主力16枚
         CARD_IDS.strike,
         CARD_IDS.heavyBlow,
@@ -92,8 +96,8 @@ describe('bonusを持つカードのデータ（scope外へ広がっていない
         CARD_IDS.renGeki,
       ].sort(),
     )
-    expect(withBonus.length).toBe(20)
-    expect(ALL_CARDS.length - withBonus.length).toBe(40)
+    expect(withBonus.length).toBe(23)
+    expect(ALL_CARDS.length - withBonus.length).toBe(37)
   })
 
   it('共通カードのbonusは4条件のどれかで、神専用の条件（lowHp）を共通へ広げていない', () => {

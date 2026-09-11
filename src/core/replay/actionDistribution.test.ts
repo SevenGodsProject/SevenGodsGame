@@ -121,6 +121,7 @@ describe('Action数 / payloadサイズの分布（Step 6）', () => {
     // 出す枚数と決着ラウンド）がわずかに動いたため更新した。上限400に対する余裕は不変。
     // Phase 5-D：加護が予告連動ブロックになり、一部の対局で打ち筋（出すカード）が変わった。
     // Action数の分布は同じで、payloadサイズだけ最大11byte動いた。
+    // Phase 5-C：大耀・蒼毘の専用3枚に条件が付き、打ち筋がわずかに動いた（payload の median・p95 が1byteずつ）。
     expect(measurement.actions).toEqual({
       n: 1470,
       min: 7,
@@ -133,9 +134,9 @@ describe('Action数 / payloadサイズの分布（Step 6）', () => {
     expect(measurement.bytes).toEqual({
       n: 1470,
       min: 790,
-      median: 1269,
+      median: 1268,
       p90: 1425,
-      p95: 1476,
+      p95: 1475,
       p99: 1558,
       max: 1615,
     })

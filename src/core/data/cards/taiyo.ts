@@ -30,6 +30,13 @@ export const TAIYO_CARDS: CardDef[] = [
       { kind: 'damage', target: 'enemy', amount: 14 },
       { kind: 'damage', target: 'self', amount: 2 },
     ],
+    // Phase 5-C（決定159）：「共鳴を溜めてから吐き出す」。共鳴は使う前の値で判定するので、
+    // 先に共振・一心不乱で4まで積んでから撃つ、という順番そのものに報酬が出る
+    bonus: {
+      when: 'charged',
+      effects: [{ kind: 'damage', target: 'enemy', amount: 4 }],
+      textJa: '共鳴が4以上なら、敵に40ダメージ。',
+    },
   },
   {
     id: TAIYO_CARD_IDS.sisterlyCommand,
@@ -41,6 +48,13 @@ export const TAIYO_CARDS: CardDef[] = [
     godId: GOD_IDS.taiyo,
     // カード効果でのbuff初採用。以降の攻撃カードの威力を底上げする
     effects: [{ kind: 'buff', target: 'self', stat: 'atk', amount: 3, rounds: 2 }],
+    // Phase 5-C（決定159）：共鳴を溜めた状態で号令をかけると、このラウンドの攻撃がさらに伸びる。
+    // rounds:1 はラウンド終了時の tickBuffs で消える＝次のラウンドへは残らない（本体の+30・2Rとは別枠で加算）
+    bonus: {
+      when: 'charged',
+      effects: [{ kind: 'buff', target: 'self', stat: 'atk', amount: 3, rounds: 1 }],
+      textJa: '共鳴が4以上なら、さらに攻撃力+30（1ラウンドのみ）。',
+    },
   },
   {
     id: TAIYO_CARD_IDS.singleMinded,
