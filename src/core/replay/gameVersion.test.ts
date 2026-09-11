@@ -2,7 +2,9 @@ import { describe, expect, it } from 'vitest'
 import { RULES } from '../data/rules'
 import { runReplay } from './replay'
 import type { ReplayInput } from './types'
-import { dataFingerprint, getGameVersion, rankingImpactSnapshot, stableStringify } from './gameVersion'
+import { dataFingerprint, getGameVersion, rankingImpactSnapshot, resetGameVersionCache, stableStringify } from './gameVersion'
+import { DIVINATION_CHOICES } from '../data/divination'
+import type { Effect } from '../types'
 
 /**
  * Phase 4.6（決定139 §5-2）：`gameVersion` の golden test。
@@ -99,7 +101,9 @@ const GOLDEN = {
   // Phase 5-B（決定155）：`RULES.stakes` の3値を変えたので版だけ変わる（Dailyは神階0なので結果は同じ）
   // Phase 5-D：加護を予告連動ブロックへ変更（`RULES.divination` に guardRatio/guardMin が増えた）。
   // この操作列は R1 冒頭で加護を1回使うが、決着（R7敗北・score 345）は同じなので版だけ変わる
-  gameVersion: '1.da1ec40838d7ff9a',
+  // Phase 5-E（決定158）：指紋に DIVINATION_CHOICES を追加し、加護の効率例外（RULES.divination）を入れた。
+  // 2つを同じ変更にまとめて版の更新を1回にした。Daily は神階0で効率がかからないので決着は同じ
+  gameVersion: '1.5aac9529b1a59ad3',
   outcome: {
     enemyId: 'enemy_06',
     seedId: 'B6PW1T',
@@ -162,6 +166,33 @@ describe('gameVersion の形', () => {
     expect(stableStringify({ a: [1, { y: 1, x: 2 }] })).toBe(stableStringify({ a: [1, { x: 2, y: 1 }] }))
     // undefined のキーは「無い」と同じに扱う（JSON.stringifyと同じ挙動へ揃える）
     expect(stableStringify({ a: 1, b: undefined })).toBe(stableStringify({ a: 1 }))
+  })
+
+  it('Phase 5-E（決定158）：神託の3択（DIVINATION_CHOICES）も版に含まれる', () => {
+    const snapshot = rankingImpactSnapshot()
+    expect(snapshot).toContain('加護の託宣')
+    expect(snapshot).toContain('blockOfIntent')
+    expect(snapshot).toContain('導きの託宣')
+    expect(snapshot).toContain('天啓の託宣')
+  })
+
+  it('Phase 5-E（決定158）：DIVINATION_CHOICES の中身を変えると gameVersion が変わる', () => {
+    const before = getGameVersion()
+    const beforeFingerprint = dataFingerprint()
+    const target = DIVINATION_CHOICES[2] as { effects: Effect[] }
+    const original = target.effects
+    try {
+      // 天啓のダメージ4→5（RULES には現れない変更。Phase 4.6〜5-D ではこれで版が変わらなかった）
+      target.effects = [{ kind: 'damage', target: 'enemy', amount: 5 }]
+      resetGameVersionCache()
+      expect(dataFingerprint()).not.toBe(beforeFingerprint)
+      expect(getGameVersion()).not.toBe(before)
+    } finally {
+      target.effects = original
+      resetGameVersionCache()
+    }
+    // 元に戻せば版も元に戻る（決定論）
+    expect(getGameVersion()).toBe(before)
   })
 
   it('データが1つでも変われば fingerprint が変わる', () => {

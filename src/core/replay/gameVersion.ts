@@ -3,6 +3,7 @@ import { ALL_CARDS } from '../data/cards/index.js'
 import { ENEMIES } from '../data/enemies.js'
 import { GODS } from '../data/gods.js'
 import { OTOMOS } from '../data/otomo.js'
+import { DIVINATION_CHOICES } from '../data/divination.js'
 
 /**
  * Phase 4.6（決定139 §5-2）：ランキングの比較可能性を守るための「版」。
@@ -19,7 +20,7 @@ import { OTOMOS } from '../data/otomo.js'
  *      reducer・スコア計算・RNGの**挙動**の版。データには現れないので人が上げる。
  *      上げ忘れは `gameVersion.golden.test.ts`（固定リプレイの期待値）が検出する。
  *   2. `dataFingerprint()`（自動）
- *      ランキングに影響するデータ（調整値・カード・敵・神・OTOMO）の要約。
+ *      ランキングに影響するデータ（調整値・カード・敵・神・OTOMO・神託の3択）の要約。
  *      1つでも数値が変われば必ず変わるので、上げ忘れが起こり得ない。
  *
  * ★何を除くか
@@ -72,6 +73,9 @@ export function rankingImpactSnapshot(): string {
     enemies: ENEMIES,
     gods: GODS,
     otomos: OTOMOS,
+    // Phase 5-E（決定158）：神託の3択も対局結果を直接変える。Phase 4.6 の列挙から漏れていたため追加
+    // （導き・天啓の数値や効果の種類は `RULES` に無く、ここに入れないと変更しても版が変わらなかった）
+    divination: DIVINATION_CHOICES,
   })
 }
 

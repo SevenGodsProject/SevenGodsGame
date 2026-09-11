@@ -110,4 +110,14 @@ describe('specialMultiplierFor / stakeScoreScale / describe', () => {
     expect(stakeLabel(3)).toBe('神階Ⅲ 拝殿')
     expect(stakeLabel(0)).toBe('')
   })
+
+  it('Phase 5-E（決定158）：ブロック効率の説明に「加護を除く」が付く（Ⅳの説明と累積要約の両方）', () => {
+    const percent = Math.round(RULES.stakes.blockEfficiency * 100)
+    const label = `ブロック効率${percent}%（加護を除く）`
+    expect(STAKE_LEVELS.find((s) => s.level === 4)!.addedRuleJa).toBe(label)
+    expect(describeStakeRules(4)).toContain(label)
+    expect(describeStakeRules(7, 'race')).toContain(label)
+    // Ⅲ以下にはブロック効率の行そのものが無い
+    expect(describeStakeRules(3).some((l) => l.includes('ブロック効率'))).toBe(false)
+  })
 })

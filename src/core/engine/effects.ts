@@ -21,9 +21,26 @@ export function addScore(
   return { ...score, [field]: score[field] + amount, total: score.total + amount }
 }
 
-/** 決定126：神階のブロック効率をかけた実効量。ブロックを得る全経路がここを通る */
+/** 決定126：神階のブロック効率をかけた実効量。通常のブロックはすべてここを通る（加護だけは Phase 5-E で例外。intentGuardGained） */
 function effectiveBlock(state: GameState, amount: number): number {
   return Math.round(amount * resolveStakeRules(state.stake, state.stakeChoice).blockEfficiency)
+}
+
+/**
+ * Phase 5-E（決定158）：加護（`blockOfIntent`）が実際に得る量。
+ * `RULES.divination.guardIgnoresBlockEfficiency` が true なら神階のブロック効率を受けない。
+ * 通常のブロック（`kind: 'block'`）は従来どおり `effectiveBlock` を通る。
+ */
+function intentGuardGained(state: GameState, raw: number): number {
+  return RULES.divination.guardIgnoresBlockEfficiency ? raw : effectiveBlock(state, raw)
+}
+
+/** ブロックを得る（量は呼び出し側で確定済み）。イベントには実効値を載せ、UIの表示と一致させる */
+function gainBlock(state: GameState, gained: number): EffectResult {
+  return {
+    state: { ...state, player: { ...state.player, block: state.player.block + gained } },
+    events: [{ t: 'BLOCK_GAINED', target: 'self', amount: gained }],
+  }
 }
 
 /**
@@ -44,7 +61,7 @@ export function intentGuardRaw(state: GameState, ratio: number, min: number): nu
 export function previewIntentGuard(state: GameState, effects: Effect[]): number | null {
   const guard = effects.find((e): e is Extract<Effect, { kind: 'blockOfIntent' }> => e.kind === 'blockOfIntent')
   if (!guard) return null
-  return effectiveBlock(state, intentGuardRaw(state, guard.ratio, guard.min))
+  return intentGuardGained(state, intentGuardRaw(state, guard.ratio, guard.min))
 }
 
 /**
@@ -71,23 +88,12 @@ export function applyEffect(
     }
 
     case 'blockOfIntent':
-      // Phase 5-D：予告から量を決め、あとは通常のブロックと同じ経路（神階のブロック効率・イベント）に乗せる
-      return applyEffect(state, { kind: 'block', amount: intentGuardRaw(state, effect.ratio, effect.min) }, rng)
+      // Phase 5-D：予告から量を決める。Phase 5-E：神階のブロック効率は受けない（intentGuardGained）
+      return gainBlock(state, intentGuardGained(state, intentGuardRaw(state, effect.ratio, effect.min)))
 
-    case 'block': {
-      // 決定126：神階Ⅳ以降はブロック効率が下がる（イベントには実効値を載せ、UIの表示と一致させる）
-      const gained = effectiveBlock(state, effect.amount)
-      const events: GameEvent[] = [
-        { t: 'BLOCK_GAINED', target: 'self', amount: gained },
-      ]
-      return {
-        state: {
-          ...state,
-          player: { ...state.player, block: state.player.block + gained },
-        },
-        events,
-      }
-    }
+    case 'block':
+      // 決定126：神階Ⅳ以降はブロック効率が下がる
+      return gainBlock(state, effectiveBlock(state, effect.amount))
 
     case 'heal': {
       // 決定126：神階Ⅴ以降は回復効率が下がる（Math.round）

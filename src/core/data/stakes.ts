@@ -20,6 +20,13 @@ import { ENEMY_IDS } from './enemies.js'
  * ここは「段 → 累積ルール」の純粋な解決と表示用データだけを持つ。
  */
 export const STAKE_MAX = 7
+
+/**
+ * Phase 5-E（決定158）：「ブロック効率75%」の説明に添える注記。加護が例外のときだけ付ける。
+ * 神階の選択画面（Ⅳの説明）と累積ルールの要約の両方で使う。
+ */
+const blockEfficiencyLabel = (percent: number) =>
+  `ブロック効率${percent}%${RULES.divination.guardIgnoresBlockEfficiency ? '（加護を除く）' : ''}`
 export type StakeLevel = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7
 export type StakeChoiceId = 'race' | 'pressure' | 'tempo'
 
@@ -39,7 +46,7 @@ export const STAKE_LEVELS: StakeLevelDef[] = [
   { level: 1, numeral: 'Ⅰ', nameJa: '参道', addedRuleJa: `託宣${RULES.stakes.divinationCount}回まで・R${RULES.stakes.lateRoundFrom}以降 敵の攻撃+${Math.round((RULES.stakes.lateRoundAtkMul - 1) * 100)}%・敵の攻撃+${Math.round((RULES.stakes.enemyAtkStep - 1) * 100)}%`, flavorJa: '神域への道が開く。無料の託宣は、もう当てにできない。' },
   { level: 2, numeral: 'Ⅱ', nameJa: '鳥居', addedRuleJa: `初期手札−${RULES.stakes.initialHandMinus}`, flavorJa: '鳥居をくぐる。持ち込める札が一枚減る。' },
   { level: 3, numeral: 'Ⅲ', nameJa: '拝殿', addedRuleJa: `敵HP+${Math.round((RULES.stakes.enemyHpStep - 1) * 100)}%`, flavorJa: '拝殿の敵は、ひとまわり頑丈だ。' },
-  { level: 4, numeral: 'Ⅳ', nameJa: '本殿', addedRuleJa: `ブロック効率${Math.round(RULES.stakes.blockEfficiency * 100)}%`, flavorJa: '本殿の気配に、盾が軋む。' },
+  { level: 4, numeral: 'Ⅳ', nameJa: '本殿', addedRuleJa: blockEfficiencyLabel(Math.round(RULES.stakes.blockEfficiency * 100)), flavorJa: '本殿の気配に、盾が軋む。' },
   { level: 5, numeral: 'Ⅴ', nameJa: '奥宮', addedRuleJa: `回復効率${Math.round(RULES.stakes.healEfficiency * 100)}%`, flavorJa: '奥宮では、傷が癒えにくい。' },
   { level: 6, numeral: 'Ⅵ', nameJa: '禁足地', addedRuleJa: `敵の必殺・連撃+${Math.round((RULES.stakes.specialMul - 1) * 100)}%`, flavorJa: '踏み入れてはならぬ地。敵の大技が牙を剥く。' },
   { level: 7, numeral: 'Ⅶ', nameJa: '高天原', addedRuleJa: '最終試練を1つ選ぶ', flavorJa: '最終試練を越えた者だけが、高天原へ至る。' },
@@ -150,7 +157,7 @@ export function describeStakeRules(level: number | undefined, choice?: StakeChoi
   if (r.enemyAtkMul > 1) lines.push(`敵の攻撃+${Math.round((r.enemyAtkMul - 1) * 100)}%`)
   if (r.initialHandMinus > 0) lines.push(`初期手札−${r.initialHandMinus}`)
   if (r.enemyHpMul > 1) lines.push(`敵HP+${Math.round((r.enemyHpMul - 1) * 100)}%`)
-  if (r.blockEfficiency < 1) lines.push(`ブロック効率${Math.round(r.blockEfficiency * 100)}%`)
+  if (r.blockEfficiency < 1) lines.push(blockEfficiencyLabel(Math.round(r.blockEfficiency * 100)))
   if (r.healEfficiency < 1) lines.push(`回復効率${Math.round(r.healEfficiency * 100)}%`)
   if (r.specialMul > 1) lines.push(`敵の必殺・連撃+${Math.round((r.specialMul - 1) * 100)}%`)
   if (r.round1ApMinus > 0) lines.push(`ラウンド1の神力−${r.round1ApMinus}`)

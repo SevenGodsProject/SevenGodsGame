@@ -4,10 +4,8 @@ import { ENEMIES } from '../../src/core/data/enemies.js'
 import { getCardDef } from '../../src/core/data/cards/index.js'
 import { getRecommendedDeck } from '../../src/core/data/deckBuilder.js'
 import { RULES } from '../../src/core/data/rules.js'
-import { resolveStakeRules } from '../../src/core/data/stakes.js'
 import { applyAction } from '../../src/core/engine/reducer.js'
 import { previewBonusTrigger } from '../../src/core/engine/cardBonus.js'
-import { intentGuardRaw } from '../../src/core/engine/effects.js'
 import { enemyActionTotal } from '../../src/core/engine/intent.js'
 import type { StakeChoiceId } from '../../src/core/data/stakes.js'
 import type { CardDef, CardDefId, CardInstance, EnemyId, GameAction, GameState, GodId } from '../../src/core/types/index.js'
@@ -19,12 +17,13 @@ import type { CardDef, CardDefId, CardInstance, EnemyId, GameAction, GameState, 
  *   P5E_SEEDS=12          seed数（既定 6 ＝ Phase 5-D と同じ。BASE が 5-D の実測と一致することの確認に使う）
  *   P5E_STAKES="5,7"      神階を絞る
  *
- * ★候補の再現方法（`RULES` も `DIVINATION_CHOICES` も触らない）
+ * ★候補の再現方法
  *   A（神階の神託 4→5）… START_GAME 直後に `divination.remaining` を 5 に差し替える
  *      （本番では `RULES.stakes.divinationCount` の1値。`createInitialState` はこの値を1度だけ読む）
- *   B（加護だけⅣ以降のブロック効率の対象外）… 加護を使った直後に、効率で削られた分
- *      （raw − round(raw×0.75)）をブロックへ足し戻す。本番では `applyEffect` の `blockOfIntent` が
- *      `effectiveBlock` を通さない形に相当する。ブロックは rng を使わないので決定論は崩れない
+ *   B（加護だけⅣ以降のブロック効率の対象外）… Phase 5-E（決定158）で本番に入った。
+ *      `RULES.divination.guardIgnoresBlockEfficiency` を実行時に切り替えて再現する（BASE＝false＝Phase 5-D）
+ *      ※設計監査（commit f3141e9）の時点では、加護の直後に効率で削られた分を足し戻して再現していた。
+ *        得るブロックは raw で同じなので、数値は一致する
  *   C … A と B の両方
  *
  * ★2つのレンズ（Phase 5-D と同じ）
@@ -45,6 +44,7 @@ type Strategy = 'balanced' | 'aggressive' | 'defensive'
 type Policy = 'blind' | 'aware'
 type Config = { name: string; divCount: number | null; guardExempt: boolean }
 
+/** 既定は「Phase 5-D（BASE）と Phase 5-E（B＝本番）」。A・C は設計監査の参考として残す */
 const CONFIGS: Config[] = [
   { name: 'BASE', divCount: null, guardExempt: false },
   { name: 'A', divCount: 5, guardExempt: false },
@@ -133,17 +133,12 @@ function pickCard(state: GameState, strategy: Strategy, policy: Policy): CardIns
 
 // --- 候補の再現 ------------------------------------------------------------------------
 
-/** 本番の reducer を通したうえで、候補B の差分（効率で削られた加護ぶん）を足し戻す */
-function step(state: GameState, action: GameAction, cfg: Config): ReturnType<typeof applyAction> {
-  const r = applyAction(state, action)
-  if (cfg.guardExempt && action.type === 'USE_DIVINATION' && action.choiceIndex === 0 && r.state.status === 'playing') {
-    const raw = intentGuardRaw(state, RULES.divination.guardRatio, RULES.divination.guardMin)
-    const eff = Math.round(raw * resolveStakeRules(state.stake, state.stakeChoice).blockEfficiency)
-    if (raw !== eff) {
-      r.state = { ...r.state, player: { ...r.state.player, block: r.state.player.block + (raw - eff) } }
-    }
-  }
-  return r
+/** 加護の効率例外は `RULES` のフラグで切り替える（本番の reducer をそのまま通す） */
+const divinationRules = RULES.divination as { guardIgnoresBlockEfficiency: boolean }
+const PRODUCTION_GUARD_EXEMPT = divinationRules.guardIgnoresBlockEfficiency
+
+function step(state: GameState, action: GameAction, _cfg: Config): ReturnType<typeof applyAction> {
+  return applyAction(state, action)
 }
 
 function start(cfg: Config, seed: string, godId: GodId, deck: CardDefId[], enemyId: EnemyId, stake: number, choice?: StakeChoiceId): GameState {
@@ -496,10 +491,11 @@ function fmtLens(l: Lens): string {
 describe.skipIf(!RUN)('Phase 5-E 神階の受け構造の比較', () => {
   it('BASE / A / B / C を固定方策と予告を読む方策の両方で出す', { timeout: 60 * 60 * 1000 }, () => {
     const only = process.env.P5E_CONFIGS?.split(',').map((s) => s.trim())
-    const targets = only ? CONFIGS.filter((c) => only.includes(c.name)) : CONFIGS
+    const targets = CONFIGS.filter((c) => (only ? only.includes(c.name) : c.name === 'BASE' || c.name === 'B'))
     const stakes = process.env.P5E_STAKES ? process.env.P5E_STAKES.split(',').map(Number) : [1, 2, 3, 4, 5, 6, 7]
     const out: string[] = []
     for (const cfg of targets) {
+      divinationRules.guardIgnoresBlockEfficiency = cfg.guardExempt
       const lines: string[] = [`[${cfg.name}] 神託${cfg.divCount ?? RULES.stakes.divinationCount}回（神階） 加護の効率例外=${cfg.guardExempt} seeds=${SEEDS}`]
       const curve: string[] = []
       const curveAware: string[] = []
@@ -515,6 +511,7 @@ describe.skipIf(!RUN)('Phase 5-E 神階の受け構造の比較', () => {
       out.push(lines.join('\n'))
       console.log('\n' + lines.join('\n'))
     }
+    divinationRules.guardIgnoresBlockEfficiency = PRODUCTION_GUARD_EXEMPT
     expect(out.length).toBe(targets.length)
   })
 })

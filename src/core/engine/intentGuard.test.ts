@@ -3,6 +3,8 @@ import { RULES } from '../data/rules'
 import { DIVINATION_CHOICES } from '../data/divination'
 import type { Effect, EnemyActionDef, GameState } from '../types'
 import { applyAction } from './reducer'
+import { applyEffect } from './effects'
+import { createRng } from '../rng/seededRandom'
 import { applyDivination } from './applyDivination'
 import { intentGuardRaw, previewIntentGuard } from './effects'
 import { enemyActionTotal } from './intent'
@@ -15,7 +17,8 @@ import { startTestGame } from './testUtils'
  *   1. 量＝max(最低保証, floor(予告合計 × 割合))。割合・最低保証は RULES から来る
  *   2. 「予告」は UI の予告表示と同じ値（`enemyActionTotal`）。連撃は合計、溜めは0
  *   3. 溜め（予告0）では最低保証だけ。ブロックはラウンドをまたいで残らない
- *   4. 神階Ⅳ以降は通常のブロックと同じくブロック効率がかかる（例外を作らない）
+ *   4. Phase 5-E（決定158）：加護だけ神階Ⅳ以降のブロック効率を受けない（本文の「予告の50%」＝実効）。
+ *      通常のブロックには従来どおり効率がかかる。神階Ⅲ以下は 5-D と完全に同じ
  *   5. ボタンに出す「今ならブロックいくつ」（preview）と、実際に得る量が常に一致する
  *   6. 旧加護のHP回復は無い（役割を「予告への防御」に絞った）
  */
@@ -118,16 +121,82 @@ describe('溜めラウンドに貯め込めない', () => {
   })
 })
 
-describe('神階のブロック効率', () => {
-  it('神階Ⅳ以降は通常のブロックと同じく効率がかかる', () => {
-    const base = startTestGame()
-    const stake4: GameState = { ...withIntent(base, { kind: 'attack', amount: 20 }), stake: 4 }
-    const raw = Math.floor(20 * RULES.divination.guardRatio)
-    const { state: after } = useGuard(stake4)
-    expect(after.player.block).toBe(Math.round(raw * RULES.stakes.blockEfficiency))
-    // 神階Ⅲ以下は効率がかからない
-    const stake3: GameState = { ...withIntent(base, { kind: 'attack', amount: 20 }), stake: 3 }
-    expect(useGuard(stake3).state.player.block).toBe(raw)
+describe('神階のブロック効率（Phase 5-E・決定158）', () => {
+  /** Phase 5-D の加護（効率がかかる）で得ていたはずの量。比較の基準 */
+  const phase5dGuard = (state: GameState) => {
+    const raw = intentGuardRaw(state, RULES.divination.guardRatio, RULES.divination.guardMin)
+    const eff = state.stake && state.stake >= 4 ? RULES.stakes.blockEfficiency : 1
+    return Math.round(raw * eff)
+  }
+  const intents: EnemyActionDef[] = [
+    { kind: 'attack', amount: 3 },
+    { kind: 'attack', amount: 15 },
+    { kind: 'attack', amount: 20 },
+    { kind: 'multiAttack', hits: [5, 5, 5] },
+    { kind: 'special', amount: 29, name: '主砲' },
+    { kind: 'charge', label: '溜め' },
+  ]
+
+  it('加護だけが例外であることは RULES のデータで表す', () => {
+    expect(RULES.divination.guardIgnoresBlockEfficiency).toBe(true)
+    // 神階全体のブロック効率は変えていない
+    expect(RULES.stakes.blockEfficiency).toBe(0.75)
+  })
+
+  it('神階Ⅲ以下：加護の量は Phase 5-D と完全に一致する', () => {
+    for (const stake of [0, 1, 2, 3]) {
+      for (const intent of intents) {
+        const state: GameState = { ...withIntent(startTestGame(), intent), stake }
+        expect(useGuard(state).state.player.block).toBe(phase5dGuard(state))
+      }
+    }
+  })
+
+  it('神階Ⅳ以上：通常のブロックは0.75、加護だけは効率を受けない', () => {
+    for (const stake of [4, 5, 6, 7]) {
+      const state: GameState = { ...withIntent(startTestGame(), { kind: 'attack', amount: 20 }), stake }
+      // 加護：予告20 × 0.5 ＝ 10（効率なし）
+      expect(useGuard(state).state.player.block).toBe(Math.floor(20 * RULES.divination.guardRatio))
+      // 通常のブロック10：0.75 がかかって 8（Math.round(7.5)）
+      const card = applyEffect(state, { kind: 'block', amount: 10 }, createRng(state.seed, state.rngCursor))
+      expect(card.state.player.block).toBe(Math.round(10 * RULES.stakes.blockEfficiency))
+    }
+  })
+
+  it('予告200（内部20）：神階Ⅳ以上でも加護は100（75にならない）', () => {
+    for (const stake of [4, 5, 6, 7]) {
+      const state: GameState = { ...withIntent(startTestGame(), { kind: 'attack', amount: 20 }), stake }
+      const { state: after, events } = useGuard(state)
+      expect(after.player.block).toBe(10)
+      expect(events).toContainEqual({ t: 'BLOCK_GAINED', target: 'self', amount: 10 })
+    }
+  })
+
+  it('予告0（溜め）：神階Ⅳ以上でも最低保証20（効率で15にならない）', () => {
+    for (const stake of [4, 7]) {
+      const state: GameState = { ...withIntent(startTestGame(), { kind: 'charge', label: '溜め' }), stake }
+      expect(useGuard(state).state.player.block).toBe(RULES.divination.guardMin)
+    }
+  })
+
+  it('連撃：UIの予告合計（enemyActionTotal）の50%がそのまま加護になる', () => {
+    const intent: EnemyActionDef = { kind: 'multiAttack', hits: [9, 6, 5], name: '双牙乱撃' }
+    for (const stake of [0, 4, 7]) {
+      const state: GameState = { ...withIntent(startTestGame(), intent), stake }
+      expect(useGuard(state).state.player.block).toBe(Math.floor(enemyActionTotal(intent) * RULES.divination.guardRatio))
+    }
+  })
+
+  it('フラグを false にすると Phase 5-D の挙動（効率がかかる）に戻る', () => {
+    const divination = RULES.divination as { guardIgnoresBlockEfficiency: boolean }
+    divination.guardIgnoresBlockEfficiency = false
+    try {
+      const state: GameState = { ...withIntent(startTestGame(), { kind: 'attack', amount: 20 }), stake: 4 }
+      expect(useGuard(state).state.player.block).toBe(phase5dGuard(state))
+      expect(previewIntentGuard(state, guardEffects)).toBe(phase5dGuard(state))
+    } finally {
+      divination.guardIgnoresBlockEfficiency = true
+    }
   })
 })
 
