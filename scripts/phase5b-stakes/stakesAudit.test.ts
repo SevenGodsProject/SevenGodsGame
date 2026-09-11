@@ -124,6 +124,9 @@ type Game = {
   divergences: number
   plays: number
   attacks: number
+  blockGained: number
+  healGained: number
+  finalHp: number
 }
 
 function playOne(
@@ -147,7 +150,7 @@ function playOne(
     stake,
     ...(choice ? { stakeChoice: choice } : {}),
   })
-  const g: Game = { win: false, round: 0, score: 0, damageTaken: 0, bonus: 0, burst: 0, divergences: 0, plays: 0, attacks: 0 }
+  const g: Game = { win: false, round: 0, score: 0, damageTaken: 0, bonus: 0, burst: 0, divergences: 0, plays: 0, attacks: 0, blockGained: 0, healGained: 0, finalHp: 0 }
   let guard = 0
   while (state.status === 'playing' && guard < 500) {
     guard++
@@ -162,6 +165,8 @@ function playOne(
       for (const e of r.events) {
         if (e.t === 'BONUS_TRIGGERED') g.bonus++
         if (e.t === 'RESONANCE_BURST') g.burst++
+        if (e.t === 'BLOCK_GAINED') g.blockGained += e.amount
+        if (e.t === 'HEALED') g.healGained += e.amount
       }
       state = r.state
       continue
@@ -177,6 +182,7 @@ function playOne(
     g.damageTaken += Math.max(0, hpBefore - state.player.hp)
   }
   g.win = state.status === 'won'
+  g.finalHp = state.player.hp
   g.round = state.round
   g.score = state.score.total
   return g
@@ -343,6 +349,48 @@ function measureStake(stake: number, policy: Policy): StakeSummary {
 
 const f0 = (n: number) => n.toFixed(0)
 const f2 = (n: number) => n.toFixed(2)
+
+/**
+ * 総合再監査（決定156）用：神階Ⅶで「なぜ神ごとに差が出るか」を分解する。
+ * balanced 戦略・3択の最良・7敵×6seeds。被ダメ／ブロック／回復／終了HP／BURST／敗北時ラウンドを神別に出す。
+ *   P5B_GODS=1 npx vitest run scripts/phase5b-stakes/stakesAudit.test.ts --reporter=verbose
+ */
+describe.skipIf(process.env.P5B_GODS !== '1')('神階Ⅶ 神別診断（なぜ差が出るか）', () => {
+  it('神ごとの被ダメ・ブロック・回復・BURST・ラウンド', () => {
+    apply({})
+    const lines: string[] = []
+    for (const god of GODS) {
+      const deck = getRecommendedDeck(god.id)
+      let best: { label: string; win: number; games: Game[] } | null = null
+      for (const choice of CHOICES) {
+        const games: Game[] = []
+        for (const enemy of ENEMIES) {
+          for (let i = 0; i < SEEDS; i++) {
+            games.push(playOne(`diag-7-${god.id}-${enemy.id}-balanced-${choice ?? 'p'}-${i}`, 'balanced', 'blind', god.id, deck, enemy.id, 7, choice))
+          }
+        }
+        const win = games.filter((g) => g.win).length / games.length
+        if (!best || win > best.win) best = { label: choice ?? 'pressure', win, games }
+      }
+      const gs = best!.games
+      const avg = (f: (g: Game) => number) => gs.reduce((a, g) => a + f(g), 0) / gs.length
+      const lost = gs.filter((g) => !g.win)
+      const deckTypes = deck.reduce(
+        (m, id) => {
+          const t = getCardDef(id).type
+          m[t] = (m[t] ?? 0) + 1
+          return m
+        },
+        {} as Record<string, number>,
+      )
+      lines.push(
+        `  ${god.nameJa}(${best!.label}): 勝率${f0(best!.win * 100)}% | 被ダメ${f0(avg((g) => g.damageTaken))} ブロック${f0(avg((g) => g.blockGained))} 回復${f0(avg((g) => g.healGained))} 終了HP${f0(avg((g) => g.finalHp))} | R${f2(avg((g) => g.round))} BURST${f2(avg((g) => g.burst))} bonus${f2(avg((g) => g.bonus))} | 敗北時R${f2(lost.reduce((a, g) => a + g.round, 0) / Math.max(1, lost.length))} | deck ${JSON.stringify(deckTypes)}`,
+      )
+    }
+    console.log('\n=== 神階Ⅶ 神別診断 ===\n' + lines.join('\n'))
+    expect(true).toBe(true)
+  })
+})
 
 describe.skipIf(!RUN)('Phase 5-B 神階ラダー感度分析', () => {
   it('候補ごとに神階Ⅰ〜Ⅶの勝率カーブと Phase 5-A 指標を出す', () => {
