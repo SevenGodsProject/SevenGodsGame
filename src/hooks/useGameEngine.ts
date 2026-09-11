@@ -34,7 +34,7 @@ import { clearTicket, loadTicketFor } from './rankingTicketStorage'
  * （カード1枚の演出より明確に長い「間」という決定61の意図は2.5倍でも維持されるため、
  * ENEMY_TURN_REVEAL_MS自体はここでは変更しない）。
  */
-const ENEMY_TURN_REVEAL_MS = 700
+export const ENEMY_TURN_REVEAL_MS = 700
 
 /**
  * 開発用の敵指定バックドア（決定40）。`?enemy=oni`のようにURLで指定すると、
@@ -70,7 +70,7 @@ function resolveForcedStake(): number | null {
  * 最大値（support=250ms地点）を上回る最小のキリのいい値とし、6タイプ全てが最大不透明度に
  * 到達してから結果が着弾するようにした。
  */
-const CARD_PLAY_REVEAL_MS = 280
+export const CARD_PLAY_REVEAL_MS = 280
 
 export type UseGameEngine = {
   state: GameState | null

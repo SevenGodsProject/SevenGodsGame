@@ -4082,3 +4082,359 @@
   text-align: center;
   overflow-wrap: anywhere;
 }
+
+/* ============================================================
+   Phase 6-A Combat Juice（決定162）：anticipation → impact → recovery。
+   表示専用（engine・ダメージ・HP更新タイミング・スコアは不変）。時刻は combatTimeline.ts の
+   着弾計画から inline CSS 変数（--impact-delay／--stop）で受け取り、animationend には依存しない。
+   既存定義は消さず末尾へ後置（ロールバック容易方式）。
+   ============================================================ */
+
+/* --- 向き：相手のいる方向（PC＝敵は左・神は右、900px 未満＝敵は上・神は下）。
+   突進は相手へ向かい、ノックバックは相手から離れる方向へ --- */
+.enemy-panel { --atk-x: 1; --atk-y: 0; }
+.player-panel { --atk-x: -1; --atk-y: 0; }
+@media (max-width: 899px) {
+  .enemy-panel { --atk-x: 0.3; --atk-y: 1; }
+  .player-panel { --atk-x: -0.3; --atk-y: -1; }
+}
+
+/* 敵の突進（旧：相手と逆の方向へ動いていた）を相手の方向へ。距離・時間・tier は従来値 */
+@keyframes enemy-lunge {
+  0% { transform: translate(0, 0) scale(1); }
+  35% { transform: translate(calc(var(--atk-x, -1) * 16px), calc(var(--atk-y, 0) * 16px)) scale(1.06); }
+  65% { transform: translate(calc(var(--atk-x, -1) * -5px), calc(var(--atk-y, 0) * -5px)) scale(0.99); }
+  100% { transform: translate(0, 0) scale(1); }
+}
+@keyframes enemy-lunge-strong {
+  0% { transform: translate(0, 0) scale(1); }
+  35% { transform: translate(calc(var(--atk-x, -1) * 18px), calc(var(--atk-y, 0) * 18px)) scale(1.07); }
+  65% { transform: translate(calc(var(--atk-x, -1) * -5px), calc(var(--atk-y, 0) * -5px)) scale(0.99); }
+  100% { transform: translate(0, 0) scale(1); }
+}
+@keyframes enemy-lunge-huge {
+  0% { transform: translate(0, 0) scale(1); filter: brightness(1); }
+  35% { transform: translate(calc(var(--atk-x, -1) * 21px), calc(var(--atk-y, 0) * 21px)) scale(1.09); filter: brightness(1.12); }
+  65% { transform: translate(calc(var(--atk-x, -1) * -5px), calc(var(--atk-y, 0) * -5px)) scale(0.99); filter: brightness(1); }
+  100% { transform: translate(0, 0) scale(1); filter: brightness(1); }
+}
+
+/* --- 神：構え（cast 中）→ 突き（commit、26%＝CARD_IMPACT_MS 90ms で最前）--- */
+.player-windup {
+  transition: transform 90ms ease-out;
+}
+.player-windup.is-winding {
+  transform: translate(calc(var(--atk-x, -1) * -7px), calc(var(--atk-y, 0) * -7px)) scale(0.97);
+  transition: transform 220ms cubic-bezier(0.3, 0.7, 0.4, 1);
+}
+@keyframes god-strike {
+  0% { transform: translate(calc(var(--atk-x, -1) * -6px), calc(var(--atk-y, 0) * -6px)) scale(0.97); }
+  26% { transform: translate(calc(var(--atk-x, -1) * 18px), calc(var(--atk-y, 0) * 18px)) scale(1.07); }
+  60% { transform: translate(calc(var(--atk-x, -1) * -3px), calc(var(--atk-y, 0) * -3px)) scale(0.99); }
+  100% { transform: translate(0, 0) scale(1); }
+}
+.god-strike img {
+  animation:
+    enemy-idle 3.4s ease-in-out infinite,
+    god-strike 0.34s cubic-bezier(0.2, 0.8, 0.3, 1);
+}
+/* 神の一撃：溜め（0〜30%）→ 突き（50%＝BURST_STRIKE_PEAK_MS 300ms）。
+   開始 1.3s＝enemyVfxTiming.ts の BURST_GOD_ATTACK_MS と一致 */
+@keyframes god-burst-strike {
+  0% { transform: translate(0, 0) scale(1); }
+  30% { transform: translate(calc(var(--atk-x, -1) * -10px), calc(var(--atk-y, 0) * -10px)) scale(0.95); }
+  50% { transform: translate(calc(var(--atk-x, -1) * 24px), calc(var(--atk-y, 0) * 24px)) scale(1.1); }
+  75% { transform: translate(calc(var(--atk-x, -1) * -4px), calc(var(--atk-y, 0) * -4px)) scale(0.99); }
+  100% { transform: translate(0, 0) scale(1); }
+}
+.god-burst-strike img {
+  animation:
+    enemy-idle 3.4s ease-in-out infinite,
+    god-burst-strike 0.6s cubic-bezier(0.3, 0.7, 0.3, 1);
+  animation-delay: 0s, 1.3s;
+  animation-fill-mode: none, backwards;
+}
+
+/* --- 敵リアクション：着弾の瞬間に対象だけ hit stop（ノックバック姿勢で静止）→ 段階別の揺れ＋閃光 --- */
+.enemy-stage {
+  position: relative;
+}
+.enemy-collapse,
+.enemy-reaction,
+.enemy-reaction-idle {
+  position: relative;
+}
+@keyframes juice-stop {
+  from,
+  to {
+    transform: translate(calc(var(--atk-x, 1) * -1 * var(--kb, 6px)), calc(var(--atk-y, 0) * -1 * var(--kb, 6px))) scale(0.97);
+    filter: brightness(2.2) saturate(1.3);
+  }
+}
+@keyframes juice-bonus-flash {
+  0% { filter: brightness(1); }
+  25% { filter: brightness(1.8) sepia(0.6) saturate(2.4); }
+  100% { filter: brightness(1); }
+}
+.enemy-reaction {
+  --kb: 5px;
+  animation-name: juice-stop, hit-shake, impact-flash;
+  animation-duration: var(--stop, 0ms), 0.4s, 0.35s;
+  animation-delay: var(--impact-delay, 0ms), calc(var(--impact-delay, 0ms) + var(--stop, 0ms)), calc(var(--impact-delay, 0ms) + var(--stop, 0ms));
+  animation-timing-function: linear, ease-in-out, ease-out;
+  animation-fill-mode: none;
+}
+.enemy-reaction.react-l1 {
+  --kb: 2px;
+  animation-name: juice-stop, hit-shake-l1, impact-flash;
+  animation-duration: var(--stop, 0ms), 0.28s, 0.25s;
+}
+.enemy-reaction.react-l3 {
+  --kb: 8px;
+  animation-name: juice-stop, hit-shake-l3, impact-flash-strong;
+  animation-duration: var(--stop, 0ms), 0.5s, 0.4s;
+}
+.enemy-reaction.react-l4 {
+  --kb: 11px;
+  animation-name: juice-stop, hit-shake-l4, impact-flash-huge;
+  animation-duration: var(--stop, 0ms), 0.7s, 0.55s;
+}
+.enemy-reaction.react-final {
+  --kb: 14px;
+}
+.enemy-reaction.react-minor {
+  --kb: 3px;
+  animation-name: juice-stop, hit-shake-l1, juice-bonus-flash;
+  animation-duration: var(--stop, 0ms), 0.26s, 0.32s;
+}
+
+/* 斬撃・数字は立ち絵の上（胸の位置）に重ねる。HP の数値とは重ならない */
+.enemy-hit-layer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  /* 立ち絵より上に重ねる（立ち絵は filter でスタッキング文脈を作る） */
+  z-index: 9;
+}
+.enemy-hit-layer .slash-fx {
+  inset: 22% 10%;
+}
+.enemy-hit-layer .floating-number {
+  top: 34%;
+}
+.slash-fx.juice-delayed::before {
+  animation-delay: var(--impact-delay, 0ms);
+  animation-fill-mode: both;
+}
+.slash-fx.slash-minor {
+  transform: scale(0.7) rotate(38deg);
+  opacity: 0.85;
+}
+.slash-fx.slash-minor::before {
+  background: linear-gradient(90deg, transparent, #fff3c4, #ffd166, transparent);
+  box-shadow: 0 0 12px 3px #ffd166cc;
+}
+/* 自分側：敵の通常攻撃は突進の最前で着弾（--impact-delay）。連撃・必殺は既存の CSS タイムライン */
+.juice-delayed {
+  animation-delay: var(--impact-delay, 0ms) !important;
+  animation-fill-mode: backwards !important;
+}
+.player-panel .floating-number {
+  top: -34px;
+}
+
+/* --- ダメージ数字：100 と 300 で明確に違う大きさ・跳ね方。最大クラス＝神の一撃・最後の一撃 --- */
+.floating-number-l1 { font-size: 16px; opacity: 0.9; }
+.floating-number-l2 { font-size: 22px; }
+.floating-number-l3 {
+  font-size: 30px;
+  font-weight: 800;
+  text-shadow: 0 0 12px #ff9a4aaa, 0 2px 4px #000000cc;
+  animation-name: float-up-l3;
+  animation-duration: 1s;
+}
+.floating-number-l4 {
+  font-size: 40px;
+}
+@keyframes float-up-l3 {
+  0% { opacity: 0; transform: translate(-50%, 0) scale(0.7); }
+  14% { opacity: 1; transform: translate(-50%, -4px) scale(1.22); }
+  32% { transform: translate(-50%, -10px) scale(1); }
+  100% { opacity: 0; transform: translate(-50%, -40px) scale(1); }
+}
+.floating-number-max {
+  font-size: 52px;
+  font-weight: 900;
+  color: #ffe08a;
+  letter-spacing: 0.02em;
+  text-shadow: 0 0 18px #ffd166ee, 0 0 42px #ff6b3aaa, 0 3px 6px #000000ee;
+  animation-name: float-up-max;
+  animation-duration: 1.3s;
+  z-index: 5;
+}
+@keyframes float-up-max {
+  0% { opacity: 0; transform: translate(-50%, 0) scale(0.5); }
+  10% { opacity: 1; transform: translate(-50%, -6px) scale(1.55); }
+  16% { transform: translate(calc(-50% - 3px), -8px) scale(1.4); }
+  22% { transform: translate(calc(-50% + 3px), -10px) scale(1.3); }
+  34% { transform: translate(-50%, -14px) scale(1.15); }
+  80% { opacity: 1; }
+  100% { opacity: 0; transform: translate(-50%, -52px) scale(1.1); }
+}
+.floating-number-bonus {
+  font-size: 20px;
+  color: #ffd166;
+  text-shadow: 0 0 10px #ffd166aa, 0 2px 4px #000000dd;
+}
+
+/* --- HP：主バーの後ろに直前HPのゴースト（遅れて縮む）。回復時はゴーストが主バーの下に隠れる --- */
+.hp-bar {
+  isolation: isolate;
+}
+.hp-bar-ghost {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  z-index: 0;
+  background: linear-gradient(90deg, #fff4d6, #ffd9a1);
+  opacity: 0.85;
+  transition-property: width;
+  transition-timing-function: ease-in;
+}
+.hp-bar-fill {
+  position: relative;
+  z-index: 1;
+  transition-property: width;
+  transition-timing-function: cubic-bezier(0.2, 0.8, 0.3, 1);
+}
+.hp-bar-label {
+  z-index: 2;
+}
+/* 追い詰めた：50%／25% 以下で静かに色が変わる（常時点滅はしない） */
+.hp-bar.hp-bar-quarter {
+  box-shadow:
+    0 0 0 1px #ff5c5c99,
+    0 0 12px #ff5c5c55;
+}
+.enemy-wound {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 260px;
+  height: 260px;
+  margin: -130px 0 0 -130px;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 0;
+  background: radial-gradient(circle, #ff3b3b30 0%, transparent 62%);
+}
+.enemy-wound-quarter {
+  background: radial-gradient(circle, #ff3b3b55 0%, #ff3b3b1c 45%, transparent 70%);
+}
+
+/* --- 撃破：最後の一撃 → フラッシュ → 脱色 → 沈み込んで消える（--collapse＝DEFEAT_COLLAPSE_MS）--- */
+@keyframes enemy-defeat {
+  0% { opacity: 1; transform: translate(0, 0) scale(1); filter: brightness(1); }
+  14% { opacity: 1; transform: translate(calc(var(--atk-x, 1) * -6px), calc(var(--atk-y, 0) * -6px)) scale(1.02); filter: brightness(2.8) saturate(0); }
+  45% { opacity: 0.9; filter: brightness(1.2) saturate(0.1); }
+  100% { opacity: 0; transform: translate(calc(var(--atk-x, 1) * -12px), 16px) scale(0.9); filter: brightness(0.6) saturate(0) blur(2px); }
+}
+.enemy-collapse.enemy-defeat {
+  animation: enemy-defeat var(--collapse, 520ms) cubic-bezier(0.4, 0, 0.7, 0.4) forwards;
+}
+.impact-ring.enemy-defeat-ring {
+  width: 180px;
+  height: 180px;
+  margin: -90px 0 0 -90px;
+  border-color: #fff;
+  box-shadow:
+    0 0 40px 8px #ffd166cc,
+    inset 0 0 30px #ffd16688;
+  animation-duration: 0.5s;
+  z-index: 4;
+}
+
+/* 「撃破」表示：崩壊の終盤に重ねる（--beat-ms＝VICTORY_BEAT_MS） */
+.victory-beat,
+.victory-beat span {
+  animation-duration: var(--beat-ms, 1s);
+}
+
+/* 結果トースト：着弾まで待つ（inline の animation-delay 中は不可視） */
+.result-toast {
+  animation-fill-mode: both;
+}
+
+/* 勝利カード：「自己ベストまであと〜」は勝利・スコアの後に出す */
+.game-over-card-won .game-over-best-gap {
+  animation: result-rise 0.5s ease-out both;
+  animation-delay: 1.4s;
+}
+
+/* --- prefers-reduced-motion：揺れ・ノックバック・突き・崩壊の動きを止める（情報は失わない：
+   数字・HP変化・撃破状態・閃光は残す。hit stop は計画側で 0）--- */
+@media (prefers-reduced-motion: reduce) {
+  .enemy-reaction,
+  .enemy-reaction.react-l1,
+  .enemy-reaction.react-l3,
+  .enemy-reaction.react-l4,
+  .enemy-reaction.react-minor {
+    --kb: 0px;
+    animation-name: none, none, impact-flash;
+  }
+  .god-strike img,
+  .god-burst-strike img {
+    animation: none;
+  }
+  .player-windup.is-winding {
+    transform: none;
+  }
+  .enemy-collapse.enemy-defeat {
+    animation-name: enemy-defeat-reduced;
+    animation-timing-function: linear;
+  }
+  .hp-bar-ghost {
+    transition-duration: 150ms !important;
+    transition-delay: 0ms !important;
+  }
+  .floating-number-l3,
+  .floating-number-max {
+    animation-name: float-up;
+  }
+  .impact-ring.enemy-defeat-ring {
+    animation: none;
+    opacity: 0;
+  }
+  .victory-beat span {
+    animation: none;
+    opacity: 1;
+  }
+}
+@keyframes enemy-defeat-reduced {
+  0% { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+/* 数字は立ち絵（赤紫の密度が高い絵）の上に出るため、黒の縁取りで必ず読めるようにする */
+.floating-number {
+  text-shadow:
+    2px 2px 0 #000000cc,
+    -2px 2px 0 #000000cc,
+    2px -2px 0 #000000cc,
+    -2px -2px 0 #000000cc,
+    0 2px 6px #000000ee,
+    0 0 16px currentColor;
+}
+.floating-number-damage {
+  color: #ff9393;
+}
+.floating-number-max {
+  text-shadow:
+    2px 2px 0 #000000dd,
+    -2px 2px 0 #000000dd,
+    2px -2px 0 #000000dd,
+    -2px -2px 0 #000000dd,
+    0 0 20px #ffd166ee,
+    0 0 46px #ff6b3aaa;
+}

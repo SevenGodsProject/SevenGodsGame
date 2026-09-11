@@ -1,4 +1,9 @@
+import { useEffect, useRef } from 'react'
 import { getGodDef } from '../../core/data/gods'
+import { RESONANCE_CUTIN_MS } from './enemyVfxTiming'
+
+/** Phase 6-A（決定162）：animationend を取りこぼしても操作不能にしないための安全弁 */
+export const CUTIN_FALLBACK_MS = 400
 import type { GodId } from '../../core/types'
 
 type BattleResonanceCutinProps = {
@@ -28,11 +33,28 @@ type BattleResonanceCutinProps = {
  */
 export function BattleResonanceCutin({ godId, onComplete }: BattleResonanceCutinProps) {
   const god = getGodDef(godId)
+  // 完了通知は1回だけ。animationend が来なくても（背景タブ・描画落ち）時刻で必ず完了する
+  const doneRef = useRef(false)
+  const onCompleteRef = useRef(onComplete)
+  onCompleteRef.current = onComplete
+  const finish = () => {
+    if (doneRef.current) return
+    doneRef.current = true
+    onCompleteRef.current()
+  }
+  useEffect(() => {
+    const t = window.setTimeout(() => {
+      if (doneRef.current) return
+      doneRef.current = true
+      onCompleteRef.current()
+    }, RESONANCE_CUTIN_MS + CUTIN_FALLBACK_MS)
+    return () => window.clearTimeout(t)
+  }, [])
 
   const handleAnimationEnd = (event: React.AnimationEvent<HTMLDivElement>) => {
     if (event.target !== event.currentTarget) return
     if (event.animationName !== 'resonance-cutin-timer') return
-    onComplete()
+    finish()
   }
 
   return (

@@ -194,8 +194,6 @@ export function GameOverOverlay({
             予告を見て、その一撃の前に守るか、先に倒し切ろう。
           </div>
         )}
-        {/* 決定128：「自己ベスト更新」は勝利時のみ祝う（敗北で初記録が付いても祝わない） */}
-        {newBest && status === 'won' && <div className="game-over-new-best">✨ 自己ベスト更新！</div>}
         {daily && (
           <div className="game-over-daily">
             {daily.isNewBest ? (
@@ -241,7 +239,6 @@ export function GameOverOverlay({
             </div>
           </div>
         )}
-        {bestGap !== null && <div className="game-over-best-gap">自己ベストまであと{formatScaled(bestGap)}点</div>}
         {otomoLevelUp && (
           <div className="game-over-otomo-levelup">
             💠 絆Lv UP！ {otomoLevelUp.otomoName} Lv.{otomoLevelUp.prevLevel} → Lv.{otomoLevelUp.nextLevel}
@@ -263,6 +260,10 @@ export function GameOverOverlay({
           </div>
         )}
         <div className={`score-total game-over-score${status === 'won' && shownScore < finalScore ? ' game-over-score-rolling' : ''}`}>スコア {formatScaled(shownScore)}</div>
+        {/* Phase 6-A（決定162）：勝利そのもの→スコアの後に、自己ベスト関連を出す（不足を先に告げない） */}
+        {/* 決定128：「自己ベスト更新」は勝利時のみ祝う（敗北で初記録が付いても祝わない） */}
+        {newBest && status === 'won' && <div className="game-over-new-best">✨ 自己ベスト更新！</div>}
+        {bestGap !== null && <div className="game-over-best-gap">自己ベストまであと{formatScaled(bestGap)}点</div>}
         <dl className="score-breakdown">
           <dt>
             実効ダメージ

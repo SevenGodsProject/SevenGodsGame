@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState, type CSSProperties } from 'react'
 import { RULES } from '../../core/data/rules'
 import { getFinalScore, getMastery } from '../../core/engine'
 import { previewBonusTrigger } from '../../core/engine/cardBonus'
@@ -15,7 +15,10 @@ import type { UseGameEngine } from '../../hooks/useGameEngine'
 import { addRewardBonus } from '../../hooks/rewardStorage'
 import { detectOtomoLevelUp } from '../setup/otomoGrowthDisplay'
 import { useBattleFx } from './useBattleFx'
-import { useMobileAutoFocus } from './useMobileAutoFocus'
+import { dealsEnemyDamage, useMobileAutoFocus } from './useMobileAutoFocus'
+import { useCombatPresentation } from './useCombatPresentation'
+import { BURST_BANNER_MS, BURST_READY_LEAD_MS, VICTORY_BEAT_MS, VICTORY_BEAT_REDUCED_MS } from './enemyVfxTiming'
+import { CUTIN_FALLBACK_MS } from './BattleResonanceCutin'
 import { BossEntrance } from './BossEntrance'
 import { deriveDefeatCause } from './defeatCause'
 import { preloadSe, sfx } from './sound'
@@ -85,8 +88,13 @@ export function BattleScreen({
   } = engine
   // STEP2-B：BattleMiniResultのAP獲得検出用（gainAp効果はGameEventを出さないため、
   // useBattleFx側でap.currentの差分から検出する。stateがまだ無い初回描画では0扱い）
-  const fx = useBattleFx(log, state?.ap.current ?? 0)
-  const { enemyNumbers, playerNumbers } = useFloatingNumbers(log, state?.godId)
+  // Phase 6-A（決定162）：着弾計画は敵の動き方（visualType）に依存する（突進の最前＝着弾）
+  const enemyVisualType = state ? getEnemyDef(state.enemy.defId).visualType : undefined
+  const fx = useBattleFx(log, state?.ap.current ?? 0, enemyVisualType)
+  const { enemyNumbers, playerNumbers } = useFloatingNumbers(log, state?.godId, enemyVisualType)
+  // Phase 6-A：表示HP・撃破／結果の順序・大きな一撃の揺れ（表示専用。engine の状態・タイミングは不変）
+  const arenaRef = useRef<HTMLDivElement>(null)
+  const presentation = useCombatPresentation(log, state, arenaRef)
 
   // CEO指示：共鳴バースト（.burst-banner）とOTOMO進化（.evolve-banner）が
   // 同時に重なって表示される不具合の修正。setTimeoutでCSSのanimation-durationと
@@ -100,12 +108,17 @@ export function BattleScreen({
   // このハンドラが呼ばれても何もせず、共鳴バーストのバナーのみが表示される。
   const [evolveBannerKey, setEvolveBannerKey] = useState(0)
   const shownEvolveKeyRef = useRef(0)
-  const handleBurstAnimationEnd = () => {
-    if (fx.evolveKey > shownEvolveKeyRef.current) {
-      shownEvolveKeyRef.current = fx.evolveKey
+  // Phase 6-A：タイマー（安全弁）からも呼ぶため、最新の evolveKey は ref で読む
+  const evolveKeyRef = useRef(fx.evolveKey)
+  useEffect(() => {
+    evolveKeyRef.current = fx.evolveKey
+  }, [fx.evolveKey])
+  const handleBurstAnimationEnd = useCallback(() => {
+    if (evolveKeyRef.current > shownEvolveKeyRef.current) {
+      shownEvolveKeyRef.current = evolveKeyRef.current
       setEvolveBannerKey((k) => k + 1)
     }
-  }
+  }, [])
 
   // STEP-R2で蒼毘のみのプロトタイプとして導入し、STEP-R3で全7神へ横展開した
   // 共鳴7/7カットイン。useBattleFx.ts自体は変更せず、既存のfx.burstKeyを
@@ -125,19 +138,35 @@ export function BattleScreen({
   // burst成立バッチは常にRESONANCE_GAINEDを伴うためhasMiniResultが真になり、
   // fx.miniResultKeyもfx.burstKeyと同じバッチ内で進む（useBattleFx.ts参照）。
   const suppressedMiniResultKeyRef = useRef<number | null>(null)
+  const cutinLeadTimerRef = useRef<number | null>(null)
   useEffect(() => {
     if (fx.burstKey > shownCutinBurstKeyRef.current) {
       shownCutinBurstKeyRef.current = fx.burstKey
       suppressedMiniResultKeyRef.current = fx.miniResultKey
-      setCutinVisible(true)
+      // Phase 6-A：7/7 到達の発光（到達反応）を BURST_READY_LEAD_MS 見せてからカットイン。
+      // その間も操作はブロックする（cutinActive）。依存値の変化でタイマーを取り消すと
+      // カットインが出ないまま操作がブロックされ続けるため、取り消しはアンマウント時だけ
       setCutinActive(true)
+      cutinLeadTimerRef.current = window.setTimeout(() => setCutinVisible(true), BURST_READY_LEAD_MS)
     }
   }, [fx.burstKey, fx.miniResultKey])
+  useEffect(
+    () => () => {
+      if (cutinLeadTimerRef.current !== null) window.clearTimeout(cutinLeadTimerRef.current)
+    },
+    [],
+  )
   const handleCutinComplete = () => {
     setCutinVisible(false)
     setCutinActive(false)
     setCutinBurstBannerKey((k) => k + 1)
   }
+  // Phase 6-A：burst-banner の onAnimationEnd を取りこぼしても、OTOMO 成長バナーへ必ず進む
+  useEffect(() => {
+    if (cutinBurstBannerKey === 0) return undefined
+    const t = window.setTimeout(handleBurstAnimationEnd, BURST_BANNER_MS + CUTIN_FALLBACK_MS)
+    return () => window.clearTimeout(t)
+  }, [cutinBurstBannerKey, handleBurstAnimationEnd])
 
   // ENEMY-VFX-01：敵必殺技カットイン（CEO発案）。共鳴カットインと同じ
   // 「keyの増分→表示→onComplete（CSS実測終了）でハンドオフ」パターンを複製する。
@@ -167,7 +196,7 @@ export function BattleScreen({
   // ここでの「ミュート中はlogを[]に見せる」二重防御は不要だった。しかも副作用として、
   // ミュート解除時にuseBattleSound内部のseenCountが0にリセットされ、logが元の長さに
   // 戻った瞬間にその対局の全イベントのSEが一斉に再生されるバグを引き起こしていた。
-  useBattleSound(log)
+  useBattleSound(log, enemyVisualType)
 
   // 決定125：Mobile Battle Auto Focus。375px級の縦積みでは手札と敵パネルが約1,000px離れ、
   // 攻撃VFX・被弾・ダメージ数字が画面外で再生されて見えないため、敵ダメージカード／
@@ -201,19 +230,12 @@ export function BattleScreen({
   }, [battleStartKey])
   const handleEntranceDone = useCallback(() => setEntranceKey(0), [])
 
-  // 決定128：撃破の一拍。勝利が確定した直後に約1秒「撃破！」を見せてから報酬→結果へ進む
-  // （決定43の報酬→結果の順序は変えない）。表示専用。
-  const [victoryBeat, setVictoryBeat] = useState(false)
-  const seenWonSeedRef = useRef<string | null>(null)
-  useEffect(() => {
-    if (state?.status === 'won' && seenWonSeedRef.current !== state.seed) {
-      seenWonSeedRef.current = state.seed
-      setVictoryBeat(true)
-      const t = window.setTimeout(() => setVictoryBeat(false), 1000)
-      return () => window.clearTimeout(t)
-    }
-    return undefined
-  }, [state?.status, state?.seed])
+  // 決定128 → Phase 6-A（決定162）：撃破の順序。最後の一撃 → 表示HP 0 → 敵フラッシュ・崩壊 →
+  // 「撃破」→ 報酬 → 結果（決定43の報酬→結果の順序は変えない）。時刻は useCombatPresentation が
+  // 着弾計画から決め、setTimeout と安全弁で必ず進む。表示専用。
+  const victoryPhase = presentation.victoryPhase
+  const victoryBeat = victoryPhase === 'beat'
+  const presentationDone = state?.status === 'won' ? victoryPhase === 'done' : presentation.resultReady
 
   // 決定43：報酬カードは勝利1回につき1回だけ提示する。新しいバトル（seedが変わる）
   // のたびにリセットする（再開・「もう一度」でも新しいseedが発行されるため）。
@@ -247,6 +269,8 @@ export function BattleScreen({
   // （type:'oracle', damage 25）のようなattack以外の高ダメージカードも正しく
   // 最上位tierになる。
   const castPowerTier = pendingCardDef ? getEnemyDamagePowerTier(pendingCardDef) : null
+  // Phase 6-A：敵にダメージを与えるカードを使う瞬間だけ、神が一瞬構える（anticipation）
+  const windUp = !!pendingCardDef && dealsEnemyDamage(pendingCardDef.effects)
 
   // 決定74（Task C3）：対局前後の育成記録からLvが実際に上がった場合だけバッジを出す。
   const levelUp = otomoBondChange ? detectOtomoLevelUp(otomoBondChange.prevRecord, otomoBondChange.nextRecord) : null
@@ -311,24 +335,31 @@ export function BattleScreen({
           スクロールする（このトーストは回復・防御の結果表示として引き続き有効）。ap-penalty-toastと同じ
           「keyを増分してCSSアニメーションを再生させる」パターンを複製している。 */}
       {fx.resultToastKey > 0 && (
-        <div key={`result-toast-${fx.resultToastKey}`} className="result-toast">
+        <div
+          key={`result-toast-${fx.resultToastKey}`}
+          className="result-toast"
+          // Phase 6-A：数値の結果は着弾を見せてから（神の一撃では着弾まで隠す）
+          style={{ animationDelay: `${fx.revealDelayMs}ms` }}
+        >
           {fx.resultToastText}
         </div>
       )}
 
-      <div className="battle-main">
+      <div className="battle-main" ref={arenaRef}>
         <div className="battle-arena-glow" aria-hidden="true" />
         <EnemyPanel
           enemy={state.enemy}
           round={state.round}
-          hitKey={fx.enemyHitKey}
           attackKey={fx.enemyAttackKey}
           attackTier={fx.enemyAttackTier}
           multiHitCount={fx.multiHitCount}
           specialHit={fx.specialHit}
-          burstHit={fx.burstHit}
           floatingNumbers={enemyNumbers}
-          hitTier={fx.enemyHitTier}
+          hpShown={presentation.enemyHpShown}
+          plan={presentation.plan}
+          planKey={presentation.planKey}
+          defeated={state.status === 'won' && (victoryPhase === 'collapse' || victoryPhase === 'beat' || victoryPhase === 'done')}
+          reduced={presentation.reduced}
         />
         <div className="ally-row">
           <PlayerPanel
@@ -343,6 +374,9 @@ export function BattleScreen({
             specialHit={fx.specialHit}
             burstHit={fx.burstHit}
             floatingNumbers={playerNumbers}
+            hpShown={presentation.playerHpShown}
+            windUp={windUp}
+            selfImpactMs={presentation.plan?.selfImpactMs ?? null}
           />
           {/* VFX-03：evolveRevealKey＝🌱成長バナーの表示回数。OTOMO立ち絵の新形態切替・
               成長グロー・リアクションをこの瞬間に揃える（進化自体はstateで確定済み） */}
@@ -423,7 +457,13 @@ export function BattleScreen({
           RewardOverlay/GameOverOverlayに切り替わるため、`status==='playing'`
           の間だけ表示する＝それらのモーダルとHUDが同時に存在することはない。 */}
       {state.status === 'playing' && (
-        <BattleHud enemy={state.enemy} player={state.player} ap={state.ap} resonance={state.resonance} />
+        <BattleHud
+          // Phase 6-A：HUD の HP も表示HP（着弾より先に減らない）
+          enemy={{ ...state.enemy, hp: presentation.enemyHpShown }}
+          player={{ ...state.player, hp: presentation.playerHpShown }}
+          ap={state.ap}
+          resonance={state.resonance}
+        />
       )}
 
       {/* STEP2-B：BattleHud直下に、カード使用結果（誰が誰を攻撃したか＋数値変化）を
@@ -443,6 +483,7 @@ export function BattleScreen({
           resonanceMax={state.resonance.max}
           resultKey={fx.miniResultKey}
           result={fx.miniResult}
+          delayMs={fx.revealDelayMs}
         />
       )}
 
@@ -495,12 +536,17 @@ export function BattleScreen({
       )}
 
       {victoryBeat && (
-        <div className="victory-beat" aria-hidden="true" data-testid="victory-beat">
+        <div
+          className="victory-beat"
+          aria-hidden="true"
+          data-testid="victory-beat"
+          style={{ '--beat-ms': `${presentation.reduced ? VICTORY_BEAT_REDUCED_MS : VICTORY_BEAT_MS}ms` } as CSSProperties}
+        >
           <span>撃破！</span>
         </div>
       )}
 
-      {state.status === 'won' && !rewardDone && !victoryBeat && (
+      {state.status === 'won' && !rewardDone && presentationDone && (
         <RewardOverlay
           godId={state.godId}
           seed={state.seed}
@@ -512,7 +558,7 @@ export function BattleScreen({
         />
       )}
 
-      {state.status !== 'playing' && (state.status !== 'won' || rewardDone) && !victoryBeat && (
+      {state.status !== 'playing' && (state.status !== 'won' || rewardDone) && presentationDone && (
         <GameOverOverlay
           status={state.status}
           score={state.score}

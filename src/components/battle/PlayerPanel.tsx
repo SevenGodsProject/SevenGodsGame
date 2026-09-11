@@ -1,3 +1,4 @@
+import type { CSSProperties } from 'react'
 import type { GodId, PlayerState } from '../../core/types'
 import { getGodDef } from '../../core/data/gods'
 import { STAT_LABEL } from '../setup/godStyle'
@@ -31,6 +32,12 @@ type PlayerPanelProps = {
    * 共鳴カットイン終了＝burst-banner出現（BURST_GOD_ATTACK_MS）まで遅らせる */
   burstHit: boolean
   floatingNumbers: FloatingNumber[]
+  /** Phase 6-A：表示HP（着弾に合わせて追従する値。engine の HP ではない） */
+  hpShown: number
+  /** Phase 6-A：敵ダメージのカードを使った直後（cast 中）の「構え」＝anticipation */
+  windUp?: boolean
+  /** Phase 6-A：敵の通常攻撃の着弾時刻（敵の突進の最前）。連撃・必殺は既存の CSS タイムライン */
+  selfImpactMs?: number | null
 }
 
 /**
@@ -49,6 +56,9 @@ export function PlayerPanel({
   specialHit,
   burstHit,
   floatingNumbers,
+  hpShown,
+  windUp = false,
+  selfImpactMs = null,
 }: PlayerPanelProps) {
   const god = getGodDef(godId)
   // STEP-UX5：被弾シェイクの強さを、その攻撃のIntent危険度と同じtierで
@@ -67,18 +77,25 @@ export function PlayerPanel({
       ? `hit-shake-multi-${Math.min(multiHitCount, 3)}`
       : `hit-shake-flash${hitTierToken}`
   const delayToken = specialHit ? (multiHitCount >= 2 ? ' hit-delay-multilead' : ' hit-delay-beam') : ''
+  // Phase 6-A：敵の通常攻撃（単発・必殺でない）は、敵の突進の最前で着弾させる（旧：commit と同時）
+  const normalDelayed = !specialHit && multiHitCount <= 1 && selfImpactMs != null && selfImpactMs > 0
+  const impactStyle = normalDelayed ? ({ '--impact-delay': `${selfImpactMs}ms` } as CSSProperties) : undefined
 
   return (
     <div className="panel player-panel">
       <div className="panel-title">{god.nameJa}</div>
       <p className="god-tagline">「{god.tagline}」</p>
-      {/* VFX-03：共鳴BURSTの一撃は「共鳴カットイン→✨神の一撃！バナー」の後ろ
-          （god-lunge-delay-burst＝RESONANCE_CUTIN_MS）で突進する。通常攻撃は従来どおり即時 */}
-      <div
-        key={`god-${attackKey}`}
-        className={`player-avatar-wrap${attackKey > 0 ? ` god-lunge${burstHit ? ' god-lunge-delay-burst' : ''}` : ''}`}
-      >
-        <img className="player-avatar" src={god.art.front} alt={god.nameJa} />
+      {/* VFX-03：共鳴BURSTの一撃は「共鳴カットイン→✨神の一撃！バナー」の後ろで突進する。
+          Phase 6-A：敵ダメージのカードを選んだ瞬間（cast 中）に一瞬引いて構え、commit で突く
+          （god-strike の 26%＝CARD_IMPACT_MS で着弾）。神の一撃は溜め→突きの god-burst-strike
+          （開始＝BURST_GOD_ATTACK_MS、着弾＝BURST_IMPACT_MS。battle.css と一致） */}
+      <div className={`player-windup${windUp ? ' is-winding' : ''}`}>
+        <div
+          key={`god-${attackKey}`}
+          className={`player-avatar-wrap${attackKey > 0 ? (burstHit ? ' god-burst-strike' : ' god-strike') : ''}`}
+        >
+          <img className="player-avatar" src={god.art.front} alt={god.nameJa} />
+        </div>
       </div>
       {/* 第二次完成フェーズF-1（緊急バグ修正）：以前はhit-shake-flash（被弾）と
           heal-pulse（回復）が`key={`${hitKey}-${healKey}`}`という単一のkeyを
@@ -92,16 +109,16 @@ export function PlayerPanel({
           `key={`hit-${hitKey}`}`と同じ命名パターンに統一）。 */}
       <div
         key={`hit-${hitKey}`}
-        className={hitKey > 0 ? `${shakeClass}${delayToken}` : undefined}
-        style={{ position: 'relative' }}
+        className={hitKey > 0 ? `${shakeClass}${delayToken}${normalDelayed ? ' juice-delayed' : ''}` : undefined}
+        style={{ position: 'relative', ...impactStyle }}
       >
         <div key={`heal-${healKey}`} className={healKey > 0 ? 'heal-pulse' : undefined}>
-          <HpBar current={player.hp} max={player.maxHp} color="#4dbd74" />
+          <HpBar current={hpShown} max={player.maxHp} color="#4dbd74" />
         </div>
         {/* 単発被弾は従来の斬撃線。連撃はhitごとの専用slash（下）に置き換える。
             VFX-03：神滅甲タイプ（special単発＝砲撃）は斬撃技ではないためslashを出さず、
             着弾は下のimpact-ring-beam（大リング）＋hugeシェイク＋閃光で表現する */}
-        {hitKey > 0 && multiHitCount <= 1 && !specialHit && <div className="slash-fx slash-fx-reverse" />}
+        {hitKey > 0 && multiHitCount <= 1 && !specialHit && <div className={`slash-fx slash-fx-reverse${normalDelayed ? ' juice-delayed' : ''}`} />}
         {/* ENEMY-VFX-02：連撃のhitごとのslash trail。HIT1=左下→右上／HIT2=右下→左上／
             HIT3=双牙クロス（X字2本・最大）。発生時刻はTEMPO-B（CSS側delayで一致） */}
         {hitKey > 0 && multiHitCount >= 2 && (

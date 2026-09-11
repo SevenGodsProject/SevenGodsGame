@@ -1,4 +1,7 @@
+import { useEffect, useRef } from 'react'
 import { getEnemyDef } from '../../core/data/enemies'
+import { ENEMY_CUTIN_TOTAL_MS } from './enemyVfxTiming'
+import { CUTIN_FALLBACK_MS } from './BattleResonanceCutin'
 import type { EnemyId } from '../../core/types'
 import { formatScaled } from '../displayScale'
 
@@ -30,11 +33,28 @@ type BattleEnemyCutinProps = {
  */
 export function BattleEnemyCutin({ enemyDefId, specialName, amount, onComplete }: BattleEnemyCutinProps) {
   const def = getEnemyDef(enemyDefId)
+  // Phase 6-A（決定162）：完了通知は1回だけ。animationend が来なくても時刻で必ず完了する
+  const doneRef = useRef(false)
+  const onCompleteRef = useRef(onComplete)
+  onCompleteRef.current = onComplete
+  const finish = () => {
+    if (doneRef.current) return
+    doneRef.current = true
+    onCompleteRef.current()
+  }
+  useEffect(() => {
+    const t = window.setTimeout(() => {
+      if (doneRef.current) return
+      doneRef.current = true
+      onCompleteRef.current()
+    }, ENEMY_CUTIN_TOTAL_MS + CUTIN_FALLBACK_MS)
+    return () => window.clearTimeout(t)
+  }, [])
 
   const handleAnimationEnd = (event: React.AnimationEvent<HTMLDivElement>) => {
     if (event.target !== event.currentTarget) return
     if (event.animationName !== 'enemy-cutin-timer') return
-    onComplete()
+    finish()
   }
 
   return (

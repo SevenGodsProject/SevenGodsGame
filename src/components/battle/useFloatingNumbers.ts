@@ -3,8 +3,10 @@ import type { Dispatch, SetStateAction } from 'react'
 import type { GameEvent, GodId } from '../../core/types'
 import { getGodDef } from '../../core/data/gods'
 import { formatScaled } from '../displayScale'
-import { damageFeelTier, type FeelTier } from './feelTier'
-import { BURST_IMPACT_MS, MULTI_CUTIN_LEAD_MS, SPECIAL_IMPACT_MS, multiHitOffsetMs } from './enemyVfxTiming'
+import { type FeelTier } from './feelTier'
+import { BURST_IMPACT_MS } from './enemyVfxTiming'
+import { planBatch, type ImpactStep } from './combatTimeline'
+import { prefersReducedMotion } from './reducedMotion'
 
 export type FloatingNumber = {
   id: number
@@ -19,9 +21,15 @@ export type FloatingNumber = {
   leftPercent?: number
   /** 決定128：演出段階（数字サイズ）。damageのみ。省略＝L2 */
   tier?: FeelTier
+  /** Phase 6-A：条件⚡の追加ダメージ（金色・⚡付き） */
+  bonus?: boolean
+  /** Phase 6-A：最大クラス（神の一撃・最後の一撃） */
+  max?: boolean
 }
 
 const LIFETIME_MS = 900
+/** Phase 6-A：最大クラスの数字は少し長く残す（CSS の float-up-max 1.3s と一致） */
+const MAX_LIFETIME_MS = 1300
 
 /**
  * イベントログを見て、HPバーの上に浮かべる「-8」「+5」のような数値の
@@ -38,6 +46,7 @@ const LIFETIME_MS = 900
 export function useFloatingNumbers(
   log: GameEvent[],
   godId: GodId | undefined,
+  enemyVisualType?: string,
 ): {
   enemyNumbers: FloatingNumber[]
   playerNumbers: FloatingNumber[]
@@ -62,104 +71,81 @@ export function useFloatingNumbers(
       setter((prev) => [...prev, entry])
       window.setTimeout(() => {
         setter((prev) => prev.filter((n) => n.id !== entry.id))
-      }, LIFETIME_MS + (entry.delayMs ?? 0))
+      }, (entry.max ? MAX_LIFETIME_MS : LIFETIME_MS) + (entry.delayMs ?? 0))
     }
 
-    // ENEMY-VFX-01：このバッチが敵の連撃/必殺だったかを先に判定する。
-    // round.tsはENEMY_ACTED→hitごとのDAMAGE_DEALTの順でイベントを積むため、
-    // ENEMY_ACTEDのkind/labelを読むだけで後続のself被弾hitへ表示遅延を割り振れる。
-    // 判定はイベント列のみ（敵IDのswitchは使わない）＝将来の7敵展開でもこのまま動く。
-    const enemyActed = newEvents.find(
-      (e): e is Extract<GameEvent, { t: 'ENEMY_ACTED' }> => e.t === 'ENEMY_ACTED' && e.kind !== 'charge',
-    )
-    const isMulti = enemyActed?.kind === 'multiAttack'
-    const isSpecial = enemyActed?.kind === 'special' || (isMulti && !!enemyActed?.label)
-    const totalHits = isMulti
-      ? newEvents.filter((e) => e.t === 'DAMAGE_DEALT' && e.target === 'self').length
-      : 0
-    // ENEMY-VFX-02：カットイン付きはlead後、hitはTEMPO-B offset（enemyVfxTiming.ts）。
-    // 神滅甲タイプ（special単発）はビーム着弾（SPECIAL_IMPACT_MS）に同期する。
-    const cutinLead = isSpecial ? (isMulti ? MULTI_CUTIN_LEAD_MS : SPECIAL_IMPACT_MS) : 0
+    // Phase 6-A（決定162）：着弾の時刻・段階は着弾計画（combatTimeline）と共有する。
+    // 数字は「着弾の瞬間」に出る（hit stop 中にポップし、その後に表示HPが動く）。
+    const plan = planBatch(newEvents, { enemyVisualType, reduced: prefersReducedMotion() })
+    const selfEnemyHits = plan.steps.filter((st) => st.target === 'self' && st.role === 'enemy')
+    const isMulti = selfEnemyHits.length >= 2
+    const isSpecialSingle = newEvents.some((e) => e.t === 'ENEMY_ACTED' && e.kind === 'special')
+    const enemySteps = plan.steps.filter((st) => st.target === 'enemy')
+    const cardSteps = enemySteps.filter((st) => st.role === 'card')
+
+    // 敵の胸の位置で、同時期の数字が重ならないよう横にずらす
+    const enemyLeft = (st: ImpactStep): number | undefined => {
+      if (st.role === 'bonus') return 66
+      if (st.role === 'passive') return 34
+      if (st.role === 'card' && cardSteps.length >= 2) return 42 + (cardSteps.indexOf(st) % 2) * 16
+      return undefined
+    }
     // 連撃hitのleftを 38%→50%→62% と振って重なりを防ぐ（3hit想定、2hitは38/50）
     const multiLeft = (index: number) => 38 + Math.min(index, 2) * 12
-    let selfHitIndex = 0
-    // VFX-03：RESONANCE_BURST以降のイベント（神の一撃のダメージ、共鳴由来のdraw/AP）は
-    // 共鳴カットイン→burst-bannerの後ろ（BURST_IMPACT_MS）へ遅らせて表示する。
-    // effects.tsのapplyResonanceはRESONANCE_BURST→神resonanceEffects→OTOMO効果の順で
-    // イベントを積むため、バッチ内で「BURSTより後か」を見るだけで神の一撃を特定できる
-    // （RESONANCE_BURSTより前のDAMAGE_DEALT＝カード自身の効果は従来どおり即時）。
-    let afterBurst = false
 
+    for (const st of plan.steps) {
+      const isEnemy = st.target === 'enemy'
+      const setter = isEnemy ? setEnemyNumbers : setPlayerNumbers
+      const hitIndex = selfEnemyHits.indexOf(st)
+      // 強調＝神の一撃・最後の一撃（敵側）／必殺の単発着弾・連撃の最終hit（自分側）
+      const emphasis = isEnemy
+        ? st.role === 'burst' || st.final
+        : st.role === 'enemy' && ((isSpecialSingle && !isMulti) || (isMulti && hitIndex === selfEnemyHits.length - 1))
+      const leftPercent = isEnemy ? enemyLeft(st) : st.role === 'enemy' && isMulti ? multiLeft(hitIndex) : undefined
+      // D2b：damage/block/healは表示×10。draw/AP（下のRESONANCE_BURST分岐）は倍率対象外
+      if (st.amount > 0) {
+        spawn(setter, {
+          id: nextId.current++,
+          text: `${st.role === 'bonus' ? '⚡' : ''}-${formatScaled(st.amount)}`,
+          kind: 'damage',
+          delayMs: st.atMs,
+          emphasis,
+          leftPercent,
+          tier: st.tier,
+          bonus: st.role === 'bonus',
+          max: isEnemy && (st.role === 'burst' || st.final),
+        })
+      }
+      // 第二次完成フェーズP0-3：完全ブロック時（amount=0・blocked>0）は既存の「-N」表示が出ないため、
+      // これが唯一の視覚フィードバックになる。表記は「軽減N」（残ブロック量バッジ🛡Nと区別する）。
+      if (st.blocked > 0) {
+        spawn(setter, { id: nextId.current++, text: `軽減${formatScaled(st.blocked)}`, kind: 'block', delayMs: st.atMs })
+      }
+    }
+
+    // 回復・共鳴由来の draw／AP。神の一撃の後に起きたものは、神の一撃の着弾に揃える（VFX-03）
+    let afterBurst = false
     for (const event of newEvents) {
       if (event.t === 'RESONANCE_BURST') afterBurst = true
-      if (event.t === 'DAMAGE_DEALT') {
-        const setter = event.target === 'enemy' ? setEnemyNumbers : setPlayerNumbers
-        const isSelfHit = event.target === 'self' && enemyActed != null
-        const isBurstHit = afterBurst && event.target === 'enemy'
-        const hitIndex = isSelfHit ? selfHitIndex++ : 0
-        const delayMs = isSelfHit
-          ? cutinLead + (isMulti ? multiHitOffsetMs(hitIndex) : 0)
-          : isBurstHit
-            ? BURST_IMPACT_MS
-            : 0
-        // 強調＝必殺の単発着弾、連撃の最終hit（「ドン→ドン→ドン！」の3発目）、神の一撃
-        const emphasis =
-          (isSelfHit && (enemyActed?.kind === 'special' || (isMulti && hitIndex === totalHits - 1 && totalHits >= 2))) ||
-          isBurstHit
-        const leftPercent = isSelfHit && isMulti ? multiLeft(hitIndex) : undefined
-        // D2b：damage/block/healは表示×10。draw/AP（下のRESONANCE_BURST分岐）は倍率対象外
-        if (event.amount > 0) {
-          spawn(setter, {
-            id: nextId.current++,
-            text: `-${formatScaled(event.amount)}`,
-            kind: 'damage',
-            delayMs,
-            emphasis,
-            leftPercent,
-            tier: damageFeelTier(event.amount, { burst: isBurstHit, special: isSelfHit && emphasis }),
-          })
-        }
-        // 第二次完成フェーズP0-3：DAMAGE_DEALT.blockedは既存のデータとして
-        // 存在していたが、これまでどのフックも読んでいなかった（未消費）。
-        // 完全ブロック時（amount=0・blocked>0）は既存の「-N」表示が出ないため、
-        // これが唯一の視覚フィードバックになる。一部ブロック時は「-N」と並んで
-        // 表示されるが、CSS側で表示位置をずらしており（.floating-number-block）、
-        // 二重表示（同じ位置に重なる）にはならない。
-        // 表記は「軽減N」（アイコンなし）。「🛡N」だと既存の残ブロック量バッジ
-        // （PlayerPanel/EnemyPanelの.badge-block、同じ🛡アイコン・同じ色）と
-        // 見た目が完全に一致し、「残っている量」なのか「今回吸収した量」なのか
-        // 一瞬で区別できなかった（Opusレビュー・CEO判断）。既存のバトルログ
-        // （formatEvent.ts）が同じ意味を「（N軽減）」と表現している言葉をそのまま
-        // 流用し、色（#7fb2ff）はバッジと共通のまま維持している。
-        if (event.blocked > 0) {
-          // 連撃/必殺では軽減表示にも同じ遅延を与え、hitと同じテンポで見せる
-          spawn(setter, { id: nextId.current++, text: `軽減${formatScaled(event.blocked)}`, kind: 'block', delayMs })
-        }
-      } else if (event.t === 'HEALED' && event.amount > 0) {
-        spawn(setPlayerNumbers, { id: nextId.current++, text: `+${formatScaled(event.amount)}`, kind: 'heal' })
+      if (event.t === 'HEALED' && event.amount > 0) {
+        spawn(setPlayerNumbers, {
+          id: nextId.current++,
+          text: `+${formatScaled(event.amount)}`,
+          kind: 'heal',
+          delayMs: afterBurst ? BURST_IMPACT_MS : undefined,
+        })
       } else if (event.t === 'RESONANCE_BURST' && godId) {
         const resonanceEffects = getGodDef(godId).resonanceEffects
         for (const effect of resonanceEffects) {
-          // VFX-03：神の一撃（ダメージ数字）と同じ着弾タイミングに揃える
           if (effect.kind === 'draw' && effect.amount > 0) {
-            spawn(setPlayerNumbers, {
-              id: nextId.current++,
-              text: `カード+${effect.amount}`,
-              kind: 'draw',
-              delayMs: BURST_IMPACT_MS,
-            })
+            spawn(setPlayerNumbers, { id: nextId.current++, text: `カード+${effect.amount}`, kind: 'draw', delayMs: BURST_IMPACT_MS })
           } else if (effect.kind === 'gainAp' && effect.amount > 0) {
-            spawn(setPlayerNumbers, {
-              id: nextId.current++,
-              text: `神力+${effect.amount}`,
-              kind: 'ap',
-              delayMs: BURST_IMPACT_MS,
-            })
+            spawn(setPlayerNumbers, { id: nextId.current++, text: `神力+${effect.amount}`, kind: 'ap', delayMs: BURST_IMPACT_MS })
           }
         }
       }
     }
-  }, [log, godId])
+  }, [log, godId, enemyVisualType])
 
   return { enemyNumbers, playerNumbers }
 }
