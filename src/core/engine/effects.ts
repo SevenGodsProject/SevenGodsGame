@@ -7,6 +7,7 @@ import { performDraw } from './deck.js'
 import { sumBuff } from './buffs.js'
 import type { Rng } from '../rng/seededRandom.js'
 import { resolveStakeRules } from '../data/stakes.js'
+import { enemyActionTotal } from './intent.js'
 
 export type EffectResult = { state: GameState; events: GameEvent[] }
 
@@ -18,6 +19,32 @@ export function addScore(
 ): ScoreState {
   if (amount === 0) return score
   return { ...score, [field]: score[field] + amount, total: score.total + amount }
+}
+
+/** 決定126：神階のブロック効率をかけた実効量。ブロックを得る全経路がここを通る */
+function effectiveBlock(state: GameState, amount: number): number {
+  return Math.round(amount * resolveStakeRules(state.stake, state.stakeChoice).blockEfficiency)
+}
+
+/**
+ * Phase 5-D：神託「加護」（`blockOfIntent`）の素の量（ブロック効率をかける前）。
+ * max(min, floor(予告合計 × ratio))。予告が無い・溜め（予告0）なら min だけ。
+ */
+export function intentGuardRaw(state: GameState, ratio: number, min: number): number {
+  const intent = state.enemy.intent
+  const incoming = intent ? enemyActionTotal(intent) : 0
+  return Math.max(min, Math.floor(incoming * ratio))
+}
+
+/**
+ * Phase 5-D：表示専用。「今この神託を使えば、ブロックをいくつ得るか」（実効値・内部値）。
+ * 加護のボタンに実数を出すために使う。**engine と同じ2関数を通す**ので、
+ * 表示と実際に得る量が食い違うことは無い。`blockOfIntent` を含まない選択肢は null。
+ */
+export function previewIntentGuard(state: GameState, effects: Effect[]): number | null {
+  const guard = effects.find((e): e is Extract<Effect, { kind: 'blockOfIntent' }> => e.kind === 'blockOfIntent')
+  if (!guard) return null
+  return effectiveBlock(state, intentGuardRaw(state, guard.ratio, guard.min))
 }
 
 /**
@@ -43,9 +70,13 @@ export function applyEffect(
       return applyDamage(state, effect.target, effect.amount)
     }
 
+    case 'blockOfIntent':
+      // Phase 5-D：予告から量を決め、あとは通常のブロックと同じ経路（神階のブロック効率・イベント）に乗せる
+      return applyEffect(state, { kind: 'block', amount: intentGuardRaw(state, effect.ratio, effect.min) }, rng)
+
     case 'block': {
       // 決定126：神階Ⅳ以降はブロック効率が下がる（イベントには実効値を載せ、UIの表示と一致させる）
-      const gained = Math.round(effect.amount * resolveStakeRules(state.stake, state.stakeChoice).blockEfficiency)
+      const gained = effectiveBlock(state, effect.amount)
       const events: GameEvent[] = [
         { t: 'BLOCK_GAINED', target: 'self', amount: gained },
       ]

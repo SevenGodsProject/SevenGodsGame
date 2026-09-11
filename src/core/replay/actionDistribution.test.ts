@@ -119,6 +119,8 @@ describe('Action数 / payloadサイズの分布（Step 6）', () => {
     // 変わったらエンジンか打ち筋が変わった合図であり、docsも更新する必要がある。
     // Phase 5-A（決定154）：共通16枚に条件付き追加効果が付き、打ち筋（＝1ラウンドに
     // 出す枚数と決着ラウンド）がわずかに動いたため更新した。上限400に対する余裕は不変。
+    // Phase 5-D：加護が予告連動ブロックになり、一部の対局で打ち筋（出すカード）が変わった。
+    // Action数の分布は同じで、payloadサイズだけ最大11byte動いた。
     expect(measurement.actions).toEqual({
       n: 1470,
       min: 7,
@@ -131,10 +133,10 @@ describe('Action数 / payloadサイズの分布（Step 6）', () => {
     expect(measurement.bytes).toEqual({
       n: 1470,
       min: 790,
-      median: 1262,
-      p90: 1424,
-      p95: 1466,
-      p99: 1547,
+      median: 1269,
+      p90: 1425,
+      p95: 1476,
+      p99: 1558,
       max: 1615,
     })
   })

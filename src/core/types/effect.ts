@@ -28,6 +28,14 @@ export type Effect =
   | { kind: 'damage'; target: EffectTarget; amount: number }
   /** ブロック（このラウンドの被ダメージ軽減）を得る */
   | { kind: 'block'; amount: number }
+  /**
+   * Phase 5-D：敵の予告に応じたブロックを得る（神託「加護」）。
+   * 量＝max(min, floor(予告合計 × ratio))。予告合計は `intent.ts` の `enemyActionTotal`
+   * （UIの予告表示と同じ値）。溜め（予告0）なら min だけ。
+   * 得た量には通常の `block` と同じく神階のブロック効率がかかる。
+   * ratio / min の値そのものは `RULES.divination` に集約し、データ側はそこから読む。
+   */
+  | { kind: 'blockOfIntent'; ratio: number; min: number }
   /** HPを回復する */
   | { kind: 'heal'; amount: number }
   /** 共鳴ゲージを上昇させる */

@@ -33,6 +33,9 @@ function expectedNumbersInText(effect: Effect): string[] {
     case 'gainAp':
       // 倍率対象外（共鳴の「7」、枚数、神力）
       return [String(effect.amount)]
+    case 'blockOfIntent':
+      // Phase 5-D：割合は倍率対象外（「40%」）、最低保証はブロック量なので×10
+      return [`${Math.round(effect.ratio * 100)}%`, formatScaled(effect.min)]
   }
 }
 

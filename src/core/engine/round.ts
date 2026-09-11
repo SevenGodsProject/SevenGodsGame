@@ -7,15 +7,13 @@ import { applyDamage } from './effects.js'
 import { sumBuff, tickBuffs } from './buffs.js'
 import type { Rng } from '../rng/seededRandom.js'
 import { resolveStakeRules, specialMultiplierFor } from '../data/stakes.js'
+import { enemyActionTotal } from './intent.js'
 
 type StepResult = { state: GameState; events: GameEvent[] }
 
-/** action合計値（charge=0）。intent表示・危険度tier・イベントamountの共通値 */
-export function enemyActionTotal(action: EnemyActionDef): number {
-  if (action.kind === 'attack' || action.kind === 'special') return action.amount
-  if (action.kind === 'multiAttack') return action.hits.reduce((sum, h) => sum + h, 0)
-  return 0
-}
+// Phase 5-D：定義は `intent.ts` へ移した（`effects.ts` から使うと循環するため）。
+// 既存の import 先（`./round.js`）を壊さないよう、ここから再エクスポートする。
+export { enemyActionTotal }
 
 /** special/multiAttackの技名、chargeの予告文（VFXカットイン・ログ用） */
 export function enemyActionLabel(action: EnemyActionDef): string | undefined {
