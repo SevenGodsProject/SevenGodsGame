@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react'
+import { useCallback, useRef, useState } from 'react'
 import type {
   CardDefId,
   CardUid,
@@ -12,7 +12,6 @@ import type {
 import type { EnemyId, StakeChoiceId } from '../core/types'
 import { isStakeLevel } from '../core/data/stakes'
 import { recordStakeResult, type StakeResultOutcome } from './stakeStorage'
-import { applyAction } from '../core/engine'
 import { ENEMY_IDS } from '../core/data/enemies'
 import { resolveStartEnemyId } from './startEnemy'
 import { clearBattleSave, saveBattle } from './battleSaveStorage'
@@ -20,6 +19,10 @@ import { recordGameResult } from './recordStorage'
 import { recordOtomoBond, type OtomoBondRecord } from './otomoBondStorage'
 import { recordDailyResult, startDailyAttempt, type DailyRecordResult } from './dailyStorage'
 import { resolveDailyStart } from './startDaily'
+import { applyAndRecord, resumeRunLog, toReplayInput, type DailyRunLog } from '../core/replay'
+import { createClientRunId } from './clientRunId'
+import { clearRunLog, loadRunLog, saveRunLog } from './dailyRunLogStorage'
+import { enqueuePendingRun } from './pendingRunStorage'
 
 /**
  * ラウンド終了→次ラウンド開始の結果を見せる前に「敵のターン」を溜める時間（見せ方のみ。判定タイミングは変えない）。
@@ -30,7 +33,7 @@ import { resolveDailyStart } from './startDaily'
  * （カード1枚の演出より明確に長い「間」という決定61の意図は2.5倍でも維持されるため、
  * ENEMY_TURN_REVEAL_MS自体はここでは変更しない）。
  */
-const ENEMY_TURN_REVEAL_MS = 700
+export const ENEMY_TURN_REVEAL_MS = 700
 
 /**
  * 開発用の敵指定バックドア（決定40）。`?enemy=oni`のようにURLで指定すると、
@@ -66,7 +69,7 @@ function resolveForcedStake(): number | null {
  * 最大値（support=250ms地点）を上回る最小のキリのいい値とし、6タイプ全てが最大不透明度に
  * 到達してから結果が着弾するようにした。
  */
-const CARD_PLAY_REVEAL_MS = 280
+export const CARD_PLAY_REVEAL_MS = 280
 
 export type UseGameEngine = {
   state: GameState | null
@@ -90,15 +93,23 @@ export type UseGameEngine = {
    */
   dailyResult: DailyRecordResult | null
   /**
-   * DAILY-01：神域挑戦を開始する。敵・seed・難易度・補正は日付キーから
-   * `resolveDailyStart`が確定し、URLバックドア・敵選択・難易度選択は参照しない。
-   * 挑戦回数を1回消費する。残り0なら開始せずfalseを返す
+   * DAILY-01 / Phase 4.1：神域挑戦を開始する。
+   *
+   * **`bonusCopies`を引数に取らない**ことが公平性の実装そのものである
+   * （`resolveDailyStart`が`forcedId`を取らないのと同じ設計）。決定43の報酬ボーナス
+   * （＝プレイ量に応じてlocalStorageへ積み上がる「同じカードを3枚積める」権利）は
+   * プレイヤーごとに異なる永続進行であり、Dailyの「全員共通の条件」と両立しない。
+   * Phase 4.0監査（決定131）で、この差だけで1,000人規模の順位が平均14.8・最大45
+   * 動くと実測したため、Dailyでは**渡す経路自体を型から消す**。
+   * 通常モード（`startGame`）は従来どおり`bonusCopies`を受け取り、決定43は無変更。
+   *
+   * 敵・seed・難易度・補正は日付キーから`resolveDailyStart`が確定し、URLバックドア・
+   * 敵選択・難易度選択は参照しない。挑戦回数を1回消費する。残り0なら開始せずfalseを返す。
    */
   startDailyGame: (
     godId: GodId,
     deck: CardDefId[],
     dailyKey: string,
-    bonusCopies?: Map<CardDefId, number>,
     otomoGrowthPath?: GrowthPath,
   ) => boolean
   startGame: (
@@ -128,6 +139,12 @@ export type UseGameEngine = {
    * BattleScreen が Boss Entrance を出す条件に使う（表示専用）
    */
   battleStartKey: number
+  /**
+   * Phase 4.2：進行中のDaily runの行動ログが健全か（＝将来ランキングへ提出できるか）。
+   * Daily以外では常にfalse。「続きから」でログを引き継げなかった場合もfalseになる
+   * （ゲームの続行は妨げないが、そのrunは検証できないため提出対象外になる）。
+   */
+  dailyRunLogAvailable: boolean
   /** 保存済みのGameStateからバトルを再開する（決定29） */
   resumeGame: (savedState: GameState) => void
   /** 進行中／決着済みのゲームを未開始状態に戻す（神選択からやり直すため） */
@@ -157,18 +174,46 @@ export function useGameEngine(): UseGameEngine {
   const [dailyResult, setDailyResult] = useState<DailyRecordResult | null>(null)
   const [stakeResult, setStakeResult] = useState<StakeResultOutcome | null>(null)
   const [battleStartKey, setBattleStartKey] = useState(0)
+  /**
+   * Phase 4.2：Daily実プレイの行動ログ。
+   *
+   * refで持つのは、①レンダリングに関係しない記録であり、②Reactのre-renderや
+   * StrictModeの二重実行の影響を受けない場所へ置きたいため。追記は`commit`の中で
+   * GameStateの更新と**同時に**行う（片方だけ進むと再開時に食い違うため）。
+   */
+  const runLogRef = useRef<DailyRunLog | null>(null)
+  const [dailyRunLogAvailable, setDailyRunLogAvailable] = useState(false)
 
-  const commit = useCallback((result: { state: GameState; events: GameEvent[] }) => {
+  const commit = useCallback((result: { state: GameState; events: GameEvent[] }, runLog: DailyRunLog | null) => {
     setState(result.state)
     setLog((prev) => [...prev, ...result.events])
     setError(null)
+    // Phase 4.2：行動ログはGameStateと足並みを揃えて進める。END_ROUNDは演出のため
+    // 700ms遅らせてcommitされるので、dispatch時点で記録を進めると「ログだけ1手先」
+    // の状態で中断されうる。ここで一緒に更新すれば、保存されるログと保存される
+    // 盤面は常に同じ地点を指す。
+    runLogRef.current = runLog
+    setDailyRunLogAvailable(runLog !== null)
     // 決定29：毎アクション後に自動保存する。決着がついた瞬間は保存済みデータを消す
     // （決着済みの状態を「続きから」で開いてもゲームオーバー画面が出るだけのため）。
     if (result.state.status === 'playing') {
       saveBattle(result.state)
+      // 中断・再開でログを失わないよう、盤面と同じタイミングで永続化する
+      if (runLog) saveRunLog(runLog)
     } else {
       clearBattleSave()
       if (result.state.mode === 'daily') {
+        // Phase 4.2：決着したDaily runは送信待ちへ控える（送信はPhase 4.3）。
+        // 未完走runはこの経路を通らないため、そもそも提出対象にならない。
+        if (runLog) {
+          enqueuePendingRun(
+            { clientRunId: runLog.clientRunId, dailyKey: runLog.dailyKey, input: toReplayInput(runLog) },
+            runLog.dailyKey,
+          )
+        }
+        clearRunLog()
+        runLogRef.current = null
+        setDailyRunLogAvailable(false)
         // DAILY-01：神域挑戦の決着は`sevengods.daily`にだけ記録し、通常モードの
         // 神別自己ベスト（recordGameResult）は更新しない（CEO決定5）。
         setDailyResult(recordDailyResult(result.state))
@@ -195,9 +240,13 @@ export function useGameEngine(): UseGameEngine {
   }, [])
 
   const dispatch = useCallback(
-    (action: GameAction) => {
+    (action: GameAction, clientRunId?: string) => {
       try {
-        const result = applyAction(state, action)
+        // Phase 4.2：エンジンの適用と行動ログへの追記を1つの関数に閉じ込める。
+        // 例外が出れば記録も増えない＝**エンジンが受理した操作だけがログに残る**。
+        // UI側でログを組み立てないので、「画面には出たがエンジンに届かなかった操作」
+        // や「届いたのに記録されなかった操作」が構造的に発生しない。
+        const { result, log: nextLog } = applyAndRecord(state, action, runLogRef.current, clientRunId)
 
         // 判定（誰が何ダメージ受けるか等）はここで確定済み。
         // END_ROUNDだけは「敵のターン」の間を置いてから見せることで、
@@ -206,10 +255,10 @@ export function useGameEngine(): UseGameEngine {
           setIsEnemyTurn(true)
           window.setTimeout(() => {
             setIsEnemyTurn(false)
-            commit(result)
+            commit(result, nextLog)
           }, ENEMY_TURN_REVEAL_MS)
         } else {
-          commit(result)
+          commit(result, nextLog)
         }
       } catch (e) {
         setError(e instanceof Error ? e.message : String(e))
@@ -237,6 +286,10 @@ export function useGameEngine(): UseGameEngine {
       setPrevBest(0)
       setOtomoBondChange(null)
       setStakeResult(null)
+      // Phase 4.2：通常モードは記録対象外。進行中のDailyログが残っていれば捨てる
+      runLogRef.current = null
+      setDailyRunLogAvailable(false)
+      clearRunLog()
       // 決定126：Seed共有（`?seed=`）。無ければ従来どおり時刻から発行
       const seed = resolveForcedSeed() ?? `seed-${Date.now()}`
       // 決定126：URLバックドア`?stake=` > 画面の選択。神階>0は「ふつう」基準に固定
@@ -263,7 +316,6 @@ export function useGameEngine(): UseGameEngine {
       godId: GodId,
       deck: CardDefId[],
       dailyKey: string,
-      bonusCopies?: Map<CardDefId, number>,
       otomoGrowthPath?: GrowthPath,
     ): boolean => {
       // DAILY-01：残り回数が無ければ開始しない（画面側もボタンを無効化するが二重に守る）
@@ -279,6 +331,17 @@ export function useGameEngine(): UseGameEngine {
       setDailyResult(null)
     setStakeResult(null)
       setStakeResult(null)
+      // Phase 4.2：このrunのIDを1度だけ発行する（行動ログの識別子。中断・再開しても同じ）。
+      // 乱数が使えない環境ではIDを発行できない＝記録なしで進行する。
+      let clientRunId: string | undefined
+      try {
+        clientRunId = createClientRunId()
+      } catch {
+        clientRunId = undefined
+      }
+      runLogRef.current = null
+      setDailyRunLogAvailable(false)
+      clearRunLog()
       const daily = resolveDailyStart(dailyKey)
       setBattleStartKey((k) => k + 1)
       dispatch({
@@ -289,12 +352,14 @@ export function useGameEngine(): UseGameEngine {
         enemyId: daily.enemyId,
         deck,
         difficulty: daily.difficulty,
-        bonusCopies: bonusCopies ? Object.fromEntries(bonusCopies) : undefined,
+        // Phase 4.1：Dailyは`bonusCopies`を一切乗せない（＝全員が同じ編成ルール）。
+        // 省略時はcreateInitialStateが空Mapとして扱い、validateDeckは
+        // `RULES.deckBuilding.maxCopiesPerCard`（2枚）で判定する
         otomoGrowthPath,
         mode: daily.mode,
         dailyKey: daily.dailyKey,
         modifier: daily.modifier,
-      })
+      }, clientRunId)
       return true
     },
     [dispatch],
@@ -328,10 +393,28 @@ export function useGameEngine(): UseGameEngine {
     setOtomoBondChange(null)
     setDailyResult(null)
     setStakeResult(null)
+    // Phase 4.2 Step 7：中断・再開でDailyの行動ログを失わない。
+    // 保存されていたログをそのまま信用せず、`resumeRunLog`がリプレイで再生して
+    // 「このログから本当にこの盤面になるか」を確かめてから引き継ぐ。
+    // 食い違えば捨てる（ログと盤面がずれたまま追記を続けると、決着時に
+    // 「正しく遊んだのにリプレイが通らない」提出物が出来てしまうため）。
+    const recovered = resumeRunLog(savedState, loadRunLog())
+    if (recovered.ok) {
+      runLogRef.current = recovered.log
+      setDailyRunLogAvailable(true)
+    } else {
+      runLogRef.current = null
+      setDailyRunLogAvailable(false)
+      if (recovered.reason !== 'not-daily') clearRunLog()
+    }
     setState(savedState)
   }, [])
 
   const resetGame = useCallback(() => {
+    // 進行中runの記録はメモリ上だけ手放す。永続化したログは`battleSaveStorage`と
+    // 同じ扱いで残し、「続きから」で戻ってきたときに引き継げるようにする
+    runLogRef.current = null
+    setDailyRunLogAvailable(false)
     setState(null)
     setLog([])
     setError(null)
@@ -356,6 +439,7 @@ export function useGameEngine(): UseGameEngine {
     dailyResult,
     stakeResult,
     battleStartKey,
+    dailyRunLogAvailable,
     startDailyGame,
     startGame,
     resumeGame,

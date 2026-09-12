@@ -163,20 +163,26 @@ export const KEYVISUAL_OBJECT_POSITION: Record<GodId, string> = {
 }
 
 /**
- * OTOMO育成インセンティブ改善（8/31版）：「OTOMOとの絆」画面の7枚のカードを
- * 一目で見分けられるようにする専用テーマカラー。
+ * **神ごとのテーマカラーの正式source（single source of truth）**。
+ *
+ * 初出はOTOMO育成インセンティブ改善（8/31版）で、「OTOMOとの絆」画面の7枚の
+ * カードを一目で見分けるための色として`OTOMO_THEME_COLOR`という名前で導入した。
+ * Phase 6-D Visual Patch v1（決定168）で神の一撃カットインの神色にも使うことになり、
+ * 「OTOMO画面専用の色」ではなく「神7柱のテーマカラー」になったため`GOD_THEME_COLOR`
+ * へ改名した（値は1文字も変えていない）。**per-godの色を新しく足すときはここだけを
+ * 触り、コンポーネント側でHEXを直書きしない**（決定168の「色を新規ハードコードしない」）。
  *
  * `.god-archetype-*`（5色）をそのまま流用しなかった理由：7神中3神（恵比寿・
  * 大耀・福永）が同じattack型のため、archetype色だけでは最大5色にしかならず
  * 7体を一意に区別できない（OTOMO育成監査STEP7で確認済み）。そのため7神の
- * キービジュアル（`public/assets/reference/gods/`）の配色を目視で参照しつつ、
+ * キービジュアル（`art-source/reference/gods/`。決定170 で配信対象外へ移動）の配色を目視で参照しつつ、
  * 色相環を7等分した明確に異なる7色を新規に割り当てた（画像アセットは
  * 追加せず、CSSカスタムプロパティとして各カードに注入するだけ）。
- * `base`＝バッジ・称号見出し等の不透明表示用、`bg`＝カード背景グローの
- * 淡色オーバーレイ用、`border`＝カード外枠用。値は既存コードの配色記法
+ * `base`＝バッジ・称号見出し・カットインのaccent等の不透明表示用、`bg`＝カード
+ * 背景グローの淡色オーバーレイ用、`border`＝カード外枠用。値は既存コードの配色記法
  * （8桁HEXでアルファを直書き、例：`#ffd16655`）に合わせている。
  */
-export const OTOMO_THEME_COLOR: Record<GodId, { base: string; bg: string; border: string }> = {
+export const GOD_THEME_COLOR: Record<GodId, { base: string; bg: string; border: string }> = {
   [GOD_IDS.ebisu]: { base: '#ff6b5e', bg: '#ff6b5e22', border: '#ff6b5e66' },
   [GOD_IDS.taiyo]: { base: '#e8b33d', bg: '#e8b33d22', border: '#e8b33d66' },
   [GOD_IDS.sobi]: { base: '#4d9fff', bg: '#4d9fff22', border: '#4d9fff66' },

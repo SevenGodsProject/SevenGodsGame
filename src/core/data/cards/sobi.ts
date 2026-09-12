@@ -1,6 +1,6 @@
-import { cardDefId } from '../../types/ids'
-import type { CardDef } from '../../types/card'
-import { GOD_IDS } from '../gods'
+import { cardDefId } from '../../types/ids.js'
+import type { CardDef } from '../../types/card.js'
+import { GOD_IDS } from '../gods.js'
 
 /**
  * 蒼毘（sobi）専用カード。
@@ -61,6 +61,13 @@ export const SOBI_CARDS: CardDef[] = [
       { kind: 'block', amount: 6 },
       { kind: 'damage', target: 'enemy', amount: 8 },
     ],
+    // Phase 5-C（決定159）：「盾を作ってから反撃する」。判定は不動の構えと同じ blocked
+    // （このカード自身のブロックも足した後のブロック ≧ 敵の予告）。先に不動・誓いで固めるほど立ちやすい
+    bonus: {
+      when: 'blocked',
+      effects: [{ kind: 'damage', target: 'enemy', amount: 6 }],
+      textJa: 'ブロックが敵の予告以上なら、敵に60ダメージ。',
+    },
   },
   {
     id: SOBI_CARD_IDS.sternRebuke,

@@ -1,5 +1,5 @@
-import { godId, otomoId } from '../types/ids'
-import type { Effect, OtomoDef, OtomoForm, OtomoId } from '../types'
+import { godId, otomoId } from '../types/ids.js'
+import type { Effect, OtomoDef, OtomoForm, OtomoId } from '../types/index.js'
 
 export const OTOMO_IDS = {
   taimaru: otomoId('taimaru'),

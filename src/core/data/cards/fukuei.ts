@@ -1,6 +1,6 @@
-import { cardDefId } from '../../types/ids'
-import type { CardDef } from '../../types/card'
-import { GOD_IDS } from '../gods'
+import { cardDefId } from '../../types/ids.js'
+import type { CardDef } from '../../types/card.js'
+import { GOD_IDS } from '../gods.js'
 
 /**
  * 福永（fukuei）専用カード。

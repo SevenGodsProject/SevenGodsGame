@@ -61,6 +61,8 @@ export function RewardOverlay({ godId, seed, onPick, onSkip }: RewardOverlayProp
                       alt=""
                       loading="lazy"
                       decoding="async"
+                      width={512}
+                      height={768}
                     />
                   ) : (
                     <div className="reward-card-icon" style={{ color: style.color }}>

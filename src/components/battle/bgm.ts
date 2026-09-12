@@ -14,16 +14,41 @@
 const BGM_VOLUME = 0.35
 const JINGLE_VOLUME = 0.5
 
+/**
+ * Release Hygiene Gate（決定170）：配信容量の整理で、同じ音源を
+ * **Opus/WebM（主）と MP3（フォールバック）の2形式**で置くようにした。
+ *
+ * - 曲そのもの・再生タイミング・ループ位置・音量は変えていない。原音源
+ *   （200kbps の MP3）は `audio-source/bgm/` へ移し、配信対象から外したうえで
+ *   そこから両形式を書き出している（`scripts/release-hygiene/audio.mjs`）
+ * - Opus 48kbps は元と**尺が1サンプルも変わらない**ので、`loop = true` の
+ *   つなぎ目も従来どおり。MP3 80kbps は 12〜16kHz がわずかに落ちるが、
+ *   こちらは WebM/Opus を再生できない環境（Safari 17.4 未満など）専用の保険
+ * - 拡張子の選択は `canPlayType` の実測に任せる。判定できない環境（テスト環境で
+ *   `Audio` が無い等）では MP3 を選ぶ＝従来と同じ挙動になる
+ */
+const AUDIO_EXT: 'webm' | 'mp3' = (() => {
+  if (typeof document === 'undefined' || typeof Audio === 'undefined') return 'mp3'
+  try {
+    const probe = document.createElement('audio')
+    return probe.canPlayType('audio/webm; codecs="opus"') === 'probably' ? 'webm' : 'mp3'
+  } catch {
+    return 'mp3'
+  }
+})()
+
+const bgmUrl = (name: string): string => `/assets/bgm/${name}.${AUDIO_EXT}`
+
 const TRACKS = {
-  home: '/assets/bgm/home.mp3',
-  battle: '/assets/bgm/battle.mp3',
+  home: bgmUrl('home'),
+  battle: bgmUrl('battle'),
 } as const
 
 export type BgmTrack = keyof typeof TRACKS
 
 const JINGLE_TRACKS = {
-  victory: '/assets/bgm/victory.mp3',
-  defeat: '/assets/bgm/defeat.mp3',
+  victory: bgmUrl('victory'),
+  defeat: bgmUrl('defeat'),
 } as const
 
 export type JingleTrack = keyof typeof JINGLE_TRACKS

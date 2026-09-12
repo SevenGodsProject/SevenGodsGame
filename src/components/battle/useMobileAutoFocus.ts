@@ -65,10 +65,25 @@ function matches(query: string): boolean {
 
 const CANCEL_EVENTS = ['pointerdown', 'touchstart', 'wheel', 'keydown'] as const
 
+/**
+ * Phase 6-B（決定164）：Battle Viewport Layout では戦闘画面が1画面に収まり、
+ * ページ自体がスクロールしない＝着弾は常に画面内にある。スクロールできない
+ * 画面で `window.scrollTo` を呼ぶのは純粋な無駄なので、「ページが実際に
+ * スクロールできるとき」だけ決定125の自動フォーカスを動かす。
+ * （極端に低いビューポート＝`@media (max-height: 460px)` の逃げ道では
+ * ページがスクロール可能になるため、そこでは従来どおり機能する。）
+ */
+function isPageScrollable(): boolean {
+  if (typeof document === 'undefined') return false
+  const el = document.scrollingElement
+  if (!el) return false
+  return el.scrollHeight - el.clientHeight > 4
+}
+
 /** window/document を `autoFocusSession.ts` の環境として配線する */
 function createBrowserController(): AutoFocusController {
   return createAutoFocusController({
-    isMobile: () => matches(MOBILE_FOCUS_QUERY),
+    isMobile: () => matches(MOBILE_FOCUS_QUERY) && isPageScrollable(),
     reducedMotion: () => matches(REDUCED_MOTION_QUERY),
     findTarget: () => document.querySelector<HTMLElement>(FOCUS_TARGET_SELECTOR),
     scrollY: () => window.scrollY,

@@ -1,3 +1,4 @@
+import type { CSSProperties } from 'react'
 import type { GodId, PlayerState } from '../../core/types'
 import { getGodDef } from '../../core/data/gods'
 import { STAT_LABEL } from '../setup/godStyle'
@@ -31,6 +32,12 @@ type PlayerPanelProps = {
    * 共鳴カットイン終了＝burst-banner出現（BURST_GOD_ATTACK_MS）まで遅らせる */
   burstHit: boolean
   floatingNumbers: FloatingNumber[]
+  /** Phase 6-A：表示HP（着弾に合わせて追従する値。engine の HP ではない） */
+  hpShown: number
+  /** Phase 6-A：敵ダメージのカードを使った直後（cast 中）の「構え」＝anticipation */
+  windUp?: boolean
+  /** Phase 6-A：敵の通常攻撃の着弾時刻（敵の突進の最前）。連撃・必殺は既存の CSS タイムライン */
+  selfImpactMs?: number | null
 }
 
 /**
@@ -49,6 +56,9 @@ export function PlayerPanel({
   specialHit,
   burstHit,
   floatingNumbers,
+  hpShown,
+  windUp = false,
+  selfImpactMs = null,
 }: PlayerPanelProps) {
   const god = getGodDef(godId)
   // STEP-UX5：被弾シェイクの強さを、その攻撃のIntent危険度と同じtierで
@@ -67,76 +77,84 @@ export function PlayerPanel({
       ? `hit-shake-multi-${Math.min(multiHitCount, 3)}`
       : `hit-shake-flash${hitTierToken}`
   const delayToken = specialHit ? (multiHitCount >= 2 ? ' hit-delay-multilead' : ' hit-delay-beam') : ''
+  // Phase 6-A：敵の通常攻撃（単発・必殺でない）は、敵の突進の最前で着弾させる（旧：commit と同時）
+  const normalDelayed = !specialHit && multiHitCount <= 1 && selfImpactMs != null && selfImpactMs > 0
+  const impactStyle = normalDelayed ? ({ '--impact-delay': `${selfImpactMs}ms` } as CSSProperties) : undefined
 
   return (
     <div className="panel player-panel">
-      <div className="panel-title">{god.nameJa}</div>
-      <p className="god-tagline">「{god.tagline}」</p>
-      {/* VFX-03：共鳴BURSTの一撃は「共鳴カットイン→✨神の一撃！バナー」の後ろ
-          （god-lunge-delay-burst＝RESONANCE_CUTIN_MS）で突進する。通常攻撃は従来どおり即時 */}
-      <div
-        key={`god-${attackKey}`}
-        className={`player-avatar-wrap${attackKey > 0 ? ` god-lunge${burstHit ? ' god-lunge-delay-burst' : ''}` : ''}`}
-      >
-        <img className="player-avatar" src={god.art.front} alt={god.nameJa} />
-      </div>
-      {/* 第二次完成フェーズF-1（緊急バグ修正）：以前はhit-shake-flash（被弾）と
-          heal-pulse（回復）が`key={`${hitKey}-${healKey}`}`という単一のkeyを
-          共有していた。hitKey/healKeyはともに単調増加で一度0より大きくなると
-          恒久的にtrueのままのため、「一度でも被弾した後」に回復のみが発生して
-          healKeyだけが変わってもkey文字列自体は変化し再マウントが起き、その際
-          `hitKey > 0`の条件でhit-shake-flash（被弾シェイク＋赤い斬撃線slash-fx）が
-          意図せず再生されてしまっていた（回復しただけなのに殴られたように見える
-          誤表示）。被弾用と回復用でそれぞれ独立したkeyのラッパーに分離し、
-          お互いの再マウントに影響しないようにする（EnemyPanel.tsxの
-          `key={`hit-${hitKey}`}`と同じ命名パターンに統一）。 */}
-      <div
-        key={`hit-${hitKey}`}
-        className={hitKey > 0 ? `${shakeClass}${delayToken}` : undefined}
-        style={{ position: 'relative' }}
-      >
+      {/* Phase 6-B（決定164）：神名・HP・主要状態を立ち絵の「上」に1枚の名札としてまとめる。
+          EnemyPanel の .enemy-plate と対になる構造。台詞（god-tagline）は画面高が
+          小さいときに CSS で省略できるよう、名札の中の独立要素にしておく。 */}
+      <div className="player-plate">
+        <div className="player-plate-head">
+          <span className="panel-title">{god.nameJa}</span>
+          <span className="god-tagline">「{god.tagline}」</span>
+        </div>
         <div key={`heal-${healKey}`} className={healKey > 0 ? 'heal-pulse' : undefined}>
-          <HpBar current={player.hp} max={player.maxHp} color="#4dbd74" />
+          <HpBar current={hpShown} max={player.maxHp} color="#4dbd74" />
         </div>
-        {/* 単発被弾は従来の斬撃線。連撃はhitごとの専用slash（下）に置き換える。
-            VFX-03：神滅甲タイプ（special単発＝砲撃）は斬撃技ではないためslashを出さず、
-            着弾は下のimpact-ring-beam（大リング）＋hugeシェイク＋閃光で表現する */}
-        {hitKey > 0 && multiHitCount <= 1 && !specialHit && <div className="slash-fx slash-fx-reverse" />}
-        {/* ENEMY-VFX-02：連撃のhitごとのslash trail。HIT1=左下→右上／HIT2=右下→左上／
-            HIT3=双牙クロス（X字2本・最大）。発生時刻はTEMPO-B（CSS側delayで一致） */}
-        {hitKey > 0 && multiHitCount >= 2 && (
-          <>
-            <div className={`multi-slash multi-slash-1${delayToken}`} />
-            <div className={`multi-slash multi-slash-2${delayToken}`} />
-            {multiHitCount >= 3 && <div className={`multi-slash multi-slash-3a${delayToken}`} />}
-            {multiHitCount >= 3 && <div className={`multi-slash multi-slash-3b${delayToken}`} />}
-          </>
-        )}
-        {/* 神滅甲タイプ：ビーム着弾のimpact ring（1260ms遅延、CSS側と一致）。
-            VFX-03：slashの代わりに大リング（impact-ring-beam）で砲撃の着弾を表現する */}
-        {hitKey > 0 && specialHit && multiHitCount <= 1 && <div className="impact-ring impact-ring-beam hit-delay-beam" />}
-        {/* 双牙乱撃タイプ：HIT3の大impact ring */}
-        {hitKey > 0 && specialHit && multiHitCount >= 3 && <div className="impact-ring impact-ring-hit3 hit-delay-multilead" />}
-        <FloatingNumbers numbers={floatingNumbers} />
+        <div className="player-plate-status">
+          {player.block > 0 && (
+            <div
+              key={`block-${blockGainKey}`}
+              className={`badge badge-block${blockGainKey > 0 ? ' badge-block-pulse' : ''}`}
+            >
+              🛡 {formatScaled(player.block)}
+            </div>
+          )}
+          {player.buffs.length > 0 && (
+            <div className="buff-list">
+              {player.buffs.map((b, i) => (
+                <span key={i} className="badge badge-buff">
+                  {STAT_LABEL[b.stat]} {b.amount > 0 ? '+' : ''}
+                  {formatScaled(b.amount)}（{b.remainingRounds}）
+                </span>
+              ))}
+            </div>
+          )}
+        </div>
       </div>
-      {player.block > 0 && (
-        <div
-          key={`block-${blockGainKey}`}
-          className={`badge badge-block${blockGainKey > 0 ? ' badge-block-pulse' : ''}`}
-        >
-          🛡 {formatScaled(player.block)}
+      {/* VFX-03：共鳴BURSTの一撃は「共鳴カットイン→✨神の一撃！バナー」の後ろで突進する。
+          Phase 6-A：敵ダメージのカードを選んだ瞬間（cast 中）に一瞬引いて構え、commit で突く
+          （god-strike の 26%＝CARD_IMPACT_MS で着弾）。神の一撃は溜め→突きの god-burst-strike
+          （開始＝BURST_GOD_ATTACK_MS、着弾＝BURST_IMPACT_MS。battle.css と一致） */}
+      <div className="player-stage">
+        <div className={`player-windup${windUp ? ' is-winding' : ''}`}>
+          <div
+            key={`god-${attackKey}`}
+            className={`player-avatar-wrap${attackKey > 0 ? (burstHit ? ' god-burst-strike' : ' god-strike') : ''}`}
+          >
+            {/* Phase 6-B：被弾の揺れ・閃光は立ち絵そのものに掛ける（旧：HPバーのラッパー） */}
+            <div
+              key={`hit-${hitKey}`}
+              className={hitKey > 0 ? `${shakeClass}${delayToken}${normalDelayed ? ' juice-delayed' : ''}` : undefined}
+              style={impactStyle}
+            >
+              <img className="player-avatar" src={god.art.front} alt={god.nameJa} width={640} height={640} />
+            </div>
+          </div>
         </div>
-      )}
-      {player.buffs.length > 0 && (
-        <div className="buff-list">
-          {player.buffs.map((b, i) => (
-            <span key={i} className="badge badge-buff">
-              {STAT_LABEL[b.stat]} {b.amount > 0 ? '+' : ''}
-              {formatScaled(b.amount)}（{b.remainingRounds}）
-            </span>
-          ))}
+        {/* 斬撃・リング・ダメージ数字は立ち絵の上のレイヤーへ（HP の数値と重ならない） */}
+        <div className="player-hit-layer" aria-hidden="true">
+          {/* 単発被弾は従来の斬撃線。連撃はhitごとの専用slash。
+              神滅甲タイプ（special単発＝砲撃）は斬撃技ではないため大リングで表現する */}
+          {hitKey > 0 && multiHitCount <= 1 && !specialHit && (
+            <div key={`slash-${hitKey}`} className={`slash-fx slash-fx-reverse${normalDelayed ? ' juice-delayed' : ''}`} style={impactStyle} />
+          )}
+          {hitKey > 0 && multiHitCount >= 2 && (
+            <div key={`multi-${hitKey}`}>
+              <div className={`multi-slash multi-slash-1${delayToken}`} />
+              <div className={`multi-slash multi-slash-2${delayToken}`} />
+              {multiHitCount >= 3 && <div className={`multi-slash multi-slash-3a${delayToken}`} />}
+              {multiHitCount >= 3 && <div className={`multi-slash multi-slash-3b${delayToken}`} />}
+            </div>
+          )}
+          {hitKey > 0 && specialHit && multiHitCount <= 1 && <div key={`ring-${hitKey}`} className="impact-ring impact-ring-beam hit-delay-beam" />}
+          {hitKey > 0 && specialHit && multiHitCount >= 3 && <div key={`ring3-${hitKey}`} className="impact-ring impact-ring-hit3 hit-delay-multilead" />}
+          <FloatingNumbers numbers={floatingNumbers} />
         </div>
-      )}
+      </div>
     </div>
   )
 }

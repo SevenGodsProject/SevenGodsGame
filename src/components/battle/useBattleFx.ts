@@ -4,6 +4,7 @@ import { getGodPassiveDef } from '../../core/data/gods'
 import { getIntentPowerTier, type PowerTier } from './cardStyle'
 import { damageFeelTier, type FeelTier } from './feelTier'
 import { formatScaled } from '../displayScale'
+import { planBatch } from './combatTimeline'
 
 /**
  * HOTFIX-DISPLAY-SCALE-TOAST：カード使用結果トーストの表示文言。
@@ -102,6 +103,11 @@ export type BattleFx = {
   burstHit: boolean
   /** 決定128：直近の自分→敵の被弾の演出段階（L1〜L4。同バッチ最大ダメージ、BURSTはL4） */
   enemyHitTier: FeelTier
+  /**
+   * Phase 6-A（決定162）：結果トースト・ミニ結果を見せてよい時刻（commit からの ms）。
+   * 数値の結果を着弾より先に見せない（神の一撃では着弾まで隠す）。着弾計画と共有
+   */
+  revealDelayMs: number
 }
 
 const INITIAL_FX: BattleFx = {
@@ -127,6 +133,7 @@ const INITIAL_FX: BattleFx = {
   specialHit: false,
   burstHit: false,
   enemyHitTier: 2,
+  revealDelayMs: 0,
 }
 
 /**
@@ -134,7 +141,7 @@ const INITIAL_FX: BattleFx = {
  * ルール本体（core）は演出を一切知らないので、「起きた出来事」から
  * 「どう見せるか」への変換はすべてここに閉じ込めます。
  */
-export function useBattleFx(log: GameEvent[], apCurrent: number): BattleFx {
+export function useBattleFx(log: GameEvent[], apCurrent: number, enemyVisualType?: string): BattleFx {
   const [fx, setFx] = useState<BattleFx>(INITIAL_FX)
   const seenCount = useRef(0)
   // STEP2-B：gainAp効果はGameEventを一切出さない（effects.tsのcase 'gainAp'参照）ため、
@@ -154,6 +161,7 @@ export function useBattleFx(log: GameEvent[], apCurrent: number): BattleFx {
     const apDelta = apCurrent - prevAp.current
     prevAp.current = apCurrent
     if (newEvents.length === 0) return
+    const batchPlan = planBatch(newEvents, { enemyVisualType })
 
     let enemyHit = 0
     let selfHit = 0
@@ -349,10 +357,11 @@ export function useBattleFx(log: GameEvent[], apCurrent: number): BattleFx {
         // （カード自身のダメージと同バッチでも、1回のlunge/シェイクとしてburst側の
         // タイミングに揃える。数字はイベント単位で個別に遅延＝useFloatingNumbers）
         burstHit: godAttack > 0 ? burst > 0 : prev.burstHit,
-        enemyHitTier: enemyHit > 0 ? damageFeelTier(maxEnemyHitAmount, { burst: burst > 0 }) : prev.enemyHitTier,
+        enemyHitTier: enemyHit > 0 ? (batchPlan.outcome === 'won' ? 4 : damageFeelTier(maxEnemyHitAmount, { burst: burst > 0 })) : prev.enemyHitTier,
+        revealDelayMs: resultToast || miniResult ? batchPlan.revealMs : prev.revealDelayMs,
       }))
     }
-  }, [log, apCurrent])
+  }, [log, apCurrent, enemyVisualType])
 
   return fx
 }

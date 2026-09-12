@@ -1,5 +1,5 @@
-import { cardDefId } from '../../types/ids'
-import type { CardDef } from '../../types/card'
+import { cardDefId } from '../../types/ids.js'
+import type { CardDef } from '../../types/card.js'
 
 /**
  * 共通カードのID一覧。
@@ -59,6 +59,12 @@ export const COMMON_CARDS: CardDef[] = [
     rarity: 'common',
     // 効率 ×1.0（基準）
     effects: [{ kind: 'damage', target: 'enemy', amount: 5 }],
+    // Phase 5-A（決定153）：最も安い攻撃札を「2枚目に置く」動機にする。1枚目に撃つと素の50のまま。
+    bonus: {
+      when: 'combo',
+      effects: [{ kind: 'damage', target: 'enemy', amount: 3 }],
+      textJa: 'このラウンド2枚目以降なら、敵に30ダメージ。',
+    },
   },
   {
     id: CARD_IDS.heavyBlow,
@@ -69,6 +75,12 @@ export const COMMON_CARDS: CardDef[] = [
     rarity: 'common',
     // 効率 ×1.2（高コストほど得にして、1APカード連打を最適解にしない）
     effects: [{ kind: 'damage', target: 'enemy', amount: 12 }],
+    // Phase 5-A（決定153）：ゲージを溜めてから撃つ主砲。共振・受け流しで先に4まで運ぶ順番を作る。
+    bonus: {
+      when: 'charged',
+      effects: [{ kind: 'damage', target: 'enemy', amount: 4 }],
+      textJa: '共鳴が4以上なら、敵に40ダメージ。',
+    },
   },
   {
     id: CARD_IDS.guard,
@@ -78,6 +90,12 @@ export const COMMON_CARDS: CardDef[] = [
     cost: 1,
     rarity: 'common',
     effects: [{ kind: 'block', amount: 5 }],
+    // Phase 5-A（決定153）：「予告ぴったりまで固める」判断そのものを反撃に変える（蒼毘の看板と同型の共通版）。
+    bonus: {
+      when: 'blocked',
+      effects: [{ kind: 'damage', target: 'enemy', amount: 3 }],
+      textJa: 'ブロックが敵の予告以上なら、敵に30ダメージ。',
+    },
   },
   {
     id: CARD_IDS.resonate,
@@ -88,6 +106,12 @@ export const COMMON_CARDS: CardDef[] = [
     rarity: 'common',
     // ゲージ最大7に対し +2 なので、4枚で満タンに届きます
     effects: [{ kind: 'resonance', amount: 2 }],
+    // Phase 5-A（決定153）：ゲージ札を「先に置く」のではなく「後に足す」選択肢も作る。charged札への橋渡し。
+    bonus: {
+      when: 'combo',
+      effects: [{ kind: 'resonance', amount: 1 }],
+      textJa: 'このラウンド2枚目以降なら、共鳴ゲージ+1。',
+    },
   },
   {
     id: CARD_IDS.heal,
@@ -97,6 +121,12 @@ export const COMMON_CARDS: CardDef[] = [
     cost: 1,
     rarity: 'common',
     effects: [{ kind: 'heal', amount: 5 }],
+    // Phase 5-A（決定153）：大技の前に回復すると、そのまま受けの厚みにもなる。
+    bonus: {
+      when: 'enemyBig',
+      effects: [{ kind: 'block', amount: 3 }],
+      textJa: '敵の予告が100以上なら、ブロック+30。',
+    },
   },
   {
     id: CARD_IDS.curse,
@@ -109,6 +139,12 @@ export const COMMON_CARDS: CardDef[] = [
     effects: [
       { kind: 'debuff', target: 'enemy', stat: 'atk', amount: 5, rounds: 3 },
     ],
+    // Phase 5-A（決定153）：弱体は早いほど得だが、大技の直前に置けば火力にもなる。
+    bonus: {
+      when: 'enemyBig',
+      effects: [{ kind: 'damage', target: 'enemy', amount: 4 }],
+      textJa: '敵の予告が100以上なら、敵に40ダメージ。',
+    },
   },
   {
     id: CARD_IDS.oracle,
@@ -139,6 +175,12 @@ export const COMMON_CARDS: CardDef[] = [
       { kind: 'damage', target: 'enemy', amount: 4 },
       { kind: 'draw', amount: 1 },
     ],
+    // Phase 5-A（決定153）：2枚目以降に撃つと神力が返り、そのラウンドの手数が伸びる。
+    bonus: {
+      when: 'combo',
+      effects: [{ kind: 'gainAp', amount: 1 }],
+      textJa: 'このラウンド2枚目以降なら、神力+1。',
+    },
   },
   {
     id: CARD_IDS.allOutStrike,
@@ -149,6 +191,12 @@ export const COMMON_CARDS: CardDef[] = [
     rarity: 'common',
     // 効率 ×1.33。神託（×1.67）より安く撃てる純粋火力の3AP選択肢
     effects: [{ kind: 'damage', target: 'enemy', amount: 20 }],
+    // Phase 5-A（決定153）：3APの大振りを、大技の直前に置く価値へ変える。
+    bonus: {
+      when: 'enemyBig',
+      effects: [{ kind: 'debuff', target: 'enemy', stat: 'atk', amount: 3, rounds: 1 }],
+      textJa: '敵の予告が100以上なら、敵の攻撃力を1ラウンドのあいだ30下げる。',
+    },
   },
   {
     id: CARD_IDS.ironStance,
@@ -159,6 +207,12 @@ export const COMMON_CARDS: CardDef[] = [
     rarity: 'common',
     // 効率 ×1.2。守護の上位互換ではなくコスト帯違いの選択肢
     effects: [{ kind: 'block', amount: 12 }],
+    // Phase 5-A（決定153）：受け切れたぶんだけ立て直す。
+    bonus: {
+      when: 'blocked',
+      effects: [{ kind: 'heal', amount: 3 }],
+      textJa: 'ブロックが敵の予告以上なら、HPを30回復。',
+    },
   },
   {
     id: CARD_IDS.breathOfLife,
@@ -190,6 +244,12 @@ export const COMMON_CARDS: CardDef[] = [
     effects: [
       { kind: 'debuff', target: 'enemy', stat: 'atk', amount: 5, rounds: 1 },
     ],
+    // Phase 5-A（決定153）：軽い妨害を「先に置く」動機は既にあるので、こちらは後置きに手数を返す。
+    bonus: {
+      when: 'combo',
+      effects: [{ kind: 'draw', amount: 1 }],
+      textJa: 'このラウンド2枚目以降なら、カードを1枚引く。',
+    },
   },
   {
     id: CARD_IDS.kaguraDance,
@@ -202,6 +262,12 @@ export const COMMON_CARDS: CardDef[] = [
       { kind: 'resonance', amount: 3 },
       { kind: 'block', amount: 3 },
     ],
+    // Phase 5-A（決定153）：溜まった状態でもう一段回すと、ゲージが火力に変わる。
+    bonus: {
+      when: 'charged',
+      effects: [{ kind: 'damage', target: 'enemy', amount: 4 }],
+      textJa: '共鳴が4以上なら、敵に40ダメージ。',
+    },
   },
   {
     id: CARD_IDS.prophecy,
@@ -256,6 +322,12 @@ export const COMMON_CARDS: CardDef[] = [
       { kind: 'damage', target: 'enemy', amount: 10 },
       { kind: 'resonance', amount: 1 },
     ],
+    // Phase 5-A（決定153）：溜まっているほど加速する。発動（7）へ1手早く届く。
+    bonus: {
+      when: 'charged',
+      effects: [{ kind: 'resonance', amount: 1 }],
+      textJa: '共鳴が4以上なら、共鳴ゲージ+1。',
+    },
   },
   {
     id: CARD_IDS.warCry,
@@ -269,6 +341,12 @@ export const COMMON_CARDS: CardDef[] = [
       { kind: 'damage', target: 'enemy', amount: 18 },
       { kind: 'debuff', target: 'enemy', stat: 'atk', amount: 3, rounds: 1 },
     ],
+    // Phase 5-A（決定153）：3APの締め。安い札で場を作ってから撃つ。
+    bonus: {
+      when: 'combo',
+      effects: [{ kind: 'damage', target: 'enemy', amount: 6 }],
+      textJa: 'このラウンド2枚目以降なら、敵に60ダメージ。',
+    },
   },
   {
     id: CARD_IDS.parry,
@@ -281,6 +359,12 @@ export const COMMON_CARDS: CardDef[] = [
       { kind: 'block', amount: 3 },
       { kind: 'resonance', amount: 1 },
     ],
+    // Phase 5-A（決定153）：軽く受けて流すと、そのまま次の発動が近づく。
+    bonus: {
+      when: 'blocked',
+      effects: [{ kind: 'resonance', amount: 1 }],
+      textJa: 'ブロックが敵の予告以上なら、共鳴ゲージ+1。',
+    },
   },
   {
     id: CARD_IDS.bastion,
@@ -293,6 +377,12 @@ export const COMMON_CARDS: CardDef[] = [
       { kind: 'block', amount: 8 },
       { kind: 'heal', amount: 4 },
     ],
+    // Phase 5-A（決定153）：大技の前に置けば、そのラウンドを受け切る厚みになる。
+    bonus: {
+      when: 'enemyBig',
+      effects: [{ kind: 'block', amount: 4 }],
+      textJa: '敵の予告が100以上なら、ブロック+40。',
+    },
   },
   {
     id: CARD_IDS.mikoDance,
@@ -412,6 +502,12 @@ export const COMMON_CARDS: CardDef[] = [
       { kind: 'damage', target: 'enemy', amount: 7 },
       { kind: 'gainAp', amount: 1 },
     ],
+    // Phase 5-A（決定153）：神力が返る札なので、2枚目以降の「繋ぎ」として撃つほど伸びる。
+    bonus: {
+      when: 'combo',
+      effects: [{ kind: 'damage', target: 'enemy', amount: 5 }],
+      textJa: 'このラウンド2枚目以降なら、敵に50ダメージ。',
+    },
   },
   {
     id: CARD_IDS.foresight,

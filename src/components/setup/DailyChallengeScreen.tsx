@@ -32,7 +32,11 @@ function godName(godId: string | null): string {
  * 敵選択・難易度選択はDailyには無い（挑戦開始→神選択→デッキ→バトル）。
  * 「ランキング」の語はオンライン実装まで使わない（決定73の免責と同じ方針）。
  */
-export function DailyChallengeScreen({ dateKey, onStart, onBack }: DailyChallengeScreenProps) {
+export function DailyChallengeScreen({
+  dateKey,
+  onStart,
+  onBack,
+}: DailyChallengeScreenProps) {
   const boss = dailyBossFor(dateKey)
   const def = getEnemyDef(boss.enemyId)
   const day = loadDailyDay(dateKey)
@@ -129,6 +133,10 @@ export function DailyChallengeScreen({ dateKey, onStart, onBack }: DailyChalleng
       <div className="daily-rules">
         <strong>全員共通の条件：</strong>敵・Seed・神域強化（敵HP ×{RULES.daily.modifier.enemyHpMul}・攻撃 ×
         {RULES.daily.modifier.enemyAtkMul}、難易度は「ふつう」基準）。
+        {/* Phase 4.1：編成ルールも「全員共通の条件」であることを明記する。
+            神域挑戦では報酬カードの追加編成上限（通常モードの3枚積み）を使わない */}
+        <strong>編成ルールも全員同じ</strong>で、同じカードは
+        {RULES.deckBuilding.maxCopiesPerCard}枚まで（通常モードの報酬ボーナスは使いません）。
         <br />
         <strong>自由に選べるもの：</strong>神・OTOMOの絆・デッキ。敵選択と難易度選択はありません。
         <br />

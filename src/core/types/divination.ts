@@ -1,4 +1,4 @@
-import type { Effect } from './effect'
+import type { Effect } from './effect.js'
 
 /**
  * 託宣の選択肢（決定21）。

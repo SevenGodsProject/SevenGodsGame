@@ -68,6 +68,28 @@ export const RULES = {
      * QuotaProviderで抽象化する（決定21・§3-1）。
      */
     count: 7,
+    /**
+     * Phase 5-D：神託「加護」が得るブロック＝敵の予告合計 × guardRatio（切り捨て）。
+     * 0.35 / 0.40 / 0.45 / 0.50 を paired-seed で比較し 0.5 を採用（`scripts/phase5d-guard/`）。
+     * 先読みプレイヤーの加護選択率が「致死の予告ラウンドで85%・通常ラウンドで13%」となり、
+     * 危険なときだけ使う形が最も明確に出た。どの候補でも「毎ラウンドとりあえず加護」は起きなかった。
+     * 神階Ⅳ以降のブロック効率は `guardIgnoresBlockEfficiency` を参照（Phase 5-E で例外化）。
+     */
+    guardRatio: 0.5,
+    /**
+     * Phase 5-D：加護の最低保証（内部値。表示×10で20）。予告が小さい・溜め（予告0）のときはこれだけ。
+     * 旧加護のブロック量（2）と同じにして、「予告が小さいラウンドの加護は弱い」を保つ。
+     * ブロックはラウンド開始時に0へ戻るので、溜めラウンドに貯め込むことはできない。
+     */
+    guardMin: 2,
+    /**
+     * Phase 5-E（決定158）：加護のブロックだけ、神階Ⅳ以降のブロック効率（`RULES.stakes.blockEfficiency`）を受けない。
+     * 5-D では加護にも 0.75 がかかり、本文の「予告の50%」がⅣ以降で実効37%になっていた。
+     * BASE / 神託4→5 / この例外 / 両方 を paired-seed で比較し、神階Ⅶ 45〜55% の帯に留まりながら
+     * 福永・大耀・魔獣を引き上げ、蒼毘・寿楽をほぼ動かさない唯一の案だった（`scripts/phase5e-guard-structure/`）。
+     * 通常カードのブロックには従来どおり効率がかかる。データにしてあるのは gameVersion の指紋へ自動で乗せるため。
+     */
+    guardIgnoresBlockEfficiency: true,
   },
 
   /**
@@ -188,6 +210,119 @@ export const RULES = {
   },
 
   /**
+   * Phase 4.1：リプレイ検証（`src/core/replay`）の調整値。
+   * ゲームの挙動には一切影響しない（エンジンはこの値を参照しない）。
+   */
+  replay: {
+    /**
+     * ReplayInputのフォーマット版。行動ログの構造を変えたときだけ上げる。
+     * `saveVersion`とは独立（セーブデータとリプレイは別物で、片方の変更が
+     * もう片方の互換性を壊さないようにするため）。
+     */
+    formatVersion: 1,
+    /**
+     * 1リプレイあたりの最大action数（DoS・巨大ログ対策の門番であって、
+     * ゲームルールではない）。理論上の上限は「7ラウンド × (山札20枚を2巡＝40回の
+     * PLAY_CARD ＋ 託宣1回) ＋ END_ROUND 7回」＝約336。実プレイは30〜60程度
+     * （Phase 4.0監査の想定）なので、正当な試合を落とさない余裕を持たせて400とする。
+     * Phase 4.2で本番記録経路を通した1,470runの実分布（max 34・P99 30）でも再確認した。
+     */
+    maxActions: 400,
+    /**
+     * Phase 4.2：送信待ちrun（`sevengods.pendingRuns`）の保持上限。
+     * ランキングBackendはまだ無く、Phase 4.3以降の送信失敗時の再送のために
+     * 決着済みReplayInputをローカルへ溜める。無限に溜めないための上限。
+     */
+    pendingRuns: {
+      /** 保持するrunの最大数（超えたら古い順に捨てる） */
+      maxRuns: 20,
+      /** 保持日数（JSTの日付キー基準。これより古いDailyのrunは剪定する） */
+      retentionDays: 7,
+    },
+  },
+
+  /**
+   * Phase 4.3：Daily ランキングBackendの調整値。
+   * ゲームの挙動には一切影響しない（engineはこの値を参照しない）。
+   */
+  ranking: {
+    /**
+     * ★kill switch：クライアントからサーバーへ提出を行うか。
+     * Phase 4.3では **false**。ランキングBackendの本番環境（Neon等）は
+     * CEO判断待ちで未契約であり、送信先が存在しないため。
+     * trueにするのは、Backendの本番稼働をCEOが承認した後（Phase 4.4）。
+     */
+    submissionEnabled: false,
+    /** リーダーボードで返す最大件数 */
+    leaderboardLimit: 100,
+    /**
+     * Phase 4.9：Daily画面のランキングに載せる上位の件数。
+     * サーバーは最大 `leaderboardLimit` 件返せるが、**画面には10件しか出さない**。
+     * 神域挑戦の画面は既にボス・自己ベスト・神別ベスト・ルールで縦に長く、
+     * ここに100行を足すと「今日の自分の立ち位置」が埋もれる（Phase 4.9 の方針）。
+     */
+    leaderboardTopCount: 10,
+    /**
+     * Phase 4.9：ランキング取得を諦めるまでの時間（ミリ秒）。
+     * ランキングは**あってもなくても遊べる**付加情報なので、待たせ続けない。
+     * これを過ぎたら取得を打ち切り、UIは「取得できませんでした」に落として先へ進ませる。
+     */
+    leaderboardTimeoutMs: 6000,
+    /**
+     * Phase 4.6（決定139 §13）：run ticket の有効期間（分）。
+     * 実プレイ5〜10分＋中断・再開を見込む。これを過ぎた ticket では提出できず、
+     * 枠は消費されたままになる（＝放置で枠を寝かせられないようにする）。
+     */
+    ticketTtlMinutes: 90,
+    /**
+     * Phase 4.6（決定139 §6）：JSTの日付が変わったあと、前日の ticket で提出できる猶予（分）。
+     * 23:59に開始した挑戦を救うためのもの。ボードは翌日 00:00＋この値で確定する。
+     * 0分では救えず、90分（TTLと同じ）では確定が遅れて翌日の掲示と重なるため15分。
+     */
+    dayEndGraceMinutes: 15,
+    /**
+     * Phase 4.6（決定139 §7-2）：受け付けるリクエストbodyの最大バイト数。
+     * 400 action の行動ログでも約20 KBなので、正当な提出を落とさない余裕がある。
+     * 高コストなJSON解析・リプレイ検証より**前**に切るための門番。
+     */
+    maxBodyBytes: 65536,
+    /**
+     * Phase 4.6（決定139 §7-2）：リーダーボードの取得結果を保持する秒数。
+     * 連打でDBを全走査し続けないための門番（Neon Free の CU-hours／egress 保護）。
+     */
+    leaderboardCacheSeconds: 15,
+    /**
+     * Phase 4.6（決定139 §7-2）：古い日のデータを剪定する頻度。
+     * 外部cronを持ち込まず、`startRun` の N 回に1回だけ剪定を試みる
+     * （`clientRunId` の末尾16進が 0 のとき＝約1/16）。
+     */
+    pruneEveryStarts: 16,
+    /**
+     * Phase 4.6（決定139 §3-2）：端末が保持する秘密の長さ（16進の文字数）。
+     * 64桁＝256bit。公開IDはこの秘密のSHA-256の先頭 `playerIdLength` 桁。
+     */
+    playerSecretLength: 64,
+    /**
+     * Phase 4.6（決定139 §5-2）：エンジン挙動の版。**手動で上げる**。
+     * カード・敵・神・数値の変更は `dataFingerprint` が自動で拾うが、
+     * reducer／スコア計算／RNGの挙動変更はデータに現れないため、この整数で表明する。
+     * 上げ忘れは `gameVersion.golden.test.ts`（固定リプレイの期待値）が検出する。
+     */
+    engineVersion: 1,
+    /**
+     * 1プレイヤー・1日あたりに受け付ける提出**試行**の上限（受理・拒否とも数える）。
+     * 総当たりでリプレイを叩き続ける行為を抑えるための門番。
+     * 正当な利用は1日3回（`daily.attemptsPerDay`）＋再送数回なので十分な余裕がある。
+     */
+    maxSubmitAttemptsPerDay: 30,
+    /**
+     * プレイヤーIDとして受け付ける文字列の長さ（16進）。
+     * 端末で生成する乱数のみ。氏名・メール等は一切扱わない
+     */
+    playerIdLength: 32,
+  },
+
+  /**
    * Phase 3「神格」FINAL SPEC v0.1：神の得意技（Passive）の数値。
    *
    * 3神のみが得意技を持つ（蒼毘・笑蓮・福永）。値は約36万試合の決定論シミュレーション
@@ -215,6 +350,18 @@ export const RULES = {
   cardBonus: {
     enemyBigThreshold: 10,
     lowHpRatio: 0.5,
+    /**
+     * Phase 5-A（決定153）：`charged` の下限。共鳴ゲージ（最大7）がこの値以上で成立。
+     * 4＝「半分より上」。3以下だと初手から常に立ってしまい条件の意味が消え、
+     * 5以上だと発動（7）までの窓が2しか無く、狙う余地が無くなる。
+     */
+    chargedThreshold: 4,
+    /**
+     * Phase 5-A（決定153）：`combo` の下限。このラウンドで既に使った枚数がこの値以上で成立。
+     * 1＝「2枚目以降」。スコアの連携加点（`score.comboSteps`）と同じ「2枚目から」の
+     * 考え方に揃えてあるが、別々の調整値として持つ（片方を動かしても他方が動かない）。
+     */
+    comboMinCardsPlayed: 1,
   },
 
   /**
@@ -249,14 +396,21 @@ export const RULES = {
    * 各値は決定論シミュレーション（約33,000試合、v3ラダー）で
    * Ⅰ89／Ⅱ80／Ⅲ67／Ⅳ61／Ⅴ48／Ⅵ44／Ⅶ29〜39%（balanced基準）を確認した組み合わせ。
    * healEfficiencyは福永（自傷＋回復）対策で 0.5→0.6 に緩和、必殺倍率は機工師の主砲に上限。
+   *
+   * Phase 5-B（決定155）：共通16枚の条件付き追加効果（Phase 5-A）で神階Ⅶが 49%→67% へ
+   * 緩んだため、敵側の3値だけを小さく締めて Phase 5-A 前のカーブへ戻した
+   * （lateRoundAtkMul 1.2→1.3、enemyAtkStep 1.1→1.15、enemyHpStep 1.1→1.15）。
+   * 同一seedの感度分析（`scripts/phase5b-stakes/`）で、この組み合わせだけが全神階で
+   * 実装前 ±5pt に収まり、bonus成立・「順番を変える判断」の頻度を落とさなかった。
+   * HP+とATK+を同時に同量だけ積むのは、決定126の「防御神と攻撃神の公平性」の原則を守るため。
    */
   stakes: {
     scoreScalePerLevel: 0.08,
     divinationCount: 4,
     lateRoundFrom: 5,
-    lateRoundAtkMul: 1.2,
-    enemyAtkStep: 1.1,
-    enemyHpStep: 1.1,
+    lateRoundAtkMul: 1.3,
+    enemyAtkStep: 1.15,
+    enemyHpStep: 1.15,
     initialHandMinus: 1,
     blockEfficiency: 0.75,
     healEfficiency: 0.6,

@@ -1,22 +1,21 @@
 import { useEffect, useRef } from 'react'
 import type { GameEvent } from '../../core/types'
 import { sfx } from './sound'
-import { damageFeelTier } from './feelTier'
-import { playJingle } from './bgm'
-import {
-  BURST_EVOLVE_MS,
-  BURST_IMPACT_MS,
-  MULTI_CUTIN_LEAD_MS,
-  SPECIAL_IMPACT_MS,
-  multiHitOffsetMs,
-} from './enemyVfxTiming'
+import { BURST_EVOLVE_MS } from './enemyVfxTiming'
+import { planBatch } from './combatTimeline'
+import { prefersReducedMotion } from './reducedMotion'
 
 /**
  * イベントログを見て効果音を鳴らすフック。
  * ルール本体（core）は音を一切知らないので、useBattleFx と同じ形で
  * 「起きた出来事」から「どう聞かせるか」への変換をここに閉じ込める。
+ *
+ * Phase 6-A（決定162）：着弾の音は着弾計画（combatTimeline.planBatch）と同じ時刻で鳴らす
+ * （数字・敵リアクション・表示HPと同期。新しい音源は追加していない）。
+ * 勝利／敗北のスティングとジングルは、撃破演出・結果画面の時刻に合わせて
+ * useCombatPresentation が鳴らす（ここでは GAME_ENDED を扱わない）。
  */
-export function useBattleSound(log: GameEvent[]): void {
+export function useBattleSound(log: GameEvent[], enemyVisualType?: string): void {
   const seenCount = useRef(0)
 
   useEffect(() => {
@@ -26,21 +25,27 @@ export function useBattleSound(log: GameEvent[]): void {
     seenCount.current = log.length
     if (newEvents.length === 0) return
 
-    // ENEMY-VFX-02：このバッチが敵の連撃/必殺なら、self被弾のSEを視覚timeline
-    // （enemyVfxTiming.ts）と同じdelayで鳴らす（useFloatingNumbers.tsと同じ
-    // イベント列判定。敵IDのswitchは持たない）。
-    const enemyActed = newEvents.find(
-      (e): e is Extract<GameEvent, { t: 'ENEMY_ACTED' }> => e.t === 'ENEMY_ACTED' && e.kind !== 'charge',
-    )
-    const seMulti = enemyActed?.kind === 'multiAttack'
-    const seSpecial = enemyActed?.kind === 'special' || (seMulti && !!enemyActed?.label)
-    const seLead = seSpecial ? (seMulti ? MULTI_CUTIN_LEAD_MS : SPECIAL_IMPACT_MS) : 0
-    let seHitIndex = 0
-    // VFX-03：RESONANCE_BURST以降の敵ダメージ（＝神の一撃）とOTOMO進化のSEは、
-    // 視覚timeline（cut-in→banner→着弾→進化）と同じdelayで鳴らす。
-    // カード自身の効果（RESONANCE_BURSTより前のDAMAGE_DEALT）は従来どおり即時。
-    let afterBurst = false
+    const plan = planBatch(newEvents, { enemyVisualType, reduced: prefersReducedMotion() })
+    const selfEnemyHits = plan.steps.filter((s) => s.target === 'self' && s.role === 'enemy')
+    const isMulti = selfEnemyHits.length >= 2
+    const isSpecial = newEvents.some((e) => e.t === 'ENEMY_ACTED' && (e.kind === 'special' || (e.kind === 'multiAttack' && !!e.label)))
 
+    // 着弾（与ダメージ・被ダメージ）
+    for (const st of plan.steps) {
+      if (st.amount <= 0) continue
+      if (st.target === 'enemy') {
+        // 決定128：与ダメージ量で L1〜L4（神の一撃・最後の一撃は L4）
+        sfx.damageEnemy(st.tier, st.atMs)
+      } else if (st.role === 'enemy' && isMulti) {
+        sfx.enemyMultiHit(selfEnemyHits.indexOf(st), st.atMs)
+      } else if (st.role === 'enemy' && isSpecial) {
+        sfx.enemySpecialImpact(st.atMs)
+      } else {
+        sfx.damageSelf(st.tier >= 3, st.atMs)
+      }
+    }
+
+    let afterBurst = false
     for (const event of newEvents) {
       switch (event.t) {
         case 'CARD_PLAYED':
@@ -48,21 +53,6 @@ export function useBattleSound(log: GameEvent[]): void {
           break
         case 'CARD_DRAWN':
           sfx.cardDrawn()
-          break
-        case 'DAMAGE_DEALT':
-          if (event.amount > 0) {
-            if (event.target === 'enemy') {
-              // 決定128：与ダメージ量で L1〜L4（BURST は L4）。着弾タイミングは従来どおり
-              sfx.damageEnemy(damageFeelTier(event.amount, { burst: afterBurst }), afterBurst ? BURST_IMPACT_MS : 0)
-            } else if (seMulti) {
-              sfx.enemyMultiHit(seHitIndex, seLead + multiHitOffsetMs(seHitIndex))
-              seHitIndex += 1
-            } else if (seSpecial) {
-              sfx.enemySpecialImpact(seLead)
-            } else {
-              sfx.damageSelf(damageFeelTier(event.amount) >= 3)
-            }
-          }
           break
         case 'HEALED':
           if (event.amount > 0) sfx.heal()
@@ -74,7 +64,7 @@ export function useBattleSound(log: GameEvent[]): void {
           sfx.resonanceGain()
           break
         case 'RESONANCE_BURST':
-          // 決定128：7/7 到達＝READY の上昇音。着弾音は後続の DAMAGE_DEALT（L4）が担う
+          // 決定128：7/7 到達＝READY の上昇音。着弾音は上の着弾計画（L4）が担う
           sfx.burstReady()
           afterBurst = true
           break
@@ -89,18 +79,9 @@ export function useBattleSound(log: GameEvent[]): void {
           if (event.kind === 'charge') sfx.enemyCharge() // 決定128：溜めは警告音、それ以外は敵ターン音
           else sfx.enemyTurn()
           break
-        case 'GAME_ENDED':
-          if (event.status === 'won') {
-            sfx.victory()
-            playJingle('victory')
-          } else {
-            sfx.defeat()
-            playJingle('defeat')
-          }
-          break
         default:
           break
       }
     }
-  }, [log])
+  }, [log, enemyVisualType])
 }

@@ -59,6 +59,8 @@ export function CardView({ instance, affordable, playable, playing, bonusReady =
             alt=""
             loading="lazy"
             decoding="async"
+            width={512}
+            height={768}
           />
         )}
         {!illustration && godArt && (

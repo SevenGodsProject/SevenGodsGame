@@ -2,7 +2,7 @@ import { afterEach, describe, expect, it } from 'vitest'
 import { RULES } from '../data/rules'
 import { GOD_IDS } from '../data/gods'
 import { ENEMY_IDS } from '../data/enemies'
-import { ALL_CARDS, SHOUREN_CARD_IDS, SOBI_CARD_IDS } from '../data/cards'
+import { ALL_CARDS, CARD_IDS, SHOUREN_CARD_IDS, SOBI_CARD_IDS, TAIYO_CARD_IDS } from '../data/cards'
 import { getCardPoolForGod } from '../data/deckBuilder'
 import { cardUid } from '../types/ids'
 import type { CardDefId, GameState, GodId } from '../types'
@@ -10,9 +10,10 @@ import { applyAction } from './reducer'
 import { evaluateBonusCond, incomingDamage, previewBonusTrigger } from './cardBonus'
 
 /**
- * Phase 3「神格」FINAL SPEC v0.1：カードの条件付き追加効果（bonus）のテスト。
+ * カードの条件付き追加効果（bonus）のテスト。
  *
- * 対象は4枚だけ（不動の構え・一喝・福袋・笑って許す）で、残る56枚は無変更。
+ * Phase 3「神格」FINAL SPEC v0.1 で神専用4枚（不動の構え・一喝・福袋・笑って許す）に導入し、
+ * **Phase 5-A（決定153）で共通の主力16枚へ広げた**。合計20枚で、残る40枚は無変更。
  * 「本体効果 → 条件評価 → 追加効果」の順序と、AP・共鳴・BURST・予告との
  * 相互作用が既存挙動を壊していないことを確認する。
  */
@@ -63,17 +64,81 @@ afterEach(() => {
 })
 
 describe('bonusを持つカードのデータ（scope外へ広がっていないこと）', () => {
-  it('条件付き追加効果を持つのは4枚だけで、残り56枚は無変更', () => {
+  it('条件付き追加効果を持つのは神専用7枚＋共通16枚の計23枚で、残り37枚は無変更', () => {
     const withBonus = ALL_CARDS.filter((c) => c.bonus)
     expect(withBonus.map((c) => c.id).sort()).toEqual(
       [
+        // Phase 3：神専用4枚
         SOBI_CARD_IDS.unshakableStance,
         SOBI_CARD_IDS.sternRebuke,
         SHOUREN_CARD_IDS.bagOfFortune,
         SHOUREN_CARD_IDS.laughItOff,
+        // Phase 5-C（決定159）：神専用3枚（大耀2・蒼毘1。福永・他4神は無変更）
+        TAIYO_CARD_IDS.boldStrike,
+        TAIYO_CARD_IDS.sisterlyCommand,
+        SOBI_CARD_IDS.counterBlade,
+        // Phase 5-A（決定153）：共通の主力16枚
+        CARD_IDS.strike,
+        CARD_IDS.heavyBlow,
+        CARD_IDS.guard,
+        CARD_IDS.resonate,
+        CARD_IDS.heal,
+        CARD_IDS.curse,
+        CARD_IDS.quickStrike,
+        CARD_IDS.allOutStrike,
+        CARD_IDS.ironStance,
+        CARD_IDS.readTheAttack,
+        CARD_IDS.kaguraDance,
+        CARD_IDS.flurry,
+        CARD_IDS.warCry,
+        CARD_IDS.parry,
+        CARD_IDS.bastion,
+        CARD_IDS.renGeki,
       ].sort(),
     )
-    expect(ALL_CARDS.length - withBonus.length).toBe(56)
+    expect(withBonus.length).toBe(23)
+    expect(ALL_CARDS.length - withBonus.length).toBe(37)
+  })
+
+  it('共通カードのbonusは4条件のどれかで、神専用の条件（lowHp）を共通へ広げていない', () => {
+    const commonWithBonus = ALL_CARDS.filter((c) => c.bonus && !c.godId)
+    for (const card of commonWithBonus) {
+      expect(['blocked', 'enemyBig', 'combo', 'charged']).toContain(card.bonus!.when)
+    }
+    // 4条件がすべて使われている（1条件だけに偏っていない）
+    const used = new Set(commonWithBonus.map((c) => c.bonus!.when))
+    expect([...used].sort()).toEqual(['blocked', 'charged', 'combo', 'enemyBig'])
+  })
+
+  it('bonusを足した16枚は、本体のコスト・効果を1つも変えていない（Phase 5-A の約束）', () => {
+    // 本体（cost / effects）はPhase 5-A で据え置く、という取り決めの機械検査。
+    // 値そのものは `cardTextScale.test.ts` が本文と突き合わせているので、ここでは
+    // 「bonus を足したせいで本体が動いていないか」だけを、代表的な札で確かめる。
+    const byId = new Map(ALL_CARDS.map((c) => [c.id, c]))
+    const expected: Array<[CardDefId, number, number]> = [
+      // [id, cost, 本体effectsの件数]
+      [CARD_IDS.strike, 1, 1],
+      [CARD_IDS.heavyBlow, 2, 1],
+      [CARD_IDS.guard, 1, 1],
+      [CARD_IDS.resonate, 1, 1],
+      [CARD_IDS.heal, 1, 1],
+      [CARD_IDS.curse, 2, 1],
+      [CARD_IDS.quickStrike, 1, 2],
+      [CARD_IDS.allOutStrike, 3, 1],
+      [CARD_IDS.ironStance, 2, 1],
+      [CARD_IDS.readTheAttack, 1, 1],
+      [CARD_IDS.kaguraDance, 2, 2],
+      [CARD_IDS.flurry, 2, 2],
+      [CARD_IDS.warCry, 3, 2],
+      [CARD_IDS.parry, 1, 2],
+      [CARD_IDS.bastion, 2, 2],
+      [CARD_IDS.renGeki, 2, 2],
+    ]
+    for (const [id, cost, effectCount] of expected) {
+      const card = byId.get(id)!
+      expect(card.cost, `${card.name} のコスト`).toBe(cost)
+      expect(card.effects.length, `${card.name} の本体効果の数`).toBe(effectCount)
+    }
   })
 
   it('bonusの説明文（textJa）は必ず入っていて、本体textとは別行になっている', () => {
@@ -245,14 +310,16 @@ describe('既存挙動との相互作用', () => {
     expect(after.score.combo).toBe(0)
   })
 
-  it('bonusを持たない既存カードの挙動は変わらない（守護：ブロック5のみ）', () => {
+  it('bonusを持たない既存カードの挙動は変わらない（神速：ダメージ3と共鳴1だけ）', () => {
+    // Phase 5-A で守護にもbonusが付いたため、例示を「今もbonusを持たない札」へ差し替えた。
+    // 検査の意図は変わらない：bonus未設定のカードは追加効果を1つも起こさない。
     const base = startGame(GOD_IDS.sobi)
-    const guard = getCardPoolForGod(GOD_IDS.sobi).find((c) => c.name === '守護')!
-    expect(guard.bonus).toBeUndefined()
-    const state = withHand(base, guard.id)
+    const windStep = getCardPoolForGod(GOD_IDS.sobi).find((c) => c.name === '神速')!
+    expect(windStep.bonus).toBeUndefined()
+    const state = withHand(base, windStep.id)
     const { state: after, events } = play(state)
-    expect(after.player.block).toBe(5)
-    expect(after.enemy.hp).toBe(base.enemy.hp)
+    expect(base.enemy.hp - after.enemy.hp).toBe(3)
+    expect(after.resonance.value).toBe(base.resonance.value + 1)
     expect(events.some((e) => e.t === 'BONUS_TRIGGERED')).toBe(false)
   })
 
@@ -283,7 +350,7 @@ describe('既存挙動との相互作用', () => {
     expect(previewBonusTrigger(wontTrigger, card)).toBe(false)
     expect(play(wontTrigger).events.some((e) => e.t === 'BONUS_TRIGGERED')).toBe(false)
 
-    const noBonusCard = getCardPoolForGod(GOD_IDS.sobi).find((c) => c.name === '守護')!
+    const noBonusCard = getCardPoolForGod(GOD_IDS.sobi).find((c) => c.name === '神速')!
     expect(previewBonusTrigger(willTrigger, noBonusCard)).toBe(false)
   })
 

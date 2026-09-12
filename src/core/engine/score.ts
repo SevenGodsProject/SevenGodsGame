@@ -1,6 +1,6 @@
-import type { ScoreState } from '../types'
-import { RULES } from '../data/rules'
-import { stakeScoreScale } from '../data/stakes'
+import type { ScoreState } from '../types/index.js'
+import { RULES } from '../data/rules.js'
+import { stakeScoreScale } from '../data/stakes.js'
 
 /**
  * 表示スコア（Battle Score）。素点合計×finalScaleを四捨五入する（BASE-D、決定109）。

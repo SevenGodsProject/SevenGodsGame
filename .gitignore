@@ -22,3 +22,15 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Secrets（Phase 4.4）
+# ランキングBackendのDB接続文字列などは絶対にcommitしない。
+# `*.local` は既にあるが、`.env` / `.env.production` 等は拾えないため明示する。
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# Claude Code のローカル専用設定（個人の許可設定。リポジトリでは共有しない。Phase 5-F・決定160）
+.claude/settings.local.json

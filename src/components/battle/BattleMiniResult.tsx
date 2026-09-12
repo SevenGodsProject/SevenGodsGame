@@ -14,6 +14,8 @@ type BattleMiniResultProps = {
   /** 変わるたびに新しい結果を表示し直す（useBattleFxのminiResultKey） */
   resultKey: number
   result: MiniResultData | null
+  /** Phase 6-A（決定162）：着弾を見せてから結果を出す（commit からの ms。神の一撃は着弾まで隠す） */
+  delayMs?: number
 }
 
 /** STEP2-B：結果1件あたりの表示時間（テンポ優先、既存floating-numberの0.9秒より短く） */
@@ -34,15 +36,23 @@ const DISPLAY_MS = 700
  * リセットして即座に新しい結果へ差し替える。キューは持たない＝手札は
  * 常に操作可能（この演出自体はカード操作をブロックしない、表示専用）。
  */
-export function BattleMiniResult({ godId, enemy, player, resonanceMax, resultKey, result }: BattleMiniResultProps) {
+export function BattleMiniResult({ godId, enemy, player, resonanceMax, resultKey, result, delayMs = 0 }: BattleMiniResultProps) {
   const [visible, setVisible] = useState(false)
   const timerRef = useRef<number | null>(null)
 
   useEffect(() => {
     if (resultKey === 0 || !result) return
-    setVisible(true)
     if (timerRef.current !== null) window.clearTimeout(timerRef.current)
-    timerRef.current = window.setTimeout(() => setVisible(false), DISPLAY_MS)
+    const show = () => {
+      setVisible(true)
+      timerRef.current = window.setTimeout(() => setVisible(false), DISPLAY_MS)
+    }
+    if (delayMs > 0) {
+      setVisible(false)
+      timerRef.current = window.setTimeout(show, delayMs)
+    } else {
+      show()
+    }
     return () => {
       if (timerRef.current !== null) window.clearTimeout(timerRef.current)
     }

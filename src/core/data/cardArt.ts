@@ -2,13 +2,13 @@ import type { CardDefId } from '../types/ids'
 
 /**
  * カードイラストの対応表（決定30のSVGアイコンから実絵への差し替え）。
- * ChatGPTで生成した1枚絵を `public/assets/cards/` に置き、ここに登録する。
+ * ChatGPTで生成した1枚絵を `public/assets/cards/`（webp）に置き、ここに登録する。
  * まだ絵が無いカードはこの表に載せない（CardView側でSVGアイコン表示にフォールバックする）。
  *
  * FINAL_BACKLOG_8-31.md Phase 2「カード画像軽量化・OOM対策」：元の1024×1536 PNG
  * （56枚・計約200MB）はブラウザCanvas API（`toBlob('image/webp', 0.85)`）で
  * 512×768・WebP品質0.85に一括変換し、ここの参照のみ`.webp`に切り替えた
- * （56枚合計 約6.15MB、削減率96.9%）。元PNGは`public/assets/cards/`に
+ * （56枚合計 約6.15MB、削減率96.9%）。元PNGは決定170 で `art-source/cards/` へ移し（配信対象外）
  * そのまま残しており削除していない（将来の再変換・高解像度が必要になった場合の
  * ソースとして保持）。512×768を選んだ理由：手札(132px)・デッキ構築(150〜190px)・
  * 報酬画面(140px)いずれの実表示幅もDPR3倍まで512pxで鮮明にカバーできる一方、

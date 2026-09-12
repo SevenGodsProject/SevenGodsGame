@@ -1,12 +1,13 @@
-import type { Effect, GameEvent, GameState, ScoreState } from '../types'
-import { OTOMO_FORM_ORDER } from '../types/otomo'
-import { RULES } from '../data/rules'
-import { getGodDef, GOD_IDS } from '../data/gods'
-import { getOtomoDef } from '../data/otomo'
-import { performDraw } from './deck'
-import { sumBuff } from './buffs'
-import type { Rng } from '../rng/seededRandom'
-import { resolveStakeRules } from '../data/stakes'
+import type { Effect, GameEvent, GameState, ScoreState } from '../types/index.js'
+import { OTOMO_FORM_ORDER } from '../types/otomo.js'
+import { RULES } from '../data/rules.js'
+import { getGodDef, GOD_IDS } from '../data/gods.js'
+import { getOtomoDef } from '../data/otomo.js'
+import { performDraw } from './deck.js'
+import { sumBuff } from './buffs.js'
+import type { Rng } from '../rng/seededRandom.js'
+import { resolveStakeRules } from '../data/stakes.js'
+import { enemyActionTotal } from './intent.js'
 
 export type EffectResult = { state: GameState; events: GameEvent[] }
 
@@ -18,6 +19,49 @@ export function addScore(
 ): ScoreState {
   if (amount === 0) return score
   return { ...score, [field]: score[field] + amount, total: score.total + amount }
+}
+
+/** 決定126：神階のブロック効率をかけた実効量。通常のブロックはすべてここを通る（加護だけは Phase 5-E で例外。intentGuardGained） */
+function effectiveBlock(state: GameState, amount: number): number {
+  return Math.round(amount * resolveStakeRules(state.stake, state.stakeChoice).blockEfficiency)
+}
+
+/**
+ * Phase 5-E（決定158）：加護（`blockOfIntent`）が実際に得る量。
+ * `RULES.divination.guardIgnoresBlockEfficiency` が true なら神階のブロック効率を受けない。
+ * 通常のブロック（`kind: 'block'`）は従来どおり `effectiveBlock` を通る。
+ */
+function intentGuardGained(state: GameState, raw: number): number {
+  return RULES.divination.guardIgnoresBlockEfficiency ? raw : effectiveBlock(state, raw)
+}
+
+/** ブロックを得る（量は呼び出し側で確定済み）。イベントには実効値を載せ、UIの表示と一致させる */
+function gainBlock(state: GameState, gained: number): EffectResult {
+  return {
+    state: { ...state, player: { ...state.player, block: state.player.block + gained } },
+    events: [{ t: 'BLOCK_GAINED', target: 'self', amount: gained }],
+  }
+}
+
+/**
+ * Phase 5-D：神託「加護」（`blockOfIntent`）の素の量（ブロック効率をかける前）。
+ * max(min, floor(予告合計 × ratio))。予告が無い・溜め（予告0）なら min だけ。
+ */
+export function intentGuardRaw(state: GameState, ratio: number, min: number): number {
+  const intent = state.enemy.intent
+  const incoming = intent ? enemyActionTotal(intent) : 0
+  return Math.max(min, Math.floor(incoming * ratio))
+}
+
+/**
+ * Phase 5-D：表示専用。「今この神託を使えば、ブロックをいくつ得るか」（実効値・内部値）。
+ * 加護のボタンに実数を出すために使う。**engine と同じ2関数を通す**ので、
+ * 表示と実際に得る量が食い違うことは無い。`blockOfIntent` を含まない選択肢は null。
+ */
+export function previewIntentGuard(state: GameState, effects: Effect[]): number | null {
+  const guard = effects.find((e): e is Extract<Effect, { kind: 'blockOfIntent' }> => e.kind === 'blockOfIntent')
+  if (!guard) return null
+  return intentGuardGained(state, intentGuardRaw(state, guard.ratio, guard.min))
 }
 
 /**
@@ -43,20 +87,13 @@ export function applyEffect(
       return applyDamage(state, effect.target, effect.amount)
     }
 
-    case 'block': {
-      // 決定126：神階Ⅳ以降はブロック効率が下がる（イベントには実効値を載せ、UIの表示と一致させる）
-      const gained = Math.round(effect.amount * resolveStakeRules(state.stake, state.stakeChoice).blockEfficiency)
-      const events: GameEvent[] = [
-        { t: 'BLOCK_GAINED', target: 'self', amount: gained },
-      ]
-      return {
-        state: {
-          ...state,
-          player: { ...state.player, block: state.player.block + gained },
-        },
-        events,
-      }
-    }
+    case 'blockOfIntent':
+      // Phase 5-D：予告から量を決める。Phase 5-E：神階のブロック効率は受けない（intentGuardGained）
+      return gainBlock(state, intentGuardGained(state, intentGuardRaw(state, effect.ratio, effect.min)))
+
+    case 'block':
+      // 決定126：神階Ⅳ以降はブロック効率が下がる
+      return gainBlock(state, effectiveBlock(state, effect.amount))
 
     case 'heal': {
       // 決定126：神階Ⅴ以降は回復効率が下がる（Math.round）

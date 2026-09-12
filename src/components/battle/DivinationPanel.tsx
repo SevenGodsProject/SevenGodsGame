@@ -1,4 +1,5 @@
 import { DIVINATION_CHOICES } from '../../core/data/divination'
+import { formatScaled } from '../displayScale'
 import { GlyphIcon, type GlyphKey } from './cardIcon'
 
 type DivinationPanelProps = {
@@ -6,6 +7,11 @@ type DivinationPanelProps = {
   usedThisRound: boolean
   playable: boolean
   onChoose: (choiceIndex: number) => void
+  /**
+   * Phase 5-D：選択肢ごとの「今使えば得るブロック」（内部値・実効値）。
+   * 予告連動の加護だけが値を持ち、他は null。計算は `previewIntentGuard`（engineと同じ関数）。
+   */
+  guardPreviews?: (number | null)[]
 }
 
 /**
@@ -22,6 +28,7 @@ export function DivinationPanel({
   usedThisRound,
   playable,
   onChoose,
+  guardPreviews,
 }: DivinationPanelProps) {
   const disabled = !playable || remaining <= 0 || usedThisRound
 
@@ -39,11 +46,18 @@ export function DivinationPanel({
             className="divination-choice"
             disabled={disabled}
             onClick={() => onChoose(i)}
+            // Phase 6-B：画面高が小さいとき効果文（.divination-choice-text）をCSSで
+            // 畳むため、同じ文をtitleにも持たせて情報を失わないようにする
+            title={choice.text}
           >
             <GlyphIcon glyph={DIVINATION_GLYPHS[i]} className="divination-choice-glyph" />
             <span className="divination-choice-body">
               <span className="divination-choice-name">{choice.name}</span>
               <span className="divination-choice-text">{choice.text}</span>
+              {guardPreviews?.[i] != null && (
+                // 押す前に「今ならいくつ」を実数で見せる。予告を見て使うかどうかを決める材料
+                <span className="divination-choice-preview">今なら ブロック{formatScaled(guardPreviews[i]!)}</span>
+              )}
             </span>
           </button>
         ))}

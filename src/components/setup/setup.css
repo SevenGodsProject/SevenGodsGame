@@ -1056,6 +1056,11 @@
   .home-portrait-card {
     max-width: 320px;
     margin: 0 auto;
+    /* Release Hygiene（決定170）：`margin: 0 auto` があるとグリッドの項目が
+       shrink-to-fit になり、画像が読み終わるまで幅が 0 に潰れて `aspect-ratio`
+       が効かず、読み込み後に高さ 3px → 427px と跳ねていた（SP の CLS の主因）。
+       幅を確定させて aspect-ratio に箱を先に確保させる。見た目は従来どおり。 */
+    width: 100%;
   }
 }
 
@@ -1270,7 +1275,7 @@
  * 72×72pxは変えず、内側に2pxの暗いプレートのリングを作ることで、画像の
  * 紫背景とカードの専用背景の「境界」を意図的な額縁の縁として見せている。
  * 縁の色（outline）と外側の淡い発光（box-shadow）には神ごとの
- * `--otomo-theme`/`-border`（既存のOTOMO_THEME_COLOR、godStyle.ts）を使い、
+ * `--otomo-theme`/`-border`（既存のGOD_THEME_COLOR、godStyle.ts）を使い、
  * 専用背景・進捗バー・絆称号バッジと同じ色でOTOMO本体を「調和した1枚の
  * ポートレートカード」として見せる。mix-blend-mode・filterでの色変換・
  * 画像の不透明度変更は行っていない＝キャラクター画質はそのまま。
@@ -2086,4 +2091,47 @@
   .stake-select-flavor {
     display: none;
   }
+}
+
+/* ============================================================
+   Release Hygiene Gate（決定170）：タップ領域 44×44
+   ------------------------------------------------------------
+   Mobile 390px の実測で 44px 未満だった主要操作だけを対象にする。
+   見た目の大きさは変えず、`min-height` と（テキストリンクだけ）縦 padding で
+   タップ行を確保する。レイアウトの作り直しはしていない。
+   ============================================================ */
+
+/* ホームの主要ナビ（遊び方・OTOMOとの絆・戦績）：高さ 20px → 44px の行にする。
+   下線の位置は変わらないよう、上下 padding を対称に入れて文字は中央のまま */
+.home-howto-button {
+  min-height: 44px;
+  margin-top: 0;
+  padding: 0 4px;
+}
+
+/* デッキ編成の主要ボタン（この構成でバトル開始・敵を選び直す・
+   おすすめデッキに戻す・全て外す）：高さ 40px → 44px */
+.deck-builder-actions button,
+.deck-builder-toolbar button {
+  min-height: 44px;
+}
+
+/* 枚数の ± ：見た目は 40px のまま（決定66 でカード幅 151〜179px に収まる値として
+   選んだ寸法を崩さない）、タップ判定だけ 44×44 にする。間の枚数表示が 2.4em 以上
+   あるので、隣り合う ± の判定は重ならない */
+.deck-builder-card-stepper button {
+  position: relative;
+  /* 広げた判定が枚数表示より手前に来るようにする（見た目は不変） */
+  z-index: 1;
+}
+
+.deck-builder-card-stepper button::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 44px;
+  height: 44px;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
 }

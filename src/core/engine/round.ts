@@ -1,21 +1,19 @@
-import type { EnemyActionDef, GameEvent, GameState } from '../types'
-import { RULES } from '../data/rules'
-import { GOD_IDS } from '../data/gods'
-import { getEnemyDef } from '../data/enemies'
-import { performDraw } from './deck'
-import { applyDamage } from './effects'
-import { sumBuff, tickBuffs } from './buffs'
-import type { Rng } from '../rng/seededRandom'
-import { resolveStakeRules, specialMultiplierFor } from '../data/stakes'
+import type { EnemyActionDef, GameEvent, GameState } from '../types/index.js'
+import { RULES } from '../data/rules.js'
+import { GOD_IDS } from '../data/gods.js'
+import { getEnemyDef } from '../data/enemies.js'
+import { performDraw } from './deck.js'
+import { applyDamage } from './effects.js'
+import { sumBuff, tickBuffs } from './buffs.js'
+import type { Rng } from '../rng/seededRandom.js'
+import { resolveStakeRules, specialMultiplierFor } from '../data/stakes.js'
+import { enemyActionTotal } from './intent.js'
 
 type StepResult = { state: GameState; events: GameEvent[] }
 
-/** action合計値（charge=0）。intent表示・危険度tier・イベントamountの共通値 */
-export function enemyActionTotal(action: EnemyActionDef): number {
-  if (action.kind === 'attack' || action.kind === 'special') return action.amount
-  if (action.kind === 'multiAttack') return action.hits.reduce((sum, h) => sum + h, 0)
-  return 0
-}
+// Phase 5-D：定義は `intent.ts` へ移した（`effects.ts` から使うと循環するため）。
+// 既存の import 先（`./round.js`）を壊さないよう、ここから再エクスポートする。
+export { enemyActionTotal }
 
 /** special/multiAttackの技名、chargeの予告文（VFXカットイン・ログ用） */
 export function enemyActionLabel(action: EnemyActionDef): string | undefined {

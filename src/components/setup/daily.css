@@ -271,3 +271,272 @@
     margin: 0 auto;
   }
 }
+
+/*
+ * Phase 4.6（決定139 §12）：挑戦を始める前の注意と、ランキング対象外の案内。
+ * どちらも「読まなくても遊べるが、読めば損をしない」情報なので、
+ * 主要導線（挑戦開始ボタン）より弱く、しかし見落とさない強さで置く。
+ */
+.daily-attempt-warning {
+  margin: 0 0 8px;
+  max-width: 44em;
+  font-size: 0.82rem;
+  line-height: 1.6;
+  color: #b9a98a;
+  text-align: center;
+}
+
+.daily-notice {
+  margin: 0 0 10px;
+  padding: 8px 14px;
+  max-width: 44em;
+  border: 1px solid rgba(226, 178, 92, 0.5);
+  border-radius: 8px;
+  background: rgba(226, 178, 92, 0.1);
+  font-size: 0.86rem;
+  line-height: 1.6;
+  color: #e8d5a8;
+  text-align: center;
+}
+
+/* 対局中の「ランキング対象外」バッジ。盤面の情報量を増やしすぎないよう小さく置く */
+.battle-unranked-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 8px;
+  border: 1px solid rgba(200, 200, 200, 0.45);
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.35);
+  font-size: 0.72rem;
+  letter-spacing: 0.04em;
+  color: #cfcfcf;
+}
+
+/* =========================================================================
+   Phase 4.9：今日のランキング（Daily画面）
+   既存の .daily-fact / .daily-bygod-table の見た目をなぞる。新しい配色は作らない。
+   ========================================================================= */
+
+.daily-ranking {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  padding: 0.8rem 0.9rem;
+  border: 1px solid #ffffff1a;
+  border-radius: 12px;
+  background: linear-gradient(165deg, #12142aaa 0%, #0b0d17cc 100%);
+}
+
+.daily-ranking-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+}
+
+.daily-ranking-title {
+  margin: 0;
+  font-size: 0.95rem;
+  letter-spacing: 0.06em;
+  color: #ffd166;
+}
+
+.daily-ranking-total {
+  font-size: 0.78rem;
+  color: #9aa3c4;
+  font-variant-numeric: tabular-nums;
+}
+
+/* 読み込み中・取得失敗・0人。どれも同じ静かな見た目にして、
+   「エラーで画面が壊れた」ように見せない */
+.daily-ranking-state {
+  margin: 0;
+  font-size: 0.82rem;
+  line-height: 1.6;
+  color: #b9c0d8;
+  overflow-wrap: anywhere;
+}
+
+/* 自分の成績。ランキングで最初に見たいのはここなので、上位一覧より前に置く */
+.daily-ranking-self {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  padding: 0.55rem 0.7rem;
+  border: 1px solid #ffd16644;
+  border-radius: 10px;
+  background: #ffd1660f;
+}
+
+.daily-ranking-self-main {
+  display: flex;
+  align-items: baseline;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+}
+
+.daily-ranking-self-rank {
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: #ffe9b0;
+  font-variant-numeric: tabular-nums;
+}
+
+.daily-ranking-self-score {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #fff;
+  font-variant-numeric: tabular-nums;
+}
+
+.daily-ranking-self-sub {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  font-size: 0.76rem;
+  color: #c3c6de;
+  font-variant-numeric: tabular-nums;
+}
+
+/* 上位一覧。縦に伸ばしすぎないよう高さを抑え、あふれる分は中でスクロールさせる */
+.daily-ranking-list-wrap {
+  max-height: 19rem;
+  overflow-y: auto;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.daily-ranking-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.82rem;
+}
+
+.daily-ranking-table th {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  padding: 0.3rem 0.4rem;
+  text-align: left;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  color: #9aa3c4;
+  background: #0b0d17;
+  border-bottom: 1px solid #ffffff1a;
+  white-space: nowrap;
+}
+
+.daily-ranking-table th.num,
+.daily-ranking-table td.num {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.daily-ranking-table th:first-child,
+.daily-ranking-table td:first-child {
+  text-align: left;
+}
+
+.daily-ranking-table td {
+  padding: 0.42rem 0.4rem;
+  border-bottom: 1px solid #ffffff14;
+  color: #dfe3f5;
+  vertical-align: top;
+  /* 名前が長くても切り詰めない（このリポジトリの方針：省略ではなく折り返す） */
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.daily-ranking-row-self td {
+  background: #ffd1660f;
+}
+
+/* 自分の行は色だけで示さない。左の帯＋「← あなた」の文字を必ず併記する */
+.daily-ranking-row-self td:first-child {
+  box-shadow: inset 3px 0 0 #ffd166;
+}
+
+.daily-ranking-rank {
+  display: block;
+  font-weight: 700;
+  color: #fff;
+}
+
+.daily-ranking-tie {
+  display: block;
+  margin-top: 0.1rem;
+  font-size: 0.68rem;
+  color: #9aa3c4;
+  white-space: nowrap;
+}
+
+.daily-ranking-name {
+  font-variant-numeric: tabular-nums;
+}
+
+/* 自分の行の名前。文字（「あなた」）が主で、この強調は補助 */
+.daily-ranking-you {
+  font-weight: 700;
+  color: #ffd166;
+}
+
+.daily-ranking-god {
+  color: #c3c6de;
+}
+
+.daily-ranking-score {
+  display: block;
+  font-weight: 700;
+  color: #fff;
+}
+
+.daily-ranking-outcome {
+  display: block;
+  margin-top: 0.1rem;
+  font-size: 0.68rem;
+  color: #9aa3c4;
+  white-space: nowrap;
+}
+
+.daily-ranking-more {
+  margin: 0;
+  font-size: 0.74rem;
+  color: #9aa3c4;
+}
+
+/* 提出が閉じている間の但し書き。見落とされない程度に、しかし警告色にはしない */
+.daily-ranking-notice {
+  margin: 0;
+  padding-top: 0.45rem;
+  border-top: 1px dashed #ffffff1f;
+  font-size: 0.74rem;
+  line-height: 1.55;
+  color: #b9c0d8;
+  overflow-wrap: anywhere;
+}
+
+/* モバイル縦画面。行の情報量を減らさず、余白と文字だけを詰める */
+@media (max-width: 640px) {
+  .daily-ranking {
+    padding: 0.7rem 0.7rem;
+  }
+
+  .daily-ranking-list-wrap {
+    max-height: 16rem;
+  }
+
+  .daily-ranking-table {
+    font-size: 0.78rem;
+  }
+
+  .daily-ranking-table td {
+    padding: 0.4rem 0.3rem;
+  }
+
+  .daily-ranking-self-rank {
+    font-size: 1.2rem;
+  }
+}

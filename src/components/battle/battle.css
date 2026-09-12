@@ -1536,79 +1536,306 @@
   }
 }
 
-/* 画像＋文字を同一コンテナでレイアウトすることで、「画像は右側、文字だけ画面
-   中央」というPCでのズレ（STEP-R1で再発防止の最重要事項として確定）を構造的に
-   防止する。widthはclamp()で375px（56vw=210px）〜430px超まで自然に追従し、
-   375専用の固定値にしない（STEP-R1処理09）。PC（900px以上）だけ340px固定＋
-   right位置を実測調整する。 */
+/* ============================================================
+   Phase 6-D Visual Patch v1（決定168）：神の一撃 ＝ 専用舞台
+   ------------------------------------------------------------
+   これまでのカットインは「暗転した戦場の上にキービジュアルのカードを1枚
+   置く」だけで、通常攻撃との差が画像の有無しかなかった。ここを「戦闘中
+   最大の儀式」にするため、overlayの中だけを3層に組み替える。
+
+     rays  … 集中線＋周辺減光。戦場をもう一段沈めて空気を変える
+     band  … 神を置く舞台の帯。わずかに傾けて静止画に流れを作る
+     group … 円マスクの神＋七つ刻みの環＋神名／神の一撃／共鳴発動
+
+   守っていること（決定168）：
+   - ルート`.resonance-cutin`（fixed・z-index:4・dim 0.2s・timer 0.9s）と
+     `resonance-cutin-timer`は無変更＝burst-bannerへのバトンタッチの時刻も
+     判定条件も変わらない。子のanimationはすべて900ms以内に終わる
+     （rays 160+450=610ms／band 160+400=560ms／group 200+400=600ms／
+     技名 340+260=600ms）
+   - overlayのみ（ルートがfixed）。ページ高さ・scroll・6-Bの一画面性に無影響
+   - 画像を1枚も追加していない。円も環も集中線もgradientとmaskだけで描く
+   - `filter`は使わない（box-shadow/text-shadowも最小限）。390px相当で
+     フレーム落ちしないことを実測で確認する
+   - 色は`--god-accent`（`GOD_THEME_COLOR`＝per-god色の正式source）と、
+     既存の金（#ffd166 / #ffe9b0）・既存の地色（#05060d / #03040a）だけ。
+     コンポーネント側にも新規の色値を書かない
+   - 月蝕綺譚固有の意匠（三日月・満月構図・月蝕環・墨刷毛帯・赤金の固有配色・
+     固有紋様・UIフレーム形状・ロゴ書体・構図）は使わない。SEVEN GODS側の軸は
+     「七」＝環の7刻み（共鳴ゲージと同じ分割）、「円」＝神を主役化するマスク、
+     「共鳴」＝この演出そのもの、「神色」＝GOD_THEME_COLOR
+   ============================================================ */
+
+/* --- 集中線＋周辺減光：戦場を一段沈め、中心の神へ視線を集める --- */
+.resonance-cutin-rays {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transform: scale(1.12);
+  animation: resonance-cutin-rays-in 0.45s ease-out 0.16s forwards;
+}
+
+.resonance-cutin-rays::before,
+.resonance-cutin-rays::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+}
+
+/* 集中線は神色。主役（神・技名）を食わないよう不透明度は低く保つ */
+.resonance-cutin-rays::before {
+  background: repeating-conic-gradient(
+    from 0deg at 50% 50%,
+    var(--god-accent, #ffd166) 0deg 0.45deg,
+    transparent 0.45deg 6deg
+  );
+  opacity: 0.16;
+}
+
+.resonance-cutin-rays::after {
+  background: radial-gradient(ellipse at 50% 50%, transparent 26%, #05060dcc 78%);
+}
+
+@keyframes resonance-cutin-rays-in {
+  from {
+    opacity: 0;
+    transform: scale(1.12);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* --- 舞台の帯：上下の金のヘアラインだけを残し、中央を沈める --- */
+.resonance-cutin-band {
+  position: absolute;
+  left: -8%;
+  right: -8%;
+  top: 50%;
+  height: clamp(196px, 44vh, 320px);
+  opacity: 0;
+  transform: translate(-3%, -50%) rotate(-3.5deg);
+  background: linear-gradient(
+    180deg,
+    #05060d00 0%,
+    #05060de6 16%,
+    #03040af2 50%,
+    #05060de6 84%,
+    #05060d00 100%
+  );
+  animation: resonance-cutin-band-in 0.4s ease-out 0.16s forwards;
+}
+
+.resonance-cutin-band::before,
+.resonance-cutin-band::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    #ffd16688 20%,
+    #ffe9b0cc 50%,
+    #ffd16688 80%,
+    transparent 100%
+  );
+}
+
+.resonance-cutin-band::before {
+  top: 0;
+}
+
+.resonance-cutin-band::after {
+  bottom: 0;
+}
+
+@keyframes resonance-cutin-band-in {
+  from {
+    opacity: 0;
+    transform: translate(-3%, -50%) rotate(-3.5deg);
+  }
+  to {
+    opacity: 1;
+    transform: translate(0, -50%) rotate(-3.5deg);
+  }
+}
+
+/* --- 神＋文字。帯は傾けるが、文字は水平のまま（0.5秒で読ませるため） ---
+   STEP-R1で確定した「画像と文字を同一コンテナに入れてPCでのズレを構造的に
+   防ぐ」方針はそのまま維持する（画面中央に1つのgroupを置くだけ）。 */
 .resonance-cutin-group {
   position: absolute;
+  left: 50%;
   top: 50%;
-  right: 15%;
-  width: clamp(210px, 56vw, 230px);
   display: flex;
-  flex-direction: column;
   align-items: center;
-  transform: translate(100%, -50%);
+  justify-content: center;
+  gap: clamp(18px, 3vw, 34px);
+  width: min(92vw, 940px);
   opacity: 0;
+  transform: translate(calc(-50% + 44px), -50%);
   animation: resonance-cutin-slide 0.4s ease-out 0.2s forwards;
 }
 
+/* 右から寄ってくる既存の入りは踏襲しつつ、中央構図に合わせて移動量を
+   「画面幅ぶん」から44pxへ縮めた（中央の主役が横切って見えないように） */
 @keyframes resonance-cutin-slide {
   from {
-    transform: translate(100%, -50%);
+    transform: translate(calc(-50% + 44px), -50%);
     opacity: 0;
   }
   to {
-    transform: translate(0, -50%);
+    transform: translate(-50%, -50%);
     opacity: 1;
   }
 }
 
+.resonance-cutin-portrait {
+  position: relative;
+  flex: 0 0 auto;
+  width: clamp(148px, 34vh, 252px);
+  aspect-ratio: 1;
+}
+
+/* 神選択カードと同じ1:1クロップ（KEYVISUAL_OBJECT_POSITION）を
+   CSS変数で受け取り、円に収める。高さはposition:absoluteで確定させる
+   （flex内のimgにheight:100%を使うと内在サイズへフォールバックしうるため）。 */
 .resonance-cutin-image {
+  position: absolute;
+  inset: 0;
   width: 100%;
-  height: auto;
-  border-radius: 12px;
-  box-shadow: 0 0 30px 6px #ffd16655;
-}
-
-/* STEP-R3：笑蓮のkeyvisualのみ900×900の正方形・横臥ポーズで、他6神
-   （675〜720×900の縦長ポートレート、顔中央上寄せ）と構図が大きく異なる。
-   元画像アセットは変更せず、表示側だけでトリミングする。aspect-ratioを
-   他6神と同じ3:4（675×900相当）に固定してcoverすると、900×900正方形は
-   縦方向は無トリミング（高さがそのままboxの高さに一致）、横方向だけ25%
-   （900pxの左右合計225px）が切り取られる計算になる。
-   object-positionは実画像をグリッド計測して決定（推測で固定していない）：
-   顔の中心はおよそx=29%・y=23%（左上寄り）。x:20%にすると、実際に見える
-   範囲はx=5%〜80%となり、顔（29%）を左端から余裕を持って収めつつ、
-   右側に伸びる横臥ポーズの下半身・膝も80%まで残る（0%まで振り切ると
-   顔が窮屈になり、50%centerだと逆に顔が窓の外＝画面外に出てしまう）。
-   y座標は高さが無トリミングのため実質効かないが、意図を明示するために
-   顔の実測y位置に合わせている。 */
-.resonance-cutin-image[data-god='shouren'] {
-  aspect-ratio: 3 / 4;
+  height: 100%;
+  border-radius: 50%;
   object-fit: cover;
-  object-position: 20% 23%;
+  object-position: var(--god-keyvisual-pos, center 25%);
+  box-shadow: 0 0 26px 2px var(--god-accent, #ffd166);
 }
 
-.resonance-cutin-text {
-  margin-top: 8px;
-  width: 100%;
-  text-align: center;
-  font-size: 20px;
+/* 七つ刻みの環：360°を7分割（51.4286°ごと）した金の弧。共鳴ゲージ7/7と
+   同じ「七」を円で見せるSEVEN GODS独自の記号で、画像は増やさない。 */
+.resonance-cutin-ring {
+  position: absolute;
+  inset: -9px;
+  border-radius: 50%;
+  background: repeating-conic-gradient(from -90deg, #ffd166 0deg 44deg, transparent 44deg 51.4286deg);
+  -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 3px), #000 calc(100% - 2.5px));
+  mask: radial-gradient(farthest-side, transparent calc(100% - 3px), #000 calc(100% - 2.5px));
+}
+
+/* God Strikeの中だけ明朝系。フォントファイルは追加せず端末標準のみで、
+   無い環境（Androidの一部）はserifへフォールバックする。
+   数字系HUD・カード文言は既存のsansのまま（決定168）。 */
+.resonance-cutin-caption {
+  flex: 0 1 auto;
+  min-width: 0;
+  text-align: left;
+  font-family: 'Yu Mincho', 'YuMincho', 'Hiragino Mincho ProN', 'Noto Serif JP', 'Noto Serif CJK JP', serif;
+}
+
+.resonance-cutin-god {
+  font-size: clamp(13px, 1.5vw, 19px);
   font-weight: 700;
-  line-height: 1.3;
-  color: #ffd166;
-  text-shadow: 0 0 16px #ffd166cc;
+  letter-spacing: 0.34em;
+  color: var(--god-accent, #ffd166);
+  text-shadow: 0 1px 3px #000;
 }
 
-@media (min-width: 900px) {
-  .resonance-cutin-group {
-    right: 29%;
-    width: 340px;
+.resonance-cutin-title {
+  margin: 0.08em 0 0.1em;
+  /* 末尾のletter-spacingぶんを相殺して光学的に左端へ揃える */
+  margin-right: -0.16em;
+  font-size: clamp(40px, 5.4vw, 68px);
+  font-weight: 700;
+  line-height: 1.08;
+  letter-spacing: 0.16em;
+  color: #ffe9b0;
+  text-shadow:
+    0 2px 3px #000,
+    0 0 22px #ffd16677;
+  animation: resonance-cutin-title-in 0.26s ease-out 0.34s both;
+}
+
+@keyframes resonance-cutin-title-in {
+  from {
+    letter-spacing: 0.5em;
+    opacity: 0;
   }
-  .resonance-cutin-text {
-    font-size: 24px;
+  to {
+    letter-spacing: 0.16em;
+    opacity: 1;
+  }
+}
+
+.resonance-cutin-sub {
+  font-size: clamp(11px, 1.2vw, 15px);
+  letter-spacing: 0.3em;
+  color: #c3c6de;
+  text-shadow: 0 1px 3px #000;
+}
+
+/* モバイル（390px）は縦積み。縦書き案はPhase 6-Dのモックで成立していたが、
+   実画面比較の結果、4文字の技名は横組みのほうが視線移動が短く、端末や
+   フォント差（縦中横・約物の回転）の影響も受けないため横組みを採用した。 */
+@media (max-width: 899px) {
+  .resonance-cutin-group {
+    flex-direction: column;
+    gap: 14px;
+    width: min(94vw, 380px);
+  }
+  .resonance-cutin-band {
+    height: clamp(292px, 54vh, 420px);
+  }
+  .resonance-cutin-portrait {
+    width: clamp(136px, 44vw, 188px);
+  }
+  .resonance-cutin-caption {
+    text-align: center;
+  }
+  /* 中央寄せでは末尾のletter-spacingを相殺せず、頭に同じ量を足して釣り合わせる */
+  .resonance-cutin-god {
+    text-indent: 0.34em;
+  }
+  .resonance-cutin-title {
+    margin-right: 0;
+    text-indent: 0.16em;
+    font-size: clamp(34px, 11vw, 46px);
+  }
+  .resonance-cutin-sub {
+    text-indent: 0.3em;
+  }
+}
+
+/* prefers-reduced-motion：拡大・回転・スライド・字間アニメを止める。
+   暗転・神名・「神の一撃」・神色・円マスクは静的に全部見せるので、
+   God Strikeが起きたことは動きなしでも分かる（決定168）。 */
+@media (prefers-reduced-motion: reduce) {
+  .resonance-cutin-rays {
+    transform: none;
+    animation: resonance-cutin-static-in 0.25s ease-out both;
+  }
+  .resonance-cutin-band {
+    transform: translate(0, -50%);
+    animation: resonance-cutin-static-in 0.25s ease-out 0.1s both;
+  }
+  .resonance-cutin-group {
+    transform: translate(-50%, -50%);
+    animation: resonance-cutin-static-in 0.25s ease-out 0.16s both;
+  }
+  .resonance-cutin-title {
+    letter-spacing: 0.16em;
+    animation: resonance-cutin-static-in 0.25s ease-out 0.22s both;
+  }
+}
+
+@keyframes resonance-cutin-static-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
   }
 }
 
@@ -1900,6 +2127,15 @@
   color: #b8bfe0;
 }
 
+/* Phase 5-D：加護の「今ならブロックいくつ」。条件付き追加効果の⚡行と同じ琥珀色で、実数だけを強調する */
+.divination-choice-preview {
+  display: block;
+  margin-top: 2px;
+  font-size: 11px;
+  font-weight: 700;
+  color: #ffc868;
+}
+
 /*
  * Battle UX P0改善（HUD方式最終比較、案B採用）：カード選択中でも
  * 敵の予告・自分HP・AP・共鳴を確認できるcompact戦況バー。`.hand`の直前に
@@ -1912,32 +2148,9 @@
  * 各種バナー(5〜7)より下に置くことで、演出バナーの上に不自然に被らない
  * ようにしている。
  */
-.battle-hud {
-  position: sticky;
-  top: 0;
-  z-index: 2;
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  font-size: 12px;
-  color: #e8e9f3;
-  background: linear-gradient(120deg, #14152cb0 0%, #0b0d17c0 100%);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  border: 1px solid #ffd16633;
-  border-radius: 12px;
-  padding: 8px 14px;
-}
-
-.battle-hud-row {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-}
-
-.battle-hud-sep {
-  color: #a9adc4;
-}
+/* Phase 6-B（決定164）：sticky の戦況バー（.battle-hud）は廃止した。
+   名前・HP・予告・状態を立ち絵の上の名札（.enemy-plate／.player-plate）へ
+   移したことで常時可視になり、二重表示になるため（BattleHud.tsx も削除）。 */
 
 /*
  * STEP2-B（BattleMiniResult）：BattleHud（sticky, top:0, 高さ58px固定・
@@ -2861,30 +3074,11 @@
  * カード使用中・敵ターン中は従来どおり操作不能（半透明・cursor:not-allowed）
  * のまま。
  */
-@media (min-width: 900px) {
-  .battle {
-    /* 固定ボタンの高さ＋下余白ぶん、ページ末尾のコンテンツが隠れないよう確保 */
-    padding-bottom: 90px;
-  }
-
-  .end-round-button {
-    position: fixed;
-    left: 50%;
-    bottom: 20px;
-    transform: translateX(-50%);
-    z-index: 3;
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
-    box-shadow:
-      0 0 18px -4px #ffd16688,
-      0 10px 28px -8px #000000cc,
-      inset 0 1px 0 #ffffff33;
-  }
-
-  .end-round-button:not(:disabled):hover {
-    transform: translateX(-50%) translateY(-2px);
-  }
-}
+/* 決定77 の「ラウンドを終える」固定バー（PC幅で position: fixed）は
+   Phase 6-B（決定164）で廃止した。固定要素はページの高さを減らさないため、
+   アリーナ下部＝敵 HP・予告・神の立ち絵を覆うだけで「着弾が見えない」問題を
+   解決できないことが Phase 6-B 設計監査の実測で確定したため。現在はドックの
+   操作列（`.battle-dock-actions`）が grid の中に場所を確保して配置する。 */
 
 /*
  * P0②改善（CEO承認済み、B案）：PC幅（1280px前後）で開くと、敵/自分/OTOMOの
@@ -3027,36 +3221,36 @@
 .enemy-avatar {
   background-color: transparent;
   box-shadow: none;
-  filter: drop-shadow(0 12px 16px #000000cc) drop-shadow(0 0 26px #9b59b666);
+  filter: drop-shadow(0 12px 16px #000000cc) drop-shadow(0 0 26px #9b59b666) drop-shadow(0 0 1px #ffe0aa8c);
 }
 
 .player-avatar {
   background: transparent;
   box-shadow: none;
-  filter: drop-shadow(0 12px 16px #000000cc) drop-shadow(0 0 22px #4dbd7455);
+  filter: drop-shadow(0 12px 16px #000000cc) drop-shadow(0 0 22px #4dbd7455) drop-shadow(0 0 1px #ffe0aa8c);
 }
 
 .portrait img {
   background: transparent;
   box-shadow: none;
-  filter: drop-shadow(0 8px 12px #000000cc) drop-shadow(0 0 14px #ffd16644);
+  filter: drop-shadow(0 8px 12px #000000cc) drop-shadow(0 0 14px #ffd16644) drop-shadow(0 0 1px #ffe0aa8c);
 }
 
 /* 既存の終盤surge／溜めglow（box-shadow前提）も黒箱なしのdrop-shadow表現へ変換
    （色・強弱の序列 mild<strong、charge=金 は既存踏襲。ロジック無変更） */
 .enemy-avatar.enemy-avatar-surge-mild {
   box-shadow: none;
-  filter: drop-shadow(0 12px 16px #000000cc) drop-shadow(0 0 30px #9b59b6aa);
+  filter: drop-shadow(0 12px 16px #000000cc) drop-shadow(0 0 30px #9b59b6aa) drop-shadow(0 0 1px #ffe0aa8c);
 }
 
 .enemy-avatar.enemy-avatar-surge-strong {
   box-shadow: none;
-  filter: drop-shadow(0 12px 16px #000000cc) drop-shadow(0 0 38px #6a5acdcc);
+  filter: drop-shadow(0 12px 16px #000000cc) drop-shadow(0 0 38px #6a5acdcc) drop-shadow(0 0 1px #ffe0aa8c);
 }
 
 .enemy-avatar.enemy-avatar-charging {
   box-shadow: none;
-  filter: drop-shadow(0 12px 16px #000000cc) drop-shadow(0 0 32px #ffd166aa);
+  filter: drop-shadow(0 12px 16px #000000cc) drop-shadow(0 0 32px #ffd166aa) drop-shadow(0 0 1px #ffe0aa8c);
 }
 
 /* (2) 敵・神・OTOMOの3パネルを透明化し、背景が敵⇄神の背後まで連続して見えるように。
@@ -4009,4 +4203,1610 @@
     opacity: 1;
     transform: none;
   }
+}
+
+/*
+ * Phase 4.6（決定139 §12）：ランキング対象外だった神域挑戦の但し書き。
+ * 結果そのものは通常どおり祝う（遊んだ事実は変わらない）ので、
+ * 主張は控えめにし、色だけで「記録は残らない」ことを分かるようにする。
+ */
+.game-over-unranked {
+  display: inline-block;
+  margin-top: 4px;
+  font-size: 0.78rem;
+  line-height: 1.5;
+  color: #b0b0b0;
+}
+
+/* -------------------------------------------------------------------------
+   Phase 4.9：神域挑戦の決着画面から「今日のランキング」への導線。
+   `.game-over-daily` の内側にだけ現れる＝通常モードには一切出ない。
+   ------------------------------------------------------------------------- */
+.game-over-daily-rank {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.35rem;
+  margin-top: 0.5rem;
+  padding-top: 0.5rem;
+  border-top: 1px dashed #ffffff1f;
+}
+
+.game-over-daily-score {
+  font-size: 0.92rem;
+  color: #dfe3f5;
+  font-variant-numeric: tabular-nums;
+}
+
+.game-over-daily-score strong {
+  color: #fff;
+  font-size: 1.05rem;
+}
+
+/* タップ領域を 44px 確保する（Apple HIG）。文字リンクに見えるが押しやすくする */
+.game-over-rank-link {
+  min-height: 44px;
+  padding: 0.5rem 1.1rem;
+  border: 1px solid #ffd16666;
+  border-radius: 999px;
+  background: #ffd1660f;
+  color: #ffe9b0;
+  font-size: 0.88rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.game-over-rank-link:hover {
+  background: #ffd16620;
+}
+
+.game-over-rank-note {
+  font-size: 0.72rem;
+  line-height: 1.5;
+  color: #9aa3c4;
+  text-align: center;
+  overflow-wrap: anywhere;
+}
+
+/* ============================================================
+   Phase 6-A Combat Juice（決定162）：anticipation → impact → recovery。
+   表示専用（engine・ダメージ・HP更新タイミング・スコアは不変）。時刻は combatTimeline.ts の
+   着弾計画から inline CSS 変数（--impact-delay／--stop）で受け取り、animationend には依存しない。
+   既存定義は消さず末尾へ後置（ロールバック容易方式）。
+   ============================================================ */
+
+/* --- 向き：相手のいる方向（PC＝敵は左・神は右、900px 未満＝敵は上・神は下）。
+   突進は相手へ向かい、ノックバックは相手から離れる方向へ --- */
+.enemy-panel { --atk-x: 1; --atk-y: 0; }
+.player-panel { --atk-x: -1; --atk-y: 0; }
+@media (max-width: 899px) {
+  .enemy-panel { --atk-x: 0.3; --atk-y: 1; }
+  .player-panel { --atk-x: -0.3; --atk-y: -1; }
+}
+
+/* 敵の突進（旧：相手と逆の方向へ動いていた）を相手の方向へ。距離・時間・tier は従来値 */
+@keyframes enemy-lunge {
+  0% { transform: translate(0, 0) scale(1); }
+  35% { transform: translate(calc(var(--atk-x, -1) * 16px), calc(var(--atk-y, 0) * 16px)) scale(1.06); }
+  65% { transform: translate(calc(var(--atk-x, -1) * -5px), calc(var(--atk-y, 0) * -5px)) scale(0.99); }
+  100% { transform: translate(0, 0) scale(1); }
+}
+@keyframes enemy-lunge-strong {
+  0% { transform: translate(0, 0) scale(1); }
+  35% { transform: translate(calc(var(--atk-x, -1) * 18px), calc(var(--atk-y, 0) * 18px)) scale(1.07); }
+  65% { transform: translate(calc(var(--atk-x, -1) * -5px), calc(var(--atk-y, 0) * -5px)) scale(0.99); }
+  100% { transform: translate(0, 0) scale(1); }
+}
+@keyframes enemy-lunge-huge {
+  0% { transform: translate(0, 0) scale(1); filter: brightness(1); }
+  35% { transform: translate(calc(var(--atk-x, -1) * 21px), calc(var(--atk-y, 0) * 21px)) scale(1.09); filter: brightness(1.12); }
+  65% { transform: translate(calc(var(--atk-x, -1) * -5px), calc(var(--atk-y, 0) * -5px)) scale(0.99); filter: brightness(1); }
+  100% { transform: translate(0, 0) scale(1); filter: brightness(1); }
+}
+
+/* --- 神：構え（cast 中）→ 突き（commit、26%＝CARD_IMPACT_MS 90ms で最前）--- */
+.player-windup {
+  transition: transform 90ms ease-out;
+}
+.player-windup.is-winding {
+  transform: translate(calc(var(--atk-x, -1) * -7px), calc(var(--atk-y, 0) * -7px)) scale(0.97);
+  transition: transform 220ms cubic-bezier(0.3, 0.7, 0.4, 1);
+}
+@keyframes god-strike {
+  0% { transform: translate(calc(var(--atk-x, -1) * -6px), calc(var(--atk-y, 0) * -6px)) scale(0.97); }
+  26% { transform: translate(calc(var(--atk-x, -1) * 18px), calc(var(--atk-y, 0) * 18px)) scale(1.07); }
+  60% { transform: translate(calc(var(--atk-x, -1) * -3px), calc(var(--atk-y, 0) * -3px)) scale(0.99); }
+  100% { transform: translate(0, 0) scale(1); }
+}
+.god-strike img {
+  animation:
+    enemy-idle 3.4s ease-in-out infinite,
+    god-strike 0.34s cubic-bezier(0.2, 0.8, 0.3, 1);
+}
+/* 神の一撃：溜め（0〜30%）→ 突き（50%＝BURST_STRIKE_PEAK_MS 300ms）。
+   開始 1.3s＝enemyVfxTiming.ts の BURST_GOD_ATTACK_MS と一致 */
+@keyframes god-burst-strike {
+  0% { transform: translate(0, 0) scale(1); }
+  30% { transform: translate(calc(var(--atk-x, -1) * -10px), calc(var(--atk-y, 0) * -10px)) scale(0.95); }
+  50% { transform: translate(calc(var(--atk-x, -1) * 24px), calc(var(--atk-y, 0) * 24px)) scale(1.1); }
+  75% { transform: translate(calc(var(--atk-x, -1) * -4px), calc(var(--atk-y, 0) * -4px)) scale(0.99); }
+  100% { transform: translate(0, 0) scale(1); }
+}
+.god-burst-strike img {
+  animation:
+    enemy-idle 3.4s ease-in-out infinite,
+    god-burst-strike 0.6s cubic-bezier(0.3, 0.7, 0.3, 1);
+  animation-delay: 0s, 1.3s;
+  animation-fill-mode: none, backwards;
+}
+
+/* --- 敵リアクション：着弾の瞬間に対象だけ hit stop（ノックバック姿勢で静止）→ 段階別の揺れ＋閃光 --- */
+.enemy-stage {
+  position: relative;
+}
+.enemy-collapse,
+.enemy-reaction,
+.enemy-reaction-idle {
+  position: relative;
+}
+@keyframes juice-stop {
+  from,
+  to {
+    transform: translate(calc(var(--atk-x, 1) * -1 * var(--kb, 6px)), calc(var(--atk-y, 0) * -1 * var(--kb, 6px))) scale(0.97);
+    filter: brightness(2.2) saturate(1.3);
+  }
+}
+@keyframes juice-bonus-flash {
+  0% { filter: brightness(1); }
+  25% { filter: brightness(1.8) sepia(0.6) saturate(2.4); }
+  100% { filter: brightness(1); }
+}
+.enemy-reaction {
+  --kb: 5px;
+  animation-name: juice-stop, hit-shake, impact-flash;
+  animation-duration: var(--stop, 0ms), 0.4s, 0.35s;
+  animation-delay: var(--impact-delay, 0ms), calc(var(--impact-delay, 0ms) + var(--stop, 0ms)), calc(var(--impact-delay, 0ms) + var(--stop, 0ms));
+  animation-timing-function: linear, ease-in-out, ease-out;
+  animation-fill-mode: none;
+}
+.enemy-reaction.react-l1 {
+  --kb: 2px;
+  animation-name: juice-stop, hit-shake-l1, impact-flash;
+  animation-duration: var(--stop, 0ms), 0.28s, 0.25s;
+}
+.enemy-reaction.react-l3 {
+  --kb: 8px;
+  animation-name: juice-stop, hit-shake-l3, impact-flash-strong;
+  animation-duration: var(--stop, 0ms), 0.5s, 0.4s;
+}
+.enemy-reaction.react-l4 {
+  --kb: 11px;
+  animation-name: juice-stop, hit-shake-l4, impact-flash-huge;
+  animation-duration: var(--stop, 0ms), 0.7s, 0.55s;
+}
+.enemy-reaction.react-final {
+  --kb: 14px;
+}
+.enemy-reaction.react-minor {
+  --kb: 3px;
+  animation-name: juice-stop, hit-shake-l1, juice-bonus-flash;
+  animation-duration: var(--stop, 0ms), 0.26s, 0.32s;
+}
+
+/* 斬撃・数字は立ち絵の上（胸の位置）に重ねる。HP の数値とは重ならない */
+.enemy-hit-layer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  /* 立ち絵より上に重ねる（立ち絵は filter でスタッキング文脈を作る） */
+  z-index: 9;
+}
+.enemy-hit-layer .slash-fx {
+  inset: 22% 10%;
+}
+.enemy-hit-layer .floating-number {
+  top: 34%;
+}
+.slash-fx.juice-delayed::before {
+  animation-delay: var(--impact-delay, 0ms);
+  animation-fill-mode: both;
+}
+.slash-fx.slash-minor {
+  transform: scale(0.7) rotate(38deg);
+  opacity: 0.85;
+}
+.slash-fx.slash-minor::before {
+  background: linear-gradient(90deg, transparent, #fff3c4, #ffd166, transparent);
+  box-shadow: 0 0 12px 3px #ffd166cc;
+}
+/* 自分側：敵の通常攻撃は突進の最前で着弾（--impact-delay）。連撃・必殺は既存の CSS タイムライン */
+.juice-delayed {
+  animation-delay: var(--impact-delay, 0ms) !important;
+  animation-fill-mode: backwards !important;
+}
+.player-panel .floating-number {
+  top: -34px;
+}
+
+/* --- ダメージ数字：100 と 300 で明確に違う大きさ・跳ね方。最大クラス＝神の一撃・最後の一撃 --- */
+.floating-number-l1 { font-size: 16px; opacity: 0.9; }
+.floating-number-l2 { font-size: 22px; }
+.floating-number-l3 {
+  font-size: 30px;
+  font-weight: 800;
+  text-shadow: 0 0 12px #ff9a4aaa, 0 2px 4px #000000cc;
+  animation-name: float-up-l3;
+  animation-duration: 1s;
+}
+.floating-number-l4 {
+  font-size: 40px;
+}
+@keyframes float-up-l3 {
+  0% { opacity: 0; transform: translate(-50%, 0) scale(0.7); }
+  14% { opacity: 1; transform: translate(-50%, -4px) scale(1.22); }
+  32% { transform: translate(-50%, -10px) scale(1); }
+  100% { opacity: 0; transform: translate(-50%, -40px) scale(1); }
+}
+.floating-number-max {
+  font-size: 52px;
+  font-weight: 900;
+  color: #ffe08a;
+  letter-spacing: 0.02em;
+  text-shadow: 0 0 18px #ffd166ee, 0 0 42px #ff6b3aaa, 0 3px 6px #000000ee;
+  animation-name: float-up-max;
+  animation-duration: 1.3s;
+  z-index: 5;
+}
+@keyframes float-up-max {
+  0% { opacity: 0; transform: translate(-50%, 0) scale(0.5); }
+  10% { opacity: 1; transform: translate(-50%, -6px) scale(1.55); }
+  16% { transform: translate(calc(-50% - 3px), -8px) scale(1.4); }
+  22% { transform: translate(calc(-50% + 3px), -10px) scale(1.3); }
+  34% { transform: translate(-50%, -14px) scale(1.15); }
+  80% { opacity: 1; }
+  100% { opacity: 0; transform: translate(-50%, -52px) scale(1.1); }
+}
+.floating-number-bonus {
+  font-size: 20px;
+  color: #ffd166;
+  text-shadow: 0 0 10px #ffd166aa, 0 2px 4px #000000dd;
+}
+
+/* --- HP：主バーの後ろに直前HPのゴースト（遅れて縮む）。回復時はゴーストが主バーの下に隠れる --- */
+.hp-bar {
+  isolation: isolate;
+}
+.hp-bar-ghost {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  z-index: 0;
+  background: linear-gradient(90deg, #fff4d6, #ffd9a1);
+  opacity: 0.85;
+  transition-property: width;
+  transition-timing-function: ease-in;
+}
+.hp-bar-fill {
+  position: relative;
+  z-index: 1;
+  transition-property: width;
+  transition-timing-function: cubic-bezier(0.2, 0.8, 0.3, 1);
+}
+.hp-bar-label {
+  z-index: 2;
+}
+/* 追い詰めた：50%／25% 以下で静かに色が変わる（常時点滅はしない） */
+.hp-bar.hp-bar-quarter {
+  box-shadow:
+    0 0 0 1px #ff5c5c99,
+    0 0 12px #ff5c5c55;
+}
+.enemy-wound {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 260px;
+  height: 260px;
+  margin: -130px 0 0 -130px;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 0;
+  background: radial-gradient(circle, #ff3b3b30 0%, transparent 62%);
+}
+.enemy-wound-quarter {
+  background: radial-gradient(circle, #ff3b3b55 0%, #ff3b3b1c 45%, transparent 70%);
+}
+
+/* --- 撃破：最後の一撃 → フラッシュ → 脱色 → 沈み込んで消える（--collapse＝DEFEAT_COLLAPSE_MS）--- */
+@keyframes enemy-defeat {
+  0% { opacity: 1; transform: translate(0, 0) scale(1); filter: brightness(1); }
+  14% { opacity: 1; transform: translate(calc(var(--atk-x, 1) * -6px), calc(var(--atk-y, 0) * -6px)) scale(1.02); filter: brightness(2.8) saturate(0); }
+  45% { opacity: 0.9; filter: brightness(1.2) saturate(0.1); }
+  100% { opacity: 0; transform: translate(calc(var(--atk-x, 1) * -12px), 16px) scale(0.9); filter: brightness(0.6) saturate(0) blur(2px); }
+}
+.enemy-collapse.enemy-defeat {
+  animation: enemy-defeat var(--collapse, 520ms) cubic-bezier(0.4, 0, 0.7, 0.4) forwards;
+}
+.impact-ring.enemy-defeat-ring {
+  width: 180px;
+  height: 180px;
+  margin: -90px 0 0 -90px;
+  border-color: #fff;
+  box-shadow:
+    0 0 40px 8px #ffd166cc,
+    inset 0 0 30px #ffd16688;
+  animation-duration: 0.5s;
+  z-index: 4;
+}
+
+/* 「撃破」表示：崩壊の終盤に重ねる（--beat-ms＝VICTORY_BEAT_MS） */
+.victory-beat,
+.victory-beat span {
+  animation-duration: var(--beat-ms, 1s);
+}
+
+/* 結果トースト：着弾まで待つ（inline の animation-delay 中は不可視） */
+.result-toast {
+  animation-fill-mode: both;
+}
+
+/* 勝利カード：「自己ベストまであと〜」は勝利・スコアの後に出す */
+.game-over-card-won .game-over-best-gap {
+  animation: result-rise 0.5s ease-out both;
+  animation-delay: 1.4s;
+}
+
+/* --- prefers-reduced-motion：揺れ・ノックバック・突き・崩壊の動きを止める（情報は失わない：
+   数字・HP変化・撃破状態・閃光は残す。hit stop は計画側で 0）--- */
+@media (prefers-reduced-motion: reduce) {
+  .enemy-reaction,
+  .enemy-reaction.react-l1,
+  .enemy-reaction.react-l3,
+  .enemy-reaction.react-l4,
+  .enemy-reaction.react-minor {
+    --kb: 0px;
+    animation-name: none, none, impact-flash;
+  }
+  .god-strike img,
+  .god-burst-strike img {
+    animation: none;
+  }
+  .player-windup.is-winding {
+    transform: none;
+  }
+  .enemy-collapse.enemy-defeat {
+    animation-name: enemy-defeat-reduced;
+    animation-timing-function: linear;
+  }
+  .hp-bar-ghost {
+    transition-duration: 150ms !important;
+    transition-delay: 0ms !important;
+  }
+  .floating-number-l3,
+  .floating-number-max {
+    animation-name: float-up;
+  }
+  .impact-ring.enemy-defeat-ring {
+    animation: none;
+    opacity: 0;
+  }
+  .victory-beat span {
+    animation: none;
+    opacity: 1;
+  }
+}
+@keyframes enemy-defeat-reduced {
+  0% { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+/* 数字は立ち絵（赤紫の密度が高い絵）の上に出るため、黒の縁取りで必ず読めるようにする */
+.floating-number {
+  text-shadow:
+    2px 2px 0 #000000cc,
+    -2px 2px 0 #000000cc,
+    2px -2px 0 #000000cc,
+    -2px -2px 0 #000000cc,
+    0 2px 6px #000000ee,
+    0 0 16px currentColor;
+}
+.floating-number-damage {
+  color: #ff9393;
+}
+.floating-number-max {
+  text-shadow:
+    2px 2px 0 #000000dd,
+    -2px 2px 0 #000000dd,
+    2px -2px 0 #000000dd,
+    -2px -2px 0 #000000dd,
+    0 0 20px #ffd166ee,
+    0 0 46px #ff6b3aaa;
+}
+
+/* ============================================================
+   Phase 6-B（決定164）Battle Viewport Layout
+   ------------------------------------------------------------
+   目的：「カードを選ぶためにスクロールすると、敵への着弾（Phase 6-A の
+   Combat Juice）が画面外で終わってしまう」問題を構造から消す。
+
+   設計（docs/PHASE6B_BATTLE_HUD_DESIGN.md の D案）：
+   1. 戦闘画面を「画面の高さに収まる grid」にする（上＝ステータス／
+      中＝アリーナ＝残りの高さ／下＝ドック＝託宣＋手札＋操作）。
+      ページ自体はスクロールしない＝カードを触る位置＝着弾が見える位置。
+   2. 操作 UI は grid の行として場所を確保する。`position: fixed` で
+      アリーナに重ねない（固定要素はページの高さを減らさないため、
+      敵 HP・予告を覆うだけで問題は解決しない＝監査で実測済み）。
+      決定77 の固定「ラウンドを終える」ボタンはこの方式に置き換えた。
+   3. 名前・HP・予告・状態は立ち絵の「上」の名札へ集約し、常に見えるようにする。
+   4. 立ち絵は残り高さに収まる可変サイズ（contain）。切れない・重ならない。
+
+   すべて表示・レイアウトのみ。engine・combat 計算・Phase 6-A の
+   タイムライン（--impact-delay／--stop／ghost HP）には一切触れない。
+   `body.battle-viewport` は BattleScreen のマウント中だけ付くため、
+   ホーム・デッキ構築・ランキングなど他画面には一切影響しない。
+   ============================================================ */
+
+/* --- 0) 名札（Enemy / Player / 共鳴）。背景を持つ「可読性の島」 --- */
+.enemy-plate,
+.player-plate,
+.god-otomo-plate {
+  flex: 0 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  width: 100%;
+  padding: 6px 8px;
+  border: 1px solid #ffffff14;
+  border-radius: 10px;
+  background: linear-gradient(180deg, #05060dcc 0%, #05060d8c 100%);
+}
+
+.enemy-plate-head,
+.player-plate-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 2px 6px;
+}
+
+.enemy-plate-head .panel-title,
+.player-plate-head .panel-title {
+  font-size: 14px;
+}
+
+.enemy-plate-status,
+.player-plate-status {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 8px;
+}
+
+.player-plate-status:empty {
+  display: none;
+}
+
+.player-plate-head .god-tagline {
+  margin: 0;
+  font-size: 10px;
+}
+
+/* 予告（Intent）は情報の最優先。名札の中で本文より明確に大きくする
+   （PC 20px／モバイル 17px。色・枠は既存の intent-tier-* をそのまま使う） */
+.enemy-plate .intent {
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 1.25;
+}
+
+.god-otomo-plate-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+}
+
+.god-otomo-plate-head .panel-title {
+  font-size: 13px;
+}
+
+.god-otomo-plate .god-passive-badge {
+  align-self: auto;
+  margin: 0;
+}
+
+.god-otomo-plate .burst-preview-head {
+  margin-bottom: 0;
+  font-size: 12px;
+}
+
+/* --- 1) ドック（託宣バー＋手札＋操作）。grid の行として場所を持つ --- */
+.battle-dock {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+}
+
+.battle-dock-row {
+  position: relative;
+  display: flex;
+  align-items: stretch;
+  gap: 10px;
+  min-width: 0;
+}
+
+/* 手札。PC幅では「クリップしない」ことを最優先し、枚数が増えたときは
+   従来どおり折り返す（ドックが高くなった分はアリーナ＝1fr が吸収するため、
+   カードの持ち上げ・使用アニメーション・コストバッジは一切切れない）。
+   390px 級の横幅では折り返すと高さが倍になるため、そちらだけ横スクロールにする
+   （→ 下の `@media (max-width: 899px)`）。 */
+.battle-dock-row .hand {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: visible;
+}
+
+.battle-dock-actions {
+  flex: 0 0 auto;
+  width: 112px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 6px;
+}
+
+.battle-dock-actions .end-round-button {
+  align-self: stretch;
+  margin-top: 0;
+  padding: 10px 8px;
+  font-size: 13px;
+  letter-spacing: 0.04em;
+}
+
+/* ログは既定で畳む。機能は削除せず、ドックのトグルで開く（決定164） */
+.battle-log-toggle {
+  align-self: stretch;
+  padding: 5px 8px;
+  border-radius: 8px;
+  border: 1px solid #ffffff22;
+  background: #14152caa;
+  color: #9aa3cc;
+  font-size: 11px;
+  font-weight: 700;
+  cursor: pointer;
+  transition:
+    border-color 0.2s ease,
+    color 0.2s ease;
+}
+
+.battle-log-toggle:hover {
+  border-color: #ffd16688;
+  color: #ffd9a0;
+}
+
+.battle-log-toggle.is-open {
+  border-color: #ffd16688;
+  background: #ffd1661a;
+  color: #ffd9a0;
+}
+
+/* --- 2) アプリ外枠：戦闘中だけ「1画面に収める」モードにする --- */
+body.battle-viewport {
+  overflow: hidden;
+}
+
+body.battle-viewport #root {
+  /* dvh 非対応ブラウザ向けに vh を先に置く（モバイルのURLバー伸縮対策） */
+  height: 100vh;
+  height: 100dvh;
+  overflow: hidden;
+}
+
+body.battle-viewport .app {
+  height: 100%;
+  min-height: 0;
+  overflow: hidden;
+}
+
+body.battle-viewport .app-header {
+  padding: 4px 14px;
+  /* 決定170：アイコンは 26px のままだが、44px のタップ判定（App.css の
+     .app-icon-button::after）が隣と重ならないよう間隔を広げる */
+  gap: 18px;
+}
+
+body.battle-viewport .app-icon-button {
+  width: 26px;
+  height: 26px;
+}
+
+body.battle-viewport .app-icon-glyph {
+  width: 15px;
+  height: 15px;
+}
+
+body.battle-viewport .game-stage {
+  min-height: 0;
+  padding: 6px;
+  place-items: stretch center;
+  overflow: hidden;
+}
+
+/* --- 3) 戦闘画面＝3行の grid（上部バー／アリーナ可変／ドック） --- */
+body.battle-viewport .battle {
+  width: 100%;
+  max-width: 1240px;
+  height: 100%;
+  min-height: 0;
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  grid-template-areas:
+    'topbar'
+    'arena'
+    'dock';
+  gap: 8px;
+  padding-bottom: 0;
+  overflow: hidden;
+}
+
+body.battle-viewport .battle-topbar {
+  grid-area: topbar;
+  padding: 6px 14px;
+  font-size: 13px;
+}
+
+/* アリーナ＝残りの高さ。中は「敵（左）」と「神＋OTOMO（右）」の2列 */
+body.battle-viewport .battle-main {
+  grid-area: arena;
+  min-height: 0;
+  /* Combat Juice（52px のダメージ数字・閃光・ノックバック・斬撃）を
+     絶対に切らないため、アリーナはクリップしない（旧：overflow:hidden）。
+     背景のグラデーション・画像は border-box に収まるので見た目は不変。 */
+  overflow: visible;
+  display: grid;
+  grid-template-columns: 1.12fr 0.88fr;
+  grid-template-rows: minmax(0, 1fr);
+  align-items: stretch;
+  padding: 10px;
+  gap: 10px;
+}
+
+/* アリーナは「敵 ／ 神 ／ OTOMO・共鳴」の3列にする。`.ally-row` を
+   display:contents にするだけで、DOM・JSX を変えずに神と OTOMO をアリーナ直下の
+   列へ展開できる。こうすると神の立ち絵もアリーナの全高を使えるため、
+   敵 > 神 > OTOMO というサイズ序列（設計 §11 の 0.82）をどの画面高でも保てる。
+   （右列に神と OTOMO を縦積みすると、OTOMO パネルの固定分に高さを食われて
+   神の立ち絵が 64px まで潰れることを実測で確認したため、この形にした。） */
+body.battle-viewport .battle-main {
+  grid-template-columns: 1.18fr 1fr 0.78fr;
+}
+
+body.battle-viewport .ally-row {
+  display: contents;
+}
+
+/* display:contents で `.battle-main > *` の指定から外れるため、
+   アリーナのグロー・vignette（z-index:0）より前に出す指定をここで補う。 */
+body.battle-viewport .ally-row > .panel {
+  position: relative;
+  z-index: 1;
+  min-height: 0;
+}
+
+/* 敵と神の「立ち絵の領域」を同じ高さにして、足元ライン（align-items:end）と
+   頭の高さの比（神＝敵の 0.82）を構造的に保証する：
+   ・名札は両者とも同じ min-height
+   ・掛け声の吹き出しは高さを消費させず、立ち絵の上端に重ねる（高さ固定＋負のmargin）
+   ・神の立ち絵だけ max-height:82% */
+body.battle-viewport .enemy-plate,
+body.battle-viewport .player-plate {
+  min-height: 78px;
+}
+
+body.battle-viewport .enemy-speech-bubble {
+  z-index: 2;
+  height: 26px;
+  padding: 4px 12px;
+  margin-bottom: -31px;
+  max-width: 94%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+body.battle-viewport .player-avatar {
+  max-height: 82%;
+}
+
+body.battle-viewport .battle-dock {
+  grid-area: dock;
+}
+
+/* アリーナのグロー層は、クリップをやめた分だけ内側に収める */
+body.battle-viewport .battle-arena-glow {
+  inset: 0;
+  border-radius: 20px;
+}
+
+/* 背景の vignette（四隅を落として立ち絵へ視線を寄せ、文字の可読性も上げる）。
+   子要素は z-index:1 のため、この層（0）より必ず前に出る */
+body.battle-viewport .battle-main::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  border-radius: 20px;
+  background: radial-gradient(ellipse 116% 104% at 50% 48%, transparent 54%, #00000055 100%);
+}
+
+/* --- 4) アリーナ内：高さは必ず親に収める --- */
+body.battle-viewport .enemy-panel,
+body.battle-viewport .player-panel,
+body.battle-viewport .god-otomo-panel {
+  min-height: 0;
+  justify-content: flex-start;
+}
+
+body.battle-viewport .god-otomo-panel {
+  align-items: stretch;
+}
+
+/* ミニ結果・エラー・ログはアリーナに重ねる（grid の列を消費させない）。
+   `.battle-main > *` の position:relative より強い指定で上書きする。 */
+body.battle-viewport .battle-main > .battle-mini-result {
+  position: absolute;
+  top: 8px;
+  left: 0;
+  right: 0;
+  width: fit-content;
+  max-width: min(480px, 94%);
+  margin: 0 auto;
+  z-index: 3;
+}
+
+body.battle-viewport .battle-main > .battle-error {
+  position: absolute;
+  left: 8px;
+  right: 8px;
+  bottom: 8px;
+  z-index: 4;
+}
+
+body.battle-viewport .battle-main > .battle-log {
+  position: absolute;
+  left: 8px;
+  right: 8px;
+  bottom: 8px;
+  max-height: 46%;
+  overflow-y: auto;
+  z-index: 4;
+  background: linear-gradient(165deg, #14152cee 0%, #0b0d17f2 100%);
+}
+
+/* --- 5) 立ち絵は「名札の残り」に収まる可変サイズ（切れない・重ならない）--- */
+body.battle-viewport .enemy-stage {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  /* 接地影：背景ステージの床ラインに足元を合わせる（CSSのみ・画像は不変） */
+  background-image: radial-gradient(ellipse 54% 6% at 50% 98%, #000000a8 0%, transparent 72%);
+}
+
+body.battle-viewport .enemy-stage > .enemy-collapse,
+body.battle-viewport .enemy-collapse > .enemy-avatar-wrap,
+body.battle-viewport .enemy-avatar-wrap > .enemy-reaction,
+body.battle-viewport .enemy-avatar-wrap > .enemy-reaction-idle,
+body.battle-viewport .enemy-reaction > .enemy-reaction,
+body.battle-viewport .enemy-reaction > .enemy-reaction-idle,
+body.battle-viewport .enemy-reaction-idle > .enemy-reaction,
+body.battle-viewport .enemy-reaction-idle > .enemy-reaction-idle {
+  display: flex;
+  flex: 1 1 auto;
+  min-height: 0;
+  width: 100%;
+  height: 100%;
+  align-items: flex-end;
+  justify-content: center;
+}
+
+body.battle-viewport .enemy-avatar {
+  width: 100%;
+  max-width: 290px;
+  height: 100%;
+  min-height: 104px;
+  background-position: center bottom;
+}
+
+body.battle-viewport .player-stage {
+  position: relative;
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  background-image: radial-gradient(ellipse 50% 6% at 50% 98%, #00000099 0%, transparent 72%);
+}
+
+body.battle-viewport .player-windup {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+}
+
+body.battle-viewport .player-avatar-wrap {
+  flex: 1 1 auto;
+  min-height: 0;
+  height: 100%;
+  align-items: flex-end;
+}
+
+body.battle-viewport .player-avatar-wrap > div {
+  display: flex;
+  flex: 1 1 auto;
+  min-height: 0;
+  height: 100%;
+  align-items: flex-end;
+  justify-content: center;
+}
+
+body.battle-viewport .player-avatar {
+  width: 100%;
+  /* 敵 290 に対し 0.82（設計の序列：敵 > 神 > OTOMO を維持） */
+  max-width: 238px;
+  height: 100%;
+  min-height: 92px;
+  object-position: center bottom;
+}
+
+/* 斬撃・ダメージ数字は立ち絵の上のレイヤー（敵側 .enemy-hit-layer と同じ型）。
+   HP の数値と重ならず、立ち絵の胸の位置に出る。 */
+.player-hit-layer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 9;
+}
+
+.player-hit-layer .slash-fx {
+  inset: 22% 10%;
+}
+
+.player-panel .player-hit-layer .floating-number {
+  top: 34%;
+}
+
+/* 立ち絵のオーラ（::before）は固定 324/270px のままだと、可変サイズの立ち絵に
+   対して大きすぎるうえ、アリーナの下へはみ出して scrollHeight を押し広げる。
+   可変領域に追従させる（見た目の役割＝立ち絵の背後の陣営色は不変）。 */
+body.battle-viewport .enemy-avatar-wrap::before,
+body.battle-viewport .player-avatar-wrap::before {
+  width: auto;
+  height: 100%;
+  aspect-ratio: 1 / 1;
+  max-width: 340px;
+  max-height: 340px;
+  /* 回転させると（rotate アニメーション）正方形の外接矩形が √2 倍に広がり、
+     アリーナの下へ約80pxはみ出す＝スクロール領域を押し広げる（実測）。
+     blur 済みの conic-gradient なので、静止させても見た目はほぼ変わらない。 */
+  animation: none;
+}
+
+/* OTOMO は可変（48〜80px）。キャプションは名前が神技プレビュー行にも出るため省略 */
+body.battle-viewport .god-otomo-portraits {
+  flex: 0 1 auto;
+  min-height: 0;
+}
+
+body.battle-viewport .portrait img {
+  width: auto;
+  height: clamp(48px, 8vh, 80px);
+  aspect-ratio: 1 / 1;
+}
+
+body.battle-viewport .portrait figcaption {
+  display: none;
+}
+
+/* 神技プレビュー（7に達すると何が起きるか：8/31 P0-2）は情報として残し、
+   高さだけを詰める。各行は1行・はみ出しは省略記号（全文は DeckBuilder と
+   同じ文面がここにも出る）。 */
+body.battle-viewport .burst-preview {
+  flex: 0 0 auto;
+  margin-top: 2px;
+  padding: 3px 6px;
+  font-size: 10px;
+  line-height: 1.35;
+}
+
+body.battle-viewport .burst-preview-row {
+  gap: 4px;
+  min-width: 0;
+}
+
+body.battle-viewport .burst-preview-row > span:last-child {
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+body.battle-viewport .burst-preview-note {
+  display: none;
+}
+
+/* --- 6) 託宣バー：横1列のコンパクト行 --- */
+body.battle-viewport .divination-panel {
+  flex-direction: row;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 10px;
+}
+
+body.battle-viewport .divination-panel-title {
+  flex: 0 0 auto;
+  font-size: 11px;
+  max-width: 210px;
+}
+
+body.battle-viewport .divination-choices {
+  flex: 1 1 auto;
+  flex-wrap: nowrap;
+  gap: 6px;
+  min-width: 0;
+}
+
+body.battle-viewport .divination-choice {
+  min-width: 0;
+  padding: 4px 8px;
+  gap: 6px;
+}
+
+body.battle-viewport .divination-choice-glyph {
+  width: 22px;
+  height: 22px;
+  padding: 3px;
+}
+
+body.battle-viewport .divination-choice-name {
+  font-size: 11px;
+}
+
+body.battle-viewport .divination-choice-text {
+  font-size: 10px;
+}
+
+body.battle-viewport .divination-choice-preview {
+  margin-top: 0;
+  font-size: 10px;
+}
+
+/* --- 7) 手札：1列・カードは画像が見える下限を守ってコンパクト化 --- */
+body.battle-viewport .hand {
+  gap: 8px;
+}
+
+body.battle-viewport .card-view {
+  width: 116px;
+  min-height: 0;
+  height: 164px;
+  flex: 0 0 auto;
+  padding: 7px;
+}
+
+body.battle-viewport .card-view-name {
+  font-size: 11.5px;
+}
+
+body.battle-viewport .card-view-type {
+  display: none;
+}
+
+body.battle-viewport .card-view-text {
+  font-size: 9.5px;
+  line-height: 1.3;
+}
+
+body.battle-viewport .card-view-bonus {
+  font-size: 9px;
+  line-height: 1.25;
+  margin-top: 1px;
+  padding-top: 2px;
+}
+
+body.battle-viewport .card-view-god {
+  font-size: 9px;
+}
+
+body.battle-viewport .card-view-has-art .card-view-body {
+  margin: auto -7px -7px;
+  padding: 16px 7px 6px;
+}
+
+body.battle-viewport .card-view-icon-bg {
+  width: 68px;
+  height: 68px;
+}
+
+/* --- 8) 攻撃の向き：この構造では敵は常に「横」にいる（上下ではない） --- */
+body.battle-viewport .enemy-panel {
+  --atk-x: 1;
+  --atk-y: 0;
+}
+
+body.battle-viewport .player-panel {
+  --atk-x: -1;
+  --atk-y: 0;
+}
+
+/* --- 9) 低い画面（≤640px 高）：情報の優先順位どおりに省略する。
+       HP・共鳴・予告・AP・カードは決して省略しない。 --- */
+@media (max-height: 700px) {
+  body.battle-viewport .enemy-speech-bubble,
+  body.battle-viewport .player-plate-head .god-tagline,
+  body.battle-viewport .enemy-plate-head .enemy-type-desc {
+    display: none;
+  }
+
+  body.battle-viewport .divination-choice-text {
+    display: none;
+  }
+}
+
+@media (max-height: 600px) {
+  /* ここまで低いと神技プレビューの2行ぶんも惜しい。「あと◯で神技発動」は
+     名札側に常時残るため、詳細行だけを畳む。 */
+  body.battle-viewport .burst-preview {
+    display: none;
+  }
+}
+
+@media (max-height: 640px) {
+  body.battle-viewport .battle {
+    gap: 6px;
+  }
+
+  body.battle-viewport .battle-topbar {
+    padding: 4px 12px;
+    font-size: 12px;
+  }
+
+  body.battle-viewport .card-view {
+    height: 150px;
+  }
+
+  body.battle-viewport .portrait figcaption {
+    display: none;
+  }
+
+  body.battle-viewport .portrait img {
+    height: clamp(44px, 9vh, 72px);
+  }
+}
+
+/* 逃げ道：極端に低いビューポート（アドレスバー展開・小型ウィンドウ）では
+   1画面に詰め込まず、従来どおりスクロールできる状態へ戻す。 */
+@media (max-height: 460px) {
+  body.battle-viewport,
+  body.battle-viewport #root,
+  body.battle-viewport .app,
+  body.battle-viewport .game-stage {
+    overflow: visible;
+    height: auto;
+    min-height: 100%;
+  }
+
+  body.battle-viewport .battle {
+    height: auto;
+    overflow: visible;
+  }
+
+  body.battle-viewport .battle-main {
+    grid-template-rows: auto;
+  }
+}
+
+/* --- 10) モバイル（<900px）：同じ構造のまま寸法だけ変える --- */
+@media (max-width: 899px) {
+  body.battle-viewport .battle-main {
+    grid-template-columns: 1.22fr 1fr 0.78fr;
+    padding: 8px;
+    gap: 6px;
+  }
+
+  body.battle-viewport .enemy-plate,
+  body.battle-viewport .player-plate {
+    min-height: 72px;
+    padding: 4px 6px;
+  }
+
+  body.battle-viewport .battle-main .panel {
+    padding: 8px;
+    gap: 5px;
+  }
+
+  body.battle-viewport .enemy-plate .intent {
+    font-size: 17px;
+  }
+
+  /* 【型】と攻略説明は 390px の列幅では折り返して名札を倍の高さにし、敵の立ち絵の
+     高さを奪う（実測：名札が37px高くなり、神＞敵という逆転が起きていた）。
+     設計 §6 の「アリーナが低い時は【型】と吹き出しを省略」を幅にも適用する。 */
+  body.battle-viewport .enemy-plate-head .enemy-type-desc,
+  body.battle-viewport .enemy-plate-head .enemy-type-badge {
+    display: none;
+  }
+
+  body.battle-viewport .enemy-plate-head,
+  body.battle-viewport .player-plate-head {
+    flex-wrap: nowrap;
+    min-width: 0;
+  }
+
+  body.battle-viewport .enemy-plate-head .panel-title,
+  body.battle-viewport .player-plate-head .panel-title {
+    min-width: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  body.battle-viewport .enemy-plate-head .panel-title,
+  body.battle-viewport .player-plate-head .panel-title {
+    font-size: 12.5px;
+  }
+
+  body.battle-viewport .enemy-avatar {
+    max-width: 210px;
+    min-height: 88px;
+  }
+
+  body.battle-viewport .player-avatar {
+    max-width: 172px;
+    min-height: 76px;
+  }
+
+  /* 390px は縦積みの右列。OTOMO パネルを詰めて神の立ち絵に高さを譲る */
+  body.battle-viewport .god-otomo-portraits {
+    justify-content: center;
+  }
+
+  body.battle-viewport .portrait img {
+    height: clamp(44px, 7vh, 64px);
+  }
+
+  body.battle-viewport .burst-preview {
+    display: none;
+  }
+
+  /* 「ラウンドを終える」は託宣バーの右端へ（手札に横幅を全部渡すため）。
+     ドック内の absolute＝grid の中に場所を予約する方式で、fixed は使わない。 */
+  body.battle-viewport .divination-panel {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 3px;
+    padding-right: 128px;
+  }
+
+  body.battle-viewport .divination-panel-title {
+    max-width: none;
+    font-size: 10px;
+  }
+
+  /* 行は block に戻し（position:static）、操作ボタンは「ドック」を基準に
+     託宣バーの右端へ置く。ドックの行の中に場所を予約する方式で fixed は使わない。 */
+  body.battle-viewport .battle-dock-row {
+    display: block;
+    position: static;
+  }
+
+  body.battle-viewport .battle-dock-actions {
+    position: absolute;
+    top: 5px;
+    right: 6px;
+    width: auto;
+    flex-direction: row;
+    align-items: stretch;
+    gap: 4px;
+    z-index: 3;
+  }
+
+  body.battle-viewport .battle-dock-actions .end-round-button {
+    min-height: 44px;
+    padding: 6px 10px;
+    font-size: 11px;
+    letter-spacing: 0;
+  }
+
+  body.battle-viewport .battle-log-toggle {
+    min-height: 44px;
+    /* 決定170：390px では幅 30px しかなくタップ領域が足りないため 44px にする */
+    min-width: 44px;
+    padding: 6px 8px;
+  }
+
+  /* 手札は横1列・横スクロール（折り返さない）。カードの持ち上げ・使用
+     アニメーション（実測で上方向へ最大約17px）とコストバッジ（-10px）が
+     切れないよう、スクロール領域の上に余白を確保する。負の margin は使わない
+     （託宣バーの上に重なるとボタンのタップを奪ってしまうため）。 */
+  body.battle-viewport .battle-dock {
+    gap: 4px;
+  }
+
+  body.battle-viewport .battle-dock-row .hand {
+    display: flex;
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    align-items: flex-start;
+    gap: 8px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding: 30px 12px 4px;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior-x: contain;
+  }
+
+  body.battle-viewport .battle-dock-row .hand::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* 余裕があるときは中央寄せ、はみ出すときは左端から（auto margin は
+     オーバーフロー時に 0 へ解決されるため、先頭カードが切れない） */
+  body.battle-viewport .battle-dock-row .hand > .card-view:first-child {
+    margin-left: auto;
+  }
+
+  body.battle-viewport .battle-dock-row .hand > .card-view:last-child {
+    margin-right: auto;
+  }
+
+  body.battle-viewport .card-view {
+    width: 100px;
+    height: 158px;
+  }
+
+  body.battle-viewport .card-view-text {
+    font-size: 9px;
+  }
+
+  /* 効果文は託宣ボタンの title に同じ文が入っている（DivinationPanel.tsx）。
+     390px では1行に3つ並べるため、ボタン内の長文だけを畳む。 */
+  body.battle-viewport .divination-choice-text {
+    display: none;
+  }
+}
+
+/* 390px かつ画面が低いとき（390×780 CSS=696 など）は、アリーナの高さを確保する
+   ためカードを一段小さくする。画像の見える高さは 58px 以上を保つ（設計 §7）。 */
+@media (max-width: 899px) and (max-height: 720px) {
+  body.battle-viewport .card-view {
+    height: 140px;
+  }
+
+  body.battle-viewport .battle-dock-row .hand {
+    padding-top: 26px;
+  }
+}
+
+/* ============================================================
+   Phase 6-B 実装調整（実測スクリーンショットに基づく）
+   ============================================================ */
+
+/* OTOMO も「床に立つ」3人目として扱う。神技プレビューを名札側（order:-1）へ
+   送り、立ち絵は残りの高さいっぱいで下揃え＝敵・神と同じ接地ラインに乗せる。 */
+body.battle-viewport .burst-preview {
+  order: -1;
+  margin-top: 0;
+}
+
+body.battle-viewport .god-otomo-portraits {
+  flex: 1 1 auto;
+  min-height: 0;
+  align-items: flex-end;
+  background-image: radial-gradient(ellipse 46% 7% at 50% 98%, #00000099 0%, transparent 72%);
+}
+
+body.battle-viewport .portrait {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  min-height: 0;
+}
+
+body.battle-viewport .portrait img {
+  width: auto;
+  height: min(100%, clamp(56px, 14vh, 128px));
+  aspect-ratio: 1 / 1;
+}
+
+/* カード使用結果のミニ表示は、名札（名前・HP・予告）を隠さないよう
+   アリーナの下端＝床のあたりに出す（0.7秒の一過性表示） */
+body.battle-viewport .battle-main > .battle-mini-result {
+  top: auto;
+  bottom: 10px;
+}
+
+@media (max-width: 899px) {
+  /* 390px の託宣バー：3ボタンを1行に収める。アイコンは畳み、文言は折り返さない
+     （効果文は button の title に入っている） */
+  body.battle-viewport .divination-choice-glyph {
+    display: none;
+  }
+
+  body.battle-viewport .divination-choice {
+    padding: 3px 5px;
+    gap: 3px;
+  }
+
+  body.battle-viewport .divination-choice-name {
+    font-size: 10px;
+    white-space: nowrap;
+  }
+
+  body.battle-viewport .divination-choice-preview {
+    font-size: 9px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  body.battle-viewport .divination-panel {
+    padding-right: 106px;
+  }
+
+  body.battle-viewport .battle-dock-actions {
+    width: 96px;
+  }
+
+  body.battle-viewport .battle-dock-actions .end-round-button {
+    width: 62px;
+    padding: 4px 4px;
+    font-size: 10px;
+    line-height: 1.15;
+  }
+
+  body.battle-viewport .battle-log-toggle {
+    width: 30px;
+    padding: 4px 2px;
+    font-size: 10px;
+  }
+
+  body.battle-viewport .battle-dock-row .hand {
+    padding-top: 26px;
+  }
+}
+
+/* 立ち絵サイズは vh 基準で決める（親が flex で高さが不定のとき、img の
+   height:100% は解決できず intrinsic サイズに戻ってしまうため％は使わない）。
+   列幅より大きくなる場合は max-width:100% ＋ contain で letterbox する。 */
+body.battle-viewport .portrait img {
+  width: auto;
+  max-width: 100%;
+  height: clamp(56px, 13vh, 120px);
+  aspect-ratio: auto;
+  object-fit: contain;
+}
+
+@media (max-width: 899px) {
+  body.battle-viewport .portrait img {
+    height: clamp(48px, 8vh, 76px);
+  }
+
+  /* 台詞は 100px 級の列幅では縦書きのように折り返すため常に畳む（設計 §6） */
+  body.battle-viewport .player-plate-head .god-tagline {
+    display: none;
+  }
+}
+
+/* OTOMO 立ち絵の高さ上限を「列の残り高さ」にする。行方向の flex で
+   align-items:stretch にすると .portrait の高さが確定するため、img の
+   max-height:100% が解決でき、アリーナからはみ出さなくなる。 */
+body.battle-viewport .god-otomo-portraits {
+  align-items: stretch;
+}
+
+body.battle-viewport .portrait {
+  min-height: 0;
+}
+
+body.battle-viewport .portrait img {
+  max-height: 100%;
+}
+
+/* 共鳴パネルの並び：名札（共鳴ゲージ・あと◯で神技発動）→ 神技プレビュー →
+   OTOMO立ち絵（床に接地）。burst-preview の order:-1 だけだと名札より上に来るため、
+   名札を -2 にして「見出し → 詳細」の順を保つ。 */
+body.battle-viewport .god-otomo-plate {
+  order: -2;
+}
+
+/* ============================================================
+   Phase 6-C（決定166）Decision Feedback ＋ Battle Recap
+   ------------------------------------------------------------
+   「良い判断が成立した瞬間」を短く返す callout と、結果画面の振り返り。
+   表示専用。6-A のタイムライン・6-B の一画面性には触れない：
+   - callout はアリーナ内の overlay（absolute／pointer-events:none）で、
+     ページの高さを増やさず、操作・タップを奪わない
+   - 数字（最大 52px）より小さく、着弾そのものより目立たせない
+   - 位置は敵と神のあいだ（PC）／神の頭上（SP）。浮遊数字の帯・ミニ結果・
+     立ち絵の顔・予告・手札のいずれとも重ねない（QA で矩形計測）
+   ============================================================ */
+
+.battle-callout {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1px;
+  pointer-events: none;
+  text-align: center;
+  text-shadow:
+    0 2px 4px #000000ee,
+    0 0 14px #00000099;
+  animation: battle-callout-in 0.7s ease-out both;
+}
+
+/* `.battle-main > *` の position:relative より強く、アリーナ内に絶対配置する */
+body.battle-viewport .battle-main > .battle-callout {
+  position: absolute;
+  /* 横位置は「敵と神のあいだ」。浮遊数字は敵側（アリーナ幅の約 13〜28%）と
+     神側（約 47〜70%、「軽減N」は 47〜54%）に出るため、その間の 32〜44% に置く（敵立ち絵の枠の右端 32% と 1 桁 px の余裕を取る）。
+     幅を固定して sub は折り返す（最長でも 2 行） */
+  left: 38%;
+  width: 140px;
+  margin-left: -70px;
+  /* ミニ結果（bottom:10px・PC は最大約 80px）の上に重ならない高さ */
+  bottom: 90px;
+  z-index: 4;
+}
+
+.battle-callout-label {
+  font-size: 22px;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  line-height: 1.1;
+  color: #ffe9b0;
+}
+
+.battle-callout-sub {
+  font-size: 11px;
+  font-weight: 700;
+  color: #dfe3f5;
+  padding: 2px 10px;
+  border-radius: 12px;
+  background: #05060db8;
+  border: 1px solid #ffffff1f;
+  max-width: 100%;
+  line-height: 1.25;
+}
+
+/* トーン：防御＝青白、Identity＝金、予告読み＝琥珀、条件＝金（⚡と同色） */
+.battle-callout-defense .battle-callout-label { color: #bfe0ff; }
+.battle-callout-defense .battle-callout-sub { border-color: #8ab4ff55; }
+.battle-callout-identity .battle-callout-label { color: #ffd166; }
+.battle-callout-identity .battle-callout-sub { border-color: #ffd16666; }
+.battle-callout-read .battle-callout-label { color: #ffc868; }
+.battle-callout-bonus .battle-callout-label { color: #ffd166; font-size: 18px; }
+.battle-callout-p1 .battle-callout-label { font-size: 26px; }
+
+@keyframes battle-callout-in {
+  0% { opacity: 0; transform: translateY(6px) scale(0.96); }
+  18% { opacity: 1; transform: translateY(0) scale(1.03); }
+  30% { transform: translateY(0) scale(1); }
+  80% { opacity: 1; }
+  100% { opacity: 0; transform: translateY(-4px) scale(1); }
+}
+
+@media (max-width: 899px) {
+  /* 390px は敵と神の数字帯が横に隣接する（y 約 254〜357）ため、その下・
+     ミニ結果（2 行・上端 y 約 431）の上に置き、神の頭上（やや右）へ寄せる */
+  body.battle-viewport .battle-main > .battle-callout {
+    left: 55%;
+    width: 150px;
+    margin-left: -75px;
+    bottom: 76px;
+  }
+  .battle-callout-label { font-size: 18px; }
+  .battle-callout-p1 .battle-callout-label { font-size: 21px; }
+  .battle-callout-bonus .battle-callout-label { font-size: 15px; }
+  .battle-callout-sub { font-size: 10px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  /* 表示はする。拡大・上昇は無くし、フェードだけ */
+  @keyframes battle-callout-in {
+    0% { opacity: 0; transform: none; }
+    15% { opacity: 1; transform: none; }
+    85% { opacity: 1; }
+    100% { opacity: 0; transform: none; }
+  }
+}
+
+/* --- 結果画面の振り返り（勝利＝勝因の事実／敗北＝学び1行）。スコアの前に置く --- */
+.game-over-recap {
+  list-style: none;
+  margin: 2px 0 6px;
+  padding: 8px 14px;
+  border-radius: 10px;
+  border: 1px solid #ffd16644;
+  background: #ffd1660f;
+  color: #e8e9f3;
+  font-size: 13px;
+  line-height: 1.55;
+  text-align: left;
+  max-width: 460px;
+}
+
+.game-over-recap li + li {
+  margin-top: 2px;
+}
+
+.game-over-recap li::before {
+  content: '◆ ';
+  color: #ffd166;
+}
+
+.game-over-recap-defeat,
+.game-over-recap-finished {
+  border-color: #ff8a8a66;
+  background: #ff6b6b12;
+}
+
+.game-over-recap-defeat li::before,
+.game-over-recap-finished li::before {
+  color: #ff9a9a;
+}
+
+/* --- 「報酬カードを選ぶ」：結果を見終えてから報酬へ進む主ボタン --- */
+.game-over-reward-button {
+  min-width: 220px;
+  font-size: 15px;
+}
+
+/* ============================================================
+   Release Hygiene Gate（決定170）：戦闘画面のタップ領域 44×44
+   ------------------------------------------------------------
+   Mobile 390px の実測で 44px 未満だったのは託宣の3枚（83×39）と
+   PC のログボタン（112×29）。どちらも主要操作なので判定を 44px 以上にする。
+   ただし **高さそのものは変えない**：ドックが数 px 伸びるとアリーナが同じだけ
+   縮み、6-C の callout が敵の顔の判定枠に触れることが 15 戦 QA で実測された
+   （#7 で 48px²）。そこで見た目は据え置き、`::after` で判定だけを広げる。
+   これならレイアウトは 1px も動かないので 6-A／6-B／6-C は完全に不変。
+   ============================================================ */
+.divination-choice {
+  position: relative;
+}
+
+/* 左右は 83px あるので、上下だけ 3px ずつ広げて 45px にする */
+.divination-choice::after {
+  content: '';
+  position: absolute;
+  top: -3px;
+  left: 0;
+  right: 0;
+  /* bottom ではなく height で指定する（監査スクリプトが実寸を読めるようにするため） */
+  height: 45px;
+}
+
+.battle-log-toggle {
+  position: relative;
+}
+
+/* 上の「ラウンドを終える」との間隔は 6px しかないので、上は 3px だけ。
+   下はドックの余白（26px）があるので 13px 伸ばして 45px にする。
+   390px では既に 44px 角あるため、この指定は主に PC 向け。 */
+.battle-log-toggle::after {
+  content: '';
+  position: absolute;
+  top: -3px;
+  left: 0;
+  right: 0;
+  /* bottom ではなく height で指定する（監査スクリプトが実寸を読めるようにするため） */
+  height: 45px;
 }

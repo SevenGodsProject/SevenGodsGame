@@ -4,15 +4,20 @@ import { startTestGame } from './testUtils'
 
 describe('applyDivination', () => {
   it('applies the chosen effect and decrements the remaining count', () => {
-    const state = { ...startTestGame(), player: { ...startTestGame().player, hp: 10 } }
+    const base = startTestGame()
+    const state = {
+      ...base,
+      player: { ...base.player, hp: 10 },
+      enemy: { ...base.enemy, intent: { kind: 'attack' as const, amount: 14 } },
+    }
     const { state: next, events } = applyDivination(state, {
       type: 'USE_DIVINATION',
       choiceIndex: 0,
     })
 
-    // choiceIndex 0 = 加護の託宣：HP+3, ブロック+2
-    expect(next.player.hp).toBe(13)
-    expect(next.player.block).toBe(2)
+    // choiceIndex 0 = 加護の託宣（Phase 5-D）：予告14 × 0.5 ＝ ブロック7。HPは回復しない
+    expect(next.player.block).toBe(7)
+    expect(next.player.hp).toBe(10)
     expect(next.divination.remaining).toBe(state.divination.remaining - 1)
     expect(events).toContainEqual({
       t: 'DIVINATION_USED',

@@ -1,9 +1,9 @@
-import type { CardDefId, CardUid } from './ids'
-import type { EffectTarget } from './effect'
-import type { GameStatus } from './state'
-import type { OtomoForm } from './otomo'
-import type { BonusCond } from './card'
-import type { GodPassiveId } from './god'
+import type { CardDefId, CardUid } from './ids.js'
+import type { EffectTarget } from './effect.js'
+import type { GameStatus } from './state.js'
+import type { OtomoForm } from './otomo.js'
+import type { BonusCond } from './card.js'
+import type { GodPassiveId } from './god.js'
 
 /**
  * ゲーム内で「起きた出来事」の記録。

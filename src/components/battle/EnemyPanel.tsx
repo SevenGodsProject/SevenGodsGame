@@ -1,3 +1,4 @@
+import type { CSSProperties, ReactNode } from 'react'
 import type { EnemyState } from '../../core/types'
 import { getEnemyDef } from '../../core/data/enemies'
 import { STAT_LABEL } from '../setup/godStyle'
@@ -6,14 +7,14 @@ import { formatEnemyIntent, getIntentTierClass, type PowerTier } from './cardSty
 import { HpBar } from './HpBar'
 import { FloatingNumbers } from './FloatingNumbers'
 import type { FloatingNumber } from './useFloatingNumbers'
-import { feelTierClass, type FeelTier } from './feelTier'
+import type { BatchPlan, ReactionPlan } from './combatTimeline'
+import { hpBand } from './visualHp'
+import { DEFEAT_COLLAPSE_MS, DEFEAT_COLLAPSE_REDUCED_MS } from './enemyVfxTiming'
 
 type EnemyPanelProps = {
   enemy: EnemyState
   /** 現在のラウンド（決定40：掛け声の切り替えに使う） */
   round: number
-  /** 変わるたびに被弾シェイクを再生する */
-  hitKey: number
   /** 変わるたびに敵の攻撃モーションを再生する */
   attackKey: number
   /** STEP-UX5：直近の敵攻撃の危険度tier（fx.enemyAttackTier）。突進モーションの
@@ -23,34 +24,74 @@ type EnemyPanelProps = {
   multiHitCount: number
   /** 直近の攻撃が必殺（カットイン付き）か。lungeをカットイン後へ遅らせる */
   specialHit: boolean
-  /** VFX-03：直近の被弾が共鳴BURST（神の一撃）か（fx.burstHit）。被弾シェイク・斬撃線を
-   * 共鳴カットイン→burst-bannerの後ろ（BURST_IMPACT_MS）へ遅らせる */
-  burstHit: boolean
   floatingNumbers: FloatingNumber[]
-  /** 決定128：被弾演出の段階（L1〜L4）。省略時はL2（従来の見た目） */
-  hitTier?: FeelTier
+  /** Phase 6-A：表示HP（着弾に合わせて追従する値。engine の HP ではない） */
+  hpShown: number
+  /** Phase 6-A：直近アクションの着弾計画（リアクションの時刻・段階） */
+  plan: BatchPlan | null
+  /** 計画が変わるたびに増える（リアクション・斬撃の再生キー） */
+  planKey: number
+  /** Phase 6-A：撃破演出（崩壊中／消えた後） */
+  defeated: boolean
+  reduced?: boolean
+}
+
+/** 敵立ち絵のリアクション1層。reaction が無いときは素通しの div（ツリー構造を変えない） */
+function Reaction({ reaction, planKey, index, children }: { reaction: ReactionPlan | undefined; planKey: number; index: number; children: ReactNode }) {
+  if (!reaction || planKey === 0) return <div className="enemy-reaction-idle">{children}</div>
+  const cls = [
+    'enemy-reaction',
+    `react-l${reaction.tier}`,
+    reaction.final ? 'react-final' : '',
+    reaction.burst ? 'react-burst' : '',
+    reaction.minor ? 'react-minor' : '',
+  ]
+    .filter(Boolean)
+    .join(' ')
+  const style = { '--impact-delay': `${reaction.atMs}ms`, '--stop': `${reaction.stopMs}ms` } as CSSProperties
+  return (
+    <div key={`react-${planKey}-${index}`} className={cls} style={style} data-impact-at={reaction.atMs}>
+      {children}
+    </div>
+  )
 }
 
 /**
  * 敵のビジュアル。決定32でCEOが用意した専用イラスト（7種）に対応し、
  * 円形フレーム＋発光の演出はCSSのまま残している（決定28の発展）。
- * 攻撃時は`enemy-lunge`でプレイヤー側へ突進し、被弾時は`hit-shake`＋
- * `impact-flash`＋斬撃エフェクトで応じる。決定40：ラウンドごとに敵の掛け声を
- * 吹き出しで表示する（`Math.random`は使わず`round`から決定論的に選ぶ）。
+ * 決定40：ラウンドごとに敵の掛け声を吹き出しで表示する（`Math.random`は使わず`round`から決定論的に選ぶ）。
+ *
+ * Phase 6-A Combat Juice（決定162）：
+ * - 被弾は「敵の立ち絵」が受ける（旧：HPバーのラッパーが揺れていた）。着弾の瞬間に対象だけ
+ *   hit stop（ノックバック姿勢で静止）→ 段階別シェイク＋閃光。時刻は着弾計画（combatTimeline）の
+ *   inline CSS 変数（--impact-delay／--stop）で受け取り、animationend には依存しない
+ * - ダメージ数字は立ち絵の胸の位置に出す（HPの数値と重ならない）
+ * - HPバーは表示HP（visualHp）で、着弾を見せてから減る。50%／25% 以下で静かに傷の色が付く
+ * - 撃破：最後の一撃のあと、立ち絵がフラッシュ→脱色→沈んで消える（報酬はその後）
  */
-export function EnemyPanel({ enemy, round, hitKey, attackKey, attackTier, multiHitCount, specialHit, burstHit, floatingNumbers, hitTier = 2 }: EnemyPanelProps) {
+export function EnemyPanel({
+  enemy,
+  round,
+  attackKey,
+  attackTier,
+  multiHitCount,
+  specialHit,
+  floatingNumbers,
+  hpShown,
+  plan,
+  planKey,
+  defeated,
+  reduced = false,
+}: EnemyPanelProps) {
   const def = getEnemyDef(enemy.defId)
   const line = def.battleCries[(round - 1) % def.battleCries.length]
 
   // STEP3-A：終盤glow（datenshi＝控えめ／onryo＝明確）はround>=5から、
   // 溜め中glow（karakuri/doukeshi）はintent.kind==='charge'の間だけ付与する。
-  // どちらも表示専用のクラス出し分けで、GameState・敵AIには一切触れない。
   const isLateSurge = (def.visualType === 'lateSurgeMild' || def.visualType === 'lateSurgeStrong') && round >= 5
   const surgeClass = isLateSurge ? (def.visualType === 'lateSurgeStrong' ? ' enemy-avatar-surge-strong' : ' enemy-avatar-surge-mild') : ''
   // ENEMY-VFX-01：次ラウンドが必殺技（special／技名付きmultiAttack）へつながる
-  // chargeのときだけ、通常の溜めglowに「必殺充填」強化クラスを重ねる。
-  // 判定は敵定義テーブル（次roundのaction）を読むだけの表示専用・data-driven
-  // （敵IDのswitchなし。難易度倍率はダメージ値のみでkindは不変のためdefで判定できる）。
+  // chargeのときだけ、通常の溜めglowに「必殺充填」強化クラスを重ねる（data-driven）
   const nextAction = def.actions[round] ?? def.actions[def.actions.length - 1]
   const nextIsSpecial =
     nextAction.kind === 'special' || (nextAction.kind === 'multiAttack' && !!nextAction.special)
@@ -61,63 +102,78 @@ export function EnemyPanel({ enemy, round, hitKey, attackKey, attackTier, multiH
         : ' enemy-avatar-charging'
       : ''
   const lungeSpeedSuffix = def.visualType === 'fast' ? '-fast' : def.visualType === 'heavy' ? '-heavy' : ''
-  // STEP-UX5：「動き方」（lungeSpeedSuffix、敵の個性＝visualType由来）と
-  // 「攻撃の重さ」（attackTier、今回のIntent危険度由来）を別クラスとして
-  // 両方付与する。battle.cssの複合セレクタ（.enemy-lunge{-fast,-heavy}.enemy-lunge-tier-*）
-  // が両方を掛け合わせる。normal tierはトークン自体を付与しないため、visualType単体の
-  // 見た目（STEP3-A以前からの既存演出）と完全に同一のまま。
+  // STEP-UX5：「動き方」（visualType）と「攻撃の重さ」（attackTier）を別クラスで掛け合わせる
   const lungeTierToken =
     attackTier === 'huge' ? ' enemy-lunge-tier-huge' : attackTier === 'strong' ? ' enemy-lunge-tier-strong' : ''
 
+  const reactions = plan?.enemyReactions ?? []
+  const band = hpBand(hpShown, enemy.maxHp)
+  const collapseStyle = { '--collapse': `${reduced ? DEFEAT_COLLAPSE_REDUCED_MS : DEFEAT_COLLAPSE_MS}ms` } as CSSProperties
+
   return (
-    <div className="panel enemy-panel">
-      <div className="panel-title">{enemy.name}</div>
-      <div className="enemy-type-row">
-        <span className="enemy-type-badge">【{def.typeLabel}】</span>
-        <span className="enemy-type-desc">{def.typeDescription}</span>
+    <div className={`panel enemy-panel enemy-band-${band}`}>
+      {/* Phase 6-B（決定164）：名前・HP・予告・状態を立ち絵の「上」に1枚の名札としてまとめる。
+          こうすると、どの画面高でも予告と HP が立ち絵と一緒に必ず見える（旧：立ち絵の下にあり、
+          手札を触る位置までスクロールすると画面外になっていた）。 */}
+      <div className="enemy-plate">
+        <div className="enemy-plate-head">
+          <span className="panel-title">{enemy.name}</span>
+          <span className="enemy-type-badge">【{def.typeLabel}】</span>
+          <span className="enemy-type-desc">{def.typeDescription}</span>
+        </div>
+        <HpBar current={hpShown} max={enemy.maxHp} color="#e5484d" className={band === 'high' ? undefined : `hp-bar-${band}`} />
+        <div className="enemy-plate-status">
+          <div className={`intent ${getIntentTierClass(enemy.intent)}`.trim()}>{formatEnemyIntent(enemy.intent)}</div>
+          {enemy.block > 0 && <div className="badge badge-block">🛡 {formatScaled(enemy.block)}</div>}
+          {enemy.buffs.length > 0 && (
+            <div className="buff-list">
+              {enemy.buffs.map((b, i) => (
+                <span key={i} className="badge badge-buff">
+                  {STAT_LABEL[b.stat]} {b.amount > 0 ? '+' : ''}
+                  {formatScaled(b.amount)}（{b.remainingRounds}）
+                </span>
+              ))}
+            </div>
+          )}
+        </div>
       </div>
       <div key={`line-${round}`} className="enemy-speech-bubble">
         {line}
       </div>
-      {/* ENEMY-VFX-02：連撃はhitごとの多段lunge（TEMPO-B。enemyVfxTiming.tsと一致する
-          keyframesをbattle.cssに焼き込み）。必殺はカットイン終了後へdelayする
-          （神滅甲=1050ms・双牙乱撃=1100ms。表示のみ、combatは確定済み）。 */}
-      <div
-        key={`atk-${attackKey}`}
-        className={`enemy-avatar-wrap${
-          attackKey > 0
-            ? multiHitCount >= 2
-              ? ` enemy-lunge-multi-${Math.min(multiHitCount, 3)}${specialHit ? ' enemy-lunge-delay-multilead' : ''}`
-              : ` enemy-lunge${lungeSpeedSuffix}${lungeTierToken}${specialHit ? ' enemy-lunge-delay-cutinend' : ''}`
-            : ''
-        }`}
-      >
-        <div className={`enemy-avatar${surgeClass}${chargingClass}`} style={{ backgroundImage: `url(${def.art})` }} />
-      </div>
-      {/* VFX-03：共鳴BURSTの一撃は「共鳴カットイン→✨神の一撃！バナー→神の突進」の
-          後ろ（hit-delay-burst＝BURST_IMPACT_MS）で被弾する。通常攻撃は従来どおり即時。
-          slash-fxのanimationは::before側にあるため、CSSも::beforeへdelayを掛けている */}
-      <div
-        key={`hit-${hitKey}`}
-        className={hitKey > 0 ? `hit-shake-flash ${feelTierClass('hit-tier', hitTier)}${burstHit ? ' hit-delay-burst' : ''}` : undefined}
-        style={{ position: 'relative' }}
-      >
-        <HpBar current={enemy.hp} max={enemy.maxHp} color="#e5484d" />
-        {hitKey > 0 && <div className={`slash-fx ${feelTierClass('slash', hitTier)}${burstHit ? ' hit-delay-burst' : ''}`} />}
-        <FloatingNumbers numbers={floatingNumbers} />
-      </div>
-      {enemy.block > 0 && <div className="badge badge-block">🛡 {formatScaled(enemy.block)}</div>}
-      <div className={`intent ${getIntentTierClass(enemy.intent)}`.trim()}>{formatEnemyIntent(enemy.intent)}</div>
-      {enemy.buffs.length > 0 && (
-        <div className="buff-list">
-          {enemy.buffs.map((b, i) => (
-            <span key={i} className="badge badge-buff">
-              {STAT_LABEL[b.stat]} {b.amount > 0 ? '+' : ''}
-              {formatScaled(b.amount)}（{b.remainingRounds}）
-            </span>
-          ))}
+      <div className="enemy-stage">
+        {band !== 'high' && !defeated && <div className={`enemy-wound enemy-wound-${band}`} aria-hidden="true" />}
+        <div className={`enemy-collapse${defeated ? ' enemy-defeat' : ''}`} style={collapseStyle}>
+          {/* ENEMY-VFX-02：連撃はhitごとの多段lunge（TEMPO-B）。必殺はカットイン終了後へdelayする */}
+          <div
+            key={`atk-${attackKey}`}
+            className={`enemy-avatar-wrap${
+              attackKey > 0
+                ? multiHitCount >= 2
+                  ? ` enemy-lunge-multi-${Math.min(multiHitCount, 3)}${specialHit ? ' enemy-lunge-delay-multilead' : ''}`
+                  : ` enemy-lunge${lungeSpeedSuffix}${lungeTierToken}${specialHit ? ' enemy-lunge-delay-cutinend' : ''}`
+                : ''
+            }`}
+          >
+            <Reaction reaction={reactions[0]} planKey={planKey} index={0}>
+              <Reaction reaction={reactions[1]} planKey={planKey} index={1}>
+                <div className={`enemy-avatar${surgeClass}${chargingClass}`} style={{ backgroundImage: `url(${def.art})` }} />
+              </Reaction>
+            </Reaction>
+          </div>
         </div>
-      )}
+        {defeated && <div className="impact-ring enemy-defeat-ring" aria-hidden="true" />}
+        <div className="enemy-hit-layer" aria-hidden="true">
+          {planKey > 0 &&
+            reactions.map((r, i) => (
+              <div
+                key={`slash-${planKey}-${i}`}
+                className={`slash-fx slash-l${r.tier} juice-delayed${r.minor ? ' slash-minor' : ''}`}
+                style={{ '--impact-delay': `${r.atMs}ms` } as CSSProperties}
+              />
+            ))}
+          <FloatingNumbers numbers={floatingNumbers} />
+        </div>
+      </div>
     </div>
   )
 }

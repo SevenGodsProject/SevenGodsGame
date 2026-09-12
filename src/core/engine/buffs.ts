@@ -1,4 +1,4 @@
-import type { Buff, StatKey } from '../types'
+import type { Buff, StatKey } from '../types/index.js'
 
 /** 指定した能力値に対する、現在有効なバフ/デバフの合計値 */
 export function sumBuff(buffs: Buff[], stat: StatKey): number {

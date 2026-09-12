@@ -248,3 +248,8 @@
   transform: translateY(-2px);
 }
 
+
+/* Release Hygiene Gate（決定170）：「わかった」は 42px だったので 44px に揃える */
+.tutorial-close {
+  min-height: 44px;
+}

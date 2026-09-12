@@ -4,7 +4,7 @@ import { GODS } from '../../core/data/gods'
 import { getOtomoDef } from '../../core/data/otomo'
 import { loadOtomoBond, type OtomoBondRecord } from '../../hooks/otomoBondStorage'
 import { computeOtomoGrowthDisplay, computeSevenBondSummary } from './otomoGrowthDisplay'
-import { OTOMO_BACKGROUND_IMAGE, OTOMO_THEME_COLOR } from './godStyle'
+import { GOD_THEME_COLOR, OTOMO_BACKGROUND_IMAGE } from './godStyle'
 import './setup.css'
 
 /** 絆ランク★の最大数（bondTierの最大値と一致。tier0〜3の4段階だが★は1〜3の3段階で表現） */
@@ -90,7 +90,7 @@ export function OtomoGrowthScreen({ onBack }: OtomoGrowthScreenProps) {
           const otomoDef = getOtomoDef(god.otomoId)
           const record = recordsByGodId.get(god.id)!
           const display = computeOtomoGrowthDisplay(record)
-          const theme = OTOMO_THEME_COLOR[god.id]
+          const theme = GOD_THEME_COLOR[god.id]
           const backgroundImage = OTOMO_BACKGROUND_IMAGE[god.id]
           // OTOMOカード背景 個別化（第2版）：CEO承認の参考イメージから切り出した
           // 専用背景画像（godId由来の修飾クラスは維持しつつ、実体はCSS変数
@@ -107,7 +107,7 @@ export function OtomoGrowthScreen({ onBack }: OtomoGrowthScreenProps) {
                 ['--otomo-bg-image' as string]: `url(${backgroundImage})`,
               }}
             >
-              <img src={otomoDef.art.doji} alt={otomoDef.nameJa} />
+              <img src={otomoDef.art.doji} alt={otomoDef.nameJa} width={320} height={320} />
               <div className="otomo-growth-body">
                 <div className="otomo-growth-head">
                   <span className="otomo-growth-name">{otomoDef.nameJa}</span>
@@ -161,7 +161,7 @@ export function OtomoGrowthScreen({ onBack }: OtomoGrowthScreenProps) {
                         title={unlocked ? GALLERY_FORM_LABEL[form] : `${GALLERY_FORM_LABEL[form]}（未解放）`}
                       >
                         {unlocked ? (
-                          <img src={otomoDef.art[form]} alt={GALLERY_FORM_LABEL[form]} loading="lazy" />
+                          <img src={otomoDef.art[form]} alt={GALLERY_FORM_LABEL[form]} loading="lazy" width={320} height={320} />
                         ) : (
                           <span className="otomo-growth-gallery-lock" aria-hidden="true">
                             🔒

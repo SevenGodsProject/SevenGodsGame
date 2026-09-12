@@ -1,8 +1,8 @@
-import type { GameEvent, GameState } from '../types'
-import { createRng } from '../rng/seededRandom'
-import { runEnemyTurn, finishRound } from './round'
-import { applyEffects } from './effects'
-import { passiveNominalAmount, resolveGodPassive } from './godPassive'
+import type { GameEvent, GameState } from '../types/index.js'
+import { createRng } from '../rng/seededRandom.js'
+import { runEnemyTurn, finishRound } from './round.js'
+import { applyEffects } from './effects.js'
+import { passiveNominalAmount, resolveGodPassive } from './godPassive.js'
 
 /**
  * ラウンドを終えます：敵のターン → 神の得意技（afterEnemyTurn） → ラウンド終了処理。

@@ -1,4 +1,10 @@
-import type { DivinationChoice } from '../types'
+import type { DivinationChoice } from '../types/index.js'
+import { RULES } from './rules.js'
+
+/** 表示用：ratio を「40%」のような文字に（倍率対象外。割合そのもの） */
+const guardPercent = Math.round(RULES.divination.guardRatio * 100)
+/** 表示用：最低保証（内部値×10） */
+const guardMinDisplay = RULES.divination.guardMin * 10
 
 /**
  * 託宣の3択（決定21）。
@@ -11,10 +17,12 @@ import type { DivinationChoice } from '../types'
 export const DIVINATION_CHOICES: DivinationChoice[] = [
   {
     name: '加護の託宣',
-    text: 'HPを30回復し、ブロックを20得る。',
+    // Phase 5-D（決定157）：予告を見て使う「受けの床」に一本化した（旧：HP30回復＋ブロック20）。
+    // 大技の前ほど厚くなり、小さな攻撃や溜めの前では最低保証だけ＝毎ラウンド押す理由は無い。
+    // HP回復を外したのは、役割を「予告に対する防御」に絞るため（回復は手札の支援札が担う）。
+    text: `敵の予告の${guardPercent}%ぶんブロックを得る（最低${guardMinDisplay}）。`,
     effects: [
-      { kind: 'heal', amount: 3 },
-      { kind: 'block', amount: 2 },
+      { kind: 'blockOfIntent', ratio: RULES.divination.guardRatio, min: RULES.divination.guardMin },
     ],
   },
   {
