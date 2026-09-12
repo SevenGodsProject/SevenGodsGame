@@ -46,6 +46,9 @@ export function DivinationPanel({
             className="divination-choice"
             disabled={disabled}
             onClick={() => onChoose(i)}
+            // Phase 6-B：画面高が小さいとき効果文（.divination-choice-text）をCSSで
+            // 畳むため、同じ文をtitleにも持たせて情報を失わないようにする
+            title={choice.text}
           >
             <GlyphIcon glyph={DIVINATION_GLYPHS[i]} className="divination-choice-glyph" />
             <span className="divination-choice-body">

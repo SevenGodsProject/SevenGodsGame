@@ -1921,32 +1921,9 @@
  * 各種バナー(5〜7)より下に置くことで、演出バナーの上に不自然に被らない
  * ようにしている。
  */
-.battle-hud {
-  position: sticky;
-  top: 0;
-  z-index: 2;
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  font-size: 12px;
-  color: #e8e9f3;
-  background: linear-gradient(120deg, #14152cb0 0%, #0b0d17c0 100%);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  border: 1px solid #ffd16633;
-  border-radius: 12px;
-  padding: 8px 14px;
-}
-
-.battle-hud-row {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-}
-
-.battle-hud-sep {
-  color: #a9adc4;
-}
+/* Phase 6-B（決定164）：sticky の戦況バー（.battle-hud）は廃止した。
+   名前・HP・予告・状態を立ち絵の上の名札（.enemy-plate／.player-plate）へ
+   移したことで常時可視になり、二重表示になるため（BattleHud.tsx も削除）。 */
 
 /*
  * STEP2-B（BattleMiniResult）：BattleHud（sticky, top:0, 高さ58px固定・
@@ -2870,30 +2847,11 @@
  * カード使用中・敵ターン中は従来どおり操作不能（半透明・cursor:not-allowed）
  * のまま。
  */
-@media (min-width: 900px) {
-  .battle {
-    /* 固定ボタンの高さ＋下余白ぶん、ページ末尾のコンテンツが隠れないよう確保 */
-    padding-bottom: 90px;
-  }
-
-  .end-round-button {
-    position: fixed;
-    left: 50%;
-    bottom: 20px;
-    transform: translateX(-50%);
-    z-index: 3;
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
-    box-shadow:
-      0 0 18px -4px #ffd16688,
-      0 10px 28px -8px #000000cc,
-      inset 0 1px 0 #ffffff33;
-  }
-
-  .end-round-button:not(:disabled):hover {
-    transform: translateX(-50%) translateY(-2px);
-  }
-}
+/* 決定77 の「ラウンドを終える」固定バー（PC幅で position: fixed）は
+   Phase 6-B（決定164）で廃止した。固定要素はページの高さを減らさないため、
+   アリーナ下部＝敵 HP・予告・神の立ち絵を覆うだけで「着弾が見えない」問題を
+   解決できないことが Phase 6-B 設計監査の実測で確定したため。現在はドックの
+   操作列（`.battle-dock-actions`）が grid の中に場所を確保して配置する。 */
 
 /*
  * P0②改善（CEO承認済み、B案）：PC幅（1280px前後）で開くと、敵/自分/OTOMOの
@@ -3036,36 +2994,36 @@
 .enemy-avatar {
   background-color: transparent;
   box-shadow: none;
-  filter: drop-shadow(0 12px 16px #000000cc) drop-shadow(0 0 26px #9b59b666);
+  filter: drop-shadow(0 12px 16px #000000cc) drop-shadow(0 0 26px #9b59b666) drop-shadow(0 0 1px #ffe0aa8c);
 }
 
 .player-avatar {
   background: transparent;
   box-shadow: none;
-  filter: drop-shadow(0 12px 16px #000000cc) drop-shadow(0 0 22px #4dbd7455);
+  filter: drop-shadow(0 12px 16px #000000cc) drop-shadow(0 0 22px #4dbd7455) drop-shadow(0 0 1px #ffe0aa8c);
 }
 
 .portrait img {
   background: transparent;
   box-shadow: none;
-  filter: drop-shadow(0 8px 12px #000000cc) drop-shadow(0 0 14px #ffd16644);
+  filter: drop-shadow(0 8px 12px #000000cc) drop-shadow(0 0 14px #ffd16644) drop-shadow(0 0 1px #ffe0aa8c);
 }
 
 /* 既存の終盤surge／溜めglow（box-shadow前提）も黒箱なしのdrop-shadow表現へ変換
    （色・強弱の序列 mild<strong、charge=金 は既存踏襲。ロジック無変更） */
 .enemy-avatar.enemy-avatar-surge-mild {
   box-shadow: none;
-  filter: drop-shadow(0 12px 16px #000000cc) drop-shadow(0 0 30px #9b59b6aa);
+  filter: drop-shadow(0 12px 16px #000000cc) drop-shadow(0 0 30px #9b59b6aa) drop-shadow(0 0 1px #ffe0aa8c);
 }
 
 .enemy-avatar.enemy-avatar-surge-strong {
   box-shadow: none;
-  filter: drop-shadow(0 12px 16px #000000cc) drop-shadow(0 0 38px #6a5acdcc);
+  filter: drop-shadow(0 12px 16px #000000cc) drop-shadow(0 0 38px #6a5acdcc) drop-shadow(0 0 1px #ffe0aa8c);
 }
 
 .enemy-avatar.enemy-avatar-charging {
   box-shadow: none;
-  filter: drop-shadow(0 12px 16px #000000cc) drop-shadow(0 0 32px #ffd166aa);
+  filter: drop-shadow(0 12px 16px #000000cc) drop-shadow(0 0 32px #ffd166aa) drop-shadow(0 0 1px #ffe0aa8c);
 }
 
 /* (2) 敵・神・OTOMOの3パネルを透明化し、背景が敵⇄神の背後まで連続して見えるように。
@@ -4437,4 +4395,1003 @@
     -2px -2px 0 #000000dd,
     0 0 20px #ffd166ee,
     0 0 46px #ff6b3aaa;
+}
+
+/* ============================================================
+   Phase 6-B（決定164）Battle Viewport Layout
+   ------------------------------------------------------------
+   目的：「カードを選ぶためにスクロールすると、敵への着弾（Phase 6-A の
+   Combat Juice）が画面外で終わってしまう」問題を構造から消す。
+
+   設計（docs/PHASE6B_BATTLE_HUD_DESIGN.md の D案）：
+   1. 戦闘画面を「画面の高さに収まる grid」にする（上＝ステータス／
+      中＝アリーナ＝残りの高さ／下＝ドック＝託宣＋手札＋操作）。
+      ページ自体はスクロールしない＝カードを触る位置＝着弾が見える位置。
+   2. 操作 UI は grid の行として場所を確保する。`position: fixed` で
+      アリーナに重ねない（固定要素はページの高さを減らさないため、
+      敵 HP・予告を覆うだけで問題は解決しない＝監査で実測済み）。
+      決定77 の固定「ラウンドを終える」ボタンはこの方式に置き換えた。
+   3. 名前・HP・予告・状態は立ち絵の「上」の名札へ集約し、常に見えるようにする。
+   4. 立ち絵は残り高さに収まる可変サイズ（contain）。切れない・重ならない。
+
+   すべて表示・レイアウトのみ。engine・combat 計算・Phase 6-A の
+   タイムライン（--impact-delay／--stop／ghost HP）には一切触れない。
+   `body.battle-viewport` は BattleScreen のマウント中だけ付くため、
+   ホーム・デッキ構築・ランキングなど他画面には一切影響しない。
+   ============================================================ */
+
+/* --- 0) 名札（Enemy / Player / 共鳴）。背景を持つ「可読性の島」 --- */
+.enemy-plate,
+.player-plate,
+.god-otomo-plate {
+  flex: 0 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  width: 100%;
+  padding: 6px 8px;
+  border: 1px solid #ffffff14;
+  border-radius: 10px;
+  background: linear-gradient(180deg, #05060dcc 0%, #05060d8c 100%);
+}
+
+.enemy-plate-head,
+.player-plate-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 2px 6px;
+}
+
+.enemy-plate-head .panel-title,
+.player-plate-head .panel-title {
+  font-size: 14px;
+}
+
+.enemy-plate-status,
+.player-plate-status {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 8px;
+}
+
+.player-plate-status:empty {
+  display: none;
+}
+
+.player-plate-head .god-tagline {
+  margin: 0;
+  font-size: 10px;
+}
+
+/* 予告（Intent）は情報の最優先。名札の中で本文より明確に大きくする
+   （PC 20px／モバイル 17px。色・枠は既存の intent-tier-* をそのまま使う） */
+.enemy-plate .intent {
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 1.25;
+}
+
+.god-otomo-plate-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+}
+
+.god-otomo-plate-head .panel-title {
+  font-size: 13px;
+}
+
+.god-otomo-plate .god-passive-badge {
+  align-self: auto;
+  margin: 0;
+}
+
+.god-otomo-plate .burst-preview-head {
+  margin-bottom: 0;
+  font-size: 12px;
+}
+
+/* --- 1) ドック（託宣バー＋手札＋操作）。grid の行として場所を持つ --- */
+.battle-dock {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+}
+
+.battle-dock-row {
+  position: relative;
+  display: flex;
+  align-items: stretch;
+  gap: 10px;
+  min-width: 0;
+}
+
+/* 手札。PC幅では「クリップしない」ことを最優先し、枚数が増えたときは
+   従来どおり折り返す（ドックが高くなった分はアリーナ＝1fr が吸収するため、
+   カードの持ち上げ・使用アニメーション・コストバッジは一切切れない）。
+   390px 級の横幅では折り返すと高さが倍になるため、そちらだけ横スクロールにする
+   （→ 下の `@media (max-width: 899px)`）。 */
+.battle-dock-row .hand {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: visible;
+}
+
+.battle-dock-actions {
+  flex: 0 0 auto;
+  width: 112px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 6px;
+}
+
+.battle-dock-actions .end-round-button {
+  align-self: stretch;
+  margin-top: 0;
+  padding: 10px 8px;
+  font-size: 13px;
+  letter-spacing: 0.04em;
+}
+
+/* ログは既定で畳む。機能は削除せず、ドックのトグルで開く（決定164） */
+.battle-log-toggle {
+  align-self: stretch;
+  padding: 5px 8px;
+  border-radius: 8px;
+  border: 1px solid #ffffff22;
+  background: #14152caa;
+  color: #9aa3cc;
+  font-size: 11px;
+  font-weight: 700;
+  cursor: pointer;
+  transition:
+    border-color 0.2s ease,
+    color 0.2s ease;
+}
+
+.battle-log-toggle:hover {
+  border-color: #ffd16688;
+  color: #ffd9a0;
+}
+
+.battle-log-toggle.is-open {
+  border-color: #ffd16688;
+  background: #ffd1661a;
+  color: #ffd9a0;
+}
+
+/* --- 2) アプリ外枠：戦闘中だけ「1画面に収める」モードにする --- */
+body.battle-viewport {
+  overflow: hidden;
+}
+
+body.battle-viewport #root {
+  /* dvh 非対応ブラウザ向けに vh を先に置く（モバイルのURLバー伸縮対策） */
+  height: 100vh;
+  height: 100dvh;
+  overflow: hidden;
+}
+
+body.battle-viewport .app {
+  height: 100%;
+  min-height: 0;
+  overflow: hidden;
+}
+
+body.battle-viewport .app-header {
+  padding: 4px 14px;
+  gap: 8px;
+}
+
+body.battle-viewport .app-icon-button {
+  width: 26px;
+  height: 26px;
+}
+
+body.battle-viewport .app-icon-glyph {
+  width: 15px;
+  height: 15px;
+}
+
+body.battle-viewport .game-stage {
+  min-height: 0;
+  padding: 6px;
+  place-items: stretch center;
+  overflow: hidden;
+}
+
+/* --- 3) 戦闘画面＝3行の grid（上部バー／アリーナ可変／ドック） --- */
+body.battle-viewport .battle {
+  width: 100%;
+  max-width: 1240px;
+  height: 100%;
+  min-height: 0;
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  grid-template-areas:
+    'topbar'
+    'arena'
+    'dock';
+  gap: 8px;
+  padding-bottom: 0;
+  overflow: hidden;
+}
+
+body.battle-viewport .battle-topbar {
+  grid-area: topbar;
+  padding: 6px 14px;
+  font-size: 13px;
+}
+
+/* アリーナ＝残りの高さ。中は「敵（左）」と「神＋OTOMO（右）」の2列 */
+body.battle-viewport .battle-main {
+  grid-area: arena;
+  min-height: 0;
+  /* Combat Juice（52px のダメージ数字・閃光・ノックバック・斬撃）を
+     絶対に切らないため、アリーナはクリップしない（旧：overflow:hidden）。
+     背景のグラデーション・画像は border-box に収まるので見た目は不変。 */
+  overflow: visible;
+  display: grid;
+  grid-template-columns: 1.12fr 0.88fr;
+  grid-template-rows: minmax(0, 1fr);
+  align-items: stretch;
+  padding: 10px;
+  gap: 10px;
+}
+
+/* アリーナは「敵 ／ 神 ／ OTOMO・共鳴」の3列にする。`.ally-row` を
+   display:contents にするだけで、DOM・JSX を変えずに神と OTOMO をアリーナ直下の
+   列へ展開できる。こうすると神の立ち絵もアリーナの全高を使えるため、
+   敵 > 神 > OTOMO というサイズ序列（設計 §11 の 0.82）をどの画面高でも保てる。
+   （右列に神と OTOMO を縦積みすると、OTOMO パネルの固定分に高さを食われて
+   神の立ち絵が 64px まで潰れることを実測で確認したため、この形にした。） */
+body.battle-viewport .battle-main {
+  grid-template-columns: 1.18fr 1fr 0.78fr;
+}
+
+body.battle-viewport .ally-row {
+  display: contents;
+}
+
+/* display:contents で `.battle-main > *` の指定から外れるため、
+   アリーナのグロー・vignette（z-index:0）より前に出す指定をここで補う。 */
+body.battle-viewport .ally-row > .panel {
+  position: relative;
+  z-index: 1;
+  min-height: 0;
+}
+
+/* 敵と神の「立ち絵の領域」を同じ高さにして、足元ライン（align-items:end）と
+   頭の高さの比（神＝敵の 0.82）を構造的に保証する：
+   ・名札は両者とも同じ min-height
+   ・掛け声の吹き出しは高さを消費させず、立ち絵の上端に重ねる（高さ固定＋負のmargin）
+   ・神の立ち絵だけ max-height:82% */
+body.battle-viewport .enemy-plate,
+body.battle-viewport .player-plate {
+  min-height: 78px;
+}
+
+body.battle-viewport .enemy-speech-bubble {
+  z-index: 2;
+  height: 26px;
+  padding: 4px 12px;
+  margin-bottom: -31px;
+  max-width: 94%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+body.battle-viewport .player-avatar {
+  max-height: 82%;
+}
+
+body.battle-viewport .battle-dock {
+  grid-area: dock;
+}
+
+/* アリーナのグロー層は、クリップをやめた分だけ内側に収める */
+body.battle-viewport .battle-arena-glow {
+  inset: 0;
+  border-radius: 20px;
+}
+
+/* 背景の vignette（四隅を落として立ち絵へ視線を寄せ、文字の可読性も上げる）。
+   子要素は z-index:1 のため、この層（0）より必ず前に出る */
+body.battle-viewport .battle-main::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  border-radius: 20px;
+  background: radial-gradient(ellipse 116% 104% at 50% 48%, transparent 54%, #00000055 100%);
+}
+
+/* --- 4) アリーナ内：高さは必ず親に収める --- */
+body.battle-viewport .enemy-panel,
+body.battle-viewport .player-panel,
+body.battle-viewport .god-otomo-panel {
+  min-height: 0;
+  justify-content: flex-start;
+}
+
+body.battle-viewport .god-otomo-panel {
+  align-items: stretch;
+}
+
+/* ミニ結果・エラー・ログはアリーナに重ねる（grid の列を消費させない）。
+   `.battle-main > *` の position:relative より強い指定で上書きする。 */
+body.battle-viewport .battle-main > .battle-mini-result {
+  position: absolute;
+  top: 8px;
+  left: 0;
+  right: 0;
+  width: fit-content;
+  max-width: min(480px, 94%);
+  margin: 0 auto;
+  z-index: 3;
+}
+
+body.battle-viewport .battle-main > .battle-error {
+  position: absolute;
+  left: 8px;
+  right: 8px;
+  bottom: 8px;
+  z-index: 4;
+}
+
+body.battle-viewport .battle-main > .battle-log {
+  position: absolute;
+  left: 8px;
+  right: 8px;
+  bottom: 8px;
+  max-height: 46%;
+  overflow-y: auto;
+  z-index: 4;
+  background: linear-gradient(165deg, #14152cee 0%, #0b0d17f2 100%);
+}
+
+/* --- 5) 立ち絵は「名札の残り」に収まる可変サイズ（切れない・重ならない）--- */
+body.battle-viewport .enemy-stage {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  /* 接地影：背景ステージの床ラインに足元を合わせる（CSSのみ・画像は不変） */
+  background-image: radial-gradient(ellipse 54% 6% at 50% 98%, #000000a8 0%, transparent 72%);
+}
+
+body.battle-viewport .enemy-stage > .enemy-collapse,
+body.battle-viewport .enemy-collapse > .enemy-avatar-wrap,
+body.battle-viewport .enemy-avatar-wrap > .enemy-reaction,
+body.battle-viewport .enemy-avatar-wrap > .enemy-reaction-idle,
+body.battle-viewport .enemy-reaction > .enemy-reaction,
+body.battle-viewport .enemy-reaction > .enemy-reaction-idle,
+body.battle-viewport .enemy-reaction-idle > .enemy-reaction,
+body.battle-viewport .enemy-reaction-idle > .enemy-reaction-idle {
+  display: flex;
+  flex: 1 1 auto;
+  min-height: 0;
+  width: 100%;
+  height: 100%;
+  align-items: flex-end;
+  justify-content: center;
+}
+
+body.battle-viewport .enemy-avatar {
+  width: 100%;
+  max-width: 290px;
+  height: 100%;
+  min-height: 104px;
+  background-position: center bottom;
+}
+
+body.battle-viewport .player-stage {
+  position: relative;
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  background-image: radial-gradient(ellipse 50% 6% at 50% 98%, #00000099 0%, transparent 72%);
+}
+
+body.battle-viewport .player-windup {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+}
+
+body.battle-viewport .player-avatar-wrap {
+  flex: 1 1 auto;
+  min-height: 0;
+  height: 100%;
+  align-items: flex-end;
+}
+
+body.battle-viewport .player-avatar-wrap > div {
+  display: flex;
+  flex: 1 1 auto;
+  min-height: 0;
+  height: 100%;
+  align-items: flex-end;
+  justify-content: center;
+}
+
+body.battle-viewport .player-avatar {
+  width: 100%;
+  /* 敵 290 に対し 0.82（設計の序列：敵 > 神 > OTOMO を維持） */
+  max-width: 238px;
+  height: 100%;
+  min-height: 92px;
+  object-position: center bottom;
+}
+
+/* 斬撃・ダメージ数字は立ち絵の上のレイヤー（敵側 .enemy-hit-layer と同じ型）。
+   HP の数値と重ならず、立ち絵の胸の位置に出る。 */
+.player-hit-layer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 9;
+}
+
+.player-hit-layer .slash-fx {
+  inset: 22% 10%;
+}
+
+.player-panel .player-hit-layer .floating-number {
+  top: 34%;
+}
+
+/* 立ち絵のオーラ（::before）は固定 324/270px のままだと、可変サイズの立ち絵に
+   対して大きすぎるうえ、アリーナの下へはみ出して scrollHeight を押し広げる。
+   可変領域に追従させる（見た目の役割＝立ち絵の背後の陣営色は不変）。 */
+body.battle-viewport .enemy-avatar-wrap::before,
+body.battle-viewport .player-avatar-wrap::before {
+  width: auto;
+  height: 100%;
+  aspect-ratio: 1 / 1;
+  max-width: 340px;
+  max-height: 340px;
+  /* 回転させると（rotate アニメーション）正方形の外接矩形が √2 倍に広がり、
+     アリーナの下へ約80pxはみ出す＝スクロール領域を押し広げる（実測）。
+     blur 済みの conic-gradient なので、静止させても見た目はほぼ変わらない。 */
+  animation: none;
+}
+
+/* OTOMO は可変（48〜80px）。キャプションは名前が神技プレビュー行にも出るため省略 */
+body.battle-viewport .god-otomo-portraits {
+  flex: 0 1 auto;
+  min-height: 0;
+}
+
+body.battle-viewport .portrait img {
+  width: auto;
+  height: clamp(48px, 8vh, 80px);
+  aspect-ratio: 1 / 1;
+}
+
+body.battle-viewport .portrait figcaption {
+  display: none;
+}
+
+/* 神技プレビュー（7に達すると何が起きるか：8/31 P0-2）は情報として残し、
+   高さだけを詰める。各行は1行・はみ出しは省略記号（全文は DeckBuilder と
+   同じ文面がここにも出る）。 */
+body.battle-viewport .burst-preview {
+  flex: 0 0 auto;
+  margin-top: 2px;
+  padding: 3px 6px;
+  font-size: 10px;
+  line-height: 1.35;
+}
+
+body.battle-viewport .burst-preview-row {
+  gap: 4px;
+  min-width: 0;
+}
+
+body.battle-viewport .burst-preview-row > span:last-child {
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+body.battle-viewport .burst-preview-note {
+  display: none;
+}
+
+/* --- 6) 託宣バー：横1列のコンパクト行 --- */
+body.battle-viewport .divination-panel {
+  flex-direction: row;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 10px;
+}
+
+body.battle-viewport .divination-panel-title {
+  flex: 0 0 auto;
+  font-size: 11px;
+  max-width: 210px;
+}
+
+body.battle-viewport .divination-choices {
+  flex: 1 1 auto;
+  flex-wrap: nowrap;
+  gap: 6px;
+  min-width: 0;
+}
+
+body.battle-viewport .divination-choice {
+  min-width: 0;
+  padding: 4px 8px;
+  gap: 6px;
+}
+
+body.battle-viewport .divination-choice-glyph {
+  width: 22px;
+  height: 22px;
+  padding: 3px;
+}
+
+body.battle-viewport .divination-choice-name {
+  font-size: 11px;
+}
+
+body.battle-viewport .divination-choice-text {
+  font-size: 10px;
+}
+
+body.battle-viewport .divination-choice-preview {
+  margin-top: 0;
+  font-size: 10px;
+}
+
+/* --- 7) 手札：1列・カードは画像が見える下限を守ってコンパクト化 --- */
+body.battle-viewport .hand {
+  gap: 8px;
+}
+
+body.battle-viewport .card-view {
+  width: 116px;
+  min-height: 0;
+  height: 164px;
+  flex: 0 0 auto;
+  padding: 7px;
+}
+
+body.battle-viewport .card-view-name {
+  font-size: 11.5px;
+}
+
+body.battle-viewport .card-view-type {
+  display: none;
+}
+
+body.battle-viewport .card-view-text {
+  font-size: 9.5px;
+  line-height: 1.3;
+}
+
+body.battle-viewport .card-view-bonus {
+  font-size: 9px;
+  line-height: 1.25;
+  margin-top: 1px;
+  padding-top: 2px;
+}
+
+body.battle-viewport .card-view-god {
+  font-size: 9px;
+}
+
+body.battle-viewport .card-view-has-art .card-view-body {
+  margin: auto -7px -7px;
+  padding: 16px 7px 6px;
+}
+
+body.battle-viewport .card-view-icon-bg {
+  width: 68px;
+  height: 68px;
+}
+
+/* --- 8) 攻撃の向き：この構造では敵は常に「横」にいる（上下ではない） --- */
+body.battle-viewport .enemy-panel {
+  --atk-x: 1;
+  --atk-y: 0;
+}
+
+body.battle-viewport .player-panel {
+  --atk-x: -1;
+  --atk-y: 0;
+}
+
+/* --- 9) 低い画面（≤640px 高）：情報の優先順位どおりに省略する。
+       HP・共鳴・予告・AP・カードは決して省略しない。 --- */
+@media (max-height: 700px) {
+  body.battle-viewport .enemy-speech-bubble,
+  body.battle-viewport .player-plate-head .god-tagline,
+  body.battle-viewport .enemy-plate-head .enemy-type-desc {
+    display: none;
+  }
+
+  body.battle-viewport .divination-choice-text {
+    display: none;
+  }
+}
+
+@media (max-height: 600px) {
+  /* ここまで低いと神技プレビューの2行ぶんも惜しい。「あと◯で神技発動」は
+     名札側に常時残るため、詳細行だけを畳む。 */
+  body.battle-viewport .burst-preview {
+    display: none;
+  }
+}
+
+@media (max-height: 640px) {
+  body.battle-viewport .battle {
+    gap: 6px;
+  }
+
+  body.battle-viewport .battle-topbar {
+    padding: 4px 12px;
+    font-size: 12px;
+  }
+
+  body.battle-viewport .card-view {
+    height: 150px;
+  }
+
+  body.battle-viewport .portrait figcaption {
+    display: none;
+  }
+
+  body.battle-viewport .portrait img {
+    height: clamp(44px, 9vh, 72px);
+  }
+}
+
+/* 逃げ道：極端に低いビューポート（アドレスバー展開・小型ウィンドウ）では
+   1画面に詰め込まず、従来どおりスクロールできる状態へ戻す。 */
+@media (max-height: 460px) {
+  body.battle-viewport,
+  body.battle-viewport #root,
+  body.battle-viewport .app,
+  body.battle-viewport .game-stage {
+    overflow: visible;
+    height: auto;
+    min-height: 100%;
+  }
+
+  body.battle-viewport .battle {
+    height: auto;
+    overflow: visible;
+  }
+
+  body.battle-viewport .battle-main {
+    grid-template-rows: auto;
+  }
+}
+
+/* --- 10) モバイル（<900px）：同じ構造のまま寸法だけ変える --- */
+@media (max-width: 899px) {
+  body.battle-viewport .battle-main {
+    grid-template-columns: 1.22fr 1fr 0.78fr;
+    padding: 8px;
+    gap: 6px;
+  }
+
+  body.battle-viewport .enemy-plate,
+  body.battle-viewport .player-plate {
+    min-height: 72px;
+    padding: 4px 6px;
+  }
+
+  body.battle-viewport .battle-main .panel {
+    padding: 8px;
+    gap: 5px;
+  }
+
+  body.battle-viewport .enemy-plate .intent {
+    font-size: 17px;
+  }
+
+  /* 【型】と攻略説明は 390px の列幅では折り返して名札を倍の高さにし、敵の立ち絵の
+     高さを奪う（実測：名札が37px高くなり、神＞敵という逆転が起きていた）。
+     設計 §6 の「アリーナが低い時は【型】と吹き出しを省略」を幅にも適用する。 */
+  body.battle-viewport .enemy-plate-head .enemy-type-desc,
+  body.battle-viewport .enemy-plate-head .enemy-type-badge {
+    display: none;
+  }
+
+  body.battle-viewport .enemy-plate-head,
+  body.battle-viewport .player-plate-head {
+    flex-wrap: nowrap;
+    min-width: 0;
+  }
+
+  body.battle-viewport .enemy-plate-head .panel-title,
+  body.battle-viewport .player-plate-head .panel-title {
+    min-width: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  body.battle-viewport .enemy-plate-head .panel-title,
+  body.battle-viewport .player-plate-head .panel-title {
+    font-size: 12.5px;
+  }
+
+  body.battle-viewport .enemy-avatar {
+    max-width: 210px;
+    min-height: 88px;
+  }
+
+  body.battle-viewport .player-avatar {
+    max-width: 172px;
+    min-height: 76px;
+  }
+
+  /* 390px は縦積みの右列。OTOMO パネルを詰めて神の立ち絵に高さを譲る */
+  body.battle-viewport .god-otomo-portraits {
+    justify-content: center;
+  }
+
+  body.battle-viewport .portrait img {
+    height: clamp(44px, 7vh, 64px);
+  }
+
+  body.battle-viewport .burst-preview {
+    display: none;
+  }
+
+  /* 「ラウンドを終える」は託宣バーの右端へ（手札に横幅を全部渡すため）。
+     ドック内の absolute＝grid の中に場所を予約する方式で、fixed は使わない。 */
+  body.battle-viewport .divination-panel {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 3px;
+    padding-right: 128px;
+  }
+
+  body.battle-viewport .divination-panel-title {
+    max-width: none;
+    font-size: 10px;
+  }
+
+  /* 行は block に戻し（position:static）、操作ボタンは「ドック」を基準に
+     託宣バーの右端へ置く。ドックの行の中に場所を予約する方式で fixed は使わない。 */
+  body.battle-viewport .battle-dock-row {
+    display: block;
+    position: static;
+  }
+
+  body.battle-viewport .battle-dock-actions {
+    position: absolute;
+    top: 5px;
+    right: 6px;
+    width: auto;
+    flex-direction: row;
+    align-items: stretch;
+    gap: 4px;
+    z-index: 3;
+  }
+
+  body.battle-viewport .battle-dock-actions .end-round-button {
+    min-height: 44px;
+    padding: 6px 10px;
+    font-size: 11px;
+    letter-spacing: 0;
+  }
+
+  body.battle-viewport .battle-log-toggle {
+    min-height: 44px;
+    padding: 6px 8px;
+  }
+
+  /* 手札は横1列・横スクロール（折り返さない）。カードの持ち上げ・使用
+     アニメーション（実測で上方向へ最大約17px）とコストバッジ（-10px）が
+     切れないよう、スクロール領域の上に余白を確保する。負の margin は使わない
+     （託宣バーの上に重なるとボタンのタップを奪ってしまうため）。 */
+  body.battle-viewport .battle-dock {
+    gap: 4px;
+  }
+
+  body.battle-viewport .battle-dock-row .hand {
+    display: flex;
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    align-items: flex-start;
+    gap: 8px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding: 30px 12px 4px;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior-x: contain;
+  }
+
+  body.battle-viewport .battle-dock-row .hand::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* 余裕があるときは中央寄せ、はみ出すときは左端から（auto margin は
+     オーバーフロー時に 0 へ解決されるため、先頭カードが切れない） */
+  body.battle-viewport .battle-dock-row .hand > .card-view:first-child {
+    margin-left: auto;
+  }
+
+  body.battle-viewport .battle-dock-row .hand > .card-view:last-child {
+    margin-right: auto;
+  }
+
+  body.battle-viewport .card-view {
+    width: 100px;
+    height: 158px;
+  }
+
+  body.battle-viewport .card-view-text {
+    font-size: 9px;
+  }
+
+  /* 効果文は託宣ボタンの title に同じ文が入っている（DivinationPanel.tsx）。
+     390px では1行に3つ並べるため、ボタン内の長文だけを畳む。 */
+  body.battle-viewport .divination-choice-text {
+    display: none;
+  }
+}
+
+/* 390px かつ画面が低いとき（390×780 CSS=696 など）は、アリーナの高さを確保する
+   ためカードを一段小さくする。画像の見える高さは 58px 以上を保つ（設計 §7）。 */
+@media (max-width: 899px) and (max-height: 720px) {
+  body.battle-viewport .card-view {
+    height: 140px;
+  }
+
+  body.battle-viewport .battle-dock-row .hand {
+    padding-top: 26px;
+  }
+}
+
+/* ============================================================
+   Phase 6-B 実装調整（実測スクリーンショットに基づく）
+   ============================================================ */
+
+/* OTOMO も「床に立つ」3人目として扱う。神技プレビューを名札側（order:-1）へ
+   送り、立ち絵は残りの高さいっぱいで下揃え＝敵・神と同じ接地ラインに乗せる。 */
+body.battle-viewport .burst-preview {
+  order: -1;
+  margin-top: 0;
+}
+
+body.battle-viewport .god-otomo-portraits {
+  flex: 1 1 auto;
+  min-height: 0;
+  align-items: flex-end;
+  background-image: radial-gradient(ellipse 46% 7% at 50% 98%, #00000099 0%, transparent 72%);
+}
+
+body.battle-viewport .portrait {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  min-height: 0;
+}
+
+body.battle-viewport .portrait img {
+  width: auto;
+  height: min(100%, clamp(56px, 14vh, 128px));
+  aspect-ratio: 1 / 1;
+}
+
+/* カード使用結果のミニ表示は、名札（名前・HP・予告）を隠さないよう
+   アリーナの下端＝床のあたりに出す（0.7秒の一過性表示） */
+body.battle-viewport .battle-main > .battle-mini-result {
+  top: auto;
+  bottom: 10px;
+}
+
+@media (max-width: 899px) {
+  /* 390px の託宣バー：3ボタンを1行に収める。アイコンは畳み、文言は折り返さない
+     （効果文は button の title に入っている） */
+  body.battle-viewport .divination-choice-glyph {
+    display: none;
+  }
+
+  body.battle-viewport .divination-choice {
+    padding: 3px 5px;
+    gap: 3px;
+  }
+
+  body.battle-viewport .divination-choice-name {
+    font-size: 10px;
+    white-space: nowrap;
+  }
+
+  body.battle-viewport .divination-choice-preview {
+    font-size: 9px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  body.battle-viewport .divination-panel {
+    padding-right: 106px;
+  }
+
+  body.battle-viewport .battle-dock-actions {
+    width: 96px;
+  }
+
+  body.battle-viewport .battle-dock-actions .end-round-button {
+    width: 62px;
+    padding: 4px 4px;
+    font-size: 10px;
+    line-height: 1.15;
+  }
+
+  body.battle-viewport .battle-log-toggle {
+    width: 30px;
+    padding: 4px 2px;
+    font-size: 10px;
+  }
+
+  body.battle-viewport .battle-dock-row .hand {
+    padding-top: 26px;
+  }
+}
+
+/* 立ち絵サイズは vh 基準で決める（親が flex で高さが不定のとき、img の
+   height:100% は解決できず intrinsic サイズに戻ってしまうため％は使わない）。
+   列幅より大きくなる場合は max-width:100% ＋ contain で letterbox する。 */
+body.battle-viewport .portrait img {
+  width: auto;
+  max-width: 100%;
+  height: clamp(56px, 13vh, 120px);
+  aspect-ratio: auto;
+  object-fit: contain;
+}
+
+@media (max-width: 899px) {
+  body.battle-viewport .portrait img {
+    height: clamp(48px, 8vh, 76px);
+  }
+
+  /* 台詞は 100px 級の列幅では縦書きのように折り返すため常に畳む（設計 §6） */
+  body.battle-viewport .player-plate-head .god-tagline {
+    display: none;
+  }
+}
+
+/* OTOMO 立ち絵の高さ上限を「列の残り高さ」にする。行方向の flex で
+   align-items:stretch にすると .portrait の高さが確定するため、img の
+   max-height:100% が解決でき、アリーナからはみ出さなくなる。 */
+body.battle-viewport .god-otomo-portraits {
+  align-items: stretch;
+}
+
+body.battle-viewport .portrait {
+  min-height: 0;
+}
+
+body.battle-viewport .portrait img {
+  max-height: 100%;
+}
+
+/* 共鳴パネルの並び：名札（共鳴ゲージ・あと◯で神技発動）→ 神技プレビュー →
+   OTOMO立ち絵（床に接地）。burst-preview の order:-1 だけだと名札より上に来るため、
+   名札を -2 にして「見出し → 詳細」の順を保つ。 */
+body.battle-viewport .god-otomo-plate {
+  order: -2;
 }

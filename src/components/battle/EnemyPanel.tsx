@@ -112,10 +112,30 @@ export function EnemyPanel({
 
   return (
     <div className={`panel enemy-panel enemy-band-${band}`}>
-      <div className="panel-title">{enemy.name}</div>
-      <div className="enemy-type-row">
-        <span className="enemy-type-badge">【{def.typeLabel}】</span>
-        <span className="enemy-type-desc">{def.typeDescription}</span>
+      {/* Phase 6-B（決定164）：名前・HP・予告・状態を立ち絵の「上」に1枚の名札としてまとめる。
+          こうすると、どの画面高でも予告と HP が立ち絵と一緒に必ず見える（旧：立ち絵の下にあり、
+          手札を触る位置までスクロールすると画面外になっていた）。 */}
+      <div className="enemy-plate">
+        <div className="enemy-plate-head">
+          <span className="panel-title">{enemy.name}</span>
+          <span className="enemy-type-badge">【{def.typeLabel}】</span>
+          <span className="enemy-type-desc">{def.typeDescription}</span>
+        </div>
+        <HpBar current={hpShown} max={enemy.maxHp} color="#e5484d" className={band === 'high' ? undefined : `hp-bar-${band}`} />
+        <div className="enemy-plate-status">
+          <div className={`intent ${getIntentTierClass(enemy.intent)}`.trim()}>{formatEnemyIntent(enemy.intent)}</div>
+          {enemy.block > 0 && <div className="badge badge-block">🛡 {formatScaled(enemy.block)}</div>}
+          {enemy.buffs.length > 0 && (
+            <div className="buff-list">
+              {enemy.buffs.map((b, i) => (
+                <span key={i} className="badge badge-buff">
+                  {STAT_LABEL[b.stat]} {b.amount > 0 ? '+' : ''}
+                  {formatScaled(b.amount)}（{b.remainingRounds}）
+                </span>
+              ))}
+            </div>
+          )}
+        </div>
       </div>
       <div key={`line-${round}`} className="enemy-speech-bubble">
         {line}
@@ -154,19 +174,6 @@ export function EnemyPanel({
           <FloatingNumbers numbers={floatingNumbers} />
         </div>
       </div>
-      <HpBar current={hpShown} max={enemy.maxHp} color="#e5484d" className={band === 'high' ? undefined : `hp-bar-${band}`} />
-      {enemy.block > 0 && <div className="badge badge-block">🛡 {formatScaled(enemy.block)}</div>}
-      <div className={`intent ${getIntentTierClass(enemy.intent)}`.trim()}>{formatEnemyIntent(enemy.intent)}</div>
-      {enemy.buffs.length > 0 && (
-        <div className="buff-list">
-          {enemy.buffs.map((b, i) => (
-            <span key={i} className="badge badge-buff">
-              {STAT_LABEL[b.stat]} {b.amount > 0 ? '+' : ''}
-              {formatScaled(b.amount)}（{b.remainingRounds}）
-            </span>
-          ))}
-        </div>
-      )}
     </div>
   )
 }

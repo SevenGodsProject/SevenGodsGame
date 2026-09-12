@@ -27,7 +27,6 @@ import { useFloatingNumbers } from './useFloatingNumbers'
 import { CAST_FX, getEnemyDamagePowerTier, TYPE_STYLE } from './cardStyle'
 import { CardIcon } from './cardIcon'
 import { CardView } from './CardView'
-import { BattleHud } from './BattleHud'
 import { BattleMiniResult } from './BattleMiniResult'
 import { BattleResonanceCutin } from './BattleResonanceCutin'
 import { BattleEnemyCutin } from './BattleEnemyCutin'
@@ -237,6 +236,17 @@ export function BattleScreen({
   const victoryBeat = victoryPhase === 'beat'
   const presentationDone = state?.status === 'won' ? victoryPhase === 'done' : presentation.resultReady
 
+  // Phase 6-B（決定164）：戦闘中だけアプリ全体をビューポート高に固定し、ページの
+  // 縦スクロールを 0 にする（他の画面＝ホーム・デッキ構築は従来どおりスクロールする）。
+  // body のクラスで切り替え、アンマウント時に必ず戻す。
+  useEffect(() => {
+    document.body.classList.add('battle-viewport')
+    return () => document.body.classList.remove('battle-viewport')
+  }, [])
+
+  // Phase 6-B：戦闘ログは既定で畳む（ドックの「ログ」ボタンで開閉。機能は残す）
+  const [logOpen, setLogOpen] = useState(false)
+
   // 決定43：報酬カードは勝利1回につき1回だけ提示する。新しいバトル（seedが変わる）
   // のたびにリセットする（再開・「もう一度」でも新しいseedが発行されるため）。
   const [rewardDone, setRewardDone] = useState(false)
@@ -404,6 +414,33 @@ export function BattleScreen({
             </span>
           </div>
         )}
+
+        {/* STEP2-B：カード使用結果（誰が誰を攻撃したか＋数値変化）の一時表示。
+            Phase 6-B：アリーナの上端に重ねる（旧：手札の直前で sticky）。
+            STEP-R2（処理10）：共鳴7/7を含むバッチだけ、カットインと重ならないよう抑制する。 */}
+        {state.status === 'playing' && fx.miniResultKey !== suppressedMiniResultKeyRef.current && (
+          <BattleMiniResult
+            godId={state.godId}
+            enemy={state.enemy}
+            player={state.player}
+            resonanceMax={state.resonance.max}
+            resultKey={fx.miniResultKey}
+            result={fx.miniResult}
+            delayMs={fx.revealDelayMs}
+          />
+        )}
+
+        {error && <div className="battle-error">{error}</div>}
+
+        {/* Phase 6-B：ログは既定で畳み、ドックの「ログ」ボタンで開く（機能は残す）。
+            開いている間だけアリーナ下部に重ねる（レイアウトを押し広げない）。 */}
+        {logOpen && (
+          <div className="battle-log">
+            {log.slice(-6).map((event, i) => (
+              <div key={i}>{formatEvent(event)}</div>
+            ))}
+          </div>
+        )}
       </div>
 
       {/* STEP-R3：全7神で共鳴7/7カットインを挟む（STEP-R2は蒼毘のみのプロトタイプ
@@ -450,85 +487,55 @@ export function BattleScreen({
         </div>
       )}
 
-      {/* Battle UX P0改善：カード選択中でも戦況を確認できるcompact HUD（案B）。
-          `.hand`の直前に置くことで、EnemyPanel/PlayerPanelがまだ画面内にある
-          間は本来位置に留まり、スクロールでそれらが隠れたタイミングで初めて
-          画面上部にstickyで張り付く（比較検証済み）。決着後（勝敗/未撃破）は
-          RewardOverlay/GameOverOverlayに切り替わるため、`status==='playing'`
-          の間だけ表示する＝それらのモーダルとHUDが同時に存在することはない。 */}
-      {state.status === 'playing' && (
-        <BattleHud
-          // Phase 6-A：HUD の HP も表示HP（着弾より先に減らない）
-          enemy={{ ...state.enemy, hp: presentation.enemyHpShown }}
-          player={{ ...state.player, hp: presentation.playerHpShown }}
-          ap={state.ap}
-          resonance={state.resonance}
+      {/* Phase 6-B（決定164）：操作は画面下の「ドック」に場所を確保して置く。
+          position:fixed で重ねると Enemy HP・予告を覆ってしまうため使わない。
+          行の順番は操作順（託宣 → カード → ラウンドを終える）。 */}
+      <div className="battle-dock">
+        <DivinationPanel
+          remaining={state.divination.remaining}
+          usedThisRound={state.divination.usedThisRound}
+          playable={isPlayerTurn}
+          // Phase 5-D：加護は予告で量が変わるので、押す前に実数を見せる（engineと同じ計算）。
+          // 並び順に依存しないよう、全選択肢について求め、該当しないものは null になる
+          guardPreviews={DIVINATION_CHOICES.map((c) => previewIntentGuard(state, c.effects))}
+          onChoose={(i) => {
+            // 決定125：敵ダメージを伴う託宣（天啓）だけ敵パネルへフォーカス。engine呼び出しは即時
+            focusForDivination(i)
+            divine(i)
+          }}
         />
-      )}
 
-      {/* STEP2-B：BattleHud直下に、カード使用結果（誰が誰を攻撃したか＋数値変化）を
-          一時表示する。BattleHudと同じsticky領域内に置くことで、`.hand`まで
-          スクロールした状態でも「カードを押した瞬間、その場で結果が見える」を
-          実現する（CEO実プレイ指摘「カードしか見えず攻撃シーンが見えない」への対応）。
-          表示するものが無い時はコンポーネント自体がnullを返すため、空領域は残らない。 */}
-      {/* STEP-R2（処理10）：蒼毘の共鳴7/7を含むバッチだけ、cut-in+burst-bannerと
-          画面が過密にならないようBattleMiniResultを一時的に表示しない。
-          suppressedMiniResultKeyRefが指すkeyの回だけ抑制し、1〜6/7の通常共鳴・
-          通常攻撃/防御/回復等の表示は完全に従来通り（BattleMiniResult自体は無変更）。 */}
-      {state.status === 'playing' && fx.miniResultKey !== suppressedMiniResultKeyRef.current && (
-        <BattleMiniResult
-          godId={state.godId}
-          enemy={state.enemy}
-          player={state.player}
-          resonanceMax={state.resonance.max}
-          resultKey={fx.miniResultKey}
-          result={fx.miniResult}
-          delayMs={fx.revealDelayMs}
-        />
-      )}
+        <div className="battle-dock-row">
+          <div className="hand">
+            {state.hand.map((instance) => (
+              <CardView
+                key={instance.uid}
+                instance={instance}
+                affordable={getCardDef(instance.defId).cost + (instance.costModifier ?? 0) <= state.ap.current}
+                playable={isPlayerTurn}
+                playing={pendingCardUid === instance.uid}
+                bonusReady={isPlayerTurn && previewBonusTrigger(state, getCardDef(instance.defId))}
+                onPlay={() => playCard(instance.uid)}
+              />
+            ))}
+          </div>
 
-      <div className="hand">
-        {state.hand.map((instance) => (
-          <CardView
-            key={instance.uid}
-            instance={instance}
-            affordable={getCardDef(instance.defId).cost + (instance.costModifier ?? 0) <= state.ap.current}
-            playable={isPlayerTurn}
-            playing={pendingCardUid === instance.uid}
-            bonusReady={isPlayerTurn && previewBonusTrigger(state, getCardDef(instance.defId))}
-            onPlay={() => playCard(instance.uid)}
-          />
-        ))}
-      </div>
-
-      {error && <div className="battle-error">{error}</div>}
-
-      {/* Battle UX P0改善：操作順（カードを使う→託宣→ラウンドを終える）に
-          合わせ、DivinationPanel・終了ボタンをbattle-logより前に並べ替えた
-          （旧順：hand→battle-log→error→DivinationPanel→終了ボタン）。
-          遊び方画面の説明順と矛盾しないようにする。 */}
-      <DivinationPanel
-        remaining={state.divination.remaining}
-        usedThisRound={state.divination.usedThisRound}
-        playable={isPlayerTurn}
-        // Phase 5-D：加護は予告で量が変わるので、押す前に実数を見せる（engineと同じ計算）。
-        // 並び順に依存しないよう、全選択肢について求め、該当しないものは null になる
-        guardPreviews={DIVINATION_CHOICES.map((c) => previewIntentGuard(state, c.effects))}
-        onChoose={(i) => {
-          // 決定125：敵ダメージを伴う託宣（天啓）だけ敵パネルへフォーカス。engine呼び出しは即時
-          focusForDivination(i)
-          divine(i)
-        }}
-      />
-
-      <button type="button" className="end-round-button" disabled={!isPlayerTurn} onClick={endRound}>
-        ラウンドを終える
-      </button>
-
-      <div className="battle-log">
-        {log.slice(-6).map((event, i) => (
-          <div key={i}>{formatEvent(event)}</div>
-        ))}
+          {/* 決定77 の position:fixed は Phase 6-B で廃止し、ドック内の操作列へ統合した
+              （カードと重ならない専用の場所を確保する）。disabled 制御は無変更。 */}
+          <div className="battle-dock-actions">
+            <button type="button" className="end-round-button" disabled={!isPlayerTurn} onClick={endRound}>
+              ラウンドを終える
+            </button>
+            <button
+              type="button"
+              className={`battle-log-toggle${logOpen ? ' is-open' : ''}`}
+              onClick={() => setLogOpen((v) => !v)}
+              aria-expanded={logOpen}
+            >
+              ログ
+            </button>
+          </div>
+        </div>
       </div>
 
       {entranceKey > 0 && (

@@ -18,6 +18,8 @@ const args = process.argv.slice(2)
 const out = args[0]
 const base = args.find((a) => a.startsWith('http')) ?? 'http://localhost:5173'
 const shotsDir = args.includes('--shots') ? args[args.indexOf('--shots') + 1] : null
+/** Phase 6-B 実装後：実装そのもの（candidate=current）だけを測りたいときに使う */
+const only = args.includes('--only') ? args[args.indexOf('--only') + 1].split(',') : null
 if (shotsDir) mkdirSync(shotsDir, { recursive: true })
 const pwPath = process.env.PLAYWRIGHT_MODULE
 const { chromium } = pwPath ? await import(pathToFileURL(pwPath).href) : await import('playwright')
@@ -698,6 +700,7 @@ async function boot(page, url) {
 const results = []
 for (const vp of VIEWPORTS) {
   for (const [name, css] of Object.entries(CANDIDATES)) {
+    if (only && !only.includes(name)) continue
     // スマホ幅では候補の CSS（min-width:900px 内）は効かないので、current 相当として1回だけ測る
     const mobile = vp.width < 900
     if (mobile && !(name === 'current' || name === 'P6' || name === 'P7')) continue

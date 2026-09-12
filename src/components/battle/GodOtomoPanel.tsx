@@ -153,17 +153,35 @@ export function GodOtomoPanel({
 
   return (
     <div className="panel god-otomo-panel">
-      <div className="panel-title">共鳴</div>
-      {godPassive && (
-        <div
-          className={`god-passive-badge${passiveArmed ? ' god-passive-armed' : ''}`}
-          title={godPassive.textJa}
-          data-testid="god-passive-badge"
-        >
-          得意技 {godPassive.nameJa}
-          {passiveArmed && <span className="god-passive-armed-mark">発動中</span>}
+      {/* Phase 6-B（決定164）：共鳴ゲージと「あと何で発動するか」は画面高が小さくても
+          必ず見えるよう、立ち絵より上の名札側へ集約する。詳しい効果テキスト
+          （.burst-preview-detail）は低い画面では CSS で省略できる位置に置く。 */}
+      <div className="god-otomo-plate">
+        <div className="god-otomo-plate-head">
+          <span className="panel-title">共鳴</span>
+          {godPassive && (
+            <span
+              className={`god-passive-badge${passiveArmed ? ' god-passive-armed' : ''}`}
+              title={godPassive.textJa}
+              data-testid="god-passive-badge"
+            >
+              得意技 {godPassive.nameJa}
+              {passiveArmed && <span className="god-passive-armed-mark">発動中</span>}
+            </span>
+          )}
         </div>
-      )}
+        <div key={`ready-${readyFlashKey}`} className={`resonance-gauge-wrap ${resonanceStage}${readyFlashKey > 0 ? ' resonance-gauge-ready-flash' : ''}`.trim()}>
+          <div className="resonance-gauge">
+            <div className="resonance-gauge-fill" style={{ width: `${ratio * 100}%` }} />
+            <span className="resonance-gauge-label">
+              共鳴 {resonance.value} / {resonance.max}
+            </span>
+          </div>
+        </div>
+        <div className={`burst-preview-head${remaining === 0 ? ' burst-preview-ready' : ''}`}>
+          {remaining > 0 ? `あと${remaining}で神技発動` : '神技発動！'}
+        </div>
+      </div>
       <div className="god-otomo-portraits">
         {/* VFX-03：成長グロー（evolve-glow）は立ち絵切替と同じ「🌱成長」の瞬間に再生する
             （keyをevolveRevealKeyに変更。以前はevolveKey＝暗転の下で発動していた） */}
@@ -183,18 +201,7 @@ export function GodOtomoPanel({
           )}
         </figure>
       </div>
-      <div key={`ready-${readyFlashKey}`} className={`resonance-gauge-wrap ${resonanceStage}${readyFlashKey > 0 ? ' resonance-gauge-ready-flash' : ''}`.trim()}>
-        <div className="resonance-gauge">
-          <div className="resonance-gauge-fill" style={{ width: `${ratio * 100}%` }} />
-          <span className="resonance-gauge-label">
-            共鳴 {resonance.value} / {resonance.max}
-          </span>
-        </div>
-      </div>
       <div className="burst-preview" data-testid="burst-preview">
-        <div className={`burst-preview-head${remaining === 0 ? ' burst-preview-ready' : ''}`}>
-          {remaining > 0 ? `あと${remaining}で神技発動` : '神技発動！'}
-        </div>
         <div className="burst-preview-row">
           <span className="burst-preview-label">神の一撃</span>
           <span>{resonanceEffectText}</span>
