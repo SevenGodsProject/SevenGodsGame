@@ -5395,3 +5395,145 @@ body.battle-viewport .portrait img {
 body.battle-viewport .god-otomo-plate {
   order: -2;
 }
+
+/* ============================================================
+   Phase 6-C（決定166）Decision Feedback ＋ Battle Recap
+   ------------------------------------------------------------
+   「良い判断が成立した瞬間」を短く返す callout と、結果画面の振り返り。
+   表示専用。6-A のタイムライン・6-B の一画面性には触れない：
+   - callout はアリーナ内の overlay（absolute／pointer-events:none）で、
+     ページの高さを増やさず、操作・タップを奪わない
+   - 数字（最大 52px）より小さく、着弾そのものより目立たせない
+   - 位置は敵と神のあいだ（PC）／神の頭上（SP）。浮遊数字の帯・ミニ結果・
+     立ち絵の顔・予告・手札のいずれとも重ねない（QA で矩形計測）
+   ============================================================ */
+
+.battle-callout {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1px;
+  pointer-events: none;
+  text-align: center;
+  text-shadow:
+    0 2px 4px #000000ee,
+    0 0 14px #00000099;
+  animation: battle-callout-in 0.7s ease-out both;
+}
+
+/* `.battle-main > *` の position:relative より強く、アリーナ内に絶対配置する */
+body.battle-viewport .battle-main > .battle-callout {
+  position: absolute;
+  /* 横位置は「敵と神のあいだ」。浮遊数字は敵側（アリーナ幅の約 13〜28%）と
+     神側（約 47〜70%、「軽減N」は 47〜54%）に出るため、その間の 32〜44% に置く（敵立ち絵の枠の右端 32% と 1 桁 px の余裕を取る）。
+     幅を固定して sub は折り返す（最長でも 2 行） */
+  left: 38%;
+  width: 140px;
+  margin-left: -70px;
+  /* ミニ結果（bottom:10px・PC は最大約 80px）の上に重ならない高さ */
+  bottom: 90px;
+  z-index: 4;
+}
+
+.battle-callout-label {
+  font-size: 22px;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  line-height: 1.1;
+  color: #ffe9b0;
+}
+
+.battle-callout-sub {
+  font-size: 11px;
+  font-weight: 700;
+  color: #dfe3f5;
+  padding: 2px 10px;
+  border-radius: 12px;
+  background: #05060db8;
+  border: 1px solid #ffffff1f;
+  max-width: 100%;
+  line-height: 1.25;
+}
+
+/* トーン：防御＝青白、Identity＝金、予告読み＝琥珀、条件＝金（⚡と同色） */
+.battle-callout-defense .battle-callout-label { color: #bfe0ff; }
+.battle-callout-defense .battle-callout-sub { border-color: #8ab4ff55; }
+.battle-callout-identity .battle-callout-label { color: #ffd166; }
+.battle-callout-identity .battle-callout-sub { border-color: #ffd16666; }
+.battle-callout-read .battle-callout-label { color: #ffc868; }
+.battle-callout-bonus .battle-callout-label { color: #ffd166; font-size: 18px; }
+.battle-callout-p1 .battle-callout-label { font-size: 26px; }
+
+@keyframes battle-callout-in {
+  0% { opacity: 0; transform: translateY(6px) scale(0.96); }
+  18% { opacity: 1; transform: translateY(0) scale(1.03); }
+  30% { transform: translateY(0) scale(1); }
+  80% { opacity: 1; }
+  100% { opacity: 0; transform: translateY(-4px) scale(1); }
+}
+
+@media (max-width: 899px) {
+  /* 390px は敵と神の数字帯が横に隣接する（y 約 254〜357）ため、その下・
+     ミニ結果（2 行・上端 y 約 431）の上に置き、神の頭上（やや右）へ寄せる */
+  body.battle-viewport .battle-main > .battle-callout {
+    left: 55%;
+    width: 150px;
+    margin-left: -75px;
+    bottom: 76px;
+  }
+  .battle-callout-label { font-size: 18px; }
+  .battle-callout-p1 .battle-callout-label { font-size: 21px; }
+  .battle-callout-bonus .battle-callout-label { font-size: 15px; }
+  .battle-callout-sub { font-size: 10px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  /* 表示はする。拡大・上昇は無くし、フェードだけ */
+  @keyframes battle-callout-in {
+    0% { opacity: 0; transform: none; }
+    15% { opacity: 1; transform: none; }
+    85% { opacity: 1; }
+    100% { opacity: 0; transform: none; }
+  }
+}
+
+/* --- 結果画面の振り返り（勝利＝勝因の事実／敗北＝学び1行）。スコアの前に置く --- */
+.game-over-recap {
+  list-style: none;
+  margin: 2px 0 6px;
+  padding: 8px 14px;
+  border-radius: 10px;
+  border: 1px solid #ffd16644;
+  background: #ffd1660f;
+  color: #e8e9f3;
+  font-size: 13px;
+  line-height: 1.55;
+  text-align: left;
+  max-width: 460px;
+}
+
+.game-over-recap li + li {
+  margin-top: 2px;
+}
+
+.game-over-recap li::before {
+  content: '◆ ';
+  color: #ffd166;
+}
+
+.game-over-recap-defeat,
+.game-over-recap-finished {
+  border-color: #ff8a8a66;
+  background: #ff6b6b12;
+}
+
+.game-over-recap-defeat li::before,
+.game-over-recap-finished li::before {
+  color: #ff9a9a;
+}
+
+/* --- 「報酬カードを選ぶ」：結果を見終えてから報酬へ進む主ボタン --- */
+.game-over-reward-button {
+  min-width: 220px;
+  font-size: 15px;
+}

@@ -10,6 +10,7 @@ import type { StakeResultOutcome } from '../../hooks/stakeStorage'
 import type { GameState } from '../../core/types'
 import { getStakeLevelDef, stakeLabel, stakeScoreScale } from '../../core/data/stakes'
 import { buildShareText, copyToClipboard } from './shareText'
+import type { BattleRecap } from './battleRecap'
 import { useEffect, useState } from 'react'
 import { describeDefeatCause, type DefeatCause } from './defeatCause'
 import { getEnemyDef } from '../../core/data/enemies'
@@ -101,6 +102,11 @@ type GameOverOverlayProps = {
    * 通常モードでは渡さない（＝ボタンが現れない）。
    */
   onOpenRanking?: () => void
+  /** Phase 6-C（決定166）：この1戦の振り返り（最大3行）。BattleScreen がログから生成する */
+  recap?: BattleRecap | null
+  /** Phase 6-C：勝利で報酬がまだ確定していない（「報酬カードを選ぶ」だけを出す） */
+  rewardPending?: boolean
+  onOpenReward?: () => void
 }
 
 export function GameOverOverlay({
@@ -123,6 +129,9 @@ export function GameOverOverlay({
   shareState = null,
   defeatCause = null,
   onOpenRanking,
+  recap = null,
+  rewardPending = false,
+  onOpenReward,
 }: GameOverOverlayProps) {
   const god = getGodDef(godId)
   const otomoDef = getOtomoDef(otomo.defId)
@@ -187,11 +196,25 @@ export function GameOverOverlay({
           </div>
         )}
         {status === 'won' && <div className="game-over-conquer">神域制覇</div>}
+        {/* Phase 6-C（決定166）：この1戦の振り返り。勝利＝なぜ上手くいったか（事実）、
+            敗北＝次の1戦への学び（高信頼ルールのみ・無ければ出さない）。スコアより先に置く */}
+        {recap && recap.lines.length > 0 && (
+          <ul className={`game-over-recap game-over-recap-${recap.kind}`} data-testid="battle-recap">
+            {recap.lines.map((line, i) => (
+              <li key={i}>{line}</li>
+            ))}
+          </ul>
+        )}
         {defeatText && (
           <div className="game-over-defeat-cause">
             敗因：<strong>{defeatText}</strong>
-            <br />
-            予告を見て、その一撃の前に守るか、先に倒し切ろう。
+            {/* Phase 6-C：状況固有の助言（recap）があるときは定型文を出さない */}
+            {!(recap && recap.lines.length > 0) && (
+              <>
+                <br />
+                予告を見て、その一撃の前に守るか、先に倒し切ろう。
+              </>
+            )}
           </div>
         )}
         {daily && (
@@ -365,14 +388,24 @@ export function GameOverOverlay({
             </button>
           </div>
         )}
-        <div className="game-over-actions">
-          <button type="button" onClick={onRematch} disabled={rematchDisabled}>
-            {rematchLabel ?? '同じ構成でもう一度'}
-          </button>
-          <button type="button" onClick={onReselect}>
-            神・デッキを選び直す
-          </button>
-        </div>
+        {/* Phase 6-C（決定166）：勝利で報酬が未確定のあいだは「報酬カードを選ぶ」だけを出す
+            （勝利1回＝報酬の判断1回、を保つ）。確定後は従来のボタンに戻る */}
+        {rewardPending && onOpenReward ? (
+          <div className="game-over-actions">
+            <button type="button" className="game-over-reward-button" onClick={onOpenReward} data-testid="open-reward">
+              報酬カードを選ぶ ›
+            </button>
+          </div>
+        ) : (
+          <div className="game-over-actions">
+            <button type="button" onClick={onRematch} disabled={rematchDisabled}>
+              {rematchLabel ?? '同じ構成でもう一度'}
+            </button>
+            <button type="button" onClick={onReselect}>
+              神・デッキを選び直す
+            </button>
+          </div>
+        )}
       </div>
     </div>
   )

@@ -21,6 +21,9 @@ import { BURST_BANNER_MS, BURST_READY_LEAD_MS, VICTORY_BEAT_MS, VICTORY_BEAT_RED
 import { CUTIN_FALLBACK_MS } from './BattleResonanceCutin'
 import { BossEntrance } from './BossEntrance'
 import { deriveDefeatCause } from './defeatCause'
+import { useDecisionCallout } from './useDecisionCallout'
+import { BattleCallout } from './BattleCallout'
+import { buildBattleRecap } from './battleRecap'
 import { preloadSe, sfx } from './sound'
 import { useBattleSound } from './useBattleSound'
 import { useFloatingNumbers } from './useFloatingNumbers'
@@ -94,6 +97,8 @@ export function BattleScreen({
   // Phase 6-A：表示HP・撃破／結果の順序・大きな一撃の揺れ（表示専用。engine の状態・タイミングは不変）
   const arenaRef = useRef<HTMLDivElement>(null)
   const presentation = useCombatPresentation(log, state, arenaRef)
+  // Phase 6-C（決定166）：良い判断が成立した瞬間の短い評価（表示専用。1バッチ最大1件）
+  const decision = useDecisionCallout(log, state)
 
   // CEO指示：共鳴バースト（.burst-banner）とOTOMO進化（.evolve-banner）が
   // 同時に重なって表示される不具合の修正。setTimeoutでCSSのanimation-durationと
@@ -250,8 +255,13 @@ export function BattleScreen({
   // 決定43：報酬カードは勝利1回につき1回だけ提示する。新しいバトル（seedが変わる）
   // のたびにリセットする（再開・「もう一度」でも新しいseedが発行されるため）。
   const [rewardDone, setRewardDone] = useState(false)
+  // Phase 6-C（決定166）：認知順序を「勝利 → 振り返り → スコア／神技評価 → 報酬」にする。
+  // 結果画面を先に出し、その「報酬カードを選ぶ」から報酬へ進む（報酬の中身・ルールは不変。
+  // 勝利1回につき報酬の判断は必ず1回＝報酬が未確定の間は他のボタンを出さない）。
+  const [rewardOpen, setRewardOpen] = useState(false)
   useEffect(() => {
     setRewardDone(false)
+    setRewardOpen(false)
   }, [state?.seed])
 
   if (!state) {
@@ -432,6 +442,9 @@ export function BattleScreen({
 
         {error && <div className="battle-error">{error}</div>}
 
+        {/* Phase 6-C（決定166）：良い判断の短い評価。アリーナ下段の overlay（pointer-events:none） */}
+        <BattleCallout callout={decision.callout} playKey={decision.calloutKey} />
+
         {/* Phase 6-B：ログは既定で畳み、ドックの「ログ」ボタンで開く（機能は残す）。
             開いている間だけアリーナ下部に重ねる（レイアウトを押し広げない）。 */}
         {logOpen && (
@@ -553,20 +566,28 @@ export function BattleScreen({
         </div>
       )}
 
-      {state.status === 'won' && !rewardDone && presentationDone && (
+      {/* Phase 6-C：報酬は結果画面の「報酬カードを選ぶ」から開く（決定43の提示内容・1回だけの規則は不変） */}
+      {state.status === 'won' && !rewardDone && rewardOpen && (
         <RewardOverlay
           godId={state.godId}
           seed={state.seed}
           onPick={(cardId) => {
             addRewardBonus(state.godId, cardId)
             setRewardDone(true)
+            setRewardOpen(false)
           }}
-          onSkip={() => setRewardDone(true)}
+          onSkip={() => {
+            setRewardDone(true)
+            setRewardOpen(false)
+          }}
         />
       )}
 
-      {state.status !== 'playing' && (state.status !== 'won' || rewardDone) && presentationDone && (
+      {state.status !== 'playing' && presentationDone && !rewardOpen && (
         <GameOverOverlay
+          recap={buildBattleRecap(log, state)}
+          rewardPending={state.status === 'won' && !rewardDone}
+          onOpenReward={() => setRewardOpen(true)}
           status={state.status}
           score={state.score}
           godId={state.godId}
