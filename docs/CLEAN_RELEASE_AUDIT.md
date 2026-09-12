@@ -158,21 +158,23 @@ path 単位の削除後、build を通すために手で切った箇所。**ゲ�
 ## 6. Neon Absence
 
 - 依存：`@neondatabase/serverless` 0・`@electric-sql/pglite` 0（package.json／lockfile とも）
-- コード：`src/server/` 0・`api/` 0・`postgres://` 0
+- コード：`src/server/` 0・`api/` 0・postgres 接続文字列 0
 - 残る "Neon" の文字列は `rules.ts` の **コメント 2 行**（「Neon 等」「Neon Free の CU-hours」）と docs の散文のみ。実行時参照なし
 
 ## 7. Secret Audit（値は表示しない）
 
 `node scripts/release-audit/secret-audit.mjs 489352c` — tracked files・RC 履歴（`489352c..HEAD` の追加行）・dist を走査。**資格情報形式（postgres URL／npg_／sk-・ghp_・AKIA・xox／JWT）の hit 0 件。tracked `.env` 0 件。**
 
-| 領域 | hit | 内容（種類のみ） |
+| 領域 | hit（tracked＋RC 履歴の追加行） | 内容（種類のみ） |
 | --- | --- | --- |
-| docs（散文） | 112 | `DECISIONS.md` の決定131〜152 に env 変数名（`DATABASE_URL`・`NEON`・`BYPASS`・`SECRET`）と `.env` の言及、`assets-kit/manifest.json` の sha256 ハッシュ 42 件（素材の同一性検証用） |
-| scripts | 41 | すべて `process.env.PLAYWRIGHT_MODULE` 等の `.env` 一致（監査スクリプトの実行オプション） |
-| test | 36 | 同上（`process.env`）＋ `replayBoundary.test.ts` の禁止トークン一覧 |
-| source | 2 | `rules.ts` の "Neon" コメント |
+| docs（散文） | 246 | `DECISIONS.md` の決定131〜152 に env 変数名（`DATABASE_URL`・`NEON`・`BYPASS`・`SECRET`）と `.env` の言及（54）、`assets-kit/manifest.json` の sha256 ハッシュ 42 件（素材の同一性検証用）、本監査文書の検査語（30）、Phase 5/6 docs の `process.env` 言及。履歴分は同じ行の二重計上 |
+| scripts | 81 | `process.env.PLAYWRIGHT_MODULE` 等の `.env` 一致（監査スクリプトの実行オプション）と `ranking-absence.mjs` の検査語 |
+| test | 62 | 同上（`process.env`）＋ `replayBoundary.test.ts` の禁止トークン一覧 |
+| source | 4 | `rules.ts` の "Neon" コメント 2 行（tracked＋履歴で 4） |
 | build | 1 | `react-dom` 内の input type 一覧（`password:!0`） |
-| other | 4 | `.gitignore` の `.env` 無視ルール |
+| other | 8 | `.gitignore` の `.env` 無視ルール 4 行（tracked＋履歴） |
+
+検査ツール自身の除外：`secret-audit.mjs` はパターン定義（検査語そのもの）を含むため走査対象から外している。`ranking-absence.mjs` はランキング語をラベルに含むため、Ranking Absence Gate では `scripts/release-audit/` を走査対象から外している（どちらも監査ツールであり配信物ではない。docs は除外していない）。
 
 過去に漏洩・ローテーション済みの資格情報についても、本 RC の tree・履歴・dist には**存在しない**（形式一致 0）。
 

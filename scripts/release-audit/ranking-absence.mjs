@@ -7,7 +7,8 @@ import { existsSync, readFileSync, readdirSync, statSync } from 'node:fs'
 import { join } from 'node:path'
 
 const dist = process.argv.includes('--dist') ? process.argv[process.argv.indexOf('--dist') + 1] : 'dist'
-const tracked = execSync('git ls-files', { encoding: 'utf8' }).split(/\r?\n/).filter(Boolean)
+// 監査ツール自身（scripts/release-audit/）は検査対象から外す：検査語をラベル・正規表現として含むため自己一致する
+const tracked = execSync('git ls-files', { encoding: 'utf8' }).split(/\r?\n/).filter(Boolean).filter((f) => !f.startsWith('scripts/release-audit/'))
 const fail = []
 const row = (label, count, expect = 0) => {
   const ok = count === expect

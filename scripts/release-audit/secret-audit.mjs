@@ -9,7 +9,8 @@ const baseRef = process.argv[2] ?? '489352c'
 const PATTERNS = [
   ['DATABASE_URL', /DATABASE_URL/],
   ['NEON', /\bNEON\b|neon\.tech|neondatabase/i],
-  ['postgres URL', /postgres(ql)?:\/\/[^\s'"]+/i],
+  // 接続文字列は user:password@host の形。scheme だけの言及（散文）は資格情報ではない
+  ['postgres URL', /postgres(ql)?:\/\/[^\s'"`]*@[^\s'"`]+/i],
   ['SECRET', /SECRET/],
   ['TOKEN', /\bTOKEN\b/],
   ['PASSWORD', /PASSWORD|passwd/i],
@@ -23,7 +24,9 @@ const PATTERNS = [
   ['npg_ (Neon password prefix)', /\bnpg_[A-Za-z0-9]{6,}/],
 ]
 const SKIP = /\.(png|jpg|jpeg|webp|gif|mp3|wav|ogg|webm|woff2?|ico|zip|pdf)$/i
-const tracked = execSync('git ls-files', { encoding: 'utf8' }).split(/\r?\n/).filter(Boolean)
+// このファイル自身はパターン定義（検査語そのもの）を含むため検査対象から外す。docs/ や他の scripts は外さない
+const SELF = 'scripts/release-audit/secret-audit.mjs'
+const tracked = execSync('git ls-files', { encoding: 'utf8' }).split(/\r?\n/).filter(Boolean).filter((f) => f !== SELF)
 const hits = {}
 const classify = (file) => (/^docs\//.test(file) ? 'docs(prose)' : /\.test\.tsx?$/.test(file) ? 'test' : /^scripts\//.test(file) ? 'script' : /^src\//.test(file) ? 'source' : /^public\//.test(file) ? 'public' : /^dist\//.test(file) ? 'build' : 'other')
 const add = (where, kind, area) => { const k = kind + ' @ ' + where; hits[k] = hits[k] ?? { kind, where, area, n: 0 }; hits[k].n++ }
@@ -41,6 +44,7 @@ let commit = '?', file = '?'
 for (const line of diff.split(/\r?\n/)) {
   if (line.startsWith('commit:')) commit = line.slice(7)
   else if (line.startsWith('+++ b/')) file = line.slice(6)
+  else if (file === SELF) continue
   else if (line.startsWith('+') && !line.startsWith('+++')) for (const [name, re] of PATTERNS) if (re.test(line)) add('history ' + commit + ' ' + file, name, classify(file))
 }
 // 3. dist
