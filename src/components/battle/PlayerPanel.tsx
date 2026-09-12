@@ -131,7 +131,7 @@ export function PlayerPanel({
               className={hitKey > 0 ? `${shakeClass}${delayToken}${normalDelayed ? ' juice-delayed' : ''}` : undefined}
               style={impactStyle}
             >
-              <img className="player-avatar" src={god.art.front} alt={god.nameJa} />
+              <img className="player-avatar" src={god.art.front} alt={god.nameJa} width={640} height={640} />
             </div>
           </div>
         </div>

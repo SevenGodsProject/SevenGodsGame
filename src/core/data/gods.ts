@@ -44,7 +44,7 @@ const art = (id: string) => ({
   // ※同ディレクトリの`front.webp`は別ポーズの立ち絵なので使用しない。
   front: `/assets/gods/${id}/front_640.webp`,
   back: `/assets/gods/${id}/back.webp`,
-  // 七神キービジュアル採用：原本（public/assets/reference/gods/）から生成した
+  // 七神キービジュアル採用：原本（art-source/reference/gods/。決定170 で配信対象外へ移動）から生成した
   // 軽量WebP派生版。原本ファイル名・godIdが一致しているため機械的に導出できる。
   keyvisual: `/assets/gods/${id}/keyvisual.webp`,
 })

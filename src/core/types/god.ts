@@ -11,7 +11,7 @@ export type GodArt = {
   back: string
   /**
    * 七神キービジュアル採用（タイトル画面＋神選択画面）：
-   * `public/assets/reference/gods/{id}-keyvisual.png`（原本・保護対象、変更禁止）から
+   * `art-source/reference/gods/{id}-keyvisual.png`（原本・保護対象、変更禁止。決定170 で配信対象外へ移動）から
    * 生成した軽量WebP派生版。原本は無加工のまま保持し、表示用にはこちらのみ使う。
    */
   keyvisual: string

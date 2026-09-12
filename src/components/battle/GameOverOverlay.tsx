@@ -278,8 +278,8 @@ export function GameOverOverlay({
          */}
         {status === 'won' && (
           <div className="game-over-portraits">
-            <img className="game-over-portrait-god" src={god.art.front} alt={god.nameJa} />
-            <img className="game-over-portrait-otomo" src={otomoDef.art[otomo.form]} alt={otomoDef.nameJa} />
+            <img className="game-over-portrait-god" src={god.art.front} alt={god.nameJa} width={640} height={640} />
+            <img className="game-over-portrait-otomo" src={otomoDef.art[otomo.form]} alt={otomoDef.nameJa} width={320} height={320} />
           </div>
         )}
         <div className={`score-total game-over-score${status === 'won' && shownScore < finalScore ? ' game-over-score-rolling' : ''}`}>スコア {formatScaled(shownScore)}</div>

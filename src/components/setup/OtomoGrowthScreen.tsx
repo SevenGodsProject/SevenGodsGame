@@ -107,7 +107,7 @@ export function OtomoGrowthScreen({ onBack }: OtomoGrowthScreenProps) {
                 ['--otomo-bg-image' as string]: `url(${backgroundImage})`,
               }}
             >
-              <img src={otomoDef.art.doji} alt={otomoDef.nameJa} />
+              <img src={otomoDef.art.doji} alt={otomoDef.nameJa} width={320} height={320} />
               <div className="otomo-growth-body">
                 <div className="otomo-growth-head">
                   <span className="otomo-growth-name">{otomoDef.nameJa}</span>
@@ -161,7 +161,7 @@ export function OtomoGrowthScreen({ onBack }: OtomoGrowthScreenProps) {
                         title={unlocked ? GALLERY_FORM_LABEL[form] : `${GALLERY_FORM_LABEL[form]}（未解放）`}
                       >
                         {unlocked ? (
-                          <img src={otomoDef.art[form]} alt={GALLERY_FORM_LABEL[form]} loading="lazy" />
+                          <img src={otomoDef.art[form]} alt={GALLERY_FORM_LABEL[form]} loading="lazy" width={320} height={320} />
                         ) : (
                           <span className="otomo-growth-gallery-lock" aria-hidden="true">
                             🔒

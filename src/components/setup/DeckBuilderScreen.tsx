@@ -264,6 +264,8 @@ export function DeckBuilderScreen({
                             alt=""
                             loading="lazy"
                             decoding="async"
+                            width={512}
+                            height={768}
                           />
                         ) : (
                           <div className="deck-builder-card-icon" style={{ color: style.color }}>

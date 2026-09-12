@@ -175,7 +175,7 @@ export const KEYVISUAL_OBJECT_POSITION: Record<GodId, string> = {
  * `.god-archetype-*`（5色）をそのまま流用しなかった理由：7神中3神（恵比寿・
  * 大耀・福永）が同じattack型のため、archetype色だけでは最大5色にしかならず
  * 7体を一意に区別できない（OTOMO育成監査STEP7で確認済み）。そのため7神の
- * キービジュアル（`public/assets/reference/gods/`）の配色を目視で参照しつつ、
+ * キービジュアル（`art-source/reference/gods/`。決定170 で配信対象外へ移動）の配色を目視で参照しつつ、
  * 色相環を7等分した明確に異なる7色を新規に割り当てた（画像アセットは
  * 追加せず、CSSカスタムプロパティとして各カードに注入するだけ）。
  * `base`＝バッジ・称号見出し・カットインのaccent等の不透明表示用、`bg`＝カード

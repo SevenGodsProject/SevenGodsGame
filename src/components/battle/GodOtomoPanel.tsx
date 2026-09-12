@@ -190,7 +190,7 @@ export function GodOtomoPanel({
           className={`portrait portrait-otomo${evolveRevealKey > 0 ? ' evolve-glow' : ''}${reactionActive ? ' otomo-reacting' : ''}`}
           onAnimationEnd={reactionActive ? handleReactionAnimationEnd : undefined}
         >
-          <img src={otomoDef.art[displayedForm]} alt={otomoDef.nameJa} />
+          <img src={otomoDef.art[displayedForm]} alt={otomoDef.nameJa} width={320} height={320} />
           <figcaption>
             {otomoDef.nameJa}（{FORM_LABEL[displayedForm]}）
           </figcaption>

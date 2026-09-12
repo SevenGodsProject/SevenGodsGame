@@ -418,7 +418,7 @@ export function BattleScreen({
             }`}
             style={{ color: castStyle.color, ['--cast-glow' as string]: castStyle.glow }}
           >
-            <img className="cast-flash-art" src={CAST_FX[pendingCardDef.type]} alt="" />
+            <img className="cast-flash-art" src={CAST_FX[pendingCardDef.type]} alt="" width={320} height={480} />
             <span className="cast-flash-icon">
               <CardIcon def={pendingCardDef} />
             </span>

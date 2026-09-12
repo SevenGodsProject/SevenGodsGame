@@ -4814,7 +4814,9 @@ body.battle-viewport .app {
 
 body.battle-viewport .app-header {
   padding: 4px 14px;
-  gap: 8px;
+  /* 決定170：アイコンは 26px のままだが、44px のタップ判定（App.css の
+     .app-icon-button::after）が隣と重ならないよう間隔を広げる */
+  gap: 18px;
 }
 
 body.battle-viewport .app-icon-button {
@@ -5424,6 +5426,8 @@ body.battle-viewport .player-panel {
 
   body.battle-viewport .battle-log-toggle {
     min-height: 44px;
+    /* 決定170：390px では幅 30px しかなくタップ領域が足りないため 44px にする */
+    min-width: 44px;
     padding: 6px 8px;
   }
 
@@ -5763,4 +5767,46 @@ body.battle-viewport .battle-main > .battle-callout {
 .game-over-reward-button {
   min-width: 220px;
   font-size: 15px;
+}
+
+/* ============================================================
+   Release Hygiene Gate（決定170）：戦闘画面のタップ領域 44×44
+   ------------------------------------------------------------
+   Mobile 390px の実測で 44px 未満だったのは託宣の3枚（83×39）と
+   PC のログボタン（112×29）。どちらも主要操作なので判定を 44px 以上にする。
+   ただし **高さそのものは変えない**：ドックが数 px 伸びるとアリーナが同じだけ
+   縮み、6-C の callout が敵の顔の判定枠に触れることが 15 戦 QA で実測された
+   （#7 で 48px²）。そこで見た目は据え置き、`::after` で判定だけを広げる。
+   これならレイアウトは 1px も動かないので 6-A／6-B／6-C は完全に不変。
+   ============================================================ */
+.divination-choice {
+  position: relative;
+}
+
+/* 左右は 83px あるので、上下だけ 3px ずつ広げて 45px にする */
+.divination-choice::after {
+  content: '';
+  position: absolute;
+  top: -3px;
+  left: 0;
+  right: 0;
+  /* bottom ではなく height で指定する（監査スクリプトが実寸を読めるようにするため） */
+  height: 45px;
+}
+
+.battle-log-toggle {
+  position: relative;
+}
+
+/* 上の「ラウンドを終える」との間隔は 6px しかないので、上は 3px だけ。
+   下はドックの余白（26px）があるので 13px 伸ばして 45px にする。
+   390px では既に 44px 角あるため、この指定は主に PC 向け。 */
+.battle-log-toggle::after {
+  content: '';
+  position: absolute;
+  top: -3px;
+  left: 0;
+  right: 0;
+  /* bottom ではなく height で指定する（監査スクリプトが実寸を読めるようにするため） */
+  height: 45px;
 }
