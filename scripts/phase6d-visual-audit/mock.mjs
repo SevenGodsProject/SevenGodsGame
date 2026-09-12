@@ -18,7 +18,7 @@ const MOCK_B = `
 .enemy-avatar img, img.player-avatar { position: relative; z-index:1; filter: drop-shadow(0 0 5px var(--stage-accent, #ffd166)) drop-shadow(0 2px 2px #00000088) contrast(1.04); }
 .god-otomo-portraits img { filter: drop-shadow(0 0 5px var(--stage-accent, #ffd166)); }
 `
-const MOCK_A = (god, kv, accent) => `
+const MOCK_A = (god, kv) => `
 <div id="mockStrike" style="position:fixed;inset:0;z-index:50;pointer-events:none;background:#05060dd6;overflow:hidden;font-family:'Yu Mincho','YuMincho','Hiragino Mincho ProN','Noto Serif JP',serif">
   <div style="position:absolute;inset:-40%;background:repeating-conic-gradient(from 0deg at 50% 50%, #ffd16626 0 1.2deg, transparent 1.2deg 7deg);opacity:.6"></div>
   <div style="position:absolute;left:-6%;right:-6%;top:50%;height:36%;transform:translateY(-50%) rotate(-5deg);background:#03040acc;border-top:1px solid #e6c27acc;border-bottom:1px solid #e6c27acc;box-shadow:0 0 40px #000"></div>
