@@ -192,3 +192,73 @@ DPR1のみ数値が低下する（-9.5〜-9.9%）。これは**§5-1と同根の
 ## 決定179（提案）
 
 **juuma M4 Production Release Candidate：PASS — READY FOR CEO RELEASE APPROVAL。** Decision177 M4（`136ef257…`・唯一のsource）を、resize・WebP re-encode・metadata除去のみでBatch A標準の768×768へ最適化した。Identity 98.81・Silhouette IoU 0.9859・landmark 0px・PSNR 38.86dBで全て基準を満たし、デザイン変更は構造上0件。white fringe/ringing の暫定数値上限は字義通りには未達だが、①1024→960という極小リサイズだけで指標が倍増する対照実験②WebP符号化の寄与がわずか+1.1ptに留まる分離実験③チェッカーボード背景での目視確認、の3点で「測定手法がリサイズ操作に対して頑健でないことによる見かけ上の数値」であり実際の画質劣化ではないと判断した（判定基準・実証方法はAI判断・CLAUDE.md §6-2）。実ゲームQAは5条件・全10回で enemy box完全一致・壊れ画像0・DPR2以上で明確に優位・DPR1/Mobileは数値微減はあるが目視判別不能（Batch A決定175と同根の焼き込みシャープ剥離）。Regression（tests 3041 passed・tsc 0・lint 0・build成功・bundle byte一致・Ranking/Secret Absence PASS）も全てクリア。**Production反映・master merge・deployはCEO判断（別Step・CLAUDE.md §6-3 #8）として実行していない。**
+
+---
+
+## 10. Production Release 結果（決定180・2026-09-15）
+
+CEO の Release Approval を受けて Production へ公開した。
+
+| 項目 | 内容 |
+| --- | --- |
+| Release source | `feat/enemy-juuma-m4-rc` `4c33350` |
+| Old master | `decebf6`（決定178 / Batch A Production Release） |
+| New master | `4c33350` |
+| transport | `git merge --ff-only`（master は RC の直接の祖先・線形 1 commit。tree hash `3bfd22b6…` で完全一致） |
+| push | `decebf6..4c33350 master -> master`（通常 push・force なし） |
+| deploy | Vercel の master 自動 deploy のみ（manual deploy なし） |
+| 反映時間 | push 05:17:08 JST の **約34秒後**に新 asset の配信を確認 |
+
+### Production Asset 検証
+
+ゲームが実際に要求する **query string 無しの canonical URL** に `no-cache, no-store` を付けて取得。
+
+```
+https://seven-gods-game.vercel.app/assets/enemies/juuma/art_hq.webp
+bytes : 158,262
+sha256: 4356913d2c9bdeeae1be34ba6a4beece15339d93ee540a6583bfca9abc3b196a  ← 承認 RC と完全一致
+```
+
+旧 asset の hash（`b4d67d58…`）はどの条件でも返らない。`Cache-Control: public, max-age=0, must-revalidate` のため再訪ユーザーにも旧 asset は残らない。**他の敵 6 体（datenshi／karakuri／doukeshi／oni／onryo／ryujin）は master と byte 完全一致**で不変。
+
+### asset-only である証明
+
+Production が配信する JS／CSS／HTML は公開前と **byte 完全一致**（`index-CLclgl5i.js` `95d062cd…`／`index-IKMGO-ur.css` `7b220d3a…`／`index.html` `2ace0eaf…`）。`src/` の tree hash も master と同一（`0b1fb25e…`）。**利用者に届く変更は juuma の WebP 1 ファイルのみ。**
+
+### Production QA（本番 URL・headless Chromium）
+
+| 条件 | PC 1366×768 | Mobile 390×844 |
+| --- | --- | --- |
+| 実描画 asset | `/assets/enemies/juuma/art_hq.webp`・**naturalSize 768×768** | 同左 |
+| enemy box | 292.8×287.3 | 126.2×359.8 |
+| 双牙の魔獣の表示 | 正常（`双牙の魔獣【連撃型】…850/850`） | 正常 |
+| 壊れ画像 | 0 | 0 |
+| scrollY / 横はみ出し | 0 / 0 | 0 / 0 |
+| JS エラー | 0 | 0 |
+| 失敗リクエスト | 0 | 0 |
+| battle 開始 | 正常 | 正常 |
+| カード使用 | 正常（手札が減り着弾） | 正常 |
+| End Round | 正常（ラウンド進行） | 正常 |
+| **6-A Combat Juice** | `.floating-number`／`.cast-flash`／`.enemy-hit-layer`／`.battle-mini-result-*` を自ターンで確認、敵ターンで `.player-hit-layer`／`.floating-number`／mini-result を確認 | — |
+| **6-B HUD** | 敵・予告・HP・手札 5 枚・End Round すべて可視 | 同左 |
+| **6-C callout** | 2 件観測 | 本試行では 0 件（callout は条件成立時のみ発火する仕様。PC で発火を確認済み） |
+| **6-D God Strike** | cut-in 観測・HP ghost 観測 | cut-in 観測・HP ghost 観測 |
+
+### Ranking Absence（Production 実測）
+
+| 検査 | 結果 |
+| --- | --- |
+| `/api/ranking/{start,submit,leaderboard}` | すべて **404** |
+| Ranking UI | **0**（戦闘画面・結果画面とも） |
+| Ranking API へのリクエスト | **0**（PC/Mobile とも計測） |
+| 外部オリジンへのリクエスト | **0**（通信先は `seven-gods-game.vercel.app` のみ） |
+| bundle 内 `/api/`・neon・postgres・`DATABASE_URL`・`RANKING_` | すべて **0 occurrences** |
+| `submissionEnabled` | `!1`（= false） |
+| `saveVersion` | 9 |
+| `/docs/`・`/art-source/` | **404**（配信対象外） |
+
+### 判定
+
+**PASS / LIVE。Release Blockers 0。**
+
+**Rollback**：不要。必要時は `origin/master` を `decebf6` の内容へ通常 commit で戻す（force push はしない）。asset 名を維持しているため、戻した時点で `max-age=0, must-revalidate` により再訪で旧 asset に復帰する。
