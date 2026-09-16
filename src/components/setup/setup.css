@@ -2336,3 +2336,211 @@
     margin-top: 2px;
   }
 }
+
+/* ============================================================
+   Phase 7 P2（決定189）：神×敵 攻略（戦績画面）
+   ------------------------------------------------------------
+   敵ごとの行に 7 柱の神チップ。撃破済み＝金の実線枠＋✓＋金色の名前、
+   未撃破＝灰色の顔＋点線枠＋灰色の名前（色だけで区別しない）。
+   チップは表示のみ：カーソル・hover・押下の見た目は付けない。
+   ============================================================ */
+.matchup-board {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+}
+.matchup-board-head {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+}
+.matchup-board-title {
+  margin: 0;
+  font-size: 1.1rem;
+  color: #ffe9b0;
+}
+.matchup-board-total {
+  margin-left: auto;
+  font-size: 13px;
+  font-weight: 700;
+  color: #c9cbe0;
+  font-variant-numeric: tabular-nums;
+}
+.matchup-board-rule,
+.matchup-board-note {
+  margin: 0;
+  font-size: 12px;
+  line-height: 1.5;
+  color: #a9adc4;
+}
+.matchup-rows {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 8px;
+}
+@media (min-width: 900px) {
+  .matchup-rows {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+.matchup-row {
+  min-width: 0;
+  padding: 8px 10px;
+  border: 1px solid #ffffff1f;
+  border-radius: 14px;
+  background: #14152c99;
+}
+.matchup-row-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 6px;
+}
+.matchup-enemy-art {
+  flex: 0 0 auto;
+  width: 48px;
+  height: 48px;
+  border-radius: 10px;
+  object-fit: cover;
+  object-position: 50% 20%;
+  background: #05060d;
+}
+.matchup-enemy-text {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+.matchup-enemy-name {
+  font-size: 15px;
+  font-weight: 800;
+  color: #f3f4fb;
+}
+.matchup-enemy-type {
+  font-size: 11px;
+  color: #c9cbe0;
+}
+.matchup-enemy-count {
+  margin-left: auto;
+  flex: 0 0 auto;
+  font-size: 13px;
+  font-weight: 800;
+  color: #8a8fa8;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+.matchup-chips {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 3px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.matchup-chip {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  min-height: 44px;
+  font-size: 11px;
+  line-height: 1.2;
+  cursor: default;
+}
+.matchup-chip-face {
+  position: relative;
+  width: 34px;
+  height: 34px;
+}
+.matchup-chip-face img {
+  width: 34px;
+  height: 34px;
+  box-sizing: border-box;
+  border-radius: 50%;
+  object-fit: cover;
+  object-position: 50% 12%;
+  background: #05060d;
+  border: 2px solid #ffffff22;
+}
+.matchup-chip-cleared .matchup-chip-face img {
+  border: 2px solid #ffd166;
+}
+.matchup-chip-open .matchup-chip-face img {
+  border: 2px dashed #ffffff55;
+  filter: grayscale(1);
+  opacity: 0.62;
+}
+.matchup-chip-check {
+  position: absolute;
+  right: -3px;
+  bottom: -3px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: #ffd166;
+  color: #221607;
+  font-size: 11px;
+  font-weight: 900;
+  line-height: 1;
+}
+.matchup-chip-name {
+  white-space: nowrap;
+}
+.matchup-chip-cleared .matchup-chip-name {
+  color: #ffe6a3;
+  font-weight: 700;
+}
+.matchup-chip-open .matchup-chip-name {
+  color: #8a8fa8;
+}
+
+/* 1 柱以上で撃破した敵だけ数を金にする（0/7 を強調して「埋める作業」に見せない） */
+.matchup-enemy-count-some {
+  color: #ffd166;
+}
+
+/* 神選択カード：自己ベスト行の末尾に「撃破 k/7 敵」 */
+.god-select-matchup {
+  font-weight: 700;
+  color: #c9cbe0;
+}
+
+/* 敵選択カード：この神で撃破済みか（✓＋文字。表示のみ） */
+.enemy-select-matchup {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  z-index: 2;
+  max-width: calc(100% - 16px);
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 1.5;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  pointer-events: none;
+}
+.enemy-select-matchup-cleared {
+  border: 1px solid #ffd166;
+  background: #221607e6;
+  color: #ffe6a3;
+}
+.enemy-select-matchup-open {
+  border: 1px dashed #ffffff55;
+  background: #0b0d17d9;
+  color: #c9cbe0;
+}
+
+/* 戦績画面の横はみ出し修正（Production 既知不具合）：神域挑戦の表は表の中だけで横スクロールさせ、
+   ページ全体を 390px に収める。戦績画面にだけ効くよう .record-screen に限定する */
+.record-screen {
+  min-width: 0;
+}
+.record-screen .record-daily {
+  min-width: 0;
+  max-width: 100%;
+}

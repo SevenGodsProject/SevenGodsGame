@@ -19,6 +19,8 @@ import { selectNextGoal, type NextGoal } from './nextGoal'
 import { describeDailyDiff } from './dailyDiff'
 import { exitLabel, planResultExits, type ResultExit } from './resultHub'
 import type { ResultTransitionAction } from '../resultTransitions'
+import type { MatchupClearResult } from '../../hooks/matchupStorage'
+import { describeMatchupClear } from './matchupCelebration'
 
 const STATUS_LABEL: Record<Exclude<GameStatus, 'playing'>, string> = {
   won: '勝利',
@@ -93,6 +95,8 @@ type GameOverOverlayProps = {
   onResultExit: (action: ResultTransitionAction) => void
   /** Phase 7 P1：「次の目標」と神域挑戦の前回比較の入力（BattleScreen が決着時の値を読み取って渡す） */
   context: ResultContext | null
+  /** Phase 7 P2（決定189）：この勝利の神×敵の攻略記録。初めて点灯したときだけ 1 行出す（null なら出さない） */
+  matchupClear?: MatchupClearResult | null
   /**
    * DAILY-01：神域挑戦の決着なら「今日のベスト」の情報（更新したか・更新前・残り回数）。
    * 通常モードではnull/省略。通常の自己ベスト表示（newBest/prevBest）とは独立
@@ -128,6 +132,7 @@ export function GameOverOverlay({
   onReselect,
   onResultExit,
   context,
+  matchupClear = null,
   daily = null,
   rematchLabel,
   rematchDisabled = false,
@@ -235,7 +240,10 @@ export function GameOverOverlay({
     <div className="game-over-overlay">
       {/* 決定64：勝敗・未撃破で装飾トーンを分ける（status別クラス）。文字色だけでなく
           カード枠・ボタン装飾も変えることで、文字を読まなくても感覚的に区別できるようにする */}
-      <div className={`game-over-card game-over-card-${status}`} data-testid="result-card">
+      <div
+        className={`game-over-card game-over-card-${status}${status === 'won' && describeMatchupClear(matchupClear) ? ' game-over-card-matchup' : ''}`}
+        data-testid="result-card"
+      >
         <div className={`game-over-status game-over-status-${status}`}>{STATUS_LABEL[status]}</div>
         {showEnemyHp && (
           <div className="game-over-enemy-hp">
@@ -290,6 +298,13 @@ export function GameOverOverlay({
         {/* 決定128：「自己ベスト更新」は勝利時のみ祝う（敗北で初記録が付いても祝わない） */}
         {newBest && status === 'won' && <div className="game-over-new-best">✨ 自己ベスト更新！</div>}
         {bestGap !== null && <div className="game-over-best-gap">自己ベストまであと{formatScaled(bestGap)}点</div>}
+        {/* Phase 7 P2（決定189・仕様 §9）：神×敵の初撃破を 1 行だけ。勝利で初めて点灯したときのみ。
+            報酬・ポップアップ・演出は伴わない。Result Hub（次の目標・出口）の規則には影響しない */}
+        {status === 'won' && describeMatchupClear(matchupClear) && (
+          <div className="game-over-matchup" data-testid="matchup-clear">
+            {describeMatchupClear(matchupClear)}
+          </div>
+        )}
         {/* Phase 7 P1（決定187・仕様 §9）：神域挑戦は「今日のベスト」軸と「前回」軸の 2 行。
             旧表示の「ベスト未記録なのに同点」は describeDailyDiff 側で出さない */}
         {daily && (

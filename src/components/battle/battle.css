@@ -6082,3 +6082,45 @@ body.battle-viewport .battle-main > .battle-callout {
     height: 52px;
   }
 }
+
+/* ============================================================
+   Phase 7 P2（決定189）：神×敵の初撃破（結果画面の 1 行）
+   ------------------------------------------------------------
+   自己ベスト更新と同じ視覚言語（金・13px・太字）。新しい演出は作らず、
+   勝利のステージングも自己ベスト行と同じ段（1.4s）に揃える。
+   ============================================================ */
+.game-over-matchup {
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1.45;
+  color: #ffd166;
+  text-align: center;
+}
+.game-over-card-won .game-over-matchup {
+  animation: result-rise 0.5s ease-out both;
+  animation-delay: 1.4s;
+}
+@media (prefers-reduced-motion: reduce) {
+  .game-over-card-won .game-over-matchup {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* 初撃破の 1 行が出るときだけ、高さの低い画面（PC 1508×660・SP 390×760 など）で勝利の肖像を小さくし、
+   増えた高さ（行 19px＋間隔 8px）を相殺する。P1 の Result Hub（次の目標・Primary・Secondary）の位置を
+   P2 導入前と同じに保つため。1 行が出ない結果画面には一切影響しない */
+@media (max-height: 780px) {
+  .game-over-card-matchup .game-over-portrait-god {
+    width: 56px;
+    height: 56px;
+  }
+  .game-over-card-matchup .game-over-portrait-otomo {
+    width: 40px;
+    height: 40px;
+  }
+  .game-over-card-matchup .game-over-matchup {
+    margin-top: -4px;
+  }
+}

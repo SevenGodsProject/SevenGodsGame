@@ -84,6 +84,7 @@ export function BattleScreen({
     otomoBondChange,
     dailyResult,
     stakeResult,
+    matchupClear,
     battleStartKey,
     playCard,
     endRound,
@@ -602,6 +603,7 @@ export function BattleScreen({
           onReselect={onReselect}
           onResultExit={onResultExit}
           context={collectResultContext(state, { newBest, prevBest, stakeResult, dailyResult, otomoBondChange })}
+          matchupClear={matchupClear}
           daily={state.mode === 'daily' ? dailyResult : null}
           stakeResult={stakeResult}
           shareState={state}

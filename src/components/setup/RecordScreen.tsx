@@ -11,6 +11,7 @@ import { formatScaled } from '../displayScale'
 import { ARCHETYPE_LABEL } from './godStyle'
 import './setup.css'
 import './daily.css'
+import { MatchupBoard } from './MatchupBoard'
 
 type RecordScreenProps = {
   onBack: () => void
@@ -47,11 +48,14 @@ export function RecordScreen({ onBack }: RecordScreenProps) {
   // DAILY-01：神域挑戦の直近7日。通常モードの神別自己ベストとは別のkeyから読む（混ぜない）
   const dailyDays = loadRecentDailyDays(7)
   return (
-    <div className="setup-screen">
+    <div className="setup-screen record-screen">
       <h1 className="setup-title">戦績</h1>
       <p className="setup-subtitle">
         神ごとの自己ベストと対局数です（この端末に保存された記録の表示のみ。ランキングやオンライン通信はありません）。
       </p>
+
+      {/* Phase 7 P2（決定189）：神×敵の攻略状況。既存の神域挑戦・神ごとの戦績はこの下にそのまま残す */}
+      <MatchupBoard />
 
       <section className="record-daily" aria-label="神域挑戦の記録">
         <h2 className="record-daily-title">神域挑戦（直近7日）</h2>

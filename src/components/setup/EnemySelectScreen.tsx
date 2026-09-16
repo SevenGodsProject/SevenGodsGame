@@ -1,5 +1,8 @@
-import type { EnemyId } from '../../core/types'
+import { useState } from 'react'
+import type { EnemyId, GodId } from '../../core/types'
 import { ENEMIES } from '../../core/data/enemies'
+import { GODS } from '../../core/data/gods'
+import { isMatchupCleared, loadMatchups } from '../../hooks/matchupStorage'
 import './setup.css'
 
 /**
@@ -29,6 +32,8 @@ type EnemySelectScreenProps = {
   onSelect: (enemyId: EnemyId | null) => void
   /** 神選択（難易度）へ戻る */
   onBack: () => void
+  /** Phase 7 P2（決定189）：いま選んでいる神。各敵カードに「この神で撃破済み／未撃破」を出す（無ければ出さない） */
+  godId?: GodId | null
 }
 
 /**
@@ -44,7 +49,10 @@ type EnemySelectScreenProps = {
  * カード縁色には`stage.accent`を使い、敵の性格を色で予感させる
  * （Stage systemアーキテクチャの最初の利用箇所。Battle側は注入のみ）。
  */
-export function EnemySelectScreen({ onSelect, onBack }: EnemySelectScreenProps) {
+export function EnemySelectScreen({ onSelect, onBack, godId = null }: EnemySelectScreenProps) {
+  // Phase 7 P2（決定189）：神×敵の攻略状況はマウント時に 1 回だけ読む（読めない環境では印を出さない）
+  const [matchups] = useState(() => (godId ? loadMatchups() : null))
+  const godName = godId ? (GODS.find((g) => g.id === godId)?.nameJa ?? '') : ''
   return (
     <div className="setup-screen">
       <h1 className="setup-title">挑む敵を選ぼう</h1>
@@ -71,6 +79,18 @@ export function EnemySelectScreen({ onSelect, onBack }: EnemySelectScreenProps) 
             }}
             onClick={() => onSelect(enemy.id)}
           >
+            {/* Phase 7 P2（決定189）：この神でこの敵を倒したか。✓ と文字で示す（色だけにしない）。表示のみ */}
+            {godId && matchups?.available && (
+              isMatchupCleared(matchups.data, godId, enemy.id) ? (
+                <span className="enemy-select-matchup enemy-select-matchup-cleared" data-testid="enemy-matchup" data-cleared="true">
+                  ✓ {godName}で撃破済み
+                </span>
+              ) : (
+                <span className="enemy-select-matchup enemy-select-matchup-open" data-testid="enemy-matchup" data-cleared="false">
+                  {godName}では未撃破
+                </span>
+              )
+            )}
             {/* VISUAL POLISH：カード上部＝戦場visual area。Stage背景（fallback=
                 accentグラデ）の上に敵artを大きく立たせ、「誰と戦うのか」を
                 最初に目に入れる。下部infoの可読性はoverlayグラデで守る。

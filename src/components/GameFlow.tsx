@@ -274,6 +274,7 @@ export function GameFlow({ onShowTutorial, onSnapshotChange }: GameFlowProps) {
       if (setupScreen === 'enemySelect' && godId) {
         return (
           <EnemySelectScreen
+            godId={godId}
             onSelect={(enemyId) => {
               setSelectedEnemyId(enemyId)
               setSetupScreen('deckBuild')

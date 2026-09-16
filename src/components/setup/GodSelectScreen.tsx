@@ -4,6 +4,7 @@ import { StakeSelector } from './StakeSelector'
 import { GODS } from '../../core/data/gods'
 import { getOtomoDef } from '../../core/data/otomo'
 import { loadGodRecord } from '../../hooks/recordStorage'
+import { countMatchupsByGod, loadMatchups, MATCHUP_ENEMIES } from '../../hooks/matchupStorage'
 import { MASTERY_SELECT_HINT } from '../battle/masteryDisplay'
 import { formatScaled } from '../displayScale'
 import {
@@ -149,13 +150,18 @@ export function GodSelectScreen({
   // マウント時点のスナップショットになるが、この画面自体がバトル終了→選び直しの
   // たびに再マウントされる（GameFlowが条件分岐でコンポーネントを切り替えるため）ので、
   // 常に最新の戦績が表示される。
-  const { statsByGodId, maxStats, specialNoteByGodId, archetypeCounts, recordByGodId } = useMemo(() => {
+  const { statsByGodId, maxStats, specialNoteByGodId, archetypeCounts, recordByGodId, matchupCountByGodId } = useMemo(() => {
     const entries = GODS.map((god) => [god.id, computeGodStats(god, getOtomoDef(god.otomoId))] as const)
     const statsByGodId = new Map(entries)
     const specialNoteByGodId = new Map(
       GODS.map((god) => [god.id, describeSpecial(god, getOtomoDef(god.otomoId))] as const),
     )
     const recordByGodId = new Map(GODS.map((god) => [god.id, loadGodRecord(god.id)] as const))
+    // Phase 7 P2（決定189）：その神で撃破した敵の数（神×敵の攻略）。読めない環境では出さない
+    const matchups = loadMatchups()
+    const matchupCountByGodId = matchups.available
+      ? new Map(GODS.map((god) => [god.id, countMatchupsByGod(matchups.data, god.id)] as const))
+      : null
     const maxStats: GodStats = { attack: 0, defense: 0, heal: 0, special: 0 }
     for (const [, stats] of entries) {
       maxStats.attack = Math.max(maxStats.attack, stats.attack)
@@ -163,7 +169,7 @@ export function GodSelectScreen({
       maxStats.heal = Math.max(maxStats.heal, stats.heal)
       maxStats.special = Math.max(maxStats.special, stats.special)
     }
-    return { statsByGodId, maxStats, specialNoteByGodId, archetypeCounts: countGodsByArchetype(GODS), recordByGodId }
+    return { statsByGodId, maxStats, specialNoteByGodId, archetypeCounts: countGodsByArchetype(GODS), recordByGodId, matchupCountByGodId }
   }, [])
 
   return (
@@ -290,10 +296,24 @@ export function GodSelectScreen({
                   {/* STEP-SCORE2-D-PROTO：新スコア式のベスト（bestBattleScore）を優先表示。
                       新式の記録がまだ無ければ旧記録を暫定表示する（勝数は共通） */}
                   {/* D2b：新式ベストは表示×10。旧形式のみの場合は当時のスケールのまま */}
-                  {(record.bestBattleScore > 0 || record.bestScore > 0) && (
+                  {(record.bestBattleScore > 0 || record.bestScore > 0) ? (
                     <div className="god-select-record">
                       自己ベスト {record.bestBattleScore > 0 ? formatScaled(record.bestBattleScore) : record.bestScore}（{record.wins}勝）
+                      {/* Phase 7 P2（決定189）：その神で撃破した敵の数（神×敵の攻略） */}
+                      {matchupCountByGodId && (
+                        <span className="god-select-matchup" data-testid="god-matchup-count">
+                          ・撃破 {matchupCountByGodId.get(god.id) ?? 0}/{MATCHUP_ENEMIES.length} 敵
+                        </span>
+                      )}
                     </div>
+                  ) : (
+                    matchupCountByGodId && (
+                      <div className="god-select-record">
+                        <span className="god-select-matchup" data-testid="god-matchup-count">
+                          撃破 {matchupCountByGodId.get(god.id) ?? 0}/{MATCHUP_ENEMIES.length} 敵
+                        </span>
+                      </div>
+                    )
                   )}
                   <GodStatBars stats={stats} max={maxStats} specialNote={specialNoteByGodId.get(god.id) ?? null} />
                 </button>

@@ -17,6 +17,7 @@ import { resolveStartEnemyId } from './startEnemy'
 import { clearBattleSave, saveBattle } from './battleSaveStorage'
 import { recordGameResult } from './recordStorage'
 import { recordOtomoBond, type OtomoBondRecord } from './otomoBondStorage'
+import { recordMatchupClear, type MatchupClearResult } from './matchupStorage'
 import { recordDailyResult, startDailyAttempt, type DailyRecordResult } from './dailyStorage'
 import { resolveDailyStart } from './startDaily'
 import { applyAndRecord, resumeRunLog, toReplayInput, type DailyRunLog } from '../core/replay'
@@ -135,6 +136,11 @@ export type UseGameEngine = {
    */
   stakeResult: StakeResultOutcome | null
   /**
+   * Phase 7 P2（決定189）：直近の決着の神×敵の攻略記録（勝利時のみ。敗北・未撃破・記録不可では null）。
+   * 結果画面の「初撃破」1 行に使う（表示専用）
+   */
+  matchupClear: MatchupClearResult | null
+  /**
    * 決定128：新規開始（startGame／startDailyGame）ごとに増える。「続きから」では増えない。
    * BattleScreen が Boss Entrance を出す条件に使う（表示専用）
    */
@@ -173,6 +179,7 @@ export function useGameEngine(): UseGameEngine {
   } | null>(null)
   const [dailyResult, setDailyResult] = useState<DailyRecordResult | null>(null)
   const [stakeResult, setStakeResult] = useState<StakeResultOutcome | null>(null)
+  const [matchupClear, setMatchupClear] = useState<MatchupClearResult | null>(null)
   const [battleStartKey, setBattleStartKey] = useState(0)
   /**
    * Phase 4.2：Daily実プレイの行動ログ。
@@ -202,6 +209,11 @@ export function useGameEngine(): UseGameEngine {
       if (runLog) saveRunLog(runLog)
     } else {
       clearBattleSave()
+      // Phase 7 P2（決定189）：神×敵の攻略記録（勝利のときだけ点灯。通常・神域挑戦の共通点）。
+      // ★Daily の記録（recordDailyResult）より先に呼ぶ：`sevengods.matchups` が無いときの初回取り込みは
+      // daily の勝利を読むので、後に呼ぶと今回の勝利が「過去の勝利」として先に取り込まれ、初撃破を祝えない。
+      // 勝敗・他の記録には触れず、例外も外へ出さない（matchupStorage 側で保証）
+      setMatchupClear(recordMatchupClear(result.state))
       if (result.state.mode === 'daily') {
         // Phase 4.2：決着したDaily runは送信待ちへ控える（送信はPhase 4.3）。
         // 未完走runはこの経路を通らないため、そもそも提出対象にならない。
@@ -285,6 +297,7 @@ export function useGameEngine(): UseGameEngine {
       setNewBest(false)
       setPrevBest(0)
       setOtomoBondChange(null)
+      setMatchupClear(null)
       setStakeResult(null)
       // Phase 4.2：通常モードは記録対象外。進行中のDailyログが残っていれば捨てる
       runLogRef.current = null
@@ -328,6 +341,7 @@ export function useGameEngine(): UseGameEngine {
       setNewBest(false)
       setPrevBest(0)
       setOtomoBondChange(null)
+      setMatchupClear(null)
       setDailyResult(null)
     setStakeResult(null)
       setStakeResult(null)
@@ -391,6 +405,7 @@ export function useGameEngine(): UseGameEngine {
     setNewBest(false)
     setPrevBest(0)
     setOtomoBondChange(null)
+    setMatchupClear(null)
     setDailyResult(null)
     setStakeResult(null)
     // Phase 4.2 Step 7：中断・再開でDailyの行動ログを失わない。
@@ -423,6 +438,7 @@ export function useGameEngine(): UseGameEngine {
     setNewBest(false)
     setPrevBest(0)
     setOtomoBondChange(null)
+    setMatchupClear(null)
     setDailyResult(null)
     setStakeResult(null)
   }, [])
@@ -438,6 +454,7 @@ export function useGameEngine(): UseGameEngine {
     otomoBondChange,
     dailyResult,
     stakeResult,
+    matchupClear,
     battleStartKey,
     dailyRunLogAvailable,
     startDailyGame,
