@@ -189,3 +189,34 @@ export function detectOtomoLevelUp(
   const nextLevel = computeOtomoGrowthDisplay(nextRecord).level
   return nextLevel > prevLevel ? { prevLevel, nextLevel } : null
 }
+
+export type NextBondGoal = {
+  /** 次に得られる絆称号 */
+  title: string
+  /** 称号に必要な残り pt（0 ならポイント条件は満たしている） */
+  pointsNeeded: number
+  /** 童子形態での対局終了がまだ 1 回も無く、称号の条件に含まれる */
+  needsDoji: boolean
+}
+
+/**
+ * Phase 7 P1（決定187）：結果画面の「次の目標」用に、次の絆称号までの距離を数値で返す。
+ * `computeNextUnlockText`（OTOMO 画面の文言）と同じ境界（Lv3・Lv5＋童子）で計算し、
+ * 表示文字列ではなく数値を返す（結果画面側で「近いときだけ」目標に採用するため）。
+ * 未対局（tier0）と最終称号（tier3）は null。
+ */
+export function computeNextBondGoal(record: OtomoBondRecord): NextBondGoal | null {
+  const display = computeOtomoGrowthDisplay(record)
+  const { level, pointsInLevel, bondTier } = display
+  if (bondTier === 1) {
+    return { title: BOND_TIER_TITLE[2], pointsNeeded: Math.max(0, (3 - level) * POINTS_PER_LEVEL - pointsInLevel), needsDoji: false }
+  }
+  if (bondTier === 2) {
+    return {
+      title: BOND_TIER_TITLE[3],
+      pointsNeeded: Math.max(0, (5 - level) * POINTS_PER_LEVEL - pointsInLevel),
+      needsDoji: record.dojiReached === 0,
+    }
+  }
+  return null
+}

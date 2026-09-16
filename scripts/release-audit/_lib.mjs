@@ -24,6 +24,42 @@ export function clickText(page, text) {
   }, text)
 }
 
+/**
+ * Home の「続きから」ボタンの文言（無ければ null）。
+ * Phase 7 P1（決定187）でボタンが .home-cta-secondary → 最上位の .home-cta-primary に移ったため、
+ * クラスではなく文言で探す（リリース前後どちらのビルドにも同じスクリプトで使える）。
+ */
+export function resumeLabel(page) {
+  return page.evaluate(() => {
+    const el = [...document.querySelectorAll('.home-screen button')].find((b) => b.textContent.trim().startsWith('続きから'))
+    return el ? el.textContent.trim() : null
+  })
+}
+
+/** Home の「続きから」を押す（無ければ false） */
+export function clickResume(page) {
+  return page.evaluate(() => {
+    const el = [...document.querySelectorAll('.home-screen button')].find((b) => b.textContent.trim().startsWith('続きから'))
+    if (!el) return false
+    el.click()
+    return true
+  })
+}
+
+/**
+ * Home から神域挑戦画面を開く。P1 以前は「今日の神域挑戦 ★★★★★」ボタン、
+ * P1 以後は Today パネルの挑戦ボタン（data-testid="home-today-cta"）。
+ */
+export async function openDailyFromHome(page) {
+  if (await clickText(page, '今日の神域挑戦')) return true
+  return page.evaluate(() => {
+    const el = document.querySelector('[data-testid="home-today-cta"]')
+    if (!el) return false
+    el.click()
+    return true
+  })
+}
+
 /** ネットワーク・エラー監視を付ける（同一オリジン以外／api／ranking を全部数える） */
 export function watch(page, base) {
   const rec = { requests: [], external: [], api: [], failed: [], errors: [] }

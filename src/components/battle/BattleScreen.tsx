@@ -38,6 +38,8 @@ import { PlayerPanel } from './PlayerPanel'
 import { GodOtomoPanel } from './GodOtomoPanel'
 import { GameOverOverlay } from './GameOverOverlay'
 import { RewardOverlay } from './RewardOverlay'
+import { collectResultContext } from './resultContext'
+import type { ResultTransitionAction } from '../resultTransitions'
 import { DivinationPanel } from './DivinationPanel'
 import { formatEvent } from './formatEvent'
 import './battle.css'
@@ -49,6 +51,8 @@ type BattleScreenProps = {
   onRematch: () => void
   /** 決着後、神選択からやり直す */
   onReselect: () => void
+  /** Phase 7 P1（決定187）：結果画面の新しい出口（デッキを調整／今日の神域挑戦へ／ホームへ 等） */
+  onResultExit: (action: ResultTransitionAction) => void
   /** DAILY-01：神域挑戦時の「もう一度」ボタンの文言・無効化（残り回数）。通常モードでは省略 */
   rematchLabel?: string
   rematchDisabled?: boolean
@@ -65,6 +69,7 @@ export function BattleScreen({
   engine,
   onRematch,
   onReselect,
+  onResultExit,
   rematchLabel,
   rematchDisabled,
 }: BattleScreenProps) {
@@ -595,6 +600,8 @@ export function BattleScreen({
           mastery={getMastery(state)}
           onRematch={onRematch}
           onReselect={onReselect}
+          onResultExit={onResultExit}
+          context={collectResultContext(state, { newBest, prevBest, stakeResult, dailyResult, otomoBondChange })}
           daily={state.mode === 'daily' ? dailyResult : null}
           stakeResult={stakeResult}
           shareState={state}

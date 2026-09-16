@@ -149,3 +149,43 @@ export function describeMastery(mastery: MasteryResult, godId: GodId): MasteryDi
     hint: copy.overrideHint?.(mastery) ?? copy.hint,
   }
 }
+
+export type MasteryNextStep = {
+  rank: MasteryGrade
+  word: string
+  /** 今回の raw（0〜1） */
+  raw: number
+  /** 次ランクの下限（0〜1） */
+  threshold: number
+  /** threshold − raw（0 より大きい） */
+  gap: number
+}
+
+/**
+ * Phase 7 P1（決定187）：結果画面の「次の目標」用に、次ランクとその閾値を返す。
+ *
+ * 次の場合は null（＝「次の目標」の候補にしない）：
+ * - 神技の無い神／既に S
+ * - 条件（ゲート）が満たせていないため raw を上げてもランクが上がらない
+ *   （福永の評価対象外・寿楽の「かんたん」上限 A・寿楽の A→S ゲート未達）
+ * - raw が既に閾値以上なのに上がっていない（ゲート由来。距離が 0 以下で目標にならない）
+ *
+ * 閾値は `describeMastery` と同じ `RULES.mastery`（MASTERY_COPY 経由）を使い、別定義を作らない。
+ */
+export function nextMasteryStep(mastery: MasteryResult, godId: GodId): MasteryNextStep | null {
+  const copy = MASTERY_COPY[godId]
+  if (!copy) return null
+  if (mastery.riskGateMet === false) return null
+  if (mastery.easyCapped) return null
+  if (godId === GOD_IDS.juraku && mastery.grade === 'A' && !mastery.sGateMet) return null
+  const next = nextRank(mastery.grade, copy.thresholds)
+  if (!next) return null
+  const gap = next.threshold - mastery.raw
+  if (gap <= 0) return null
+  return { rank: next.rank, word: MASTERY_GRADE_WORD[next.rank], raw: mastery.raw, threshold: next.threshold, gap }
+}
+
+/** 0〜1 の値を「55%」表記にする（`describeMastery` と同じ丸め） */
+export function formatMasteryPercent(value: number): string {
+  return pct(value)
+}

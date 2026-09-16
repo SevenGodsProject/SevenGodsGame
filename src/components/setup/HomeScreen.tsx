@@ -1,5 +1,7 @@
 import type { GameState } from '../../core/types'
 import { GODS } from '../../core/data/gods'
+import { getEnemyDef } from '../../core/data/enemies'
+import { HomeProgressRow, HomeTodayPanel } from './HomeTodayPanel'
 import { ARCHETYPE_LABEL } from './godStyle'
 import { BookIcon, HeartIcon, TrophyIcon } from '../icons'
 import './setup.css'
@@ -62,6 +64,9 @@ export function HomeScreen({
 }: HomeScreenProps) {
   const savedGod = savedBattle ? GODS.find((g) => g.id === savedBattle.godId) : undefined
   const savedIsDaily = savedBattle?.mode === 'daily'
+  // Phase 7 P1（決定187）：続きがあるときは「続きから」をページ最上位の Primary にし、相手の敵名も出す
+  const savedEnemyName = savedBattle ? getEnemyDef(savedBattle.enemy.defId).name : ''
+  const canResume = !!(savedBattle && savedGod)
 
   return (
     <div className="home-screen">
@@ -74,35 +79,44 @@ export function HomeScreen({
           <p className="home-genre-label">共鳴カードバトル</p>
           <p className="home-tagline">七柱の神と挑む、七日間の物語。</p>
 
-          <div className="home-cta-row">
-            <button type="button" className="home-cta-primary" onClick={onStartFresh}>
-              神を選ぶ
-            </button>
-            {savedBattle && savedGod && (
-              <button type="button" className="home-cta-secondary" onClick={onResume}>
-                続きから（{savedIsDaily ? '神域挑戦・' : ''}
-                {savedGod.nameJa}・ラウンド{savedBattle.round}）
+          {/* Phase 7 P1（決定187・仕様 §8）：続き（ある時）→ 神を選ぶ → 今日の神域挑戦 → 進行 → リンク */}
+          <div className={`home-cta-row${canResume ? ' home-cta-row-resume' : ''}`}>
+            {canResume && savedBattle && savedGod && (
+              <button type="button" className="home-cta-primary home-cta-resume" data-testid="home-resume" onClick={onResume}>
+                <span className="home-cta-resume-label">続きから</span>
+                <span className="home-cta-resume-detail">
+                  {savedIsDaily ? '神域挑戦・' : ''}
+                  {savedGod.nameJa} vs {savedEnemyName}・ラウンド{savedBattle.round}
+                </span>
               </button>
             )}
-          </div>
-          <div className="home-cta-row">
-            <button type="button" className="home-cta-daily" onClick={onShowDaily}>
-              今日の神域挑戦 <span className="daily-stars">★★★★★</span>
+            <button
+              type="button"
+              className={canResume ? 'home-cta-secondary' : 'home-cta-primary'}
+              data-testid="home-start"
+              onClick={onStartFresh}
+            >
+              神を選ぶ
             </button>
           </div>
 
-          <button type="button" className="home-howto-button" onClick={onShowTutorial}>
-            <BookIcon className="home-howto-icon" />
-            遊び方を見る
-          </button>
-          <button type="button" className="home-howto-button" onClick={onShowOtomoGrowth}>
-            <HeartIcon className="home-howto-icon" />
-            OTOMOとの絆を見る
-          </button>
-          <button type="button" className="home-howto-button" onClick={onShowRecord}>
-            <TrophyIcon className="home-howto-icon" />
-            戦績を見る
-          </button>
+          <HomeTodayPanel onOpenDaily={onShowDaily} />
+          <HomeProgressRow />
+
+          <div className="home-links">
+            <button type="button" className="home-howto-button" onClick={onShowTutorial}>
+              <BookIcon className="home-howto-icon" />
+              遊び方を見る
+            </button>
+            <button type="button" className="home-howto-button" onClick={onShowOtomoGrowth}>
+              <HeartIcon className="home-howto-icon" />
+              OTOMOとの絆を見る
+            </button>
+            <button type="button" className="home-howto-button" onClick={onShowRecord}>
+              <TrophyIcon className="home-howto-icon" />
+              戦績を見る
+            </button>
+          </div>
         </div>
 
         <div className="home-portrait-card">

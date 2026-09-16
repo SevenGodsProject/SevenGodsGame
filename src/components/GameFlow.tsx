@@ -19,6 +19,7 @@ import { RecordScreen } from './setup/RecordScreen'
 import { DailyChallengeScreen } from './setup/DailyChallengeScreen'
 import { BattleScreen } from './battle/BattleScreen'
 import { ConfirmDialog } from './ConfirmDialog'
+import { planResultTransition, type ResultTransitionAction } from './resultTransitions'
 import './setup/daily.css'
 import './polish.css'
 
@@ -166,6 +167,51 @@ export function GameFlow({ onShowTutorial, onSnapshotChange }: GameFlowProps) {
   const goHome = () => {
     setDailyKey(null)
     setSetupScreen('home')
+  }
+
+  /**
+   * Phase 7 P1（決定187）：結果画面の新しい出口（デッキを調整／今日の神域挑戦へ／ホームへ／
+   * 神を選ぶ（通常攻略）／戦績を見る）。遷移先と引き継ぎは `planResultTransition` が決め、
+   * ここは `engine.resetGame()` と setState を行うだけ。
+   *
+   * ★神域挑戦の回数はここでは一切消費しない。デッキ調整から戻った先の「開始」は
+   * 既存の `beginDailyChallenge`（→ `startDailyGame`）を通る。
+   * ★「続きから」で再開した対局はホーム画面のまま始まるため、ホームへ直行すると
+   * `setupScreen` が変わらず保存状態の再読込（上の useEffect）が走らない。決着時に消えた
+   * セーブが「続きから」として残らないよう、ここで明示的に読み直す。
+   */
+  const exitResult = (action: ResultTransitionAction) => {
+    const finished = engine.state
+    if (!finished) return
+    const plan = planResultTransition(action, {
+      mode: finished.mode === 'daily' ? 'daily' : 'normal',
+      dailyKey,
+      todayKey: todayDailyKey(),
+      dailyAttemptsLeft: dailyKey ? dailyAttemptsLeft(dailyKey) : 0,
+      lastBattle: {
+        enemyId: finished.enemy.defId,
+        stake: finished.stake ?? 0,
+        stakeChoice: finished.stakeChoice ?? null,
+        difficulty: finished.difficulty,
+        otomoGrowthPath: finished.otomoGrowthPath,
+      },
+    })
+    engine.resetGame()
+    if (plan.carry) {
+      setSelectedEnemyId(plan.carry.enemyId)
+      setStake(plan.carry.stake)
+      setStakeChoice(plan.carry.stakeChoice)
+      setDifficulty(plan.carry.difficulty)
+      setOtomoGrowthPath(plan.carry.otomoGrowthPath)
+    }
+    if (plan.clearSelection) {
+      setGodId(null)
+      setDeck(null)
+      setSelectedEnemyId(null)
+    }
+    if (plan.dailyKey === null) setDailyKey(null)
+    setSavedBattle(loadResumableBattle())
+    setSetupScreen(plan.screen)
   }
 
   const screen = (() => {
@@ -324,6 +370,7 @@ export function GameFlow({ onShowTutorial, onSnapshotChange }: GameFlowProps) {
           )
         }}
         onReselect={backToGodSelect}
+        onResultExit={exitResult}
       />
     )
   })()

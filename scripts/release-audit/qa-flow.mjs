@@ -9,7 +9,7 @@
 // を通し、全リクエストを記録して「/api/・ranking・外部オリジンへの通信が 0」を機械で確かめる。
 import { mkdirSync, writeFileSync } from 'node:fs'
 import { join } from 'node:path'
-import { loadChromium, VIEWPORTS, clickText, watch, gotoHome, BATTLE_METRICS, RESULT_METRICS, playToEnd, dumpStorage } from './_lib.mjs'
+import { loadChromium, VIEWPORTS, clickText, watch, gotoHome, BATTLE_METRICS, RESULT_METRICS, playToEnd, dumpStorage, openDailyFromHome, resumeLabel, clickResume } from './_lib.mjs'
 
 const args = process.argv.slice(2)
 const outJson = args[0] ?? 'release-audit-qa.json'
@@ -71,9 +71,9 @@ for (const [id, vp] of Object.entries(VIEWPORTS)) {
   await page.goto(base + '/?enemy=oni&seed=rc-audit', { waitUntil: 'load' })
   await page.waitForSelector('.home-cta-primary', { timeout: 30000 })
   await page.waitForTimeout(500)
-  R.A.resumeButton = await page.evaluate(() => document.querySelector('.home-cta-secondary')?.textContent.trim() ?? null)
+  R.A.resumeButton = await resumeLabel(page)
   await shot('a07-home-resume')
-  await page.evaluate(() => document.querySelector('.home-cta-secondary')?.click())
+  await clickResume(page)
   await page.waitForSelector('.hand .card-view', { timeout: 15000 })
   await page.waitForTimeout(800)
   R.A.resumed = await page.evaluate('(' + BATTLE_METRICS + ')()')
@@ -91,11 +91,11 @@ for (const [id, vp] of Object.entries(VIEWPORTS)) {
     await shot('a12-after-reward')
   }
   await gotoHome(page, base)
-  R.A.homeAfter = await page.evaluate(() => ({ home: !!document.querySelector('.home-cta-primary'), resume: document.querySelector('.home-cta-secondary')?.textContent.trim() ?? null }))
+  R.A.homeAfter = await page.evaluate(() => ({ home: !!document.querySelector('.home-cta-primary'), resume: [...document.querySelectorAll('.home-screen button')].find((b) => b.textContent.trim().startsWith('続きから'))?.textContent.trim() ?? null }))
 
   // ---- B) 神域挑戦 ----
   await gotoHome(page, base)
-  await clickText(page, '今日の神域挑戦'); await page.waitForTimeout(900)
+  await openDailyFromHome(page); await page.waitForTimeout(900)
   R.B.screen = await page.evaluate(() => ({
     startLabel: document.querySelector('.home-cta-primary')?.textContent.trim() ?? null,
     text: document.body.textContent.replace(/\s+/g, ' ').slice(0, 400),
@@ -122,7 +122,7 @@ for (const [id, vp] of Object.entries(VIEWPORTS)) {
   R.B.result = await page.evaluate('(' + RESULT_METRICS + ')()')
   await shot('b04-daily-result')
   await gotoHome(page, base)
-  await clickText(page, '今日の神域挑戦'); await page.waitForTimeout(900)
+  await openDailyFromHome(page); await page.waitForTimeout(900)
   R.B.after = await page.evaluate(() => ({ startLabel: document.querySelector('.home-cta-primary')?.textContent.trim() ?? null }))
   await shot('b05-daily-after')
   await clickText(page, 'ホームへ戻る'); await page.waitForTimeout(500)

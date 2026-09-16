@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { computeOtomoGrowthDisplay, computeSevenBondSummary, detectOtomoLevelUp } from './otomoGrowthDisplay'
+import { computeNextBondGoal, computeOtomoGrowthDisplay, computeSevenBondSummary, detectOtomoLevelUp } from './otomoGrowthDisplay'
 import type { OtomoBondRecord } from '../../hooks/otomoBondStorage'
 
 function record(overrides: Partial<OtomoBondRecord> = {}): OtomoBondRecord {
@@ -187,5 +187,33 @@ describe('detectOtomoLevelUp', () => {
     const prev = record()
     const next = record({ battlesPlayed: 1, resonanceCount: 0 })
     expect(detectOtomoLevelUp(prev, next)).toBeNull()
+  })
+})
+
+describe('computeNextBondGoal（Phase 7 P1）', () => {
+  it('未対局と最終称号は null', () => {
+    expect(computeNextBondGoal(record())).toBeNull()
+    expect(computeNextBondGoal(record({ battlesPlayed: 20, resonanceCount: 12, dojiReached: 1 }))).toBeNull()
+  })
+
+  it('tier1：Lv3（6pt）までの残り pt。OTOMO 画面の「あとNpt」と一致する', () => {
+    const rec = record({ battlesPlayed: 3, resonanceCount: 4 })
+    const goal = computeNextBondGoal(rec)
+    expect(goal).toEqual({ title: '息の合った相棒', pointsNeeded: 2, needsDoji: false })
+    expect(computeOtomoGrowthDisplay(rec).nextUnlockText).toContain('あと2pt')
+  })
+
+  it('tier2：Lv5（12pt）までの残り pt と、童子到達が必要か', () => {
+    expect(computeNextBondGoal(record({ battlesPlayed: 9, resonanceCount: 10, dojiReached: 0 }))).toEqual({
+      title: '固い絆で結ばれた相棒',
+      pointsNeeded: 2,
+      needsDoji: true,
+    })
+    // Lv5 到達済みで童子だけが足りない
+    expect(computeNextBondGoal(record({ battlesPlayed: 15, resonanceCount: 13, dojiReached: 0 }))).toEqual({
+      title: '固い絆で結ばれた相棒',
+      pointsNeeded: 0,
+      needsDoji: true,
+    })
   })
 })

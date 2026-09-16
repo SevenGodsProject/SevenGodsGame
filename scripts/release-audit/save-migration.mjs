@@ -5,7 +5,7 @@
 // ③神域挑戦を1回開始して1ラウンド進めて中断 の localStorage を実際に作り、
 // RC 側にそのまま注入して「続きから」「戦績」「神域挑戦の残り回数」が欠けずに読めるかを確かめる。
 import { writeFileSync } from 'node:fs'
-import { loadChromium, clickText, watch, gotoHome, BATTLE_METRICS, RESULT_METRICS, playToEnd, dumpStorage } from './_lib.mjs'
+import { loadChromium, clickText, watch, gotoHome, BATTLE_METRICS, RESULT_METRICS, playToEnd, dumpStorage, openDailyFromHome, resumeLabel, clickResume } from './_lib.mjs'
 
 const [outJson = 'release-audit-migration.json', masterBase = 'http://localhost:4182', rcBase = 'http://localhost:4181'] = process.argv.slice(2)
 const chromium = await loadChromium()
@@ -60,7 +60,7 @@ await mctx.close()
 const dctx = await browser.newContext(vp)
 const dp = await dctx.newPage()
 await gotoHome(dp, masterBase)
-await clickText(dp, '今日の神域挑戦'); await dp.waitForTimeout(800)
+await openDailyFromHome(dp); await dp.waitForTimeout(800)
 const dailyBefore = await dp.evaluate(() => document.querySelector('.home-cta-primary')?.textContent.trim())
 await clickText(dp, '挑戦開始'); await dp.waitForTimeout(400)
 if (await clickText(dp, '新しく始める')) await dp.waitForTimeout(300)
@@ -93,8 +93,8 @@ async function openHome(page) {
 {
   const { ctx, page, net } = await inject(normalDump)
   await openHome(page)
-  const resumeLabel = await page.evaluate(() => document.querySelector('.home-cta-secondary')?.textContent.trim() ?? null)
-  await page.evaluate(() => document.querySelector('.home-cta-secondary')?.click())
+  const resumeText = await resumeLabel(page)
+  await clickResume(page)
   await page.waitForSelector('.hand .card-view', { timeout: 15000 }).catch(() => {})
   await page.waitForTimeout(800)
   const resumed = await page.evaluate('(' + BATTLE_METRICS + ')()')
@@ -106,7 +106,7 @@ async function openHome(page) {
   const recordsText = await page.evaluate(() => document.body.textContent.replace(/\s+/g, ' ').slice(0, 600))
   const after = await dumpStorage(page)
   report.rcNormal = {
-    resumeLabel,
+    resumeLabel: resumeText,
     resumed: { round: resumed.round, hand: resumed.handCards, enemyInView: resumed.enemy?.inView, endRound: resumed.endRoundEnabled },
     saveAfterLoad: rcSave,
     playedToEnd: { status: result.status, rounds: play.rounds },
@@ -122,19 +122,19 @@ async function openHome(page) {
 {
   const { ctx, page, net } = await inject(dailyDump)
   await openHome(page)
-  const resumeLabel = await page.evaluate(() => document.querySelector('.home-cta-secondary')?.textContent.trim() ?? null)
-  await page.evaluate(() => document.querySelector('.home-cta-secondary')?.click())
+  const resumeText = await resumeLabel(page)
+  await clickResume(page)
   await page.waitForSelector('.hand .card-view', { timeout: 15000 }).catch(() => {})
   await page.waitForTimeout(800)
   const resumed = await page.evaluate('(' + BATTLE_METRICS + ')()')
   const play = await playToEnd(page, { pumpPath: outJson + '.pump.png' })
   const result = await page.evaluate('(' + RESULT_METRICS + ')()')
   await openHome(page)
-  await clickText(page, '今日の神域挑戦'); await page.waitForTimeout(800)
+  await openDailyFromHome(page); await page.waitForTimeout(800)
   const startLabel = await page.evaluate(() => document.querySelector('.home-cta-primary')?.textContent.trim() ?? null)
   const after = await dumpStorage(page)
   report.rcDaily = {
-    resumeLabel,
+    resumeLabel: resumeText,
     resumed: { round: resumed.round, hand: resumed.handCards, dailyTag: resumed.dailyTag },
     result: { status: result.status, daily: result.daily, rounds: play.rounds },
     startLabelAfter: startLabel,

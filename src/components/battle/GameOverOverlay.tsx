@@ -13,6 +13,12 @@ import type { BattleRecap } from './battleRecap'
 import { useEffect, useState } from 'react'
 import { describeDefeatCause, type DefeatCause } from './defeatCause'
 import { getEnemyDef } from '../../core/data/enemies'
+import { useMinuteClock } from '../../hooks/useMinuteClock'
+import type { ResultContext } from './resultContext'
+import { selectNextGoal, type NextGoal } from './nextGoal'
+import { describeDailyDiff } from './dailyDiff'
+import { exitLabel, planResultExits, type ResultExit } from './resultHub'
+import type { ResultTransitionAction } from '../resultTransitions'
 
 const STATUS_LABEL: Record<Exclude<GameStatus, 'playing'>, string> = {
   won: '勝利',
@@ -37,6 +43,9 @@ const SCORE_HINT: Record<Exclude<keyof ScoreState, 'total' | 'legacy'>, string> 
   survival: '残りHPが多いほどUP',
   difficultyBonus: '難しいほどUP',
 }
+
+/** Phase 7 P1：SP（この幅以下）ではスコア内訳を既定で畳む（仕様 §10） */
+const BREAKDOWN_COLLAPSED_QUERY = '(max-width: 700px)'
 
 type GameOverOverlayProps = {
   status: Exclude<GameStatus, 'playing'>
@@ -78,6 +87,13 @@ type GameOverOverlayProps = {
   /** 神選択からやり直す（決定24：Phase 5） */
   onReselect: () => void
   /**
+   * Phase 7 P1（決定187）：結果画面の新しい出口（デッキを調整／今日の神域挑戦へ／ホームへ／
+   * 神を選ぶ（通常攻略）／戦績を見る）。遷移は GameFlow が行う
+   */
+  onResultExit: (action: ResultTransitionAction) => void
+  /** Phase 7 P1：「次の目標」と神域挑戦の前回比較の入力（BattleScreen が決着時の値を読み取って渡す） */
+  context: ResultContext | null
+  /**
    * DAILY-01：神域挑戦の決着なら「今日のベスト」の情報（更新したか・更新前・残り回数）。
    * 通常モードではnull/省略。通常の自己ベスト表示（newBest/prevBest）とは独立
    */
@@ -110,6 +126,8 @@ export function GameOverOverlay({
   mastery,
   onRematch,
   onReselect,
+  onResultExit,
+  context,
   daily = null,
   rematchLabel,
   rematchDisabled = false,
@@ -170,11 +188,54 @@ export function GameOverOverlay({
   // 差分を表示する。newBest時は既存の「自己ベスト更新！」演出を優先し重複表示しない。
   const bestGap = !newBest && prevBest > 0 && prevBest > finalScore ? prevBest - finalScore : null
 
+  // ---- Phase 7 P1（決定187）：Result Hub ----
+  // 「次の目標」は 1 つだけ。残り時間（神域挑戦の残り 0 回）を進めるため分単位で再描画する
+  const nowMs = useMinuteClock()
+  const goal: NextGoal = context
+    ? selectNextGoal({ ...context.goalInput, nowMs })
+    : { id: 'N10', text: '', action: 'rematch' }
+  const isDaily = context?.goalInput.mode === 'daily' || daily !== null
+  const hubCtx = {
+    mode: isDaily ? ('daily' as const) : ('normal' as const),
+    status,
+    dailyAttemptsLeft: rematchDisabled ? 0 : (daily?.attemptsLeft ?? 0),
+    canShare: shareState !== null,
+  }
+  const plan = planResultExits(goal, hubCtx)
+  const dailyDiff = daily && context?.dailyDay && context.dailyCurrent ? describeDailyDiff(context.dailyDay, context.dailyCurrent, daily) : null
+  // SP ではスコア内訳を畳む（スコアそのものは常に見える）。PC は開いたまま
+  const [breakdownOpen, setBreakdownOpen] = useState(
+    () => !(typeof window !== 'undefined' && typeof window.matchMedia === 'function' && window.matchMedia(BREAKDOWN_COLLAPSED_QUERY).matches),
+  )
+
+  const labelOf = (exit: ResultExit): string => {
+    if (exit === 'share') {
+      return copyState === 'copied' ? 'コピーしました' : copyState === 'failed' ? 'コピーできませんでした' : '挑戦状をコピー'
+    }
+    if (exit === 'rematch' && rematchLabel && isDaily) return rematchLabel
+    return exitLabel(exit, hubCtx)
+  }
+  const runExit = (exit: ResultExit) => {
+    if (exit === 'share') {
+      void handleShare()
+      return
+    }
+    if (exit === 'rematch') {
+      onRematch()
+      return
+    }
+    if (exit === 'reselect') {
+      onReselect()
+      return
+    }
+    onResultExit(exit)
+  }
+
   return (
     <div className="game-over-overlay">
       {/* 決定64：勝敗・未撃破で装飾トーンを分ける（status別クラス）。文字色だけでなく
           カード枠・ボタン装飾も変えることで、文字を読まなくても感覚的に区別できるようにする */}
-      <div className={`game-over-card game-over-card-${status}`}>
+      <div className={`game-over-card game-over-card-${status}`} data-testid="result-card">
         <div className={`game-over-status game-over-status-${status}`}>{STATUS_LABEL[status]}</div>
         {showEnemyHp && (
           <div className="game-over-enemy-hp">
@@ -204,23 +265,6 @@ export function GameOverOverlay({
             )}
           </div>
         )}
-        {daily && (
-          <div className="game-over-daily">
-            {daily.isNewBest ? (
-              <>
-                ✨ <strong>今日のベスト更新！</strong>（{STATUS_LABEL[status]}・スコア {formatScaled(finalScore)}）
-              </>
-            ) : daily.prevBest > finalScore ? (
-              <>
-                今日のベストまであと<strong>{formatScaled(daily.prevBest - finalScore)}</strong>点（{STATUS_LABEL[status]}）
-              </>
-            ) : (
-              <>今日のベストと同点です（{STATUS_LABEL[status]}）</>
-            )}
-            <br />
-            神域挑戦の残り回数 <strong>{daily.attemptsLeft}</strong> 回
-          </div>
-        )}
         {otomoLevelUp && (
           <div className="game-over-otomo-levelup">
             💠 絆Lv UP！ {otomoLevelUp.otomoName} Lv.{otomoLevelUp.prevLevel} → Lv.{otomoLevelUp.nextLevel}
@@ -246,61 +290,128 @@ export function GameOverOverlay({
         {/* 決定128：「自己ベスト更新」は勝利時のみ祝う（敗北で初記録が付いても祝わない） */}
         {newBest && status === 'won' && <div className="game-over-new-best">✨ 自己ベスト更新！</div>}
         {bestGap !== null && <div className="game-over-best-gap">自己ベストまであと{formatScaled(bestGap)}点</div>}
-        <dl className="score-breakdown">
-          <dt>
-            実効ダメージ
-            <span className="score-breakdown-hint">{SCORE_HINT.damage}</span>
-          </dt>
-          <dd>{formatScaled(Math.round(score.damage))}</dd>
-          <dt>
-            連携
-            <span className="score-breakdown-hint">{SCORE_HINT.combo}</span>
-          </dt>
-          <dd>{formatScaled(score.combo)}</dd>
-          <dt>
-            撃破
-            <span className="score-breakdown-hint">{SCORE_HINT.victory}</span>
-          </dt>
-          <dd>{formatScaled(score.victory)}</dd>
-          <dt>
-            早期撃破
-            <span className="score-breakdown-hint">{SCORE_HINT.tempo}</span>
-          </dt>
-          <dd>{formatScaled(score.tempo)}</dd>
-          <dt>
-            生存
-            <span className="score-breakdown-hint">{SCORE_HINT.survival}</span>
-          </dt>
-          <dd>{formatScaled(score.survival)}</dd>
-          <dt>
-            難易度
-            <span className="score-breakdown-hint">{SCORE_HINT.difficultyBonus}</span>
-          </dt>
-          <dd>{formatScaled(score.difficultyBonus)}</dd>
-          {score.legacy !== 0 && (
-            <>
-              <dt>
-                旧形式分
-                <span className="score-breakdown-hint">再開した旧セーブの引き継ぎ分</span>
-              </dt>
-              <dd>{formatScaled(score.legacy)}</dd>
-            </>
-          )}
-          {stake > 0 && (
-            <>
-              <dt>
-                神階倍率
-                <span className="score-breakdown-hint">{stakeLabel(stake)}</span>
-              </dt>
-              <dd>×{stakeScale.toFixed(2)}</dd>
-            </>
-          )}
-          <dt className="score-breakdown-subtotal">
-            小計 ×1.3{stake > 0 ? ` ×${stakeScale.toFixed(2)}` : ''}
-            <span className="score-breakdown-hint">最終スコア＝小計の1.3倍{stake > 0 ? '×神階倍率' : ''}</span>
-          </dt>
-          <dd className="score-breakdown-subtotal">{formatScaled(Math.round(score.total))} → {formatScaled(finalScore)}</dd>
-        </dl>
+        {/* Phase 7 P1（決定187・仕様 §9）：神域挑戦は「今日のベスト」軸と「前回」軸の 2 行。
+            旧表示の「ベスト未記録なのに同点」は describeDailyDiff 側で出さない */}
+        {daily && (
+          <div className="game-over-daily" data-testid="daily-diff">
+            {dailyDiff ? (
+              <>
+                <p className={`game-over-daily-best game-over-daily-best-${dailyDiff.best.kind}`}>{dailyDiff.best.text}</p>
+                <p className="game-over-daily-previous">{dailyDiff.previous.text}</p>
+              </>
+            ) : (
+              <p className="game-over-daily-previous">神域挑戦の残り回数 {daily.attemptsLeft} 回</p>
+            )}
+          </div>
+        )}
+
+        {/* Phase 6-C（決定166）：勝利で報酬が未確定のあいだは「報酬カードを選ぶ」だけを出す
+            （勝利1回＝報酬の判断1回、を保つ）。確定後に Result Hub（次の目標＋出口）へ切り替わる */}
+        {rewardPending && onOpenReward ? (
+          <div className="game-over-actions result-hub-pending">
+            <button type="button" className="game-over-reward-button" onClick={onOpenReward} data-testid="open-reward">
+              報酬カードを選ぶ ›
+            </button>
+          </div>
+        ) : (
+          <section className="result-hub" data-testid="result-hub" aria-label="次の一歩">
+            {goal.text && (
+              <p className="result-next-goal" data-testid="next-goal" data-goal-id={goal.id}>
+                <span className="result-next-goal-label">次の目標</span>
+                <span className="result-next-goal-text">{goal.text}</span>
+              </p>
+            )}
+            <button
+              type="button"
+              className="result-cta-primary"
+              data-testid="result-primary"
+              data-exit={plan.primary}
+              onClick={() => runExit(plan.primary)}
+            >
+              {plan.primary === 'rematch' ? labelOf('rematch') : plan.primaryLabel}
+            </button>
+            {plan.secondary.length > 0 && (
+              <div className="result-cta-secondary-row">
+                {plan.secondary.map((exit) => (
+                  <button
+                    key={exit}
+                    type="button"
+                    className="result-cta-secondary"
+                    data-testid="result-secondary"
+                    data-exit={exit}
+                    onClick={() => runExit(exit)}
+                  >
+                    {labelOf(exit)}
+                  </button>
+                ))}
+              </div>
+            )}
+          </section>
+        )}
+
+        {/* Phase 7 P1：スコア内訳は Primary より下。SP では既定で畳む（合計スコアは上で常に見える） */}
+        <details
+          className="game-over-breakdown"
+          open={breakdownOpen}
+          onToggle={(e) => setBreakdownOpen(e.currentTarget.open)}
+        >
+          <summary className="game-over-breakdown-summary">スコア内訳</summary>
+          <dl className="score-breakdown">
+            <dt>
+              実効ダメージ
+              <span className="score-breakdown-hint">{SCORE_HINT.damage}</span>
+            </dt>
+            <dd>{formatScaled(Math.round(score.damage))}</dd>
+            <dt>
+              連携
+              <span className="score-breakdown-hint">{SCORE_HINT.combo}</span>
+            </dt>
+            <dd>{formatScaled(score.combo)}</dd>
+            <dt>
+              撃破
+              <span className="score-breakdown-hint">{SCORE_HINT.victory}</span>
+            </dt>
+            <dd>{formatScaled(score.victory)}</dd>
+            <dt>
+              早期撃破
+              <span className="score-breakdown-hint">{SCORE_HINT.tempo}</span>
+            </dt>
+            <dd>{formatScaled(score.tempo)}</dd>
+            <dt>
+              生存
+              <span className="score-breakdown-hint">{SCORE_HINT.survival}</span>
+            </dt>
+            <dd>{formatScaled(score.survival)}</dd>
+            <dt>
+              難易度
+              <span className="score-breakdown-hint">{SCORE_HINT.difficultyBonus}</span>
+            </dt>
+            <dd>{formatScaled(score.difficultyBonus)}</dd>
+            {score.legacy !== 0 && (
+              <>
+                <dt>
+                  旧形式分
+                  <span className="score-breakdown-hint">再開した旧セーブの引き継ぎ分</span>
+                </dt>
+                <dd>{formatScaled(score.legacy)}</dd>
+              </>
+            )}
+            {stake > 0 && (
+              <>
+                <dt>
+                  神階倍率
+                  <span className="score-breakdown-hint">{stakeLabel(stake)}</span>
+                </dt>
+                <dd>×{stakeScale.toFixed(2)}</dd>
+              </>
+            )}
+            <dt className="score-breakdown-subtotal">
+              小計 ×1.3{stake > 0 ? ` ×${stakeScale.toFixed(2)}` : ''}
+              <span className="score-breakdown-hint">最終スコア＝小計の1.3倍{stake > 0 ? '×神階倍率' : ''}</span>
+            </dt>
+            <dd className="score-breakdown-subtotal">{formatScaled(Math.round(score.total))} → {formatScaled(finalScore)}</dd>
+          </dl>
+        </details>
         {/* 神技評価。Human Play QA（2026-09-06）で「スコアの続き」と誤読されたため、
             スコア内訳の“後”へ移し、区切り線を入れて別の軸であることを見た目でも示す。
             3行構成：ランク／現在値→次ランクの目標値／上げ方1行（差分表現は使わない） */}
@@ -340,30 +451,23 @@ export function GameOverOverlay({
             )}
           </div>
         )}
-        {shareState && (
-          <div className="game-over-share">
-            <button type="button" className="game-over-share-button" onClick={handleShare} disabled={copyState !== 'idle'}>
-              {copyState === 'copied' ? 'コピーしました' : copyState === 'failed' ? 'コピーできませんでした' : '挑戦状をコピー（Seed・神階・スコア）'}
-            </button>
-          </div>
-        )}
-        {/* Phase 6-C（決定166）：勝利で報酬が未確定のあいだは「報酬カードを選ぶ」だけを出す
-            （勝利1回＝報酬の判断1回、を保つ）。確定後は従来のボタンに戻る */}
-        {rewardPending && onOpenReward ? (
-          <div className="game-over-actions">
-            <button type="button" className="game-over-reward-button" onClick={onOpenReward} data-testid="open-reward">
-              報酬カードを選ぶ ›
-            </button>
-          </div>
-        ) : (
-          <div className="game-over-actions">
-            <button type="button" onClick={onRematch} disabled={rematchDisabled}>
-              {rematchLabel ?? '同じ構成でもう一度'}
-            </button>
-            <button type="button" onClick={onReselect}>
-              神・デッキを選び直す
-            </button>
-          </div>
+        {/* Phase 7 P1：残りの出口はテキストリンク（Tertiary）。挑戦状のコピーは行動導線より目立たせない */}
+        {!rewardPending && plan.tertiary.length > 0 && (
+          <nav className="result-tertiary" data-testid="result-tertiary" aria-label="その他の行き先">
+            {plan.tertiary.map((exit) => (
+              <button
+                key={exit}
+                type="button"
+                className={`result-link${exit === 'share' ? ' result-link-share' : ''}`}
+                data-testid={exit === 'share' ? 'result-share' : 'result-tertiary-link'}
+                data-exit={exit}
+                disabled={exit === 'share' && copyState !== 'idle'}
+                onClick={() => runExit(exit)}
+              >
+                {labelOf(exit)}
+              </button>
+            ))}
+          </nav>
         )}
       </div>
     </div>

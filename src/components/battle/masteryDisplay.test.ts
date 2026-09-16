@@ -3,7 +3,7 @@ import type { MasteryResult } from '../../core/engine'
 import type { GodId } from '../../core/types'
 import { GOD_IDS } from '../../core/data/gods'
 import { RULES } from '../../core/data/rules'
-import { describeMastery, MASTERY_AXIS_NOTE, MASTERY_GRADE_WORD, MASTERY_SELECT_HINT } from './masteryDisplay'
+import { describeMastery, formatMasteryPercent, MASTERY_AXIS_NOTE, MASTERY_GRADE_WORD, MASTERY_SELECT_HINT, nextMasteryStep } from './masteryDisplay'
 
 /**
  * 神技評価の表示コピー（純粋関数）の検証。
@@ -203,5 +203,33 @@ describe('神選択画面の神技1行', () => {
 describe('Grade和語', () => {
   it('S/A/B/Cすべてに補助語がある', () => {
     expect(MASTERY_GRADE_WORD).toEqual({ S: '神業', A: '見事', B: '堂々', C: '修行中' })
+  })
+})
+
+describe('nextMasteryStep（Phase 7 P1 結果画面の「次の目標」用）', () => {
+  it('次ランクの閾値と距離を RULES.mastery から返す', () => {
+    const step = nextMasteryStep(taiyo('A', 0.55), GOD_IDS.taiyo)
+    expect(step?.rank).toBe('S')
+    expect(step?.word).toBe('神業')
+    expect(step?.threshold).toBe(RULES.mastery.taiyo.s)
+    expect(step?.gap).toBeCloseTo(RULES.mastery.taiyo.s - 0.55)
+  })
+
+  it('S・神技の無い神・ゲート未達は目標にしない', () => {
+    expect(nextMasteryStep(taiyo('S', 0.7), GOD_IDS.taiyo)).toBeNull()
+    expect(nextMasteryStep(taiyo('C', 0.2), GOD_IDS.ebisu)).toBeNull()
+    expect(nextMasteryStep(fukuei('C', 0.3, false), GOD_IDS.fukuei)).toBeNull()
+    expect(nextMasteryStep(juraku('A', 0.95, { easyCapped: true }), GOD_IDS.juraku)).toBeNull()
+    expect(nextMasteryStep(juraku('A', 0.85, { sGateMet: false }), GOD_IDS.juraku)).toBeNull()
+    expect(nextMasteryStep(juraku('A', 0.85, { sGateMet: true }), GOD_IDS.juraku)?.rank).toBe('S')
+  })
+
+  it('raw が閾値以上なのにランクが上がっていない場合（距離 0 以下）は目標にしない', () => {
+    expect(nextMasteryStep(sobi('B', 0.7), GOD_IDS.sobi)).toBeNull()
+  })
+
+  it('formatMasteryPercent は describeMastery と同じ丸め', () => {
+    expect(formatMasteryPercent(0.555)).toBe('56%')
+    expect(formatMasteryPercent(RULES.mastery.taiyo.s)).toBe('58%')
   })
 })
