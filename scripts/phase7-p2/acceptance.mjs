@@ -428,7 +428,23 @@ async function scenarioHomeParity(vp) {
     await p.page.goto(url + '/')
     await p.page.waitForSelector('.home-screen', { timeout: 30000 })
     await p.page.waitForTimeout(600)
-    texts[name] = await p.page.evaluate(() => ({ text: document.querySelector('.home-screen').innerText.replace(/\s+/g, ' ').trim(), buttons: [...document.querySelectorAll('.home-screen button')].map((b) => b.textContent.trim()) }))
+    texts[name] = await p.page.evaluate(() => {
+      const t = (sel) => document.querySelector(sel)?.textContent.replace(/\s+/g, ' ').trim() ?? null
+      return {
+        text: document.querySelector('.home-screen').innerText.replace(/\s+/g, ' ').trim(),
+        buttons: [...document.querySelectorAll('.home-screen button')].map((b) => b.textContent.trim()),
+        // Phase 7 Entrance E1（決定193・仕様 §16）：Home の構図が変わっても、Home Today と進行チップの「値」と入口は同じであること
+        values: {
+          todayEnemy: t('[data-testid="home-today-enemy"] strong'),
+          attempts: t('[data-testid="home-today-attempts"]'),
+          best: t('[data-testid="home-today-best"]'),
+          chips: [...document.querySelectorAll('[data-testid="home-progress"] li')].map((li) => li.textContent.replace(/\s+/g, ' ').trim()).sort(),
+          hasStart: !!document.querySelector('[data-testid="home-start"]'),
+          hasTodayCta: document.querySelectorAll('[data-testid="home-today-cta"]').length === 1,
+          hasResume: !!document.querySelector('[data-testid="home-resume"]'),
+        },
+      }
+    })
     texts[`${name}Errors`] = p.errors
     await p.ctx.close()
   }
@@ -504,7 +520,9 @@ add('AC18', '壊れた保存・storage 不可でもゲームが進行する', ()
   ck(`${vp}/corrupt`, f.corruptResult?.metrics?.status === '勝利' && f.corruptResult?.metrics?.primary && f.corruptRecords?.board && f.corruptErrors.length === 0, { line: f.corruptResult?.metrics?.matchupLine, errors: f.corruptErrors.slice(0, 2) }),
   ck(`${vp}/unavailable`, f.unavailableResult?.metrics?.status === '勝利' && f.unavailableResult?.metrics?.primary && f.unavailableResult?.metrics?.matchupLine === null && /保存できない/.test(f.unavailableRecords?.note ?? '') && f.gods.every((g) => g.count === null) && f.enemies.badges.every((b) => b.badge === null) && f.unavailableErrors.length === 0, { note: f.unavailableRecords?.note, errors: f.unavailableErrors.slice(0, 2) }),
 ] }))
-add('AC19', 'Home の出力が P2 前後で同一（Home Today・進行チップ・CTA）', () => vps.map((vp) => { const h = S[vp].homeParity; return ck(vp, h && h.p1 && h.p2 && h.p1.text === h.p2.text && JSON.stringify(h.p1.buttons) === JSON.stringify(h.p2.buttons), h && (h.p1?.text === h.p2?.text ? null : { p1: h.p1?.text?.slice(0, 200), p2: h.p2?.text?.slice(0, 200) })) }))
+// Phase 7 Entrance E1（決定193・仕様 §16）で Home の構図と文言の並びを変えたため、文字列の完全一致ではなく
+// Home Today（今日の敵・残り回数・今日のベスト）と進行チップの値、入口（神を選ぶ・神域挑戦・続きから）が前ビルドと同じことを判定する
+add('AC19', 'Home Today・進行チップの値と入口が前ビルドと同一（E1 で文字列一致から値の一致に置き換え）', () => vps.map((vp) => { const h = S[vp].homeParity; return ck(vp, h && h.p1?.values && h.p2?.values && JSON.stringify(h.p1.values) === JSON.stringify(h.p2.values), h && { p1: h.p1?.values, p2: h.p2?.values }) }))
 add('EXTRA-1', '神域挑戦の勝利も点灯し、回数・seed は既存どおり（開始ごとに +1）', () => vps.filter((vp) => S[vp].daily).map((vp) => { const d = S[vp].daily; const last = d.attempts[d.attempts.length - 1]; return ck(vp, d.won && /初撃破：大耀 × /.test(last?.matchupLine ?? '') && (last?.matchups?.cleared?.taiyo ?? []).includes(d.won.enemyId) && d.attempts.every((a, i) => a.attemptsUsed === i + 1 && a.seed === d.attempts[0].seed), d.attempts.map((a) => ({ s: a.strategy, status: a.status, line: a.matchupLine, used: a.attemptsUsed }))) }))
 add('EXTRA-2', 'チップは操作要素に見せない（button・リンク・pointer なし）／チップ 44×44px 以上', () => vps.map((vp) => { const r = S[vp].fixture?.records; return ck(vp, r && !r.chipsInteractive && r.chipMinHeight >= 44 && r.chipMinWidth >= 44, r && { interactive: r.chipsInteractive, minH: r.chipMinHeight, minW: r.chipMinWidth }) }))
 add('EXTRA-3', '選択画面の印（神選択「撃破 k/7 敵」・敵選択「撃破済み／未撃破」）が fixture どおり', () => vps.map((vp) => { const f = S[vp].fixture; const oni = f?.enemies?.badges?.find((b) => b.name === '業斧の鬼将'); const others = f?.enemies?.badges?.filter((b) => b.name && b.name !== '業斧の鬼将' && b.name !== '神に委ねる'); const taiyo = f?.gods?.find((g) => /大耀/.test(g.name)); const saika = f?.gods?.find((g) => /才華/.test(g.name)); const sobi = f?.gods?.find((g) => /蒼毘/.test(g.name)); return ck(vp, f && oni?.cleared === 'true' && /撃破済み/.test(oni.badge ?? '') && others.every((b) => b.cleared === 'false' && /未撃破/.test(b.badge ?? '')) && /撃破 1\/7 敵/.test(taiyo?.count ?? '') && /撃破 1\/7 敵/.test(saika?.count ?? '') && /撃破 0\/7 敵/.test(sobi?.count ?? ''), f && { oni, taiyo: taiyo?.count, saika: saika?.count, sobi: sobi?.count }) }))

@@ -307,9 +307,11 @@ describe('UI配線ガード：Daily開始経路に報酬ボーナスが復活し
   it('GameFlow：通常モードのstartGameは従来どおりloadRewardBonusesを渡す', () => {
     const source = read('components/GameFlow.tsx')
     const calls = callArgs(source, 'engine.startGame')
-    expect(calls.length, 'startGameの呼び出しが見つからない').toBe(2)
+    // Phase 7 Entrance E1（決定193）：通常モードの開始は 3 か所（デッキ確定・もう一度・初陣）。
+    // 初陣も通常モードなので、同じく報酬ボーナスを渡す（神は preset の神）
+    expect(calls.length, 'startGameの呼び出しが見つからない').toBe(3)
     for (const call of calls) {
-      expect(call).toContain('loadRewardBonuses(godId)')
+      expect(call).toMatch(/loadRewardBonuses\((godId|preset\.godId)\)/)
     }
   })
 

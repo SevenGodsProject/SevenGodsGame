@@ -107,7 +107,9 @@ add('AC10', 'Result 初期表示に別アクティビティへの CTA が 2 つ�
 
 add('AC11', '挑戦状のコピーは Primary より小さく、DOM 上も後ろ', allResults.map(({ name, m }) => check(name, m.share && m.primary && m.share.area < m.primary.area && m.shareAfterPrimary, m.share && { share: m.share.area, primary: m.primary?.area })))
 
-add('AC12', 'PC 1508×660 で Home の 3 リンクが viewport 内', homes.filter((h) => h.name.startsWith('pc1508/')).map(({ name, m }) => check(name, m.linksInView.length === 3 && m.linksInView.every(Boolean), m.linkRects)))
+// Phase 7 Entrance E1（決定193・仕様 §10・§15）：Home の「遊び方を見る」はヘッダーの本のアイコン（同じ機能）へ一本化したため、
+// Home のリンクは「戦績を見る」「OTOMOとの絆を見る」の 2 本（機能の削除ではない）
+add('AC12', 'PC 1508×660 で Home のリンク（E1 以降は 2 本：戦績・OTOMO）が viewport 内', homes.filter((h) => h.name.startsWith('pc1508/')).map(({ name, m }) => check(name, m.linksInView.length === 2 && m.linksInView.every(Boolean), m.linkRects)))
 
 add('AC13', 'Home CLS ≤ 0.1・Home のボタンはすべて 44px 以上', [
   ...Object.entries(vps).map(([vp, v]) => check(`${vp}/cls`, v.homeNoResume && v.homeNoResume.clsAfterTutorial <= 0.1, { load: v.homeNoResume?.clsLoad, afterTutorial: v.homeNoResume?.clsAfterTutorial })),

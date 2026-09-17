@@ -257,3 +257,35 @@ export function describeSpecial(god: GodDef, otomo: OtomoDef): string | null {
   ]
   return merged.length > 0 ? merged.join('・') : null
 }
+
+/**
+ * Phase 7 Entrance E1（決定193・仕様 §13）：Home の Hero God の画像サイズと切り出し位置。
+ *
+ * キービジュアルは背景込みの矩形イラスト（切り抜きではない）なので、Home では枠に入れず
+ * 画面の場面として `object-fit: cover` で敷く。PC は横長・SP はほぼ正方形の箱になるため、
+ * 顔・頭部・主要な装飾（恵比寿の鯛など）が切れない位置を神ごとに持つ（`object-position`）。
+ * 数値は 4 viewport のスクリーンショットで目視確認した値（表示専用。ゲームの数値ではない）。
+ *
+ * 画像：恵比寿はトップ専用の高画質版（E1 以前の Home と同じファイル）。大耀・蒼毘・才華・寿楽・福永は、
+ * PC 1508×660・DPR2 で 1 画像ピクセルが 2 倍以上に引き伸ばされ線の甘さが目視で分かったため、原本から
+ * 非生成で再エンコードした Home 用の版（`scripts/entrance-e1/encode-hero.mjs`）。笑蓮は 900×900 の軽量版で足りる。
+ */
+export type HomeHeroArt = {
+  /** Home で使う画像 */
+  src: string
+  /** 配信する画像の実寸（`width`/`height` 属性。読み込み前に箱を確保して CLS を出さない） */
+  width: number
+  height: number
+  /** `object-position`（横 縦） */
+  focus: string
+}
+
+export const HOME_HERO_ART: Record<GodId, HomeHeroArt> = {
+  [GOD_IDS.ebisu]: { src: '/assets/gods/ebisu/keyvisual-hero.webp', width: 1086, height: 1448, focus: '45% 32%' },
+  [GOD_IDS.taiyo]: { src: '/assets/gods/taiyo/keyvisual-home.webp', width: 1086, height: 1448, focus: '50% 28%' },
+  [GOD_IDS.sobi]: { src: '/assets/gods/sobi/keyvisual-home.webp', width: 1086, height: 1448, focus: '45% 18%' },
+  [GOD_IDS.saika]: { src: '/assets/gods/saika/keyvisual-home.webp', width: 1086, height: 1448, focus: '55% 22%' },
+  [GOD_IDS.juraku]: { src: '/assets/gods/juraku/keyvisual-home.webp', width: 1086, height: 1448, focus: '50% 18%' },
+  [GOD_IDS.fukuei]: { src: '/assets/gods/fukuei/keyvisual-home.webp', width: 1086, height: 1357, focus: '60% 25%' },
+  [GOD_IDS.shouren]: { src: '/assets/gods/shouren/keyvisual.webp', width: 900, height: 900, focus: '30% 30%' },
+}

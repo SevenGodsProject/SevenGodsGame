@@ -1,5 +1,6 @@
 import type { CardDefId, GodId } from '../core/types'
 import { RULES } from '../core/data/rules'
+import { GODS } from '../core/data/gods'
 
 /**
  * 決定27：神・デッキ構成の永続化（Phase 5の続き）。
@@ -55,6 +56,27 @@ export function loadDeckPreference(godId: GodId): CardDefId[] | null {
     if (parsed.version !== RULES.saveVersion) return null
     if (parsed.godId !== godId) return null
     return parsed.deck
+  } catch {
+    return null
+  }
+}
+
+/**
+ * Phase 7 Entrance E1（決定193）：最後にデッキを確定した神を返す（読み取り専用）。
+ *
+ * `saveDeckPreference` を呼ぶのは GameFlow のデッキ確定時の 1 か所だけで、保存は常に 1 件を
+ * 上書きする。したがってこの `godId` は「最後にデッキを確定した神」そのもの。
+ * 形が壊れている・版が違う・現在の神定義に存在しない ID のときは null（呼び出し側が fallback する）。
+ * 保存データは直さない・消さない（決定191 と同じ「読むだけ」の方針）。
+ */
+export function loadLastUsedGodId(): GodId | null {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY)
+    if (!raw) return null
+    const parsed: unknown = JSON.parse(raw)
+    if (!isSavedDeckPreference(parsed)) return null
+    if (parsed.version !== RULES.saveVersion) return null
+    return GODS.some((god) => god.id === parsed.godId) ? parsed.godId : null
   } catch {
     return null
   }

@@ -1,9 +1,19 @@
+import { useEffect, useRef, useState } from 'react'
 import type { GameState } from '../../core/types'
 import { GODS } from '../../core/data/gods'
+import { RULES } from '../../core/data/rules'
 import { isKnownEnemyId, safeEnemyName } from '../enemyLookup'
 import { HomeProgressRow, HomeTodayPanel } from './HomeTodayPanel'
 import { ARCHETYPE_LABEL } from './godStyle'
-import { BookIcon, HeartIcon, TrophyIcon } from '../icons'
+import { heroImageOf, selectHeroGod } from './heroGod'
+import { hasPlayTrace, selectHomePrimary } from './homePrimary'
+import { HeartIcon, TrophyIcon } from '../icons'
+import { loadLastUsedGodId } from '../../hooks/deckPreferenceStorage'
+import { loadGodRecord } from '../../hooks/recordStorage'
+import { dailyAttemptsLeft, loadDailyDay, loadRecentDailyDays } from '../../hooks/dailyStorage'
+import { todayDailyKey } from '../../hooks/dailyClock'
+import { dailyBossFor } from '../../core/data/dailyBoss'
+import { useMinuteClock } from '../../hooks/useMinuteClock'
 import './setup.css'
 
 type HomeScreenProps = {
@@ -11,7 +21,8 @@ type HomeScreenProps = {
   savedBattle: GameState | null
   onStartFresh: () => void
   onResume: () => void
-  onShowTutorial: () => void
+  /** Phase 7 Entrance E1（決定193）：「初陣へ」。短い説明を開き、そこから初陣を始める */
+  onStartFirstBattle: () => void
   /** Task C2：OTOMO育成画面を開く */
   onShowOtomoGrowth: () => void
   /** Task E1：戦績画面を開く */
@@ -20,48 +31,37 @@ type HomeScreenProps = {
   onShowDaily: () => void
 }
 
-/** ホーム画面で見せる代表の神（決定16・18のMVP基準神と同じ恵比寿で統一） */
-const FEATURED_GOD = GODS[0]
-
 /**
- * トップ画面専用の高品質キービジュアル（恵比寿のみ）。
+ * 起動直後に必ず表示するホーム画面。
  *
- * `god.art.keyvisual`（675×900・quality72、神選択画面の120px角サムネイル用に
- * 最適化した軽量版）をそのままトップ画面のヒーロー枠（`.home-portrait-card`、
- * PC幅で実測CSS約454px、devicePixelRatio 1.5〜2.0の高DPI環境では実質900px超の
- * 解像度が必要）に使うと、高DPI環境で明確に画質が粗く見えることが実機確認で
- * 判明した（CEO実プレイ報告）。トップ画面はゲームの第一印象を左右するため、
- * 原本（`art-source/reference/gods/ebisu-keyvisual.png`、1086×1448。決定170 で配信対象外へ移動、
- * 保護対象・変更禁止）の解像度をアップスケールせずそのまま維持したWebP
- * （quality88、511KB）を別ファイルとして新規に用意した。
- * 神選択画面・recap・他6神はこれまでどおり`god.art.keyvisual`（軽量版）を
- * 使い続けるため、ここではFEATURED_GOD側の`art.keyvisual`を上書きせず、
- * トップ画面専用のローカル定数として分離している。
- */
-const EBISU_HERO_IMAGE = '/assets/gods/ebisu/keyvisual-hero.webp'
-
-/**
- * 起動直後に必ず表示するヒーロー画面。
- *
- * CEOが共有した他ゲームのタイトル画面（配色・レイアウトの意匠参考のみ、
- * 文言・ランキング等の機能はSEVEN GODS独自のものに置き換え）をもとに、
- * 「ブランドを一目で伝える入口」を追加した。決定29の`TitleScreen`が
- * 担っていた「続きから／はじめから」もここに統合し、保存データの有無に
- * 関わらず起動時は必ずこの画面を経由するようにした（従来は保存データが
- * 無いと神選択画面へ直行していた）。
- *
- * ランキング・シーズン・プロフィール等（参考画像にあった要素）は、
- * 運営プラットフォームとの連携が前提の別スコープのため今回は含めない。
+ * Phase 7 Entrance E1（決定193、`docs/PHASE7_ENTRANCE_E1_MINIMAL_SPEC.md`）で、
+ * 「左に文字・右に枠入りの恵比寿」のランディングページ型の構図から、
+ * **神の絵そのものを入口の場面にする**構図へ組み替えた：
+ *   - 中心の神（Hero God）＝続きの神 → 最後にデッキを確定した神 → 恵比寿（`heroGod.ts`）
+ *   - 金色の Primary は常に 1 個（`homePrimary.ts`）：続きから／初陣へ／神域へ挑む／神を選ぶ
+ *   - 今日の敵は `dailyBossFor` の定義から（storage を経由しない）Today ブロックに小さく出す
+ *   - 「遊び方を見る」はヘッダーの本のアイコン（同じ機能）に一本化。戦績・OTOMO の 2 リンクを残す
+ * Home は表示のために storage を一切書かない（読み取り関数だけを呼ぶ）。
  */
 export function HomeScreen({
   savedBattle,
   onStartFresh,
   onResume,
-  onShowTutorial,
+  onStartFirstBattle,
   onShowOtomoGrowth,
   onShowRecord,
   onShowDaily,
 }: HomeScreenProps) {
+  const nowMs = useMinuteClock()
+  // Entrance E1（決定193・仕様 §14）：LCP は Hero 画像の読み込み完了で決まる。回線の細い端末では、同じ初期画面にある
+  // 今日の敵の絵（〜180KB）を同時に取りに行くと帯域を取り合って Hero が遅れる（実測：SP 1.6Mbps で LCP 5.4 → 6.8 秒）。
+  // そこで敵の絵は Hero 画像の読み込みが終わってから（失敗した場合も）読み込む。箱の寸法は固定なので CLS は出ない。
+  const heroImgRef = useRef<HTMLImageElement>(null)
+  const [heroSettled, setHeroSettled] = useState(false)
+  useEffect(() => {
+    // キャッシュ済みで React が onLoad を付ける前に読み終わっていた場合の取りこぼし防止
+    if (heroImgRef.current?.complete) setHeroSettled(true)
+  }, [])
   const savedGod = savedBattle ? GODS.find((g) => g.id === savedBattle.godId) : undefined
   const savedIsDaily = savedBattle?.mode === 'daily'
   // Phase 7 P1（決定187）：続きがあるときは「続きから」をページ最上位の Primary にし、相手の敵名も出す
@@ -72,71 +72,116 @@ export function HomeScreen({
   const savedEnemyName = savedBattle ? safeEnemyName(savedBattle.enemy.defId) : ''
   const canResume = !!(savedBattle && savedGod && savedEnemyKnown)
 
+  // Entrance E1：Hero God と Primary の状態（すべて読み取りのみ）
+  const lastUsedGodId = loadLastUsedGodId()
+  const { god: heroGod } = selectHeroGod({
+    resumeGodId: canResume && savedGod ? savedGod.id : null,
+    lastUsedGodId,
+  })
+  const heroImage = heroImageOf(heroGod)
+  const todayKey = todayDailyKey(new Date(nowMs))
+  const today = loadDailyDay(todayKey)
+  const playTrace = hasPlayTrace({
+    hasSavedBattle: savedBattle !== null,
+    godRecords: GODS.map((god) => loadGodRecord(god.id)),
+    lastUsedGodId,
+    dailyAttemptsUsed: loadRecentDailyDays(RULES.daily.retentionDays).map((day) => day.attemptsUsed),
+  })
+  const primary = selectHomePrimary({
+    canResume,
+    playTrace,
+    todayAttemptsUsed: today.attemptsUsed,
+    todayAttemptsLeft: dailyAttemptsLeft(todayKey),
+  })
+  const todayEnemyName = safeEnemyName(dailyBossFor(todayKey).enemyId)
+
   return (
-    <div className="home-screen">
-      <div className="home-hero">
-        <div className="home-hero-text">
+    <div className={`home-screen home-state-${primary}`} data-testid="home-screen" data-primary={primary}>
+      <div className="home-hero-art" data-testid="home-hero-god" data-god={heroGod.id}>
+        <img
+          ref={heroImgRef}
+          className="home-hero-img"
+          src={heroImage.src}
+          alt={heroGod.nameJa}
+          width={heroImage.width}
+          height={heroImage.height}
+          style={{ objectPosition: heroImage.focus }}
+          fetchPriority="high"
+          decoding="async"
+          onLoad={() => setHeroSettled(true)}
+          onError={() => setHeroSettled(true)}
+        />
+        <div className="home-hero-caption">
+          <span className={`god-archetype-badge god-archetype-${heroGod.archetype}`}>
+            {ARCHETYPE_LABEL[heroGod.archetype]}
+          </span>
+          <span className="home-hero-name">{heroGod.nameJa}</span>
+          <span className="home-hero-tagline">「{heroGod.tagline}」</span>
+        </div>
+      </div>
+
+      <div className="home-panel">
+        <div className="home-brand">
           <p className="home-eyebrow">SEVENDAO GAMES</p>
           <h1 className="home-title">
             SEVEN <span className="home-title-accent">GODS</span>
           </h1>
           <p className="home-genre-label">共鳴カードバトル</p>
           <p className="home-tagline">七柱の神と挑む、七日間の物語。</p>
-
-          {/* Phase 7 P1（決定187・仕様 §8）：続き（ある時）→ 神を選ぶ → 今日の神域挑戦 → 進行 → リンク */}
-          <div className={`home-cta-row${canResume ? ' home-cta-row-resume' : ''}`}>
-            {canResume && savedBattle && savedGod && (
-              <button type="button" className="home-cta-primary home-cta-resume" data-testid="home-resume" onClick={onResume}>
-                <span className="home-cta-resume-label">続きから</span>
-                <span className="home-cta-resume-detail">
-                  {savedIsDaily ? '神域挑戦・' : ''}
-                  {savedGod.nameJa} vs {savedEnemyName}・ラウンド{savedBattle.round}
-                </span>
-              </button>
-            )}
-            <button
-              type="button"
-              className={canResume ? 'home-cta-secondary' : 'home-cta-primary'}
-              data-testid="home-start"
-              onClick={onStartFresh}
-            >
-              神を選ぶ
-            </button>
-          </div>
-
-          <HomeTodayPanel onOpenDaily={onShowDaily} />
-          <HomeProgressRow />
-
-          <div className="home-links">
-            <button type="button" className="home-howto-button" onClick={onShowTutorial}>
-              <BookIcon className="home-howto-icon" />
-              遊び方を見る
-            </button>
-            <button type="button" className="home-howto-button" onClick={onShowOtomoGrowth}>
-              <HeartIcon className="home-howto-icon" />
-              OTOMOとの絆を見る
-            </button>
-            <button type="button" className="home-howto-button" onClick={onShowRecord}>
-              <TrophyIcon className="home-howto-icon" />
-              戦績を見る
-            </button>
-          </div>
         </div>
 
-        <div className="home-portrait-card">
-          {/* 七神キービジュアル採用：`.home-portrait-card`は元々aspect-ratio:3/4で、
-              恵比寿キービジュアル原本（1086×1448＝ちょうど3:4）と寸法がほぼ一致するため
-              クロップがごく少なく収まる。object-positionの個別調整は不要だった。
-              トップ画質改善：軽量版（god.art.keyvisual）ではなくトップ専用の
-              高品質版（EBISU_HERO_IMAGE）を使う。 */}
-          <img src={EBISU_HERO_IMAGE} alt={FEATURED_GOD.nameJa} width={1086} height={1448} />
-          <div className="home-portrait-overlay">
-            <span className={`god-archetype-badge god-archetype-${FEATURED_GOD.archetype}`}>
-              {ARCHETYPE_LABEL[FEATURED_GOD.archetype]}
-            </span>
-            <span className="home-portrait-name">{FEATURED_GOD.nameJa}</span>
-            <span className="home-portrait-tagline">「{FEATURED_GOD.tagline}」</span>
-          </div>
+        {/* Entrance E1（仕様 §6）：金色の Primary はちょうど 1 個。Secondary は枠のみで最大 1 個 */}
+        <div className={`home-cta-row${canResume ? ' home-cta-row-resume' : ''}`}>
+          {primary === 'resume' && savedBattle && savedGod && (
+            <button type="button" className="home-cta-primary home-cta-resume" data-testid="home-resume" onClick={onResume}>
+              <span className="home-cta-resume-label">続きから</span>
+              <span className="home-cta-resume-detail">
+                {savedIsDaily ? '神域挑戦・' : ''}
+                {savedGod.nameJa} vs {savedEnemyName}・ラウンド{savedBattle.round}
+              </span>
+            </button>
+          )}
+          {primary === 'firstBattle' && (
+            <button
+              type="button"
+              className="home-cta-primary home-cta-resume"
+              data-testid="home-first-battle"
+              onClick={onStartFirstBattle}
+            >
+              <span className="home-cta-resume-label">初陣へ</span>
+              <span className="home-cta-resume-detail">おすすめの構成ですぐ戦う</span>
+            </button>
+          )}
+          {primary === 'daily' && (
+            <button type="button" className="home-cta-primary home-cta-resume" data-testid="home-today-cta" onClick={onShowDaily}>
+              <span className="home-cta-resume-label">神域へ挑む</span>
+              <span className="home-cta-resume-detail">
+                今日の試練：{todayEnemyName}・残り {dailyAttemptsLeft(todayKey)}/{RULES.daily.attemptsPerDay}
+              </span>
+            </button>
+          )}
+          <button
+            type="button"
+            className={primary === 'normal' ? 'home-cta-primary' : 'home-cta-secondary'}
+            data-testid="home-start"
+            onClick={onStartFresh}
+          >
+            神を選ぶ
+          </button>
+        </div>
+
+        <HomeTodayPanel onOpenDaily={onShowDaily} showCta={primary !== 'daily'} showEnemyArt={heroSettled} />
+        <HomeProgressRow showLockedStake={playTrace} />
+
+        <div className="home-links">
+          <button type="button" className="home-howto-button" onClick={onShowRecord}>
+            <TrophyIcon className="home-howto-icon" />
+            戦績を見る
+          </button>
+          <button type="button" className="home-howto-button" onClick={onShowOtomoGrowth}>
+            <HeartIcon className="home-howto-icon" />
+            OTOMOとの絆を見る
+          </button>
         </div>
       </div>
     </div>

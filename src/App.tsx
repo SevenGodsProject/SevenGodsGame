@@ -3,7 +3,7 @@ import { GameFlow } from './components/GameFlow'
 import { TutorialOverlay } from './components/TutorialOverlay'
 import { FeedbackOverlay } from './components/feedback/FeedbackOverlay'
 import { computeSnapshot, type FeedbackSnapshot } from './components/feedback/feedbackSnapshot'
-import { hasSeenTutorial, markTutorialSeen } from './hooks/tutorialStorage'
+import { markTutorialSeen } from './hooks/tutorialStorage'
 import { setSoundMuted } from './components/battle/sound'
 import { setBgmMuted } from './components/battle/bgm'
 import { SpeakerIcon, BookIcon, FeedbackIcon } from './components/icons'
@@ -23,7 +23,10 @@ import './App.css'
  */
 function App() {
   const [muted, setMuted] = useState(false)
-  const [showTutorial, setShowTutorial] = useState(() => !hasSeenTutorial())
+  // Phase 7 Entrance E1（決定193）：起動時に 699 字の「遊び方」を自動で開くのをやめた。
+  // 最初の 3 秒は Home（神・Primary）を見せ、初めての人には「初陣へ」→ 3 行の短い説明で案内する。
+  // 完全版は削除しておらず、ヘッダーの本のアイコンからいつでも開ける。
+  const [showTutorial, setShowTutorial] = useState(false)
   const [showFeedback, setShowFeedback] = useState(false)
   const [snapshot, setSnapshot] = useState<FeedbackSnapshot>(() =>
     computeSnapshot({ setupScreen: 'home', godId: null, difficulty: 'normal', state: null }),

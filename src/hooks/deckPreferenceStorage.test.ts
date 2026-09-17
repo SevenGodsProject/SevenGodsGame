@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it } from 'vitest'
-import { loadDeckPreference, saveDeckPreference } from './deckPreferenceStorage'
+import { loadDeckPreference, loadLastUsedGodId, saveDeckPreference } from './deckPreferenceStorage'
 import { GOD_IDS } from '../core/data/gods'
 import { STARTER_DECK } from '../core/data/decks'
 
@@ -57,5 +57,46 @@ describe('deckPreferenceStorage', () => {
   it('ignores malformed saved data', () => {
     localStorage.setItem('sevengods.deckPreference', '{not valid json')
     expect(loadDeckPreference(GOD_IDS.ebisu)).toBeNull()
+  })
+})
+
+/** Phase 7 Entrance E1（決定193）：Home の Hero God 用の読み取り専用関数 */
+describe('loadLastUsedGodId', () => {
+  const snapshot = () => JSON.stringify(Object.fromEntries(Array.from({ length: localStorage.length }, (_, i) => [localStorage.key(i), localStorage.getItem(localStorage.key(i)!)])))
+
+  it('何も保存されていなければ null', () => {
+    expect(loadLastUsedGodId()).toBeNull()
+  })
+
+  it('最後にデッキを確定した神を返す（保存は常に 1 件の上書き）', () => {
+    saveDeckPreference(GOD_IDS.ebisu, STARTER_DECK)
+    saveDeckPreference(GOD_IDS.sobi, STARTER_DECK)
+    expect(loadLastUsedGodId()).toBe(GOD_IDS.sobi)
+  })
+
+  it('未知の神 ID・版違い・壊れたデータは null（fallback は呼び出し側）', () => {
+    localStorage.setItem('sevengods.deckPreference', JSON.stringify({ version: 9, godId: 'not_a_god', deck: [] }))
+    expect(loadLastUsedGodId()).toBeNull()
+    localStorage.setItem('sevengods.deckPreference', JSON.stringify({ version: 1, godId: GOD_IDS.taiyo, deck: [] }))
+    expect(loadLastUsedGodId()).toBeNull()
+    localStorage.setItem('sevengods.deckPreference', '{broken')
+    expect(loadLastUsedGodId()).toBeNull()
+  })
+
+  it('読むだけで storage を 1 バイトも変えない（壊れたデータも直さない・消さない）', () => {
+    localStorage.setItem('sevengods.deckPreference', JSON.stringify({ version: 9, godId: 'not_a_god', deck: [] }))
+    const before = snapshot()
+    loadLastUsedGodId()
+    expect(snapshot()).toBe(before)
+    saveDeckPreference(GOD_IDS.juraku, STARTER_DECK)
+    const before2 = snapshot()
+    expect(loadLastUsedGodId()).toBe(GOD_IDS.juraku)
+    expect(snapshot()).toBe(before2)
+  })
+
+  it('localStorage が使えなくても投げない', () => {
+    Object.defineProperty(globalThis, 'localStorage', { value: undefined, configurable: true })
+    expect(() => loadLastUsedGodId()).not.toThrow()
+    expect(loadLastUsedGodId()).toBeNull()
   })
 })

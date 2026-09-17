@@ -17,6 +17,9 @@ import { DeckBuilderScreen } from './setup/DeckBuilderScreen'
 import { OtomoGrowthScreen } from './setup/OtomoGrowthScreen'
 import { RecordScreen } from './setup/RecordScreen'
 import { DailyChallengeScreen } from './setup/DailyChallengeScreen'
+import { FirstBattleBrief } from './FirstBattleBrief'
+import { FIRST_BATTLE_PRESET } from './setup/firstBattle'
+import { markTutorialSeen } from '../hooks/tutorialStorage'
 import { BattleScreen } from './battle/BattleScreen'
 import { ConfirmDialog } from './ConfirmDialog'
 import { planResultTransition, type ResultTransitionAction } from './resultTransitions'
@@ -28,7 +31,10 @@ import './polish.css'
 type SetupScreen = 'home' | 'godSelect' | 'enemySelect' | 'deckBuild' | 'otomoGrowth' | 'record' | 'daily'
 
 type GameFlowProps = {
-  /** 「遊び方」ボタン（ホーム画面用）。トップバー分はAppが自前で持つ */
+  /**
+   * 完全版の「遊び方」を開く。Entrance E1（決定193）でホームのリンクはヘッダーの本のアイコンへ一本化し、
+   * ここからは初陣の短い説明の「詳しい遊び方」だけが使う。トップバー分はAppが自前で持つ
+   */
   onShowTutorial: () => void
   /** 実プレイ・フィードバック基盤：ヘッダーのフィードバックボタンに添える現在のプレイ状況 */
   onSnapshotChange: (snapshot: FeedbackSnapshot) => void
@@ -92,6 +98,8 @@ export function GameFlow({ onShowTutorial, onSnapshotChange }: GameFlowProps) {
   // 8/31 P0-1：進行中セーブがある状態で「神を選ぶ」「挑戦開始」を押したときの確認。
   // 確認後に実行する処理を保持する（null＝ダイアログ非表示）。セーブが無ければ出さない
   const [pendingDiscard, setPendingDiscard] = useState<{ proceed: () => void } | null>(null)
+  // Phase 7 Entrance E1（決定193）：「初陣へ」を押したときの短い説明（3 行）の開閉
+  const [showFirstBattleBrief, setShowFirstBattleBrief] = useState(false)
   const guardDiscard = (proceed: () => void) => {
     if (savedBattle) setPendingDiscard({ proceed })
     else proceed()
@@ -164,6 +172,41 @@ export function GameFlow({ onShowTutorial, onSnapshotChange }: GameFlowProps) {
     }
   }
 
+  /**
+   * Phase 7 Entrance E1（決定193・仕様 §7）：初陣を始める。
+   *
+   * 神選択・敵選択・デッキ編成を通らず、`FIRST_BATTLE_PRESET`（恵比寿・試練の影・ふつう）と
+   * おすすめデッキで**既存の `engine.startGame`** を呼ぶだけ（通常戦と同じ開始・決着処理を通る）。
+   * 先に state を通常戦と同じ値に揃えるので、結果画面の「もう一度」「デッキを調整」もそのまま動く。
+   * デッキの好み（`saveDeckPreference`）は保存しない：初陣の神＝Home の fallback の神なので、
+   * 初戦後の Home も同じ神で一貫する。神域挑戦の回数には関係しない（通常戦）。
+   * 説明を閉じたことは既存の `markTutorialSeen` で記録する（既存 key・既存の意味）。
+   */
+  const startFirstBattle = () => {
+    const preset = FIRST_BATTLE_PRESET
+    const firstDeck = getRecommendedDeck(preset.godId)
+    setShowFirstBattleBrief(false)
+    markTutorialSeen()
+    setDailyKey(null)
+    setGodId(preset.godId)
+    setDeck(firstDeck)
+    setDifficulty(preset.difficulty)
+    setStake(0)
+    setStakeChoice(null)
+    setOtomoGrowthPath(preset.otomoGrowthPath)
+    setSelectedEnemyId(preset.enemyId)
+    engine.startGame(
+      preset.godId,
+      firstDeck,
+      preset.difficulty,
+      loadRewardBonuses(preset.godId),
+      preset.otomoGrowthPath,
+      preset.enemyId,
+      0,
+      null,
+    )
+  }
+
   const goHome = () => {
     setDailyKey(null)
     setSetupScreen('home')
@@ -220,7 +263,7 @@ export function GameFlow({ onShowTutorial, onSnapshotChange }: GameFlowProps) {
         return (
           <HomeScreen
             savedBattle={savedBattle}
-            onShowTutorial={onShowTutorial}
+            onStartFirstBattle={() => setShowFirstBattleBrief(true)}
             onShowOtomoGrowth={() => setSetupScreen('otomoGrowth')}
             onShowRecord={() => setSetupScreen('record')}
             onShowDaily={() => setSetupScreen('daily')}
@@ -379,6 +422,16 @@ export function GameFlow({ onShowTutorial, onSnapshotChange }: GameFlowProps) {
   return (
     <>
       {screen}
+      {showFirstBattleBrief && !engine.state && (
+        <FirstBattleBrief
+          onConfirm={startFirstBattle}
+          onCancel={() => {
+            setShowFirstBattleBrief(false)
+            markTutorialSeen()
+          }}
+          onOpenTutorial={onShowTutorial}
+        />
+      )}
       {pendingDiscard && (
         <ConfirmDialog
           title="新しい挑戦を始めますか？"
