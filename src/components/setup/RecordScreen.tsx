@@ -5,7 +5,7 @@ import { bestResultOf, loadRecentDailyDays } from '../../hooks/dailyStorage'
 import { loadGodStakeRecord } from '../../hooks/stakeStorage'
 import { STAKE_LEVELS, getStakeLevelDef } from '../../core/data/stakes'
 import { DailyStatusBadge } from './DailyStatusBadge'
-import { getEnemyDef } from '../../core/data/enemies'
+import { safeEnemyName } from '../enemyLookup'
 import { RULES } from '../../core/data/rules'
 import { formatScaled } from '../displayScale'
 import { ARCHETYPE_LABEL } from './godStyle'
@@ -78,7 +78,9 @@ export function RecordScreen({ onBack }: RecordScreenProps) {
                 {dailyDays.map((day) => (
                   <tr key={day.dateKey}>
                     <td>{day.dateKey}</td>
-                    <td>{getEnemyDef(day.enemyId).name}</td>
+                    {/* Post-P2 Hardening（決定191）：保存データが壊れて現在の敵定義に存在しない ID が
+                        入っていた場合でも、この行だけ「不明な敵」にし、有効な他の行・他の記録は表示を続ける */}
+                    <td>{safeEnemyName(day.enemyId)}</td>
                     <td className="num">{day.bestScore > 0 ? formatScaled(day.bestScore) : '—'}</td>
                     <td>{(() => { const r = bestResultOf(day); return r ? <DailyStatusBadge status={r.status} /> : '—' })()}</td>
                     <td>{day.bestGodId ? (GODS.find((g) => g.id === day.bestGodId)?.nameJa ?? '—') : '—'}</td>

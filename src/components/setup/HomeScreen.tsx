@@ -1,6 +1,6 @@
 import type { GameState } from '../../core/types'
 import { GODS } from '../../core/data/gods'
-import { getEnemyDef } from '../../core/data/enemies'
+import { isKnownEnemyId, safeEnemyName } from '../enemyLookup'
 import { HomeProgressRow, HomeTodayPanel } from './HomeTodayPanel'
 import { ARCHETYPE_LABEL } from './godStyle'
 import { BookIcon, HeartIcon, TrophyIcon } from '../icons'
@@ -65,8 +65,12 @@ export function HomeScreen({
   const savedGod = savedBattle ? GODS.find((g) => g.id === savedBattle.godId) : undefined
   const savedIsDaily = savedBattle?.mode === 'daily'
   // Phase 7 P1（決定187）：続きがあるときは「続きから」をページ最上位の Primary にし、相手の敵名も出す
-  const savedEnemyName = savedBattle ? getEnemyDef(savedBattle.enemy.defId).name : ''
-  const canResume = !!(savedBattle && savedGod)
+  // Post-P2 Hardening（決定191）：保存データが壊れて現在の敵定義に存在しない ID が入っていた場合、
+  // Battle 側は安全に処理できない（多数の getEnemyDef 呼び出しが未防御）ため、Resume 自体を出さない。
+  // 保存データは削除・修正しない（「神を選ぶ」で新しく始めることはできる）
+  const savedEnemyKnown = savedBattle ? isKnownEnemyId(savedBattle.enemy.defId) : false
+  const savedEnemyName = savedBattle ? safeEnemyName(savedBattle.enemy.defId) : ''
+  const canResume = !!(savedBattle && savedGod && savedEnemyKnown)
 
   return (
     <div className="home-screen">
