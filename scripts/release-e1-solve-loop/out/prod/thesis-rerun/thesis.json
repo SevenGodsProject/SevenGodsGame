@@ -1,0 +1,337 @@
+{
+  "base": "https://seven-gods-game.vercel.app",
+  "at": "2026-09-18T16:02:31.786Z",
+  "verdict": "PASS",
+  "checks": [
+    {
+      "id": "T1-pc1508",
+      "d": "初陣は 2 click で開戦（3 click 目が最初のカード）",
+      "verdict": "PASS",
+      "detail": 2
+    },
+    {
+      "id": "T2-pc1508",
+      "d": "初陣＝恵比寿 vs 試練の影・通常モード",
+      "verdict": "PASS",
+      "detail": {
+        "god": "ebisu",
+        "enemy": "enemy_01",
+        "mode": "normal"
+      }
+    },
+    {
+      "id": "T3-pc1508",
+      "d": "初陣で負けたとき Primary が「同じ盤面でもう一度」",
+      "verdict": "PASS",
+      "detail": {
+        "primaryExit": "rematch",
+        "primaryLabel": "同じ盤面でもう一度",
+        "rematchLabel": "同じ盤面でもう一度",
+        "goal": "次の目標試練の影を撃破する（残りHP 100%）"
+      }
+    },
+    {
+      "id": "T4-pc1508",
+      "d": "初陣の敗北→再戦で seed・初期手札・予告が一致（E1 の state 設定と Solve Loop の接続）",
+      "verdict": "PASS",
+      "detail": {
+        "seed": [
+          "seed-1789747222983",
+          "seed-1789747222983"
+        ],
+        "hand": [
+          [
+            "🌟 予言",
+            "🛡 守護",
+            "🌿 福授け",
+            "⚔ 一撃",
+            "✨ 共振"
+          ],
+          [
+            "🌟 予言",
+            "🛡 守護",
+            "🌿 福授け",
+            "⚔ 一撃",
+            "✨ 共振"
+          ]
+        ],
+        "intent": [
+          "⚔ 50",
+          "⚔ 50"
+        ]
+      }
+    },
+    {
+      "id": "T5-pc1508",
+      "d": "初陣で勝ったとき再戦文言は「同じ構成でもう一度」で seed が変わる",
+      "verdict": "PASS",
+      "detail": {
+        "label": "同じ構成でもう一度",
+        "seed": [
+          "seed-1789747248397",
+          "seed-1789747280737"
+        ]
+      }
+    },
+    {
+      "id": "T6-pc1508",
+      "d": "初陣は Daily 回数に触れない",
+      "verdict": "PASS",
+      "detail": null
+    },
+    {
+      "id": "T7-pc1508",
+      "d": "JS error 0",
+      "verdict": "PASS",
+      "detail": []
+    },
+    {
+      "id": "T1-sp844",
+      "d": "初陣は 2 click で開戦（3 click 目が最初のカード）",
+      "verdict": "PASS",
+      "detail": 2
+    },
+    {
+      "id": "T2-sp844",
+      "d": "初陣＝恵比寿 vs 試練の影・通常モード",
+      "verdict": "PASS",
+      "detail": {
+        "god": "ebisu",
+        "enemy": "enemy_01",
+        "mode": "normal"
+      }
+    },
+    {
+      "id": "T3-sp844",
+      "d": "初陣で負けたとき Primary が「同じ盤面でもう一度」",
+      "verdict": "PASS",
+      "detail": {
+        "primaryExit": "rematch",
+        "primaryLabel": "同じ盤面でもう一度",
+        "rematchLabel": "同じ盤面でもう一度",
+        "goal": "次の目標試練の影を撃破する（残りHP 100%）"
+      }
+    },
+    {
+      "id": "T4-sp844",
+      "d": "初陣の敗北→再戦で seed・初期手札・予告が一致（E1 の state 設定と Solve Loop の接続）",
+      "verdict": "PASS",
+      "detail": {
+        "seed": [
+          "seed-1789747285122",
+          "seed-1789747285122"
+        ],
+        "hand": [
+          [
+            "⚔ 渾身の一撃",
+            "⚔ 潮招き",
+            "⚔ 剛撃",
+            "✨ 共振",
+            "⚔ 一撃"
+          ],
+          [
+            "⚔ 渾身の一撃",
+            "⚔ 潮招き",
+            "⚔ 剛撃",
+            "✨ 共振",
+            "⚔ 一撃"
+          ]
+        ],
+        "intent": [
+          "⚔ 50",
+          "⚔ 50"
+        ]
+      }
+    },
+    {
+      "id": "T5-sp844",
+      "d": "初陣で勝ったとき再戦文言は「同じ構成でもう一度」で seed が変わる",
+      "verdict": "PASS",
+      "detail": {
+        "label": "同じ構成でもう一度",
+        "seed": [
+          "seed-1789747310002",
+          "seed-1789747350242"
+        ]
+      }
+    },
+    {
+      "id": "T6-sp844",
+      "d": "初陣は Daily 回数に触れない",
+      "verdict": "PASS",
+      "detail": null
+    },
+    {
+      "id": "T7-sp844",
+      "d": "JS error 0",
+      "verdict": "PASS",
+      "detail": []
+    }
+  ],
+  "raw": {
+    "pc1508-lose": {
+      "clicks": 2,
+      "before": {
+        "seed": "seed-1789747222983",
+        "mode": "normal",
+        "godId": "ebisu",
+        "enemyId": "enemy_01",
+        "hand": [
+          "🌟 予言",
+          "🛡 守護",
+          "🌿 福授け",
+          "⚔ 一撃",
+          "✨ 共振"
+        ],
+        "intent": "⚔ 50",
+        "daily": null
+      },
+      "result": {
+        "primaryExit": "rematch",
+        "primaryLabel": "同じ盤面でもう一度",
+        "rematchLabel": "同じ盤面でもう一度",
+        "goal": "次の目標試練の影を撃破する（残りHP 100%）"
+      },
+      "clicked": true,
+      "after": {
+        "seed": "seed-1789747222983",
+        "mode": "normal",
+        "godId": "ebisu",
+        "enemyId": "enemy_01",
+        "hand": [
+          "🌟 予言",
+          "🛡 守護",
+          "🌿 福授け",
+          "⚔ 一撃",
+          "✨ 共振"
+        ],
+        "intent": "⚔ 50",
+        "daily": null
+      },
+      "errors": []
+    },
+    "pc1508-win": {
+      "clicks": 2,
+      "before": {
+        "seed": "seed-1789747248397",
+        "mode": "normal",
+        "godId": "ebisu",
+        "enemyId": "enemy_01",
+        "hand": [
+          "🌿 恵比寿顔",
+          "🌟 小さな託宣",
+          "🛡 守護",
+          "⚔ 大漁",
+          "⚔ 剛撃"
+        ],
+        "intent": "⚔ 50",
+        "daily": null
+      },
+      "result": {
+        "primaryExit": "goDaily",
+        "primaryLabel": "今日の神域挑戦へ",
+        "rematchLabel": "同じ構成でもう一度",
+        "goal": "次の目標今日の神域挑戦：試練の影に挑む（残り3回）"
+      },
+      "clicked": true,
+      "after": {
+        "seed": "seed-1789747280737",
+        "mode": "normal",
+        "godId": "ebisu",
+        "enemyId": "enemy_01",
+        "hand": [
+          "⚔ 剛撃",
+          "⚔ 速攻",
+          "⚔ 渾身の一撃",
+          "🌟 予言",
+          "⚔ 潮招き"
+        ],
+        "intent": "⚔ 50",
+        "daily": null
+      },
+      "errors": []
+    },
+    "sp844-lose": {
+      "clicks": 2,
+      "before": {
+        "seed": "seed-1789747285122",
+        "mode": "normal",
+        "godId": "ebisu",
+        "enemyId": "enemy_01",
+        "hand": [
+          "⚔ 渾身の一撃",
+          "⚔ 潮招き",
+          "⚔ 剛撃",
+          "✨ 共振",
+          "⚔ 一撃"
+        ],
+        "intent": "⚔ 50",
+        "daily": null
+      },
+      "result": {
+        "primaryExit": "rematch",
+        "primaryLabel": "同じ盤面でもう一度",
+        "rematchLabel": "同じ盤面でもう一度",
+        "goal": "次の目標試練の影を撃破する（残りHP 100%）"
+      },
+      "clicked": true,
+      "after": {
+        "seed": "seed-1789747285122",
+        "mode": "normal",
+        "godId": "ebisu",
+        "enemyId": "enemy_01",
+        "hand": [
+          "⚔ 渾身の一撃",
+          "⚔ 潮招き",
+          "⚔ 剛撃",
+          "✨ 共振",
+          "⚔ 一撃"
+        ],
+        "intent": "⚔ 50",
+        "daily": null
+      },
+      "errors": []
+    },
+    "sp844-win": {
+      "clicks": 2,
+      "before": {
+        "seed": "seed-1789747310002",
+        "mode": "normal",
+        "godId": "ebisu",
+        "enemyId": "enemy_01",
+        "hand": [
+          "🌟 神託",
+          "🌿 福授け",
+          "⚔ 潮招き",
+          "⚔ 一撃",
+          "⚔ 剛撃"
+        ],
+        "intent": "⚔ 50",
+        "daily": null
+      },
+      "result": {
+        "primaryExit": "goDaily",
+        "primaryLabel": "今日の神域挑戦へ",
+        "rematchLabel": "同じ構成でもう一度",
+        "goal": "次の目標今日の神域挑戦：試練の影に挑む（残り3回）"
+      },
+      "clicked": true,
+      "after": {
+        "seed": "seed-1789747350242",
+        "mode": "normal",
+        "godId": "ebisu",
+        "enemyId": "enemy_01",
+        "hand": [
+          "⚔ 大漁",
+          "🌿 福授け",
+          "⚔ 剛撃",
+          "⚔ 一撃",
+          "✨ 神楽舞"
+        ],
+        "intent": "⚔ 50",
+        "daily": null
+      },
+      "errors": []
+    }
+  }
+}
