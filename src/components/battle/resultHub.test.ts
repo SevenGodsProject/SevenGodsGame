@@ -43,6 +43,13 @@ describe('planResultExits', () => {
     expect(p.tertiary).toEqual(['home', 'goDaily', 'share'])
   })
 
+  it('決定196：通常戦の敗北・未撃破の Primary 文言は「同じ盤面でもう一度」', () => {
+    for (const status of ['lost', 'finished'] as const) {
+      const p = planResultExits(goal('rematch'), ctx({ status }))
+      expect(p.primaryLabel, status).toBe('同じ盤面でもう一度')
+    }
+  })
+
   it('神域挑戦・残りあり（勝敗とも）：Primary もう一度挑戦（残りN回）', () => {
     for (const status of ['won', 'lost'] as const) {
       const p = planResultExits(goal('rematch'), ctx({ mode: 'daily', status, dailyAttemptsLeft: 2 }))
@@ -81,9 +88,15 @@ describe('planResultExits', () => {
     expect(cases[1].tertiary[cases[1].tertiary.length - 1]).toBe('share')
   })
 
-  it('exitLabel：もう一度はモードで文言が変わる', () => {
+  it('exitLabel：もう一度はモードと勝敗で文言が変わる（決定196）', () => {
+    // 通常戦の勝利：従来どおり新しい盤面
     expect(exitLabel('rematch', ctx())).toBe('同じ構成でもう一度')
+    // 通常戦の敗北・未撃破：同じ盤面（同じ seed）
+    expect(exitLabel('rematch', ctx({ status: 'lost' }))).toBe('同じ盤面でもう一度')
+    expect(exitLabel('rematch', ctx({ status: 'finished' }))).toBe('同じ盤面でもう一度')
+    // 神域挑戦は勝敗にかかわらず残り回数の文言（seed の意味論は不変）
     expect(exitLabel('rematch', ctx({ mode: 'daily', dailyAttemptsLeft: 1 }))).toBe('もう一度挑戦（残り1回）')
+    expect(exitLabel('rematch', ctx({ mode: 'daily', status: 'lost', dailyAttemptsLeft: 1 }))).toBe('もう一度挑戦（残り1回）')
     expect(exitLabel('share', ctx())).toBe('挑戦状をコピー')
   })
 })

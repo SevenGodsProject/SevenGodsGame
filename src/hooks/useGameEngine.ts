@@ -129,6 +129,12 @@ export type UseGameEngine = {
     stake?: number,
     /** 決定126：神階Ⅶの最終試練の選択 */
     stakeChoice?: StakeChoiceId | null,
+    /**
+     * 決定196（Solve Loop v1）：同じ盤面で始め直すときに引き継ぐseed。
+     * 省略すると従来どおり時刻から新しいseedを発行する。
+     * URLバックドア`?seed=`は常にこの指定より優先される（`?enemy=`と同じ順序）
+     */
+    seed?: string,
   ) => void
   /**
    * 決定126：直近の決着の神階記録（通常モードで神階>0、またはむずかしい撃破時）。
@@ -289,6 +295,7 @@ export function useGameEngine(): UseGameEngine {
       enemyId?: EnemyId | null,
       stake?: number,
       stakeChoice?: StakeChoiceId | null,
+      requestedSeed?: string,
     ) => {
       setLog([])
       setError(null)
@@ -303,8 +310,10 @@ export function useGameEngine(): UseGameEngine {
       runLogRef.current = null
       setDailyRunLogAvailable(false)
       clearRunLog()
-      // 決定126：Seed共有（`?seed=`）。無ければ従来どおり時刻から発行
-      const seed = resolveForcedSeed() ?? `seed-${Date.now()}`
+      // 決定126：Seed共有（`?seed=`）。
+      // 決定196：次に「同じ盤面でもう一度」から渡されたseed（敗北・未撃破の再戦）。
+      // どちらも無ければ従来どおり時刻から発行する。
+      const seed = resolveForcedSeed() ?? requestedSeed ?? `seed-${Date.now()}`
       // 決定126：URLバックドア`?stake=` > 画面の選択。神階>0は「ふつう」基準に固定
       const resolvedStake = resolveForcedStake() ?? (isStakeLevel(stake) ? stake : 0)
       setBattleStartKey((k) => k + 1)

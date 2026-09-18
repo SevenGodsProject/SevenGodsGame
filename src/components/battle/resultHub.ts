@@ -1,4 +1,5 @@
 import type { NextGoal, ResultAction } from './nextGoal'
+import { isSameBoardRematch } from './retrySemantics'
 
 /**
  * Phase 7 P1（決定187・仕様 §5）：結果画面の出口を Primary 1／Secondary 2／Tertiary に並べる純関数。
@@ -40,7 +41,10 @@ export const EXIT_LABEL: Record<Exclude<ResultAction, 'rematch'>, string> = {
 export function exitLabel(exit: ResultExit, ctx: ResultHubContext): string {
   if (exit === 'share') return '挑戦状をコピー'
   if (exit === 'rematch') {
-    return ctx.mode === 'daily' ? `もう一度挑戦（残り${ctx.dailyAttemptsLeft}回）` : '同じ構成でもう一度'
+    if (ctx.mode === 'daily') return `もう一度挑戦（残り${ctx.dailyAttemptsLeft}回）`
+    // 決定196（Solve Loop v1）：通常戦の敗北・未撃破は同じ盤面（同じ seed）で始め直す。
+    // 文言と挙動を 1:1 にする＝「撃破する」と言われて別の手札が来る状態をなくす
+    return isSameBoardRematch(ctx) ? '同じ盤面でもう一度' : '同じ構成でもう一度'
   }
   return EXIT_LABEL[exit]
 }
