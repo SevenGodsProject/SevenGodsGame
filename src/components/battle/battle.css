@@ -27,13 +27,16 @@
     background 0.2s ease;
 }
 
-.end-round-button:not(:disabled):hover,
-.game-over-card button:hover {
-  background: linear-gradient(180deg, #ffd1664a, #ffd16618);
-  box-shadow:
-    0 0 26px -2px #ffd166cc,
-    inset 0 1px 0 #ffffff55;
-  transform: translateY(-2px);
+/* 決定200：touch では hover を発生させない（tap のあと浮いたまま残るのを防ぐ）。PC の見た目は不変 */
+@media (hover: hover) and (pointer: fine) {
+  .end-round-button:not(:disabled):hover,
+  .game-over-card button:hover {
+    background: linear-gradient(180deg, #ffd1664a, #ffd16618);
+    box-shadow:
+      0 0 26px -2px #ffd166cc,
+      inset 0 1px 0 #ffffff55;
+    transform: translateY(-2px);
+  }
 }
 
 .game-over-actions {
@@ -2350,13 +2353,19 @@
   cursor: not-allowed;
 }
 
-.card-view:not(:disabled):hover {
-  transform: translateY(-8px) scale(1.04);
+/* 決定200：touch では hover を発生させない（tap のあと浮いたまま残るのを防ぐ）。PC の見た目は不変 */
+@media (hover: hover) and (pointer: fine) {
+  .card-view:not(:disabled):hover {
+    transform: translateY(-8px) scale(1.04);
+  }
 }
 
-.card-view:not(:disabled):hover .card-view-shine {
-  transform: translateX(120%) rotate(20deg);
-  opacity: 1;
+/* 決定200：touch では hover を発生させない（tap のあと浮いたまま残るのを防ぐ）。PC の見た目は不変 */
+@media (hover: hover) and (pointer: fine) {
+  .card-view:not(:disabled):hover .card-view-shine {
+    transform: translateX(120%) rotate(20deg);
+    opacity: 1;
+  }
 }
 
 /* 角丸の内側だけにクリップする装飾レイヤー（イラスト・透かしアイコン・シャイン）。
@@ -2649,9 +2658,12 @@
     box-shadow 0.2s ease;
 }
 
-.reward-card:not(:disabled):hover {
-  transform: translateY(-4px);
-  box-shadow: 0 0 20px -4px #ffd16688;
+/* 決定200：touch では hover を発生させない（tap のあと浮いたまま残るのを防ぐ）。PC の見た目は不変 */
+@media (hover: hover) and (pointer: fine) {
+  .reward-card:not(:disabled):hover {
+    transform: translateY(-4px);
+    box-shadow: 0 0 20px -4px #ffd16688;
+  }
 }
 
 .reward-card:disabled {
@@ -2885,11 +2897,14 @@
     inset 0 1px 0 #ffffff22;
 }
 
-.game-over-card-lost .game-over-actions button:hover {
-  background: linear-gradient(180deg, #e5484d44, #e5484d18);
-  box-shadow:
-    0 0 20px -2px #e5484d99,
-    inset 0 1px 0 #ffffff33;
+/* 決定200：touch では hover を発生させない（tap のあと浮いたまま残るのを防ぐ）。PC の見た目は不変 */
+@media (hover: hover) and (pointer: fine) {
+  .game-over-card-lost .game-over-actions button:hover {
+    background: linear-gradient(180deg, #e5484d44, #e5484d18);
+    box-shadow:
+      0 0 20px -2px #e5484d99,
+      inset 0 1px 0 #ffffff33;
+  }
 }
 
 .game-over-card-finished {
@@ -2905,11 +2920,14 @@
     inset 0 1px 0 #ffffff22;
 }
 
-.game-over-card-finished .game-over-actions button:hover {
-  background: linear-gradient(180deg, #7f8ab844, #7f8ab818);
-  box-shadow:
-    0 0 20px -2px #7f8ab899,
-    inset 0 1px 0 #ffffff33;
+/* 決定200：touch では hover を発生させない（tap のあと浮いたまま残るのを防ぐ）。PC の見た目は不変 */
+@media (hover: hover) and (pointer: fine) {
+  .game-over-card-finished .game-over-actions button:hover {
+    background: linear-gradient(180deg, #7f8ab844, #7f8ab818);
+    box-shadow:
+      0 0 20px -2px #7f8ab899,
+      inset 0 1px 0 #ffffff33;
+  }
 }
 
 .game-over-status {
@@ -5883,18 +5901,24 @@ body.battle-viewport .battle-main > .battle-callout {
   background: linear-gradient(135deg, #ffe6a3 0%, #ffd166 55%, #e0a53a 100%);
   box-shadow: 0 0 24px -4px #ffd16688;
 }
-.game-over-card .result-cta-primary:hover {
-  background: linear-gradient(135deg, #fff0c4 0%, #ffd97f 55%, #e8b04a 100%);
-  box-shadow: 0 0 30px -2px #ffd166cc;
+/* 決定200：touch では hover を発生させない（tap のあと浮いたまま残るのを防ぐ）。PC の見た目は不変 */
+@media (hover: hover) and (pointer: fine) {
+  .game-over-card .result-cta-primary:hover {
+    background: linear-gradient(135deg, #fff0c4 0%, #ffd97f 55%, #e8b04a 100%);
+    box-shadow: 0 0 30px -2px #ffd166cc;
+  }
 }
 .game-over-card-lost .result-cta-primary {
   color: #2a0b0c;
   background: linear-gradient(135deg, #ffb0b0 0%, #ff8080 55%, #e5484d 100%);
   box-shadow: 0 0 22px -6px #e5484d99;
 }
-.game-over-card-lost .result-cta-primary:hover {
-  background: linear-gradient(135deg, #ffc4c4 0%, #ff9696 55%, #ec5d61 100%);
-  box-shadow: 0 0 28px -4px #e5484dcc;
+/* 決定200：touch では hover を発生させない（tap のあと浮いたまま残るのを防ぐ）。PC の見た目は不変 */
+@media (hover: hover) and (pointer: fine) {
+  .game-over-card-lost .result-cta-primary:hover {
+    background: linear-gradient(135deg, #ffc4c4 0%, #ff9696 55%, #ec5d61 100%);
+    box-shadow: 0 0 28px -4px #e5484dcc;
+  }
 }
 .game-over-card-finished .result-cta-primary {
   color: #11142a;

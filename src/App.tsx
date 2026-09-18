@@ -8,6 +8,9 @@ import { setSoundMuted } from './components/battle/sound'
 import { setBgmMuted } from './components/battle/bgm'
 import { SpeakerIcon, BookIcon, FeedbackIcon } from './components/icons'
 import './App.css'
+// 決定200 Interaction Feel v1：押した瞬間の手応え（見た目だけ）。
+// 既存 CSS のあとに載せるため、import はこのファイルの最後に置く
+import './components/press.css'
 
 /**
  * アプリ全体の土台。

@@ -167,13 +167,16 @@
   position: relative;
 }
 
-.god-select-card:hover {
-  border-color: #ffd166;
-  background: linear-gradient(165deg, #2a2140aa 0%, #0b0d17cc 100%);
-  box-shadow:
-    inset 0 1px 0 #ffffff10,
-    0 0 20px -4px #ffd16688;
-  transform: translateY(-3px);
+/* 決定200：touch では hover を発生させない（tap のあと浮いたまま残るのを防ぐ）。PC の見た目は不変 */
+@media (hover: hover) and (pointer: fine) {
+  .god-select-card:hover {
+    border-color: #ffd166;
+    background: linear-gradient(165deg, #2a2140aa 0%, #0b0d17cc 100%);
+    box-shadow:
+      inset 0 1px 0 #ffffff10,
+      0 0 20px -4px #ffd16688;
+    transform: translateY(-3px);
+  }
 }
 
 /*
@@ -530,9 +533,12 @@
     box-shadow 0.2s ease;
 }
 
-.god-select-confirm:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 24px -4px #ffd166aa;
+/* 決定200：touch では hover を発生させない（tap のあと浮いたまま残るのを防ぐ）。PC の見た目は不変 */
+@media (hover: hover) and (pointer: fine) {
+  .god-select-confirm:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 24px -4px #ffd166aa;
+  }
 }
 
 /* --- OTOMOの成長の絆選択（決定44） --- */
@@ -636,11 +642,14 @@
     background 0.2s ease;
 }
 
-.deck-builder-toolbar button:hover,
-.deck-builder-actions button:not(:disabled):hover {
-  background: linear-gradient(180deg, #ffd16644, #ffd16614);
-  box-shadow: 0 0 22px -2px #ffd166cc;
-  transform: translateY(-2px);
+/* 決定200：touch では hover を発生させない（tap のあと浮いたまま残るのを防ぐ）。PC の見た目は不変 */
+@media (hover: hover) and (pointer: fine) {
+  .deck-builder-toolbar button:hover,
+  .deck-builder-actions button:not(:disabled):hover {
+    background: linear-gradient(180deg, #ffd16644, #ffd16614);
+    box-shadow: 0 0 22px -2px #ffd166cc;
+    transform: translateY(-2px);
+  }
 }
 
 /* CEO承認済み・P1（誤操作対策A案）：「全て外す」（20枚を一括で消す操作）を、
@@ -709,8 +718,11 @@
   transition: transform 0.15s ease;
 }
 
-.deck-builder-card:hover {
-  transform: translateY(-3px);
+/* 決定200：touch では hover を発生させない（tap のあと浮いたまま残るのを防ぐ）。PC の見た目は不変 */
+@media (hover: hover) and (pointer: fine) {
+  .deck-builder-card:hover {
+    transform: translateY(-3px);
+  }
 }
 
 /* 角丸の内側だけにクリップする装飾レイヤー（イラスト・フォールバックアイコン）。
@@ -937,9 +949,12 @@
     box-shadow 0.2s ease;
 }
 
-.home-cta-primary:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 28px -4px #ffd166aa;
+/* 決定200：touch では hover を発生させない（tap のあと浮いたまま残るのを防ぐ）。PC の見た目は不変 */
+@media (hover: hover) and (pointer: fine) {
+  .home-cta-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 28px -4px #ffd166aa;
+  }
 }
 
 .home-cta-secondary {
@@ -1538,7 +1553,8 @@
 
 /* SELECTED/HOVER STATE：背景・敵artを隠さず、border＋glow＋右上accentマーカー
    だけで明確化（過度な塗りでStage artを潰さない、CEO指示） */
-.enemy-select-card:hover,
+/* 決定200：キーボードの :focus-visible は端末を問わず必要なので hover と分ける。
+   hover 側だけを hover 可能なポインタに限定し、touch で浮いたまま残るのを防ぐ */
 .enemy-select-card:focus-visible {
   border-color: var(--enemy-accent, #ffd166);
   transform: translateY(-3px);
@@ -1546,6 +1562,17 @@
     inset 0 1px 0 #ffffff10,
     0 0 26px -4px var(--enemy-accent-glow, #ffd16688);
   outline: none;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .enemy-select-card:hover {
+    border-color: var(--enemy-accent, #ffd166);
+    transform: translateY(-3px);
+    box-shadow:
+      inset 0 1px 0 #ffffff10,
+      0 0 26px -4px var(--enemy-accent-glow, #ffd16688);
+    outline: none;
+  }
 }
 
 .enemy-select-card::after {
@@ -1561,11 +1588,18 @@
   pointer-events: none;
 }
 
-.enemy-select-card:hover::after,
 .enemy-select-card:focus-visible::after {
   opacity: 1;
 }
 
+@media (hover: hover) and (pointer: fine) {
+  .enemy-select-card:hover::after {
+    opacity: 1;
+  }
+}
+
+/* 決定200：押し込みは `press.css` の Tier 2 に一本化した（`:not(:disabled):active` で
+   こちらより詳細度が高い）。この規則は press.css が読めなかったときの控えとして残す */
 .enemy-select-card:active {
   transform: translateY(-1px) scale(0.99);
 }
@@ -1701,12 +1735,21 @@
   border: 1px dashed #ffd16655;
 }
 
-.enemy-select-card-entrust:hover,
+/* 決定200：同上（focus-visible は残し、hover だけを hover 可能なポインタに限定） */
 .enemy-select-card-entrust:focus-visible {
   border-color: #ffd166;
   box-shadow:
     inset 0 1px 0 #ffffff10,
     0 0 26px -4px #ffd16688;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .enemy-select-card-entrust:hover {
+    border-color: #ffd166;
+    box-shadow:
+      inset 0 1px 0 #ffffff10,
+      0 0 26px -4px #ffd16688;
+  }
 }
 
 .enemy-select-card-entrust::after {
@@ -2172,9 +2215,12 @@
     box-shadow 0.2s ease,
     background 0.2s ease;
 }
-.home-today-cta:hover {
-  background: linear-gradient(180deg, #ffd16655, #ffd1661f);
-  box-shadow: 0 0 22px -2px #ffd166cc;
+/* 決定200：touch では hover を発生させない（tap のあと浮いたまま残るのを防ぐ）。PC の見た目は不変 */
+@media (hover: hover) and (pointer: fine) {
+  .home-today-cta:hover {
+    background: linear-gradient(180deg, #ffd16655, #ffd1661f);
+    box-shadow: 0 0 22px -2px #ffd166cc;
+  }
 }
 .home-today-exhausted .home-today-cta {
   border-color: #ffd16688;

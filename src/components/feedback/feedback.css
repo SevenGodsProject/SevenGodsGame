@@ -113,9 +113,12 @@
     transform 0.15s ease;
 }
 
-.feedback-copy:hover {
-  box-shadow: 0 0 26px -2px #7ad1ffcc;
-  transform: translateY(-2px);
+/* 決定200：touch では hover を発生させない（tap のあと浮いたまま残るのを防ぐ）。PC の見た目は不変 */
+@media (hover: hover) and (pointer: fine) {
+  .feedback-copy:hover {
+    box-shadow: 0 0 26px -2px #7ad1ffcc;
+    transform: translateY(-2px);
+  }
 }
 
 .feedback-close {
