@@ -9,6 +9,7 @@ import { dailyAttemptsLeft } from '../hooks/dailyStorage'
 import { getRecommendedDeck } from '../core/data/deckBuilder'
 import { dailyBossFor } from '../core/data/dailyBoss'
 import { playTrack } from './battle/bgm'
+import { resolveRematchSeed } from './battle/retrySemantics'
 import { computeSnapshot, type FeedbackSnapshot } from './feedback/feedbackSnapshot'
 import { HomeScreen } from './setup/HomeScreen'
 import { GodSelectScreen } from './setup/GodSelectScreen'
@@ -359,6 +360,8 @@ export function GameFlow({ onShowTutorial, onSnapshotChange }: GameFlowProps) {
           // リマッチ相手が突然すり替わらない（新しい敵と戦いたい時は
           // 「神を選び直す」からEnemy Selectを通る）。URLバックドアは従来どおり最優先。
           // 決定126：「もう一度」は同じ神階・同じ最終試練で再戦する（state側の値を優先）
+          // 決定196（Solve Loop v1）：敗北・未撃破なら同じ盤面（同じ seed）で始め直す。
+          // 勝利なら seed を渡さず、従来どおり新しい盤面になる（`retrySemantics.ts`）
           engine.startGame(
             godId,
             deck,
@@ -368,6 +371,13 @@ export function GameFlow({ onShowTutorial, onSnapshotChange }: GameFlowProps) {
             engine.state?.enemy.defId ?? selectedEnemyId,
             engine.state?.stake ?? stake,
             engine.state?.stakeChoice ?? stakeChoice,
+            engine.state
+              ? resolveRematchSeed({
+                  mode: engine.state.mode,
+                  status: engine.state.status,
+                  seed: engine.state.seed,
+                })
+              : undefined,
           )
         }}
         onReselect={backToGodSelect}
