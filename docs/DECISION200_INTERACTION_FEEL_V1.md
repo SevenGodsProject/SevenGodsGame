@@ -1,8 +1,8 @@
 # 決定200 — Interaction Feel v1 実装（押した瞬間の手応え）
 
-- 日付：2026-09-19
+- 日付：2026-09-19（実装）／2026-09-19（CEO Human QA・Close-out）
 - branch：`feat/interaction-feel-v1`（**local master `3470545` から分岐**＝決定198 の記録 commit を含む。push・master merge・deploy は未実施）
-- 判定：**READY FOR CEO HUMAN QA**（Production 反映ではない）
+- 判定：**PASS / CLOSED**（CEO Human QA PASS。**Production 反映はしていない**）
 - 区分：実装方式・Tier 分け・判定は **AI判断**（CLAUDE.md §6-2）。着手は **CEO指示**（決定200）
 - 上流：`docs/DECISION199_INTERACTION_FEEL_AUDIT.md`（PASS WITH MODIFICATIONS・推奨 IMPLEMENT）
 - Production：`origin/master` = `3b416da`（**不変**）
@@ -188,28 +188,26 @@ Ranking Absence Gate 18 項目 PASS、Secret Audit PASS、`feat/daily-ranking-ph
 
 ---
 
-## 14. CEO Human QA（5 分以内）
+## 14. CEO Human QA — PASS（2026-09-19）
 
-プレビュー：PC `http://localhost:4181/`／iPhone（同じ Wi-Fi）`http://192.168.11.6:4181/`
+- 対象：本ブランチ `feat/interaction-feel-v1` `e359104` のビルドを `vite preview --host --port 4181` で配信（PC `http://localhost:4181/`／実機 `http://192.168.11.6:4181/`）
+- 判定：**PASS**（**CEO判断**）
+- 確認した質問：「押した瞬間に反応が返ってくる感じがあるか」
 
-**確認する質問はひとつ：「押した瞬間に反応が返ってくる感じがあるか」**
+| # | 端末 | 確認項目 | CEO コメント（原文） | 判定 |
+| --- | --- | --- | --- | --- |
+| 1 | PC | Home Primary CTA | 「押した感じがある」 | **PASS** |
+| 2 | PC | 神・敵・難易度の選択 | 「選んだ感がある」 | **PASS** |
+| 3 | PC | カード 3 枚 | 「押した感じがある」 | **PASS** |
+| 4 | iPhone | ラウンド終了後にボタンが浮いたままにならない | 浮いたままにならない | **PASS** |
+| 5 | iPhone | デッキ ± を 5 回連打してもズームしない | ズームしない | **PASS** |
+| 6 | iPhone | 敵ターン中の手札が「押せない」と分かる | 押せないと分かる | **PASS** |
 
-### PC
+**この QA で確認された最重要点**：自動テストが証明できるのは「押下規則が適用される」「レイテンシ 0.0ms」「tap 後に hover が残らない」という**事実**までで、それが**手応えとして届いているか**は測れない。CEO の「押した感じがある」「選んだ感がある」という言葉が、決定200 の目的（押した瞬間に入力がゲームへ伝わったと感じられること）を満たした唯一の証拠である。
 
-1. Home の金色ボタンを **押し込んで離す**（沈んでから進むか）
-2. 神・敵・難易度を押す（それぞれ沈むか）
-3. カードを 3 枚使う（触った瞬間に沈み、そのまま飛んでいくか）
-4. わざと負けて「同じ盤面でもう一度」を押す
-5. 勝って報酬カードを押す
+②の「**選んだ感**」は、決定199 で指摘した「hover と選択状態が alpha 差しか無く区別がつかない」問題に対して、Tier 2 の押し込み（`scale(0.97)` ＋ `brightness(0.94)`）が選択の瞬間を作れたことを示す。
 
-### Mobile（iPhone）
-
-同じ 5 つに加えて：
-
-- ラウンド終了を押したあと、**敵のターンが終わってもボタンが浮いたまま光っていないか**
-- デッキ画面で ± を **素早く 5 回**タップ（画面が拡大しないか）
-- 敵のターン中に手札が **灰色に沈んで「押せない」と分かるか**（押しても出ない）
-- カードが押しやすいか
+④⑤⑥はいずれも決定199 で実測した具体的な不具合（sticky hover・ダブルタップ拡大・押せないカードが押せるように見える）が実機で解消したことの確認である。
 
 ---
 
@@ -224,6 +222,14 @@ Ranking Absence Gate 18 項目 PASS、Secret Audit PASS、`feat/daily-ranking-ph
 
 ---
 
-## 16. 判定
+## 16. 判定（Close-out）
 
-**READY FOR CEO HUMAN QA。** Production 反映は未実施（CLAUDE.md §6-3 #8）。commit は `feat/interaction-feel-v1` ブランチのみで、push・master merge・deploy は行っていない。次 Phase（Solve Legibility／Living Hero／OTOMO／Ranking／UI SFX v1.1／隣接バグ修正）には着手しない。
+**PASS / CLOSED。** CEO Human QA（PC 3 項目・iPhone 3 項目すべて PASS）により、決定200 の実装フェーズを完了とする。
+
+**Production 反映はしていない。** commit は `feat/interaction-feel-v1` ブランチのみで、push・master merge・deploy は未実施（CLAUDE.md §6-3 #8：Production 公開は CEO 判断）。次 Phase（Solve Legibility／Living Hero／OTOMO／Ranking／UI SFX v1.1／§13 の隣接バグ修正）にも着手していない。
+
+次に進むには CEO の Release Gate 実施指示が必要。Release Gate へ進む場合の前提は以下のとおり（本 Decision では実施しない）。
+
+- 本ブランチは local master `3470545` から分岐しているため、**決定198 の記録 commit を含んだまま** Release Gate へ進められる。Production（`origin/master` `3b416da`）との差分は「決定198 docs 1 commit ＋ 本 commit」の 2 つ
+- 変更は CSS と import 1 行のみで `src/core` diff 0・storage 0・依存 0 のため、Rollback は Vercel Instant Rollback だけで済む（保存データの巻き戻し不要）
+- `docs/DECISIONS.md` には決定200 の行を追記済み。決定199 の監査文書（`docs/DECISION199_INTERACTION_FEEL_AUDIT.md`）と監査スクリプトは、決定199 §22「成果物は原則 untracked・commit 禁止」に従って**未 commit のまま**にしてある（決定194・195 の成果物と同じ扱い）
