@@ -1,8 +1,8 @@
 # 決定196 — Solve Loop v1（敗北した通常戦だけ「同じ盤面でもう一度」）実装報告
 
-- 日付：2026-09-18
+- 日付：2026-09-18（実装）／2026-09-18（CEO Human QA・Close-out）
 - branch：`feat/solve-loop-v1`（**master `88ca430` から分岐**。push・merge・deploy は未実施）
-- 判定：**PASS / READY FOR CEO QA**（Production 反映ではない）
+- 判定：**PASS / CLOSED**（CEO Human QA PASS。**Production 反映はしていない**）
 - 上流：`docs/SEVENGODS_COMMERCIAL_DESIGN_RED_TEAM.md`（決定195 §8・§25 NEXT NOW）、`docs/SEVENGODS_47_LESSONS_CONSOLIDATION_AUDIT.md`
 - 区分：実装方式・判定は **AI判断**（CLAUDE.md §6-2）。着手は **CEO指示**（決定196）
 
@@ -172,17 +172,31 @@ resolveForcedSeed()（URLバックドア ?seed=） ?? requestedSeed ?? `seed-${D
 
 ---
 
-## 7. Human QA（CEO へのお願い）
+## 7. CEO Human QA — PASS（2026-09-18）
 
-1. 通常戦でわざと負けて、Primary が「**同じ盤面でもう一度**」になっているか
-2. 押した直後の **手札 5 枚が、さっきと同じ並び**か（敵の予告も同じか）
-3. もう一度考え直したくなるか。＝「さっきの判断を変えれば勝てそう」と思えるか
-4. 勝ったあとに押す「同じ構成でもう一度」は、**別の手札**になっているか（同じ盤面が繰り返されないこと）
-5. 神域挑戦（今日の3回）が今までどおりか（同じ敵・同じ盤面・残り回数の減り方）
-6. 7ラウンド終了（未撃破）でも同じ盤面で始まるか
+- 対象：本ブランチ `feat/solve-loop-v1` `c03d0bb` のビルドを `vite preview --host --port 4181` で配信（PC `http://localhost:4181/`／実機 `http://192.168.11.6:4181/`）
+- 判定：**PASS**（**CEO判断**）
+
+| # | 確認項目 | CEO 判定 |
+| --- | --- | --- |
+| 1 | 敗北 → 同じ盤面での再挑戦で「**失敗を修正している感じ**」があるか | **PASS** |
+| 2 | 勝利後は別の盤面になるか | **PASS** |
+| 3 | 神域挑戦（Daily）が従来どおりか | **PASS** |
+| 4 | 7ラウンド未撃破 → 同じ盤面での再挑戦になるか | **PASS** |
+
+CEO コメント（原文）：「敗北→同じ盤面Retryで「失敗を修正している感じ」がある：PASS／勝利後は別盤面：PASS／Daily従来挙動：PASS／7R未撃破→同じ盤面Retry：PASS」
+
+**この QA で確認された最重要点**：本変更の狙いは「同じ盤面を出すこと」ではなく「**失敗を修正している感じ**」を作ることだった。CEO の言葉がそのまま、Failure → Observation → Hypothesis → Same-condition Retry → Learning → Solve が体験として成立したことの証拠になっている。自動テストと受け入れテストは「同じ seed・同じ手札・同じ予告」という事実までしか保証できないため、この一文が本 Decision の Exit Criteria を満たす唯一の証拠である。
 
 ---
 
-## 8. 判定
+## 8. 判定（Close-out）
 
-**PASS / READY FOR CEO QA。** Production 反映は未実施（CLAUDE.md §6-3 #8）。commit はこのブランチのみ、push・merge・deploy は行っていない。
+**PASS / CLOSED。** CEO Human QA PASS により、決定196 の実装フェーズを完了とする。
+
+**Production 反映はしていない。** commit は `feat/solve-loop-v1` ブランチのみで、push・master merge・deploy は未実施（CLAUDE.md §6-3 #8：Production 公開は CEO 判断）。
+
+次に進むには CEO の Release Gate 実施指示が必要。Release Gate を通す場合の前提は以下のとおり（本 Decision では実施しない）。
+
+- 本ブランチは master `88ca430` から分岐しているため、**Entrance E1（`feat/entrance-e1` `1cba2e6`）の公開判断とは独立に** Release Gate へ進められる
+- 両方を Production へ出す場合、`docs/DECISIONS.md` の末尾で追記行が衝突する（どちらも行を追加するだけなので解決は自明）。`src` 側は E1 と重複するファイルが `GameFlow.tsx` のみで、ハンクが別のため自動マージできる
