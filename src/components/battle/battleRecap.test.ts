@@ -256,7 +256,7 @@ describe('buildBattleRecap（最大3行・固有の事実・後知恵なし）',
 
   it('G1：大技に盾が届かなかった敗北は、実行値と吸収量をそのまま書く', () => {
     const facts = {
-      complete: true, round: 5, perfect: 0, perfectBig: 0, neutralized: 0, bonus: 2, bonusByCond: {}, passive: 0, burstCount: 0, burstFinish: false,
+      complete: true, round: 5, announced: 0, unharmed: 0, blockedTotal: 0, perfect: 0, perfectBig: 0, neutralized: 0, bonus: 2, bonusByCond: {}, passive: 0, burstCount: 0, burstFinish: false,
       lowestHpRatio: 0, unusedApRounds: 0, divinationUses: 3, divinationUsedInLastRound: true,
       fatal: { actedAmount: RULES.cardBonus.enemyBigThreshold + 5, intentAmount: null, blocked: 3, big: true }, hasBonusCards: true,
     }
@@ -268,7 +268,7 @@ describe('buildBattleRecap（最大3行・固有の事実・後知恵なし）',
 
   it('G2：託宣が残っていたのに使わなかった敗北だけ託宣を案内する（使っていれば出さない）', () => {
     const base = {
-      complete: true, round: 4, perfect: 0, perfectBig: 0, neutralized: 0, bonus: 1, bonusByCond: {}, passive: 0, burstCount: 0, burstFinish: false,
+      complete: true, round: 4, announced: 0, unharmed: 0, blockedTotal: 0, perfect: 0, perfectBig: 0, neutralized: 0, bonus: 1, bonusByCond: {}, passive: 0, burstCount: 0, burstFinish: false,
       lowestHpRatio: 0, unusedApRounds: 0, divinationUses: 0, divinationUsedInLastRound: false,
       fatal: { actedAmount: 5, intentAmount: 5, blocked: 5, big: false }, hasBonusCards: true,
     }
