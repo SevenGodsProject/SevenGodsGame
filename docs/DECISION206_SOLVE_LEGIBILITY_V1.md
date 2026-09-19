@@ -111,9 +111,14 @@
 
 空きメモリが少ない環境（Edge／VS Code 稼働中、空き 350〜950 MB）でバックグラウンド実行が 2 回停止された。フォアグラウンドで 1 本ずつ再実行して完走。`SL_ONLY=` で分割実行できるようにした。
 
-## 4. CEO Human QA（約 5 分）— Preview `http://localhost:4181`
+## 4. CEO Human QA（約 5 分）— Preview `http://127.0.0.1:4181`
 
-1. 新しいプロファイル（またはストレージを空に）で「初陣へ」→ 勝つ → 結果に **「次は連撃型『双牙の魔獣』に挑む — 予告を読む戦い」** が出るか
+0. **Step 0（再発防止・2026-09-20 CEO 指示）：fresh origin で Home の金ボタンが「初陣へ」であることを確認する。**
+   - 保存は origin（scheme＋host＋port）ごとに分かれる。過去の Human QA を行った `localhost:4181` ではなく **`127.0.0.1:4181`** など未使用の host で開けば、何も消さずに完全な新規状態になる
+   - Edge の InPrivate は開いている全 InPrivate ウィンドウで一時ストレージを共有するため、先に **すべての InPrivate ウィンドウを閉じる**
+   - Home に「自己ベスト」「七柱との絆」「今日の神域挑戦：残り n/3」が出ていれば新規ではない。金ボタンが「神域へ挑む」なら、それは初陣ではなく神域挑戦（Daily）に入る
+   - 勝利画面は報酬カードを 1 枚選んでから「次の目標」と出口（Result Hub）に切り替わる（決定166）。NR1 は報酬選択後に出る
+1. 「初陣へ」→ 勝つ → 報酬カードを 1 枚選ぶ → 結果に **「次は連撃型『双牙の魔獣』に挑む — 予告を読む戦い」** が出るか
 2. 「魔獣に挑む（神を選ぶ）」→ 恵比寿のまま → 敵選択で魔獣カードの **「予告を読む戦い」** chip を見る → 選ぶ → デッキそのまま開始
 3. 魔獣戦：R1 から予告（⚔ 9 →10 →12…）。**予告を見て、盾札や「加護」で先に守る**
 4. 結果 1 行目「予告された攻撃 N回のうち、M回を無傷で受け切りました（盾で防いだ量 X）」を見る
@@ -126,6 +131,24 @@
 
 難易度・敵行動の変更（決定203 §9・CEO 判断）、初陣の敵の変更（決定193 維持）、「読み」の新 state・実績・採点、数ラウンド先の予告表示、Living Hero、OTOMO identity、49→nextGoal の一般接続。
 
-## 6. 状態
+## 6. CEO Human QA 結果（2026-09-20）— PASS
 
-**READY FOR CEO HUMAN QA**。自動 QA は全通過。commit 済み（branch `feat/solve-legibility-v1`）。master merge・push・deploy・Production 変更は行っていない。Preview は `http://localhost:4181`（本 branch の build）。
+| 項目 | 結果 |
+| --- | --- |
+| A. Early Read Moment | **PASS**。初陣勝利 → 報酬選択後に「次は連撃型『双牙の魔獣』に挑む — 予告を読む戦い」と Primary「魔獣に挑む（神を選ぶ）」を実画面で確認 |
+| B. Solve Learning Loop | **PASS**。双牙の魔獣戦で予告を確認し、CEO 自身が防御行動を変更 |
+| 最重要質問「敵の予告を見たことで、自分の行動を変えた感じがしたか？」 | **YES** |
+| Result の実測 | 予告された攻撃 3 回・無傷で受け切り 1 回・盾で防いだ量 180・双牙の魔獣 初撃破 |
+| 1 回だけ | NR1 は初回のみ機能し、その後は通常の「次の目標」に戻ることを確認 |
+
+### 6-1. Human QA 中の NR1 未表示 2 回（製品不具合ではない）
+
+1. 1 回目：勝利直後の画面に「報酬カードを選ぶ」だけが出ていた。決定166 の設計どおり、Result Hub（次の目標）は報酬選択後に出る。手順書に「報酬を選ぶ」が抜けていた
+2. 2 回目：報酬選択後の目標が「今日のベストまであと 720 点（残り1回）」＝神域挑戦（Daily）専用の文言。`localhost:4181` に過去の Human QA（決定196・200）の保存が残り、Home の金ボタンが「初陣へ」ではなく「神域へ挑む／今日の試練」になっていた（初陣導線は Daily に入れない）。**state contamination** と確認
+3. InPrivate でも既存状態が見えたのは、Edge の InPrivate が開いている全 InPrivate ウィンドウで一時ストレージを共有するため。`127.0.0.1:4181`（別 origin）で fresh state を作り、削除なしで再テスト → PASS
+
+再発防止として §4 に Step 0 を追加した。
+
+## 7. 状態
+
+**Decision206 — PASS / CLOSED**（2026-09-20 CEO Human QA PASS）。close-out は docs のみ（runtime 変更 0）。branch `feat/solve-legibility-v1` に commit。master merge・push・deploy・Production（`bba4c67`）変更は行っていない。次は Release Gate（RC branch）→ CEO の Production 反映承認。
