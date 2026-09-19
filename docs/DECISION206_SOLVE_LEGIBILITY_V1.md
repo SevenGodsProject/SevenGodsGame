@@ -107,6 +107,13 @@
 - A10-1：fixture に Daily が無く Home の Primary が「神域へ挑む」だった（製品は正しく N4）。判定を「初陣へ が出ない」に修正
 - B4-3：守る bot が魔獣に勝っても無傷 0 回。指標を「盾の量または無傷回数の増加」に変え、事実行に「盾で防いだ量」を添えた（§2-2）
 
+### 3-2b. 【訂正】「tsc 0 エラー」の報告は無効だった（2026-09-20・決定207 Gate で判明）
+
+- 上表の `npx tsc --noEmit` は実際には `tsc --noEmit -p tsconfig.json` で実行していた。root の `tsconfig.json` は `files: []` の **references 専用**設定のため、このコマンドは何も検査せず exit 0 を返す。**PASS の根拠として無効**
+- 決定207 Release Gate の正規コマンド `tsc -b --noEmit`（＝ `npm run build` の前段）で初めて、`battleRecap.test.ts` の G1／G2 facts リテラルに `announced`・`unharmed`・`blockedTotal` が無い型エラー 4 件を検出した（テストコードのみ・runtime 影響 0。vitest は型を検査しないため 1,157 件全通過していた）
+- CEO 承認のもと、テスト 2 箇所に 3 項目を追加する最小修正を `364915b` で commit（build 出力 `index-GqAh05FD.js` は修正前後で同一）
+- **以後、本プロジェクトの正式 TypeScript Gate は `tsc -b --noEmit`。`tsc --noEmit -p tsconfig.json` を PASS 根拠に使わない**
+
 ### 3-3. 実行環境の注記
 
 空きメモリが少ない環境（Edge／VS Code 稼働中、空き 350〜950 MB）でバックグラウンド実行が 2 回停止された。フォアグラウンドで 1 本ずつ再実行して完走。`SL_ONLY=` で分割実行できるようにした。
