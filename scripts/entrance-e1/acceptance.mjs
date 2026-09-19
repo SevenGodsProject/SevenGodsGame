@@ -327,7 +327,8 @@ for (const vp of battleVps) {
     const matchups = JSON.parse(s['sevengods.matchups'] ?? 'null')
     // 結果 →「もう一度」で同じ神・同じ敵・ふつう
     let rematch = null
-    const rematchBtn = page.locator('[data-testid="result-primary"], [data-testid="result-secondary"]').filter({ hasText: 'もう一度' })
+    // 決定206：初陣の初勝利は「次の目標」が NR1（魔獣へ・reselect）になり、「もう一度」は Tertiary リンクへ移る。出口としては残る
+    const rematchBtn = page.locator('[data-testid="result-primary"], [data-testid="result-secondary"], [data-testid="result-tertiary-link"]').filter({ hasText: 'もう一度' })
     if (await rematchBtn.count()) {
       await rematchBtn.first().click()
       await battleReady(page)

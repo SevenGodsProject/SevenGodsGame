@@ -70,6 +70,64 @@ describe('selectNextGoal — 通常モード', () => {
     expect(selectNextGoal(base({ stake: 7, stakeResult: stake({ stake: 7, clearedNew: true }) })).id).not.toBe('N3')
   })
 
+  describe('NR1（決定206）：初陣に初めて勝った直後だけ「予告を読む戦い」（双牙の魔獣）を勧める', () => {
+    const first = (over: Partial<NonNullable<NextGoalInput['earlyRead']>> = {}) => ({
+      godId: GOD_IDS.ebisu,
+      enemyName: '試練の影',
+      difficulty: 'normal' as const,
+      stake: 0,
+      stakeUnlocked: false,
+      todayDaily: { enemyName: '蒼海の龍神', attemptsUsed: 0, attemptsLeft: 3 },
+      earlyRead: { isFirstBattleSetup: true, godWinsAfterThis: 1, targetCleared: false, ...over },
+    })
+
+    it('成立：初陣構成・初勝利・魔獣未撃破 → reselect（神を選ぶ）で Primary は「魔獣に挑む」。N4（今日の神域）・N9 より先', () => {
+      const g = selectNextGoal(base(first()))
+      expect(g).toEqual({
+        id: 'NR1',
+        text: '次は連撃型「双牙の魔獣」に挑む — 予告を読む戦い',
+        action: 'reselect',
+        primaryLabel: '魔獣に挑む（神を選ぶ）',
+      })
+    })
+
+    it('成立：49 攻略の記録が読めない環境（targetCleared=false 扱い）でも出す', () => {
+      expect(selectNextGoal(base(first({ targetCleared: false }))).id).toBe('NR1')
+    })
+
+    it('1 回だけ：2 勝目以降（通算勝利 ≠ 1）は出さない → 従来どおり N4 以降', () => {
+      expect(selectNextGoal(base(first({ godWinsAfterThis: 2 }))).id).toBe('N4')
+      expect(selectNextGoal(base(first({ godWinsAfterThis: 0 }))).id).toBe('N4')
+    })
+
+    it('魔獣を既にどの神かで撃破していれば出さない', () => {
+      expect(selectNextGoal(base(first({ targetCleared: true }))).id).toBe('N4')
+    })
+
+    it('初陣構成でない勝利（別の敵・別の神・むずかしい・神階）では出さない', () => {
+      expect(selectNextGoal(base(first({ isFirstBattleSetup: false }))).id).toBe('N4')
+    })
+
+    it('敗北・未撃破では出さない（N1 が先）', () => {
+      expect(selectNextGoal(base({ ...first(), status: 'lost', enemyHpRatio: 0.5 })).id).toBe('N1')
+      expect(selectNextGoal(base({ ...first(), status: 'finished', enemyHpRatio: 0.5 })).id).toBe('N1')
+    })
+
+    it('入力が無い（earlyRead 未指定／null）なら従来の規則だけで決まる', () => {
+      expect(selectNextGoal(base({ ...first(), earlyRead: null })).id).toBe('N4')
+      expect(selectNextGoal(base({ ...first(), earlyRead: undefined })).id).toBe('N4')
+    })
+
+    it('神階解放（N2／N3）は NR1 より先', () => {
+      expect(selectNextGoal(base({ ...first(), difficulty: 'hard', stakeResult: stake({ hardClearedNow: true }) })).id).toBe('N2')
+    })
+
+    it('神域挑戦（daily）では NR1 を出さない', () => {
+      const g = selectNextGoal(base({ ...first(), mode: 'daily', daily: { isNewBest: false, prevBest: 0, attemptsLeft: 2 } }))
+      expect(g.id).toMatch(/^D/)
+    })
+  })
+
   it('N4：今日の神域挑戦が未挑戦なら、同構成の目標より優先して誘導する', () => {
     const g = selectNextGoal(base({ prevBest: 900, todayDaily: { enemyName: '蒼海の龍神', attemptsUsed: 0, attemptsLeft: 3 } }))
     expect(g).toMatchObject({ id: 'N4', action: 'goDaily', text: '今日の神域挑戦：蒼海の龍神に挑む（残り3回）' })

@@ -6,7 +6,10 @@ import { todayDailyKey } from '../../hooks/dailyClock'
 import { dailyAttemptsLeft, loadDailyDay, type DailyDay, type DailyRecordResult } from '../../hooks/dailyStorage'
 import { isStakeUnlocked, type StakeResultOutcome } from '../../hooks/stakeStorage'
 import type { OtomoBondRecord } from '../../hooks/otomoBondStorage'
-import type { NextGoalInput } from './nextGoal'
+import { loadGodRecord } from '../../hooks/recordStorage'
+import { countMatchupsByEnemy, loadMatchups } from '../../hooks/matchupStorage'
+import { FIRST_BATTLE_PRESET } from '../setup/firstBattle'
+import { EARLY_READ_TARGET_ENEMY_ID, type EarlyReadInput, type NextGoalInput } from './nextGoal'
 import type { DailyDiffCurrent } from './dailyDiff'
 
 /**
@@ -31,6 +34,26 @@ export type ResultContext = {
   dailyDay: DailyDay | null
   /** 神域挑戦の決着なら、今回分（`results[]` の中から今回を特定するため） */
   dailyCurrent: DailyDiffCurrent | null
+}
+
+/**
+ * 決定206（Solve Legibility v1・A）：初陣勝利→「予告を読む戦い」誘導の判定材料を **読むだけ** で集める。
+ * 戦績と 49 攻略の記録は決着処理（`useGameEngine`）で既に更新済みなので、
+ * ここで読む `wins` は「この勝利を含む」通算値になる（初勝利なら 1）。書き込みは一切しない。
+ */
+export function collectEarlyRead(state: GameState, now: Date): EarlyReadInput {
+  const preset = FIRST_BATTLE_PRESET
+  const isFirstBattleSetup =
+    state.godId === preset.godId &&
+    state.enemy.defId === preset.enemyId &&
+    state.difficulty === preset.difficulty &&
+    (state.stake ?? 0) === 0
+  const matchups = loadMatchups(now.getTime())
+  return {
+    isFirstBattleSetup,
+    godWinsAfterThis: loadGodRecord(state.godId).wins,
+    targetCleared: matchups.available ? countMatchupsByEnemy(matchups.data, EARLY_READ_TARGET_ENEMY_ID) > 0 : false,
+  }
 }
 
 export function collectResultContext(state: GameState, engine: ResultEngineSnapshot, now: Date = new Date()): ResultContext | null {
@@ -80,6 +103,7 @@ export function collectResultContext(state: GameState, engine: ResultEngineSnaps
         attemptsUsed: today.attemptsUsed,
         attemptsLeft: dailyAttemptsLeft(todayKey),
       },
+      earlyRead: state.status === 'won' ? collectEarlyRead(state, now) : null,
     },
     dailyDay: null,
     dailyCurrent: null,

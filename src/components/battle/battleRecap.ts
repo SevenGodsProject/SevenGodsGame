@@ -21,6 +21,15 @@ export type RecapFacts = {
   /** ログが対局の最初（GAME_STARTED）から揃っているか */
   complete: boolean
   round: number
+  /**
+   * 決定206（Solve Legibility v1・B）：予告された攻撃の回数（敵が攻撃した、または予告があったのに 0 で終わった＝封じた）。
+   * 溜め（予告 0）は数えない。`evaluateDefense` の `attacked || neutralized` をそのまま数えた事実
+   */
+  announced: number
+  /** 決定206：そのうち HP が 1 も減らなかった回数（無傷で受け切った `perfect` ＋ 封じた `neutralized`） */
+  unharmed: number
+  /** 決定206：予告された攻撃に対して盾が吸収した合計（`DAMAGE_DEALT.blocked` の和。表示前スケール） */
+  blockedTotal: number
   perfect: number
   perfectBig: number
   neutralized: number
@@ -77,6 +86,9 @@ export function collectRecapFacts(log: readonly GameEvent[], state: GameState): 
   const batches = splitBatches(log)
   const threshold = RULES.cardBonus.enemyBigThreshold
 
+  let announced = 0
+  let unharmed = 0
+  let blockedTotal = 0
   let perfect = 0
   let perfectBig = 0
   let neutralized = 0
@@ -96,6 +108,11 @@ export function collectRecapFacts(log: readonly GameEvent[], state: GameState): 
 
   for (const batch of batches) {
     const defense = evaluateDefense(batch, intent)
+    if (defense.attacked || defense.neutralized) {
+      announced += 1
+      blockedTotal += defense.blocked
+    }
+    if (defense.perfect || defense.neutralized) unharmed += 1
     if (defense.perfect) {
       perfect += 1
       if (defense.big) perfectBig += 1
@@ -137,6 +154,9 @@ export function collectRecapFacts(log: readonly GameEvent[], state: GameState): 
   return {
     complete,
     round: state.round,
+    announced,
+    unharmed,
+    blockedTotal,
     perfect,
     perfectBig,
     neutralized,
@@ -165,12 +185,15 @@ export function buildBattleRecap(log: readonly GameEvent[], state: GameState): B
     if (lines.length < RECAP_MAX_LINES) lines.push(s)
   }
 
+  // 決定206（Solve Legibility v1・B）：勝敗を問わず、予告された攻撃に対して実際に何が起きたかを 1 行目に置く
+  // （評価・採点ではなく事実。ログが完全で、予告された攻撃が 1 回以上あったときだけ）
+  const announcedLine = describeAnnouncedAttacks(facts)
+  if (announcedLine) push(announcedLine)
+
   if (state.status === 'won') {
     // 勝因：起きた順ではなく「珍しく・大きい」順。回数はログが完全なときだけ主張する
     if (facts.burstFinish) push('神の一撃で決着しました')
     if (facts.complete) {
-      if (facts.perfectBig > 0) push(`大技を${facts.perfectBig}回、無傷で受け切りました`)
-      else if (facts.perfect > 0) push(`敵の攻撃を${facts.perfect}回、無傷で受け切りました`)
       if (facts.lowestHpRatio !== null && facts.lowestHpRatio <= RECAP_CRISIS_RATIO) {
         push(`HP${Math.round(facts.lowestHpRatio * 100)}%から立て直しました`)
       }
@@ -178,7 +201,6 @@ export function buildBattleRecap(log: readonly GameEvent[], state: GameState): B
         const name = getGodDef(state.godId).passive?.nameJa
         push(name ? `得意技「${name}」が${facts.passive}回はたらきました` : `得意技が${facts.passive}回はたらきました`)
       }
-      if (facts.neutralized > 0) push(`敵の攻撃を${facts.neutralized}回、封じ切りました`)
       if (facts.bonus > 0) push(`⚡の条件を${facts.bonus}回成立させました`)
     }
     // 最低1行はこの戦闘固有の事実（撃破ラウンド）
@@ -194,6 +216,25 @@ export function buildBattleRecap(log: readonly GameEvent[], state: GameState): B
   const guidance = defeatGuidance(facts, state)
   if (guidance) push(guidance)
   return { kind, lines, facts }
+}
+
+/**
+ * 決定206（Solve Legibility v1・B）：「予告された攻撃に対して、実際に何が起きたか」の 1 行。
+ *
+ * - 数えるのは `evaluateDefense` の事実だけ：予告された攻撃の回数と、そのうち HP が 1 も減らなかった回数
+ * - 「読めた」「理解した」「意図して守った」などプレイヤーの意図は推測しない（文にも含めない）
+ * - 旧「大技を N 回、無傷で受け切りました」「封じ切りました」の 2 行はこの 1 行に統合（分母が無いと 1 回が
+ *   多いのか少ないのか分からないため）
+ * - 「盾で防いだ量」を必ず添える：連撃型（双牙の魔獣）は初期デッキでは無傷が稀で、守ったのに「無傷 0 回」だけでは
+ *   行動を変えた結果が Result に現れない。盾の吸収量はイベントの事実（敗因の助言「盾は30でした」と同じ語）。
+ *   封じた回数は 0 でなければ内訳として添える
+ * - 予告された攻撃が 0 回（R1 撃破など）や「続きから」でログが途中からのときは null＝出さない
+ */
+export function describeAnnouncedAttacks(facts: RecapFacts): string | null {
+  if (!facts.complete || facts.announced <= 0) return null
+  const detail = [`盾で防いだ量 ${formatScaled(facts.blockedTotal)}`, ...(facts.neutralized > 0 ? [`封じ${facts.neutralized}回`] : [])].join('・')
+  if (facts.unharmed <= 0) return `予告された攻撃${facts.announced}回のうち、無傷で受け切った攻撃はありませんでした（${detail}）`
+  return `予告された攻撃${facts.announced}回のうち、${facts.unharmed}回を無傷で受け切りました（${detail}）`
 }
 
 /**

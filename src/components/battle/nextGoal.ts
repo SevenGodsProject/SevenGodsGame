@@ -1,5 +1,6 @@
-import type { Difficulty, GameStatus, GodId } from '../../core/types'
+import type { Difficulty, EnemyId, GameStatus, GodId } from '../../core/types'
 import type { MasteryResult } from '../../core/engine'
+import { ENEMY_IDS, getEnemyDef } from '../../core/data/enemies'
 import { getStakeLevelDef, stakeLabel } from '../../core/data/stakes'
 import type { OtomoBondRecord } from '../../hooks/otomoBondStorage'
 import type { StakeResultOutcome } from '../../hooks/stakeStorage'
@@ -22,7 +23,20 @@ import { formatMasteryPercent, nextMasteryStep } from './masteryDisplay'
 
 export type ResultAction = 'rematch' | 'adjustDeck' | 'goDaily' | 'home' | 'reselect' | 'startNormal' | 'record'
 
-export type NextGoalId = 'N1' | 'N2' | 'N3' | 'N4' | 'N5' | 'N6' | 'N7' | 'N8' | 'N9' | 'N10' | 'D1' | 'D2' | 'D3' | 'D4'
+export type NextGoalId = 'N1' | 'N2' | 'N3' | 'NR1' | 'N4' | 'N5' | 'N6' | 'N7' | 'N8' | 'N9' | 'N10' | 'D1' | 'D2' | 'D3' | 'D4'
+
+/**
+ * 決定206（Solve Legibility v1・A）：初陣の勝利直後に 1 回だけ「予告を読む戦い」へ誘導するための入力。
+ * すべて決着時に既に存在する記録（戦績・49 攻略）から読み取る。新しい保存はしない。
+ */
+export type EarlyReadInput = {
+  /** この対局が「初陣」の構成（`FIRST_BATTLE_PRESET`：恵比寿×試練の影×ふつう×神階 0）だったか */
+  isFirstBattleSetup: boolean
+  /** 決着後の、この神の通算勝利数（決着処理で更新済みの値。初勝利なら 1） */
+  godWinsAfterThis: number
+  /** 誘導先の敵（双牙の魔獣）をどの神かで既に撃破しているか（記録が読めない環境では false） */
+  targetCleared: boolean
+}
 
 export type NextGoal = {
   id: NextGoalId
@@ -61,6 +75,8 @@ export type NextGoalInput = {
   stakeUnlocked?: boolean
   /** 今日の神域挑戦の状況（通常モードの決着時に読む） */
   todayDaily?: TodayDailyStatus | null
+  /** 決定206：初陣勝利→「予告を読む戦い」誘導の判定材料（通常モードの決着時に読む。無ければ NR1 は出ない） */
+  earlyRead?: EarlyReadInput | null
   // ---- 神域挑戦 ----
   daily?: { isNewBest: boolean; prevBest: number; attemptsLeft: number } | null
 }
@@ -71,6 +87,12 @@ export const NEXT_GOAL_BEST_NEAR_RATIO = 0.1
 export const NEXT_GOAL_MASTERY_NEAR_GAP = 0.1
 /** 絆称号が「近い」とみなす残り pt（仕様 §6-2 N8） */
 export const NEXT_GOAL_BOND_NEAR_POINTS = 3
+/**
+ * 決定206：初陣勝利後に勧める「予告を読む戦い」の相手。ふつうのまま R3〜4 に「読まないと危ない」瞬間が来る
+ * 唯一の敵（決定203：blind 79.5% → reader 100%、初回致死 R3.6）。表示層の導線定数であってバランス値ではない
+ */
+export const EARLY_READ_TARGET_ENEMY_ID: EnemyId = ENEMY_IDS.juuma
+const EARLY_READ_TARGET_NAME = getEnemyDef(EARLY_READ_TARGET_ENEMY_ID).name
 
 function selectDailyGoal(input: NextGoalInput): NextGoal {
   const daily = input.daily ?? { isNewBest: false, prevBest: 0, attemptsLeft: 0 }
@@ -125,6 +147,19 @@ function selectNormalGoal(input: NextGoalInput): NextGoal {
         action: 'reselect',
         primaryLabel: '神階に挑む（神を選び直す）',
       }
+    }
+  }
+  // NR1（決定206）：初陣（恵比寿×試練の影×ふつう）に**初めて**勝った直後だけ、「予告を読む戦い」として
+  // 双牙の魔獣を勧める。初陣は読まなくても勝てる（決定203：致死ラウンド 0.13/試合）ため、既定の道筋に
+  // 「予告を見て行動を変える」瞬間を 1 回だけ用意する。強制ではない（神・デッキは自由、敵も推奨のみ）。
+  // 1 回だけ＝通算勝利数が 1 のときだけ成立し、新しい state は持たない。魔獣を既に倒していれば出さない
+  const early = input.earlyRead ?? null
+  if (early && early.isFirstBattleSetup && early.godWinsAfterThis === 1 && !early.targetCleared) {
+    return {
+      id: 'NR1',
+      text: `次は連撃型「${EARLY_READ_TARGET_NAME}」に挑む — 予告を読む戦い`,
+      action: 'reselect',
+      primaryLabel: '魔獣に挑む（神を選ぶ）',
     }
   }
   // N4：今日の神域挑戦がまだ手つかず（1 日 1 回しか成立しない「翌日に戻る理由」）

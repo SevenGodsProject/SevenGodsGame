@@ -54,11 +54,20 @@ describe('P1 の判断（Home・Next Goal・Result Hub の出口）は神×敵�
     'components/setup/HomeTodayPanel.tsx',
     'components/battle/nextGoal.ts',
     'components/battle/resultHub.ts',
-    'components/battle/resultContext.ts',
     'components/battle/dailyDiff.ts',
     'components/resultTransitions.ts',
   ])('%s は matchup を参照しない', (file) => {
     expect(read(file)).not.toMatch(/matchup/i)
+  })
+
+  // 決定206（Solve Legibility v1）：resultContext だけは「魔獣を既に倒しているか」を **読むだけ** で参照してよい
+  // （NR1 の判定材料。書き込み・49 の一般接続はしない。nextGoal.ts 自体は上の検査どおり matchup を知らない）
+  it('components/battle/resultContext.ts は matchup を読むだけ（countMatchupsByEnemy／loadMatchups のみ・書き込み無し）', () => {
+    const src = read('components/battle/resultContext.ts')
+    const refs = [...new Set([...src.matchAll(/\b\w*[mM]atchup\w*\b/g)].map((m) => m[0]))].sort()
+    expect(refs).toEqual(['countMatchupsByEnemy', 'loadMatchups', 'matchupStorage', 'matchups'])
+    // 書き込み関数の **呼び出し** が無い（コメントでの言及は可）
+    expect(src).not.toMatch(/\b(recordMatchupClear|recordGameResult|saveBattle|recordOtomoBond|recordDailyResult)\s*\(|\.setItem\s*\(/)
   })
 })
 

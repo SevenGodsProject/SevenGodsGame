@@ -1,0 +1,1028 @@
+{
+  "base": "http://localhost:4181",
+  "at": "2026-09-19T12:37:35.567Z",
+  "verdict": "PASS",
+  "checks": [
+    {
+      "id": "A1-1",
+      "desc": "初陣の勝利で「次の目標」が NR1",
+      "verdict": "PASS",
+      "detail": {
+        "goalId": "NR1",
+        "status": "勝利"
+      }
+    },
+    {
+      "id": "A1-2",
+      "desc": "NR1 の文言",
+      "verdict": "PASS",
+      "detail": "次は連撃型「双牙の魔獣」に挑む — 予告を読む戦い"
+    },
+    {
+      "id": "A1-3",
+      "desc": "Primary は reselect「魔獣に挑む（神を選ぶ）」",
+      "verdict": "PASS",
+      "detail": {
+        "exit": "reselect",
+        "label": "魔獣に挑む（神を選ぶ）"
+      }
+    },
+    {
+      "id": "A1-4",
+      "desc": "初撃破（P2）の行と両立",
+      "verdict": "PASS",
+      "detail": "✨ 初撃破：恵比寿 × 試練の影（この敵 1/7 神）"
+    },
+    {
+      "id": "A1-5",
+      "desc": "初陣は恵比寿×試練の影×ふつう×神階0（preset 不変）",
+      "verdict": "PASS",
+      "detail": {
+        "seed": "seed-1789820989738",
+        "mode": "normal",
+        "godId": "ebisu",
+        "enemyId": "enemy_01",
+        "difficulty": "normal",
+        "stake": 0
+      }
+    },
+    {
+      "id": "A2-1",
+      "desc": "Primary → 神選択画面（神は固定しない）",
+      "verdict": "PASS",
+      "detail": {
+        "title": "共に戦う神を選ぼう",
+        "gods": 7
+      }
+    },
+    {
+      "id": "A2-2",
+      "desc": "敵選択：魔獣カードにだけ「予告を読む戦い」chip",
+      "verdict": "PASS",
+      "detail": [
+        [
+          "試練の影",
+          null
+        ],
+        [
+          "業斧の鬼将",
+          null
+        ],
+        [
+          "藍花の怨霊",
+          null
+        ],
+        [
+          "銀甲の機工師",
+          null
+        ],
+        [
+          "双牙の魔獣",
+          "予告を読む戦い"
+        ],
+        [
+          "蒼海の龍神",
+          null
+        ],
+        [
+          "乱舞の道化",
+          null
+        ],
+        [
+          "神に委ねる",
+          null
+        ]
+      ]
+    },
+    {
+      "id": "A2-3",
+      "desc": "魔獣 → デッキ画面を通る（デッキ変更可能）→ 戦闘",
+      "verdict": "PASS",
+      "detail": {
+        "title": "恵比寿のデッキを編成しよう",
+        "hasStart": true
+      }
+    },
+    {
+      "id": "A2-4",
+      "desc": "魔獣戦は新しい seed（初陣と異なる）・通常モード・神階0",
+      "verdict": "PASS",
+      "detail": {
+        "first": "seed-1789820989738",
+        "juuma": {
+          "seed": "seed-1789821025533",
+          "mode": "normal",
+          "godId": "ebisu",
+          "enemyId": "enemy_05",
+          "difficulty": "normal",
+          "stake": 0
+        }
+      }
+    },
+    {
+      "id": "C1-1",
+      "desc": "49 progression：初陣勝利で ebisu×enemy_01 が記録される",
+      "verdict": "PASS",
+      "detail": {
+        "ebisu": [
+          "enemy_01"
+        ]
+      }
+    },
+    {
+      "id": "C1-2",
+      "desc": "魔獣カードに「未撃破」chip と「予告を読む戦い」chip が両方ある",
+      "verdict": "PASS",
+      "detail": {
+        "name": "双牙の魔獣",
+        "readChip": "予告を読む戦い",
+        "matchup": "恵比寿では未撃破"
+      }
+    },
+    {
+      "id": "C1-3",
+      "desc": "新規 storage key 0（sevengods.* 以外・決定206 由来の名前のキーが無い。ソース側の検査は release ゲートの secret/hygiene で行う）",
+      "verdict": "PASS",
+      "detail": [
+        "sevengods.matchups",
+        "sevengods.otomoBond",
+        "sevengods.records",
+        "sevengods.rewardBonuses",
+        "sevengods.stakes",
+        "sevengods.tutorialSeen"
+      ]
+    },
+    {
+      "id": "B1-1",
+      "desc": "victory：recap 1 行目が「予告された攻撃 N回のうち、M回を無傷で受け切りました」（M ≤ N）",
+      "verdict": "PASS",
+      "detail": [
+        "予告された攻撃3回のうち、無傷で受け切った攻撃はありませんでした（盾で防いだ量 0）",
+        "⚡の条件を2回成立させました"
+      ]
+    },
+    {
+      "id": "B1-2",
+      "desc": "recap に評価語・意図の推測が無い",
+      "verdict": "PASS",
+      "detail": [
+        "予告された攻撃3回のうち、無傷で受け切った攻撃はありませんでした（盾で防いだ量 0）",
+        "⚡の条件を2回成立させました"
+      ]
+    },
+    {
+      "id": "A3-1",
+      "desc": "初陣の 1 勝目は NR1、2 勝目は NR1 でない（1 回だけ）",
+      "verdict": "PASS",
+      "detail": {
+        "first": "NR1",
+        "second": "N4",
+        "wins": 2
+      }
+    },
+    {
+      "id": "A3-2",
+      "desc": "2 勝目の戦績 wins=2（新 state 無しで判定）",
+      "verdict": "PASS",
+      "detail": {
+        "bestScore": 0,
+        "bestScoreDifficulty": null,
+        "bestBattleScore": 919,
+        "bestBattleScoreDifficulty": "normal",
+        "wins": 2,
+        "losses": 0,
+        "finished": 0,
+        "fastestWinRound": 5
+      }
+    },
+    {
+      "id": "A4-1",
+      "desc": "初陣の敗北は N1・Primary「同じ盤面でもう一度」（Solve Loop 不変）",
+      "verdict": "PASS",
+      "detail": {
+        "goal": "N1",
+        "primary": "同じ盤面でもう一度"
+      }
+    },
+    {
+      "id": "A4-2",
+      "desc": "同じ盤面：seed 同一",
+      "verdict": "PASS",
+      "detail": {
+        "before": "seed-1789821111318",
+        "after": "seed-1789821111318"
+      }
+    },
+    {
+      "id": "B2-1",
+      "desc": "defeat（無操作）：recap 1 行目「…無傷で受け切った攻撃はありませんでした」（M=0）",
+      "verdict": "PASS",
+      "detail": [
+        "予告された攻撃5回のうち、無傷で受け切った攻撃はありませんでした（盾で防いだ量 0）",
+        "R5：110の大技に対し、盾は0でした。加護や防御札で予告ぶんの盾を用意すると受け切れます"
+      ]
+    },
+    {
+      "id": "B2-2",
+      "desc": "defeat の recap は 3 行以内で、事実行の後に助言（最大 1）",
+      "verdict": "PASS",
+      "detail": [
+        "予告された攻撃5回のうち、無傷で受け切った攻撃はありませんでした（盾で防いだ量 0）",
+        "R5：110の大技に対し、盾は0でした。加護や防御札で予告ぶんの盾を用意すると受け切れます"
+      ]
+    },
+    {
+      "id": "A5-1",
+      "desc": "魔獣を既に撃破（fixture）→ 初陣に勝っても NR1 でない",
+      "verdict": "PASS",
+      "detail": {
+        "goal": "N4",
+        "matchups": {
+          "taiyo": [
+            "enemy_05"
+          ],
+          "ebisu": [
+            "enemy_01"
+          ]
+        }
+      }
+    },
+    {
+      "id": "A6-1",
+      "desc": "Save/Resume：続きから → 同じ seed で再開",
+      "verdict": "PASS",
+      "detail": {
+        "before": "seed-1789821173466",
+        "after": "seed-1789821173466"
+      }
+    },
+    {
+      "id": "A6-2",
+      "desc": "再開後の勝利でも NR1 は出る（記録から判定・保存に依存しない）",
+      "verdict": "PASS",
+      "detail": {
+        "goal": "NR1",
+        "status": "勝利"
+      }
+    },
+    {
+      "id": "A6-3",
+      "desc": "再開後（ログ不完全）は recap で回数を主張しない",
+      "verdict": "PASS",
+      "detail": [
+        "ラウンド5で撃破しました"
+      ]
+    },
+    {
+      "id": "A7-1",
+      "desc": "Daily：目標は D*・NR1 なし・Primary はもう一度挑戦",
+      "verdict": "PASS",
+      "detail": {
+        "goal": "D1",
+        "primary": "もう一度挑戦（残り2回）"
+      }
+    },
+    {
+      "id": "A7-2",
+      "desc": "Daily：回数消費 1・seed は daily-",
+      "verdict": "PASS",
+      "detail": {
+        "daily": [
+          {
+            "dateKey": "2026-09-19",
+            "enemyId": "enemy_01",
+            "attemptsUsed": 1
+          }
+        ],
+        "seed": "daily-2026-09-19-enemy_01"
+      }
+    },
+    {
+      "id": "B2-3",
+      "desc": "Daily の recap にも事実行（無操作→M=0）",
+      "verdict": "PASS",
+      "detail": [
+        "予告された攻撃4回のうち、無傷で受け切った攻撃はありませんでした（盾で防いだ量 0）",
+        "R4：100の大技に対し、盾は0でした。加護や防御札で予告ぶんの盾を用意すると受け切れます"
+      ]
+    },
+    {
+      "id": "A8-1",
+      "desc": "神階Ⅰ（?stake=1）の恵比寿×試練の影 勝利は NR1 でない",
+      "verdict": "PASS",
+      "detail": {
+        "stake": 1,
+        "goal": "N3"
+      }
+    },
+    {
+      "id": "A9-1",
+      "desc": "?seed= 固定でも初陣勝利で NR1（seed 非依存）",
+      "verdict": "PASS",
+      "detail": {
+        "seed": "sl206-direct",
+        "goal": "NR1"
+      }
+    },
+    {
+      "id": "A10-1",
+      "desc": "既存プレイヤー（old records・恵比寿 3 勝）は Home に「初陣へ」が出ず、恵比寿×試練の影に勝っても NR1 でない（通算 4 勝）",
+      "verdict": "PASS",
+      "detail": {
+        "home": "神域へ挑む今日の試練：試練の影・残り 3/3",
+        "goal": "N4",
+        "wins": 4
+      }
+    },
+    {
+      "id": "B3-1",
+      "desc": "7R 未撃破：事実行 ＋「あと N で撃破でした」",
+      "verdict": "PASS",
+      "detail": [
+        "予告された攻撃7回のうち、3回を無傷で受け切りました（盾で防いだ量 520）",
+        "あと1,000で撃破でした",
+        "神力を使い切らずに終えたラウンドが6回ありました"
+      ]
+    },
+    {
+      "id": "B4-1",
+      "desc": "魔獣：読まない（無操作）→ 敗北・事実行 M=0",
+      "verdict": "PASS",
+      "detail": [
+        "予告された攻撃3回のうち、無傷で受け切った攻撃はありませんでした（盾で防いだ量 0）",
+        "R3：120の大技に対し、盾は0でした。加護や防御札で予告ぶんの盾を用意すると受け切れます"
+      ]
+    },
+    {
+      "id": "B4-2",
+      "desc": "同じ盤面でもう一度（seed 同一）",
+      "verdict": "PASS",
+      "detail": {
+        "before": "seed-1789821404637",
+        "rematch": "seed-1789821404637"
+      }
+    },
+    {
+      "id": "B4-3",
+      "desc": "守る → 盾で防いだ量または無傷回数が増える（行動を変えると結果が変わる、が Result の事実行に出る）",
+      "verdict": "PASS",
+      "detail": {
+        "blind": "予告された攻撃3回のうち、無傷で受け切った攻撃はありませんでした（盾で防いだ量 0）",
+        "reader": "予告された攻撃4回のうち、1回を無傷で受け切りました（盾で防いだ量 310）",
+        "readerStatus": "勝利"
+      }
+    },
+    {
+      "id": "B4-4",
+      "desc": "読まない（無操作）の盾で防いだ量は 0",
+      "verdict": "PASS",
+      "detail": "予告された攻撃3回のうち、無傷で受け切った攻撃はありませんでした（盾で防いだ量 0）"
+    },
+    {
+      "id": "C2-1",
+      "desc": "コンソールエラー 0",
+      "verdict": "PASS",
+      "detail": []
+    },
+    {
+      "id": "C2-2",
+      "desc": "外部／API リクエスト 0",
+      "verdict": "PASS",
+      "detail": []
+    },
+    {
+      "id": "C2-3",
+      "desc": "シナリオ実行エラー 0",
+      "verdict": "PASS",
+      "detail": []
+    }
+  ],
+  "raw": {
+    "earlyRead": {
+      "first": {
+        "save": {
+          "seed": "seed-1789820989738",
+          "mode": "normal",
+          "godId": "ebisu",
+          "enemyId": "enemy_01",
+          "difficulty": "normal",
+          "stake": 0
+        },
+        "result": {
+          "status": "勝利",
+          "goalId": "NR1",
+          "goalText": "次は連撃型「双牙の魔獣」に挑む — 予告を読む戦い",
+          "primaryExit": "reselect",
+          "primaryLabel": "魔獣に挑む（神を選ぶ）",
+          "matchupClear": "✨ 初撃破：恵比寿 × 試練の影（この敵 1/7 神）",
+          "recap": [
+            "予告された攻撃3回のうち、無傷で受け切った攻撃はありませんでした（盾で防いだ量 0）",
+            "⚡の条件を2回成立させました"
+          ],
+          "exits": [
+            "reselect",
+            "adjustDeck",
+            "goDaily",
+            "home",
+            "rematch",
+            "share"
+          ]
+        },
+        "attempts": 1
+      },
+      "storageAfterWin": {
+        "keys": [
+          "sevengods.matchups",
+          "sevengods.otomoBond",
+          "sevengods.records",
+          "sevengods.rewardBonuses",
+          "sevengods.stakes",
+          "sevengods.tutorialSeen"
+        ],
+        "records": {
+          "ebisu": {
+            "bestScore": 0,
+            "bestScoreDifficulty": null,
+            "bestBattleScore": 946,
+            "bestBattleScoreDifficulty": "normal",
+            "wins": 1,
+            "losses": 0,
+            "finished": 0,
+            "fastestWinRound": 4
+          }
+        },
+        "matchups": {
+          "ebisu": [
+            "enemy_01"
+          ]
+        },
+        "daily": null
+      },
+      "clicked": true,
+      "godScreen": {
+        "title": "共に戦う神を選ぼう",
+        "gods": 7
+      },
+      "enemySelect": {
+        "title": "挑む敵を選ぼう",
+        "cards": [
+          {
+            "name": "試練の影",
+            "readChip": null,
+            "matchup": "✓ 恵比寿で撃破済み"
+          },
+          {
+            "name": "業斧の鬼将",
+            "readChip": null,
+            "matchup": "恵比寿では未撃破"
+          },
+          {
+            "name": "藍花の怨霊",
+            "readChip": null,
+            "matchup": "恵比寿では未撃破"
+          },
+          {
+            "name": "銀甲の機工師",
+            "readChip": null,
+            "matchup": "恵比寿では未撃破"
+          },
+          {
+            "name": "双牙の魔獣",
+            "readChip": "予告を読む戦い",
+            "matchup": "恵比寿では未撃破"
+          },
+          {
+            "name": "蒼海の龍神",
+            "readChip": null,
+            "matchup": "恵比寿では未撃破"
+          },
+          {
+            "name": "乱舞の道化",
+            "readChip": null,
+            "matchup": "恵比寿では未撃破"
+          },
+          {
+            "name": "神に委ねる",
+            "readChip": null,
+            "matchup": null
+          }
+        ]
+      },
+      "deckScreen": {
+        "title": "恵比寿のデッキを編成しよう",
+        "hasStart": true
+      },
+      "juumaSave": {
+        "seed": "seed-1789821025533",
+        "mode": "normal",
+        "godId": "ebisu",
+        "enemyId": "enemy_05",
+        "difficulty": "normal",
+        "stake": 0
+      },
+      "errors": [],
+      "api": []
+    },
+    "secondWin": {
+      "first": {
+        "save": {
+          "seed": "seed-1789821029821",
+          "mode": "normal",
+          "godId": "ebisu",
+          "enemyId": "enemy_01",
+          "difficulty": "normal",
+          "stake": 0
+        },
+        "result": {
+          "status": "勝利",
+          "goalId": "NR1",
+          "goalText": "次は連撃型「双牙の魔獣」に挑む — 予告を読む戦い",
+          "primaryExit": "reselect",
+          "primaryLabel": "魔獣に挑む（神を選ぶ）",
+          "matchupClear": "✨ 初撃破：恵比寿 × 試練の影（この敵 1/7 神）",
+          "recap": [
+            "予告された攻撃4回のうち、無傷で受け切った攻撃はありませんでした（盾で防いだ量 0）",
+            "⚡の条件を5回成立させました"
+          ],
+          "exits": [
+            "reselect",
+            "adjustDeck",
+            "goDaily",
+            "home",
+            "rematch",
+            "share"
+          ]
+        },
+        "attempts": 1
+      },
+      "clicked": true,
+      "second": {
+        "status": "勝利",
+        "goalId": "N4",
+        "goalText": "今日の神域挑戦：試練の影に挑む（残り3回）",
+        "primaryExit": "goDaily",
+        "primaryLabel": "今日の神域挑戦へ",
+        "matchupClear": null,
+        "recap": [
+          "予告された攻撃4回のうち、無傷で受け切った攻撃はありませんでした（盾で防いだ量 0）",
+          "⚡の条件を4回成立させました"
+        ],
+        "exits": [
+          "goDaily",
+          "adjustDeck",
+          "rematch",
+          "home",
+          "reselect",
+          "share"
+        ]
+      },
+      "storage": {
+        "keys": [
+          "sevengods.matchups",
+          "sevengods.otomoBond",
+          "sevengods.records",
+          "sevengods.rewardBonuses",
+          "sevengods.stakes",
+          "sevengods.tutorialSeen"
+        ],
+        "records": {
+          "ebisu": {
+            "bestScore": 0,
+            "bestScoreDifficulty": null,
+            "bestBattleScore": 919,
+            "bestBattleScoreDifficulty": "normal",
+            "wins": 2,
+            "losses": 0,
+            "finished": 0,
+            "fastestWinRound": 5
+          }
+        },
+        "matchups": {
+          "ebisu": [
+            "enemy_01"
+          ]
+        },
+        "daily": null
+      },
+      "errors": [],
+      "api": []
+    },
+    "firstLoss": {
+      "before": {
+        "seed": "seed-1789821111318",
+        "mode": "normal",
+        "godId": "ebisu",
+        "enemyId": "enemy_01",
+        "difficulty": "normal",
+        "stake": 0
+      },
+      "result": {
+        "status": "敗北",
+        "goalId": "N1",
+        "goalText": "試練の影を撃破する（残りHP 100%）",
+        "primaryExit": "rematch",
+        "primaryLabel": "同じ盤面でもう一度",
+        "matchupClear": null,
+        "recap": [
+          "予告された攻撃5回のうち、無傷で受け切った攻撃はありませんでした（盾で防いだ量 0）",
+          "R5：110の大技に対し、盾は0でした。加護や防御札で予告ぶんの盾を用意すると受け切れます"
+        ],
+        "exits": [
+          "rematch",
+          "adjustDeck",
+          "reselect",
+          "home",
+          "goDaily",
+          "share"
+        ]
+      },
+      "clicked": true,
+      "after": {
+        "seed": "seed-1789821111318",
+        "mode": "normal",
+        "godId": "ebisu",
+        "enemyId": "enemy_01",
+        "difficulty": "normal",
+        "stake": 0
+      },
+      "errors": [],
+      "api": []
+    },
+    "juumaCleared": {
+      "first": {
+        "save": {
+          "seed": "seed-1789821134843",
+          "mode": "normal",
+          "godId": "ebisu",
+          "enemyId": "enemy_01",
+          "difficulty": "normal",
+          "stake": 0
+        },
+        "result": {
+          "status": "勝利",
+          "goalId": "N4",
+          "goalText": "今日の神域挑戦：試練の影に挑む（残り3回）",
+          "primaryExit": "goDaily",
+          "primaryLabel": "今日の神域挑戦へ",
+          "matchupClear": "✨ 初撃破：恵比寿 × 試練の影（この敵 1/7 神）",
+          "recap": [
+            "予告された攻撃4回のうち、無傷で受け切った攻撃はありませんでした（盾で防いだ量 0）",
+            "神の一撃で決着しました",
+            "⚡の条件を4回成立させました"
+          ],
+          "exits": [
+            "goDaily",
+            "adjustDeck",
+            "rematch",
+            "home",
+            "reselect",
+            "share"
+          ]
+        },
+        "attempts": 1
+      },
+      "storage": {
+        "keys": [
+          "sevengods.matchups",
+          "sevengods.otomoBond",
+          "sevengods.records",
+          "sevengods.rewardBonuses",
+          "sevengods.stakes",
+          "sevengods.tutorialSeen"
+        ],
+        "records": {
+          "ebisu": {
+            "bestScore": 0,
+            "bestScoreDifficulty": null,
+            "bestBattleScore": 880,
+            "bestBattleScoreDifficulty": "normal",
+            "wins": 1,
+            "losses": 0,
+            "finished": 0,
+            "fastestWinRound": 5
+          }
+        },
+        "matchups": {
+          "taiyo": [
+            "enemy_05"
+          ],
+          "ebisu": [
+            "enemy_01"
+          ]
+        },
+        "daily": null
+      },
+      "errors": [],
+      "api": []
+    },
+    "resume": {
+      "saveBefore": {
+        "seed": "seed-1789821173466",
+        "mode": "normal",
+        "godId": "ebisu",
+        "enemyId": "enemy_01",
+        "difficulty": "normal",
+        "stake": 0
+      },
+      "resumed": true,
+      "saveAfter": {
+        "seed": "seed-1789821173466",
+        "mode": "normal",
+        "godId": "ebisu",
+        "enemyId": "enemy_01",
+        "difficulty": "normal",
+        "stake": 0
+      },
+      "result": {
+        "status": "勝利",
+        "goalId": "NR1",
+        "goalText": "次は連撃型「双牙の魔獣」に挑む — 予告を読む戦い",
+        "primaryExit": "reselect",
+        "primaryLabel": "魔獣に挑む（神を選ぶ）",
+        "matchupClear": "✨ 初撃破：恵比寿 × 試練の影（この敵 1/7 神）",
+        "recap": [
+          "ラウンド5で撃破しました"
+        ],
+        "exits": [
+          "reselect",
+          "adjustDeck",
+          "goDaily",
+          "home",
+          "rematch",
+          "share"
+        ]
+      },
+      "errors": [],
+      "api": []
+    },
+    "daily": {
+      "save": {
+        "seed": "daily-2026-09-19-enemy_01",
+        "mode": "daily",
+        "godId": "taiyo",
+        "enemyId": "enemy_01",
+        "difficulty": "normal",
+        "stake": 0
+      },
+      "result": {
+        "status": "敗北",
+        "goalId": "D1",
+        "goalText": "同じ盤面で試練の影を撃破する（残り2回）",
+        "primaryExit": "rematch",
+        "primaryLabel": "もう一度挑戦（残り2回）",
+        "matchupClear": null,
+        "recap": [
+          "予告された攻撃4回のうち、無傷で受け切った攻撃はありませんでした（盾で防いだ量 0）",
+          "R4：100の大技に対し、盾は0でした。加護や防御札で予告ぶんの盾を用意すると受け切れます"
+        ],
+        "exits": [
+          "rematch",
+          "adjustDeck",
+          "reselect",
+          "home",
+          "share"
+        ]
+      },
+      "storage": {
+        "keys": [
+          "sevengods.daily",
+          "sevengods.deckPreference",
+          "sevengods.matchups",
+          "sevengods.otomoBond",
+          "sevengods.pendingRuns"
+        ],
+        "records": null,
+        "matchups": {},
+        "daily": [
+          {
+            "dateKey": "2026-09-19",
+            "enemyId": "enemy_01",
+            "attemptsUsed": 1
+          }
+        ]
+      },
+      "errors": [],
+      "api": []
+    },
+    "stake": {
+      "save": {
+        "seed": "seed-1789821243855",
+        "mode": "normal",
+        "godId": "ebisu",
+        "enemyId": "enemy_01",
+        "difficulty": "normal",
+        "stake": 1
+      },
+      "result": {
+        "status": "勝利",
+        "goalId": "N3",
+        "goalText": "次は神階Ⅱ「鳥居」：初期手札−1",
+        "primaryExit": "reselect",
+        "primaryLabel": "神階に挑む（神を選び直す）",
+        "matchupClear": "✨ 初撃破：恵比寿 × 試練の影（この敵 1/7 神）",
+        "recap": [
+          "予告された攻撃4回のうち、無傷で受け切った攻撃はありませんでした（盾で防いだ量 50）",
+          "神の一撃で決着しました",
+          "HP27%から立て直しました"
+        ],
+        "exits": [
+          "reselect",
+          "adjustDeck",
+          "goDaily",
+          "home",
+          "rematch",
+          "share"
+        ]
+      },
+      "errors": [],
+      "api": []
+    },
+    "directSeed": {
+      "first": {
+        "save": {
+          "seed": "sl206-direct",
+          "mode": "normal",
+          "godId": "ebisu",
+          "enemyId": "enemy_01",
+          "difficulty": "normal",
+          "stake": 0
+        },
+        "result": {
+          "status": "勝利",
+          "goalId": "NR1",
+          "goalText": "次は連撃型「双牙の魔獣」に挑む — 予告を読む戦い",
+          "primaryExit": "reselect",
+          "primaryLabel": "魔獣に挑む（神を選ぶ）",
+          "matchupClear": "✨ 初撃破：恵比寿 × 試練の影（この敵 1/7 神）",
+          "recap": [
+            "予告された攻撃5回のうち、1回を無傷で受け切りました（盾で防いだ量 80）",
+            "⚡の条件を3回成立させました"
+          ],
+          "exits": [
+            "reselect",
+            "adjustDeck",
+            "goDaily",
+            "home",
+            "rematch",
+            "share"
+          ]
+        },
+        "attempts": 1
+      },
+      "errors": [],
+      "api": []
+    },
+    "returning": {
+      "homePrimary": "神域へ挑む今日の試練：試練の影・残り 3/3",
+      "first": {
+        "save": {
+          "seed": "seed-1789821327305",
+          "mode": "normal",
+          "godId": "ebisu",
+          "enemyId": "enemy_01",
+          "difficulty": "normal",
+          "stake": 0
+        },
+        "result": {
+          "status": "勝利",
+          "goalId": "N4",
+          "goalText": "今日の神域挑戦：試練の影に挑む（残り3回）",
+          "primaryExit": "goDaily",
+          "primaryLabel": "今日の神域挑戦へ",
+          "matchupClear": "✨ 初撃破：恵比寿 × 試練の影（この敵 1/7 神）",
+          "recap": [
+            "予告された攻撃4回のうち、1回を無傷で受け切りました（盾で防いだ量 90）",
+            "神の一撃で決着しました",
+            "⚡の条件を5回成立させました"
+          ],
+          "exits": [
+            "goDaily",
+            "adjustDeck",
+            "rematch",
+            "home",
+            "reselect",
+            "share"
+          ]
+        },
+        "attempts": 1
+      },
+      "storage": {
+        "keys": [
+          "sevengods.deckPreference",
+          "sevengods.matchups",
+          "sevengods.otomoBond",
+          "sevengods.records",
+          "sevengods.rewardBonuses",
+          "sevengods.stakes"
+        ],
+        "records": {
+          "ebisu": {
+            "bestScore": 0,
+            "bestScoreDifficulty": null,
+            "bestBattleScore": 887,
+            "bestBattleScoreDifficulty": "normal",
+            "wins": 4,
+            "losses": 1,
+            "finished": 0,
+            "fastestWinRound": 4
+          }
+        },
+        "matchups": {
+          "ebisu": [
+            "enemy_01"
+          ]
+        },
+        "daily": null
+      },
+      "errors": [],
+      "api": []
+    },
+    "finished": {
+      "result": {
+        "status": "未撃破（7ラウンド終了）",
+        "goalId": "N1",
+        "goalText": "業斧の鬼将を撃破する（残りHP 100%）",
+        "primaryExit": "rematch",
+        "primaryLabel": "同じ盤面でもう一度",
+        "matchupClear": null,
+        "recap": [
+          "予告された攻撃7回のうち、3回を無傷で受け切りました（盾で防いだ量 520）",
+          "あと1,000で撃破でした",
+          "神力を使い切らずに終えたラウンドが6回ありました"
+        ],
+        "exits": [
+          "rematch",
+          "adjustDeck",
+          "reselect",
+          "home",
+          "goDaily",
+          "share"
+        ]
+      },
+      "errors": [],
+      "api": []
+    },
+    "juumaLoop": {
+      "before": {
+        "seed": "seed-1789821404637",
+        "mode": "normal",
+        "godId": "ebisu",
+        "enemyId": "enemy_05",
+        "difficulty": "normal",
+        "stake": 0
+      },
+      "blind": {
+        "status": "敗北",
+        "goalId": "N1",
+        "goalText": "双牙の魔獣を撃破する（残りHP 100%）",
+        "primaryExit": "rematch",
+        "primaryLabel": "同じ盤面でもう一度",
+        "matchupClear": null,
+        "recap": [
+          "予告された攻撃3回のうち、無傷で受け切った攻撃はありませんでした（盾で防いだ量 0）",
+          "R3：120の大技に対し、盾は0でした。加護や防御札で予告ぶんの盾を用意すると受け切れます"
+        ],
+        "exits": [
+          "rematch",
+          "adjustDeck",
+          "reselect",
+          "home",
+          "goDaily",
+          "share"
+        ]
+      },
+      "clicked": true,
+      "rematch": {
+        "seed": "seed-1789821404637",
+        "mode": "normal",
+        "godId": "ebisu",
+        "enemyId": "enemy_05",
+        "difficulty": "normal",
+        "stake": 0
+      },
+      "reader": {
+        "status": "勝利",
+        "goalId": "N4",
+        "goalText": "今日の神域挑戦：試練の影に挑む（残り3回）",
+        "primaryExit": "goDaily",
+        "primaryLabel": "今日の神域挑戦へ",
+        "matchupClear": "✨ 初撃破：恵比寿 × 双牙の魔獣（この敵 1/7 神）",
+        "recap": [
+          "予告された攻撃4回のうち、1回を無傷で受け切りました（盾で防いだ量 310）",
+          "神の一撃で決着しました",
+          "⚡の条件を6回成立させました"
+        ],
+        "exits": [
+          "goDaily",
+          "adjustDeck",
+          "rematch",
+          "home",
+          "reselect",
+          "share"
+        ]
+      },
+      "errors": [],
+      "api": []
+    }
+  }
+}

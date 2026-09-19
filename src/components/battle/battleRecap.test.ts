@@ -6,7 +6,8 @@ import { getRecommendedDeck } from '../../core/data/deckBuilder'
 import { getCardDef } from '../../core/data/cards'
 import { RULES } from '../../core/data/rules'
 import { applyAction } from '../../core/engine/reducer'
-import { buildBattleRecap, collectRecapFacts, defeatGuidance, RECAP_MAX_LINES, splitBatches } from './battleRecap'
+import { buildBattleRecap, collectRecapFacts, defeatGuidance, describeAnnouncedAttacks, RECAP_MAX_LINES, splitBatches, type RecapFacts } from './battleRecap'
+import { evaluateDefense } from './decisionFeedback'
 
 /**
  * Phase 6-C（決定166）：振り返りは「実際に起きたこと」だけから作る。
@@ -149,14 +150,18 @@ describe('buildBattleRecap（最大3行・固有の事実・後知恵なし）',
       found = true
       const recap = buildBattleRecap(r.log, r.state)!
       expect(recap.kind).toBe('defeat')
-      expect(recap.lines.length).toBeLessThanOrEqual(1)
+      // 決定206：1 行目は「予告された攻撃に対して何が起きたか」の事実（予告された攻撃が 1 回以上あるとき）。助言はその後に最大 1 行
+      const announced = describeAnnouncedAttacks(recap.facts)
+      const rest = announced ? recap.lines.slice(1) : recap.lines
+      if (announced) expect(recap.lines[0]).toBe(announced)
+      expect(rest.length).toBeLessThanOrEqual(1)
       const g = defeatGuidance(recap.facts, r.state)
       if (g) {
-        expect(recap.lines).toEqual([g])
+        expect(rest).toEqual([g])
         // 事実（実行値・盾）を含む形か、託宣・神力・⚡の既存の仕組みへの案内
         expect(g).toMatch(/大技に対し|託宣が|神力を|⚡の条件/)
       } else {
-        expect(recap.lines).toEqual([])
+        expect(rest).toEqual([])
       }
     }
     expect(found).toBe(true)
@@ -170,8 +175,83 @@ describe('buildBattleRecap（最大3行・固有の事実・後知恵なし）',
     const log: GameEvent[] = [...run.log, { t: 'ROUND_ENDED', round: 7, unusedAp: 0 }, { t: 'GAME_ENDED', status: 'finished', totalScore: 0 }]
     const recap = buildBattleRecap(log, state)!
     expect(recap.kind).toBe('finished')
-    expect(recap.lines[0]).toBe('あと240で撃破でした')
+    // 決定206：予告された攻撃の事実行が先頭、「あと N で撃破」はその直後
+    const announced = describeAnnouncedAttacks(recap.facts)
+    expect(recap.lines[announced ? 1 : 0]).toBe('あと240で撃破でした')
     expect(recap.lines.length).toBeLessThanOrEqual(RECAP_MAX_LINES)
+  })
+
+  describe('決定206（Solve Legibility v1・B）：予告された攻撃に対して実際に何が起きたか（事実のみ）', () => {
+    const factsOf = (over: Partial<RecapFacts>): RecapFacts => ({
+      complete: true, round: 5, announced: 4, unharmed: 3, blockedTotal: 27, perfect: 3, perfectBig: 0, neutralized: 0, bonus: 0, bonusByCond: {}, passive: 0,
+      burstCount: 0, burstFinish: false, lowestHpRatio: 0.5, unusedApRounds: 0, divinationUses: 0, divinationUsedInLastRound: false, fatal: null, hasBonusCards: false,
+      ...over,
+    })
+
+    it('文は「予告された攻撃 N回のうち M回を無傷で受け切りました（盾で防いだ量 X）」。封じは内訳として添える', () => {
+      expect(describeAnnouncedAttacks(factsOf({}))).toBe('予告された攻撃4回のうち、3回を無傷で受け切りました（盾で防いだ量 270）')
+      expect(describeAnnouncedAttacks(factsOf({ unharmed: 3, perfect: 2, neutralized: 1 }))).toBe('予告された攻撃4回のうち、3回を無傷で受け切りました（盾で防いだ量 270・封じ1回）')
+    })
+
+    it('M=0 は「無傷で受け切った攻撃はありませんでした」＋盾で防いだ量（0 でも出す。守ったのに無傷が無い連撃型でも結果が見える）', () => {
+      expect(describeAnnouncedAttacks(factsOf({ unharmed: 0, perfect: 0, blockedTotal: 12 }))).toBe('予告された攻撃4回のうち、無傷で受け切った攻撃はありませんでした（盾で防いだ量 120）')
+      expect(describeAnnouncedAttacks(factsOf({ unharmed: 0, perfect: 0, blockedTotal: 0 }))).toBe('予告された攻撃4回のうち、無傷で受け切った攻撃はありませんでした（盾で防いだ量 0）')
+    })
+
+    it('予告された攻撃 0 回・「続きから」でログが途中からのときは出さない', () => {
+      expect(describeAnnouncedAttacks(factsOf({ announced: 0, unharmed: 0, perfect: 0 }))).toBeNull()
+      expect(describeAnnouncedAttacks(factsOf({ complete: false }))).toBeNull()
+    })
+
+    it('文に意図の推測（読めた・理解・狙い）や評価語を含まない', () => {
+      for (const f of [factsOf({}), factsOf({ unharmed: 0, perfect: 0 }), factsOf({ perfectBig: 1, neutralized: 1 })]) {
+        const s = describeAnnouncedAttacks(f)!
+        expect(s).not.toMatch(/読め|読ん|理解|狙|正し|上手|惜し|成績|評価|点/)
+      }
+    })
+
+    it('回数は engine のログの事実と一致する（予告あり＝attacked または neutralized、無傷＝perfect または neutralized）', () => {
+      for (const [i, seed] of seeds.entries()) {
+        const [god, enemy] = combos[i]
+        for (const prefer of ['attack', 'guard'] as const) {
+          const r = playToEnd(start(seed, god as never, enemy as never), prefer)
+          const f = collectRecapFacts(r.log, r.state)
+          let announced = 0
+          let unharmed = 0
+          let blocked = 0
+          let intent: number | null = null
+          for (const b of splitBatches(r.log)) {
+            const d = evaluateDefense(b, intent)
+            if (d.attacked || d.neutralized) {
+              announced += 1
+              blocked += d.blocked
+            }
+            if (d.perfect || d.neutralized) unharmed += 1
+            for (const e of b) if (e.t === 'ENEMY_INTENT_SET') intent = e.amount
+          }
+          expect(f.announced).toBe(announced)
+          expect(f.unharmed).toBe(unharmed)
+          expect(f.blockedTotal).toBe(blocked)
+          expect(f.unharmed).toBeLessThanOrEqual(f.announced)
+          expect(f.unharmed).toBe(f.perfect + f.neutralized)
+          const recap = buildBattleRecap(r.log, r.state)!
+          const line = describeAnnouncedAttacks(f)
+          if (line) expect(recap.lines[0]).toBe(line)
+          else for (const l of recap.lines) expect(l).not.toMatch(/予告された攻撃/)
+          expect(recap.lines.length).toBeLessThanOrEqual(RECAP_MAX_LINES)
+        }
+      }
+    })
+
+    it('R1 で撃破して予告された攻撃が 0 回でも、勝利の振り返りは「ラウンド1で撃破」で成立する', () => {
+      const run = start('recap-r1', GOD_IDS.ebisu, ENEMY_IDS.trial)
+      const state: GameState = { ...run.state, status: 'won', round: 1, enemy: { ...run.state.enemy, hp: 0 } }
+      const log: GameEvent[] = [...run.log, { t: 'GAME_ENDED', status: 'won', totalScore: 0 }]
+      const recap = buildBattleRecap(log, state)!
+      expect(recap.facts.announced).toBe(0)
+      expect(recap.lines.some((l) => /予告された攻撃/.test(l))).toBe(false)
+      expect(recap.lines).toContain('ラウンド1で撃破しました')
+    })
   })
 
   it('G1：大技に盾が届かなかった敗北は、実行値と吸収量をそのまま書く', () => {

@@ -3,6 +3,7 @@ import type { EnemyId, GodId } from '../../core/types'
 import { ENEMIES } from '../../core/data/enemies'
 import { GODS } from '../../core/data/gods'
 import { isMatchupCleared, loadMatchups } from '../../hooks/matchupStorage'
+import { EARLY_READ_TARGET_ENEMY_ID } from '../battle/nextGoal'
 import './setup.css'
 
 /**
@@ -106,6 +107,13 @@ export function EnemySelectScreen({ onSelect, onBack, godId = null }: EnemySelec
               </span>
               <span className="enemy-select-name">{enemy.name}</span>
               <span className="enemy-select-type">【{enemy.typeLabel}】</span>
+              {/* 決定206（Solve Legibility v1・A）：結果画面の「次の目標」（NR1）から来た人が迷わないよう、
+                  誘導先の敵にだけ固定の短い印を常時出す。表示のみ・state 無し。強制はしない */}
+              {enemy.id === EARLY_READ_TARGET_ENEMY_ID && (
+                <span className="enemy-select-read-chip" data-testid="enemy-read-chip">
+                  予告を読む戦い
+                </span>
+              )}
               <span className="enemy-select-hint">{enemy.typeDescription}</span>
               <span className="enemy-select-stage">{enemy.stage.nameJa}</span>
             </span>

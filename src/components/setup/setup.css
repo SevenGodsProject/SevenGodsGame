@@ -2480,6 +2480,22 @@
   color: #c9cbe0;
 }
 
+/* 決定206（Solve Legibility v1・A）：「予告を読む戦い」の印（双牙の魔獣のみ・表示専用）。
+   型ラベルの直下に置き、金の細枠で「次の目標」と同じ文言を結びつける。色だけに頼らず文字で示す */
+.enemy-select-read-chip {
+  display: inline-block;
+  padding: 1px 8px;
+  border: 1px solid #ffd166aa;
+  border-radius: 999px;
+  background: #221607b3;
+  font-size: 10px;
+  font-weight: 700;
+  line-height: 1.6;
+  letter-spacing: 0.04em;
+  color: #ffe6a3;
+  white-space: nowrap;
+}
+
 /* 戦績画面の横はみ出し修正（Production 既知不具合）：神域挑戦の表は表の中だけで横スクロールさせ、
    ページ全体を 390px に収める。戦績画面にだけ効くよう .record-screen に限定する */
 .record-screen {
