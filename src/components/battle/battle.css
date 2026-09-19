@@ -6101,6 +6101,18 @@ body.battle-viewport .battle-main > .battle-callout {
     width: 80px;
     height: 80px;
   }
+}
+
+/* 決定207（Release Gate 修正）：決定206 の recap 事実行（PC では 2 行に折り返す）で、低い PC viewport
+   （1508×660）の Daily 2 回目勝利の結果カードだけ Secondary CTA が可視領域から 3.7px はみ出した（phase7-p1 AC10）。
+   PC の低い画面に限って recap の上下 padding と行間を最小限詰める（−4px − 4 行×0.65px ≈ −6.6px）。
+   文言・行数・SP のレイアウト・通常の高さの PC には触れない */
+@media (min-width: 1024px) and (max-height: 700px) {
+  .game-over-recap {
+    padding-top: 4px;
+    padding-bottom: 4px;
+    line-height: 1.5;
+  }
   .game-over-portrait-otomo {
     width: 52px;
     height: 52px;
