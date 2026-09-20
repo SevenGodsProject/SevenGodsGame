@@ -1,0 +1,398 @@
+{
+  "base": "http://localhost:4181",
+  "at": "2026-09-20T00:23:26.603Z",
+  "verdict": "PASS",
+  "checks": [
+    {
+      "id": "AC1-1",
+      "desc": "敗北の Primary が「同じ盤面でもう一度」",
+      "verdict": "PASS",
+      "detail": "同じ盤面でもう一度"
+    },
+    {
+      "id": "AC1-2",
+      "desc": "敗北の Primary の出口は rematch",
+      "verdict": "PASS",
+      "detail": "rematch"
+    },
+    {
+      "id": "AC1-3",
+      "desc": "再戦の seed が同じ",
+      "verdict": "PASS",
+      "detail": {
+        "before": "seed-1789863637441",
+        "after": "seed-1789863637441"
+      }
+    },
+    {
+      "id": "AC1-4",
+      "desc": "再戦の初期手札が同じ",
+      "verdict": "PASS",
+      "detail": {
+        "before": [
+          "🌿 姉御の号令",
+          "⚔ 豪快な一撃",
+          "🛡 守護",
+          "🌿 姉御の号令",
+          "🛡 受け流し"
+        ],
+        "after": [
+          "🌿 姉御の号令",
+          "⚔ 豪快な一撃",
+          "🛡 守護",
+          "🌿 姉御の号令",
+          "🛡 受け流し"
+        ]
+      }
+    },
+    {
+      "id": "AC1-5",
+      "desc": "再戦の敵の予告が同じ",
+      "verdict": "PASS",
+      "detail": {
+        "before": "⚔ 50",
+        "after": "⚔ 50"
+      }
+    },
+    {
+      "id": "AC1-6",
+      "desc": "再戦の敵HPが同じ（満タンから同じ問題）",
+      "verdict": "PASS",
+      "detail": {
+        "before": "1,000 / 1,000",
+        "after": "1,000 / 1,000"
+      }
+    },
+    {
+      "id": "AC2-1",
+      "desc": "未撃破(7R)の Primary が「同じ盤面でもう一度」",
+      "verdict": "PASS",
+      "detail": "同じ盤面でもう一度"
+    },
+    {
+      "id": "AC2-2",
+      "desc": "未撃破の再戦 seed が同じ",
+      "verdict": "PASS",
+      "detail": {
+        "before": "seed-1789863662678",
+        "after": "seed-1789863662678"
+      }
+    },
+    {
+      "id": "AC3-1",
+      "desc": "勝利の再戦文言は「同じ構成でもう一度」のまま",
+      "verdict": "PASS",
+      "detail": "同じ構成でもう一度"
+    },
+    {
+      "id": "AC3-2",
+      "desc": "勝利の再戦は seed が変わる",
+      "verdict": "PASS",
+      "detail": {
+        "before": "seed-1789863703307",
+        "after": "seed-1789863741780"
+      }
+    },
+    {
+      "id": "AC4-1",
+      "desc": "Daily の再戦文言は「もう一度挑戦（残りN回）」のまま",
+      "verdict": "PASS",
+      "detail": "もう一度挑戦（残り2回）"
+    },
+    {
+      "id": "AC4-2",
+      "desc": "Daily は同日 seed のまま（再戦しても同じ）",
+      "verdict": "PASS",
+      "detail": {
+        "before": "daily-2026-09-20-enemy_07",
+        "after": "daily-2026-09-20-enemy_07"
+      }
+    },
+    {
+      "id": "AC4-3",
+      "desc": "Daily の seed は daily- 形式（通常戦の seed が混ざらない）",
+      "verdict": "PASS",
+      "detail": "daily-2026-09-20-enemy_07"
+    },
+    {
+      "id": "AC4-4",
+      "desc": "Daily の mode が daily のまま",
+      "verdict": "PASS",
+      "detail": {
+        "before": "daily",
+        "after": "daily"
+      }
+    },
+    {
+      "id": "AC4-5",
+      "desc": "Daily の回数消費は 1 回開始につき 1（再戦で 1 → 2）",
+      "verdict": "PASS",
+      "detail": {
+        "start": [
+          {
+            "dateKey": "2026-09-20",
+            "enemyId": "enemy_07",
+            "seed": "daily-2026-09-20-enemy_07",
+            "attemptsUsed": 1,
+            "results": 0
+          }
+        ],
+        "rematch": [
+          {
+            "dateKey": "2026-09-20",
+            "enemyId": "enemy_07",
+            "seed": "daily-2026-09-20-enemy_07",
+            "attemptsUsed": 2,
+            "results": 1
+          }
+        ]
+      }
+    },
+    {
+      "id": "AC5-1",
+      "desc": "敗北後「デッキを調整」→開始 は新しい盤面（seed が変わる）",
+      "verdict": "PASS",
+      "detail": {
+        "before": "seed-1789863774513",
+        "after": "seed-1789863798788"
+      }
+    },
+    {
+      "id": "AC6-1",
+      "desc": "コンソールエラー 0",
+      "verdict": "PASS",
+      "detail": []
+    }
+  ],
+  "raw": {
+    "lose": {
+      "strategy": "lose",
+      "before": {
+        "seed": "seed-1789863637441",
+        "mode": "normal",
+        "hand": [
+          "🌿 姉御の号令",
+          "⚔ 豪快な一撃",
+          "🛡 守護",
+          "🌿 姉御の号令",
+          "🛡 受け流し"
+        ],
+        "intent": "⚔ 50",
+        "enemyHp": "1,000 / 1,000"
+      },
+      "result": {
+        "goal": "次の目標業斧の鬼将を撃破する（残りHP 100%）",
+        "primaryExit": "rematch",
+        "primaryLabel": "同じ盤面でもう一度",
+        "rematchLabel": "同じ盤面でもう一度",
+        "exits": [
+          "rematch",
+          "adjustDeck",
+          "reselect",
+          "home",
+          "goDaily",
+          "share"
+        ]
+      },
+      "clicked": true,
+      "after": {
+        "seed": "seed-1789863637441",
+        "mode": "normal",
+        "hand": [
+          "🌿 姉御の号令",
+          "⚔ 豪快な一撃",
+          "🛡 守護",
+          "🌿 姉御の号令",
+          "🛡 受け流し"
+        ],
+        "intent": "⚔ 50",
+        "enemyHp": "1,000 / 1,000"
+      },
+      "errors": []
+    },
+    "stall": {
+      "strategy": "stall",
+      "before": {
+        "seed": "seed-1789863662678",
+        "mode": "normal",
+        "hand": [
+          "🌿 姉御の号令",
+          "⚔ 一心不乱",
+          "✨ 神楽舞",
+          "✨ 共振",
+          "⚔ 剛撃"
+        ],
+        "intent": "⚔ 50",
+        "enemyHp": "1,000 / 1,000"
+      },
+      "result": {
+        "goal": "次の目標業斧の鬼将を撃破する（残りHP 100%）",
+        "primaryExit": "rematch",
+        "primaryLabel": "同じ盤面でもう一度",
+        "rematchLabel": "同じ盤面でもう一度",
+        "exits": [
+          "rematch",
+          "adjustDeck",
+          "reselect",
+          "home",
+          "goDaily",
+          "share"
+        ]
+      },
+      "clicked": true,
+      "after": {
+        "seed": "seed-1789863662678",
+        "mode": "normal",
+        "hand": [
+          "🌿 姉御の号令",
+          "⚔ 一心不乱",
+          "✨ 神楽舞",
+          "✨ 共振",
+          "⚔ 剛撃"
+        ],
+        "intent": "⚔ 50",
+        "enemyHp": "1,000 / 1,000"
+      },
+      "errors": []
+    },
+    "win": {
+      "before": {
+        "seed": "seed-1789863703307",
+        "mode": "normal",
+        "hand": [
+          "🛡 鉄壁の構え",
+          "⚔ 一心不乱",
+          "💀 呪縛",
+          "⚔ 豪快な一撃",
+          "🌿 姉御の号令"
+        ],
+        "intent": "⚔ 50",
+        "enemyHp": "1,000 / 1,000"
+      },
+      "result": {
+        "goal": "次の目標今日の神域挑戦：乱舞の道化に挑む（残り3回）",
+        "primaryExit": "goDaily",
+        "primaryLabel": "今日の神域挑戦へ",
+        "rematchLabel": "同じ構成でもう一度",
+        "exits": [
+          "goDaily",
+          "adjustDeck",
+          "rematch",
+          "home",
+          "reselect",
+          "share"
+        ]
+      },
+      "clicked": true,
+      "after": {
+        "seed": "seed-1789863741780",
+        "mode": "normal",
+        "hand": [
+          "⚔ 一撃",
+          "🌟 神託",
+          "🌟 予言",
+          "⚔ 豪快な一撃",
+          "⚔ 剛撃"
+        ],
+        "intent": "⚔ 50",
+        "enemyHp": "1,000 / 1,000"
+      },
+      "errors": []
+    },
+    "daily": {
+      "before": {
+        "seed": "daily-2026-09-20-enemy_07",
+        "mode": "daily",
+        "hand": [
+          "🌿 姉御の号令",
+          "✨ 共振",
+          "✨ 巫女の舞",
+          "🌿 姉御の号令",
+          "⚔ 剛撃"
+        ],
+        "intent": "⚔ 50",
+        "enemyHp": "1,150 / 1,150"
+      },
+      "result": {
+        "goal": "次の目標同じ盤面で乱舞の道化を撃破する（残り2回）",
+        "primaryExit": "rematch",
+        "primaryLabel": "もう一度挑戦（残り2回）",
+        "rematchLabel": "もう一度挑戦（残り2回）",
+        "exits": [
+          "rematch",
+          "adjustDeck",
+          "reselect",
+          "home",
+          "share"
+        ]
+      },
+      "clicked": true,
+      "after": {
+        "seed": "daily-2026-09-20-enemy_07",
+        "mode": "daily",
+        "hand": [
+          "🌿 姉御の号令",
+          "✨ 共振",
+          "✨ 巫女の舞",
+          "🌿 姉御の号令",
+          "⚔ 剛撃"
+        ],
+        "intent": "⚔ 50",
+        "enemyHp": "1,150 / 1,150"
+      },
+      "storageAfterStart": {
+        "daily": [
+          {
+            "dateKey": "2026-09-20",
+            "enemyId": "enemy_07",
+            "seed": "daily-2026-09-20-enemy_07",
+            "attemptsUsed": 1,
+            "results": 0
+          }
+        ]
+      },
+      "storageAfterRematch": {
+        "daily": [
+          {
+            "dateKey": "2026-09-20",
+            "enemyId": "enemy_07",
+            "seed": "daily-2026-09-20-enemy_07",
+            "attemptsUsed": 2,
+            "results": 1
+          }
+        ]
+      },
+      "errors": []
+    },
+    "escape": {
+      "before": {
+        "seed": "seed-1789863774513",
+        "mode": "normal",
+        "hand": [
+          "🛡 守護",
+          "🌿 後輩想い",
+          "✨ 巫女の舞",
+          "⚔ 豪快な一撃",
+          "⚔ 速攻"
+        ],
+        "intent": "⚔ 50",
+        "enemyHp": "1,000 / 1,000"
+      },
+      "clicked": true,
+      "after": {
+        "seed": "seed-1789863798788",
+        "mode": "normal",
+        "hand": [
+          "🛡 鉄壁の構え",
+          "⚔ 豪快な一撃",
+          "⚔ 一撃",
+          "✨ 共振",
+          "🛡 守護"
+        ],
+        "intent": "⚔ 50",
+        "enemyHp": "1,000 / 1,000"
+      },
+      "errors": []
+    }
+  }
+}

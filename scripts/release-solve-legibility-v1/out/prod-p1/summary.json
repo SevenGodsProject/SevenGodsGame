@@ -1,0 +1,140 @@
+{
+  "source": "scripts/release-solve-legibility-v1/out/prod-p1/acceptance.json",
+  "generatedAt": "2026-09-19T18:59:42.490Z",
+  "pass": false,
+  "results": [
+    {
+      "id": "AC1",
+      "title": "通常勝利後、Result だけで次の行動候補（Primary 1＋Secondary 2）が分かる",
+      "pass": true,
+      "checks": 1,
+      "failed": []
+    },
+    {
+      "id": "AC2",
+      "title": "Daily 終了後、今日のベストとの関係が分かる（2 回目以降は前回も）",
+      "pass": true,
+      "checks": 4,
+      "failed": []
+    },
+    {
+      "id": "AC3",
+      "title": "Home 起動後、Daily の敵と残り回数がスクロールなしで読める",
+      "pass": true,
+      "checks": 2,
+      "failed": []
+    },
+    {
+      "id": "AC4",
+      "title": "続きがあるとき「続きから」が Today より上の Primary",
+      "pass": true,
+      "checks": 1,
+      "failed": []
+    },
+    {
+      "id": "AC5",
+      "title": "390×844 で主要 CTA（Primary）が viewport 内・44px 以上",
+      "pass": false,
+      "checks": 0,
+      "failed": []
+    },
+    {
+      "id": "AC5+",
+      "title": "（参考）他の viewport でも Primary が viewport 内",
+      "pass": true,
+      "checks": 7,
+      "failed": []
+    },
+    {
+      "id": "AC6",
+      "title": "Result/Home 変更で戦闘画面のレイアウトが変化しない（変更前ビルドと offset 箱が一致）",
+      "pass": false,
+      "checks": 0,
+      "failed": []
+    },
+    {
+      "id": "AC7",
+      "title": "Daily：開始ごとに回数 +1（Home 経由／もう一度／デッキ調整経由）・seed 不変・残り 0 で開始不可",
+      "pass": true,
+      "checks": 10,
+      "failed": []
+    },
+    {
+      "id": "AC9",
+      "title": "次の目標は 1 行（SP で最大 2 行）・空でない",
+      "pass": true,
+      "checks": 7,
+      "failed": []
+    },
+    {
+      "id": "AC10",
+      "title": "Result 初期表示に別アクティビティへの CTA が 2 つ以上（報酬未確定は除外）",
+      "pass": true,
+      "checks": 7,
+      "failed": []
+    },
+    {
+      "id": "AC11",
+      "title": "挑戦状のコピーは Primary より小さく、DOM 上も後ろ",
+      "pass": true,
+      "checks": 7,
+      "failed": []
+    },
+    {
+      "id": "AC12",
+      "title": "PC 1508×660 で Home のリンク（E1 以降は 2 本：戦績・OTOMO）が viewport 内",
+      "pass": true,
+      "checks": 2,
+      "failed": []
+    },
+    {
+      "id": "AC13",
+      "title": "Home CLS ≤ 0.1・Home のボタンはすべて 44px 以上",
+      "pass": true,
+      "checks": 3,
+      "failed": []
+    },
+    {
+      "id": "AC14",
+      "title": "すべてのシナリオで JS error 0",
+      "pass": true,
+      "checks": 5,
+      "failed": []
+    },
+    {
+      "id": "AC16",
+      "title": "Daily 敗北＋今日のベスト未記録で「同点」を出さない",
+      "pass": true,
+      "checks": 1,
+      "failed": []
+    },
+    {
+      "id": "EXTRA-1",
+      "title": "横スクロール・横はみ出しなし（Home・Result）",
+      "pass": true,
+      "checks": 9,
+      "failed": []
+    },
+    {
+      "id": "EXTRA-2",
+      "title": "結果→デッキ調整で直前の敵を引き継ぎ、決着後にホームへ戻っても幽霊の「続きから」が出ない",
+      "pass": true,
+      "checks": 3,
+      "failed": []
+    },
+    {
+      "id": "EXTRA-3",
+      "title": "報酬未確定（勝利直後）は「報酬カードを選ぶ」だけ",
+      "pass": true,
+      "checks": 1,
+      "failed": []
+    },
+    {
+      "id": "EXTRA-4",
+      "title": "通常戦の「同じ構成でもう一度」（既存の再戦経路）が同じ敵・通常モードで始まる",
+      "pass": true,
+      "checks": 1,
+      "failed": []
+    }
+  ]
+}

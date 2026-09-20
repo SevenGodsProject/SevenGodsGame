@@ -1,0 +1,624 @@
+{
+  "base": "http://localhost:4181",
+  "baseline": "https://seven-gods-game.vercel.app",
+  "at": "2026-09-19T18:14:08.776Z",
+  "pcPress": [
+    {
+      "label": "Home Primary CTA",
+      "sel": ".home-screen .home-cta-primary",
+      "present": true,
+      "idleTransform": "none",
+      "hoverTransform": "matrix(1, 0, 0, 1, 0, -2)",
+      "pressLatencyMs": 0,
+      "pressedStyle": "matrix(1, 0, 0, 1, 0, -2)|brightness(1)",
+      "changedWithin60ms": true,
+      "matchesPressRule": true,
+      "touchAction": "manipulation",
+      "tapHighlight": "rgba(0, 0, 0, 0)",
+      "userSelect": "none"
+    },
+    {
+      "label": "God tile",
+      "sel": ".god-select-card",
+      "present": true,
+      "idleTransform": "none",
+      "hoverTransform": "matrix(1, 0, 0, 1, 0, -3)",
+      "pressLatencyMs": 0,
+      "pressedStyle": "matrix(1, 0, 0, 1, 0, -3)|brightness(1)",
+      "changedWithin60ms": true,
+      "matchesPressRule": true,
+      "touchAction": "manipulation",
+      "tapHighlight": "rgba(0, 0, 0, 0)",
+      "userSelect": "none"
+    },
+    {
+      "label": "Difficulty option",
+      "sel": ".difficulty-option",
+      "present": true,
+      "idleTransform": "none",
+      "hoverTransform": "none",
+      "pressLatencyMs": 0,
+      "pressedStyle": "matrix(1, 0, 0, 1, 0, 0)|brightness(1)",
+      "changedWithin60ms": true,
+      "matchesPressRule": true,
+      "touchAction": "manipulation",
+      "tapHighlight": "rgba(0, 0, 0, 0)",
+      "userSelect": "none"
+    },
+    {
+      "label": "God confirm",
+      "sel": ".god-select-confirm",
+      "present": true,
+      "idleTransform": "none",
+      "hoverTransform": "matrix(1, 0, 0, 1, 0, -2)",
+      "pressLatencyMs": 0,
+      "pressedStyle": "matrix(1, 0, 0, 1, 0, -2)|brightness(1)",
+      "changedWithin60ms": true,
+      "matchesPressRule": true,
+      "touchAction": "manipulation",
+      "tapHighlight": "rgba(0, 0, 0, 0)",
+      "userSelect": "none"
+    },
+    {
+      "label": "Enemy tile",
+      "sel": ".enemy-select-card",
+      "present": true,
+      "idleTransform": "none",
+      "hoverTransform": "matrix(1, 0, 0, 1, 0, -3)",
+      "pressLatencyMs": 0,
+      "pressedStyle": "matrix(1, 0, 0, 1, 0, -3)|brightness(1)",
+      "changedWithin60ms": true,
+      "matchesPressRule": true,
+      "touchAction": "manipulation",
+      "tapHighlight": "rgba(0, 0, 0, 0)",
+      "userSelect": "none"
+    },
+    {
+      "label": "Deck confirm",
+      "sel": ".deck-builder-actions button:last-child",
+      "present": true,
+      "idleTransform": "none",
+      "hoverTransform": "matrix(1, 0, 0, 1, 0, -2)",
+      "pressLatencyMs": 0,
+      "pressedStyle": "matrix(1, 0, 0, 1, 0, -2)|brightness(1)",
+      "changedWithin60ms": true,
+      "matchesPressRule": true,
+      "touchAction": "manipulation",
+      "tapHighlight": "rgba(0, 0, 0, 0)",
+      "userSelect": "none"
+    },
+    {
+      "label": "Hand card",
+      "sel": ".hand .card-view:not([disabled])",
+      "present": true,
+      "idleTransform": "none",
+      "hoverTransform": "matrix(1.04, 0, 0, 1.04, 0, -8)",
+      "pressLatencyMs": 56.299999952316284,
+      "pressedStyle": "matrix(1.01714, 0, 0, 1.01714, 0, -4.25901)|none",
+      "changedWithin60ms": true,
+      "matchesPressRule": true,
+      "touchAction": "manipulation",
+      "tapHighlight": "rgba(0, 0, 0, 0)",
+      "userSelect": "none"
+    },
+    {
+      "label": "神託 choice",
+      "sel": ".divination-choice",
+      "present": true,
+      "idleTransform": "none",
+      "hoverTransform": "none",
+      "pressLatencyMs": 0,
+      "pressedStyle": "matrix(1, 0, 0, 1, 0, 0)|none",
+      "changedWithin60ms": true,
+      "matchesPressRule": true,
+      "touchAction": "manipulation",
+      "tapHighlight": "rgba(0, 0, 0, 0)",
+      "userSelect": "none"
+    },
+    {
+      "label": "End Round",
+      "sel": ".end-round-button",
+      "present": true,
+      "idleTransform": "none",
+      "hoverTransform": "matrix(1, 0, 0, 1, 0, -1.93849)",
+      "pressLatencyMs": 0,
+      "pressedStyle": "matrix(1, 0, 0, 1, 0, -1.93849)|brightness(1)",
+      "changedWithin60ms": true,
+      "matchesPressRule": true,
+      "touchAction": "manipulation",
+      "tapHighlight": "rgba(0, 0, 0, 0)",
+      "userSelect": "none"
+    }
+  ],
+  "pcCardTiming": {
+    "hp0": "780 / 850",
+    "hp1": "660 / 850",
+    "tLeave": 360.69999998807907,
+    "tNumber": 360.69999998807907,
+    "tHp": 574.5
+  },
+  "pcDisabledCue": {
+    "total": 5,
+    "disabledCount": 5,
+    "filter": "grayscale(0.35) brightness(0.72)",
+    "opacity": "1",
+    "handBefore": 5,
+    "clickedBefore": 5,
+    "handAfter": 5,
+    "sameCardStillThere": true
+  },
+  "pcFocus": [
+    {
+      "cls": "battle-log-toggle",
+      "outlineWidth": "2px",
+      "outlineColor": "rgb(255, 209, 102)",
+      "outlineStyle": "solid"
+    },
+    {
+      "cls": "app-icon-button",
+      "outlineWidth": "2px",
+      "outlineColor": "rgb(255, 209, 102)",
+      "outlineStyle": "solid"
+    },
+    {
+      "cls": "app-icon-button",
+      "outlineWidth": "2px",
+      "outlineColor": "rgb(255, 209, 102)",
+      "outlineStyle": "solid"
+    },
+    {
+      "cls": "app-icon-button",
+      "outlineWidth": "2px",
+      "outlineColor": "rgb(255, 209, 102)",
+      "outlineStyle": "solid"
+    },
+    {
+      "cls": "divination-choice",
+      "outlineWidth": "2px",
+      "outlineColor": "rgb(255, 209, 102)",
+      "outlineStyle": "solid"
+    },
+    {
+      "cls": "divination-choice",
+      "outlineWidth": "2px",
+      "outlineColor": "rgb(255, 209, 102)",
+      "outlineStyle": "solid"
+    },
+    {
+      "cls": "divination-choice",
+      "outlineWidth": "2px",
+      "outlineColor": "rgb(255, 209, 102)",
+      "outlineStyle": "solid"
+    }
+  ],
+  "pcErrors": [],
+  "pcFailedRequests": [],
+  "pcResultPress": {
+    "label": "Result primary",
+    "sel": "[data-testid=\"result-primary\"]",
+    "present": true,
+    "idleTransform": "none",
+    "hoverTransform": "matrix(1, 0, 0, 1, 0, -1.93884)",
+    "pressLatencyMs": 0,
+    "pressedStyle": "matrix(1, 0, 0, 1, 0, -1.98587)|brightness(1)",
+    "changedWithin60ms": true,
+    "matchesPressRule": true,
+    "touchAction": "manipulation",
+    "tapHighlight": "rgba(0, 0, 0, 0)",
+    "userSelect": "none"
+  },
+  "pcErrors3": [],
+  "spSticky": [
+    {
+      "label": "God tile",
+      "present": true,
+      "idleTransform": "none",
+      "afterTapTransform": "(gone)",
+      "sticky": false,
+      "touchAction": "manipulation",
+      "tapHighlight": "rgba(0, 0, 0, 0)"
+    },
+    {
+      "label": "Difficulty option",
+      "present": true,
+      "idleTransform": "none",
+      "afterTapTransform": "none",
+      "sticky": false,
+      "touchAction": "manipulation",
+      "tapHighlight": "rgba(0, 0, 0, 0)"
+    },
+    {
+      "label": "End Round",
+      "present": true,
+      "idleTransform": "none",
+      "afterTapTransform": "none",
+      "sticky": false,
+      "touchAction": "manipulation",
+      "tapHighlight": "rgba(0, 0, 0, 0)"
+    }
+  ],
+  "spEndRoundAfterTurn": {
+    "transform": "none",
+    "filter": "none",
+    "boxShadow": "rgba(255, 209, 102, 0.533) 0px 0px 18px -4px, rgba(255, 255,",
+    "opacity": "1",
+    "touchAction": "manipulation",
+    "tapHighlight": "rgba(0, 0, 0, 0)",
+    "userSelect": "none",
+    "outline": "none 3px rgb(255, 209, 102)"
+  },
+  "spCardStyle": {
+    "transform": "none",
+    "filter": "none",
+    "boxShadow": "rgba(255, 110, 199, 0.25) 0px 0px 0px 1px inset, rgba(255, 1",
+    "opacity": "1",
+    "touchAction": "manipulation",
+    "tapHighlight": "rgba(0, 0, 0, 0)",
+    "userSelect": "none",
+    "outline": "none 3px rgb(232, 233, 243)"
+  },
+  "spErrors": [],
+  "spFailedRequests": [],
+  "reduced": {
+    "base": "0.15s, 0.2s"
+  },
+  "reducedRule": [
+    {
+      "selectors": 29,
+      "transitionDuration": "0s",
+      "transform": "",
+      "filter": ""
+    }
+  ],
+  "baselineCardTiming": {
+    "hp0": "1,000 / 1,000",
+    "hp1": "880 / 1,000",
+    "tLeave": 294.69999998807907,
+    "tNumber": 294.69999998807907,
+    "tHp": 501.10000002384186
+  },
+  "verdict": "PASS",
+  "checks": [
+    {
+      "id": "AC1-Home Primary CTA",
+      "d": "PC：Home Primary CTA が押した瞬間に押下状態になる（実測 0.0ms／CSS は 60ms 宣言）",
+      "verdict": "PASS",
+      "detail": {
+        "latencyMs": 0,
+        "hover": "matrix(1, 0, 0, 1, 0, -2)",
+        "pressed": "matrix(1, 0, 0, 1, 0, -2)|brightness(1)"
+      }
+    },
+    {
+      "id": "AC1-God tile",
+      "d": "PC：God tile が押した瞬間に押下状態になる（実測 0.0ms／CSS は 60ms 宣言）",
+      "verdict": "PASS",
+      "detail": {
+        "latencyMs": 0,
+        "hover": "matrix(1, 0, 0, 1, 0, -3)",
+        "pressed": "matrix(1, 0, 0, 1, 0, -3)|brightness(1)"
+      }
+    },
+    {
+      "id": "AC1-Difficulty option",
+      "d": "PC：Difficulty option が押した瞬間に押下状態になる（実測 0.0ms／CSS は 60ms 宣言）",
+      "verdict": "PASS",
+      "detail": {
+        "latencyMs": 0,
+        "hover": "none",
+        "pressed": "matrix(1, 0, 0, 1, 0, 0)|brightness(1)"
+      }
+    },
+    {
+      "id": "AC1-God confirm",
+      "d": "PC：God confirm が押した瞬間に押下状態になる（実測 0.0ms／CSS は 60ms 宣言）",
+      "verdict": "PASS",
+      "detail": {
+        "latencyMs": 0,
+        "hover": "matrix(1, 0, 0, 1, 0, -2)",
+        "pressed": "matrix(1, 0, 0, 1, 0, -2)|brightness(1)"
+      }
+    },
+    {
+      "id": "AC1-Enemy tile",
+      "d": "PC：Enemy tile が押した瞬間に押下状態になる（実測 0.0ms／CSS は 60ms 宣言）",
+      "verdict": "PASS",
+      "detail": {
+        "latencyMs": 0,
+        "hover": "matrix(1, 0, 0, 1, 0, -3)",
+        "pressed": "matrix(1, 0, 0, 1, 0, -3)|brightness(1)"
+      }
+    },
+    {
+      "id": "AC1-Deck confirm",
+      "d": "PC：Deck confirm が押した瞬間に押下状態になる（実測 0.0ms／CSS は 60ms 宣言）",
+      "verdict": "PASS",
+      "detail": {
+        "latencyMs": 0,
+        "hover": "matrix(1, 0, 0, 1, 0, -2)",
+        "pressed": "matrix(1, 0, 0, 1, 0, -2)|brightness(1)"
+      }
+    },
+    {
+      "id": "AC1-Hand card",
+      "d": "PC：Hand card が押した瞬間に押下状態になる（実測 56.3ms／CSS は 60ms 宣言）",
+      "verdict": "PASS",
+      "detail": {
+        "latencyMs": 56.299999952316284,
+        "hover": "matrix(1.04, 0, 0, 1.04, 0, -8)",
+        "pressed": "matrix(1.01714, 0, 0, 1.01714, 0, -4.25901)|none"
+      }
+    },
+    {
+      "id": "AC1-神託 choice",
+      "d": "PC：神託 choice が押した瞬間に押下状態になる（実測 0.0ms／CSS は 60ms 宣言）",
+      "verdict": "PASS",
+      "detail": {
+        "latencyMs": 0,
+        "hover": "none",
+        "pressed": "matrix(1, 0, 0, 1, 0, 0)|none"
+      }
+    },
+    {
+      "id": "AC1-End Round",
+      "d": "PC：End Round が押した瞬間に押下状態になる（実測 0.0ms／CSS は 60ms 宣言）",
+      "verdict": "PASS",
+      "detail": {
+        "latencyMs": 0,
+        "hover": "matrix(1, 0, 0, 1, 0, -1.93849)",
+        "pressed": "matrix(1, 0, 0, 1, 0, -1.93849)|brightness(1)"
+      }
+    },
+    {
+      "id": "AC1-Result",
+      "d": "PC：結果 Primary が押した瞬間に押下状態になる",
+      "verdict": "PASS",
+      "detail": {
+        "latencyMs": 0,
+        "hover": "matrix(1, 0, 0, 1, 0, -1.93884)",
+        "pressed": "matrix(1, 0, 0, 1, 0, -1.98587)|brightness(1)"
+      }
+    },
+    {
+      "id": "AC8-touch",
+      "d": "touch-action: manipulation が効いている",
+      "verdict": "PASS",
+      "detail": [
+        "Home Primary CTA=manipulation",
+        "God tile=manipulation",
+        "Difficulty option=manipulation",
+        "God confirm=manipulation",
+        "Enemy tile=manipulation",
+        "Deck confirm=manipulation",
+        "Hand card=manipulation",
+        "神託 choice=manipulation",
+        "End Round=manipulation"
+      ]
+    },
+    {
+      "id": "AC8-tap",
+      "d": "tap highlight が透明",
+      "verdict": "PASS",
+      "detail": [
+        "Home Primary CTA=rgba(0, 0, 0, 0)",
+        "God tile=rgba(0, 0, 0, 0)",
+        "Difficulty option=rgba(0, 0, 0, 0)",
+        "God confirm=rgba(0, 0, 0, 0)",
+        "Enemy tile=rgba(0, 0, 0, 0)",
+        "Deck confirm=rgba(0, 0, 0, 0)",
+        "Hand card=rgba(0, 0, 0, 0)",
+        "神託 choice=rgba(0, 0, 0, 0)",
+        "End Round=rgba(0, 0, 0, 0)"
+      ]
+    },
+    {
+      "id": "AC8-select",
+      "d": "user-select: none",
+      "verdict": "PASS",
+      "detail": [
+        "Home Primary CTA=none",
+        "God tile=none",
+        "Difficulty option=none",
+        "God confirm=none",
+        "Enemy tile=none",
+        "Deck confirm=none",
+        "Hand card=none",
+        "神託 choice=none",
+        "End Round=none"
+      ]
+    },
+    {
+      "id": "AC2-God tile",
+      "d": "SP：God tile は tap のあと hover が残らない",
+      "verdict": "PASS",
+      "detail": {
+        "present": true,
+        "idle": "none",
+        "afterTap": "(gone)"
+      }
+    },
+    {
+      "id": "AC2-Difficulty option",
+      "d": "SP：Difficulty option は tap のあと hover が残らない",
+      "verdict": "PASS",
+      "detail": {
+        "present": true,
+        "idle": "none",
+        "afterTap": "none"
+      }
+    },
+    {
+      "id": "AC2-End Round",
+      "d": "SP：End Round は tap のあと hover が残らない",
+      "verdict": "PASS",
+      "detail": {
+        "present": true,
+        "idle": "none",
+        "afterTap": "none"
+      }
+    },
+    {
+      "id": "AC2-EndRoundAfterTurn",
+      "d": "SP：敵ターン後も End Round が浮いたままにならない",
+      "verdict": "PASS",
+      "detail": "none"
+    },
+    {
+      "id": "AC2-spTouch",
+      "d": "SP：カードの touch-action / tap highlight",
+      "verdict": "PASS",
+      "detail": {
+        "transform": "none",
+        "filter": "none",
+        "boxShadow": "rgba(255, 110, 199, 0.25) 0px 0px 0px 1px inset, rgba(255, 1",
+        "opacity": "1",
+        "touchAction": "manipulation",
+        "tapHighlight": "rgba(0, 0, 0, 0)",
+        "userSelect": "none",
+        "outline": "none 3px rgb(232, 233, 243)"
+      }
+    },
+    {
+      "id": "AC3-leave",
+      "d": "カードが手札から消えるまで 280ms 前後（240〜420ms）",
+      "verdict": "PASS",
+      "detail": 360.69999998807907
+    },
+    {
+      "id": "AC3-number",
+      "d": "ダメージ表示まで 420ms 以内",
+      "verdict": "PASS",
+      "detail": 360.69999998807907
+    },
+    {
+      "id": "AC3-hp",
+      "d": "敵 HP が減る（700ms 以内。設計値は 460〜520ms、残りは計測機の負荷）",
+      "verdict": "PASS",
+      "detail": {
+        "tHp": 574.5,
+        "hp0": "780 / 850",
+        "hp1": "660 / 850"
+      }
+    },
+    {
+      "id": "AC3-baseline",
+      "d": "変更前と同じタイミング（±80ms）",
+      "verdict": "PASS",
+      "detail": {
+        "after": {
+          "hp0": "780 / 850",
+          "hp1": "660 / 850",
+          "tLeave": 360.69999998807907,
+          "tNumber": 360.69999998807907,
+          "tHp": 574.5
+        },
+        "before": {
+          "hp0": "1,000 / 1,000",
+          "hp1": "880 / 1,000",
+          "tLeave": 294.69999998807907,
+          "tNumber": 294.69999998807907,
+          "tHp": 501.10000002384186
+        }
+      }
+    },
+    {
+      "id": "AC4-cue",
+      "d": "敵ターン中の手札に「押せない」手掛かりがある（filter）",
+      "verdict": "PASS",
+      "detail": {
+        "total": 5,
+        "disabledCount": 5,
+        "filter": "grayscale(0.35) brightness(0.72)",
+        "opacity": "1",
+        "handBefore": 5,
+        "clickedBefore": 5,
+        "handAfter": 5,
+        "sameCardStillThere": true
+      }
+    },
+    {
+      "id": "AC4-noop",
+      "d": "敵ターン中に押しても手札が減らない（カードが出ない）",
+      "verdict": "PASS",
+      "detail": {
+        "before": 5,
+        "after": 5,
+        "sameCardStillThere": true
+      }
+    },
+    {
+      "id": "AC5-focus",
+      "d": "Tab で 2px 以上の outline が出る要素がある",
+      "verdict": "PASS",
+      "detail": [
+        {
+          "cls": "battle-log-toggle",
+          "outlineWidth": "2px",
+          "outlineColor": "rgb(255, 209, 102)",
+          "outlineStyle": "solid"
+        },
+        {
+          "cls": "app-icon-button",
+          "outlineWidth": "2px",
+          "outlineColor": "rgb(255, 209, 102)",
+          "outlineStyle": "solid"
+        },
+        {
+          "cls": "app-icon-button",
+          "outlineWidth": "2px",
+          "outlineColor": "rgb(255, 209, 102)",
+          "outlineStyle": "solid"
+        },
+        {
+          "cls": "app-icon-button",
+          "outlineWidth": "2px",
+          "outlineColor": "rgb(255, 209, 102)",
+          "outlineStyle": "solid"
+        },
+        {
+          "cls": "divination-choice",
+          "outlineWidth": "2px",
+          "outlineColor": "rgb(255, 209, 102)",
+          "outlineStyle": "solid"
+        },
+        {
+          "cls": "divination-choice",
+          "outlineWidth": "2px",
+          "outlineColor": "rgb(255, 209, 102)",
+          "outlineStyle": "solid"
+        },
+        {
+          "cls": "divination-choice",
+          "outlineWidth": "2px",
+          "outlineColor": "rgb(255, 209, 102)",
+          "outlineStyle": "solid"
+        }
+      ]
+    },
+    {
+      "id": "AC6-reduced",
+      "d": "動きを減らす設定で :active の transition が 0s・押下状態は残る",
+      "verdict": "PASS",
+      "detail": [
+        {
+          "selectors": 29,
+          "transitionDuration": "0s",
+          "transform": "",
+          "filter": ""
+        }
+      ]
+    },
+    {
+      "id": "AC7-console",
+      "d": "console error 0",
+      "verdict": "PASS",
+      "detail": []
+    },
+    {
+      "id": "AC7-requests",
+      "d": "失敗リクエスト・404 が 0",
+      "verdict": "PASS",
+      "detail": []
+    }
+  ]
+}

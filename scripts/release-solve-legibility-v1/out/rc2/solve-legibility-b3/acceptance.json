@@ -1,0 +1,246 @@
+{
+  "base": "http://127.0.0.1:4181",
+  "at": "2026-09-20T00:06:45.813Z",
+  "verdict": "FAIL",
+  "checks": [
+    {
+      "id": "A1-1",
+      "desc": "初陣の勝利で「次の目標」が NR1",
+      "verdict": "FAIL",
+      "detail": {}
+    },
+    {
+      "id": "A1-2",
+      "desc": "NR1 の文言",
+      "verdict": "FAIL"
+    },
+    {
+      "id": "A1-3",
+      "desc": "Primary は reselect「魔獣に挑む（神を選ぶ）」",
+      "verdict": "FAIL",
+      "detail": {}
+    },
+    {
+      "id": "A1-4",
+      "desc": "初撃破（P2）の行と両立",
+      "verdict": "FAIL"
+    },
+    {
+      "id": "A1-5",
+      "desc": "初陣は恵比寿×試練の影×ふつう×神階0（preset 不変）",
+      "verdict": "FAIL"
+    },
+    {
+      "id": "A2-1",
+      "desc": "Primary → 神選択画面（神は固定しない）",
+      "verdict": "FAIL"
+    },
+    {
+      "id": "A2-2",
+      "desc": "敵選択：魔獣カードにだけ「予告を読む戦い」chip",
+      "verdict": "FAIL"
+    },
+    {
+      "id": "A2-3",
+      "desc": "魔獣 → デッキ画面を通る（デッキ変更可能）→ 戦闘",
+      "verdict": "FAIL"
+    },
+    {
+      "id": "A2-4",
+      "desc": "魔獣戦は新しい seed（初陣と異なる）・通常モード・神階0",
+      "verdict": "FAIL",
+      "detail": {}
+    },
+    {
+      "id": "C1-1",
+      "desc": "49 progression：初陣勝利で ebisu×enemy_01 が記録される",
+      "verdict": "FAIL"
+    },
+    {
+      "id": "C1-2",
+      "desc": "魔獣カードに「未撃破」chip と「予告を読む戦い」chip が両方ある",
+      "verdict": "FAIL"
+    },
+    {
+      "id": "C1-3",
+      "desc": "新規 storage key 0（sevengods.* 以外・決定206 由来の名前のキーが無い。ソース側の検査は release ゲートの secret/hygiene で行う）",
+      "verdict": "FAIL"
+    },
+    {
+      "id": "B1-1",
+      "desc": "victory：recap 1 行目が「予告された攻撃 N回のうち、M回を無傷で受け切りました」（M ≤ N）",
+      "verdict": "FAIL"
+    },
+    {
+      "id": "B1-2",
+      "desc": "recap に評価語・意図の推測が無い",
+      "verdict": "PASS"
+    },
+    {
+      "id": "A3-1",
+      "desc": "初陣の 1 勝目は NR1、2 勝目は NR1 でない（1 回だけ）",
+      "verdict": "FAIL",
+      "detail": {}
+    },
+    {
+      "id": "A3-2",
+      "desc": "2 勝目の戦績 wins=2（新 state 無しで判定）",
+      "verdict": "FAIL"
+    },
+    {
+      "id": "A4-1",
+      "desc": "初陣の敗北は N1・Primary「同じ盤面でもう一度」（Solve Loop 不変）",
+      "verdict": "FAIL",
+      "detail": {}
+    },
+    {
+      "id": "A4-2",
+      "desc": "同じ盤面：seed 同一",
+      "verdict": "FAIL",
+      "detail": {}
+    },
+    {
+      "id": "B2-1",
+      "desc": "defeat（無操作）：recap 1 行目「…無傷で受け切った攻撃はありませんでした」（M=0）",
+      "verdict": "FAIL"
+    },
+    {
+      "id": "B2-2",
+      "desc": "defeat の recap は 3 行以内で、事実行の後に助言（最大 1）",
+      "verdict": "FAIL"
+    },
+    {
+      "id": "A5-1",
+      "desc": "魔獣を既に撃破（fixture）→ 初陣に勝っても NR1 でない",
+      "verdict": "FAIL",
+      "detail": {}
+    },
+    {
+      "id": "A6-1",
+      "desc": "Save/Resume：続きから → 同じ seed で再開",
+      "verdict": "FAIL",
+      "detail": {}
+    },
+    {
+      "id": "A6-2",
+      "desc": "再開後の勝利でも NR1 は出る（記録から判定・保存に依存しない）",
+      "verdict": "FAIL",
+      "detail": {}
+    },
+    {
+      "id": "A6-3",
+      "desc": "再開後（ログ不完全）は recap で回数を主張しない",
+      "verdict": "PASS"
+    },
+    {
+      "id": "A7-1",
+      "desc": "Daily：目標は D*・NR1 なし・Primary はもう一度挑戦",
+      "verdict": "FAIL",
+      "detail": {}
+    },
+    {
+      "id": "A7-2",
+      "desc": "Daily：回数消費 1・seed は daily-",
+      "verdict": "FAIL",
+      "detail": {}
+    },
+    {
+      "id": "B2-3",
+      "desc": "Daily の recap にも事実行（無操作→M=0）",
+      "verdict": "FAIL"
+    },
+    {
+      "id": "A8-1",
+      "desc": "神階Ⅰ（?stake=1）の恵比寿×試練の影 勝利は NR1 でない",
+      "verdict": "FAIL",
+      "detail": {}
+    },
+    {
+      "id": "A9-1",
+      "desc": "?seed= 固定でも初陣勝利で NR1（seed 非依存）",
+      "verdict": "FAIL",
+      "detail": {}
+    },
+    {
+      "id": "A10-1",
+      "desc": "既存プレイヤー（old records・恵比寿 3 勝）は Home に「初陣へ」が出ず、恵比寿×試練の影に勝っても NR1 でない（通算 4 勝）",
+      "verdict": "FAIL",
+      "detail": {}
+    },
+    {
+      "id": "B3-1",
+      "desc": "7R 未撃破：事実行 ＋「あと N で撃破でした」",
+      "verdict": "FAIL",
+      "detail": [
+        "予告された攻撃7回のうち、2回を無傷で受け切りました（盾で防いだ量 420）",
+        "R7：170の大技に対し、盾は80でした。加護や防御札で予告ぶんの盾を用意すると受け切れます"
+      ]
+    },
+    {
+      "id": "B4-1",
+      "desc": "魔獣：読まない（無操作）→ 敗北・事実行 M=0",
+      "verdict": "FAIL"
+    },
+    {
+      "id": "B4-2",
+      "desc": "同じ盤面でもう一度（seed 同一）",
+      "verdict": "FAIL",
+      "detail": {}
+    },
+    {
+      "id": "B4-3",
+      "desc": "守る → 盾で防いだ量または無傷回数が増える（行動を変えると結果が変わる、が Result の事実行に出る）",
+      "verdict": "FAIL",
+      "detail": {}
+    },
+    {
+      "id": "B4-4",
+      "desc": "読まない（無操作）の盾で防いだ量は 0",
+      "verdict": "FAIL"
+    },
+    {
+      "id": "C2-1",
+      "desc": "コンソールエラー 0",
+      "verdict": "PASS",
+      "detail": []
+    },
+    {
+      "id": "C2-2",
+      "desc": "外部／API リクエスト 0",
+      "verdict": "PASS",
+      "detail": []
+    },
+    {
+      "id": "C2-3",
+      "desc": "シナリオ実行エラー 0",
+      "verdict": "PASS",
+      "detail": []
+    }
+  ],
+  "raw": {
+    "finished": {
+      "result": {
+        "status": "敗北",
+        "goalId": "N1",
+        "goalText": "業斧の鬼将を撃破する（残りHP 100%）",
+        "primaryExit": "rematch",
+        "primaryLabel": "同じ盤面でもう一度",
+        "matchupClear": null,
+        "recap": [
+          "予告された攻撃7回のうち、2回を無傷で受け切りました（盾で防いだ量 420）",
+          "R7：170の大技に対し、盾は80でした。加護や防御札で予告ぶんの盾を用意すると受け切れます"
+        ],
+        "exits": [
+          "rematch",
+          "adjustDeck",
+          "reselect",
+          "home",
+          "goDaily",
+          "share"
+        ]
+      },
+      "errors": [],
+      "api": []
+    }
+  }
+}
