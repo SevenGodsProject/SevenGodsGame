@@ -6281,6 +6281,13 @@ body.battle-viewport .battle-main > .battle-callout {
   animation-name: float-up-bonus;
   animation-duration: 0.9s;
 }
+/* 決定224 B-1：撃破と重なる⚡は「最後の一撃＝最大表示」（52px・金）。既存の `.floating-number-bonus`（20px）と
+   `.floating-number-damage`（赤）の後勝ちで最大表示が潰れていたため、大きさと色だけを戻す。
+   アニメーション（float-up-max・reduced-motion では float-up）と縁取りは既存の `.floating-number-max` のまま */
+.floating-number.floating-number-bonus.floating-number-max {
+  font-size: 52px;
+  color: #ffe08a;
+}
 @keyframes float-up-bonus {
   0% { opacity: 0; transform: translate(-50%, 0) scale(0.7); }
   14% { opacity: 1; transform: translate(-50%, -4px) scale(1.22); }
