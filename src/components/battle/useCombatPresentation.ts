@@ -33,6 +33,16 @@ export type CombatPresentation = {
   /** 敗北・未撃破の結果画面を出してよいか（勝利は victoryPhase==='done'） */
   resultReady: boolean
   reduced: boolean
+  /**
+   * 決定226：勝利の舞台（「撃破」の拍＝'beat'）の間だけ結果へ進める。表示の phase だけを進め、
+   * outcome・保存・スコアには触れない。勝利音は 'beat' に入った時点で鳴っているので二重に鳴らない
+   */
+  skipVictoryBeat: () => void
+}
+
+/** 決定226：skip の遷移（純関数）。'beat' の間だけ 'done' へ。それ以外は何もしない */
+export function resolveVictorySkip(phase: VictoryPhase): VictoryPhase {
+  return phase === 'beat' ? 'done' : phase
 }
 
 /** 報酬・結果が永遠に出ない状態を作らないための上限（計画時刻＋この値で強制的に進める） */
@@ -50,6 +60,8 @@ export function useCombatPresentation(log: GameEvent[], state: GameState | null,
   const [enemyHpShown, setEnemyHpShown] = useState(state?.enemy.hp ?? 0)
   const [playerHpShown, setPlayerHpShown] = useState(state?.player.hp ?? 0)
   const [victoryPhase, setVictoryPhase] = useState<VictoryPhase>(state?.status === 'won' ? 'done' : 'none')
+  const victoryPhaseRef = useRef(victoryPhase)
+  victoryPhaseRef.current = victoryPhase
   const [victory, setVictory] = useState<VictoryTimeline | null>(null)
   const [resultReady, setResultReady] = useState(!!state && state.status !== 'playing')
 
@@ -165,5 +177,14 @@ export function useCombatPresentation(log: GameEvent[], state: GameState | null,
     [],
   )
 
-  return { plan, planKey, enemyHpShown, playerHpShown, victoryPhase, victory, resultReady, reduced }
+  // 決定226：新しい timer は作らない。残っている勝利の timer（done・安全弁）を解除して done にするだけ（冪等）
+  const skipVictoryBeat = () => {
+    const next = resolveVictorySkip(victoryPhaseRef.current)
+    if (next === victoryPhaseRef.current) return
+    clearSequence()
+    victoryPhaseRef.current = next
+    setVictoryPhase(next)
+  }
+
+  return { plan, planKey, enemyHpShown, playerHpShown, victoryPhase, victory, resultReady, reduced, skipVictoryBeat }
 }

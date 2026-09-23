@@ -6313,3 +6313,262 @@ body.battle-viewport .battle-main > .battle-callout {
     animation-name: float-up;
   }
 }
+
+/* ============================================================
+   決定226 Victory Reveal v1（撃破 → 勝利の舞台・表示専用）
+   ------------------------------------------------------------
+   仕様：docs/DECISION226_VICTORY_REVEAL_PREFLIGHT.md
+   - 旧「撃破！」の拍（850ms）を置き換える。時刻表（planVictory）は不変＝追加の強制待機 0ms
+   - 神の一撃＝最大の攻撃（傾いた帯・集中線・7 刻みの環）／勝利＝最大の結果（水平の帯・集中線なし・
+     細い一重の環・静かな光）。同じ円形ポートレートで役割を分ける
+   - 動かすのは opacity／transform／letter-spacing。粒子・虹・白フラッシュ・揺れは使わない
+   - 結果画面の mount 後は、勝った神を結果の背景として残す（内容・順序は不変）
+   ============================================================ */
+.victory-stage {
+  position: fixed;
+  inset: 0;
+  z-index: 7;
+  overflow: hidden;
+  pointer-events: none;
+  animation: victory-stage-dim 0.2s ease-out forwards;
+}
+/* 旧 .victory-beat（grid・放射グラデ・1s のフェードアウト）の見た目は使わない。クラスは受け入れスクリプト用に残す */
+.victory-stage.victory-beat {
+  display: block;
+  background: transparent;
+  animation: victory-stage-dim 0.2s ease-out forwards;
+}
+.victory-stage.is-live {
+  pointer-events: auto;
+  cursor: pointer;
+}
+.victory-stage.is-backdrop {
+  background: #05060d99;
+  animation: none;
+}
+@keyframes victory-stage-dim {
+  from { background: #05060d00; }
+  to { background: #05060d99; }
+}
+.victory-stage-content {
+  position: absolute;
+  inset: 0;
+  transition: opacity 0.35s ease-out;
+}
+.is-backdrop .victory-stage-content {
+  opacity: 0.42;
+}
+/* 静かな光：ポートレートの後ろだけを神色でほのかに照らす（集中線は神の一撃だけのもの） */
+.victory-stage-rays {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  background:
+    radial-gradient(circle at 50% 50%, color-mix(in srgb, var(--god-accent, #ffd166) 24%, transparent) 0%, transparent 38%),
+    radial-gradient(ellipse at 50% 50%, transparent 30%, #05060dcc 80%);
+  animation: victory-stage-fade 0.4s ease-out 0.08s forwards;
+}
+/* 水平の帯（神の一撃の -3.5° と対にする）。上下に神色の細い線 */
+.victory-stage-band {
+  position: absolute;
+  left: -4%;
+  right: -4%;
+  top: 50%;
+  height: clamp(196px, 44vh, 320px);
+  opacity: 0;
+  transform: translateY(-50%) scaleX(0.92);
+  background: linear-gradient(180deg, #05060d00 0%, #05060de0 14%, #03040af0 50%, #05060de0 86%, #05060d00 100%);
+  box-shadow:
+    inset 0 1px 0 color-mix(in srgb, var(--god-accent, #ffd166) 45%, transparent),
+    inset 0 -1px 0 color-mix(in srgb, var(--god-accent, #ffd166) 45%, transparent);
+  animation: victory-stage-band-in 0.4s ease-out 0.08s forwards;
+}
+@keyframes victory-stage-band-in {
+  to { opacity: 1; transform: translateY(-50%) scaleX(1); }
+}
+.victory-stage-group {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(18px, 3vw, 34px);
+  width: min(92vw, 940px);
+  opacity: 0;
+  transform: translate(-50%, calc(-50% + 14px));
+  animation: victory-stage-rise 0.36s cubic-bezier(0.2, 0.8, 0.3, 1) 0.06s forwards;
+}
+@keyframes victory-stage-rise {
+  to { opacity: 1; transform: translate(-50%, -50%); }
+}
+.victory-stage-portrait {
+  position: relative;
+  flex: 0 0 auto;
+  width: clamp(148px, 34vh, 252px);
+  aspect-ratio: 1;
+}
+.victory-stage-image {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+  object-position: var(--god-keyvisual-pos, center 25%);
+  box-shadow:
+    0 0 0 2px color-mix(in srgb, var(--god-accent, #ffd166) 70%, transparent),
+    0 0 28px 2px color-mix(in srgb, var(--god-accent, #ffd166) 50%, transparent);
+}
+/* 細い一重の環（神の一撃は 7 刻みの環） */
+.victory-stage-ring {
+  position: absolute;
+  inset: -9px;
+  border-radius: 50%;
+  border: 1px solid color-mix(in srgb, var(--god-accent, #ffd166) 55%, transparent);
+}
+.victory-stage-caption {
+  flex: 0 1 auto;
+  min-width: 0;
+  text-align: left;
+  font-family: 'Yu Mincho', 'YuMincho', 'Hiragino Mincho ProN', 'Noto Serif JP', 'Noto Serif CJK JP', serif;
+  transition: opacity 0.25s ease-out;
+}
+.is-backdrop .victory-stage-caption {
+  opacity: 0;
+}
+.victory-stage-kicker {
+  font-size: clamp(12px, 1.3vw, 16px);
+  letter-spacing: 0.5em;
+  color: #c3c6de;
+  text-shadow: 0 1px 3px #000;
+  opacity: 0;
+  animation: victory-stage-fade 0.2s ease-out forwards;
+}
+.victory-stage-title {
+  margin: 0.04em 0 0.12em;
+  margin-right: -0.24em;
+  font-size: clamp(44px, 6vw, 76px);
+  font-weight: 700;
+  line-height: 1.06;
+  letter-spacing: 0.24em;
+  color: #fff1c7;
+  text-shadow:
+    0 2px 3px #000,
+    0 0 26px color-mix(in srgb, var(--god-accent, #ffd166) 45%, transparent);
+  animation: victory-stage-title-in 0.3s ease-out 0.2s both;
+}
+@keyframes victory-stage-title-in {
+  from { letter-spacing: 0.5em; opacity: 0; }
+  to { letter-spacing: 0.24em; opacity: 1; }
+}
+.victory-stage-matchup {
+  font-size: clamp(14px, 1.7vw, 21px);
+  letter-spacing: 0.16em;
+  color: #e8e9f3;
+  text-shadow: 0 1px 3px #000;
+  animation: victory-stage-fade 0.3s ease-out 0.34s both;
+}
+.victory-stage-god {
+  color: var(--god-accent, #ffd166);
+  font-weight: 700;
+}
+.victory-stage-sep {
+  margin: 0 0.45em;
+  font-style: normal;
+  color: #8a8fb0;
+}
+.victory-stage-enemy {
+  font-weight: 700;
+}
+.victory-stage-first {
+  margin-top: 0.6em;
+  font-size: clamp(11px, 1.2vw, 14px);
+  letter-spacing: 0.06em;
+  color: #ffd166;
+  text-shadow: 0 1px 3px #000;
+  animation: victory-stage-fade 0.3s ease-out 0.46s both;
+}
+@keyframes victory-stage-fade {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+.victory-stage-sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+@media (max-width: 899px) {
+  .victory-stage-group {
+    flex-direction: column;
+    gap: 12px;
+    width: min(94vw, 380px);
+  }
+  .victory-stage-band {
+    height: clamp(292px, 54vh, 420px);
+  }
+  .victory-stage-portrait {
+    width: clamp(136px, 44vw, 188px);
+  }
+  .victory-stage-caption {
+    text-align: center;
+  }
+  /* 中央寄せでは末尾の letter-spacing を頭にも足して釣り合わせる */
+  .victory-stage-kicker {
+    text-indent: 0.5em;
+  }
+  .victory-stage-title {
+    margin-right: 0;
+    text-indent: 0.24em;
+    font-size: clamp(38px, 12vw, 52px);
+  }
+}
+
+/* 結果画面を舞台につなぐ：背景の暗さを落とし、カードの地をわずかに透かす（内容は不変） */
+.game-over-overlay.game-over-overlay-bridged {
+  background: #05060d5c;
+}
+.game-over-overlay-bridged .game-over-card {
+  background: #0b0d17f0;
+}
+/* 結果の段階表示を tap で全表示（reduced-motion と同じ要素・同じ見え方） */
+.game-over-card-won.game-over-card-skipped
+  :is(.game-over-status, .game-over-conquer, .game-over-portrait, .game-over-score, .game-over-new-best, .game-over-stake,
+    .game-over-daily, .game-over-otomo-levelup, .game-over-mastery, .score-breakdown, .game-over-share, .game-over-actions) {
+  animation: none;
+  opacity: 1;
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .victory-stage,
+  .victory-stage.victory-beat {
+    animation: none;
+    background: #05060d99;
+  }
+  .victory-stage-content,
+  .victory-stage-caption {
+    transition: none;
+  }
+  .victory-stage-rays,
+  .victory-stage-kicker,
+  .victory-stage-matchup,
+  .victory-stage-first {
+    animation: resonance-cutin-static-in 0.2s ease-out both;
+  }
+  .victory-stage-band {
+    transform: translateY(-50%);
+    animation: resonance-cutin-static-in 0.2s ease-out both;
+  }
+  .victory-stage-group {
+    transform: translate(-50%, -50%);
+    animation: resonance-cutin-static-in 0.2s ease-out both;
+  }
+  .victory-stage-title {
+    letter-spacing: 0.24em;
+    animation: resonance-cutin-static-in 0.2s ease-out both;
+  }
+}

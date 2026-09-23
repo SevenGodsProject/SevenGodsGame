@@ -21,6 +21,7 @@ import { exitLabel, planResultExits, type ResultExit } from './resultHub'
 import type { ResultTransitionAction } from '../resultTransitions'
 import type { MatchupClearResult } from '../../hooks/matchupStorage'
 import { describeMatchupClear } from './matchupCelebration'
+import { isStagedSkipTarget } from './victoryReveal'
 
 const STATUS_LABEL: Record<Exclude<GameStatus, 'playing'>, string> = {
   won: '勝利',
@@ -116,6 +117,11 @@ type GameOverOverlayProps = {
   /** Phase 6-C：勝利で報酬がまだ確定していない（「報酬カードを選ぶ」だけを出す） */
   rewardPending?: boolean
   onOpenReward?: () => void
+  /**
+   * 決定226：勝利の舞台（VictoryStage）が背景にあるとき true。背景の暗さを落として舞台とつなぐだけで、
+   * 内容・計算・順序は変えない
+   */
+  bridged?: boolean
 }
 
 export function GameOverOverlay({
@@ -142,7 +148,10 @@ export function GameOverOverlay({
   recap = null,
   rewardPending = false,
   onOpenReward,
+  bridged = false,
 }: GameOverOverlayProps) {
+  // 決定226：段階表示の skip（表示のみ。1 回押したら全表示のまま）
+  const [stagedSkip, setStagedSkip] = useState(false)
   const god = getGodDef(godId)
   const otomoDef = getOtomoDef(otomo.defId)
   // BASE-D：ユーザーへ見せるスコアは最終スコア（素点合計×1.3）。内訳は素点を
@@ -155,7 +164,7 @@ export function GameOverOverlay({
   const reduced = typeof window !== 'undefined' && typeof window.matchMedia === 'function' && window.matchMedia('(prefers-reduced-motion: reduce)').matches
   const [shownScore, setShownScore] = useState(status === 'won' && !reduced ? 0 : finalScore)
   useEffect(() => {
-    if (status !== 'won' || reduced) {
+    if (status !== 'won' || reduced || stagedSkip) {
       setShownScore(finalScore)
       return undefined
     }
@@ -171,7 +180,7 @@ export function GameOverOverlay({
     }
     raf = window.requestAnimationFrame(tick)
     return () => window.cancelAnimationFrame(raf)
-  }, [status, finalScore, reduced])
+  }, [status, finalScore, reduced, stagedSkip])
   const defeatText = status === 'lost' ? describeDefeatCause(defeatCause, getEnemyDef(enemy.defId).name) : null
   // 決定126（Seed共有）：コピー結果の表示（idle→copied/failed、数秒で戻す）
   const [copyState, setCopyState] = useState<'idle' | 'copied' | 'failed'>('idle')
@@ -237,11 +246,14 @@ export function GameOverOverlay({
   }
 
   return (
-    <div className="game-over-overlay">
+    <div
+      className={`game-over-overlay${bridged ? ' game-over-overlay-bridged' : ''}`}
+      onClick={status === 'won' && !stagedSkip ? (e) => { if (isStagedSkipTarget(e.target)) setStagedSkip(true) } : undefined}
+    >
       {/* 決定64：勝敗・未撃破で装飾トーンを分ける（status別クラス）。文字色だけでなく
           カード枠・ボタン装飾も変えることで、文字を読まなくても感覚的に区別できるようにする */}
       <div
-        className={`game-over-card game-over-card-${status}${status === 'won' && describeMatchupClear(matchupClear) ? ' game-over-card-matchup' : ''}`}
+        className={`game-over-card game-over-card-${status}${status === 'won' && describeMatchupClear(matchupClear) ? ' game-over-card-matchup' : ''}${stagedSkip ? ' game-over-card-skipped' : ''}`}
         data-testid="result-card"
       >
         <div className={`game-over-status game-over-status-${status}`}>{STATUS_LABEL[status]}</div>

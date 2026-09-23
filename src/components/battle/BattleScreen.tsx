@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState, type CSSProperties } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { RULES } from '../../core/data/rules'
 import { getFinalScore, getMastery } from '../../core/engine'
 import { previewBonusTrigger } from '../../core/engine/cardBonus'
@@ -17,7 +17,7 @@ import { detectOtomoLevelUp } from '../setup/otomoGrowthDisplay'
 import { useBattleFx } from './useBattleFx'
 import { dealsEnemyDamage, useMobileAutoFocus } from './useMobileAutoFocus'
 import { useCombatPresentation } from './useCombatPresentation'
-import { BURST_BANNER_MS, BURST_READY_LEAD_MS, VICTORY_BEAT_MS, VICTORY_BEAT_REDUCED_MS } from './enemyVfxTiming'
+import { BURST_BANNER_MS, BURST_READY_LEAD_MS } from './enemyVfxTiming'
 import { CUTIN_FALLBACK_MS } from './BattleResonanceCutin'
 import { BossEntrance } from './BossEntrance'
 import { deriveDefeatCause } from './defeatCause'
@@ -43,6 +43,8 @@ import type { ResultTransitionAction } from '../resultTransitions'
 import { DivinationPanel } from './DivinationPanel'
 import { formatEvent } from './formatEvent'
 import { READY_MATERIAL_PILOT, readyIgniteDelays } from './readyMaterial'
+import { VictoryStage } from './VictoryStage'
+import { describeMatchupClear } from './matchupCelebration'
 import './battle.css'
 
 type BattleScreenProps = {
@@ -243,6 +245,22 @@ export function BattleScreen({
   const victoryPhase = presentation.victoryPhase
   const victoryBeat = victoryPhase === 'beat'
   const presentationDone = state?.status === 'won' ? victoryPhase === 'done' : presentation.resultReady
+
+  // 決定226 Victory Reveal v1：「撃破」の拍を勝利の舞台に置き換え、結果画面の後ろに背景として残す。
+  // 舞台は拍（'beat'）を実際に通った対局だけ出す（再開で最初から 'done' の対局には出さない）。表示専用
+  const [victoryStageSeen, setVictoryStageSeen] = useState(false)
+  useEffect(() => {
+    if (victoryBeat) setVictoryStageSeen(true)
+    else if (state?.status === 'playing') setVictoryStageSeen(false)
+  }, [victoryBeat, state?.status])
+  const showVictoryStage = state?.status === 'won' && (victoryBeat || (victoryPhase === 'done' && victoryStageSeen))
+  // 決定226：舞台で使う神の keyvisual を先に読む（「続きから」再開は神選択を通らず、キャッシュに無いことがある）
+  const stageGodId = state?.godId
+  useEffect(() => {
+    if (!stageGodId || typeof Image === 'undefined') return
+    const img = new Image()
+    img.src = getGodDef(stageGodId).art.keyvisual
+  }, [stageGodId])
 
   // Phase 6-B（決定164）：戦闘中だけアプリ全体をビューポート高に固定し、ページの
   // 縦スクロールを 0 にする（他の画面＝ホーム・デッキ構築は従来どおりスクロールする）。
@@ -568,15 +586,14 @@ export function BattleScreen({
         <BossEntrance key={`entrance-${entranceKey}`} enemyId={state.enemy.defId} stake={state.stake} daily={state.mode === 'daily'} onDone={handleEntranceDone} />
       )}
 
-      {victoryBeat && (
-        <div
-          className="victory-beat"
-          aria-hidden="true"
-          data-testid="victory-beat"
-          style={{ '--beat-ms': `${presentation.reduced ? VICTORY_BEAT_REDUCED_MS : VICTORY_BEAT_MS}ms` } as CSSProperties}
-        >
-          <span>撃破！</span>
-        </div>
+      {showVictoryStage && (
+        <VictoryStage
+          godId={state.godId}
+          enemyName={state.enemy.name}
+          firstClearLine={describeMatchupClear(matchupClear)}
+          mode={victoryBeat ? 'live' : 'backdrop'}
+          onSkip={presentation.skipVictoryBeat}
+        />
       )}
 
       {/* Phase 6-C：報酬は結果画面の「報酬カードを選ぶ」から開く（決定43の提示内容・1回だけの規則は不変） */}
@@ -598,6 +615,7 @@ export function BattleScreen({
 
       {state.status !== 'playing' && presentationDone && !rewardOpen && (
         <GameOverOverlay
+          bridged={showVictoryStage}
           recap={buildBattleRecap(log, state)}
           rewardPending={state.status === 'won' && !rewardDone}
           onOpenReward={() => setRewardOpen(true)}
