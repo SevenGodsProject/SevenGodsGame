@@ -1,3 +1,4 @@
+import { useEffect, useRef, useState, type CSSProperties } from 'react'
 import type { CardInstance } from '../../core/types'
 import { getCardDef } from '../../core/data/cards'
 import { getGodDef } from '../../core/data/gods'
@@ -5,6 +6,8 @@ import { getCardArt } from '../../core/data/cardArt'
 import { RARITY_STYLE, TYPE_STYLE } from './cardStyle'
 import { CardIcon } from './cardIcon'
 import { formatCardBonus } from '../cardBonusText'
+import { GOD_THEME_COLOR } from '../setup/godStyle'
+import { READY_IGNITE_BASE_DELAY_MS, READY_MATERIAL_PILOT, shouldIgnite } from './readyMaterial'
 
 type CardViewProps = {
   instance: CardInstance
@@ -17,6 +20,13 @@ type CardViewProps = {
    * 判定は`core/engine/cardBonus.ts`の`previewBonusTrigger`だけが行う（表示専用）。
    */
   bonusReady?: boolean
+  /**
+   * 決定224：ターン判定を掛けない条件成立（`previewBonusTrigger` そのもの）。READY の点火は
+   * この値の false→true だけで起こす（`bonusReady` は cast 中・敵ターン中に false になるため使わない）
+   */
+  bonusArmed?: boolean
+  /** 決定224：点火の開始遅延（同時に成立したカードをずらす。BattleScreen が決める） */
+  igniteDelayMs?: number
   onPlay: () => void
 }
 
@@ -28,19 +38,44 @@ type CardViewProps = {
  * 透かしアイコンで質感を出す。神専用カードは、その神の立ち絵を
  * 背景に薄く敷いて特別感を足す（SGG Creator Kitは二次創作・商用利用許可済み）。
  */
-export function CardView({ instance, affordable, playable, playing, bonusReady = false, onPlay }: CardViewProps) {
+export function CardView({
+  instance,
+  affordable,
+  playable,
+  playing,
+  bonusReady = false,
+  bonusArmed = false,
+  igniteDelayMs = READY_IGNITE_BASE_DELAY_MS,
+  onPlay,
+}: CardViewProps) {
   const def = getCardDef(instance.defId)
   const style = TYPE_STYLE[def.type]
   const rarity = RARITY_STYLE[def.rarity]
   const cost = def.cost + (instance.costModifier ?? 0)
   const godArt = def.godId ? getGodDef(def.godId).art.front : null
   const illustration = getCardArt(def.id)
+  // 決定224：READY material（Pilot 対象のカードだけ）。見た目のみで、使えるかどうかの判定は変えない
+  const materialPilot = READY_MATERIAL_PILOT.has(def.id)
+  const readyOn = materialPilot && bonusArmed
+  const prevArmed = useRef<boolean | undefined>(undefined)
+  const [igniteKey, setIgniteKey] = useState(0)
+  useEffect(() => {
+    if (materialPilot && shouldIgnite(prevArmed.current, bonusArmed)) setIgniteKey((k) => k + 1)
+    prevArmed.current = bonusArmed
+  }, [materialPilot, bonusArmed])
+  const readyStyle = materialPilot
+    ? ({
+        '--ready-accent': def.godId ? GOD_THEME_COLOR[def.godId].base : '#ffd166',
+        '--ignite-delay': `${igniteDelayMs}ms`,
+      } as CSSProperties)
+    : undefined
 
   return (
     <button
       type="button"
-      className={`card-view${def.godId ? ' card-view-exclusive' : ''}${playing ? ' card-view-playing' : ''}${illustration ? ' card-view-has-art' : ''}`}
+      className={`card-view${def.godId ? ' card-view-exclusive' : ''}${playing ? ' card-view-playing' : ''}${illustration ? ' card-view-has-art' : ''}${readyOn ? ' card-view-ready' : ''}`}
       style={{
+        ...readyStyle,
         borderColor: style.color,
         opacity: playing ? undefined : affordable ? 1 : 0.45,
         background: `linear-gradient(165deg, ${style.dark} 0%, #0b0d17 62%)`,
@@ -72,7 +107,11 @@ export function CardView({ instance, affordable, playable, playing, bonusReady =
           </div>
         )}
         <span className="card-view-shine" />
+        {/* 決定224：成立した瞬間に 1 回だけ通る光の帯（key が変わった時だけ再 mount） */}
+        {readyOn && igniteKey > 0 && <span key={igniteKey} className="card-view-ignite" />}
       </div>
+      {/* 決定224：READY の重ね層（神色の縁・面取り・面の光・接地影）。絵は隠さない */}
+      {materialPilot && <span className="card-view-ready-frame" aria-hidden="true" />}
 
       <div
         className="card-view-cost"

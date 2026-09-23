@@ -42,6 +42,7 @@ import { collectResultContext } from './resultContext'
 import type { ResultTransitionAction } from '../resultTransitions'
 import { DivinationPanel } from './DivinationPanel'
 import { formatEvent } from './formatEvent'
+import { READY_MATERIAL_PILOT, readyIgniteDelays } from './readyMaterial'
 import './battle.css'
 
 type BattleScreenProps = {
@@ -291,6 +292,14 @@ export function BattleScreen({
   // （type:'oracle', damage 25）のようなattack以外の高ダメージカードも正しく
   // 最上位tierになる。
   const castPowerTier = pendingCardDef ? getEnemyDamagePowerTier(pendingCardDef) : null
+  // 決定224：READY のカードを出した瞬間だけ、中央の閃光に金の輪を足す（手札の縁→中央→敵のリングを金でつなぐ）
+  const castPayoff = !!pendingCardDef && READY_MATERIAL_PILOT.has(pendingCardDef.id) && previewBonusTrigger(state, pendingCardDef)
+  // 決定224：ターン判定を掛けない条件成立（READY の点火はこの値の false→true だけで起こす）と、同時点火のずらし
+  const handArmed = state.hand.map((c) => {
+    const def = getCardDef(c.defId)
+    return { uid: c.uid, armed: previewBonusTrigger(state, def), pilot: READY_MATERIAL_PILOT.has(def.id) }
+  })
+  const igniteDelays = readyIgniteDelays(handArmed)
   // Phase 6-A：敵にダメージを与えるカードを使う瞬間だけ、神が一瞬構える（anticipation）
   const windUp = !!pendingCardDef && dealsEnemyDamage(pendingCardDef.effects)
 
@@ -417,7 +426,7 @@ export function BattleScreen({
           <div
             className={`cast-flash cast-flash-${pendingCardDef.type}${
               castPowerTier && castPowerTier !== 'normal' ? ` cast-flash-power-${castPowerTier}` : ''
-            }`}
+            }${castPayoff ? ' cast-flash-payoff' : ''}`}
             style={{ color: castStyle.color, ['--cast-glow' as string]: castStyle.glow }}
           >
             <img className="cast-flash-art" src={CAST_FX[pendingCardDef.type]} alt="" width={320} height={480} />
@@ -530,6 +539,8 @@ export function BattleScreen({
                 playable={isPlayerTurn}
                 playing={pendingCardUid === instance.uid}
                 bonusReady={isPlayerTurn && previewBonusTrigger(state, getCardDef(instance.defId))}
+                bonusArmed={handArmed.find((c) => c.uid === instance.uid)?.armed ?? false}
+                igniteDelayMs={igniteDelays.get(instance.uid)}
                 onPlay={() => playCard(instance.uid)}
               />
             ))}

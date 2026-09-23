@@ -164,13 +164,22 @@ export function EnemyPanel({
         {defeated && <div className="impact-ring enemy-defeat-ring" aria-hidden="true" />}
         <div className="enemy-hit-layer" aria-hidden="true">
           {planKey > 0 &&
-            reactions.map((r, i) => (
-              <div
-                key={`slash-${planKey}-${i}`}
-                className={`slash-fx slash-l${r.tier} juice-delayed${r.minor ? ' slash-minor' : ''}`}
-                style={{ '--impact-delay': `${r.atMs}ms` } as CSSProperties}
-              />
-            ))}
+            reactions.map((r, i) =>
+              // 決定224：条件⚡（minor＝撃破ではない⚡）は金の斬撃線の代わりに金リング 1 つ（要素数は増やさない）
+              r.minor ? (
+                <div
+                  key={`payoff-${planKey}-${i}`}
+                  className="impact-ring impact-ring-payoff juice-delayed"
+                  style={{ '--impact-delay': `${r.atMs}ms` } as CSSProperties}
+                />
+              ) : (
+                <div
+                  key={`slash-${planKey}-${i}`}
+                  className={`slash-fx slash-l${r.tier} juice-delayed`}
+                  style={{ '--impact-delay': `${r.atMs}ms` } as CSSProperties}
+                />
+              ),
+            )}
           <FloatingNumbers numbers={floatingNumbers} />
         </div>
       </div>

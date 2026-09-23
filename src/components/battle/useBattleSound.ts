@@ -33,7 +33,10 @@ export function useBattleSound(log: GameEvent[], enemyVisualType?: string): void
     // 着弾（与ダメージ・被ダメージ）
     for (const st of plan.steps) {
       if (st.amount <= 0) continue
-      if (st.target === 'enemy') {
+      if (st.target === 'enemy' && st.role === 'bonus' && !st.final) {
+        // 決定224：条件⚡の追加着弾は打撃音ではなく専用の音色（撃破の一撃は従来どおり L4）
+        sfx.bonusPayoff(st.atMs)
+      } else if (st.target === 'enemy') {
         // 決定128：与ダメージ量で L1〜L4（神の一撃・最後の一撃は L4）
         sfx.damageEnemy(st.tier, st.atMs)
       } else if (st.role === 'enemy' && isMulti) {

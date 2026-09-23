@@ -130,6 +130,11 @@ export const PASSIVE_AFTER_ENEMY_MS = 280
 
 /** 対象要素だけに掛ける hit stop（演出段階＝FeelTier 別。ダメージ計算とは無関係） */
 export const HIT_STOP_MS: Record<1 | 2 | 3 | 4, number> = { 1: 0, 2: 20, 3: 45, 4: 60 }
+/**
+ * 決定224：条件⚡の追加着弾の hit stop。通常ヒットの最大（L3＝45）より上、L4（60）・神の一撃（80）より下。
+ * 豪快な一撃は姉御の号令込みで本体が L3 になるため、40 では⚡が本体に並んでしまう
+ */
+export const BONUS_HIT_STOP_MS = 50
 /** 神の一撃の hit stop */
 export const BURST_HIT_STOP_MS = 80
 /** 最後の一撃の hit stop */

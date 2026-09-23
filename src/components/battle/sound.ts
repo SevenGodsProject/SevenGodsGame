@@ -222,6 +222,13 @@ function fallbackTone(name: SeName, opts: PlayOptions): void {
 }
 
 /**
+ * 決定224：条件⚡の追加着弾の音。新しい音源は作らず、戦闘中には鳴らない `reward`（784／1175Hz の
+ * チャイム）を 1.5 倍速＝高いピッチ・短い長さで鳴らす。打撃（hit_l*）と違う音色にして
+ * 「本体とは別の、決まった出来事」に聞こえるようにする。
+ */
+export const BONUS_PAYOFF_SE = { name: 'reward', rate: 1.5 } as const satisfies { name: SeName; rate: number }
+
+/**
  * 役割別API。音量は feelTier.ts の階層から引く（呼び出し側で数値を書かない）。
  * 既存の呼び出し（useBattleSound）はこの関数名で移行する。
  */
@@ -232,6 +239,8 @@ export const sfx = {
   divination: () => playBuffer('divination', { gain: SE_GAIN.stateChange * 0.8 }),
   // Impact（自分→敵）：4段階
   damageEnemy: (tier: FeelTier = 2, delayMs = 0) => playBuffer(`hit_l${tier}` as SeName, { gain: SE_GAIN.impact[tier], delayMs }),
+  /** 決定224：条件⚡の追加着弾（`hit_l1` の代わり。音量は Reward 階層＝神の一撃・Big moment より小さい） */
+  bonusPayoff: (delayMs = 0) => playBuffer(BONUS_PAYOFF_SE.name, { gain: SE_GAIN.reward, delayMs, rate: BONUS_PAYOFF_SE.rate }),
   // 被弾（敵→自分）
   damageSelf: (heavy = false, delayMs = 0) =>
     playBuffer(heavy ? 'self_hit_heavy' : 'self_hit', { gain: heavy ? SE_GAIN.impact[3] : SE_GAIN.impact[2], delayMs }),

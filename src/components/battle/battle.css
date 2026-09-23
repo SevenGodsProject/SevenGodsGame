@@ -2344,9 +2344,12 @@
   text-align: left;
   cursor: pointer;
   position: relative;
+  /* 決定224：READY の持ち上げは独立プロパティ translate／scale（transform の hover・press・card-play と合成される） */
   transition:
     transform 0.15s ease,
-    box-shadow 0.15s ease;
+    box-shadow 0.15s ease,
+    translate 0.18s ease-out,
+    scale 0.18s ease-out;
 }
 
 .card-view:disabled {
@@ -6158,5 +6161,148 @@ body.battle-viewport .battle-main > .battle-callout {
   }
   .game-over-card-matchup .game-over-matchup {
     margin-top: -4px;
+  }
+}
+
+/* ============================================================
+   決定224 Premium Visual Pilot（大耀『豪快な一撃』READY → ⚡ PAYOFF）
+   ------------------------------------------------------------
+   仕様：docs/DECISION224_VISUAL_STANDARD_GATE.md
+   - READY：material（神色の細い縁・上辺明／下辺暗の面取り）＋depth（3px 持ち上げ・接地影）＋
+     light（左上からの面の光・成立した瞬間に 1 回だけ通る光の帯）。絵は隠さない
+   - 動かすのは opacity／translate／scale／transform だけ。box-shadow・filter は animate しない
+   - PAYOFF：金リング（斬撃線の置き換え）・34px の金数字。hit stop 50ms は combatTimeline 側
+   - 階層：Normal < READY < ⚡PAYOFF < 共鳴 < 神の一撃。画面揺れ・暗転・入力ブロックは使わない
+   ============================================================ */
+
+/* READY：持ち上げ（hover の 8px／1.04 より控えめ） */
+.card-view.card-view-ready {
+  translate: 0 -3px;
+  scale: 1.02;
+}
+
+/* READY の重ね層。`.card-view > *:not(.card-view-clip)`（z-index:1）より後ろに置き、
+   イラストの上・名前／効果文／コスト珠の下に重ねる。表示の切り替えは opacity だけ */
+.card-view > .card-view-ready-frame {
+  position: absolute;
+  inset: -2px;
+  border-radius: 10px;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0;
+  transition: opacity 0.18s ease-out;
+  background:
+    linear-gradient(180deg, #fff3c466 0, #fff3c400 7px),
+    linear-gradient(0deg, #0000008c 0, #00000000 9px),
+    linear-gradient(135deg, #ffffff29 0%, #ffffff00 40%);
+  box-shadow:
+    inset 0 0 0 1.5px var(--ready-accent, #ffd166),
+    0 0 12px -4px color-mix(in srgb, var(--ready-accent, #ffd166) 60%, transparent),
+    0 10px 16px -8px #000000cc;
+}
+.card-view.card-view-ready > .card-view-ready-frame {
+  opacity: 1;
+}
+
+/* READY：成立した瞬間に 1 回だけ左から右へ通る光の帯（key で再 mount したときだけ再生） */
+.card-view-ignite {
+  position: absolute;
+  top: -20%;
+  left: -60%;
+  width: 45%;
+  height: 140%;
+  pointer-events: none;
+  background: linear-gradient(
+    115deg,
+    transparent,
+    color-mix(in srgb, var(--ready-accent, #ffd166) 45%, transparent) 42%,
+    #fff8e0cc 50%,
+    transparent 58%
+  );
+  opacity: 0;
+  animation: card-ready-sweep 0.45s ease-out var(--ignite-delay, 150ms) both;
+}
+@keyframes card-ready-sweep {
+  0% { opacity: 0; transform: translateX(0) rotate(20deg); }
+  20% { opacity: 1; }
+  100% { opacity: 0; transform: translateX(380%) rotate(20deg); }
+}
+
+/* PLAY：READY のカードを出した瞬間、中央の閃光に金の輪を 1 つ足す（0.35s・cast の 280ms 内で消える） */
+.cast-flash-payoff::after {
+  content: '';
+  position: absolute;
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  border: 3px solid #ffe08a;
+  box-shadow:
+    0 0 22px #ffd166cc,
+    inset 0 0 16px #ffd16688;
+  opacity: 0;
+  animation: cast-payoff-ring 0.35s ease-out forwards;
+}
+@keyframes cast-payoff-ring {
+  0% { opacity: 0.95; transform: scale(0.3); }
+  100% { opacity: 0; transform: scale(1.25); }
+}
+
+/* PAYOFF：金リング（`.juice-delayed` で着弾時刻まで待つ。待っている間は 0% の opacity 0 で見えない） */
+.impact-ring.impact-ring-payoff {
+  width: 110px;
+  height: 110px;
+  margin: -55px 0 0 -55px;
+  border-color: #ffe08a;
+  box-shadow:
+    0 0 26px #ffd166cc,
+    inset 0 0 18px #ffd16688;
+  animation-name: payoff-ring-burst;
+  animation-duration: 0.42s;
+}
+@keyframes payoff-ring-burst {
+  0% { opacity: 0; transform: scale(0.25); }
+  8% { opacity: 1; transform: scale(0.35); }
+  100% { opacity: 0; transform: scale(1.7); }
+}
+
+/* PAYOFF：⚡の数字は 34px の金（通常 L3 の 30px より上、L4 40px・最大 52px より下）。
+   撃破の一撃（max）は従来どおり。既存の後勝ちで赤くなっていた色も金に戻す */
+.floating-number.floating-number-bonus:not(.floating-number-max) {
+  font-size: 34px;
+  opacity: 1;
+  color: #ffd166;
+  text-shadow:
+    2px 2px 0 #000000dd,
+    -2px 2px 0 #000000dd,
+    2px -2px 0 #000000dd,
+    -2px -2px 0 #000000dd,
+    0 0 14px #ffd166cc,
+    0 0 30px #ffb02e88;
+  animation-name: float-up-bonus;
+  animation-duration: 0.9s;
+}
+@keyframes float-up-bonus {
+  0% { opacity: 0; transform: translate(-50%, 0) scale(0.7); }
+  14% { opacity: 1; transform: translate(-50%, -4px) scale(1.22); }
+  32% { transform: translate(-50%, -10px) scale(1); }
+  100% { opacity: 0; transform: translate(-50%, -40px) scale(1); }
+}
+
+/* reduced-motion：持ち上げ・光の帯・金の輪・金リングを止める。重ね層（静的）・34px の数字・callout・音は残す */
+@media (prefers-reduced-motion: reduce) {
+  .card-view.card-view-ready {
+    translate: none;
+    scale: none;
+  }
+  .card-view > .card-view-ready-frame {
+    transition: none;
+  }
+  .card-view-ignite,
+  .cast-flash-payoff::after,
+  .impact-ring.impact-ring-payoff {
+    display: none;
+  }
+  .floating-number.floating-number-bonus:not(.floating-number-max) {
+    animation-name: float-up;
   }
 }

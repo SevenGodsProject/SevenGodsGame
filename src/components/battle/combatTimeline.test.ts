@@ -219,3 +219,33 @@ describe('安全弁（animationend を取りこぼしても止まらない）', 
     expect(PRESENTATION_SAFETY_MS).toBeGreaterThan(0)
   })
 })
+
+describe('決定224：条件⚡の hit stop（PAYOFF は通常ヒットより上・L4／神の一撃より下）', () => {
+  const bonusBatch: GameEvent[] = [
+    cardPlayed,
+    dmg('enemy', 17),
+    dmg('self', 2),
+    { t: 'BONUS_TRIGGERED', defId: 'card_taiyo_attack_01' as never, when: 'charged' },
+    dmg('enemy', 4),
+  ]
+
+  it('⚡の着弾は 50ms 止まる（本体が L3＝45ms でもそれより上）。反応は minor のまま＝揺れは格上げしない', async () => {
+    const { BONUS_HIT_STOP_MS, HIT_STOP_MS: stops, BURST_HIT_STOP_MS: burstStop } = await import('./enemyVfxTiming')
+    const plan = planBatch(bonusBatch)
+    const body = plan.steps.find((s) => s.role === 'card')!
+    const bonus = plan.steps.find((s) => s.role === 'bonus')!
+    expect(body.tier).toBe(3)
+    expect(bonus.stopMs).toBe(BONUS_HIT_STOP_MS)
+    expect(BONUS_HIT_STOP_MS).toBeGreaterThan(stops[3])
+    expect(BONUS_HIT_STOP_MS).toBeLessThan(stops[4])
+    expect(BONUS_HIT_STOP_MS).toBeLessThan(burstStop)
+    expect(plan.enemyReactions[1]).toMatchObject({ minor: true, tier: 1, stopMs: BONUS_HIT_STOP_MS })
+    // 着弾時刻は変えない（本体 +150ms）
+    expect(bonus.atMs).toBe(body.atMs + 150)
+  })
+
+  it('reduced-motion では⚡の hit stop も 0', () => {
+    const plan = planBatch(bonusBatch, { reduced: true })
+    expect(plan.steps.find((s) => s.role === 'bonus')!.stopMs).toBe(0)
+  })
+})

@@ -19,3 +19,13 @@ describe('SE assets (決定128)', () => {
     expect(new Set(SE_NAMES).size).toBe(SE_NAMES.length)
   })
 })
+
+describe('決定224：条件⚡の音は既存音源の加工（新規 SE 0）', () => {
+  it('既存の reward を高いピッチで使い、SE の数は増えない', async () => {
+    const { BONUS_PAYOFF_SE, SE_NAMES: names } = await import('./sound')
+    expect(names).toContain(BONUS_PAYOFF_SE.name)
+    expect(BONUS_PAYOFF_SE.name).toBe('reward')
+    expect(BONUS_PAYOFF_SE.rate).toBeGreaterThan(1)
+    expect(names).toHaveLength(20)
+  })
+})

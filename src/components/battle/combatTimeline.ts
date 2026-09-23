@@ -2,6 +2,7 @@ import type { GameEvent, GameStatus } from '../../core/types'
 import { damageFeelTier, type FeelTier } from './feelTier'
 import {
   BONUS_GAP_MS,
+  BONUS_HIT_STOP_MS,
   BURST_HIT_STOP_MS,
   BURST_IMPACT_MS,
   CARD_HIT_GAP_MS,
@@ -222,7 +223,8 @@ function hitStopFor(s: ImpactStep): number {
   if (s.final) return FINAL_HIT_STOP_MS
   if (s.role === 'burst') return BURST_HIT_STOP_MS
   if (s.target === 'self') return s.tier >= 3 ? 40 : 0
-  if (s.role === 'bonus') return 0
+  // 決定224：⚡は通常ヒットより上（L3 45 < 50 < L4 60）。reduced-motion では呼び出し側で 0
+  if (s.role === 'bonus') return BONUS_HIT_STOP_MS
   return HIT_STOP_MS[s.tier]
 }
 
