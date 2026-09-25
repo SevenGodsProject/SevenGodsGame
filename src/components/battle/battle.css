@@ -5336,9 +5336,15 @@ body.battle-viewport .player-panel {
 /* --- 10) モバイル（<900px）：同じ構造のまま寸法だけ変える --- */
 @media (max-width: 899px) {
   body.battle-viewport .battle-main {
-    grid-template-columns: 1.22fr 1fr 0.78fr;
+    /* 決定228 A：列の最小幅を 0 にして、吹き出し・バッジの長さで比率が崩れないようにする */
+    grid-template-columns: minmax(0, 1.22fr) minmax(0, 1fr) minmax(0, 0.78fr);
     padding: 8px;
     gap: 6px;
+  }
+
+  body.battle-viewport .battle-main > .panel,
+  body.battle-viewport .ally-row > .panel {
+    min-width: 0;
   }
 
   body.battle-viewport .enemy-plate,
@@ -5501,6 +5507,46 @@ body.battle-viewport .player-panel {
      390px では1行に3つ並べるため、ボタン内の長文だけを畳む。 */
   body.battle-viewport .divination-choice-text {
     display: none;
+  }
+
+  /* 決定228 B：バフ・ブロックのバッジを小さく詰め、1 個を 1 行に収める（文言は不変。幅があれば横に並ぶ）。
+     nowrap にはしない：360px の神列（内幅 ≈75px）では枠からはみ出すため、そこだけ 2 行に折り返す */
+  body.battle-viewport .enemy-plate-status .badge,
+  body.battle-viewport .player-plate-status .badge {
+    font-size: 10px;
+    padding: 1px 4px;
+    line-height: 1.3;
+  }
+
+  body.battle-viewport .buff-list {
+    gap: 2px;
+  }
+
+  body.battle-viewport .enemy-plate-status,
+  body.battle-viewport .player-plate-status {
+    gap: 2px 4px;
+  }
+}
+
+/* 決定228 C：掛け声は 2 行まで折り返し、台詞を「…」で切らない。
+   高さ 700px 以下は既存どおり非表示（§9）のため、その範囲には掛けない */
+@media (max-width: 899px) and (min-height: 701px) {
+  body.battle-viewport .enemy-speech-bubble {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    /* 1 行の台詞は高さの中央に置く（Safari＝-webkit-box-pack／Chromium＝align-content） */
+    -webkit-box-pack: center;
+    align-content: center;
+    /* 2 行（13.2px×2）＋上下 padding 4px＋枠 2px が収まる高さ（border-box） */
+    height: 33px;
+    margin-bottom: -38px;
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-size: 11px;
+    line-height: 1.2;
+    white-space: normal;
+    text-overflow: clip;
   }
 }
 
