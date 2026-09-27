@@ -29,3 +29,14 @@ describe('決定224：条件⚡の音は既存音源の加工（新規 SE 0）',
     expect(names).toHaveLength(20)
   })
 })
+
+describe('Tap Feedback v1：押下音は既存 card_play の再利用（新規 SE 0）', () => {
+  it('cardTap／endRoundTap を持ち、旧 commit 用 cardPlay は無い。SE は 20 本のまま', async () => {
+    const { sfx, SE_NAMES: names } = await import('./sound')
+    expect(typeof sfx.cardTap).toBe('function')
+    expect(typeof sfx.endRoundTap).toBe('function')
+    expect('cardPlay' in sfx).toBe(false)
+    expect(names).toContain('card_play')
+    expect(names).toHaveLength(20)
+  })
+})

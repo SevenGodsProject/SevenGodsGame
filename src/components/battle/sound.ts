@@ -1,4 +1,4 @@
-import { SE_GAIN, type FeelTier } from './feelTier'
+import { SE_DEDUP_WINDOW_MS, SE_GAIN, TAP_END_ROUND_RATE, type FeelTier } from './feelTier'
 
 /**
  * 決定128（Game Feel Phase）：効果音エンジン。
@@ -110,14 +110,39 @@ export function preloadSe(names: SeName[] = SE_NAMES): void {
   for (const n of names) void loadBuffer(n)
 }
 
-type PlayOptions = { gain?: number; delayMs?: number; rate?: number }
+type PlayOptions = {
+  gain?: number
+  delayMs?: number
+  rate?: number
+  /**
+   * Tap Feedback v1：キャッシュ済みの時だけ即再生する。未ロード・デコード失敗なら鳴らさない
+   * （ロード待ちで遅れて鳴る押下音は逆効果のため。fallback の合成音も鳴らさない）。
+   */
+  immediateOnly?: boolean
+}
+
+/**
+ * Tap Feedback v1：同じ音源の重複判定（純関数）。前回の予約時刻 `prevAt`（秒）から
+ * `at`（秒）までが `windowMs` 未満なら重複＝鳴らさない。
+ */
+export function isDuplicateStart(prevAt: number | undefined, at: number, windowMs: number): boolean {
+  if (prevAt === undefined) return false
+  return Math.abs(at - prevAt) * 1000 < windowMs
+}
+
+/** 重複抑制の記録。キー＝`name@rate`、値＝予約した AudioContext 時刻（秒）。ミュート中は更新しない */
+const lastStartAt = new Map<string, number>()
 
 function playBuffer(name: SeName, opts: PlayOptions = {}): void {
   if (muted) return
   const audioCtx = getCtx()
   if (!audioCtx) return
-  const { gain = 1, delayMs = 0, rate = 1 } = opts
+  const { gain = 1, delayMs = 0, rate = 1, immediateOnly = false } = opts
   const start = (buf: AudioBuffer) => {
+    const at = audioCtx.currentTime + delayMs / 1000
+    const key = `${name}@${rate}`
+    if (isDuplicateStart(lastStartAt.get(key), at, SE_DEDUP_WINDOW_MS)) return
+    lastStartAt.set(key, at)
     const src = audioCtx.createBufferSource()
     src.buffer = buf
     src.playbackRate.value = rate
@@ -125,11 +150,16 @@ function playBuffer(name: SeName, opts: PlayOptions = {}): void {
     g.gain.value = Math.max(0, Math.min(1, gain * SE_GAIN.master))
     src.connect(g)
     g.connect(audioCtx.destination)
-    src.start(audioCtx.currentTime + delayMs / 1000)
+    src.start(at)
   }
   const cached = buffers.get(name)
   if (cached) {
     start(cached)
+    return
+  }
+  if (immediateOnly) {
+    // 未ロードなら今回は鳴らさず、次回に備えてロードだけ始める（失敗時も無音）
+    if (cached === undefined) void loadBuffer(name)
     return
   }
   if (cached === null) {
@@ -234,7 +264,14 @@ export const BONUS_PAYOFF_SE = { name: 'reward', rate: 1.5 } as const satisfies 
  */
 export const sfx = {
   // Feedback（操作）
-  cardPlay: () => playBuffer('card_play', { gain: SE_GAIN.feedback }),
+  /**
+   * Tap Feedback v1：カードを押した瞬間（クリック処理の中・予約オフセット 0）に鳴らす。
+   * commit 時（CARD_PLAYED）の card_play は廃止＝1 タップ 1 回。クリック処理の中で呼ぶので
+   * AudioContext の resume() がユーザー操作の中で走る。
+   */
+  cardTap: () => playBuffer('card_play', { gain: SE_GAIN.tap, immediateOnly: true }),
+  /** Tap Feedback v1：「ラウンドを終える」を押した瞬間。同じ音を低め（0.85 倍速）で */
+  endRoundTap: () => playBuffer('card_play', { gain: SE_GAIN.tap, rate: TAP_END_ROUND_RATE, immediateOnly: true }),
   cardDrawn: () => playBuffer('card_draw', { gain: SE_GAIN.feedback * 0.8 }),
   divination: () => playBuffer('divination', { gain: SE_GAIN.stateChange * 0.8 }),
   // Impact（自分→敵）：4段階

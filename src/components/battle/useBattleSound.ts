@@ -14,6 +14,9 @@ import { prefersReducedMotion } from './reducedMotion'
  * （数字・敵リアクション・表示HPと同期。新しい音源は追加していない）。
  * 勝利／敗北のスティングとジングルは、撃破演出・結果画面の時刻に合わせて
  * useCombatPresentation が鳴らす（ここでは GAME_ENDED を扱わない）。
+ *
+ * Tap Feedback v1（Sound lane）：カードの押下音は useGameEngine.playCard がクリックの瞬間に
+ * 鳴らす（sfx.cardTap）。commit 時の CARD_PLAYED では鳴らさない（二重の「カチッ」を無くす）。
  */
 export function useBattleSound(log: GameEvent[], enemyVisualType?: string): void {
   const seenCount = useRef(0)
@@ -51,9 +54,6 @@ export function useBattleSound(log: GameEvent[], enemyVisualType?: string): void
     let afterBurst = false
     for (const event of newEvents) {
       switch (event.t) {
-        case 'CARD_PLAYED':
-          sfx.cardPlay()
-          break
         case 'CARD_DRAWN':
           sfx.cardDrawn()
           break

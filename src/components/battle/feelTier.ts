@@ -38,7 +38,21 @@ export const SE_GAIN = {
   reward: 0.7,
   warning: 0.5,
   bigMoment: 0.9,
+  /**
+   * Tap Feedback v1（Sound lane）：押した瞬間の音（既存 `card_play`）。master を掛けて 0.34。
+   * feedback（0.255）より +2.5dB、最弱の打撃 L1（0.383）より −1.0dB＝「押下＜最弱の打撃」を保つ。
+   */
+  tap: 0.4,
 } as const
+
+/** Tap Feedback v1：「ラウンドを終える」の押下音は同じ `card_play` を 0.85 倍速（約 −2.8 半音・低め）で鳴らす */
+export const TAP_END_ROUND_RATE = 0.85
+
+/**
+ * Tap Feedback v1：同じ音源（name@rate）が予約時刻で 30ms 未満に重なる 2 回目以降は鳴らさない。
+ * 同一波形の同時加算（×2＝+6dB、×5＝+14dB）を防ぐ。打撃の最短間隔（110ms）には掛からない。
+ */
+export const SE_DEDUP_WINDOW_MS = 30
 
 /** CSS クラス名（EnemyPanel／FloatingNumbers が使う） */
 export function feelTierClass(prefix: string, tier: FeelTier): string {

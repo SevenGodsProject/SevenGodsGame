@@ -24,6 +24,7 @@ import { applyAndRecord, resumeRunLog, toReplayInput, type DailyRunLog } from '.
 import { createClientRunId } from './clientRunId'
 import { clearRunLog, loadRunLog, saveRunLog } from './dailyRunLogStorage'
 import { enqueuePendingRun } from './pendingRunStorage'
+import { sfx } from '../components/battle/sound'
 
 /**
  * ラウンド終了→次ラウンド開始の結果を見せる前に「敵のターン」を溜める時間（見せ方のみ。判定タイミングは変えない）。
@@ -392,6 +393,8 @@ export function useGameEngine(): UseGameEngine {
     (uid: CardUid) => {
       // 判定はまだ行わない。まずアニメーションを見せてから、実際にPLAY_CARDを発行する
       // （isEnemyTurnと同じ「見せ方だけ遅らせる」パターン）。
+      // Tap Feedback v1：押した瞬間の音はクリック処理の中で同期的に鳴らす（判定・結果には無関係）
+      sfx.cardTap()
       setPendingCardUid(uid)
       window.setTimeout(() => {
         setPendingCardUid(null)
@@ -400,7 +403,11 @@ export function useGameEngine(): UseGameEngine {
     },
     [dispatch],
   )
-  const endRound = useCallback(() => dispatch({ type: 'END_ROUND' }), [dispatch])
+  const endRound = useCallback(() => {
+    // Tap Feedback v1：押した瞬間の音（表示のみ。判定・結果には無関係）
+    sfx.endRoundTap()
+    dispatch({ type: 'END_ROUND' })
+  }, [dispatch])
   const divine = useCallback(
     (choiceIndex: number) => dispatch({ type: 'USE_DIVINATION', choiceIndex }),
     [dispatch],
