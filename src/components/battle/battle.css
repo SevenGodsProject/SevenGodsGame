@@ -6730,3 +6730,48 @@ body.battle-viewport .battle-main > .battle-callout {
     margin-right: -20px;
   }
 }
+
+/* ============================================================
+   決定230 SP 共鳴の札：得意技バッジの右端切れ＋「共鳴」の縦折れ（Hotfix・<900px のみ）
+   ------------------------------------------------------------
+   見出し（.god-otomo-plate-head）は「共鳴」と得意技バッジを横 1 列（flex・nowrap）に並べていた。
+   バッジは white-space:nowrap（80.8〜131.9px）で縮まず、SP の札の中身は 47／55／65px（360／390／430）
+   しかないため、縮められる「共鳴」が 1 文字幅（13.4px）に潰れて縦 2 行になり、バッジは札の外・
+   画面の右端の外へ出て読めなかった（得意技を持つ 蒼毘・福永・笑蓮 だけ。決定228 より前は列そのものが
+   バッジに押されて太り、画面全体が右へはみ出していた）。
+   ・見出しを折り返し可にし、「共鳴」は常に 1 行、バッジは次の行へ
+   ・バッジは語の境目で折り返す（「得意技／反撃の構え」。keep-all＝名前の途中で切らない）。
+     「発動中」は 3 行目。文字の大きさは既存のまま（10px／9px）
+   ・名前 1 語（最長「無傷の慈愛」48.2px）が縮めずに 1 行に入るよう、バッジは札の左右の余白（8px）の
+     うち 7px まで広げる（360px で文字の入る幅 53px）
+   ・得意技の無い神は見出しが「共鳴」だけなので何も変わらない。列幅・名札・Intent・神と敵・OTOMO は不変
+   ============================================================ */
+@media (max-width: 899px) {
+  body.battle-viewport .god-otomo-plate-head {
+    flex-wrap: wrap;
+    row-gap: 3px;
+  }
+
+  body.battle-viewport .god-otomo-plate-head .panel-title {
+    flex: 0 0 auto;
+    white-space: nowrap;
+  }
+
+  body.battle-viewport .god-otomo-plate .god-passive-badge {
+    flex: 0 0 calc(100% + 14px);
+    min-width: 0;
+    margin: 0 -7px;
+    padding: 2px 3px;
+    border-radius: 8px;
+    line-height: 1.3;
+    text-align: center;
+    white-space: normal;
+    word-break: keep-all;
+    overflow-wrap: anywhere;
+  }
+
+  body.battle-viewport .god-otomo-plate .god-passive-armed-mark {
+    display: block;
+    margin-left: 0;
+  }
+}
