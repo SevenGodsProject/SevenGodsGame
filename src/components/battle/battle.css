@@ -1988,8 +1988,18 @@
 }
 
 .result-toast {
-  position: fixed;
-  top: 100px;
+  /* 決定241：`position:fixed; top:100px` はビューポート基準のため、決定235 の名札
+     （アリーナ上端 y≈108〜200px）に毎手 1.4s 重なっていた（PC 1508／SP 390 とも）。
+     戦闘画面は body.battle-viewport で「上部バー／アリーナ／ドック」の 3 行 grid・
+     overflow:hidden の非スクロール構成になっており、fixed の当初目的（手札まで
+     スクロールしても見える）はもう無い。そこで grid の絶対配置子として
+     `grid-area: arena` を与え、包含ブロックをアリーナ行にする（列は消費しない）。
+     top はアリーナ高さ比：PC は名札の下・神の絵の頭上の隙間（32%・最低 104px で
+     低い窓でも名札の下に出る）、SP は名札と立ち絵の間の空き帯（38%・最低 150px で
+     バフ 3 行の名札 130px より下）。文言・時間・z-index・見た目は変えない。 */
+  position: absolute;
+  grid-area: arena;
+  top: max(104px, 32%);
   left: 50%;
   z-index: 4;
   padding: 8px 18px;
@@ -2002,6 +2012,14 @@
   white-space: nowrap;
   pointer-events: none;
   animation: result-toast-pop 1.4s ease-out forwards;
+}
+
+/* 決定241：SP（899px 以下）は名札の下に「吹き出しだけの空き帯」（y≈240〜390）が
+   あるので、そこへ置く。 */
+@media (max-width: 899px) {
+  .result-toast {
+    top: max(150px, 38%);
+  }
 }
 
 .ap-penalty-toast {
