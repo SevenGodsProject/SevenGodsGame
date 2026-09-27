@@ -6874,3 +6874,83 @@ body.battle-viewport .battle-main > .battle-callout {
 .cast-flash {
   mix-blend-mode: screen;
 }
+
+/* ============================================================
+   決定240 Enemy Intent Presentation v1 — 予告を板の文字から敵の構えへ（表示のみ・新 asset なし）
+   ------------------------------------------------------------
+   ① 名札の予告 `.intent` の先頭絵文字（⚔💥🔥⚡）を既存 SVG グリフ（cardIcon.tsx）へ。0.85em＋余白 0.2em＝絵文字＋空白と同じ 1.05em 幅、
+      vertical-align で行高を変えない（名札の寸法 ±0・SP 390 の「連撃 50+40」も折り返さない）。色は予告の文字色（currentColor）を継承
+   ② 予告の危険度を立ち絵 `.enemy-avatar` の「構え」に写す。既存の drop-shadow 連鎖（STAGE-LITE）に
+      リムを挟むだけ（box-shadow・animation は使わない＝決定232 の反応・229 の反転・lunge と衝突しない）。
+      色だけに頼らない区別（太さ・二重・持ち上げ・形）：
+        normal  … 何も足さない（21/49 行動。静かなラウンドは静かなまま）
+        strong  … 細い一重のリム（2px・輪郭に沿う）。姿勢は変えない
+        huge    … 太い二重のリム（3px の芯＋24px の輪）＋ 3px の持ち上げ（独立プロパティ translate）
+        special … huge に加えて足元の環（::after・形が違う。幅は箱の高さ基準＝手札 2 段で舞台が低い時も絵の足元に収まる）
+        charge  … 既存 `enemy-avatar-charging`（金）のまま。pulse は名札の ::after が担う（現状維持）
+      loop／pulse は増やさない。予告が変わった時だけ 240ms で落ち着く（transition・motion 許可時のみ）。
+      終盤 surge（datenshi／onryo）の紫は --d240-aura に逃がして危険ラウンドでも保持する。
+      調整値はこのブロックの --d240-* だけ。 */
+.enemy-avatar {
+  --d240-aura: drop-shadow(0 0 26px #9b59b666);
+  --d240-rim-thin: 2px;
+  --d240-rim-core: 3px;
+  --d240-rim-wide: 24px;
+  --d240-lift: -3px;
+  --d240-settle: 240ms;
+}
+
+.enemy-avatar.enemy-avatar-surge-mild {
+  --d240-aura: drop-shadow(0 0 30px #9b59b6aa);
+}
+
+.enemy-avatar.enemy-avatar-surge-strong {
+  --d240-aura: drop-shadow(0 0 38px #6a5acdcc);
+}
+
+.intent-glyph {
+  width: 0.85em;
+  height: 0.85em;
+  margin-right: 0.2em;
+  vertical-align: -0.1em;
+}
+
+/* 落ち着き（settle）は motion 許可時だけ有効にする（reduce では transition が最初から無い＝打ち消し不要。
+   決定232 の test は「ファイル最後の @media (prefers-reduced-motion: reduce) は 232 のもの」を前提にしているため、
+   このブロックでは reduce の @media を書かない） */
+@media (prefers-reduced-motion: no-preference) {
+  .enemy-avatar.enemy-avatar-intent-strong,
+  .enemy-avatar.enemy-avatar-intent-huge,
+  .enemy-avatar.enemy-avatar-intent-special {
+    transition:
+      filter var(--d240-settle) ease-out,
+      translate var(--d240-settle) ease-out;
+  }
+}
+
+.enemy-avatar.enemy-avatar-intent-strong {
+  filter: drop-shadow(0 12px 16px #000000cc) var(--d240-aura) drop-shadow(0 0 var(--d240-rim-thin) #ff6b6be6)
+    drop-shadow(0 0 1px #ffe0aa8c);
+}
+
+.enemy-avatar.enemy-avatar-intent-huge,
+.enemy-avatar.enemy-avatar-intent-special {
+  filter: drop-shadow(0 12px 16px #000000cc) var(--d240-aura) drop-shadow(0 0 var(--d240-rim-core) #ff5c5c)
+    drop-shadow(0 0 var(--d240-rim-wide) #e5484dcc) drop-shadow(0 0 1px #ffe0aa8c);
+  translate: 0 var(--d240-lift);
+}
+
+.enemy-avatar.enemy-avatar-intent-special::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  bottom: 1.5%;
+  height: 9%;
+  aspect-ratio: 8 / 1;
+  translate: -50% 0;
+  border-radius: 50%;
+  border: 2px solid #ff5c5cd9;
+  box-shadow:
+    0 0 10px 2px #e5484d99,
+    inset 0 0 8px #ff5c5c66;
+}

@@ -1,5 +1,6 @@
 import type { CardDef, CardType, EnemyActionDef, Rarity } from '../../core/types'
 import { formatScaled } from '../displayScale'
+import type { GlyphKey } from './cardIcon'
 
 /**
  * カードの見た目（決定28で色付き四角からグラデーション調に刷新）。
@@ -131,5 +132,51 @@ export function getIntentTierClass(intent: EnemyActionDef | null): string {
   const tier = getIntentPowerTier(amount)
   if (tier === 'huge') return 'intent-tier-huge'
   if (tier === 'strong') return 'intent-tier-strong'
+  return ''
+}
+
+/**
+ * 決定240 Enemy Intent Presentation v1：予告の危険度を「敵の構え」として立ち絵に写すための
+ * 表示専用の純粋関数群。`formatEnemyIntent`（文言）と `getIntentTierClass`（名札の色）は
+ * 一切変更せず、同じ判定（`getIntentPowerTier` の 10/15 閾値・`intent.kind`）を再利用する。
+ * normal は 'none'＝立ち絵に何も足さない（静かなラウンドは静かなまま）。
+ */
+export type IntentDangerLevel = 'none' | 'strong' | 'huge' | 'special' | 'charge'
+
+export function getIntentDangerLevel(intent: EnemyActionDef | null): IntentDangerLevel {
+  if (!intent) return 'none'
+  if (intent.kind === 'charge') return 'charge'
+  if (intent.kind === 'special') return 'special'
+  if (intent.kind === 'multiAttack' && intent.special) return 'special'
+  const amount =
+    intent.kind === 'multiAttack' ? intent.hits.reduce((sum, h) => sum + h, 0) : intent.amount
+  const tier = getIntentPowerTier(amount)
+  if (tier === 'huge') return 'huge'
+  if (tier === 'strong') return 'strong'
+  return 'none'
+}
+
+/** 予告の先頭絵文字（⚔／💥／🔥／⚡）に対応する既存 SVG グリフ（cardIcon.tsx のキーのみ）。予告なしは null */
+export function getIntentGlyph(intent: EnemyActionDef | null): GlyphKey | null {
+  if (!intent) return null
+  const level = getIntentDangerLevel(intent)
+  if (level === 'charge') return 'bolt'
+  if (level === 'huge' || level === 'special') return 'burst'
+  if (level === 'strong') return 'swordHeavy'
+  return 'sword'
+}
+
+/** `formatEnemyIntent` の文言から先頭の絵文字 1 つと区切り空白だけを除いたもの（語・数値は同一） */
+export function formatEnemyIntentText(intent: EnemyActionDef | null): string {
+  return formatEnemyIntent(intent).replace(/^(⚔|💥|🔥|⚡) /u, '')
+}
+
+/**
+ * 立ち絵（`.enemy-avatar`）に付ける構えクラス。charge は既存の `enemy-avatar-charging`
+ * （EnemyPanel が付与・pulse 現状維持）が担うため空文字。normal も空文字。
+ */
+export function getIntentStanceClass(intent: EnemyActionDef | null): string {
+  const level = getIntentDangerLevel(intent)
+  if (level === 'strong' || level === 'huge' || level === 'special') return `enemy-avatar-intent-${level}`
   return ''
 }

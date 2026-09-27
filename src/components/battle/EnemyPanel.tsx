@@ -3,7 +3,8 @@ import type { EnemyState } from '../../core/types'
 import { getEnemyDef } from '../../core/data/enemies'
 import { STAT_LABEL } from '../setup/godStyle'
 import { formatScaled } from '../displayScale'
-import { formatEnemyIntent, getIntentTierClass, type PowerTier } from './cardStyle'
+import { formatEnemyIntentText, getIntentGlyph, getIntentStanceClass, getIntentTierClass, type PowerTier } from './cardStyle'
+import { GlyphIcon } from './cardIcon'
 import { HpBar } from './HpBar'
 import { FloatingNumbers } from './FloatingNumbers'
 import type { FloatingNumber } from './useFloatingNumbers'
@@ -101,6 +102,11 @@ export function EnemyPanel({
         ? ' enemy-avatar-charging enemy-avatar-charging-super'
         : ' enemy-avatar-charging'
       : ''
+  // 決定240：予告の危険度（strong／huge／special）を立ち絵の「構え」クラスとして写す（表示のみ・
+  // normal は空・charge は上の chargingClass が担う）。撃破中は付けない（崩壊と重ねない）
+  const stance = defeated ? '' : getIntentStanceClass(enemy.intent)
+  const stanceClass = stance ? ` ${stance}` : ''
+  const intentGlyph = getIntentGlyph(enemy.intent)
   const lungeSpeedSuffix = def.visualType === 'fast' ? '-fast' : def.visualType === 'heavy' ? '-heavy' : ''
   // STEP-UX5：「動き方」（visualType）と「攻撃の重さ」（attackTier）を別クラスで掛け合わせる
   const lungeTierToken =
@@ -123,7 +129,11 @@ export function EnemyPanel({
         </div>
         <HpBar current={hpShown} max={enemy.maxHp} color="#e5484d" className={band === 'high' ? undefined : `hp-bar-${band}`} />
         <div className="enemy-plate-status">
-          <div className={`intent ${getIntentTierClass(enemy.intent)}`.trim()}>{formatEnemyIntent(enemy.intent)}</div>
+          {/* 決定240：先頭の絵文字（⚔💥🔥⚡）は既存 SVG グリフに置換。文言（formatEnemyIntent）は不変 */}
+          <div className={`intent ${getIntentTierClass(enemy.intent)}`.trim()}>
+            {intentGlyph && <GlyphIcon glyph={intentGlyph} className="intent-glyph" />}
+            {formatEnemyIntentText(enemy.intent)}
+          </div>
           {enemy.block > 0 && <div className="badge badge-block">🛡 {formatScaled(enemy.block)}</div>}
           {enemy.buffs.length > 0 && (
             <div className="buff-list">
@@ -156,7 +166,7 @@ export function EnemyPanel({
           >
             <Reaction reaction={reactions[0]} planKey={planKey} index={0}>
               <Reaction reaction={reactions[1]} planKey={planKey} index={1}>
-                <div className={`enemy-avatar${surgeClass}${chargingClass}`} style={{ backgroundImage: `url(${def.art})` }} />
+                <div className={`enemy-avatar${surgeClass}${chargingClass}${stanceClass}`} style={{ backgroundImage: `url(${def.art})` }} />
               </Reaction>
             </Reaction>
           </div>
