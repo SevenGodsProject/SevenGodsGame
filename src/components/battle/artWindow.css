@@ -1,0 +1,47 @@
+/* ============================================================
+   Card Premium v2 Pilot「Art Window v2」（表示専用・対象は artWindow.ts の許可リストだけ）
+   - 文字帯をカードの下 45% に固定し、上 55% を絵の窓として空ける
+   - 本文が 45% に収まらない高さ（低い画面）では帯が上へ伸びる＝下端からはみ出さない
+   - 「◯◯専用」は右上の小さな札へ。条件行は 1 行（artWindow.ts の短文）
+   - 決定224 の READY 重ね層（.card-view-ready-frame・z-index 0）と点火の帯は変えない
+   詳細度は battle.css の `body.battle-viewport .card-view-has-art .card-view-body`（0,3,1）より高くし、
+   読み込み順に依存しない
+   ============================================================ */
+.card-view.card-view-artwin.card-view-has-art > .card-view-body {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  margin: 0;
+  min-height: calc(45% + 10px);
+  padding: 10px 6px 4px;
+  gap: 2px;
+  justify-content: flex-start;
+  background: linear-gradient(180deg, #05060d00 0, #05060db8 10px, #05060df2 100%);
+}
+.card-view.card-view-artwin.card-view-has-art > .card-view-god {
+  position: absolute;
+  top: 3px;
+  right: 3px;
+  padding: 0 4px;
+  border: 1px solid #ffd16666;
+  border-radius: 6px;
+  background: #05060dcc;
+  font-size: 8px;
+  line-height: 12px;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+}
+.card-view.card-view-artwin.card-view-has-art .card-view-name {
+  line-height: 1.15;
+}
+.card-view.card-view-artwin.card-view-has-art .card-view-text {
+  flex: 0 0 auto;
+  line-height: 1.2;
+}
+/* 条件行：左右へ 3px だけ広げて 1 行に収める。折り返しは禁止しない（端末のフォント差で入らない時は 2 行になり、帯が上へ伸びる＝切れない） */
+.card-view.card-view-artwin.card-view-has-art .card-view-bonus {
+  margin: 0 -3px;
+  padding: 2px 0 0;
+  line-height: 1.25;
+}

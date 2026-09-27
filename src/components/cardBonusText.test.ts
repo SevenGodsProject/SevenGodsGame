@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import { ALL_CARDS, getCardDef } from '../core/data/cards'
 import { SHOUREN_CARD_IDS, SOBI_CARD_IDS } from '../core/data/cards'
-import { formatCardBonus } from './cardBonusText'
+import { formatBonusLine, formatCardBonus } from './cardBonusText'
 
 /**
  * Phase 3 FINAL SPEC v0.1：条件付き追加効果の表示文。
@@ -36,6 +36,13 @@ describe('formatCardBonus', () => {
       // 説明はスマホで一読できる長さ（本文＋追加行で2行以内に収まる目安）
       expect(card.bonus!.textJa.length).toBeLessThanOrEqual(32)
     }
+  })
+
+  it('formatBonusLine は formatCardBonus と同じ先頭記号を付ける（Art Window v2 の 1 行版と共通）', () => {
+    const card = getCardDef(SOBI_CARD_IDS.unshakableStance)
+    expect(formatBonusLine(card.bonus!.textJa)).toBe(formatCardBonus(card))
+    expect(formatBonusLine(card.bonus!.textJa, true)).toBe(formatCardBonus(card, true))
+    expect(formatBonusLine('共鳴4以上:敵に40', true)).toBe('⚡ 共鳴4以上:敵に40')
   })
 
   it('本体テキストと追加行を合わせても、既存カードの説明量から大きく外れない', () => {

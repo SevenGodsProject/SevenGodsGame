@@ -5,9 +5,11 @@ import { getGodDef } from '../../core/data/gods'
 import { getCardArt } from '../../core/data/cardArt'
 import { RARITY_STYLE, TYPE_STYLE } from './cardStyle'
 import { CardIcon } from './cardIcon'
-import { formatCardBonus } from '../cardBonusText'
+import { formatBonusLine, formatCardBonus } from '../cardBonusText'
 import { GOD_THEME_COLOR } from '../setup/godStyle'
 import { READY_IGNITE_BASE_DELAY_MS, READY_MATERIAL_PILOT, shouldIgnite } from './readyMaterial'
+import { getArtWindow } from './artWindow'
+import './artWindow.css'
 
 type CardViewProps = {
   instance: CardInstance
@@ -54,6 +56,9 @@ export function CardView({
   const cost = def.cost + (instance.costModifier ?? 0)
   const godArt = def.godId ? getGodDef(def.godId).art.front : null
   const illustration = getCardArt(def.id)
+  // Card Premium v2 Pilot：Art Window v2（原画のあるカードだけ・表示専用の許可リスト）
+  const artWindow = illustration ? getArtWindow(def.id) : undefined
+  const godLabel = def.godId ? <div className="card-view-god">{getGodDef(def.godId).nameJa}専用</div> : null
   // 決定224：READY material（Pilot 対象のカードだけ）。見た目のみで、使えるかどうかの判定は変えない
   const materialPilot = READY_MATERIAL_PILOT.has(def.id)
   const readyOn = materialPilot && bonusArmed
@@ -73,7 +78,7 @@ export function CardView({
   return (
     <button
       type="button"
-      className={`card-view${def.godId ? ' card-view-exclusive' : ''}${playing ? ' card-view-playing' : ''}${illustration ? ' card-view-has-art' : ''}${readyOn ? ' card-view-ready' : ''}`}
+      className={`card-view${def.godId ? ' card-view-exclusive' : ''}${playing ? ' card-view-playing' : ''}${illustration ? ' card-view-has-art' : ''}${artWindow ? ' card-view-artwin' : ''}${readyOn ? ' card-view-ready' : ''}`}
       style={{
         ...readyStyle,
         borderColor: style.color,
@@ -119,8 +124,10 @@ export function CardView({
       >
         {cost}
       </div>
+      {/* Art Window v2：「◯◯専用」は本文から出して右上の小さな札にする（絵の窓を空けるため） */}
+      {artWindow && godLabel}
       <div className="card-view-body">
-        {def.godId && <div className="card-view-god">{getGodDef(def.godId).nameJa}専用</div>}
+        {!artWindow && godLabel}
         <div className="card-view-name">
           {style.icon} {def.name}
         </div>
@@ -131,8 +138,11 @@ export function CardView({
         {/* Phase 3 FINAL SPEC v0.1：条件付き追加効果。条件を満たしている手札は光らせて
             「今使えば追加が出る」ことを分かるようにする（新しい常設UIは足さない） */}
         {def.bonus && (
-          <div className={`card-view-bonus${bonusReady ? ' card-view-bonus-ready' : ''}`}>
-            {formatCardBonus(def, bonusReady)}
+          <div
+            className={`card-view-bonus${bonusReady ? ' card-view-bonus-ready' : ''}`}
+            title={artWindow ? (formatCardBonus(def, bonusReady) ?? undefined) : undefined}
+          >
+            {artWindow ? formatBonusLine(artWindow.bonusShortJa, bonusReady) : formatCardBonus(def, bonusReady)}
           </div>
         )}
       </div>

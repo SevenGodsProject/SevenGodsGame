@@ -19,5 +19,13 @@ const IDLE_PREFIX = '＋ '
 
 export function formatCardBonus(def: CardDef, ready = false): string | null {
   if (!def.bonus) return null
-  return `${ready ? READY_PREFIX : IDLE_PREFIX}${def.bonus.textJa}`
+  return formatBonusLine(def.bonus.textJa, ready)
+}
+
+/**
+ * 条件行の文言に先頭記号を付ける。`formatCardBonus` と、Card Premium v2 Pilot「Art Window v2」の
+ * 1 行版（`battle/artWindow.ts` の `bonusShortJa`）で共通に使う
+ */
+export function formatBonusLine(textJa: string, ready = false): string {
+  return `${ready ? READY_PREFIX : IDLE_PREFIX}${textJa}`
 }
