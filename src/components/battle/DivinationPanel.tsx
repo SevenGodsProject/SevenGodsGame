@@ -1,6 +1,7 @@
 import { DIVINATION_CHOICES } from '../../core/data/divination'
 import { formatScaled } from '../displayScale'
 import { GlyphIcon, type GlyphKey } from './cardIcon'
+import './dockControls.css'
 
 type DivinationPanelProps = {
   remaining: number
@@ -35,7 +36,7 @@ export function DivinationPanel({
   return (
     <div className="divination-panel">
       <div className="divination-panel-title">
-        🙏 託宣（残り{remaining}回・1ラウンド1回まで）
+        <GlyphIcon glyph="eye" className="divination-panel-glyph" />託宣（残り{remaining}回・1ラウンド1回まで）
         {usedThisRound && remaining > 0 && <span> — このラウンドは使用済み</span>}
       </div>
       <div className="divination-choices">

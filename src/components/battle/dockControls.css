@@ -1,0 +1,120 @@
+/*
+ * Dock Controls Plate v1（metric-locked）— docs/DOCK_CONTROLS_PRE_AUDIT.md §6
+ *
+ * 託宣バー・「ラウンドを終える」・ログの 形／材質／書体／行送り／折返し だけを整える。
+ *  ① 書体を本文（index.css の system-ui スタック）と揃える（<button> の UA 既定＝Windows では Meiryo をやめる）
+ *  ② 行送りを Before（Meiryo の line-height: normal）の実寸 px で固定＝高さを 1px も動かさない（metric lock）
+ *  ③「ラウンドを終える」は句で折る（auto-phrase）＋幅で 5 字折りを保証＝「ラウンドを／終える」
+ *  ④ 材質＝HUD Pilot と同じ「漆黒の札＋金の細縁・角 3px」
+ *
+ * cascade：このファイルは DivinationPanel.tsx から import され battle.css より「前」に並ぶ。
+ * そのため全セレクタを `body.battle-viewport .battle-dock …`（詳細度 0,3,1〜0,4,1）で書き、
+ * 順序ではなく詳細度で battle.css に勝つ。hover／is-open は battle.css 側が負けるので本ファイルに書き直す。
+ *
+ * 書かないもの（dockControls.test.ts で固定）：transform／opacity／outline／transition／animation／
+ * font-size／font-weight。押下（press.css）・disabled・focus-visible・reduced-motion の表現は不変。
+ */
+
+/* ---- 書体：本文と揃える ---- */
+body.battle-viewport .battle-dock .divination-choice,
+body.battle-viewport .battle-dock .battle-dock-actions .end-round-button,
+body.battle-viewport .battle-dock .battle-dock-actions .battle-log-toggle {
+  font-family: inherit;
+}
+
+/* ---- metric lock：Before（Meiryo normal）の行送りを固定＝高さ差 0 ---- */
+body.battle-viewport .battle-dock .divination-choice {
+  line-height: 1.5; /* 効果文 10px → 15px */
+}
+body.battle-viewport .battle-dock .divination-choice-name {
+  line-height: 17px; /* PC 11px：Before 17px */
+}
+
+/* ---- 託宣バー（Secondary：紫の札） ---- */
+body.battle-viewport .battle-dock .divination-panel {
+  border-radius: 4px;
+}
+body.battle-viewport .battle-dock .divination-choice {
+  border-radius: 3px;
+  background: linear-gradient(180deg, #ffffff0a 0%, #ffffff00 40%), linear-gradient(180deg, #1a1330 0%, #0e0a19 100%);
+  box-shadow: inset 0 0 0 1px #000000a6;
+}
+body.battle-viewport .battle-dock .divination-choice-glyph {
+  border-radius: 3px;
+}
+/* 見出しのアイコン（🙏 の置き換え）。1.2em＋0.45em＝「🙏＋空白」と同じ送り幅（PC 実測で見出し幅差 0） */
+body.battle-viewport .battle-dock .divination-panel-glyph {
+  display: inline-block;
+  width: 1.2em;
+  height: 1.2em;
+  vertical-align: -0.22em;
+  margin-right: 0.45em;
+  color: #e2bd6a;
+}
+
+/* ---- ラウンドを終える（Primary：漆黒の札＋金の細縁） ---- */
+body.battle-viewport .battle-dock .battle-dock-actions .end-round-button {
+  border-radius: 3px;
+  border-color: #e2bd6a;
+  background: linear-gradient(180deg, #ffe7b026 0%, #ffe7b000 38%), linear-gradient(180deg, #3d2c0c 0%, #1b1306 100%);
+  color: #ffd88a;
+  text-shadow: 0 1px 1px #000000cc;
+  box-shadow: inset 0 0 0 1px #000000b3, inset 0 2px 0 -1px #ffe3a04d, 0 0 12px -4px #ffd16677, 0 3px 8px -2px #000000cc;
+  word-break: auto-phrase; /* 句で折る（Chromium 119+・html lang="ja"）。非対応ブラウザは幅で 5 字折りを保証 */
+  line-height: 20px; /* PC：2 行 × 20 ＝ 62px（Before と同じ高さ） */
+  padding-left: 18px; /* PC：内幅 94 → 74（5 字 67.6 は入り 6 字 81.1 は入らない） */
+  padding-right: 18px;
+}
+
+/* ---- ログ（Tertiary：漆黒・金を弱く） ---- */
+body.battle-viewport .battle-dock .battle-dock-actions .battle-log-toggle {
+  border-radius: 3px;
+  border-color: #b8914a59;
+  background: linear-gradient(180deg, #16131f 0%, #0b0a12 100%);
+  color: #b9c0dd; /* 近似コントラスト 4.95 → 約 10 */
+  line-height: 17px; /* PC：29px を維持 */
+}
+body.battle-viewport .battle-dock .battle-dock-actions .battle-log-toggle.is-open {
+  border-color: #e2bd6a99;
+  background: linear-gradient(180deg, #2a2110 0%, #14100a 100%);
+  color: #ffd9a0;
+}
+
+/* ---- hover は決定200 と同じ guard の中だけ（touch で残らない） ---- */
+@media (hover: hover) and (pointer: fine) {
+  /* battle.css の translateY(-2px) は transform なので残る（本ファイルは transform を書かない） */
+  body.battle-viewport .battle-dock .battle-dock-actions .end-round-button:not(:disabled):hover {
+    background: linear-gradient(180deg, #ffe7b040 0%, #ffe7b000 44%), linear-gradient(180deg, #4a360f 0%, #221808 100%);
+    box-shadow: inset 0 0 0 1px #000000b3, inset 0 2px 0 -1px #ffe3a066, 0 0 20px -3px #ffd166aa, 0 3px 8px -2px #000000cc;
+  }
+  body.battle-viewport .battle-dock .divination-choice:hover:not(:disabled) {
+    background: linear-gradient(180deg, #ffffff12 0%, #ffffff00 40%), linear-gradient(180deg, #261b3e 0%, #150f24 100%);
+  }
+  body.battle-viewport .battle-dock .battle-dock-actions .battle-log-toggle:hover {
+    border-color: #ffd16688;
+    color: #ffd9a0;
+  }
+}
+
+/* ---- SP（battle.css の 390 系メディアクエリと同じ境界） ---- */
+@media (max-width: 899px) {
+  body.battle-viewport .battle-dock .divination-panel {
+    padding-right: 116px; /* 106 → 116（操作列 +10 に合わせる） */
+  }
+  body.battle-viewport .battle-dock .battle-dock-actions {
+    width: 106px; /* 96 → 106：終了 58 ＋ 間 4 ＋ ログ 44（決定170） */
+  }
+  body.battle-viewport .battle-dock .battle-dock-actions .end-round-button {
+    padding: 4px 2px; /* 幅 58 ＝ 内幅 52：全角仮名 5 字（50）は入り 6 字（60）は入らない */
+    line-height: 1.15; /* 既存値を明示（PC の 20px を打ち消す） */
+  }
+  body.battle-viewport .battle-dock .battle-dock-actions .battle-log-toggle {
+    line-height: 1.5;
+  }
+  body.battle-viewport .battle-dock .divination-choice-name {
+    line-height: 15px; /* SP 10px：Before 15px */
+  }
+  body.battle-viewport .battle-dock .divination-choice-preview {
+    line-height: 14px; /* SP 9px：Before 14px */
+  }
+}
