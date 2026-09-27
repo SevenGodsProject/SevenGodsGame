@@ -1,3 +1,4 @@
+import './hudPlate.css'
 import { formatScaled } from '../displayScale'
 import { HP_GHOST_DRAIN_MS, HP_GHOST_HOLD_MS, HP_MAIN_MS } from './enemyVfxTiming'
 

@@ -1,0 +1,94 @@
+/* ============================================================
+   HUD Plate & Gauge Material v1（docs/HUD_PREMIUM_PRE_AUDIT.md §5〜§6）
+   ------------------------------------------------------------
+   アリーナ上部の名札 3 枚（敵・神・共鳴）とその中のゲージ 3 本・バッジの
+   「材質と角の形」だけを変える。寸法・余白・書体・文字サイズ・文言・DOM・
+   アニメーション・z-index は一切変えない（hudPlate.test.ts で機械的に固定）。
+
+   ・読み込み順に依存しない：HpBar.tsx から import され battle.css より先に入るため、
+     全セレクタを `body.battle-viewport .battle-main …`（0,3,1 以上）にして既存の
+     最大 0,3,1 に勝つ。
+   ・z-index を宣言しない：ゲージの艶はラベル（inset:0 の絶対配置で fill より上に
+     描かれる既存要素）の背景として敷く。これで「fill の上・文字の下」になる。
+   ・position: relative は名札の角金具（::before）の基準。オフセット無し＝寸法不変。
+     SP の敵・神の名札は既存で relative＋z-index:2（battle.css）で、それは上書きしない。
+   ============================================================ */
+
+/* --- 名札 3 枚：半透明の角丸箱 → 漆黒の札＋金の細縁＋角金具 --- */
+body.battle-viewport .battle-main .enemy-plate,
+body.battle-viewport .battle-main .player-plate,
+body.battle-viewport .battle-main .god-otomo-plate {
+  position: relative;
+  border-radius: 3px;
+  border-color: #b8914a8c;
+  background:
+    linear-gradient(180deg, #ffe7b012 0%, #ffe7b000 26%),
+    linear-gradient(180deg, #110d19f0 0%, #07060cf2 100%);
+  box-shadow:
+    inset 0 0 0 1px #000000b3,
+    inset 0 2px 0 -1px #ffe3a026,
+    0 3px 8px -2px #000000cc;
+}
+
+body.battle-viewport .battle-main .enemy-plate::before,
+body.battle-viewport .battle-main .player-plate::before,
+body.battle-viewport .battle-main .god-otomo-plate::before {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  pointer-events: none;
+  --hud-plate-corner: #e2bd6a;
+  background:
+    linear-gradient(var(--hud-plate-corner), var(--hud-plate-corner)) left top / 7px 2px no-repeat,
+    linear-gradient(var(--hud-plate-corner), var(--hud-plate-corner)) left top / 2px 7px no-repeat,
+    linear-gradient(var(--hud-plate-corner), var(--hud-plate-corner)) right top / 7px 2px no-repeat,
+    linear-gradient(var(--hud-plate-corner), var(--hud-plate-corner)) right top / 2px 7px no-repeat,
+    linear-gradient(var(--hud-plate-corner), var(--hud-plate-corner)) left bottom / 7px 2px no-repeat,
+    linear-gradient(var(--hud-plate-corner), var(--hud-plate-corner)) left bottom / 2px 7px no-repeat,
+    linear-gradient(var(--hud-plate-corner), var(--hud-plate-corner)) right bottom / 7px 2px no-repeat,
+    linear-gradient(var(--hud-plate-corner), var(--hud-plate-corner)) right bottom / 2px 7px no-repeat;
+}
+
+/* --- ゲージ（敵 HP・神 HP・共鳴）：pill → 角の立った溝＋金枠 --- */
+body.battle-viewport .battle-main .hp-bar,
+body.battle-viewport .battle-main .resonance-gauge {
+  border-radius: 2px;
+  background: linear-gradient(180deg, #05060b 0%, #10142a 100%);
+  box-shadow:
+    inset 0 1px 2px #000000e6,
+    0 0 0 1px #b8914a73;
+}
+
+/* 上面の艶：ラベル（fill・ゴーストより上、文字より下）の背景として敷く。
+   艶は上 30% で消え、文字の帯（中央 30〜70%）は明るくしない（Fast Gate 実測で HP 数字の
+   コントラストが 3.24→3.13 に下がったため、仕様の 42%/55% から 30%/62% へ調整）。
+   数値の縁取りを強め、白×緑 1.96・白×金 1.19 の低コントラストを補う */
+body.battle-viewport .battle-main .hp-bar-label,
+body.battle-viewport .battle-main .resonance-gauge-label {
+  background: linear-gradient(180deg, #ffffff38 0%, #ffffff00 30%, #00000000 62%, #00000040 100%);
+  font-variant-numeric: tabular-nums;
+  text-shadow:
+    0 0 2px #000,
+    0 1px 2px #000,
+    0 0 1px #000;
+}
+
+/* 決定162「追い詰めた」の赤い外周は残す（金枠の代わりに赤枠＋外光） */
+body.battle-viewport .battle-main .hp-bar.hp-bar-quarter {
+  box-shadow:
+    inset 0 1px 2px #000000e6,
+    0 0 0 1px #ff5c5c99,
+    0 0 12px #ff5c5c55;
+}
+
+/* 決定95 の mid/high グローの形を溝に合わせる（opacity・box-shadow・animation は既存のまま） */
+body.battle-viewport .battle-main .resonance-gauge-wrap::after {
+  border-radius: 3px;
+}
+
+/* --- 名札内のバッジ：pill → 札（角丸だけ。10px・padding・折返しは決定228/230 のまま） --- */
+body.battle-viewport .battle-main .enemy-plate .badge,
+body.battle-viewport .battle-main .player-plate .badge,
+body.battle-viewport .battle-main .god-otomo-plate .god-passive-badge {
+  border-radius: 3px;
+}
