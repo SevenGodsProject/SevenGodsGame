@@ -5572,6 +5572,14 @@ body.battle-viewport .player-panel {
     height: 140px;
   }
 
+  /* 決定238 候補：140px では「◯◯専用」行（本文の先頭・約 17px）を出さない。戦闘中の手札は選んだ神の
+     専用札しか来ないので情報は落ちず、金の縁（.card-view-exclusive）で専用札とは分かる。
+     『姉御の号令』（専用行＋効果文 3 行＋条件行 4 行）が下端から 12.1px はみ出していた。
+     決定236 の Art Window は専用札を本文の外（.card-view > .card-view-god）に出すため対象外＝据え置き */
+  body.battle-viewport .card-view-body > .card-view-god {
+    display: none;
+  }
+
   body.battle-viewport .battle-dock-row .hand {
     padding-top: 26px;
   }
