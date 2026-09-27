@@ -6828,3 +6828,23 @@ body.battle-viewport .battle-main > .battle-callout {
   .enemy-reaction.react-l1:not(.react-minor) { --kb: 0px; animation-name: none, none, impact-flash; }
   .god-strike.god-strike-heavy img { animation: none; }
 }
+
+/* ============================================================
+   決定237 Cast Flash Blend Hotfix（H0・CSS 1 宣言）
+   ------------------------------------------------------------
+   根本原因（docs/CARD_PLAY_TRAVEL_PRE_AUDIT.md §2 R2）：
+   .cast-flash-art の PNG は黒地で、mix-blend-mode: screen で舞台に「光だけ」を
+   乗せる前提（決定40）。ところが親 .cast-flash は position: fixed（＋z-index: 8）で
+   必ず独立した重なり（stacking context＝合成グループ）になるため、art の screen 合成は
+   そのグループの中（透明な背景）とだけ行われ、透明に対する screen は元の色そのもの
+   ＝黒地が消えずに ~386px の黒い四角として舞台と神の上に 0〜280ms 描かれていた。
+   修正：合成をグループの外側へ移す。.cast-flash 自身に mix-blend-mode: screen を付けると、
+   グループ全体（リング ::before・アイコン・art・決定224 の金の輪 ::after）が舞台の画素と
+   screen 合成され、黒地は舞台に溶けて光だけが残る。isolation: isolate は不要（fixed が
+   既に独立グループであり、追加すると意味が変わらないまま宣言が増えるだけ）。
+   位置・大きさ・時間（cast-flash-pop 0.35〜0.5s・CARD_PLAY_REVEAL_MS 280）は変えない。
+   副作用：アイコン・金の輪も screen になる（暗い舞台では見た目ほぼ同じ。明るい月の上では
+   やや淡くなる）。scripts/card-play-travel-audit/ の Fast Gate で視認を実測している。 */
+.cast-flash {
+  mix-blend-mode: screen;
+}
