@@ -61,7 +61,7 @@ const CARD_ART: Partial<Record<CardDefId, string>> = {
   card_ebisu_support_01: '/assets/cards/card_ebisu_support_01.webp',
   card_ebisu_attack_02: '/assets/cards/card_ebisu_attack_02.webp',
   card_ebisu_support_02: '/assets/cards/card_ebisu_support_02.webp',
-  card_taiyo_attack_01: '/assets/cards/card_taiyo_attack_01.webp',
+  card_taiyo_attack_01: '/assets/cards/card_taiyo_attack_01_v2.webp',
   card_taiyo_support_01: '/assets/cards/card_taiyo_support_01.webp',
   card_taiyo_attack_02: '/assets/cards/card_taiyo_attack_02.webp',
   card_taiyo_support_02: '/assets/cards/card_taiyo_support_02.webp',
