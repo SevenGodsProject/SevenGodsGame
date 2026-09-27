@@ -6618,3 +6618,115 @@ body.battle-viewport .battle-main > .battle-callout {
     animation: resonance-cutin-static-in 0.2s ease-out both;
   }
 }
+
+/* ============================================================
+   決定229 SP 舞台レイヤー分離（Narrow Pilot・<900px のみ）
+   ------------------------------------------------------------
+   SP では神・敵の絵が 3 列の列幅（敵 ≈40%・神 ≈33%）に閉じ込められ、contain の
+   ため幅で縮んでいた（絵は画面の 2.4〜3.5%・箱の 7 割が透明・HUD の下に縦 94〜312px
+   の空き）。HUD の名札・予告・共鳴は 3 列のまま残し、**神・敵の「舞台の箱」ごと**
+   列から外して、アリーナ下端の共通の地面に並べる。
+   ・箱ごと動かす：斬撃・ダメージ数字・金リング・被弾リング・撃破リングは
+     `.enemy-stage`／`.player-stage` の中（inset:0）にあるため、絵と着弾位置が
+     一緒に動き、ずれない（JS の座標計算は無い）
+   ・箱は正方形（原画 768²／640² と同じ比）＝箱と絵がほぼ一致し、数字（top:34%）が
+     絵の胸に来る。上端は名札＋吹き出しの下（max-height）に止める
+   ・名札（z 2）は絵（z 1）より前。吹き出しは z 3
+   ・DOM／文言／数値は不変。PC（>=900px）には掛からない
+   ============================================================ */
+@media (max-width: 899px) {
+  /* パネルは名札の列として残し、舞台の箱の位置の基準をアリーナにする */
+  body.battle-viewport .battle-main > .enemy-panel,
+  body.battle-viewport .ally-row > .player-panel {
+    position: static;
+  }
+
+  body.battle-viewport .enemy-plate,
+  body.battle-viewport .player-plate {
+    position: relative;
+    z-index: 2;
+  }
+
+  body.battle-viewport .enemy-speech-bubble {
+    z-index: 3;
+  }
+
+  body.battle-viewport .enemy-stage,
+  body.battle-viewport .player-stage {
+    position: absolute;
+    z-index: 1;
+    bottom: 8px;
+    aspect-ratio: 1 / 1;
+    /* 名札（最小 72px）＋吹き出し（33px）＋余白の下に頭を止める */
+    max-height: calc(100% - 124px);
+  }
+
+  /* 地面の横幅の配分（重なり 0 を最悪ケースで保証する式）：
+     ・OTOMO は共鳴列の右端（--d229-otomo＝OTOMO の絵の箱。SP の既存値 clamp(48px, 8vh, 76px)）
+     ・床幅＝内幅 − OTOMO − 余白。敵の箱 Be と神の箱 Bg＝0.8×Be（設計の序列 神＝敵の 0.82）
+     ・敵の原画は左右に最低 10%／右に最低 2% の透明の余白がある（実測・6 体）。敵の箱は
+       左余白の分だけ左へ出してよい（絵はアリーナ内に残る）
+     ・神の箱＝敵の箱の右端 − 敵の右余白（2%）＋ 6px。神の原画は左右の余白がほぼ 0 のため
+       これで敵と神の絵は最悪でも 6px 離れる
+     ・0.88×Be ＋ 0.8×Be ＝ 床幅 − 6px → Be ＝（床幅 − 6px）÷ 1.68 */
+  /* 決定229 v2：大きさの基準（--d229-otomo-basis＝v1 の OTOMO）は据え置き＝神・敵の大きさは v1 と同じ。
+     OTOMO だけ 0.75 倍にし、空いた幅（≈ basis の 0.225 倍）の 6 割を敵と神の間へ、残りを神と OTOMO の間へ */
+  body.battle-viewport .battle-main {
+    --d229-otomo-basis: clamp(48px, 8vh, 76px);
+    --d229-otomo: calc(var(--d229-otomo-basis) * 0.75);
+    --d229-floor: calc(100% - 16px - var(--d229-otomo-basis) * 0.9);
+    --d229-enemy: min(calc((var(--d229-floor) - 6px) / 1.68), 300px);
+    --d229-god: min(calc(var(--d229-enemy) * 0.8), 240px);
+    --d229-gap: calc(6px + var(--d229-otomo-basis) * 0.135);
+  }
+
+  /* 敵＝左。v2 で左右反転するため、透明の余白は左に最低 2%（原画の右余白）・右に最低 10%
+     （原画の左余白）になる。箱は左余白 2% の分だけ左へ出す */
+  body.battle-viewport .enemy-stage {
+    left: calc(8px - var(--d229-enemy) * 0.02);
+    width: var(--d229-enemy);
+  }
+
+  /* 神＝敵の右隣。敵の箱の右端 − 敵の右余白（10%）＋ 間隔。v1 と同じ位置＋間隔の増分 */
+  body.battle-viewport .player-stage {
+    left: calc(8px + var(--d229-enemy) * 0.88 + var(--d229-gap));
+    width: var(--d229-god);
+  }
+
+  /* 絵は箱いっぱい（列幅用の上限・82% を外す）。足元は箱の下端 */
+  body.battle-viewport .enemy-avatar {
+    max-width: none;
+    min-height: 0;
+  }
+
+  /* 決定229 v2：向かい合う構図。原画は神・敵とも大半が画面の左向き（敵 7 体中 4 体が左・3 体が正面、
+     文字・紋章なし）。SP では敵が左に立つため、敵の絵だけを左右反転して神の方（右）を向かせる。
+     神は反転しない（左向き＝敵の方。福永の兜の文字も守る）。
+     ・反転は一番内側の絵（`.enemy-avatar`）だけ。着弾レイヤー（兄弟の `.enemy-hit-layer`）・
+       被弾のノックバック（`.enemy-reaction`）・撃破（`.enemy-collapse`）・連撃の突進
+       （`.enemy-avatar-wrap`）は反転しないので、着弾位置と向きは不変
+     ・`transform` ではなく独立した `scale` プロパティ（アニメーションの transform と合成される）
+     ・この要素の突進（enemy-lunge*）は `--atk-x` で向きを決めるため、反転で逆向きにならないよう
+       この要素だけ −1 にする（見た目は +x＝神の方へ突く） */
+  body.battle-viewport .enemy-avatar {
+    scale: -1 1;
+    --atk-x: -1;
+  }
+
+  /* OTOMO は主役ではないので 0.75 倍（大きさの基準は据え置き） */
+  body.battle-viewport .portrait img {
+    height: var(--d229-otomo);
+  }
+
+  body.battle-viewport .player-avatar {
+    max-width: none;
+    max-height: none;
+    min-height: 0;
+  }
+
+  /* OTOMO は共鳴列の右端（アリーナの内側の端）に寄せ、神の絵に重ねない */
+  body.battle-viewport .god-otomo-portraits {
+    justify-content: flex-end;
+    margin-right: -20px;
+  }
+}
