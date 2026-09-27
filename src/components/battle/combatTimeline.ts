@@ -5,6 +5,7 @@ import {
   BONUS_HIT_STOP_MS,
   BURST_HIT_STOP_MS,
   BURST_IMPACT_MS,
+  CARD_HEAVY_IMPACT_MS,
   CARD_HIT_GAP_MS,
   CARD_IMPACT_MS,
   DEFEAT_BEAT_OFFSET_MS,
@@ -13,6 +14,7 @@ import {
   DEFEAT_FLASH_AFTER_MS,
   ENEMY_LUNGE_PEAK_MS,
   FINAL_HIT_STOP_MS,
+  HEAVY_STRIKE_MIN_TIER,
   HIT_STOP_MS,
   HP_GHOST_DRAIN_MS,
   HP_GHOST_HOLD_MS,
@@ -75,6 +77,11 @@ export type BatchPlan = {
   /** 最後の着弾（撃破・敗北演出の起点） */
   finalStep: ImpactStep | null
   lastImpactMs: number | null
+  /**
+   * Combat Feel v2 Pilot：カード本体の神の突き。'heavy'＝生 tier≥3 の本体（溜め→重い突き・着弾 CARD_HEAVY_IMPACT_MS）。
+   * card 役の敵ダメージが無ければ null。撃破による tier 4 上書きより前の生 tier で決める（撃破だから重い、にはしない）
+   */
+  strike: 'light' | 'heavy' | null
 }
 
 export type PlanContext = {
@@ -98,6 +105,28 @@ export function planBatch(events: readonly GameEvent[], ctx: PlanContext = {}): 
   const isSpecial = acted?.kind === 'special' || (isMulti && !!acted?.label)
   const enemyImpact = enemyLungePeak(ctx.enemyVisualType)
 
+  // Combat Feel v2 Pilot：前走査で card 役の敵ダメージの生 tier の最大を求める（本ループと同じフラグ規則）
+  const hasBurst = events.some((e) => e.t === 'RESONANCE_BURST')
+  let maxCardTier = 0
+  {
+    let pEnemyTurn = false
+    let pAfterBurst = false
+    let pInBonus = false
+    let pInPassive = false
+    for (const e of events) {
+      if (e.t === 'ENEMY_ACTED') pEnemyTurn = true
+      else if (e.t === 'RESONANCE_BURST') pAfterBurst = true
+      else if (e.t === 'BONUS_TRIGGERED') pInBonus = true
+      else if (e.t === 'PASSIVE_TRIGGERED') pInPassive = true
+      if (e.t !== 'DAMAGE_DEALT' || e.target !== 'enemy') continue
+      if (pAfterBurst || pEnemyTurn || pInPassive || pInBonus) continue
+      maxCardTier = Math.max(maxCardTier, damageFeelTier(e.amount + e.blocked))
+    }
+  }
+  const heavy = !ctx.reduced && !hasBurst && maxCardTier >= HEAVY_STRIKE_MIN_TIER
+  const cardImpactMs = heavy ? CARD_HEAVY_IMPACT_MS : CARD_IMPACT_MS
+  const strike: BatchPlan['strike'] = maxCardTier === 0 ? null : heavy ? 'heavy' : 'light'
+
   const steps: ImpactStep[] = []
   let enemyTurn = false
   let afterBurst = false
@@ -108,7 +137,7 @@ export function planBatch(events: readonly GameEvent[], ctx: PlanContext = {}): 
   let passiveHits = 0
   let burstHits = 0
   let selfHits = 0
-  let lastBodyAt = CARD_IMPACT_MS
+  let lastBodyAt = cardImpactMs
   let lastSelfAt: number | null = null
 
   for (const e of events) {
@@ -140,7 +169,7 @@ export function planBatch(events: readonly GameEvent[], ctx: PlanContext = {}): 
         bonusHits += 1
       } else {
         role = 'card'
-        atMs = CARD_IMPACT_MS + cardHits * CARD_HIT_GAP_MS
+        atMs = cardImpactMs + cardHits * CARD_HIT_GAP_MS
         lastBodyAt = atMs
         cardHits += 1
       }
@@ -158,7 +187,7 @@ export function planBatch(events: readonly GameEvent[], ctx: PlanContext = {}): 
         lastSelfAt = atMs
       } else {
         role = 'selfCost'
-        atMs = CARD_IMPACT_MS
+        atMs = cardImpactMs
       }
       const tier = damageFeelTier(e.amount, { special: role === 'enemy' && isSpecial })
       steps.push({ target: 'self', amount: e.amount, blocked: e.blocked, atMs, stopMs: 0, tier, role, final: false })
@@ -216,6 +245,7 @@ export function planBatch(events: readonly GameEvent[], ctx: PlanContext = {}): 
     revealMs: burst ? BURST_IMPACT_MS : impacts.length > 0 ? Math.min(...impacts) : 0,
     finalStep,
     lastImpactMs: impacts.length > 0 ? Math.max(...impacts) : null,
+    strike,
   }
 }
 

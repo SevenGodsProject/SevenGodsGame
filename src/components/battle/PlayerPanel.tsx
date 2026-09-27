@@ -31,6 +31,8 @@ type PlayerPanelProps = {
   /** VFX-03：直近の神攻撃が共鳴BURSTか（fx.burstHit）。攻撃モーション（god-lunge）を
    * 共鳴カットイン終了＝burst-banner出現（BURST_GOD_ATTACK_MS）まで遅らせる */
   burstHit: boolean
+  /** Combat Feel v2 Pilot：直近の神攻撃が重い突きか（fx.heavyStrike）。溜め→突き god-strike-heavy（着弾 CARD_HEAVY_IMPACT_MS） */
+  heavyStrike?: boolean
   floatingNumbers: FloatingNumber[]
   /** Phase 6-A：表示HP（着弾に合わせて追従する値。engine の HP ではない） */
   hpShown: number
@@ -55,6 +57,7 @@ export function PlayerPanel({
   multiHitCount,
   specialHit,
   burstHit,
+  heavyStrike = false,
   floatingNumbers,
   hpShown,
   windUp = false,
@@ -123,7 +126,7 @@ export function PlayerPanel({
         <div className={`player-windup${windUp ? ' is-winding' : ''}`}>
           <div
             key={`god-${attackKey}`}
-            className={`player-avatar-wrap${attackKey > 0 ? (burstHit ? ' god-burst-strike' : ' god-strike') : ''}`}
+            className={`player-avatar-wrap${attackKey > 0 ? (burstHit ? ' god-burst-strike' : heavyStrike ? ' god-strike god-strike-heavy' : ' god-strike') : ''}`}
           >
             {/* Phase 6-B：被弾の揺れ・閃光は立ち絵そのものに掛ける（旧：HPバーのラッパー） */}
             <div

@@ -6775,3 +6775,41 @@ body.battle-viewport .battle-main > .battle-callout {
     margin-left: 0;
   }
 }
+
+/* === Combat Feel v2 Pilot：Card Hit Weight Ladder v1（表示専用） ===
+   床：L1 の体の反応（kb 4px・±4px）。hit-shake-l1 は ⚡(react-minor)・自分側 L1 が使うので触らず、別の keyframes を使う。
+   ⚡ の小反応は `react-l1 react-minor` の両方を持つため、:not(.react-minor) で決定224 の react-minor（hit-shake-l1・kb 3px）を守る。
+   重さの段：生 tier≥3 の本体だけ溜め→突き。最前 28.85%＝150ms＝enemyVfxTiming.ts の CARD_HEAVY_IMPACT_MS と一致
+   （Human QA で 190→150ms。引き 16.35%＝85ms、引き→最前 65ms は据え置き） */
+@keyframes hit-shake-light {
+  0% { transform: translate(0, 0); }
+  30% { transform: translate(-4px, 1px); }
+  60% { transform: translate(4px, -1px); }
+  100% { transform: translate(0, 0); }
+}
+.enemy-reaction.react-l1:not(.react-minor) {
+  --kb: 4px;
+  animation-name: juice-stop, hit-shake-light, impact-flash;
+  animation-duration: var(--stop, 0ms), 0.3s, 0.25s;
+}
+@keyframes god-strike-heavy {
+  0%    { transform: translate(calc(var(--atk-x, -1) * -6px),  calc(var(--atk-y, 0) * -6px))  scale(0.97); }
+  16.35% { transform: translate(calc(var(--atk-x, -1) * -13px), calc(var(--atk-y, 0) * -13px)) scale(0.95); }
+  28.85% { transform: translate(calc(var(--atk-x, -1) * var(--strike-heavy, 28px)), calc(var(--atk-y, 0) * var(--strike-heavy, 28px))) scale(1.1); }
+  62%   { transform: translate(calc(var(--atk-x, -1) * -4px),  calc(var(--atk-y, 0) * -4px))  scale(0.99); }
+  100%  { transform: translate(0, 0) scale(1); }
+}
+.god-strike.god-strike-heavy img {
+  animation:
+    enemy-idle 3.4s ease-in-out infinite,
+    god-strike-heavy 0.52s cubic-bezier(0.2, 0.8, 0.3, 1);
+}
+/* SP（決定229 の舞台）：神と敵が近いので突きは 22px（今の 18px の +4px まで） */
+@media (max-width: 899px) {
+  body.battle-viewport .player-panel { --strike-heavy: 22px; }
+}
+/* reduced-motion：上の 2 ルールは既存の reduced ルールより詳細度が同じか高く、後ろにあるため、ここで必ず打ち消す */
+@media (prefers-reduced-motion: reduce) {
+  .enemy-reaction.react-l1:not(.react-minor) { --kb: 0px; animation-name: none, none, impact-flash; }
+  .god-strike.god-strike-heavy img { animation: none; }
+}

@@ -1,3 +1,4 @@
+/// <reference types="node" />
 import { describe, expect, it } from 'vitest'
 import type { GameEvent } from '../../core/types'
 import {
@@ -12,6 +13,7 @@ import {
   BURST_BANNER_MS,
   BURST_GOD_ATTACK_MS,
   BURST_IMPACT_MS,
+  CARD_HEAVY_IMPACT_MS,
   CARD_HIT_GAP_MS,
   CARD_IMPACT_MS,
   ENEMY_LUNGE_PEAK_MS,
@@ -247,5 +249,117 @@ describe('決定224：条件⚡の hit stop（PAYOFF は通常ヒットより上
   it('reduced-motion では⚡の hit stop も 0', () => {
     const plan = planBatch(bonusBatch, { reduced: true })
     expect(plan.steps.find((s) => s.role === 'bonus')!.stopMs).toBe(0)
+  })
+})
+
+describe('Combat Feel v2 Pilot：Card Hit Weight Ladder v1（表示専用）', () => {
+  const bonusEv: GameEvent = { t: 'BONUS_TRIGGERED', defId: 'card_taiyo_attack_01' as never, when: 'charged' }
+  const burstEv: GameEvent = { t: 'RESONANCE_BURST', total: 7 }
+
+  it('1. hit stop の階層：L1 30 < L2 40 < L3 45 < ⚡50 < L4 60 < 神の一撃 80 < 撃破 90（単調増加）', async () => {
+    const { BONUS_HIT_STOP_MS, BURST_HIT_STOP_MS, FINAL_HIT_STOP_MS: finalStop } = await import('./enemyVfxTiming')
+    const bodyStop = (amount: number) => planBatch([cardPlayed, dmg('enemy', amount)]).steps[0].stopMs
+    const l1 = bodyStop(3)
+    const l2 = bodyStop(12)
+    const l3 = bodyStop(20)
+    const l4 = bodyStop(30)
+    expect([l1, l2, l3, l4]).toEqual([30, 40, 45, 60])
+    const bonus = planBatch([cardPlayed, dmg('enemy', 3), bonusEv, dmg('enemy', 4)]).steps.find((s) => s.role === 'bonus')!.stopMs
+    const burst = planBatch([cardPlayed, burstEv, dmg('enemy', 36)]).steps.find((s) => s.role === 'burst')!.stopMs
+    const final = planBatch([cardPlayed, dmg('enemy', 3), ended('won')]).steps[0].stopMs
+    expect([bonus, burst, final]).toEqual([BONUS_HIT_STOP_MS, BURST_HIT_STOP_MS, finalStop])
+    const ladder = [l1, l2, l3, bonus, l4, burst, final]
+    expect(ladder).toEqual([30, 40, 45, 50, 60, 80, 90])
+    for (let i = 1; i < ladder.length; i++) expect(ladder[i]).toBeGreaterThan(ladder[i - 1])
+  })
+
+  it('2. 生 tier≥3 の本体は重い突き（着弾 CARD_HEAVY_IMPACT_MS）、L2 以下は通常（90ms）', async () => {
+    const { CARD_HEAVY_IMPACT_MS } = await import('./enemyVfxTiming')
+    const heavy = planBatch([cardPlayed, dmg('enemy', 20)])
+    expect(heavy.steps[0].atMs).toBe(CARD_HEAVY_IMPACT_MS)
+    expect(heavy.strike).toBe('heavy')
+    expect(heavy.enemyReactions[0].atMs).toBe(CARD_HEAVY_IMPACT_MS)
+    for (const amount of [3, 12]) {
+      const light = planBatch([cardPlayed, dmg('enemy', amount)])
+      expect(light.steps[0].atMs).toBe(CARD_IMPACT_MS)
+      expect(light.strike).toBe('light')
+    }
+    // ブロックで吸収された分も含めた「与えた量」で決める（表示の段階と同じ規則）
+    expect(planBatch([cardPlayed, dmg('enemy', 5, 15)]).strike).toBe('heavy')
+    // card 役の敵ダメージが無いバッチは null
+    expect(planBatch([{ t: 'ENEMY_ACTED', kind: 'attack', amount: 9 }, dmg('self', 9)]).strike).toBeNull()
+  })
+
+  it('3. 同じバッチに神の一撃（RESONANCE_BURST）があれば本体は通常（90ms・light）＝神の一撃は不変', () => {
+    const plan = planBatch([cardPlayed, dmg('enemy', 20), { t: 'RESONANCE_GAINED', amount: 1, total: 7 }, burstEv, dmg('enemy', 36)])
+    const card = plan.steps.find((s) => s.role === 'card')!
+    const burst = plan.steps.find((s) => s.role === 'burst')!
+    expect(card.atMs).toBe(CARD_IMPACT_MS)
+    expect(plan.strike).toBe('light')
+    expect(burst.atMs).toBe(BURST_IMPACT_MS)
+  })
+
+  it('4. reduced-motion：重い本体でも着弾 90ms・hit stop 0・light', () => {
+    const plan = planBatch([cardPlayed, dmg('enemy', 30)], { reduced: true })
+    expect(plan.steps[0].atMs).toBe(CARD_IMPACT_MS)
+    expect(plan.steps[0].stopMs).toBe(0)
+    expect(plan.strike).toBe('light')
+  })
+
+  it('5. 重い本体＋⚡：本体→⚡の間隔は BONUS_GAP_MS のまま、自傷は本体と同時', async () => {
+    const { BONUS_GAP_MS, CARD_HEAVY_IMPACT_MS } = await import('./enemyVfxTiming')
+    const plan = planBatch([cardPlayed, dmg('enemy', 17), dmg('self', 2), bonusEv, dmg('enemy', 4)])
+    const body = plan.steps.find((s) => s.role === 'card')!
+    const bonus = plan.steps.find((s) => s.role === 'bonus')!
+    const selfCost = plan.steps.find((s) => s.role === 'selfCost')!
+    expect(body.atMs).toBe(CARD_HEAVY_IMPACT_MS)
+    expect(bonus.atMs - body.atMs).toBe(BONUS_GAP_MS)
+    expect(selfCost.atMs).toBe(body.atMs)
+    // 決定224：⚡の反応は minor のまま（重い本体に引きずられない）
+    expect(plan.enemyReactions[1]).toMatchObject({ minor: true, tier: 1, stopMs: 50 })
+  })
+
+  it('6. 撃破：軽いカードの撃破は light（撃破で tier 4 になっても重い突きにしない）、重いカード撃破は勝利の時刻表が溜めの分（CARD_HEAVY_IMPACT_MS − CARD_IMPACT_MS＝60ms）だけずれる', () => {
+    const light = planBatch([cardPlayed, dmg('enemy', 3), ended('won')])
+    expect(light.finalStep!.tier).toBe(4)
+    expect(light.strike).toBe('light')
+    expect(light.finalStep!.atMs).toBe(CARD_IMPACT_MS)
+    const heavy = planBatch([cardPlayed, dmg('enemy', 20), ended('won')])
+    expect(heavy.strike).toBe('heavy')
+    const vl = planVictory(light.finalStep)
+    const vh = planVictory(heavy.finalStep)
+    expect(vh.finalImpactMs - vl.finalImpactMs).toBe(CARD_HEAVY_IMPACT_MS - CARD_IMPACT_MS)
+    expect(vh.collapseStartMs - vl.collapseStartMs).toBe(CARD_HEAVY_IMPACT_MS - CARD_IMPACT_MS)
+    expect(vh.collapseEndMs - vl.collapseEndMs).toBe(CARD_HEAVY_IMPACT_MS - CARD_IMPACT_MS)
+    expect(vh.beatStartMs - vl.beatStartMs).toBe(CARD_HEAVY_IMPACT_MS - CARD_IMPACT_MS)
+    expect(vh.rewardMs - vl.rewardMs).toBe(CARD_HEAVY_IMPACT_MS - CARD_IMPACT_MS)
+  })
+
+  it('7. CARD_HEAVY_IMPACT_MS は battle.css の god-strike-heavy（0.52s・最前 28.85%）と同期', async () => {
+    const { CARD_HEAVY_IMPACT_MS, HEAVY_STRIKE_MIN_TIER } = await import('./enemyVfxTiming')
+    expect(CARD_HEAVY_IMPACT_MS).toBe(Math.round(520 * 0.2885))
+    expect(HEAVY_STRIKE_MIN_TIER).toBe(3)
+  })
+})
+
+describe('Combat Feel v2 Pilot：CSS の衝突面（決定224 の⚡反応・reduced-motion を守る）', () => {
+  it('8. 追記ブロックの L1 床は react-minor（⚡）を上書きせず、reduced で打ち消され、SP の重い突きは 22px', async () => {
+    const { readFileSync } = await import('node:fs')
+    const { fileURLToPath } = await import('node:url')
+    const css = readFileSync(fileURLToPath(new URL('./battle.css', import.meta.url)), 'utf8').replace(/\/\*[\s\S]*?\*\//g, '')
+    const start = css.indexOf('@keyframes hit-shake-light')
+    expect(start).toBeGreaterThan(0)
+    const block = css.slice(start)
+    // ⚡の小反応は `react-l1 react-minor` を持つ。床のルールは :not(.react-minor) で⚡を除外する
+    expect(block).toMatch(/\.enemy-reaction\.react-l1:not\(\.react-minor\)\s*\{[^}]*hit-shake-light/)
+    expect(block).not.toMatch(/\.enemy-reaction\.react-l1\s*\{/)
+    // 既存の react-minor（決定224）は hit-shake-l1 のまま
+    expect(css).toMatch(/\.enemy-reaction\.react-minor\s*\{[^}]*hit-shake-l1/)
+    // reduced-motion の打ち消しが同じブロック内（後ろ）にある
+    const reduced = block.slice(block.lastIndexOf('@media (prefers-reduced-motion: reduce)'))
+    expect(reduced).toMatch(/\.enemy-reaction\.react-l1:not\(\.react-minor\)\s*\{[^}]*animation-name:\s*none,\s*none,\s*impact-flash/)
+    expect(reduced).toMatch(/\.god-strike\.god-strike-heavy img\s*\{\s*animation:\s*none/)
+    expect(block).toMatch(/--strike-heavy:\s*22px/)
+    expect(block).toMatch(/god-strike-heavy 0\.52s/)
   })
 })

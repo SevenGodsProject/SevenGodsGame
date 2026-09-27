@@ -422,6 +422,7 @@ export function BattleScreen({
             multiHitCount={fx.multiHitCount}
             specialHit={fx.specialHit}
             burstHit={fx.burstHit}
+            heavyStrike={fx.heavyStrike}
             floatingNumbers={playerNumbers}
             hpShown={presentation.playerHpShown}
             windUp={windUp}

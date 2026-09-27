@@ -129,7 +129,19 @@ export const BONUS_GAP_MS = 150
 export const PASSIVE_AFTER_ENEMY_MS = 280
 
 /** 対象要素だけに掛ける hit stop（演出段階＝FeelTier 別。ダメージ計算とは無関係） */
-export const HIT_STOP_MS: Record<1 | 2 | 3 | 4, number> = { 1: 0, 2: 20, 3: 45, 4: 60 }
+/**
+ * Combat Feel v2 Pilot（Card Hit Weight Ladder v1）：L1 0→30・L2 20→40 で最頻の一撃に「止まり」の床を作る。
+ * 単調性：L1 30 < L2 40 < L3 45 < ⚡50 < L4 60 < burst 80 < final 90
+ */
+export const HIT_STOP_MS: Record<1 | 2 | 3 | 4, number> = { 1: 30, 2: 40, 3: 45, 4: 60 }
+/**
+ * Combat Feel v2 Pilot：生 tier≥3 のカード本体だけ「重い突き」（battle.css の god-strike-heavy 0.52s）の
+ * 28.85%＝最前で着弾する。通常の CARD_IMPACT_MS（90）より 60ms の溜め（Human QA「多少もたつく」→ 190→150。
+ * 突きの速さ＝引き→最前 65ms は据え置き、引きの時間だけ短縮）。着弾は commit 後なので入力ブロックは増えない
+ */
+export const CARD_HEAVY_IMPACT_MS = 150
+/** 重い突きになる演出段階（FeelTier）。閾値は feelTier.ts（RULES 由来）のまま＝新しい数値閾値は作らない */
+export const HEAVY_STRIKE_MIN_TIER = 3
 /**
  * 決定224：条件⚡の追加着弾の hit stop。通常ヒットの最大（L3＝45）より上、L4（60）・神の一撃（80）より下。
  * 豪快な一撃は姉御の号令込みで本体が L3 になるため、40 では⚡が本体に並んでしまう

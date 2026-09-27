@@ -5,6 +5,7 @@ import { getIntentPowerTier, type PowerTier } from './cardStyle'
 import { damageFeelTier, type FeelTier } from './feelTier'
 import { formatScaled } from '../displayScale'
 import { planBatch } from './combatTimeline'
+import { prefersReducedMotion } from './reducedMotion'
 
 /**
  * HOTFIX-DISPLAY-SCALE-TOAST：カード使用結果トーストの表示文言。
@@ -101,6 +102,9 @@ export type BattleFx = {
    * 神の攻撃モーション・敵側の被弾演出を共鳴カットイン→burst-bannerの後ろへ
    * 遅らせる（enemyVfxTiming.tsのBURST_*）。表示のみ、combatは確定済み */
   burstHit: boolean
+  /** Combat Feel v2 Pilot：直近の神攻撃が「重い突き」（生 tier≥3 の本体・溜め→突き）だったか。
+   * 着弾計画（BatchPlan.strike）と共有。burstHit と同じ更新規則。表示のみ */
+  heavyStrike: boolean
   /** 決定128：直近の自分→敵の被弾の演出段階（L1〜L4。同バッチ最大ダメージ、BURSTはL4） */
   enemyHitTier: FeelTier
   /**
@@ -132,6 +136,7 @@ const INITIAL_FX: BattleFx = {
   multiHitCount: 0,
   specialHit: false,
   burstHit: false,
+  heavyStrike: false,
   enemyHitTier: 2,
   revealDelayMs: 0,
 }
@@ -161,7 +166,8 @@ export function useBattleFx(log: GameEvent[], apCurrent: number, enemyVisualType
     const apDelta = apCurrent - prevAp.current
     prevAp.current = apCurrent
     if (newEvents.length === 0) return
-    const batchPlan = planBatch(newEvents, { enemyVisualType })
+    // Combat Feel v2 Pilot：reduced を渡し、重い突きの判定と revealDelayMs を他の planBatch 呼び出しと一致させる
+    const batchPlan = planBatch(newEvents, { enemyVisualType, reduced: prefersReducedMotion() })
 
     let enemyHit = 0
     let selfHit = 0
@@ -357,6 +363,7 @@ export function useBattleFx(log: GameEvent[], apCurrent: number, enemyVisualType
         // （カード自身のダメージと同バッチでも、1回のlunge/シェイクとしてburst側の
         // タイミングに揃える。数字はイベント単位で個別に遅延＝useFloatingNumbers）
         burstHit: godAttack > 0 ? burst > 0 : prev.burstHit,
+        heavyStrike: godAttack > 0 ? batchPlan.strike === 'heavy' : prev.heavyStrike,
         enemyHitTier: enemyHit > 0 ? (batchPlan.outcome === 'won' ? 4 : damageFeelTier(maxEnemyHitAmount, { burst: burst > 0 })) : prev.enemyHitTier,
         revealDelayMs: resultToast || miniResult ? batchPlan.revealMs : prev.revealDelayMs,
       }))
