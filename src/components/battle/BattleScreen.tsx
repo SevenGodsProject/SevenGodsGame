@@ -17,6 +17,7 @@ import { detectOtomoLevelUp } from '../setup/otomoGrowthDisplay'
 import { useBattleFx } from './useBattleFx'
 import { dealsEnemyDamage, useMobileAutoFocus } from './useMobileAutoFocus'
 import { useCombatPresentation } from './useCombatPresentation'
+import { useCardTravel } from './useCardTravel'
 import { BURST_BANNER_MS, BURST_READY_LEAD_MS } from './enemyVfxTiming'
 import { CUTIN_FALLBACK_MS } from './BattleResonanceCutin'
 import { BossEntrance } from './BossEntrance'
@@ -102,6 +103,8 @@ export function BattleScreen({
   // Phase 6-A：表示HP・撃破／結果の順序・大きな一撃の揺れ（表示専用。engine の状態・タイミングは不変）
   const arenaRef = useRef<HTMLDivElement>(null)
   const presentation = useCombatPresentation(log, state, arenaRef)
+  // Card Travel v1「神へ捧げる」：出したカードの複製を神の立ち絵へ飛ばす（表示専用・入力ロック／時刻表は不変）
+  useCardTravel(pendingCardUid)
   // Phase 6-C（決定166）：良い判断が成立した瞬間の短い評価（表示専用。1バッチ最大1件）
   const decision = useDecisionCallout(log, state)
 

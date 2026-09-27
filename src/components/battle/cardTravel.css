@@ -1,0 +1,49 @@
+/* Card Travel v1「神へ捧げる」（docs/CARD_PLAY_TRAVEL_PRE_AUDIT.md §6-3・表示専用）。
+   battle.css は触らない。ここの選択子は battle.css の .card-view-playing（0,1,0）・
+   .card-view.card-view-ready（0,2,0）・body.battle-viewport .card-view（0,2,1）より高いか同じ詳細度で、
+   かつ衝突するプロパティを持たない＝読み込み順に依存しない。 */
+
+/* ゴーストが飛んでいる間、手札の元カードは見せない（card-play を止めてその場で不可視）。
+   commit（280ms）で DOM ごと消える。詳細度 (0,3,0) > .card-view-playing (0,1,0) */
+.card-view.card-view-playing[data-travel] {
+  animation: none;
+  opacity: 0;
+}
+
+/* body 直下の fixed 層。詳細度 (0,2,1)：.card-view.card-view-ready (0,2,0) の translate／scale に勝つ。
+   READY／hover の持ち上げは useCardTravel が中心合わせ＋scale(s0) で引き継ぐので、ここでは二重に掛けない */
+body .card-view.card-travel-ghost {
+  position: fixed;
+  margin: 0;
+  box-sizing: border-box;
+  z-index: 7; /* cast-flash（8）の下＝閃光の光に包まれて届く。報酬（9）より下 */
+  pointer-events: none;
+  cursor: default;
+  transform-origin: 50% 50%;
+  translate: none;
+  scale: none;
+  transition: none;
+  animation: none;
+  will-change: transform, opacity;
+}
+
+.card-view.card-travel-ghost .card-view-shine {
+  display: none;
+}
+
+/* reduced-motion：ゴーストは出さない（useCardTravel が判定）。元カードはその場で 120ms の opacity フェードのみ
+   （translate／scale を動かさない＝§2 R5 も同時に解消）。詳細度 (0,2,0) > .card-view-playing (0,1,0) */
+@keyframes card-play-reduced {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card-view.card-view-playing {
+    animation: card-play-reduced 0.12s linear forwards;
+  }
+}
