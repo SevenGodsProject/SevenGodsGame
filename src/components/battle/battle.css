@@ -2499,6 +2499,21 @@
     inset 0 1px 2px #ffffff77;
 }
 
+/* コスト珠を角に固定する（CSS のみ・見た目の位置は従来と同じ）。
+   `.card-view > *:not(.card-view-clip)`（詳細度 0,2,0）の position:relative が上の `.card-view-cost`（0,1,0）の
+   absolute を上書きし、珠が flex の流れに入っていた。そのため文字量の多いカードでは珠が flex-shrink で縦に潰れ
+   （SP 26×17・PC 26×20.5）、珠の 26px＋gap ぶん本文が下へ押し出されて SP でカード下端からはみ出していた。
+   top／left は従来の見た目（カード外形の左上から -1px）＝ padding＋border − 10px に合わせる */
+.card-view > .card-view-cost {
+  position: absolute;
+  top: -2px;
+  left: -2px;
+}
+body.battle-viewport .card-view > .card-view-cost {
+  top: -3px;
+  left: -3px;
+}
+
 /* 背景・box-shadow本体はCardView.tsxのインラインstyleで神ごとに出し分けるため、
    ここでは専用カードだけの追加装飾（枠の二重ライン）のみを持たせる */
 .card-view-exclusive {
