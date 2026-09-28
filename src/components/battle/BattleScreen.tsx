@@ -21,6 +21,8 @@ import { useCardTravel } from './useCardTravel'
 import { useReactionLanguage } from './useReactionLanguage'
 import { BURST_BANNER_MS, BURST_READY_LEAD_MS } from './enemyVfxTiming'
 import { CUTIN_FALLBACK_MS } from './BattleResonanceCutin'
+import { createGodStrikeVideoPreload, isGodStrikeVideoReady, releaseGodStrikeVideo } from './godStrikeVideo'
+import { prefersReducedMotion } from './reducedMotion'
 import { BossEntrance } from './BossEntrance'
 import { deriveDefeatCause } from './defeatCause'
 import { useDecisionCallout } from './useDecisionCallout'
@@ -167,10 +169,16 @@ export function BattleScreen({
   // fx.miniResultKeyもfx.burstKeyと同じバッチ内で進む（useBattleFx.ts参照）。
   const suppressedMiniResultKeyRef = useRef<number | null>(null)
   const cutinLeadTimerRef = useRef<number | null>(null)
+  // 決定250 God Strike Premium Cut-in v1（大耀のみ）：戦闘開始時に先読みした <video>（下の stageGodId 効果）と、
+  // commit 時に 1 回だけ決めた「今回のカットインで使う <video>」。どちらも presentation only。
+  // 採用判定は commit のこの瞬間だけ（途中で切り替えない）。reduced／未先読み／error は null＝現行の静止カットイン
+  const godStrikeVideoRef = useRef<HTMLVideoElement | null>(null)
+  const cutinVideoRef = useRef<HTMLVideoElement | null>(null)
   useEffect(() => {
     if (fx.burstKey > shownCutinBurstKeyRef.current) {
       shownCutinBurstKeyRef.current = fx.burstKey
       suppressedMiniResultKeyRef.current = fx.miniResultKey
+      cutinVideoRef.current = isGodStrikeVideoReady(godStrikeVideoRef.current, prefersReducedMotion()) ? godStrikeVideoRef.current : null
       // Phase 6-A：7/7 到達の発光（到達反応）を BURST_READY_LEAD_MS 見せてからカットイン。
       // その間も操作はブロックする（cutinActive）。依存値の変化でタイマーを取り消すと
       // カットインが出ないまま操作がブロックされ続けるため、取り消しはアンマウント時だけ
@@ -184,10 +192,15 @@ export function BattleScreen({
     },
     [],
   )
+  // 決定250：onComplete（900ms）＝入力ロック解除・burst-banner の起点は静止・動画とも同じ時刻。
+  // unmount だけを onExit に分けた（静止は onComplete と同じ tick・動画は最大 1.2s＋安全弁の後）
   const handleCutinComplete = () => {
-    setCutinVisible(false)
     setCutinActive(false)
     setCutinBurstBannerKey((k) => k + 1)
+  }
+  const handleCutinExit = () => {
+    setCutinVisible(false)
+    cutinVideoRef.current = null
   }
   // Phase 6-A：burst-banner の onAnimationEnd を取りこぼしても、OTOMO 成長バナーへ必ず進む
   useEffect(() => {
@@ -276,9 +289,17 @@ export function BattleScreen({
   // 決定226：舞台で使う神の keyvisual を先に読む（「続きから」再開は神選択を通らず、キャッシュに無いことがある）
   const stageGodId = state?.godId
   useEffect(() => {
-    if (!stageGodId || typeof Image === 'undefined') return
+    if (!stageGodId || typeof Image === 'undefined') return undefined
     const img = new Image()
     img.src = getGodDef(stageGodId).art.keyvisual
+    // 決定250：選択神の God Strike 動画（大耀のみ）を 1 本だけ非表示で先読みし、戦闘終了で解放する。
+    // 取得できなくても何も起きない（commit 時の判定で静止カットインになるだけ）
+    const video = createGodStrikeVideoPreload(stageGodId, prefersReducedMotion())
+    godStrikeVideoRef.current = video
+    return () => {
+      if (godStrikeVideoRef.current === video) godStrikeVideoRef.current = null
+      releaseGodStrikeVideo(video)
+    }
   }, [stageGodId])
 
   // Phase 6-B（決定164）：戦闘中だけアプリ全体をビューポート高に固定し、ページの
@@ -514,7 +535,13 @@ export function BattleScreen({
           遅らせる。burst-banner自身のJSX・onAnimationEnd＝evolve-bannerへの
           ハンドオフは完全に無変更（信号源がcutinBurstBannerKeyに一本化されただけ）。 */}
       {cutinVisible && (
-        <BattleResonanceCutin key={`cutin-${fx.burstKey}`} godId={state.godId} onComplete={handleCutinComplete} />
+        <BattleResonanceCutin
+          key={`cutin-${fx.burstKey}`}
+          godId={state.godId}
+          onComplete={handleCutinComplete}
+          video={cutinVideoRef.current}
+          onExit={handleCutinExit}
+        />
       )}
 
       {/* ENEMY-VFX-01：敵必殺技カットイン→着弾ビーム。カットインは0.9sで自動終了し、

@@ -1842,6 +1842,92 @@
   }
 }
 
+/* ============================================================
+   決定250：God Strike Premium Cut-in v1（大耀のみ・presentation only）
+   ------------------------------------------------------------
+   円形ポートレートの <img> の上に、先読み済みの <video>（1.2s・720²・無音・MP4）を
+   BattleResonanceCutin が appendChild する。ルート・resonance-cutin-timer・
+   onComplete（900ms）・burst-banner／突き／着弾の時刻はすべて不変。
+   - 再生が始まる（.is-video）までは透明＝下の静止画がそのまま見える（play() reject／
+     error／reduced／未先読み／404 のフォールバックは「何も足さない」だけで成立）
+   - 動画は 720² の全身なので、円の中では顔と砲を主役にするため 1.7 倍に寄せる
+     （寄せ量と中心は CSS 変数だけ。中心＝顔と砲口の中間 37.5%／32.5%）
+   - 900ms で .is-exiting：暗転・集中線・帯・文字を 0.3s で引き、円の動画だけを
+     最後（1.2s＝T+1,400）まで見せてから unmount（onExit）。突き（T+1,300）と
+     動画末尾の白フラッシュが重なり、着弾（T+1,600）は静止と同じ時刻
+   ============================================================ */
+.resonance-cutin-video-frame {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  overflow: hidden;
+  opacity: 0;
+  pointer-events: none;
+}
+.resonance-cutin-portrait.is-video .resonance-cutin-video-frame {
+  opacity: 1;
+  transition: opacity 120ms ease-out;
+}
+.resonance-cutin-video {
+  --cutin-video-zoom: 1.7;
+  --cutin-video-cx: 37.5%;
+  --cutin-video-cy: 32.5%;
+  position: absolute;
+  width: calc(100% * var(--cutin-video-zoom));
+  height: calc(100% * var(--cutin-video-zoom));
+  left: calc(50% - var(--cutin-video-cx) * var(--cutin-video-zoom));
+  top: calc(50% - var(--cutin-video-cy) * var(--cutin-video-zoom));
+  object-fit: cover;
+}
+.resonance-cutin.is-exiting {
+  animation: resonance-cutin-undim 0.3s ease-out forwards;
+}
+@keyframes resonance-cutin-undim {
+  from {
+    background: #05060dcc;
+  }
+  to {
+    background: #05060d00;
+  }
+}
+.resonance-cutin.is-exiting .resonance-cutin-rays {
+  animation: resonance-cutin-rays-out 0.3s ease-out forwards;
+}
+@keyframes resonance-cutin-rays-out {
+  from {
+    opacity: 1;
+    transform: scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: scale(1);
+  }
+}
+.resonance-cutin.is-exiting .resonance-cutin-band {
+  animation: resonance-cutin-band-out 0.3s ease-out forwards;
+}
+@keyframes resonance-cutin-band-out {
+  from {
+    opacity: 1;
+    transform: translate(0, -50%) rotate(-3.5deg);
+  }
+  to {
+    opacity: 0;
+    transform: translate(0, -50%) rotate(-3.5deg);
+  }
+}
+.resonance-cutin.is-exiting .resonance-cutin-caption {
+  animation: resonance-cutin-static-out 0.3s ease-out forwards;
+}
+@keyframes resonance-cutin-static-out {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
 /* 決定80（Phase 1）：.battleは縦に長い要素（375pxで2000px超）のため、
    position:absoluteのままだと基準がビューポートではなく.battle全体になり、
    共鳴バースト演出が画面外に描画されていた（決定63でGameOverOverlay/
