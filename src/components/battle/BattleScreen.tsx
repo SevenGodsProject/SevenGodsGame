@@ -18,6 +18,7 @@ import { useBattleFx } from './useBattleFx'
 import { dealsEnemyDamage, useMobileAutoFocus } from './useMobileAutoFocus'
 import { useCombatPresentation } from './useCombatPresentation'
 import { useCardTravel } from './useCardTravel'
+import { useReactionLanguage } from './useReactionLanguage'
 import { BURST_BANNER_MS, BURST_READY_LEAD_MS } from './enemyVfxTiming'
 import { CUTIN_FALLBACK_MS } from './BattleResonanceCutin'
 import { BossEntrance } from './BossEntrance'
@@ -105,6 +106,21 @@ export function BattleScreen({
   const presentation = useCombatPresentation(log, state, arenaRef)
   // Card Travel v1「神へ捧げる」：出したカードの複製を神の立ち絵へ飛ばす（表示専用・入力ロック／時刻表は不変）
   useCardTravel(pendingCardUid)
+  // 決定249 Reaction Language v1：カードの意味 → 反応する主体（神・OTOMO・敵・手札）。表示専用・入力ロック不変
+  const rl = useReactionLanguage(log, state?.seed ?? null)
+  // 反応クラスは「直前のバッチがその反応だったとき」だけ付ける（古い反応を後の再マウントで再生しない）
+  const rlLast = rl.last?.primitive ?? null
+  const godReaction =
+    rlLast === 'brace'
+      ? { kind: 'brace' as const, key: rl.braceKey, tone: null }
+      : rlLast === 'breathe'
+        ? { kind: 'breathe' as const, key: rl.breatheKey, tone: null }
+        : rlLast === 'rise'
+          ? { kind: 'rise' as const, key: rl.riseKey, tone: rl.riseTone }
+          : null
+  const staggerKey = rlLast === 'stagger' ? rl.staggerKey : 0
+  const otomoSubtleKey = rl.last?.otomo ? rl.otomoKey : 0
+  const dealUids = rlLast === 'deal' ? rl.dealUids : null
   // Phase 6-C（決定166）：良い判断が成立した瞬間の短い評価（表示専用。1バッチ最大1件）
   const decision = useDecisionCallout(log, state)
 
@@ -370,7 +386,8 @@ export function BattleScreen({
         </span>
         <span className="battle-topbar-ap">
           <span>神力 {state.ap.current} / {state.ap.max}</span>
-          <span className="ap-gauge">
+          {/* 決定249：TEMPO で神力が増えたとき 1 回だけ明滅（key で再マウント） */}
+          <span key={`ap-${rl.apFlashKey}`} className={`ap-gauge${rl.apFlashKey > 0 ? ' rl-ap-flash' : ''}`}>
             <span className="ap-gauge-fill" style={{ width: `${apRatio * 100}%` }} />
           </span>
         </span>
@@ -412,6 +429,7 @@ export function BattleScreen({
           planKey={presentation.planKey}
           defeated={state.status === 'won' && (victoryPhase === 'collapse' || victoryPhase === 'beat' || victoryPhase === 'done')}
           reduced={presentation.reduced}
+          staggerKey={staggerKey}
         />
         <div className="ally-row">
           <PlayerPanel
@@ -430,6 +448,7 @@ export function BattleScreen({
             hpShown={presentation.playerHpShown}
             windUp={windUp}
             selfImpactMs={presentation.plan?.selfImpactMs ?? null}
+            reaction={godReaction}
           />
           {/* VFX-03：evolveRevealKey＝🌱成長バナーの表示回数。OTOMO立ち絵の新形態切替・
               成長グロー・リアクションをこの瞬間に揃える（進化自体はstateで確定済み） */}
@@ -442,6 +461,7 @@ export function BattleScreen({
             reactionKey={cutinBurstBannerKey}
             readyFlashKey={fx.burstKey}
             passiveArmed={isGodPassiveArmed(state)}
+            subtleKey={otomoSubtleKey}
           />
         </div>
         {castStyle && pendingCardDef && (
@@ -563,6 +583,7 @@ export function BattleScreen({
                 bonusReady={isPlayerTurn && previewBonusTrigger(state, getCardDef(instance.defId))}
                 bonusArmed={handArmed.find((c) => c.uid === instance.uid)?.armed ?? false}
                 igniteDelayMs={igniteDelays.get(instance.uid)}
+                dealt={dealUids?.has(instance.uid) ? { key: rl.dealKey, delayMs: [...dealUids].indexOf(instance.uid) * 40 } : null}
                 onPlay={() => playCard(instance.uid)}
               />
             ))}

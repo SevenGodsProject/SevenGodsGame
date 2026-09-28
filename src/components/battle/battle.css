@@ -6973,3 +6973,110 @@ body.battle-viewport .battle-main > .battle-callout {
     --atk-x: -1;
   }
 }
+
+/* ============================================================
+   決定249 Reaction Language v1 Narrow Pilot（docs/REACTION_LANGUAGE_V1_AUDIT.md・決定248）
+   ------------------------------------------------------------
+   「カードを使ったら、その意味に応じて誰かが反応する」。60 枚 → 7 semantic → 6 primitive。
+   P1 STRIKE は既存（決定232）のまま。ここは新規 5 つ：
+     brace（GUARD＝神が相手の逆へ沈み込む・盾リム）／breathe（MEND＝神が持ち上がる・緑リム）／
+     rise（ATTUNE＝共鳴色・EMPOWER＝金：神が高まる）／stagger（WEAKEN＝敵の外側 wrapper がよろめき沈む）／
+     deal（TEMPO＝引いた札が立ち上がる・神力ゲージ 1 回明滅）。OTOMO は breathe／ATTUNE で小さく応える。
+   上限（決定248）：動き ≤4px・≤400ms・hit stop 0・数字なし・音の追加なし＝Tier 1 の下限側。
+   置き場所：神＝ `.player-avatar-wrap`（突きは中の img に付くので animation を奪い合わない。突きと同じバッチでは
+     planReaction が抑止）／敵＝ `.enemy-reaction-idle`（内側 `.enemy-avatar` の filter＝決定240・scale＝決定247 に触れない）／
+     OTOMO＝ figure 内の img（figure の otomo-reacting・evolve-glow と別要素）／札＝ `.card-view`。
+   reduced-motion：既存の reduce ブロック（決定232 のテストが「末尾の reduce ブロック」を前提にする）を増やさず、
+     決定240 と同じく **no-preference のときだけ動きを足す**。既定（reduce 含む）はリム／明度／opacity の 120ms だけ。
+   向き：`--atk-x`（PC＝敵は左・神は右、SP も同じ）。brace は相手の逆（−atk-x 方向）へ沈む。
+   ============================================================ */
+.player-avatar-wrap {
+  --rl-rim: transparent;
+  --rl-x: 0px;
+  --rl-y: 0px;
+  --rl-scale: 1;
+}
+
+/* リム（色）だけの反応＝既定。動きは下の no-preference で足す */
+@keyframes rl-rim-only {
+  0% { filter: drop-shadow(0 0 0 var(--rl-rim)); }
+  40% { filter: drop-shadow(0 0 12px var(--rl-rim)); }
+  100% { filter: drop-shadow(0 0 0 transparent); }
+}
+.player-avatar-wrap.rl-brace { --rl-rim: #7fb2ffcc; animation: rl-rim-only 0.12s ease-out; }
+.player-avatar-wrap.rl-breathe { --rl-rim: #4dbd74cc; animation: rl-rim-only 0.12s ease-out; }
+.player-avatar-wrap.rl-rise.rl-tone-resonance { --rl-rim: #c39bffdd; animation: rl-rim-only 0.12s ease-out; }
+.player-avatar-wrap.rl-rise.rl-tone-power { --rl-rim: #ffd166dd; animation: rl-rim-only 0.12s ease-out; }
+
+@keyframes rl-stagger-dim {
+  0% { filter: brightness(1); }
+  40% { filter: brightness(0.78); }
+  100% { filter: brightness(1); }
+}
+.enemy-reaction-idle.rl-stagger { animation: rl-stagger-dim 0.12s ease-out; }
+
+@keyframes rl-otomo-rim {
+  0% { filter: drop-shadow(0 0 0 #c39bff00); }
+  40% { filter: drop-shadow(0 0 8px #c39bffcc); }
+  100% { filter: drop-shadow(0 0 0 #c39bff00); }
+}
+.portrait-otomo img.rl-otomo-subtle { animation: rl-otomo-rim 0.12s ease-out; }
+
+@keyframes rl-deal-fade {
+  from { opacity: 0.4; }
+  to { opacity: 1; }
+}
+.card-view.card-view-dealt { animation: rl-deal-fade 0.12s linear; animation-delay: var(--rl-deal-delay, 0ms); animation-fill-mode: backwards; }
+
+@keyframes rl-ap-flash {
+  0% { filter: brightness(1); }
+  35% { filter: brightness(1.8); }
+  100% { filter: brightness(1); }
+}
+.ap-gauge.rl-ap-flash { animation: rl-ap-flash 0.2s ease-out; }
+
+/* 動き（motion 許可時だけ）。数値は決定248 の上限内：≤4px・≤400ms */
+@media (prefers-reduced-motion: no-preference) {
+  @keyframes rl-brace {
+    0% { transform: translate(0, 0) scale(1); filter: drop-shadow(0 0 0 var(--rl-rim)); }
+    35% { transform: translate(calc(var(--atk-x, -1) * -4px), 2px) scale(0.98); filter: drop-shadow(0 0 12px var(--rl-rim)); }
+    100% { transform: translate(0, 0) scale(1); filter: drop-shadow(0 0 0 transparent); }
+  }
+  @keyframes rl-breathe {
+    0% { transform: translateY(0) scale(1); filter: drop-shadow(0 0 0 var(--rl-rim)); }
+    40% { transform: translateY(-3px) scale(1.02); filter: drop-shadow(0 0 12px var(--rl-rim)); }
+    100% { transform: translateY(0) scale(1); filter: drop-shadow(0 0 0 transparent); }
+  }
+  @keyframes rl-rise {
+    0% { transform: translateY(0) scale(1); filter: drop-shadow(0 0 0 var(--rl-rim)); }
+    40% { transform: translateY(-2px) scale(1.03); filter: drop-shadow(0 0 14px var(--rl-rim)); }
+    100% { transform: translateY(0) scale(1); filter: drop-shadow(0 0 0 transparent); }
+  }
+  .player-avatar-wrap.rl-brace { animation: rl-brace 0.32s ease-out; }
+  .player-avatar-wrap.rl-breathe { animation: rl-breathe 0.4s ease-out; }
+  /* 既定のリム規則（.rl-rise.rl-tone-* ＝ 0,3,0）に勝つため tone まで書く */
+  .player-avatar-wrap.rl-rise.rl-tone-resonance,
+  .player-avatar-wrap.rl-rise.rl-tone-power { animation: rl-rise 0.4s ease-out; }
+
+  @keyframes rl-stagger {
+    0% { transform: translateX(0); filter: brightness(1); }
+    20% { transform: translateX(-3px); filter: brightness(0.78); }
+    45% { transform: translateX(3px); }
+    70% { transform: translateX(-2px); filter: brightness(0.86); }
+    100% { transform: translateX(0); filter: brightness(1); }
+  }
+  .enemy-reaction-idle.rl-stagger { animation: rl-stagger 0.36s ease-out; }
+
+  @keyframes rl-otomo-subtle {
+    0% { transform: translateY(0) scale(1); filter: drop-shadow(0 0 0 #c39bff00); }
+    40% { transform: translateY(-3px) scale(1.06); filter: drop-shadow(0 0 8px #c39bffcc); }
+    100% { transform: translateY(0) scale(1); filter: drop-shadow(0 0 0 #c39bff00); }
+  }
+  .portrait-otomo img.rl-otomo-subtle { animation: rl-otomo-subtle 0.35s ease-out; }
+
+  @keyframes rl-deal {
+    from { transform: translateY(8px); opacity: 0.4; }
+    to { transform: translateY(0); opacity: 1; }
+  }
+  .card-view.card-view-dealt { animation: rl-deal 0.16s ease-out; animation-delay: var(--rl-deal-delay, 0ms); animation-fill-mode: backwards; }
+}

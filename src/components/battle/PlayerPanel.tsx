@@ -40,6 +40,8 @@ type PlayerPanelProps = {
   windUp?: boolean
   /** Phase 6-A：敵の通常攻撃の着弾時刻（敵の突進の最前）。連撃・必殺は既存の CSS タイムライン */
   selfImpactMs?: number | null
+  /** 決定249 Reaction Language v1：神の体の反応（GUARD＝brace／MEND＝breathe／ATTUNE・EMPOWER＝rise）。表示専用 */
+  reaction?: { kind: 'brace' | 'breathe' | 'rise'; key: number; tone: 'resonance' | 'power' | null } | null
 }
 
 /**
@@ -62,6 +64,7 @@ export function PlayerPanel({
   hpShown,
   windUp = false,
   selfImpactMs = null,
+  reaction = null,
 }: PlayerPanelProps) {
   const god = getGodDef(godId)
   // STEP-UX5：被弾シェイクの強さを、その攻撃のIntent危険度と同じtierで
@@ -124,9 +127,24 @@ export function PlayerPanel({
           （開始＝BURST_GOD_ATTACK_MS、着弾＝BURST_IMPACT_MS。battle.css と一致） */}
       <div className="player-stage">
         <div className={`player-windup${windUp ? ' is-winding' : ''}`}>
+          {/* 決定249：GUARD／MEND／ATTUNE・EMPOWER の「体の反応」は同じ wrap に rl-* クラスで載せる（決定248 §4）。
+              突き・被弾を含むバッチでは planReaction が抑止するので、rl-* は突きと同時には付かない。
+              key に反応回数を含めて再マウント＝再生（既存の attackKey と同じ手法）。attackKey の増分と
+              同時に来ることは無いが、来ても god-strike を優先する（rl-* は attackKey が動かないバッチだけ） */}
           <div
-            key={`god-${attackKey}`}
-            className={`player-avatar-wrap${attackKey > 0 ? (burstHit ? ' god-burst-strike' : heavyStrike ? ' god-strike god-strike-heavy' : ' god-strike') : ''}`}
+            key={`god-${attackKey}-${reaction?.key ?? 0}`}
+            className={`player-avatar-wrap${
+              reaction && reaction.key > 0
+                ? // 反応の再マウントで突き（god-strike）を再生しないよう、反応中は突きクラスを外す
+                  ` rl-${reaction.kind}${reaction.tone ? ` rl-tone-${reaction.tone}` : ''}`
+                : attackKey > 0
+                  ? burstHit
+                    ? ' god-burst-strike'
+                    : heavyStrike
+                      ? ' god-strike god-strike-heavy'
+                      : ' god-strike'
+                  : ''
+            }`}
           >
             {/* Phase 6-B：被弾の揺れ・閃光は立ち絵そのものに掛ける（旧：HPバーのラッパー） */}
             <div

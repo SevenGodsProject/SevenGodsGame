@@ -29,6 +29,8 @@ type CardViewProps = {
   bonusArmed?: boolean
   /** 決定224：点火の開始遅延（同時に成立したカードをずらす。BattleScreen が決める） */
   igniteDelayMs?: number
+  /** 決定249 Reaction Language v1：TEMPO の札で引かれた札は下から立ち上がる（DEAL）。key と遅延（枚数順） */
+  dealt?: { key: number; delayMs: number } | null
   onPlay: () => void
 }
 
@@ -48,6 +50,7 @@ export function CardView({
   bonusReady = false,
   bonusArmed = false,
   igniteDelayMs = READY_IGNITE_BASE_DELAY_MS,
+  dealt = null,
   onPlay,
 }: CardViewProps) {
   const def = getCardDef(instance.defId)
@@ -78,9 +81,10 @@ export function CardView({
   return (
     <button
       type="button"
-      className={`card-view${def.godId ? ' card-view-exclusive' : ''}${playing ? ' card-view-playing' : ''}${illustration ? ' card-view-has-art' : ''}${artWindow ? ' card-view-artwin' : ''}${readyOn ? ' card-view-ready' : ''}`}
+      className={`card-view${def.godId ? ' card-view-exclusive' : ''}${playing ? ' card-view-playing' : ''}${illustration ? ' card-view-has-art' : ''}${artWindow ? ' card-view-artwin' : ''}${readyOn ? ' card-view-ready' : ''}${dealt && !playing ? ' card-view-dealt' : ''}`}
       style={{
         ...readyStyle,
+        ...(dealt ? ({ '--rl-deal-delay': `${dealt.delayMs}ms` } as CSSProperties) : undefined),
         borderColor: style.color,
         opacity: playing ? undefined : affordable ? 1 : 0.45,
         background: `linear-gradient(165deg, ${style.dark} 0%, #0b0d17 62%)`,

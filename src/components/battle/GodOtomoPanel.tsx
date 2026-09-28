@@ -35,6 +35,8 @@ type GodOtomoPanelProps = {
    * 判定は`core/engine/godPassive.ts`の`isGodPassiveArmed`だけが行う。
    */
   passiveArmed?: boolean
+  /** 決定249 Reaction Language v1：MEND／ATTUNE のとき OTOMO が小さく応える回数（表示専用・ラベル無し） */
+  subtleKey?: number
 }
 
 /**
@@ -63,6 +65,7 @@ export function GodOtomoPanel({
   reactionKey,
   readyFlashKey = 0,
   passiveArmed = false,
+  subtleKey = 0,
 }: GodOtomoPanelProps) {
   const otomoDef = getOtomoDef(otomo.defId)
   // Phase 3 FINAL SPEC v0.1：得意技を持つ3神だけバッジを出す（持たない神は何も足さない）
@@ -190,7 +193,16 @@ export function GodOtomoPanel({
           className={`portrait portrait-otomo${evolveRevealKey > 0 ? ' evolve-glow' : ''}${reactionActive ? ' otomo-reacting' : ''}`}
           onAnimationEnd={reactionActive ? handleReactionAnimationEnd : undefined}
         >
-          <img src={otomoDef.art[displayedForm]} alt={otomoDef.nameJa} width={320} height={320} />
+          {/* 決定249：小さく応える（決定248 §4 P3／P5）。figure の key（進化）と分け、img だけ再マウントして再生する。
+              図の `otomo-reacting`（神の一撃）とは別要素なので animation を奪い合わない */}
+          <img
+            key={`otomo-img-${subtleKey}`}
+            className={subtleKey > 0 ? 'rl-otomo-subtle' : undefined}
+            src={otomoDef.art[displayedForm]}
+            alt={otomoDef.nameJa}
+            width={320}
+            height={320}
+          />
           <figcaption>
             {otomoDef.nameJa}（{FORM_LABEL[displayedForm]}）
           </figcaption>

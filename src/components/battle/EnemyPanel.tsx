@@ -35,11 +35,22 @@ type EnemyPanelProps = {
   /** Phase 6-A：撃破演出（崩壊中／消えた後） */
   defeated: boolean
   reduced?: boolean
+  /** 決定249 Reaction Language v1：WEAKEN（敵の攻撃力を下げる札）の「よろめき」の再生回数（表示専用） */
+  staggerKey?: number
 }
 
 /** 敵立ち絵のリアクション1層。reaction が無いときは素通しの div（ツリー構造を変えない） */
-function Reaction({ reaction, planKey, index, children }: { reaction: ReactionPlan | undefined; planKey: number; index: number; children: ReactNode }) {
-  if (!reaction || planKey === 0) return <div className="enemy-reaction-idle">{children}</div>
+function Reaction({ reaction, planKey, index, children, staggerKey = 0 }: { reaction: ReactionPlan | undefined; planKey: number; index: number; children: ReactNode; staggerKey?: number }) {
+  // 決定249：よろめきは着弾の無いバッチで起きるので reaction は無い。この idle wrapper（立ち絵の外側）に
+  // rl-stagger を載せ、key で再マウント＝再生する。内側 `.enemy-avatar` の filter（決定240 の構え）・
+  // scale（決定247 の反転）には触れない。DOM の階層も変えない（同じ div にクラスを足すだけ）
+  if (!reaction || planKey === 0) {
+    return (
+      <div key={`idle-${index}-${staggerKey}`} className={`enemy-reaction-idle${staggerKey > 0 && index === 0 ? ' rl-stagger' : ''}`}>
+        {children}
+      </div>
+    )
+  }
   const cls = [
     'enemy-reaction',
     `react-l${reaction.tier}`,
@@ -83,6 +94,7 @@ export function EnemyPanel({
   planKey,
   defeated,
   reduced = false,
+  staggerKey = 0,
 }: EnemyPanelProps) {
   const def = getEnemyDef(enemy.defId)
   const line = def.battleCries[(round - 1) % def.battleCries.length]
@@ -164,7 +176,7 @@ export function EnemyPanel({
                 : ''
             }`}
           >
-            <Reaction reaction={reactions[0]} planKey={planKey} index={0}>
+            <Reaction reaction={reactions[0]} planKey={planKey} index={0} staggerKey={defeated ? 0 : staggerKey}>
               <Reaction reaction={reactions[1]} planKey={planKey} index={1}>
                 <div className={`enemy-avatar${surgeClass}${chargingClass}${stanceClass}`} style={{ backgroundImage: `url(${def.art})` }} />
               </Reaction>
