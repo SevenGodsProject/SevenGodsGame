@@ -343,8 +343,14 @@ describe('Tamper Tests（Step 7）', () => {
       expectRejectedOrDifferent({ ...input, actions: [...actions].reverse() }, honest, '反転')
 
       // 順序変更（隣接2手の入れ替え）
+      // 決定246：旧方式（全体の1/3の位置）は、託宣が1戦3回になって操作列の並びが変わった結果、
+      // 笑蓮で「同じラウンド内の託宣とカード1枚」（どちらの順でも同じ効き）に当たり、正当に同一結果になった。
+      // 改ざん検出の欠陥ではなくテスト前提の問題のため、入れ替え位置を
+      // 「1/3以降で最初の『カード → END_ROUND』の組」（カードを次のラウンドへ移す＝必ず意味のある順序変更）へ固定する
       const swapped = [...actions]
-      const i = Math.max(0, Math.floor(actions.length / 3))
+      const from = Math.max(0, Math.floor(actions.length / 3))
+      let i = actions.findIndex((a, k) => k >= from && a.type === 'PLAY_CARD' && actions[k + 1]?.type === 'END_ROUND')
+      if (i < 0) i = from
       ;[swapped[i], swapped[i + 1]] = [swapped[i + 1], swapped[i]]
       expectRejectedOrDifferent({ ...input, actions: swapped }, honest, '入れ替え')
     }

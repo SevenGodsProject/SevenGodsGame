@@ -80,19 +80,6 @@ const GOLDEN_INPUT = {
     { type: 'PLAY_CARD', uid: 'c12' },
     { type: 'PLAY_CARD', uid: 'c18' },
     { type: 'END_ROUND' },
-    { type: 'USE_DIVINATION', choiceIndex: 1 },
-    { type: 'PLAY_CARD', uid: 'c16' },
-    { type: 'PLAY_CARD', uid: 'c11' },
-    { type: 'PLAY_CARD', uid: 'c13' },
-    { type: 'END_ROUND' },
-    { type: 'PLAY_CARD', uid: 'c15' },
-    { type: 'PLAY_CARD', uid: 'c14' },
-    { type: 'PLAY_CARD', uid: 'c14' },
-    { type: 'END_ROUND' },
-    { type: 'PLAY_CARD', uid: 'c4' },
-    { type: 'PLAY_CARD', uid: 'c17' },
-    { type: 'PLAY_CARD', uid: 'c0' },
-    { type: 'END_ROUND' }
   ]
 } as unknown as ReplayInput
 
@@ -104,19 +91,22 @@ const GOLDEN = {
   // Phase 5-E（決定158）：指紋に DIVINATION_CHOICES を追加し、加護の効率例外（RULES.divination）を入れた。
   // 2つを同じ変更にまとめて版の更新を1回にした。Daily は神階0で効率がかからないので決着は同じ
   // Phase 5-C（決定159）：大耀2枚・蒼毘1枚に bonus を追加（カードデータは指紋対象）。この操作列は恵比寿なので決着は同じ
-  gameVersion: '1.80c6eda23ed082dc',
+  // 決定246（Combat Tension v1）：託宣 7→3・敵の峰を R4 へ（データ変更＝指紋が自動で変わる。engineVersion は据え置き）。
+  // 旧操作列（29手）は蒼海の龍神の R4 大波（内部20）で恵比寿が倒れ、17手目以降が「決着後の操作」として拒否され
+  // 再生不能になった。生成器（P5A_GOLDEN=1・policySeed 4801）で作り直した操作列は旧操作列の先頭16手と一致する。
+  gameVersion: '1.6c581e56a02c0730',
   outcome: {
     enemyId: 'enemy_06',
     seedId: 'B6PW1T',
     godId: 'ebisu',
     status: 'lost',
     win: false,
-    round: 7,
-    score: 345,
+    round: 4,
+    score: 139,
     playerHp: 0,
-    enemyHp: 8,
-    rngCursor: 33,
-    actionCount: 29,
+    enemyHp: 90,
+    rngCursor: 19,
+    actionCount: 16,
   },
 }
 

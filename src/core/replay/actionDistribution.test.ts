@@ -122,23 +122,25 @@ describe('Action数 / payloadサイズの分布（Step 6）', () => {
     // Phase 5-D：加護が予告連動ブロックになり、一部の対局で打ち筋（出すカード）が変わった。
     // Action数の分布は同じで、payloadサイズだけ最大11byte動いた。
     // Phase 5-C：大耀・蒼毘の専用3枚に条件が付き、打ち筋がわずかに動いた（payload の median・p95 が1byteずつ）。
+    // 決定246（Combat Tension v1）：託宣 7→3・敵の峰 R4 で決着ラウンドと託宣の手数が動いた（median 22→17・max 32→42）。
+    // 上限400に対する余裕は不変（max 42）。Measurement Baseline Update
     expect(measurement.actions).toEqual({
       n: 1470,
       min: 7,
-      median: 22,
-      p90: 27,
-      p95: 28,
+      median: 17,
+      p90: 26,
+      p95: 27,
       p99: 30,
-      max: 32,
+      max: 42,
     })
     expect(measurement.bytes).toEqual({
       n: 1470,
       min: 790,
-      median: 1268,
-      p90: 1425,
-      p95: 1475,
-      p99: 1558,
-      max: 1615,
+      median: 1122,
+      p90: 1385,
+      p95: 1432,
+      p99: 1537,
+      max: 1929,
     })
   })
 })

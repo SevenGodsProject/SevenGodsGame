@@ -66,8 +66,13 @@ export const RULES = {
      * MVPでは「1ゲームにつき7回」（GameStateの一部としてリセットされる）。
      * 「1日7回」への変更は、アカウント基盤ができてから
      * QuotaProviderで抽象化する（決定21・§3-1）。
+     *
+     * 決定246（Combat Tension v1）：7 → 3。7回＝毎ラウンド使えるため、R1〜R3 に 69% が天啓として
+     * 消費され加護は 1% しか選ばれなかった（決定244）。3回にすると使用が R4〜R5 に集まり、
+     * 加護 26%（むずかしい 54%）・早撃ちとの差（温存の価値）むずかしい −19pt が生まれる（決定245 paired-seed）。
+     * 2回・1回は膠着と先読みプレイヤーの敗北が増えるため不採用。
      */
-    count: 7,
+    count: 3,
     /**
      * Phase 5-D：神託「加護」が得るブロック＝敵の予告合計 × guardRatio（切り捨て）。
      * 0.35 / 0.40 / 0.45 / 0.50 を paired-seed で比較し 0.5 を採用（`scripts/phase5d-guard/`）。
@@ -406,7 +411,11 @@ export const RULES = {
    */
   stakes: {
     scoreScalePerLevel: 0.08,
-    divinationCount: 4,
+    /**
+     * 決定246：4 → 2。通常の託宣が 3 回になったため、神階の「託宣は当てにできない」を保つ。
+     * 神階ラダー（Ⅰ〜Ⅶの勝率帯）の再中心化は決定246 の対象外（決定245 §8：別 Decision）。
+     */
+    divinationCount: 2,
     lateRoundFrom: 5,
     lateRoundAtkMul: 1.3,
     enemyAtkStep: 1.15,

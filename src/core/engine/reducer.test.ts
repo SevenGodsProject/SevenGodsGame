@@ -147,7 +147,8 @@ describe('END_ROUND', () => {
     expect(next.player.hp).toBe(RULES.player.maxHp - 5) // R1の敵攻撃力
     expect(next.ap).toEqual({ current: RULES.ap.perRound[1], max: RULES.ap.perRound[1] })
     expect(next.hand.length).toBe(handBefore + RULES.deck.drawPerRound)
-    expect(next.enemy.intent).toEqual({ kind: 'attack', amount: 6 })
+    // 決定246：試練の影の R2 は 6→8（峰 R4 への並べ替え。Expected Specification Update）
+    expect(next.enemy.intent).toEqual({ kind: 'attack', amount: 8 })
 
     const kinds = events.map((e) => e.t)
     expect(kinds).toContain('ENEMY_ACTED')

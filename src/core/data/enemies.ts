@@ -51,8 +51,9 @@ export const ENEMIES: EnemyDef[] = [
     // ヘルパーは変更せず、この1体だけ直接パスを指定する最小変更にしている。
     art: '/assets/enemies/datenshi/art.webp',
     typeLabel: '標準・入門型',
-    typeDescription: '基本を守れば戦える。終盤にやや攻撃が強まる。',
-    visualType: 'lateSurgeMild',
+    typeDescription: '基本を守れば戦える。R4に攻撃が強まる。',
+    // 決定246：攻撃の峰が R4 へ移ったため「終盤の強調（R5〜）」表示をやめる
+    visualType: 'standard',
     // LANE-D：脅威度★・舞台（表示専用、CEO GO済み仕様の叩き台）。数値・AI無変更
     rank: 1,
     stage: { nameJa: '褪色の神殿', accent: '#6b5b95', bg: '/assets/backgrounds/stages/01-trial-shadow.webp' },
@@ -66,13 +67,15 @@ export const ENEMIES: EnemyDef[] = [
       '揺るがぬ意志のみが、道を拓く',
     ],
     actions: [
+      // 決定246（Combat Tension v1）：同じ7値・同じ7R合計（67）のまま峰を R4 へ並べ替え。
+      // 旧：5/6/8/9/11/13/15（峰 R7＝到達率 3%）
       { kind: 'attack', amount: 5 }, // R1
-      { kind: 'attack', amount: 6 }, // R2
-      { kind: 'attack', amount: 8 }, // R3
-      { kind: 'attack', amount: 9 }, // R4
-      { kind: 'attack', amount: 11 }, // R5
-      { kind: 'attack', amount: 13 }, // R6
-      { kind: 'attack', amount: 15 }, // R7
+      { kind: 'attack', amount: 8 }, // R2
+      { kind: 'attack', amount: 11 }, // R3
+      { kind: 'attack', amount: 15 }, // R4
+      { kind: 'attack', amount: 13 }, // R5
+      { kind: 'attack', amount: 9 }, // R6
+      { kind: 'attack', amount: 6 }, // R7
     ],
   },
   {
@@ -104,13 +107,14 @@ export const ENEMIES: EnemyDef[] = [
     // シミュレーターが蒼毘・寿楽・笑蓮のdefensive戦略で7ラウンド以内に倒し切れない
     // ケースを検出したため108→100に調整）
     actions: [
+      // 決定246：同じ7値・7R合計（77）のまま峰を R4 へ。旧：5/7/9/11/13/15/17
       { kind: 'attack', amount: 5 },
-      { kind: 'attack', amount: 7 },
       { kind: 'attack', amount: 9 },
-      { kind: 'attack', amount: 11 },
       { kind: 'attack', amount: 13 },
-      { kind: 'attack', amount: 15 },
       { kind: 'attack', amount: 17 },
+      { kind: 'attack', amount: 15 },
+      { kind: 'attack', amount: 11 },
+      { kind: 'attack', amount: 7 },
     ],
   },
   {
@@ -121,8 +125,9 @@ export const ENEMIES: EnemyDef[] = [
     // 寸法・構図は無変更の純粋な再エンコードで、アルファは完全可逆（PSNR ∞）。
     art: '/assets/enemies/onryo/art_hq.webp',
     typeLabel: '遅咲き型',
-    typeDescription: '終盤に攻撃が急激に強くなる。',
-    visualType: 'lateSurgeStrong',
+    typeDescription: 'R4に祟りが極まる。峰を読め。',
+    // 決定246：攻撃の峰が R4 へ移ったため「終盤の強調（R5〜）」表示をやめる
+    visualType: 'standard',
     rank: 3,
     stage: { nameJa: '藍花の廃社', accent: '#7a4fc4', bg: '/assets/backgrounds/stages/03-ghost-hydrangea.webp' },
     battleCries: [
@@ -136,13 +141,14 @@ export const ENEMIES: EnemyDef[] = [
     ],
     // 遅咲き型。序盤は弱いが後半に祟りが強まる
     actions: [
+      // 決定246：同じ7値・7R合計（76）のまま峰を R4 へ。旧：3/4/6/9/13/18/23
       { kind: 'attack', amount: 3 },
-      { kind: 'attack', amount: 4 },
       { kind: 'attack', amount: 6 },
-      { kind: 'attack', amount: 9 },
       { kind: 'attack', amount: 13 },
-      { kind: 'attack', amount: 18 },
       { kind: 'attack', amount: 23 },
+      { kind: 'attack', amount: 18 },
+      { kind: 'attack', amount: 9 },
+      { kind: 'attack', amount: 4 },
     ],
   },
   {
@@ -217,10 +223,11 @@ export const ENEMIES: EnemyDef[] = [
       { kind: 'multiAttack', hits: [5, 4] },
       { kind: 'multiAttack', hits: [5, 5] },
       { kind: 'multiAttack', hits: [4, 4, 4], name: '双牙乱撃', special: true },
-      { kind: 'multiAttack', hits: [7, 6] },
-      { kind: 'multiAttack', hits: [7, 7] },
-      { kind: 'multiAttack', hits: [8, 7] },
+      // 決定246：R3 必殺は固定。R4〜R7 の4行動を同じ組のまま峰 R4 へ並べ替え（旧：7+6/7+7/8+7/8+8）
       { kind: 'multiAttack', hits: [8, 8] },
+      { kind: 'multiAttack', hits: [8, 7] },
+      { kind: 'multiAttack', hits: [7, 7] },
+      { kind: 'multiAttack', hits: [7, 6] },
     ],
   },
   {
@@ -230,7 +237,7 @@ export const ENEMIES: EnemyDef[] = [
     // STEP-VISUAL-ASSETS：onryoと同じく寸法・構図無変更の再エンコード。
     art: '/assets/enemies/ryujin/art_hq.webp',
     typeLabel: '耐久型',
-    typeDescription: '高HP。7ラウンドで倒し切る火力配分が重要。',
+    typeDescription: 'R4の大波を受け切れ。',
     visualType: 'heavy',
     rank: 3,
     stage: { nameJa: '蒼海の宮', accent: '#1a3a6b', bg: '/assets/backgrounds/stages/06-dragon-ocean.webp' },
@@ -247,13 +254,14 @@ export const ENEMIES: EnemyDef[] = [
     // 125のままだと笑蓮が全戦略で勝率0%になるなど、防御寄りのデッキが
     // 7ラウンド以内に倒し切れないケースが多発したため、trialと同じ103まで下げた）
     actions: [
+      // 決定246：同じ7値・7R合計（73）のまま峰を R4 へ。旧：4/5/7/9/12/16/20
       { kind: 'attack', amount: 4 },
-      { kind: 'attack', amount: 5 },
       { kind: 'attack', amount: 7 },
-      { kind: 'attack', amount: 9 },
       { kind: 'attack', amount: 12 },
-      { kind: 'attack', amount: 16 },
       { kind: 'attack', amount: 20 },
+      { kind: 'attack', amount: 16 },
+      { kind: 'attack', amount: 9 },
+      { kind: 'attack', amount: 5 },
     ],
   },
   {
@@ -283,10 +291,12 @@ export const ENEMIES: EnemyDef[] = [
       { kind: 'attack', amount: 4 },
       { kind: 'charge', label: 'カードを宙に舞わせている…' },
       { kind: 'attack', amount: 19 },
-      { kind: 'attack', amount: 6 },
-      { kind: 'attack', amount: 12 },
+      // 決定246：2回目の溜め→大技 24 を R6→R7 から R4→R5 へ（同じ7行動・同じ合計 65）。
+      // 旧：4/溜/19/6/12/溜/24
       { kind: 'charge', label: 'カードを宙に舞わせている…' },
       { kind: 'attack', amount: 24 },
+      { kind: 'attack', amount: 12 },
+      { kind: 'attack', amount: 6 },
     ],
   },
 ]

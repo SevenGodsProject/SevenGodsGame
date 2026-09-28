@@ -206,8 +206,15 @@ function playOneGame(
         continue
       }
       // カードを使い切ったら、無料リソースの託宣も（このラウンドでまだなら）使ってからラウンドを終える。
-      // 実プレイヤーなら無料の託宣を捨てる理由はないため、この挙動が現実的な上限に近い。
-      if (state.divination.remaining > 0 && !state.divination.usedThisRound) {
+      // 決定246（Combat Tension v1）：託宣は1戦3回（7ラウンドより少ない）になったため、旧前提
+      // 「無料の託宣を捨てる理由はない＝毎ラウンド使う」は成り立たない（R1〜R3 で使い切り、R4 の峰を素手で受ける）。
+      // 基準プレイヤーは「残り回数が残りラウンド以上」または「予告で危険」なときだけ使う（＝残り3回・7ラウンドの素直な読み）。
+      // 7回制ではどのラウンドでも remaining ≥ roundsLeft が成り立つので、旧挙動と完全に同じになる。
+      // 判定しきい値（決定58・DAILY-01 の50%、STAKE-01 の段別下限）は変更していない。
+      // 旧 bot のままでは hard 8 セル・Daily 3 セルが 50% 未満になる（docs/DECISION246_COMBAT_TENSION_V1_PILOT.md に記録）
+      const roundsLeft = RULES.totalRounds - state.round + 1
+      const shouldUseOracle = state.divination.remaining >= roundsLeft || isDangerous(state)
+      if (state.divination.remaining > 0 && !state.divination.usedThisRound && shouldUseOracle) {
         const result = applyAction(state, {
           type: 'USE_DIVINATION',
           choiceIndex: pickDivinationChoice(state, strategy),

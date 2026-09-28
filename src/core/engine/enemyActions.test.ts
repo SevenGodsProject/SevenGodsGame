@@ -53,10 +53,13 @@ describe('K-C2/M-G 敵データ（CEO GO仕様）', () => {
     expect(def.actions[4]).toEqual({ kind: 'special', amount: 24, name: '主砲・神滅甲' })
   })
 
-  it('魔獣：全ラウンド連撃で、各ラウンド合計はbaselineと同値（9,10,12,13,14,15,16）', () => {
+  // 決定246（Combat Tension v1）：R4〜R7 の4行動を峰 R4 へ並べ替え（同じ組・同じ合計 89）。R3 必殺は固定。
+  // Expected Specification Update：旧 9,10,12,13,14,15,16 → 9,10,12,16,15,14,13
+  it('魔獣：全ラウンド連撃で、各ラウンド合計は決定246の並び（9,10,12,16,15,14,13・合計89）', () => {
     const def = getEnemyDef(ENEMY_IDS.juuma)
     const totals = def.actions.map((a) => enemyActionTotal(a))
-    expect(totals).toEqual([9, 10, 12, 13, 14, 15, 16])
+    expect(totals).toEqual([9, 10, 12, 16, 15, 14, 13])
+    expect(totals.reduce((s, t) => s + t, 0)).toBe(89)
     for (const a of def.actions) expect(a.kind).toBe('multiAttack')
   })
 
