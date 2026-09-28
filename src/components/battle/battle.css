@@ -6954,3 +6954,22 @@ body.battle-viewport .battle-main > .battle-callout {
     0 0 10px 2px #e5484d99,
     inset 0 0 8px #ff5c5c66;
 }
+
+/* ============================================================
+   決定247 PC 敵反転 Fast Gate Hotfix（決定229 v2 の SP 規則を PC（≥900px）へ同じ形で適用）
+   原画は敵 7 体中 4 体（鬼将・機工師・龍神・道化）が画面の左向きで、PC でも敵は左・神は右に立つため、
+   PC では 4 体が神に背を向けていた（決定244 §4-3）。敵の絵（最内側の `.enemy-avatar`）だけを左右反転する。
+   ・着弾レイヤー（`.enemy-hit-layer`）・被弾（`.enemy-reaction`）・撃破（`.enemy-collapse`）・
+     連撃の突進（`.enemy-avatar-wrap`）は反転しない＝着弾位置と向きは不変
+   ・`transform` ではなく独立した `scale` プロパティ（idle／lunge の transform と合成される）
+   ・単発の突進（enemy-lunge*）は `--atk-x` で向きを決めるため、この要素だけ −1 にして打ち消す
+     （見た目は +x＝神の方へ突く。SP と同じ）
+   ・決定240 の持ち上げ（`translate` 縦のみ）・drop-shadow（x オフセット 0）は反転の影響なし
+   ・カットイン（BattleEnemyCutin）・ボス登場は SP と同じく原画の向きのまま
+   ============================================================ */
+@media (min-width: 900px) {
+  body.battle-viewport .enemy-avatar {
+    scale: -1 1;
+    --atk-x: -1;
+  }
+}
