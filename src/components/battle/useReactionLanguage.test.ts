@@ -81,7 +81,9 @@ describe('決定249 G3／G8：engine 不変・発火回数 ≤ 操作回数・1 
     const b = runGame(GODS[1].id, ENEMIES[5].id, 'rl-det')
     expect(JSON.stringify(a.state)).toBe(JSON.stringify(b.state))
     expect(a.batches.map((x) => planReaction(x))).toEqual(b.batches.map((x) => planReaction(x)))
-    expect(getGameVersion()).toBe('1.6c581e56a02c0730')
+    // 決定251（Expected Specification Update）：RULES.stakes.lateRoundFrom 5→6 で dataFingerprint が変わった。
+    // 決定247〜250 の版は 1.6c581e56a02c0730。engine 不変の検証（上の state 完全一致）は据え置き
+    expect(getGameVersion()).toBe('1.d97db7abd39e51e1')
   })
 })
 

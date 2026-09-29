@@ -76,14 +76,22 @@ describe('神階 engine integration (決定126)', () => {
     expect(applyEffect(hurt5, { kind: 'heal', amount: 10 }, createRng('fx', 0)).state.player.hp).toBe(10 + Math.round(10 * RULES.stakes.healEfficiency))
   })
 
-  it('late rounds (R5+) get the extra attack multiplier on every stake level', () => {
-    // R5の予告を得るために、Ⅰでラウンドを4回終える（カードは使わない）
+  it('late rounds (R6+, 決定251) get the extra attack multiplier on every stake level; the round before does not', () => {
+    // 決定251：late surge の起点は RULES.stakes.lateRoundFrom（5→6）。値をハードコードせず RULES から導く
     // カードを使わないと敵の攻撃で倒れるため、テスト用にHPを大きくしてから進める
+    const from = RULES.stakes.lateRoundFrom
+    expect(from).toBe(6)
     let s = start({ stake: 1 })
     s = { ...s, player: { ...s.player, hp: 1000, maxHp: 1000 } }
-    for (let i = 0; i < 4; i++) s = applyAction(s, { type: 'END_ROUND' }).state
-    expect(s.round).toBe(5)
-    const raw = getEnemyDef(ENEMY_IDS.trial).actions[4]
+    for (let i = 0; i < from - 2; i++) s = applyAction(s, { type: 'END_ROUND' }).state
+    expect(s.round).toBe(from - 1)
+    // 起点の 1 つ前（R5＝E1 の 2 番目の峰）には ×1.3 が乗らない（二段峰の解消）
+    const rawBefore = getEnemyDef(ENEMY_IDS.trial).actions[from - 2]
+    const rawBeforeAmount = rawBefore.kind === 'attack' ? rawBefore.amount : 0
+    expect(intentAmount(s)).toBe(Math.round(rawBeforeAmount * RULES.stakes.enemyAtkStep))
+    s = applyAction(s, { type: 'END_ROUND' }).state
+    expect(s.round).toBe(from)
+    const raw = getEnemyDef(ENEMY_IDS.trial).actions[from - 1]
     const rawAmount = raw.kind === 'attack' ? raw.amount : 0
     const expected = Math.round(rawAmount * RULES.stakes.enemyAtkStep * RULES.stakes.lateRoundAtkMul)
     expect(intentAmount(s)).toBe(expected)
@@ -96,16 +104,15 @@ describe('神階 engine integration (決定126)', () => {
     const rawJ = getEnemyDef(ENEMY_IDS.juuma).actions[0]
     const rawTotal = rawJ.kind === 'multiAttack' ? rawJ.hits.reduce((a, b) => a + b, 0) : 0
     expect(intentAmount(juuma)).toBe(Math.round(rawTotal * r6.enemyAtkMul * RULES.stakes.specialMul))
-    // 機工師 R5 主砲（special）は上限 specialMulCapKarakuri
+    // 機工師 R5 主砲（special）は上限 specialMulCapKarakuri。決定251：R5 は late surge（R6 起点）の前なので ×1.3 は乗らない
     let k = start({ stake: 6, enemyId: ENEMY_IDS.karakuri })
     k = { ...k, player: { ...k.player, hp: 1000, maxHp: 1000 } }
     for (let i = 0; i < 4; i++) k = applyAction(k, { type: 'END_ROUND' }).state
     const rawK = getEnemyDef(ENEMY_IDS.karakuri).actions[4]
     const rawK5 = rawK.kind === 'special' ? rawK.amount : 0
     expect(k.enemy.intent?.kind).toBe('special')
-    expect(intentAmount(k)).toBe(
-      Math.round(rawK5 * r6.enemyAtkMul * RULES.stakes.lateRoundAtkMul * RULES.stakes.specialMulCapKarakuri),
-    )
+    expect(5).toBeLessThan(RULES.stakes.lateRoundFrom)
+    expect(intentAmount(k)).toBe(Math.round(rawK5 * r6.enemyAtkMul * RULES.stakes.specialMulCapKarakuri))
   })
 
   it('Ⅶ choices: race scales HP, pressure scales attack, tempo removes 1 AP in round 1 only', () => {

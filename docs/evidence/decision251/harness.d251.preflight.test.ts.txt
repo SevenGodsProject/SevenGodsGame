@@ -4,6 +4,7 @@
  * Policies are copied from the Decision245 harnesses (reader / naive / greedy / defensive) so results are comparable. */
 import { describe, it } from 'vitest'
 import { mkdirSync, writeFileSync } from 'node:fs'
+import * as fs from 'node:fs'
 import { GODS } from '../core/data/gods'
 import { ENEMIES } from '../core/data/enemies'
 import { getCardDef } from '../core/data/cards'
@@ -63,6 +64,7 @@ const SPECS: Record<string, Spec> = {
   E_heal075: { id: 'E_heal075', over: { healEfficiency: 0.75 } },
   F_special110: { id: 'F_special110', over: { specialMul: 1.1 } },
   H_div3: { id: 'H_div3', over: { divinationCount: 3 } },
+  before5: { id: 'before5', over: { lateRoundFrom: 5 } },
 }
 
 // ---------------- policies (Decision245 harness) ----------------
@@ -279,6 +281,8 @@ describe('Decision251 preflight', () => {
     const t0 = Date.now()
     let result: { out: CellOut; games: number }
     if (MODE === 'base') result = runMatrix(['pre246', 'prod'], LEVELS.map((l) => l.key), ['reader', 'naive', 'greedy', 'defensive'], 100)
+    else if (MODE === 'qaseed') { const rows = []; for (const [gid, gname] of [['taiyo','大耀'],['ebisu','恵比寿'],['fukuei','福永']]) for (const [eid, ename] of [['onryo','藍花の怨霊'],['ryujin','蒼海の龍神'],['oni','業斧の鬼将']]) for (const lv of [LEVELS[5], LEVELS[7]]) { const god = GODS.find((g) => g.nameJa === gname)!; const enemy = ENEMIES.find((e) => e.name === ename)!; for (let i = 0; i < 100; i++) { applySpec(SPECS.before5); const bf = play(god.id, enemy.id, 'normal', 'reader', i, lv.stake); applySpec(SPECS.prod); const af = play(god.id, enemy.id, 'normal', 'reader', i, lv.stake); if (bf.status !== 'won' && af.status === 'won') rows.push({ god: gname, enemy: ename, lv: lv.key, seed: 'd251-' + i, before: bf.status + '@R' + bf.round + '/' + bf.deathClass, after: 'won@R' + af.round + ' hp' + af.hp + ' minHp' + af.minHp + ' oracle' + af.oracle }) } } fs.writeFileSync(OUT + '/qa-seeds.json', JSON.stringify(rows, null, 1)); console.log('qa candidates', rows.length); result = { out: {}, games: 0 } }
+    else if (MODE === 'pilot') { const main = runMatrix(['prod', 'before5'], LEVELS.map((l) => l.key), ['reader', 'naive', 'greedy', 'defensive'], 100); const easy = runMatrix(['prod', 'before5'], ['0'], ['reader', 'naive', 'greedy'], 60, 'easy'); const hard = runMatrix(['prod', 'before5'], ['0'], ['reader', 'naive', 'greedy'], 60, 'hard'); const daily = runMatrix(['prod', 'before5'], ['0'], ['reader', 'naive', 'greedy'], 60, 'normal', true); result = { out: { ...main.out, 'prod@easy': easy.out.prod, 'before5@easy': easy.out.before5, 'prod@hard': hard.out.prod, 'before5@hard': hard.out.before5, 'prod@daily': daily.out.prod, 'before5@daily': daily.out.before5 }, games: main.games + easy.games + hard.games + daily.games } }
     else if (MODE === 'prod60') result = runMatrix(['prod'], ['1', '2', '3', '4', '5', '6', '7p'], ['reader', 'naive', 'greedy'], 60)
     else if (MODE === 'cand') result = runMatrix(['A_late6', 'B_lateMul12', 'C_atkStep110', 'D_block080', 'E_heal075', 'F_special110', 'H_div3'], ['1', '2', '3', '4', '5', '6', '7p'], ['reader', 'naive', 'greedy'], 60)
     else {

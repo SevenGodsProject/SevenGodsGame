@@ -416,7 +416,14 @@ export const RULES = {
      * 神階ラダー（Ⅰ〜Ⅶの勝率帯）の再中心化は決定246 の対象外（決定245 §8：別 Decision）。
      */
     divinationCount: 2,
-    lateRoundFrom: 5,
+    /**
+     * 決定251：5 → 6。決定246 の E1（敵の峰を R4 へ・R5 に 2 番目の値）と「R5 以降 ×1.3」が同じ窓に重なり、
+     * 神階Ⅴ〜Ⅶで R4（×1.15）→R5（×1.495）の二段峰になっていた（reader の敗北の 8〜9 割が R5〜6・託宣枯渇 95%）。
+     * late surge を峰の窓の後（R6〜7）へ置き直す 1 値の変更。paired-seed sim（1,133,840 試合・`docs/GOD_RANK_V_VII_RECENTER_PREFLIGHT.md`）で
+     * reader 神階Ⅴ 79.4→83.9％・Ⅵ 74.9→79.0％・Ⅶ猛威 54.9→63.5％、通常／easy／hard／Daily は同一値。
+     * 神階Ⅰのルール文（`stakes.ts` addedRuleJa）は本値から自動で「R6以降」になる。
+     */
+    lateRoundFrom: 6,
     lateRoundAtkMul: 1.3,
     enemyAtkStep: 1.15,
     enemyHpStep: 1.15,
