@@ -24,6 +24,11 @@ type BattleResonanceCutinProps = {
    * 静止：`onComplete` と同時。動画：`onComplete` 以後で動画の ended／error／timeout のいずれか
    */
   onExit?: () => void
+  /**
+   * 決定250 Pilot v2：動画採用時だけ渡す静止ポスター（動画の先頭 frame と同じ画）。mount の瞬間から円に敷き、
+   * keyvisual→動画の画風の切り替わりを消す。動画が error／reject でも、このポスターが静止フォールバックとして残る
+   */
+  poster?: string | null
 }
 
 /**
@@ -66,7 +71,7 @@ type BattleResonanceCutinProps = {
  *   ・play() reject・error のときは動画を出さず（is-video なし）、下の静止画がそのまま見える
  *   ・reduced-motion・未先読み・404 は呼び出し側で video=null になり、この経路に入らない
  */
-export function BattleResonanceCutin({ godId, onComplete, video = null, onExit }: BattleResonanceCutinProps) {
+export function BattleResonanceCutin({ godId, onComplete, video = null, onExit, poster = null }: BattleResonanceCutinProps) {
   const god = getGodDef(godId)
   // 完了通知は1回だけ。animationend が来なくても（背景タブ・描画落ち）時刻で必ず完了する
   const doneRef = useRef(false)
@@ -173,7 +178,15 @@ export function BattleResonanceCutin({ godId, onComplete, video = null, onExit }
       <div className="resonance-cutin-rays" aria-hidden="true" />
       <div className="resonance-cutin-band" aria-hidden="true" />
       <div className="resonance-cutin-group">
-        <div className={videoPlaying ? 'resonance-cutin-portrait is-video' : 'resonance-cutin-portrait'}>
+        <div
+          className={[
+            'resonance-cutin-portrait',
+            video ? 'is-premium' : '',
+            videoPlaying ? 'is-video' : '',
+          ]
+            .filter(Boolean)
+            .join(' ')}
+        >
           {/* 神選択カードと同じ1:1クロップ（KEYVISUAL_OBJECT_POSITION）で円に収める。
               笑蓮だけ原本が1254×1254の正方形だが、1:1に対しては無クロップなので
               他6神と同じ扱いでよい（STEP-R3で入れていた3:4の個別クロップは、
@@ -181,7 +194,11 @@ export function BattleResonanceCutin({ godId, onComplete, video = null, onExit }
           <img className="resonance-cutin-image" src={god.art.keyvisual} alt={god.nameJa} data-god={godId} />
           {/* 決定250：動画の円（<video> は先読み済みの要素をここへ appendChild する）。
               静止画の上・環の下。再生が始まる（playing）までは透明で、下の静止画が見えている */}
-          <div className="resonance-cutin-video-frame" ref={videoFrameRef} aria-hidden="true" />
+          <div className="resonance-cutin-video-frame" ref={videoFrameRef} aria-hidden="true">
+            {/* Pilot v2：動画と同じ構図のポスター。動画（appendChild で後ろに足される）が playing になるまで、
+                そして error 時はそのまま、円の中の絵はこれ。keyvisual はこの下に隠れる */}
+            {video && poster && <img className="resonance-cutin-poster" src={poster} alt="" draggable={false} />}
+          </div>
           {/* 七＝共鳴ゲージと同じ7つ刻みの環。SEVEN GODS独自の記号で、
               画像は増やさずconic-gradientとmaskだけで描く */}
           <span className="resonance-cutin-ring" aria-hidden="true" />

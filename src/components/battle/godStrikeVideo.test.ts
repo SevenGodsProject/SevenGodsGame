@@ -2,10 +2,12 @@ import { describe, expect, it } from 'vitest'
 import {
   GOD_STRIKE_VIDEO_FALLBACK_MS,
   GOD_STRIKE_VIDEO_MS,
+  GOD_STRIKE_POSTER_SRC,
   GOD_STRIKE_VIDEO_SRC,
   VIDEO_READY_STATE_MIN,
   createGodStrikeVideoPreload,
   isGodStrikeVideoReady,
+  preloadGodStrikePoster,
 } from './godStrikeVideo'
 import { BURST_GOD_ATTACK_MS, BURST_IMPACT_MS, BURST_READY_LEAD_MS, RESONANCE_CUTIN_MS } from './enemyVfxTiming'
 import { CUTIN_FALLBACK_MS } from './BattleResonanceCutin'
@@ -14,7 +16,14 @@ import { GOD_IDS } from '../../core/data/gods'
 describe('決定250 God Strike Premium Cut-in v1（大耀のみ・presentation only）', () => {
   it('Pilot の動画は大耀 1 柱だけ（他 6 神へは展開しない）', () => {
     expect(Object.keys(GOD_STRIKE_VIDEO_SRC)).toEqual([GOD_IDS.taiyo])
-    expect(GOD_STRIKE_VIDEO_SRC[GOD_IDS.taiyo]).toBe('/assets/gods/taiyo/god-strike-v1.mp4')
+    expect(GOD_STRIKE_VIDEO_SRC[GOD_IDS.taiyo]).toBe('/assets/gods/taiyo/god-strike-v2.mp4')
+  })
+
+  it('Pilot v2：動画を持つ神は必ず同じ構図のポスターを持つ（keyvisual→動画の切り替わりを消す）', () => {
+    expect(Object.keys(GOD_STRIKE_POSTER_SRC)).toEqual(Object.keys(GOD_STRIKE_VIDEO_SRC))
+    expect(GOD_STRIKE_POSTER_SRC[GOD_IDS.taiyo]).toBe('/assets/gods/taiyo/god-strike-v2-poster.webp')
+    expect(typeof Image).toBe('undefined')
+    expect(preloadGodStrikePoster(GOD_IDS.taiyo, false)).toBeNull()
   })
 
   it('採用判定：reduced-motion・未先読み・error・readyState 不足はすべて静止カットイン', () => {

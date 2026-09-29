@@ -21,7 +21,7 @@ import { useCardTravel } from './useCardTravel'
 import { useReactionLanguage } from './useReactionLanguage'
 import { BURST_BANNER_MS, BURST_READY_LEAD_MS } from './enemyVfxTiming'
 import { CUTIN_FALLBACK_MS } from './BattleResonanceCutin'
-import { createGodStrikeVideoPreload, isGodStrikeVideoReady, releaseGodStrikeVideo } from './godStrikeVideo'
+import { GOD_STRIKE_POSTER_SRC, createGodStrikeVideoPreload, isGodStrikeVideoReady, preloadGodStrikePoster, releaseGodStrikeVideo } from './godStrikeVideo'
 import { prefersReducedMotion } from './reducedMotion'
 import { BossEntrance } from './BossEntrance'
 import { deriveDefeatCause } from './defeatCause'
@@ -296,6 +296,8 @@ export function BattleScreen({
     // 取得できなくても何も起きない（commit 時の判定で静止カットインになるだけ）
     const video = createGodStrikeVideoPreload(stageGodId, prefersReducedMotion())
     godStrikeVideoRef.current = video
+    // Pilot v2：動画と同じ構図のポスターも先に読む（keyvisual と同じ new Image() 方式）
+    preloadGodStrikePoster(stageGodId, prefersReducedMotion())
     return () => {
       if (godStrikeVideoRef.current === video) godStrikeVideoRef.current = null
       releaseGodStrikeVideo(video)
@@ -540,6 +542,7 @@ export function BattleScreen({
           godId={state.godId}
           onComplete={handleCutinComplete}
           video={cutinVideoRef.current}
+          poster={cutinVideoRef.current ? (GOD_STRIKE_POSTER_SRC[state.godId] ?? null) : null}
           onExit={handleCutinExit}
         />
       )}

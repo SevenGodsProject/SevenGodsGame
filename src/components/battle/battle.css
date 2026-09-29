@@ -1864,11 +1864,17 @@
   opacity: 0;
   pointer-events: none;
 }
+/* Pilot v2：動画採用時（.is-premium）は mount の瞬間から円にポスター（動画の先頭 frame）を敷き、
+   keyvisual→動画の画風の切り替わりを消す。動画は playing で上に現れる（同じ画なので継ぎ目なし） */
+.resonance-cutin-portrait.is-premium .resonance-cutin-video-frame,
 .resonance-cutin-portrait.is-video .resonance-cutin-video-frame {
   opacity: 1;
+}
+.resonance-cutin-portrait.is-video .resonance-cutin-video-frame {
   transition: opacity 120ms ease-out;
 }
-.resonance-cutin-video {
+.resonance-cutin-video,
+.resonance-cutin-poster {
   --cutin-video-zoom: 1.7;
   --cutin-video-cx: 37.5%;
   --cutin-video-cy: 32.5%;

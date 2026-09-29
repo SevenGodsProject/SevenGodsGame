@@ -21,10 +21,20 @@ import { GOD_IDS } from '../../core/data/gods'
  * 他 6 神への展開は Pilot の Human QA（決定250 §15）を通ってから 1 柱ずつ。
  */
 export const GOD_STRIKE_VIDEO_SRC: Partial<Record<GodId, string>> = {
-  [GOD_IDS.taiyo]: '/assets/gods/taiyo/god-strike-v1.mp4',
+  [GOD_IDS.taiyo]: '/assets/gods/taiyo/god-strike-v2.mp4',
 }
 
-/** 動画の尺（候補 D：29 frame @24fps ＝ 1,208ms。カットイン mount＝T+200 から再生し T+1,400 で終わる） */
+/**
+ * 決定250 Pilot v2：動画採用時にカットインの円へ最初から敷く静止ポスター（動画の先頭 frame と同じ画・同じ 720² 構図）。
+ * keyvisual（厚塗り）→ 動画（線画）の 120ms の切り替わり（Q3 監査 #1・Human QA Q6）を消すためのもの。
+ * 動画が採用されないとき（reduced／未先読み／404）は使わず、現行の keyvisual 静止カットインのまま。
+ * 素材は Try2 原本の静止 frame（入力板＝front_640 由来）から切り出した非生成の派生。
+ */
+export const GOD_STRIKE_POSTER_SRC: Partial<Record<GodId, string>> = {
+  [GOD_IDS.taiyo]: '/assets/gods/taiyo/god-strike-v2-poster.webp',
+}
+
+/** 動画の尺（Pilot v2＝H3 Max Try2 の W2 1.083〜2.250s・等速 29 frame @24fps ＝ 1,208ms。カットイン mount＝T+200 から再生し T+1,400 で終わる） */
 export const GOD_STRIKE_VIDEO_MS = 1200
 
 /** `ended` を取りこぼしても（背景タブ・描画落ち）時刻で必ず退場する安全弁 */
@@ -65,6 +75,19 @@ export function createGodStrikeVideoPreload(godId: GodId | undefined, reduced: b
   video.src = src
   video.load()
   return video
+}
+
+/**
+ * 戦闘開始時にポスターを HTTP cache へ入れておく（keyvisual の先読みと同じ方式）。対象外の神・reduced・ブラウザ外では何もしない。
+ * 取得できなくてもカットインは成立する（ポスターの <img> が透明なら下の keyvisual が見える＝v1 と同じ挙動）
+ */
+export function preloadGodStrikePoster(godId: GodId | undefined, reduced: boolean): HTMLImageElement | null {
+  if (!godId || reduced || typeof Image === 'undefined') return null
+  const src = GOD_STRIKE_POSTER_SRC[godId]
+  if (!src) return null
+  const img = new Image()
+  img.src = src
+  return img
 }
 
 /** 戦闘終了時に解放する（decode バッファを持ち続けない） */
