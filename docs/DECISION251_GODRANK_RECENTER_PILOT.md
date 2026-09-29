@@ -80,3 +80,28 @@ level 0 の 4 方策（通常）と easy／hard／Daily の 3 方策 × 60 seed�
 - 神は **大耀**・デッキは推奨（既定）。`?stake=7` は Ⅶ 選択画面で **猛威の試練** を選ぶ。`?seed=`・`?stake=`・`?enemy=` は決定126／決定40 の共有用バックドア（解放状態に関わらず挑戦可）
 - seed の選定根拠（`qa-seeds.json`・reader bot）：`d251-20`＠Ⅴ＝Before は R5 の late-surge で敗北 → After は R7 撃破（残 HP 7）。`d251-14`＠Ⅶ猛威＝Before は R6 で敗北 → After は R6 撃破（残 HP 3）。人間の手順は bot と異なるため結果は保証しない（同 seed で初手・託宣結果は同一）
 - 5 問：Q1 Ⅴが簡単になりすぎていないか／Q2 Ⅶ猛威が理不尽でなく判断次第で戦えるか／Q3 R5→R6 が急死ではなく終盤のクライマックスに感じられるか／Q4 託宣をいつ使うか考える必要が残っているか／Q5 通常戦と比べて神階らしい高難度感があるか。**5/5 YES で PASS**
+
+---
+
+## 5. Production Release — PRODUCTION LIVE / CLOSED（2026-09-30 JST）
+
+- Human QA（CEO・2026-09-30）：**Q1〜Q5 すべて YES（5/5 PASS）** → **CEO が Production Release を承認**（対象 `b9b126e`）。Gate と Smoke の判定は AI 判断
+- root cause：決定246 の E1（R5 に 2 番目の峰）× 神階Ⅰの R5 起点 late surge（×1.3）＝二段峰。change：`RULES.stakes.lateRoundFrom` **5 → 6**。simulation：Preflight **1,133,840** 試合・Pilot **444,920** 試合（Release Gate で再計算し Pilot evidence と完全一致）
+
+| 項目 | 値 |
+|---|---|
+| final Production commit | **`b9b126e`**（`feat/d251-godrank-recenter`。lineage `289c457` → `da3e6ba`（Preflight docs）→ `b9b126e`） |
+| 統合方法 | ローカル master を `289c457 → b9b126e` へ **fast-forward** → `git push origin master`。`feat/d224`・決定213 runtime には未接触（`git diff a50b127 b9b126e -- src` は rules.ts＋test 2 件のみ） |
+| Release Gate | 差分 15 ファイル（runtime 3・docs 12）。`src` の実体変更は `lateRoundFrom: 5→6` の 1 行のみ（grep で確認）。tsc 0／lint error 0／**1,266 PASS**／clean rebuild の JS `index-Cz3tzyfF.js` md5 `829af6b8…`・CSS `index-Bb2gHnj6.css` md5 `a88d74a6…`（Production と同一）＝Human QA 版と一致。決定58／DAILY-01／STAKE-01 違反 0。**paired-seed 再計算（444,920 試合）＝Pilot evidence と集計・49 セル完全一致**：reader Ⅴ **83.9**／Ⅵ **79.0**／Ⅶ猛威 **63.5**、通常／easy／hard／Daily Before/After 同一 → **PASS** |
+| Vercel Production deployment | **`6745262656`**（sha `b9b126e`・Production・success・2026-09-29T20:54:46Z） |
+| Production URL | `https://seven-gods-game.vercel.app/`（配信 JS md5 一致・bundle 内 `lateRoundFrom:6`・God Strike mp4 200） |
+| **Production Smoke**（Playwright・`docs/evidence/decision251/production-smoke/`） | **PASS**：①神階Ⅴ（`?seed=d251-20&stake=5&enemy=trial`・蒼毘）予告 R1..R5 ＝ 60／90／130／170／**150**（R5 に late +30% なし。旧 runtime なら 190）②神階Ⅶ猛威（`?seed=d251-14&stake=7&enemy=trial`）R1..R3 ＝ 70／110／150（×1.3225 の猛威が既定で適用）③通常戦（`rl-qa-7`・大耀×龍神）託宣 **残り3回**／神階は **残り2回** ④神階Ⅰ（`stake=1&enemy=trial`）で R6 まで生存：R5 **150**（+30% なし）→ R6 **130**（9×1.15×1.3＝13.45→13：R6 から +30%）⑤God Strike（rl-qa-7）：共鳴 7/7 R5 → カットイン → 動画 → 突き／着弾 1,600・stop 80・敗北（残 120／1,030）＝決定250 Smoke と同一 ⑥console error 0・横スクロール 0（全シナリオ）。**同 seed の Pilot（:4262）との parity**：神階Ⅴ／Ⅶ猛威／通常の予告・HP・結果が **IDENTICAL**。God Strike シナリオは結果（敗北・残 120）と敵 HP（190/1,030）が同一、途中の盾合計だけ harness のクリック取りこぼしで差（engine 差ではない） |
+| Human QA 5/5 | Q1 Ⅴが簡単になりすぎていない YES／Q2 Ⅶ猛威は理不尽でなく判断次第 YES／Q3 R5→R6 が終盤のクライマックス YES／Q4 託宣の切りどころが残る YES／Q5 神階らしい高難度感 YES |
+| V／VI／VII final（reader・100 seed・Before→After） | Ⅴ 79.4→**83.9**／Ⅵ 74.9→**79.0**／Ⅶ猛威 54.9→**63.5**（Ⅶ静寂 70.5→76.4・Ⅶ巨躯 51.9→56.1）。naive 32.4／28.7／15.3・reader−naive 51.5／50.3／48.3pt・late-surge 死亡 2.7／2.8／6.1% |
+| Normal／Easy／Hard／Daily | Before／After **同一**（sim 全値一致・Production Smoke の通常戦も決定250 と同一） |
+| rollback target | Vercel **`6739038138`**（sha `289c457`・runtime `a50b127`） |
+| cleanup | QA preview :4261／:4262 停止（pid 18940／9076）。一時ファイアウォール 0 件（作成していない） |
+
+**Known Issues**：①双牙の魔獣 × 神階Ⅵ〜Ⅶ（連撃のみの敵に specialMul が全 R に乗る。4 神で Ⅵ 17〜30%・Ⅶ猛威 2〜8%・悪化なし）②Ⅶ巨躯の未撃破 27%（HP ×1.32 の設計上の試練）③神階Ⅰ〜Ⅳ の naive +9〜11pt（reader +0.4〜+2.7）④`gameVersion` が `1.d97db7abd39e51e1` に変わり自己ベストの版が分かれる（Ranking は dormant）。
+
+**決定251：PRODUCTION LIVE / CLOSED。**

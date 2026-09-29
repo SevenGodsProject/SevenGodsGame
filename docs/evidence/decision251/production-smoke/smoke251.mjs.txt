@@ -1,0 +1,64 @@
+// 決定251 Production Smoke — 神階Ⅴ／Ⅶ猛威／通常の託宣回数・R5 に late +30% なし・R6 から +30%・same-seed parity（prod vs pilot）
+import { createRequire } from 'node:module'
+import { writeFileSync, mkdirSync } from 'node:fs'
+const require = createRequire('C:/Users/kimi1/SevenGodsGame/package.json')
+const { chromium } = require('playwright')
+const OUT = process.argv[2]; mkdirSync(OUT, { recursive: true })
+const BASES = { prod: 'https://seven-gods-game.vercel.app', pilot: 'http://127.0.0.1:4262' }
+const clickText = (page, text) => page.evaluate((t) => { const el = [...document.querySelectorAll('button')].find((x) => x.textContent.replace(/\s+/g, '').includes(t) && !x.disabled); if (!el) return false; el.click(); return true }, text)
+const clickSel = (page, sel) => page.evaluate((s) => { const el = document.querySelector(s); if (!el || el.disabled) return false; el.click(); return true }, sel)
+const hud = (page) => page.evaluate(() => {
+  const t = (s) => document.querySelector(s)?.textContent.replace(/\s+/g, ' ').trim() ?? null
+  const intent = t('.intent'); const m = intent ? intent.match(/(\d+)(?!.*\d)/) : null
+  return { round: Number((t('.battle-topbar') ?? '').match(/ラウンド\s*(\d)/)?.[1] ?? 0), intent, intentNum: m ? Number(m[1]) : null, oracle: t('.divination-panel') ?? t('[class*=divination]'), player: t('.player-plate'), enemy: t('.enemy-plate'), over: !!document.querySelector('.game-over-overlay, .victory-stage'), hScroll: document.documentElement.scrollWidth > window.innerWidth + 1 }
+})
+// 守るだけ：説明に「ブロック」を含み「ダメージを与え」を含まない札 → 「回復」札。攻撃札は出さない
+const playDefensive = (page) => page.evaluate(() => {
+  const cards = [...document.querySelectorAll('.hand .card-view')].filter((c) => !c.disabled)
+  const txt = (c) => c.textContent.replace(/\s+/g, ' ')
+  const pick = cards.find((c) => /ブロック/.test(txt(c)) && !/ダメージを与え/.test(txt(c))) ?? cards.find((c) => /回復/.test(txt(c)) && !/ダメージを与え/.test(txt(c)))
+  if (!pick) return null
+  const n = pick.querySelector('.card-view-name')?.textContent.trim() ?? '?'; pick.click(); return n
+})
+async function start(page, base, q, god, enemyName) {
+  await page.goto(`${base}/?${q}`); await page.waitForSelector('.home-screen .home-cta-primary', { timeout: 30000 }); await page.waitForTimeout(300)
+  if (await clickText(page, 'わかった')) await page.waitForTimeout(300)
+  if (!(await clickSel(page, '[data-testid="home-start"]'))) await clickText(page, '神を選ぶ')
+  await page.waitForTimeout(400); if (await clickText(page, '新しく始める')) await page.waitForTimeout(300)
+  await clickText(page, god); await page.waitForTimeout(300)
+  const stakeText = await page.evaluate(() => document.querySelector('.stake-select')?.textContent.replace(/\s+/g, ' ').trim().slice(0, 300) ?? null)
+  await clickText(page, 'この構成で始める'); await page.waitForTimeout(300)
+  await clickText(page, enemyName); await page.waitForTimeout(500); await clickText(page, 'この構成でバトル開始')
+  await page.waitForFunction(() => { const b = document.querySelector('.end-round-button'); return b && !b.disabled }, null, { timeout: 20000 }); await page.waitForTimeout(2200)
+  return stakeText
+}
+async function run(base, label, q, god, enemyName, rounds = 7) {
+  const browser = await chromium.launch(); const ctx = await browser.newContext({ viewport: { width: 1508, height: 660 } }); const page = await ctx.newPage()
+  const errors = []; page.on('console', (m) => { if (m.type() === 'error' && !/Failed to load resource/.test(m.text())) errors.push(m.text()) }); page.on('pageerror', (e) => errors.push(String(e)))
+  const rec = { label, base, q, god, enemy: enemyName, errors, perRound: [] }
+  try {
+    rec.stakeText = await start(page, base, q, god, enemyName)
+    rec.initial = await hud(page)
+    for (let r = 1; r <= rounds; r++) {
+      const h = await hud(page); if (h.over) break
+      const played = []; for (let k = 0; k < 6; k++) { const n = await playDefensive(page); if (!n) break; played.push(n); await page.waitForTimeout(500) }
+      const afterPlay = await hud(page)
+      rec.perRound.push({ round: h.round, intent: h.intent, intentNum: h.intentNum, oracle: h.oracle, playerBefore: h.player, played, playerAfterPlay: afterPlay.player, hScroll: h.hScroll })
+      await clickSel(page, '.end-round-button'); await page.waitForTimeout(3200)
+      await page.waitForFunction(() => { const b = document.querySelector('.end-round-button'); return (b && !b.disabled) || document.querySelector('.game-over-overlay, .victory-stage') }, null, { timeout: 15000 }).catch(() => {})
+    }
+    rec.final = await hud(page)
+    rec.result = await page.evaluate(() => ({ overlay: document.querySelector('.game-over-overlay')?.textContent.replace(/\s+/g, ' ').trim().slice(0, 200) ?? null, victory: !!document.querySelector('.victory-stage') }))
+  } catch (e) { rec.failure = String(e) }
+  await ctx.close(); await browser.close(); return rec
+}
+const SC = [
+  { label: 'stake5-trial', q: 'seed=d251-20&stake=5&enemy=trial', god: '蒼毘', enemy: '試練の影' },
+  { label: 'stake7-trial', q: 'seed=d251-14&stake=7&enemy=trial', god: '蒼毘', enemy: '試練の影' },
+  { label: 'normal-ryujin', q: 'seed=rl-qa-7&enemy=ryujin', god: '大耀', enemy: '蒼海の龍神' },
+]
+const results = []
+for (const [bk, base] of Object.entries(BASES)) for (const s of SC) { console.log('▶', bk, s.label); const r = await run(base, `${bk}:${s.label}`, s.q, s.god, s.enemy, s.label.startsWith('normal') ? 1 : 7); results.push(r); console.log('  rounds', r.perRound.length, 'intents', r.perRound.map((x) => `R${x.round}:${x.intentNum}`).join(' '), 'oracle0', (r.initial?.oracle ?? '').match(/残り\d+回/)?.[0], 'err', r.errors.length, r.failure ? 'FAIL ' + r.failure.slice(0, 100) : '') }
+writeFileSync(`${OUT}/smoke251.json`, JSON.stringify(results, null, 1))
+// parity prod vs pilot
+for (const s of SC) { const a = results.find((r) => r.label === `prod:${s.label}`), b = results.find((r) => r.label === `pilot:${s.label}`); const ai = a.perRound.map((x) => x.intentNum + '|' + x.playerAfterPlay).join(';'), bi = b.perRound.map((x) => x.intentNum + '|' + x.playerAfterPlay).join(';'); console.log('parity', s.label, ai === bi && JSON.stringify(a.result) === JSON.stringify(b.result) ? 'IDENTICAL' : 'DIFF', '| prod:', ai.slice(0, 120), '| result', JSON.stringify(a.result).slice(0, 60)) }
