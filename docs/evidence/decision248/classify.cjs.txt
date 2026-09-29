@@ -1,0 +1,119 @@
+// Decision248: 60-card semantic classification from the Decision244 card table (cards unchanged in bcfd530).
+const fs = require('fs')
+const SP = 'C:/Users/kimi1/AppData/Local/Temp/claude/C--Users-kimi1-SevenGodsGame/a0e18275-1268-469e-968b-aee727aa4007/scratchpad'
+const rows = fs.readFileSync(`${SP}/d248-cards.md`, 'utf8').split('\n').filter((l) => l.startsWith('| card_'))
+const usage = new Map()
+for (const l of fs.readFileSync(`${SP}/d248-usage.md`, 'utf8').split('\n').filter((l) => l.startsWith('| '))) {
+  const c = l.split('|').map((s) => s.trim())
+  usage.set(c[1], { perGame: +c[4], perCopy: +c[5] })
+}
+const decks = {}
+for (const l of fs.readFileSync('C:/Users/kimi1/SevenGodsGame/docs/evidence/decision244/card-table-60-and-recommended-decks.md', 'utf8').split('\n').filter((l) => l.startsWith('- '))) {
+  const m = l.match(/^- (\S+): (.+?) \| types=/)
+  if (!m) continue
+  decks[m[1]] = m[2].split('、').map((s) => { const mm = s.match(/^(.+?)(?:×(\d+))?$/); return { name: mm[1], n: mm[2] ? +mm[2] : 1 } })
+}
+const num = (s) => (s === '' ? 0 : +s)
+const cards = rows.map((l) => {
+  const c = l.split('|').map((s) => s.trim())
+  const [id, name, type, cost, god, dmg, block, heal, draw, ap, reso, bd, self, bonus] = c.slice(1)
+  const buff = /buff:self/.test(bd) ? +bd.match(/\+(\d+)x(\d)R/)[1] : 0
+  const debuff = /debuff:enemy/.test(bd) ? +bd.match(/-(\d+)x(\d)R/)[1] : 0
+  return { id, name, type, cost: +cost, god, dmg: num(dmg), block: num(block), heal: num(heal), draw: num(draw), ap: num(ap), reso: num(reso), buff, debuff, self: num(self), bonus }
+})
+// value weights (AP-equivalents, RULES.baselineDamagePerAp=5): dmg 1, block 1, heal 1, draw 4, ap 4 (net), reso 2.5, buff atk*rounds≈, debuff atk*rounds
+function scores(k) {
+  return {
+    STRIKE: k.dmg,
+    GUARD: k.block,
+    MEND: k.heal,
+    TEMPO: k.draw * 4 + Math.max(0, k.ap - 0) * 4,
+    EMPOWER: k.buff * 2,
+    WEAKEN: k.debuff * 2,
+    ATTUNE: k.reso * 2.5,
+  }
+}
+const cur = (k) => {
+  const s = []
+  if (k.dmg) s.push('God 突き＋Enemy 被弾（stop／揺れ／数字／SE）')
+  if (k.self) s.push('God 自傷の揺れ（90ms）')
+  if (k.block) s.push('HUD 盾バッジ pulse・トースト・SE block')
+  if (k.heal) s.push('HUD HP バー pulse・トースト・SE heal・数字')
+  if (k.draw) s.push('HUD ミニ結果「カード+n」・SE card_draw')
+  if (k.ap) s.push('HUD ミニ結果「神力+n」')
+  if (k.reso) s.push('HUD 共鳴ゲージ fill・SE resonance_gain')
+  if (k.buff) s.push('HUD バフバッジ（文字）')
+  if (k.debuff) s.push('HUD 敵バフ欄（文字）・予告値の減算')
+  return s.join('／')
+}
+const subj = (k) => {
+  const s = new Set()
+  if (k.dmg) { s.add('God'); s.add('Enemy') }
+  if (k.self) s.add('God')
+  s.add('Card')
+  s.add('HUD')
+  return [...s]
+}
+const DESIRED = { STRIKE: 'God → Enemy', GUARD: 'God（構える）', MEND: 'God（息を吹き返す）＋OTOMO（寄る・小）', TEMPO: 'Hand／Card（配り直し）＋HUD 神力', EMPOWER: 'God（高まる・金）', WEAKEN: 'Enemy（よろめく・沈む）', ATTUNE: 'God（高まる・共鳴色）＋OTOMO（応える・小）' }
+const out = []
+const bySem = {}
+for (const k of cards) {
+  const sc = scores(k)
+  const sorted = Object.entries(sc).filter(([, v]) => v > 0).sort((a, b) => b[1] - a[1])
+  const primary = sorted[0][0]
+  const secondary = sorted[1] && sorted[1][1] >= sorted[0][1] * 0.5 ? sorted[1][0] : ''
+  const mods = []
+  if (k.self) mods.push('RISK')
+  if (k.bonus) mods.push('PAYOFF(' + k.bonus.split('→')[0] + ')')
+  if (k.reso && primary !== 'ATTUNE') mods.push('SETUP(charged)')
+  const u = usage.get(k.name)
+  const freq = u ? u.perGame : 0
+  const inDecks = Object.entries(decks).filter(([, d]) => d.some((x) => x.name === k.name)).map(([g]) => g)
+  const intensity = k.dmg >= 15 ? 'L4/L3（重い一撃・既存 ladder）' : k.dmg >= 10 ? 'L2（既存 ladder）' : k.dmg > 0 ? 'L1（既存 ladder）' : k.cost >= 3 ? 'Tier1+（大技だが体の反応は Tier1 上限）' : 'Tier1'
+  const rec = { ...k, primary, secondary, mods: mods.join(' '), current: cur(k), currentSubject: subj(k).join('+'), desired: DESIRED[primary], freq, inDecks, intensity }
+  out.push(rec)
+  bySem[primary] = bySem[primary] ?? { n: 0, cards: [], freq: 0 }
+  bySem[primary].n++
+  bySem[primary].cards.push(k.name)
+}
+// frequency per semantic per battle: average over 7 recommended decks of sum(plays/game of cards in deck)
+const gods = Object.keys(decks)
+const semFreq = {}
+for (const g of gods) {
+  for (const { name } of decks[g]) {
+    const k = out.find((x) => x.name === name)
+    const u = usage.get(name)
+    if (!k || !u) continue
+    semFreq[k.primary] = semFreq[k.primary] ?? {}
+    semFreq[k.primary][g] = (semFreq[k.primary][g] ?? 0) + u.perGame / (decks[g].find((d) => d.name === name).n) * 1 // per-game already accounts copies
+  }
+}
+// note: usage perGame is per game among decks containing the card (already includes all copies) → do not multiply by n; dividing above double counts, fix:
+for (const s of Object.keys(semFreq)) for (const g of gods) if (semFreq[s][g] !== undefined) {
+  // recompute exactly: sum over distinct cards in deck of perGame
+  const names = [...new Set(decks[g].map((d) => d.name))]
+  semFreq[s][g] = names.filter((nm) => out.find((x) => x.name === nm)?.primary === s).reduce((a, nm) => a + (usage.get(nm)?.perGame ?? 0), 0)
+}
+const md = ['# Decision248 — 60 枚 semantic table（Production bcfd530・カードは決定244 以降不変）', '', '出典：効果＝`src/core/data/cards/*.ts`（決定244 evidence の表と同一）。frequency＝決定244 simulation（reader／ふつう）の「その札を含む推奨デッキでの 1 戦あたり使用回数」（推奨デッキ外の札は 0＝実プレイ頻度データなし）。', '', '| # | card ID | name | God/common | type | cost | mechanical effect | primary | secondary | modifiers | current visual response | current subject | desired subject | freq/戦 | decks | intensity req |', '|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|']
+out.forEach((k, i) => {
+  const eff = [k.dmg && `敵に${k.dmg}`, k.self && `自分に${k.self}`, k.block && `block${k.block}`, k.heal && `heal${k.heal}`, k.draw && `draw${k.draw}`, k.ap && `AP+${k.ap}`, k.reso && `共鳴+${k.reso}`, k.buff && `atk+${k.buff}`, k.debuff && `敵atk−${k.debuff}`, k.bonus && `⚡${k.bonus}`].filter(Boolean).join('・')
+  md.push(`| ${i + 1} | ${k.id} | ${k.name} | ${k.god} | ${k.type} | ${k.cost} | ${eff} | **${k.primary}** | ${k.secondary} | ${k.mods} | ${k.current} | ${k.currentSubject} | ${k.desired} | ${k.freq.toFixed(2)} | ${k.inDecks.length ? k.inDecks.join('/') : '—'} | ${k.intensity} |`)
+})
+md.push('', '## primary semantic の内訳', '', '| semantic | 枚数 | カード |', '|---|---|---|')
+for (const [s, v] of Object.entries(bySem).sort((a, b) => b[1].n - a[1].n)) md.push(`| ${s} | ${v.n} | ${v.cards.join('、')} |`)
+md.push('', '## 1 戦あたりの発生回数（reader／ふつう・推奨デッキ）', '', `| semantic | ${gods.join(' | ')} | 平均 |`, `|---|${gods.map(() => '---').join('|')}|---|`)
+for (const s of Object.keys(bySem)) {
+  const vals = gods.map((g) => semFreq[s]?.[g] ?? 0)
+  md.push(`| ${s} | ${vals.map((v) => v.toFixed(2)).join(' | ')} | ${(vals.reduce((a, b) => a + b, 0) / gods.length).toFixed(2)} |`)
+}
+const bodyReact = out.filter((k) => k.dmg > 0 || k.self > 0).length
+md.push('', `## 現行の反応主体（再検証）`, '', `- キャラクター（God／Enemy）が動くカード：**${bodyReact}/60**（敵ダメージまたは自傷を持つ札）。残り **${60 - bodyReact}/60** は Card（閃光・飛翔）と HUD だけが動く`, `- 決定244 の「38/60」と一致（差 0）`)
+const uncounted = out.filter((k) => !usage.get(k.name)).map((k) => k.name)
+md.push('', `推奨デッキ外（頻度データなし）：${uncounted.join('、')}（${uncounted.length} 枚）`)
+fs.mkdirSync('C:/Users/kimi1/SevenGodsGame/docs/evidence/decision248', { recursive: true })
+fs.writeFileSync('C:/Users/kimi1/SevenGodsGame/docs/evidence/decision248/60-card-semantic-table.md', md.join('\n'))
+fs.writeFileSync(`${SP}/d248-cards.json`, JSON.stringify(out, null, 1))
+console.log(JSON.stringify(Object.fromEntries(Object.entries(bySem).map(([s, v]) => [s, v.n]))), 'bodyReact', bodyReact)
+console.log(Object.keys(bySem).map((s) => `${s}: ${gods.map((g) => (semFreq[s]?.[g] ?? 0).toFixed(1)).join('/')}`).join('\n'))
+console.log('secondary:', out.filter((k) => k.secondary).map((k) => `${k.name}(${k.primary}+${k.secondary})`).join(', '))
+console.log('mods:', out.filter((k) => k.mods).length, 'RISK', out.filter((k) => k.self).length, 'PAYOFF', out.filter((k) => k.bonus).length)

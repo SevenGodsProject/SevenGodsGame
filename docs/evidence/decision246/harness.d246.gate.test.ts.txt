@@ -1,0 +1,379 @@
+/* Decision245 Combat Tension v1 Preflight harness — scratch only. Runs on the Production (d1e3b30) engine copy.
+ * Variants are applied by mutating exported data objects at runtime (NO_STAKE_RULES.divinationCount, EnemyDef.actions).
+ * The repo is never touched. */
+import { describe, it } from 'vitest'
+import { mkdirSync, writeFileSync } from 'node:fs'
+import { createRequire } from 'node:module'
+const require = createRequire(import.meta.url)
+import { GODS } from '../core/data/gods'
+import { ENEMIES } from '../core/data/enemies'
+import { getCardDef } from '../core/data/cards'
+import { getRecommendedDeck } from '../core/data/deckBuilder'
+import { RULES } from '../core/data/rules'
+import { NO_STAKE_RULES } from '../core/data/stakes'
+import { applyAction } from '../core/engine/reducer'
+import { enemyActionTotal } from '../core/engine/intent'
+import { sumBuff } from '../core/engine/buffs'
+import type { CardDef, CardInstance, Difficulty, EnemyActionDef, EnemyId, GameState, GodId } from '../core/types'
+
+const OUT = process.env.D246_OUT!
+mkdirSync(OUT, { recursive: true })
+
+// ---------------- variants ----------------
+type OracleVariant = 'A7' | 'B3' | 'C2' | 'D1'
+const ORACLE_COUNT: Record<OracleVariant, number> = { A7: 7, B3: 3, C2: 2, D1: 1 }
+type EnemyVariant = 'E0' | 'E1' | 'E2'
+const a = (amount: number): EnemyActionDef => ({ kind: 'attack', amount })
+const c = (label: string): EnemyActionDef => ({ kind: 'charge', label })
+const m = (hits: number[], special?: string): EnemyActionDef => (special ? { kind: 'multiAttack', hits, name: special, special: true } : { kind: 'multiAttack', hits })
+const sp = (amount: number, name: string): EnemyActionDef => ({ kind: 'special', amount, name })
+const KC = '砲身に魔力を溜めている…'
+const KC2 = '⚠ 主砲充填開始…！'
+const DC = 'カードを宙に舞わせている…'
+/** E1 = peak at R4 (multiset-preserving permutation); E2 = peak at R5. 機工師 unchanged (already R5 special). */
+const ENEMY_TABLES: Record<EnemyVariant, Record<string, EnemyActionDef[]>> = {
+  E0: {},
+  E1: {
+    enemy_01: [5, 8, 11, 15, 13, 9, 6].map(a),
+    enemy_02: [5, 9, 13, 17, 15, 11, 7].map(a),
+    enemy_03: [3, 6, 13, 23, 18, 9, 4].map(a),
+    enemy_04: [a(6), c(KC), a(22), c(KC2), sp(24, '主砲・神滅甲'), a(7), a(9)],
+    enemy_05: [m([5, 4]), m([5, 5]), m([4, 4, 4], '双牙乱撃'), m([8, 8]), m([8, 7]), m([7, 7]), m([7, 6])],
+    enemy_06: [4, 7, 12, 20, 16, 9, 5].map(a),
+    enemy_07: [a(4), c(DC), a(19), c(DC), a(24), a(12), a(6)],
+  },
+  E2: {
+    enemy_01: [5, 6, 9, 13, 15, 11, 8].map(a),
+    enemy_02: [5, 7, 11, 15, 17, 13, 9].map(a),
+    enemy_03: [3, 4, 9, 18, 23, 13, 6].map(a),
+    enemy_04: [a(6), c(KC), a(22), c(KC2), sp(24, '主砲・神滅甲'), a(7), a(9)],
+    enemy_05: [m([5, 4]), m([5, 5]), m([4, 4, 4], '双牙乱撃'), m([8, 7]), m([8, 8]), m([7, 7]), m([7, 6])],
+    enemy_06: [4, 5, 9, 16, 20, 12, 7].map(a),
+    enemy_07: [a(4), c(DC), a(19), c(DC), a(24), a(12), a(6)],
+  },
+}
+const BASE_ACTIONS = new Map(ENEMIES.map((e) => [e.id as string, e.actions]))
+function applyEnemyVariant(_v: EnemyVariant) { /* runtime gate: data is used as-is */ }
+function applyOracleVariant(_v: OracleVariant) { /* runtime gate: RULES as-is */ }
+// sanity: multiset preserved
+for (const v of ['E1', 'E2'] as EnemyVariant[]) for (const e of ENEMIES) {
+  const t = ENEMY_TABLES[v][e.id as string]
+  const s0 = BASE_ACTIONS.get(e.id as string)!.map(enemyActionTotal).sort((x, y) => x - y).join(',')
+  const s1 = t.map(enemyActionTotal).sort((x, y) => x - y).join(',')
+  if (s0 !== s1) throw new Error(`variant ${v} ${e.name} multiset differs: ${s0} vs ${s1}`)
+}
+
+// ---------------- policies (same as Decision244 harness, reader oracle rule generalized) ----------------
+type Policy = 'reader' | 'readerBurn' | 'naive' | 'greedy'
+const eff = (def: CardDef, kind: string, target?: string) =>
+  def.effects.filter((e: any) => e.kind === kind && (target ? e.target === target : true)).reduce((s, e: any) => s + (e.amount ?? 0), 0)
+const dmgOf = (x: CardInstance) => eff(getCardDef(x.defId), 'damage', 'enemy')
+const blockOf = (x: CardInstance) => eff(getCardDef(x.defId), 'block')
+const healOf = (x: CardInstance) => eff(getCardDef(x.defId), 'heal')
+const selfDmgOf = (x: CardInstance) => eff(getCardDef(x.defId), 'damage', 'self')
+const debuffOf = (x: CardInstance) => getCardDef(x.defId).effects.filter((e: any) => e.kind === 'debuff' && e.target === 'enemy').reduce((s, e: any) => s + e.amount, 0)
+const costOf = (x: CardInstance) => getCardDef(x.defId).cost + (x.costModifier ?? 0)
+const utilOf = (x: CardInstance) => getCardDef(x.defId).effects.reduce((s, e: any) => {
+  if (e.kind === 'draw') return s + e.amount * 4
+  if (e.kind === 'gainAp') return s + e.amount * 4
+  if (e.kind === 'resonance') return s + e.amount * 2.5
+  if (e.kind === 'buff' && e.target === 'self') return s + e.amount * e.rounds
+  if (e.kind === 'debuff' && e.target === 'enemy') return s + e.amount * e.rounds
+  return s
+}, 0)
+const incomingOf = (s: GameState) => (s.enemy.intent ? enemyActionTotal(s.enemy.intent) : 0)
+const effIncoming = (s: GameState) => Math.max(0, incomingOf(s) + sumBuff(s.enemy.buffs, 'atk'))
+const projectedHp = (s: GameState) => s.player.hp - Math.max(0, effIncoming(s) - s.player.block)
+function bonusDmgIf(state: GameState, x: CardInstance): number {
+  const def = getCardDef(x.defId)
+  if (!def.bonus) return 0
+  const extra = def.bonus.effects.filter((e: any) => e.kind === 'damage' && e.target === 'enemy').reduce((s, e: any) => s + e.amount, 0)
+  if (extra === 0) return 0
+  const inc = incomingOf(state)
+  switch (def.bonus.when) {
+    case 'combo': return state.cardsPlayedThisRound >= 1 ? extra : 0
+    case 'charged': return state.resonance.value >= RULES.cardBonus.chargedThreshold ? extra : 0
+    case 'enemyBig': return inc >= RULES.cardBonus.enemyBigThreshold ? extra : 0
+    case 'lowHp': return state.player.hp <= Math.floor(state.player.maxHp * 0.5) ? extra : 0
+    case 'blocked': return inc > 0 && state.player.block + blockOf(x) >= inc ? extra : 0
+  }
+  return 0
+}
+const totalDmg = (s: GameState, x: CardInstance) => dmgOf(x) + bonusDmgIf(s, x) + (dmgOf(x) > 0 ? Math.max(0, sumBuff(s.player.buffs, 'atk')) : 0)
+function canKillNow(state: GameState, affordable: CardInstance[]): boolean {
+  const dmgCards = affordable.filter((x) => dmgOf(x) > 0).sort((p, q) => totalDmg(state, q) / costOf(q) - totalDmg(state, p) / costOf(p))
+  let ap = state.ap.current
+  let sum = 0
+  for (const x of dmgCards) if (costOf(x) <= ap) { ap -= costOf(x); sum += totalDmg(state, x) }
+  return sum >= state.enemy.hp + state.enemy.block
+}
+let intentDecisions = 0 // counts reader picks taken because of lethal/dangerous intent
+function pickCard(state: GameState, policy: Policy): CardInstance | null {
+  const affordable = state.hand.filter((x) => costOf(x) <= state.ap.current)
+  if (affordable.length === 0) return null
+  if (policy === 'naive') return affordable[0]
+  const inc = effIncoming(state)
+  const hpAfter = projectedHp(state)
+  const lethal = hpAfter <= 0
+  const dangerous = hpAfter < state.player.maxHp * 0.35
+  const guarded = state.player.block >= inc
+  const byDmg = (arr: CardInstance[]) => arr.filter((x) => dmgOf(x) > 0).sort((p, q) => totalDmg(state, q) / costOf(q) - totalDmg(state, p) / costOf(p))
+  const bestBlock = () => affordable.filter((x) => blockOf(x) > 0).sort((p, q) => blockOf(q) - blockOf(p))[0]
+  const bestDebuff = () => affordable.filter((x) => debuffOf(x) > 0).sort((p, q) => debuffOf(q) - debuffOf(p))[0]
+  const bestHeal = () => affordable.filter((x) => healOf(x) > 0).sort((p, q) => healOf(q) - healOf(p))[0]
+  const bestUtil = () => affordable.filter((x) => utilOf(x) > 0 && dmgOf(x) === 0 && blockOf(x) === 0 && healOf(x) === 0).sort((p, q) => utilOf(q) / costOf(q) - utilOf(p) / costOf(p))[0]
+  if (policy === 'greedy') {
+    const d = byDmg(affordable)[0]
+    if (d) return d
+    return bestUtil() ?? bestBlock() ?? bestHeal() ?? affordable.sort((p, q) => costOf(q) - costOf(p))[0]
+  }
+  const free = affordable.find((x) => { const def = getCardDef(x.defId); return def.effects.some((e: any) => e.kind === 'gainAp' && e.amount >= def.cost) })
+  if (free) return free
+  if (canKillNow(state, affordable)) { const d = byDmg(affordable)[0]; if (d) return d }
+  if ((lethal || dangerous) && !guarded) {
+    const b = bestBlock(); if (b) { intentDecisions++; return b }
+    const db = bestDebuff(); if (db) { intentDecisions++; return db }
+    const h = bestHeal(); if (h) { intentDecisions++; return h }
+  }
+  if (lethal) { const h = bestHeal(); if (h) { intentDecisions++; return h } }
+  const safe = affordable.filter((x) => selfDmgOf(x) === 0 || state.player.hp - selfDmgOf(x) - Math.max(0, inc - state.player.block) > 0)
+  const d = byDmg(safe)[0]
+  if (d) return d
+  const u = bestUtil(); if (u) return u
+  const h = bestHeal(); if (h && state.player.hp < state.player.maxHp * 0.7) return h
+  const b = bestBlock(); if (b && !guarded && inc > 0) return b
+  return null
+}
+/** -1 = skip. Engine cap is state.divination.remaining; reader saves when remaining < rounds left. */
+function pickOracle(state: GameState, policy: Policy): number {
+  if (state.divination.remaining <= 0 || state.divination.usedThisRound) return -1
+  if (policy === 'naive' || policy === 'greedy') return 2
+  const inc = effIncoming(state)
+  const hpAfter = projectedHp(state)
+  const lethal = hpAfter <= 0
+  const dangerous = hpAfter < state.player.maxHp * 0.35
+  const kill = state.enemy.hp + state.enemy.block <= 4
+  if (kill) return 2
+  if (lethal && inc > 0) return 0
+  const roundsLeft = RULES.totalRounds - state.round + 1
+  if (policy === 'readerBurn' || state.divination.remaining >= roundsLeft) {
+    if (dangerous && inc > 0) return 0
+    return 2
+  }
+  if (dangerous && inc > 0) return 0
+  if (roundsLeft <= state.divination.remaining) return inc >= 10 && state.player.block < inc ? 0 : 2
+  return -1
+}
+
+// ---------------- game loop ----------------
+type Game = {
+  god: string; enemy: string; diff: Difficulty; policy: Policy; ov: OracleVariant; ev: EnemyVariant; seed: number
+  status: string; round: number; hp: number; minHp: number
+  roundsAlive: number; reachR5: boolean; reachR6: boolean; reachR7: boolean
+  oracleR: number[]; oracleT: number[]; burstR: number[]
+  bigIntentRounds: number; peakEncountered: boolean; peakDefended: boolean
+  intentDecisions: number
+  perRound: { r: number; inActual: number; hpEnd: number; status: string }[]
+}
+function playOne(godId: GodId, enemyId: EnemyId, diff: Difficulty, policy: Policy, ov: OracleVariant, ev: EnemyVariant, seed: number, label: { god: string; enemy: string; peakRound: number }): Game {
+  const deck = getRecommendedDeck(godId)
+  let { state } = applyAction(null, { type: 'START_GAME', seed: `d245-${seed}`, godId, enemyId, deck, difficulty: diff })
+  const oracleR: number[] = []
+  const oracleT: number[] = []
+  const burstR: number[] = []
+  const perRound: Game['perRound'] = []
+  let minHp = state.player.hp
+  let bigIntentRounds = 0
+  let peakEncountered = false
+  let peakDefended = false
+  intentDecisions = 0
+  let guard = 0
+  while (state.status === 'playing' && guard < 600) {
+    guard++
+    const r = state.round
+    if (incomingOf(state) >= 10) bigIntentRounds++
+    if (r === label.peakRound) peakEncountered = true
+    let inner = 0
+    while (state.status === 'playing' && inner < 60) {
+      inner++
+      const card = pickCard(state, policy)
+      if (card) {
+        const res = applyAction(state, { type: 'PLAY_CARD', uid: card.uid })
+        if (res.events.some((e) => e.t === 'RESONANCE_BURST')) burstR.push(r)
+        state = res.state
+        continue
+      }
+      const o = pickOracle(state, policy)
+      if (o >= 0) {
+        const res = applyAction(state, { type: 'USE_DIVINATION', choiceIndex: o })
+        if (res.events.some((e) => e.t === 'RESONANCE_BURST')) burstR.push(r)
+        state = res.state
+        oracleR.push(r)
+        oracleT.push(o)
+        continue
+      }
+      break
+    }
+    const hpBefore = state.player.hp
+    if (r === label.peakRound && state.status === 'playing') peakDefended = state.player.block >= effIncoming(state) * 0.5
+    if (state.status === 'playing') {
+      const res = applyAction(state, { type: 'END_ROUND' })
+      if (res.events.some((e) => e.t === 'RESONANCE_BURST')) burstR.push(r)
+      state = res.state
+    }
+    minHp = Math.min(minHp, state.player.hp)
+    perRound.push({ r, inActual: Math.max(0, hpBefore - state.player.hp), hpEnd: state.player.hp, status: state.status })
+    if (state.status !== 'playing') break
+  }
+  const roundsAlive = perRound.length
+  return {
+    god: label.god, enemy: label.enemy, diff, policy, ov, ev, seed,
+    status: state.status, round: state.round, hp: state.player.hp, minHp,
+    roundsAlive, reachR5: roundsAlive >= 5, reachR6: roundsAlive >= 6, reachR7: roundsAlive >= 7,
+    oracleR, oracleT, burstR, bigIntentRounds, peakEncountered, peakDefended, intentDecisions, perRound,
+  }
+}
+
+// ---------------- matrix ----------------
+const DIFFS: Difficulty[] = ['easy', 'normal', 'hard']
+const POLICIES: Policy[] = ['reader', 'readerBurn', 'naive', 'greedy']
+const OVS: OracleVariant[] = ['A7']
+const EVS: EnemyVariant[] = ['E0']
+const SEEDS = 100
+const mean = (xs: number[]) => (xs.length ? xs.reduce((p, q) => p + q, 0) / xs.length : 0)
+const pct = (n: number) => `${(n * 100).toFixed(1)}%`
+const f1 = (n: number) => n.toFixed(1)
+const f2 = (n: number) => n.toFixed(2)
+const peakRoundOf = (actions: EnemyActionDef[]) => { let best = 0; let br = 1; actions.forEach((x, i) => { const t = enemyActionTotal(x); if (t > best) { best = t; br = i + 1 } }); return br }
+
+describe('Decision246 runtime gate', () => {
+  it('runtime tables == Decision245 E1 / oracle count', () => {
+    const want = process.env.D246_EXPECT
+    for (const e of ENEMIES) {
+      const got = JSON.stringify(e.actions)
+      const e1 = JSON.stringify(ENEMY_TABLES.E1[e.id as string])
+      const same = got === e1
+      console.log(`TABLE ${e.name} equalsE1=${same}`)
+      if (want === 'E1' && !same) throw new Error('table mismatch ' + e.name)
+    }
+    console.log('ORACLE count=' + RULES.divination.count + ' stakes=' + RULES.stakes.divinationCount + ' noStake=' + NO_STAKE_RULES.divinationCount)
+  })
+  it('matrix', () => {
+    const games: Game[] = []
+    const t0 = Date.now()
+    for (const ev of EVS) {
+      applyEnemyVariant(ev)
+      const peaks = new Map(ENEMIES.map((e) => [e.id as string, peakRoundOf(e.actions)]))
+      for (const ov of OVS) {
+        applyOracleVariant(ov)
+        for (const god of GODS) for (const enemy of ENEMIES) for (const diff of DIFFS) for (const policy of POLICIES) for (let i = 0; i < SEEDS; i++) {
+          games.push(playOne(god.id, enemy.id, diff, policy, ov, ev, i, { god: god.nameJa, enemy: enemy.name, peakRound: peaks.get(enemy.id as string)! }))
+        }
+      }
+    }
+    applyEnemyVariant('E0')
+    applyOracleVariant('A7')
+    const elapsed = (Date.now() - t0) / 1000
+    const by = (f: (g: Game) => boolean) => games.filter(f)
+    const win = (gs: Game[]) => gs.filter((g) => g.status === 'won').length / Math.max(1, gs.length)
+    const lost = (gs: Game[]) => gs.filter((g) => g.status === 'lost').length / Math.max(1, gs.length)
+    const fin = (gs: Game[]) => gs.filter((g) => g.status === 'finished').length / Math.max(1, gs.length)
+    const winR = (gs: Game[]) => mean(gs.filter((g) => g.status === 'won').map((g) => g.round))
+    const md: string[] = [`# Decision245 Combat Tension v1 Preflight — simulation (Production d1e3b30 engine copy; ${games.length} games; ${elapsed.toFixed(0)}s; ${SEEDS} paired seeds per cell)`, '']
+    md.push('Variants: oracle A7=current 7/battle, B3=3, C2=2, D1=1 (engine-level cap via NO_STAKE_RULES.divinationCount). Enemy tables E0=current, E1=peak moved to R4, E2=peak moved to R5 (multiset-preserving permutation: same 7 values, same 7R total; 機工師 unchanged; 魔獣 R3 special kept). Policies: reader (intent-aware, saves oracle when remaining < rounds left), readerBurn (intent-aware cards, spends oracle every round), naive (left-to-right, oracle=天啓 always), greedy (attack-only, oracle=天啓 always).', '')
+
+    // 1. headline matrix
+    md.push('## 1. Win / defeat / unfinished by variant × policy × difficulty', '', '| enemy | oracle | diff | reader win | reader lost | reader unfinished | readerBurn win | naive win | naive lost | greedy win | greedy lost | reader−naive | reader−greedy | reader winR | reach R5 | reach R6 | reach R7 |', '|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|')
+    for (const ev of EVS) for (const ov of OVS) for (const diff of DIFFS) {
+      const g = (p: Policy) => by((x) => x.ev === ev && x.ov === ov && x.diff === diff && x.policy === p)
+      const r = g('reader')
+      md.push(`| ${ev} | ${ov} | ${diff} | ${pct(win(r))} | ${pct(lost(r))} | ${pct(fin(r))} | ${pct(win(g('readerBurn')))} | ${pct(win(g('naive')))} | ${pct(lost(g('naive')))} | ${pct(win(g('greedy')))} | ${pct(lost(g('greedy')))} | ${((win(r) - win(g('naive'))) * 100).toFixed(1)}pt | ${((win(r) - win(g('greedy'))) * 100).toFixed(1)}pt | ${f2(winR(r))} | ${pct(mean(r.map((x) => +x.reachR5)))} | ${pct(mean(r.map((x) => +x.reachR6)))} | ${pct(mean(r.map((x) => +x.reachR7)))} |`)
+    }
+
+    // 2. tension & intent value (reader) per variant, normal & hard
+    md.push('', '## 2. Tension / intent value (reader)', '', '| enemy | oracle | diff | min HP ratio (mean) | games min HP ≤30% | games min HP ≤50% | remaining HP (won) | big intent (≥10) rounds/game | peak encountered | peak defended (block ≥50%) | intent-driven picks/game | bursts/game | burst R mean |', '|---|---|---|---|---|---|---|---|---|---|---|---|---|')
+    for (const ev of EVS) for (const ov of OVS) for (const diff of DIFFS) {
+      const r = by((x) => x.ev === ev && x.ov === ov && x.diff === diff && x.policy === 'reader')
+      const won = r.filter((x) => x.status === 'won')
+      md.push(`| ${ev} | ${ov} | ${diff} | ${f2(mean(r.map((x) => x.minHp / (diff === 'easy' ? 35 : diff === 'hard' ? 27 : 30))))} | ${pct(mean(r.map((x) => +(x.minHp <= (diff === 'easy' ? 10 : diff === 'hard' ? 8 : 9)))))} | ${pct(mean(r.map((x) => +(x.minHp <= (diff === 'easy' ? 17 : diff === 'hard' ? 13 : 15)))))} | ${f1(mean(won.map((x) => x.hp)))} | ${f2(mean(r.map((x) => x.bigIntentRounds)))} | ${pct(mean(r.map((x) => +x.peakEncountered)))} | ${pct(mean(r.filter((x) => x.peakEncountered).map((x) => +x.peakDefended)))} | ${f2(mean(r.map((x) => x.intentDecisions)))} | ${f2(mean(r.map((x) => x.burstR.length)))} | ${f2(mean(r.flatMap((x) => x.burstR)))} |`)
+    }
+
+    // 3. oracle usage (reader & readerBurn) per variant
+    md.push('', '## 3. Oracle usage', '', '| enemy | oracle | diff | policy | uses/game | R1-3 | R4-5 | R6-7 | 加護 | 導き | 天啓 | win | readerBurn−reader win (value of saving) |', '|---|---|---|---|---|---|---|---|---|---|---|---|---|')
+    for (const ev of EVS) for (const ov of OVS) for (const diff of DIFFS) for (const p of ['reader', 'readerBurn'] as Policy[]) {
+      const r = by((x) => x.ev === ev && x.ov === ov && x.diff === diff && x.policy === p)
+      const rr = by((x) => x.ev === ev && x.ov === ov && x.diff === diff && x.policy === 'reader')
+      const rb = by((x) => x.ev === ev && x.ov === ov && x.diff === diff && x.policy === 'readerBurn')
+      const uses = r.flatMap((x) => x.oracleR)
+      const types = r.flatMap((x) => x.oracleT)
+      const t = (k: number) => types.filter((v) => v === k).length / Math.max(1, types.length)
+      md.push(`| ${ev} | ${ov} | ${diff} | ${p} | ${f2(mean(r.map((x) => x.oracleR.length)))} | ${pct(uses.filter((v) => v <= 3).length / Math.max(1, uses.length))} | ${pct(uses.filter((v) => v >= 4 && v <= 5).length / Math.max(1, uses.length))} | ${pct(uses.filter((v) => v >= 6).length / Math.max(1, uses.length))} | ${pct(t(0))} | ${pct(t(1))} | ${pct(t(2))} | ${pct(win(r))} | ${p === 'reader' ? ((win(rb) - win(rr)) * 100).toFixed(1) + 'pt' : ''} |`)
+    }
+
+    // 4. round curve (reader, normal & hard) per variant: alive, enemy actual dmg, hp end, cumulative win/lost
+    md.push('', '## 4. Round curve (reader)', '')
+    for (const diff of ['normal', 'hard'] as Difficulty[]) for (const ev of EVS) for (const ov of ['A7', 'B3', 'C2'] as OracleVariant[]) {
+      const r = by((x) => x.ev === ev && x.ov === ov && x.diff === diff && x.policy === 'reader')
+      md.push(`### ${diff} ${ev} ${ov}`, '', '| R | alive | enemy actual dmg | HP end | won this R | lost this R | cum win | cum lost |', '|---|---|---|---|---|---|---|---|')
+      let cw = 0
+      let cl = 0
+      for (let rr = 1; rr <= 7; rr++) {
+        const recs = r.flatMap((x) => x.perRound.filter((y) => y.r === rr))
+        const w = recs.filter((y) => y.status === 'won').length
+        const l = recs.filter((y) => y.status === 'lost').length
+        cw += w
+        cl += l
+        md.push(`| R${rr} | ${recs.length} | ${f1(mean(recs.map((y) => y.inActual)))} | ${f1(mean(recs.map((y) => y.hpEnd)))} | ${w} | ${l} | ${pct(cw / r.length)} | ${pct(cl / r.length)} |`)
+      }
+      md.push('')
+    }
+
+    // 5. clear round distribution (reader normal/hard) per variant
+    md.push('', '## 5. Clear-round distribution (reader)', '', '| enemy | oracle | diff | R1 | R2 | R3 | R4 | R5 | R6 | R7 | lost | unfinished |', '|---|---|---|---|---|---|---|---|---|---|---|---|')
+    for (const diff of ['normal', 'hard'] as Difficulty[]) for (const ev of EVS) for (const ov of OVS) {
+      const r = by((x) => x.ev === ev && x.ov === ov && x.diff === diff && x.policy === 'reader')
+      const cnt = (k: number) => r.filter((x) => x.status === 'won' && x.round === k).length
+      md.push(`| ${ev} | ${ov} | ${diff} | ${[1, 2, 3, 4, 5, 6, 7].map((k) => cnt(k)).join(' | ')} | ${r.filter((x) => x.status === 'lost').length} | ${r.filter((x) => x.status === 'finished').length} |`)
+    }
+
+    // 6. per-enemy & per-god tables for candidate cells (normal & hard; reader/naive/greedy)
+    md.push('', '## 6. Per enemy (reader win / naive win / greedy win / reader dmg-min HP ratio)', '')
+    for (const diff of ['normal', 'hard'] as Difficulty[]) for (const ev of EVS) for (const ov of ['A7', 'B3', 'C2'] as OracleVariant[]) {
+      md.push(`### ${diff} ${ev} ${ov}`, '', '| enemy | reader win | reader lost | reader unfinished | naive win | greedy win | reader winR | peak encountered | min HP ratio |', '|---|---|---|---|---|---|---|---|---|')
+      for (const enemy of ENEMIES) {
+        const g = (p: Policy) => by((x) => x.ev === ev && x.ov === ov && x.diff === diff && x.policy === p && x.enemy === enemy.name)
+        const r = g('reader')
+        md.push(`| ${enemy.name} | ${pct(win(r))} | ${pct(lost(r))} | ${pct(fin(r))} | ${pct(win(g('naive')))} | ${pct(win(g('greedy')))} | ${f2(winR(r))} | ${pct(mean(r.map((x) => +x.peakEncountered)))} | ${f2(mean(r.map((x) => x.minHp / (diff === 'hard' ? 27 : 30))))} |`)
+      }
+      md.push('')
+    }
+    md.push('', '## 7. Per god (reader win / naive win / greedy win)', '')
+    for (const diff of ['normal', 'hard'] as Difficulty[]) for (const ev of EVS) for (const ov of ['A7', 'B3', 'C2'] as OracleVariant[]) {
+      md.push(`### ${diff} ${ev} ${ov}`, '', '| god | reader win | reader lost | reader unfinished | naive win | greedy win | reader winR |', '|---|---|---|---|---|---|---|')
+      for (const god of GODS) {
+        const g = (p: Policy) => by((x) => x.ev === ev && x.ov === ov && x.diff === diff && x.policy === p && x.god === god.nameJa)
+        const r = g('reader')
+        md.push(`| ${god.nameJa} | ${pct(win(r))} | ${pct(lost(r))} | ${pct(fin(r))} | ${pct(win(g('naive')))} | ${pct(win(g('greedy')))} | ${f2(winR(r))} |`)
+      }
+      md.push('')
+    }
+    // 8. god×enemy outliers for each candidate (normal/hard): cells with reader win <60% or unfinished >20% or naive win >=95%
+    md.push('', '## 8. God × Enemy outliers (reader win < 60% or unfinished > 20%, or naive win ≥ 95% on normal)', '')
+    for (const diff of ['normal', 'hard'] as Difficulty[]) for (const ev of EVS) for (const ov of ['A7', 'B3', 'C2'] as OracleVariant[]) {
+      const rows: string[] = []
+      for (const god of GODS) for (const enemy of ENEMIES) {
+        const r = by((x) => x.ev === ev && x.ov === ov && x.diff === diff && x.policy === 'reader' && x.god === god.nameJa && x.enemy === enemy.name)
+        const n = by((x) => x.ev === ev && x.ov === ov && x.diff === diff && x.policy === 'naive' && x.god === god.nameJa && x.enemy === enemy.name)
+        const flag: string[] = []
+        if (win(r) < 0.6) flag.push(`reader ${pct(win(r))}`)
+        if (fin(r) > 0.2) flag.push(`unfinished ${pct(fin(r))}`)
+        if (diff === 'normal' && win(n) >= 0.95) flag.push(`naive ${pct(win(n))}`)
+        if (flag.length) rows.push(`- ${god.nameJa} × ${enemy.name}: ${flag.join(' / ')}`)
+      }
+      md.push(`### ${diff} ${ev} ${ov} — ${rows.length} cells`, ...(rows.length ? rows : ['- none']), '')
+    }
+    writeFileSync(`${OUT}/gate.md`, md.join('\n'))
+    writeFileSync(`${OUT}/games-digest.txt`, require('node:crypto').createHash('sha256').update(JSON.stringify(games)).digest('hex'))
+    console.log(`games=${games.length} elapsed=${elapsed}s`)
+  }, 3_600_000)
+})

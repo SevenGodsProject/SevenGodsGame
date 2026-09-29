@@ -1,0 +1,83 @@
+// Decision247 PC enemy flip — Fast Gate (local builds only)
+import { createRequire } from 'node:module'
+import { writeFileSync, mkdirSync } from 'node:fs'
+const require = createRequire('C:/Users/kimi1/SevenGodsGame/package.json')
+const { chromium } = require('playwright')
+const OUT = process.argv[2]
+mkdirSync(OUT, { recursive: true })
+const BASES = { prod: 'https://seven-gods-game.vercel.app' }
+const VPS = { pc: { width: 1508, height: 660 }, pc2: { width: 1280, height: 800 }, sp: { width: 390, height: 844 } }
+const ENEMIES = ['試練の影', '業斧の鬼将', '藍花の怨霊', '銀甲の機工師', '双牙の魔獣', '蒼海の龍神', '乱舞の道化']
+const clickText = (page, text) => page.evaluate((t) => { const el = [...document.querySelectorAll('button')].find((x) => x.textContent.replace(/\s+/g, '').includes(t) && !x.disabled); if (!el) return false; el.click(); return true }, text)
+const clickSel = (page, sel) => page.evaluate((s) => { const el = document.querySelector(s); if (!el || el.disabled) return false; el.click(); return true }, sel)
+
+async function start(page, base, enemy) {
+  await page.goto(`${base}/?seed=d247-smoke-01`)
+  await page.waitForSelector('.home-screen .home-cta-primary', { timeout: 30000 })
+  await page.waitForTimeout(300)
+  if (await clickText(page, 'わかった')) await page.waitForTimeout(300)
+  if (!(await clickSel(page, '[data-testid="home-start"]'))) await clickText(page, '神を選ぶ')
+  await page.waitForTimeout(400)
+  if (await clickText(page, '新しく始める')) await page.waitForTimeout(300)
+  await clickText(page, '大耀'); await page.waitForTimeout(300)
+  await clickText(page, 'この構成で始める'); await page.waitForTimeout(300)
+  await clickText(page, enemy); await page.waitForTimeout(500)
+  await clickText(page, 'この構成でバトル開始')
+  await page.waitForFunction(() => { const b = document.querySelector('.end-round-button'); return b && !b.disabled }, null, { timeout: 20000 })
+  await page.waitForTimeout(2200)
+}
+const measure = (page) => page.evaluate(() => {
+  const r = (s) => { const e = document.querySelector(s); if (!e) return null; const b = e.getBoundingClientRect(); return { x: Math.round(b.x), y: Math.round(b.y), w: Math.round(b.width), h: Math.round(b.height) } }
+  const av = document.querySelector('.enemy-avatar')
+  const cs = av ? getComputedStyle(av) : null
+  return {
+    scale: cs?.scale ?? null, atkX: cs?.getPropertyValue('--atk-x').trim() ?? null,
+    avatar: r('.enemy-avatar'), hitLayer: r('.enemy-hit-layer'), wrap: r('.enemy-avatar-wrap'), player: r('.player-avatar'),
+    hScroll: document.documentElement.scrollWidth > window.innerWidth + 1,
+  }
+})
+
+const results = []
+const browser = await chromium.launch()
+for (const [vpName, vp] of Object.entries(VPS)) {
+  for (const enemy of ENEMIES) {
+    for (const [side, base] of Object.entries(BASES)) {
+      const ctx = await browser.newContext({ viewport: vp })
+      const page = await ctx.newPage()
+      const errors = []
+      page.on('console', (m) => { if (m.type() === 'error') errors.push(m.text()) })
+      page.on('pageerror', (e) => errors.push(String(e)))
+      const rec = { vp: vpName, enemy, side, errors }
+      try {
+        await start(page, base, enemy)
+        rec.rest = await measure(page)
+        await page.screenshot({ path: `${OUT}/${vpName}-${side}-${ENEMIES.indexOf(enemy) + 1}.png` })
+        // enemy turn: sample the rendered center-x of the art (inner avatar for single hits, wrap for multi)
+        const cx0 = rec.rest.avatar ? rec.rest.avatar.x + rec.rest.avatar.w / 2 : 0
+        const wx0 = rec.rest.wrap ? rec.rest.wrap.x + rec.rest.wrap.w / 2 : 0
+        await clickSel(page, '.end-round-button')
+        const samples = []
+        for (let i = 0; i < 40; i++) {
+          const s = await page.evaluate(() => {
+            const a = document.querySelector('.enemy-avatar')?.getBoundingClientRect()
+            const w = document.querySelector('.enemy-avatar-wrap')?.getBoundingClientRect()
+            return { a: a ? a.x + a.width / 2 : null, w: w ? w.x + w.width / 2 : null }
+          })
+          samples.push(s)
+          await page.waitForTimeout(40)
+        }
+        const dxA = samples.map((s) => (s.a ?? cx0) - cx0)
+        const dxW = samples.map((s) => (s.w ?? wx0) - wx0)
+        const extreme = (arr) => arr.reduce((m, v) => (Math.abs(v) > Math.abs(m) ? v : m), 0)
+        rec.lunge = { avatarDx: Math.round(extreme(dxA) * 10) / 10, wrapDx: Math.round(extreme(dxW) * 10) / 10 }
+      } catch (e) { rec.failure = String(e) }
+      results.push(rec)
+      await ctx.close()
+    }
+  }
+}
+await browser.close()
+writeFileSync(`${OUT}/gate.json`, JSON.stringify(results, null, 2))
+const rows = results.map((r) => [r.vp, r.enemy, 'scale ' + r.rest?.scale, 'lunge avatar ' + r.lunge?.avatarDx + ' wrap ' + r.lunge?.wrapDx, 'err ' + r.errors.length, 'hScroll ' + r.rest?.hScroll, r.failure ? 'FAIL ' + r.failure : ''].join('\t'))
+writeFileSync(`${OUT}/summary.tsv`, rows.join('\n'))
+console.log(rows.join('\n'))

@@ -1,0 +1,5486 @@
+{
+  "summary": {
+    "window": [
+      1,
+      29
+    ],
+    "baselineFrames": [
+      0
+    ],
+    "thresholds": {
+      "lineNccDrop": 0.15,
+      "edgeNccDrop": 0.25,
+      "lumaNccDrop": 0.25,
+      "posDrift": 4,
+      "orangeDrop": 15,
+      "erosion": 1,
+      "panPx": 4,
+      "zoomPx": 5,
+      "newDarkObj": 0.3
+    },
+    "baseline": {
+      "face": {
+        "edgeNcc": 0.981,
+        "lumaNcc": 0.99,
+        "lineNcc": 0.898,
+        "pos": [
+          0,
+          0
+        ]
+      },
+      "eyes": {
+        "edgeNcc": 0.986,
+        "lumaNcc": 0.991,
+        "lineNcc": 0.943,
+        "pos": [
+          0,
+          0
+        ]
+      },
+      "visor": {
+        "edgeNcc": 0.984,
+        "lumaNcc": 0.988,
+        "lineNcc": 0.903,
+        "pos": [
+          0,
+          0
+        ]
+      },
+      "brows": {
+        "edgeNcc": 0.984,
+        "lumaNcc": 0.99,
+        "lineNcc": 0.934,
+        "pos": [
+          0,
+          0
+        ]
+      },
+      "mouth": {
+        "edgeNcc": 0.983,
+        "lumaNcc": 0.986,
+        "lineNcc": 0.913,
+        "pos": [
+          0,
+          0
+        ]
+      },
+      "hood": {
+        "edgeNcc": 0.981,
+        "lumaNcc": 0.993,
+        "lineNcc": 0.857,
+        "pos": [
+          0,
+          0
+        ]
+      },
+      "crest": {
+        "edgeNcc": 0.975,
+        "lumaNcc": 0.991,
+        "lineNcc": 0.861,
+        "pos": [
+          0,
+          0
+        ]
+      },
+      "hand": {
+        "edgeNcc": 0.988,
+        "lumaNcc": 0.992,
+        "lineNcc": 0.913,
+        "pos": [
+          0,
+          0
+        ]
+      },
+      "cannonBody": {
+        "edgeNcc": 0.986,
+        "lumaNcc": 0.993,
+        "lineNcc": 0.922,
+        "pos": [
+          0,
+          0
+        ]
+      },
+      "sack": {
+        "edgeNcc": 0.988,
+        "lumaNcc": 0.994,
+        "lineNcc": 0.922,
+        "pos": [
+          0,
+          0
+        ]
+      },
+      "eyesOrange": 81.7,
+      "visorOrange": 77.2,
+      "plateEyesOrange": 83.3,
+      "plateVisorOrange": 78.5,
+      "silIou": 0.879,
+      "erosion": 52.93,
+      "headTop": 0,
+      "headWidthRatio": 1,
+      "newDarkObj": 0
+    },
+    "worst": {
+      "face": {
+        "lineDrop": 0.902,
+        "edgeDrop": 1.042,
+        "lumaDrop": 1.013,
+        "posDrift": 8
+      },
+      "eyes": {
+        "lineDrop": 0.96,
+        "edgeDrop": 1.114,
+        "lumaDrop": 1.169,
+        "posDrift": 8
+      },
+      "visor": {
+        "lineDrop": 0.892,
+        "edgeDrop": 1.057,
+        "lumaDrop": 1.199,
+        "posDrift": 8
+      },
+      "brows": {
+        "lineDrop": 0.964,
+        "edgeDrop": 1.014,
+        "lumaDrop": 1.11,
+        "posDrift": 8
+      },
+      "mouth": {
+        "lineDrop": 0.85,
+        "edgeDrop": 0.917,
+        "lumaDrop": 1.043,
+        "posDrift": 8
+      },
+      "hood": {
+        "lineDrop": 0.762,
+        "edgeDrop": 0.976,
+        "lumaDrop": 0.84,
+        "posDrift": 8
+      },
+      "crest": {
+        "lineDrop": 0.817,
+        "edgeDrop": 0.986,
+        "lumaDrop": 0.979,
+        "posDrift": 8
+      },
+      "hand": {
+        "lineDrop": 0.889,
+        "edgeDrop": 1.053,
+        "lumaDrop": 0.836,
+        "posDrift": 8
+      },
+      "cannonBody": {
+        "lineDrop": 0.911,
+        "edgeDrop": 1.025,
+        "lumaDrop": 0.885,
+        "posDrift": 8
+      },
+      "sack": {
+        "lineDrop": 0.424,
+        "edgeDrop": 0.406,
+        "lumaDrop": 0.425,
+        "posDrift": 0
+      }
+    },
+    "minEyesOrangeDelta": -23.4,
+    "minVisorOrangeDelta": -52.8,
+    "maxSilIouDrop": 0.699,
+    "maxErosionDelta": 2.06,
+    "maxPan": 8,
+    "maxZoomPx": 16,
+    "maxNewDarkObjDelta": 0.15,
+    "verdict": {
+      "face_shape": false,
+      "eyes_shape": false,
+      "visor_shape": false,
+      "brows_shape": false,
+      "mouth_shape": false,
+      "hood_shape": false,
+      "crest_shape": false,
+      "hand_shape": false,
+      "cannonBody_shape": false,
+      "sack_shape": false,
+      "visor_position": false,
+      "crest_position": false,
+      "hand_position": false,
+      "cannonBody_position": false,
+      "face_position": false,
+      "eyes_through_visor": false,
+      "silhouette_body": false,
+      "camera_pan": false,
+      "camera_zoom": false,
+      "new_objects": true,
+      "orientation": true
+    },
+    "PASS": false
+  },
+  "baselineRows": [
+    {
+      "i": 0,
+      "file": "f001.png",
+      "face": {
+        "edgeNcc": 0.981,
+        "lumaNcc": 0.99,
+        "lineNcc": 0.898,
+        "pos": [
+          0,
+          0
+        ]
+      },
+      "eyes": {
+        "edgeNcc": 0.986,
+        "lumaNcc": 0.991,
+        "lineNcc": 0.943,
+        "pos": [
+          0,
+          0
+        ]
+      },
+      "visor": {
+        "edgeNcc": 0.984,
+        "lumaNcc": 0.988,
+        "lineNcc": 0.903,
+        "pos": [
+          0,
+          0
+        ]
+      },
+      "brows": {
+        "edgeNcc": 0.984,
+        "lumaNcc": 0.99,
+        "lineNcc": 0.934,
+        "pos": [
+          0,
+          0
+        ]
+      },
+      "mouth": {
+        "edgeNcc": 0.983,
+        "lumaNcc": 0.986,
+        "lineNcc": 0.913,
+        "pos": [
+          0,
+          0
+        ]
+      },
+      "hood": {
+        "edgeNcc": 0.981,
+        "lumaNcc": 0.993,
+        "lineNcc": 0.857,
+        "pos": [
+          0,
+          0
+        ]
+      },
+      "crest": {
+        "edgeNcc": 0.975,
+        "lumaNcc": 0.991,
+        "lineNcc": 0.861,
+        "pos": [
+          0,
+          0
+        ]
+      },
+      "hand": {
+        "edgeNcc": 0.988,
+        "lumaNcc": 0.992,
+        "lineNcc": 0.913,
+        "pos": [
+          0,
+          0
+        ]
+      },
+      "cannonBody": {
+        "edgeNcc": 0.986,
+        "lumaNcc": 0.993,
+        "lineNcc": 0.922,
+        "pos": [
+          0,
+          0
+        ]
+      },
+      "sack": {
+        "edgeNcc": 0.988,
+        "lumaNcc": 0.994,
+        "lineNcc": 0.922,
+        "pos": [
+          0,
+          0
+        ]
+      },
+      "eyesOrange": 81.7,
+      "visorOrange": 77.2,
+      "silIou": 0.879,
+      "erosion": 52.93,
+      "headTop": 0,
+      "headWidthRatio": 1,
+      "newDarkObj": 0,
+      "glowX": 300
+    }
+  ],
+  "rows": [
+    {
+      "i": 1,
+      "file": "f027.png",
+      "face": {
+        "edgeNcc": 0.786,
+        "lumaNcc": 0.917,
+        "lineNcc": 0.716,
+        "pos": [
+          1,
+          0
+        ]
+      },
+      "eyes": {
+        "edgeNcc": 0.918,
+        "lumaNcc": 0.966,
+        "lineNcc": 0.845,
+        "pos": [
+          1,
+          0
+        ]
+      },
+      "visor": {
+        "edgeNcc": 0.866,
+        "lumaNcc": 0.946,
+        "lineNcc": 0.772,
+        "pos": [
+          2,
+          0
+        ]
+      },
+      "brows": {
+        "edgeNcc": 0.887,
+        "lumaNcc": 0.954,
+        "lineNcc": 0.852,
+        "pos": [
+          1,
+          1
+        ]
+      },
+      "mouth": {
+        "edgeNcc": 0.883,
+        "lumaNcc": 0.941,
+        "lineNcc": 0.792,
+        "pos": [
+          2,
+          0
+        ]
+      },
+      "hood": {
+        "edgeNcc": 0.807,
+        "lumaNcc": 0.946,
+        "lineNcc": 0.662,
+        "pos": [
+          0,
+          0
+        ]
+      },
+      "crest": {
+        "edgeNcc": 0.833,
+        "lumaNcc": 0.959,
+        "lineNcc": 0.683,
+        "pos": [
+          0,
+          1
+        ]
+      },
+      "hand": {
+        "edgeNcc": 0.675,
+        "lumaNcc": 0.833,
+        "lineNcc": 0.644,
+        "pos": [
+          -4,
+          -1
+        ]
+      },
+      "cannonBody": {
+        "edgeNcc": 0.661,
+        "lumaNcc": 0.846,
+        "lineNcc": 0.635,
+        "pos": [
+          -4,
+          -1
+        ]
+      },
+      "sack": {
+        "edgeNcc": 0.953,
+        "lumaNcc": 0.982,
+        "lineNcc": 0.879,
+        "pos": [
+          0,
+          0
+        ]
+      },
+      "eyesOrange": 84.4,
+      "visorOrange": 79.6,
+      "silIou": 0.787,
+      "erosion": 52.78,
+      "headTop": 0,
+      "headWidthRatio": 1,
+      "newDarkObj": 0,
+      "glowX": 300
+    },
+    {
+      "i": 2,
+      "file": "f030.png",
+      "face": {
+        "edgeNcc": 0.674,
+        "lumaNcc": 0.861,
+        "lineNcc": 0.606,
+        "pos": [
+          1,
+          1
+        ]
+      },
+      "eyes": {
+        "edgeNcc": 0.821,
+        "lumaNcc": 0.923,
+        "lineNcc": 0.77,
+        "pos": [
+          1,
+          1
+        ]
+      },
+      "visor": {
+        "edgeNcc": 0.809,
+        "lumaNcc": 0.918,
+        "lineNcc": 0.719,
+        "pos": [
+          2,
+          0
+        ]
+      },
+      "brows": {
+        "edgeNcc": 0.83,
+        "lumaNcc": 0.93,
+        "lineNcc": 0.816,
+        "pos": [
+          1,
+          1
+        ]
+      },
+      "mouth": {
+        "edgeNcc": 0.875,
+        "lumaNcc": 0.933,
+        "lineNcc": 0.781,
+        "pos": [
+          2,
+          1
+        ]
+      },
+      "hood": {
+        "edgeNcc": 0.728,
+        "lumaNcc": 0.902,
+        "lineNcc": 0.527,
+        "pos": [
+          0,
+          0
+        ]
+      },
+      "crest": {
+        "edgeNcc": 0.704,
+        "lumaNcc": 0.914,
+        "lineNcc": 0.566,
+        "pos": [
+          0,
+          1
+        ]
+      },
+      "hand": {
+        "edgeNcc": 0.56,
+        "lumaNcc": 0.77,
+        "lineNcc": 0.558,
+        "pos": [
+          -6,
+          -2
+        ]
+      },
+      "cannonBody": {
+        "edgeNcc": 0.566,
+        "lumaNcc": 0.792,
+        "lineNcc": 0.541,
+        "pos": [
+          -6,
+          -1
+        ]
+      },
+      "sack": {
+        "edgeNcc": 0.941,
+        "lumaNcc": 0.976,
+        "lineNcc": 0.862,
+        "pos": [
+          0,
+          0
+        ]
+      },
+      "eyesOrange": 85.4,
+      "visorOrange": 79.1,
+      "silIou": 0.757,
+      "erosion": 52.93,
+      "headTop": 0,
+      "headWidthRatio": 1.004,
+      "newDarkObj": 0,
+      "glowX": 300
+    },
+    {
+      "i": 3,
+      "file": "f033.png",
+      "face": {
+        "edgeNcc": 0.564,
+        "lumaNcc": 0.771,
+        "lineNcc": 0.462,
+        "pos": [
+          3,
+          1
+        ]
+      },
+      "eyes": {
+        "edgeNcc": 0.739,
+        "lumaNcc": 0.874,
+        "lineNcc": 0.686,
+        "pos": [
+          2,
+          1
+        ]
+      },
+      "visor": {
+        "edgeNcc": 0.685,
+        "lumaNcc": 0.854,
+        "lineNcc": 0.583,
+        "pos": [
+          4,
+          1
+        ]
+      },
+      "brows": {
+        "edgeNcc": 0.766,
+        "lumaNcc": 0.848,
+        "lineNcc": 0.687,
+        "pos": [
+          2,
+          2
+        ]
+      },
+      "mouth": {
+        "edgeNcc": 0.819,
+        "lumaNcc": 0.91,
+        "lineNcc": 0.747,
+        "pos": [
+          5,
+          1
+        ]
+      },
+      "hood": {
+        "edgeNcc": 0.619,
+        "lumaNcc": 0.83,
+        "lineNcc": 0.359,
+        "pos": [
+          -1,
+          2
+        ]
+      },
+      "crest": {
+        "edgeNcc": 0.567,
+        "lumaNcc": 0.849,
+        "lineNcc": 0.405,
+        "pos": [
+          -1,
+          2
+        ]
+      },
+      "hand": {
+        "edgeNcc": 0.329,
+        "lumaNcc": 0.57,
+        "lineNcc": 0.221,
+        "pos": [
+          -8,
+          -3
+        ]
+      },
+      "cannonBody": {
+        "edgeNcc": 0.279,
+        "lumaNcc": 0.572,
+        "lineNcc": 0.205,
+        "pos": [
+          -8,
+          -2
+        ]
+      },
+      "sack": {
+        "edgeNcc": 0.922,
+        "lumaNcc": 0.964,
+        "lineNcc": 0.832,
+        "pos": [
+          0,
+          0
+        ]
+      },
+      "eyesOrange": 86.3,
+      "visorOrange": 79.5,
+      "silIou": 0.721,
+      "erosion": 53.15,
+      "headTop": 0,
+      "headWidthRatio": 1.02,
+      "newDarkObj": 0,
+      "glowX": 300
+    },
+    {
+      "i": 4,
+      "file": "f036.png",
+      "face": {
+        "edgeNcc": 0.524,
+        "lumaNcc": 0.736,
+        "lineNcc": 0.406,
+        "pos": [
+          3,
+          2
+        ]
+      },
+      "eyes": {
+        "edgeNcc": 0.764,
+        "lumaNcc": 0.872,
+        "lineNcc": 0.651,
+        "pos": [
+          3,
+          1
+        ]
+      },
+      "visor": {
+        "edgeNcc": 0.631,
+        "lumaNcc": 0.812,
+        "lineNcc": 0.513,
+        "pos": [
+          5,
+          2
+        ]
+      },
+      "brows": {
+        "edgeNcc": 0.735,
+        "lumaNcc": 0.809,
+        "lineNcc": 0.636,
+        "pos": [
+          2,
+          3
+        ]
+      },
+      "mouth": {
+        "edgeNcc": 0.824,
+        "lumaNcc": 0.894,
+        "lineNcc": 0.719,
+        "pos": [
+          5,
+          2
+        ]
+      },
+      "hood": {
+        "edgeNcc": 0.606,
+        "lumaNcc": 0.816,
+        "lineNcc": 0.326,
+        "pos": [
+          -1,
+          3
+        ]
+      },
+      "crest": {
+        "edgeNcc": 0.539,
+        "lumaNcc": 0.828,
+        "lineNcc": 0.359,
+        "pos": [
+          -1,
+          3
+        ]
+      },
+      "hand": {
+        "edgeNcc": 0.264,
+        "lumaNcc": 0.546,
+        "lineNcc": 0.173,
+        "pos": [
+          -8,
+          -2
+        ]
+      },
+      "cannonBody": {
+        "edgeNcc": 0.199,
+        "lumaNcc": 0.53,
+        "lineNcc": 0.171,
+        "pos": [
+          -1,
+          -2
+        ]
+      },
+      "sack": {
+        "edgeNcc": 0.911,
+        "lumaNcc": 0.959,
+        "lineNcc": 0.821,
+        "pos": [
+          0,
+          0
+        ]
+      },
+      "eyesOrange": 86.9,
+      "visorOrange": 80.1,
+      "silIou": 0.711,
+      "erosion": 53.19,
+      "headTop": 1,
+      "headWidthRatio": 1.02,
+      "newDarkObj": 0,
+      "glowX": 300
+    },
+    {
+      "i": 5,
+      "file": "f039.png",
+      "face": {
+        "edgeNcc": 0.455,
+        "lumaNcc": 0.686,
+        "lineNcc": 0.336,
+        "pos": [
+          4,
+          2
+        ]
+      },
+      "eyes": {
+        "edgeNcc": 0.664,
+        "lumaNcc": 0.815,
+        "lineNcc": 0.568,
+        "pos": [
+          4,
+          2
+        ]
+      },
+      "visor": {
+        "edgeNcc": 0.565,
+        "lumaNcc": 0.736,
+        "lineNcc": 0.427,
+        "pos": [
+          7,
+          4
+        ]
+      },
+      "brows": {
+        "edgeNcc": 0.67,
+        "lumaNcc": 0.764,
+        "lineNcc": 0.537,
+        "pos": [
+          3,
+          3
+        ]
+      },
+      "mouth": {
+        "edgeNcc": 0.766,
+        "lumaNcc": 0.847,
+        "lineNcc": 0.67,
+        "pos": [
+          7,
+          3
+        ]
+      },
+      "hood": {
+        "edgeNcc": 0.533,
+        "lumaNcc": 0.792,
+        "lineNcc": 0.297,
+        "pos": [
+          -3,
+          4
+        ]
+      },
+      "crest": {
+        "edgeNcc": 0.454,
+        "lumaNcc": 0.793,
+        "lineNcc": 0.301,
+        "pos": [
+          -2,
+          4
+        ]
+      },
+      "hand": {
+        "edgeNcc": 0.228,
+        "lumaNcc": 0.484,
+        "lineNcc": 0.149,
+        "pos": [
+          4,
+          -1
+        ]
+      },
+      "cannonBody": {
+        "edgeNcc": 0.159,
+        "lumaNcc": 0.485,
+        "lineNcc": 0.139,
+        "pos": [
+          -7,
+          -3
+        ]
+      },
+      "sack": {
+        "edgeNcc": 0.894,
+        "lumaNcc": 0.954,
+        "lineNcc": 0.81,
+        "pos": [
+          0,
+          0
+        ]
+      },
+      "eyesOrange": 87.2,
+      "visorOrange": 81,
+      "silIou": 0.694,
+      "erosion": 53.43,
+      "headTop": 2,
+      "headWidthRatio": 1.051,
+      "newDarkObj": 0,
+      "glowX": 300
+    },
+    {
+      "i": 6,
+      "file": "f042.png",
+      "face": {
+        "edgeNcc": 0.414,
+        "lumaNcc": 0.657,
+        "lineNcc": 0.292,
+        "pos": [
+          4,
+          3
+        ]
+      },
+      "eyes": {
+        "edgeNcc": 0.648,
+        "lumaNcc": 0.791,
+        "lineNcc": 0.526,
+        "pos": [
+          5,
+          2
+        ]
+      },
+      "visor": {
+        "edgeNcc": 0.516,
+        "lumaNcc": 0.694,
+        "lineNcc": 0.365,
+        "pos": [
+          8,
+          5
+        ]
+      },
+      "brows": {
+        "edgeNcc": 0.622,
+        "lumaNcc": 0.724,
+        "lineNcc": 0.48,
+        "pos": [
+          3,
+          4
+        ]
+      },
+      "mouth": {
+        "edgeNcc": 0.727,
+        "lumaNcc": 0.811,
+        "lineNcc": 0.614,
+        "pos": [
+          8,
+          4
+        ]
+      },
+      "hood": {
+        "edgeNcc": 0.5,
+        "lumaNcc": 0.777,
+        "lineNcc": 0.284,
+        "pos": [
+          -3,
+          5
+        ]
+      },
+      "crest": {
+        "edgeNcc": 0.412,
+        "lumaNcc": 0.779,
+        "lineNcc": 0.275,
+        "pos": [
+          -3,
+          5
+        ]
+      },
+      "hand": {
+        "edgeNcc": 0.201,
+        "lumaNcc": 0.447,
+        "lineNcc": 0.144,
+        "pos": [
+          1,
+          -2
+        ]
+      },
+      "cannonBody": {
+        "edgeNcc": 0.125,
+        "lumaNcc": 0.442,
+        "lineNcc": 0.101,
+        "pos": [
+          1,
+          -2
+        ]
+      },
+      "sack": {
+        "edgeNcc": 0.88,
+        "lumaNcc": 0.949,
+        "lineNcc": 0.794,
+        "pos": [
+          0,
+          0
+        ]
+      },
+      "eyesOrange": 89.1,
+      "visorOrange": 84.5,
+      "silIou": 0.682,
+      "erosion": 53.66,
+      "headTop": 4,
+      "headWidthRatio": 1.043,
+      "newDarkObj": 0,
+      "glowX": 300
+    },
+    {
+      "i": 7,
+      "file": "f045.png",
+      "face": {
+        "edgeNcc": 0.474,
+        "lumaNcc": 0.708,
+        "lineNcc": 0.363,
+        "pos": [
+          7,
+          2
+        ]
+      },
+      "eyes": {
+        "edgeNcc": 0.71,
+        "lumaNcc": 0.838,
+        "lineNcc": 0.598,
+        "pos": [
+          8,
+          1
+        ]
+      },
+      "visor": {
+        "edgeNcc": 0.464,
+        "lumaNcc": 0.668,
+        "lineNcc": 0.379,
+        "pos": [
+          8,
+          2
+        ]
+      },
+      "brows": {
+        "edgeNcc": 0.695,
+        "lumaNcc": 0.78,
+        "lineNcc": 0.553,
+        "pos": [
+          7,
+          2
+        ]
+      },
+      "mouth": {
+        "edgeNcc": 0.655,
+        "lumaNcc": 0.76,
+        "lineNcc": 0.553,
+        "pos": [
+          8,
+          3
+        ]
+      },
+      "hood": {
+        "edgeNcc": 0.565,
+        "lumaNcc": 0.808,
+        "lineNcc": 0.31,
+        "pos": [
+          3,
+          3
+        ]
+      },
+      "crest": {
+        "edgeNcc": 0.492,
+        "lumaNcc": 0.814,
+        "lineNcc": 0.329,
+        "pos": [
+          3,
+          3
+        ]
+      },
+      "hand": {
+        "edgeNcc": 0.194,
+        "lumaNcc": 0.451,
+        "lineNcc": 0.145,
+        "pos": [
+          1,
+          -3
+        ]
+      },
+      "cannonBody": {
+        "edgeNcc": 0.114,
+        "lumaNcc": 0.456,
+        "lineNcc": 0.098,
+        "pos": [
+          4,
+          -3
+        ]
+      },
+      "sack": {
+        "edgeNcc": 0.854,
+        "lumaNcc": 0.937,
+        "lineNcc": 0.764,
+        "pos": [
+          0,
+          0
+        ]
+      },
+      "eyesOrange": 90.4,
+      "visorOrange": 79.4,
+      "silIou": 0.673,
+      "erosion": 53.86,
+      "headTop": 1,
+      "headWidthRatio": 1.028,
+      "newDarkObj": 0,
+      "glowX": 300
+    },
+    {
+      "i": 8,
+      "file": "f048.png",
+      "face": {
+        "edgeNcc": 0.35,
+        "lumaNcc": 0.615,
+        "lineNcc": 0.254,
+        "pos": [
+          8,
+          2
+        ]
+      },
+      "eyes": {
+        "edgeNcc": 0.411,
+        "lumaNcc": 0.581,
+        "lineNcc": 0.347,
+        "pos": [
+          8,
+          1
+        ]
+      },
+      "visor": {
+        "edgeNcc": 0.412,
+        "lumaNcc": 0.621,
+        "lineNcc": 0.378,
+        "pos": [
+          8,
+          1
+        ]
+      },
+      "brows": {
+        "edgeNcc": 0.516,
+        "lumaNcc": 0.729,
+        "lineNcc": 0.571,
+        "pos": [
+          8,
+          2
+        ]
+      },
+      "mouth": {
+        "edgeNcc": 0.569,
+        "lumaNcc": 0.665,
+        "lineNcc": 0.486,
+        "pos": [
+          8,
+          2
+        ]
+      },
+      "hood": {
+        "edgeNcc": 0.65,
+        "lumaNcc": 0.844,
+        "lineNcc": 0.387,
+        "pos": [
+          8,
+          0
+        ]
+      },
+      "crest": {
+        "edgeNcc": 0.608,
+        "lumaNcc": 0.864,
+        "lineNcc": 0.448,
+        "pos": [
+          8,
+          1
+        ]
+      },
+      "hand": {
+        "edgeNcc": 0.207,
+        "lumaNcc": 0.475,
+        "lineNcc": 0.146,
+        "pos": [
+          3,
+          -5
+        ]
+      },
+      "cannonBody": {
+        "edgeNcc": 0.153,
+        "lumaNcc": 0.464,
+        "lineNcc": 0.112,
+        "pos": [
+          -8,
+          -6
+        ]
+      },
+      "sack": {
+        "edgeNcc": 0.837,
+        "lumaNcc": 0.927,
+        "lineNcc": 0.746,
+        "pos": [
+          0,
+          0
+        ]
+      },
+      "eyesOrange": 89.6,
+      "visorOrange": 75,
+      "silIou": 0.661,
+      "erosion": 53.88,
+      "headTop": 1,
+      "headWidthRatio": 1.02,
+      "newDarkObj": 0,
+      "glowX": 300
+    },
+    {
+      "i": 9,
+      "file": "f051.png",
+      "face": {
+        "edgeNcc": 0.156,
+        "lumaNcc": 0.463,
+        "lineNcc": 0.124,
+        "pos": [
+          8,
+          1
+        ]
+      },
+      "eyes": {
+        "edgeNcc": 0.19,
+        "lumaNcc": 0.309,
+        "lineNcc": 0.155,
+        "pos": [
+          8,
+          -3
+        ]
+      },
+      "visor": {
+        "edgeNcc": 0.304,
+        "lumaNcc": 0.467,
+        "lineNcc": 0.173,
+        "pos": [
+          8,
+          1
+        ]
+      },
+      "brows": {
+        "edgeNcc": 0.162,
+        "lumaNcc": 0.376,
+        "lineNcc": 0.305,
+        "pos": [
+          8,
+          2
+        ]
+      },
+      "mouth": {
+        "edgeNcc": 0.41,
+        "lumaNcc": 0.446,
+        "lineNcc": 0.26,
+        "pos": [
+          8,
+          1
+        ]
+      },
+      "hood": {
+        "edgeNcc": 0.392,
+        "lumaNcc": 0.732,
+        "lineNcc": 0.188,
+        "pos": [
+          8,
+          -4
+        ]
+      },
+      "crest": {
+        "edgeNcc": 0.209,
+        "lumaNcc": 0.601,
+        "lineNcc": 0.096,
+        "pos": [
+          4,
+          7
+        ]
+      },
+      "hand": {
+        "edgeNcc": 0.218,
+        "lumaNcc": 0.507,
+        "lineNcc": 0.136,
+        "pos": [
+          -8,
+          -8
+        ]
+      },
+      "cannonBody": {
+        "edgeNcc": 0.131,
+        "lumaNcc": 0.46,
+        "lineNcc": 0.096,
+        "pos": [
+          -8,
+          -8
+        ]
+      },
+      "sack": {
+        "edgeNcc": 0.809,
+        "lumaNcc": 0.907,
+        "lineNcc": 0.714,
+        "pos": [
+          0,
+          0
+        ]
+      },
+      "eyesOrange": 86.7,
+      "visorOrange": 66.7,
+      "silIou": 0.636,
+      "erosion": 54.03,
+      "headTop": -5,
+      "headWidthRatio": 0.96,
+      "newDarkObj": 0,
+      "glowX": 300
+    },
+    {
+      "i": 10,
+      "file": "f054.png",
+      "face": {
+        "edgeNcc": 0.126,
+        "lumaNcc": 0.384,
+        "lineNcc": 0.067,
+        "pos": [
+          8,
+          0
+        ]
+      },
+      "eyes": {
+        "edgeNcc": 0.136,
+        "lumaNcc": 0.208,
+        "lineNcc": 0.117,
+        "pos": [
+          5,
+          -6
+        ]
+      },
+      "visor": {
+        "edgeNcc": 0.279,
+        "lumaNcc": 0.397,
+        "lineNcc": 0.129,
+        "pos": [
+          -3,
+          0
+        ]
+      },
+      "brows": {
+        "edgeNcc": 0.124,
+        "lumaNcc": 0.174,
+        "lineNcc": 0.221,
+        "pos": [
+          8,
+          1
+        ]
+      },
+      "mouth": {
+        "edgeNcc": 0.312,
+        "lumaNcc": 0.352,
+        "lineNcc": 0.217,
+        "pos": [
+          8,
+          1
+        ]
+      },
+      "hood": {
+        "edgeNcc": 0.369,
+        "lumaNcc": 0.698,
+        "lineNcc": 0.181,
+        "pos": [
+          8,
+          -6
+        ]
+      },
+      "crest": {
+        "edgeNcc": 0.182,
+        "lumaNcc": 0.548,
+        "lineNcc": 0.085,
+        "pos": [
+          8,
+          5
+        ]
+      },
+      "hand": {
+        "edgeNcc": 0.192,
+        "lumaNcc": 0.498,
+        "lineNcc": 0.128,
+        "pos": [
+          -8,
+          -8
+        ]
+      },
+      "cannonBody": {
+        "edgeNcc": 0.098,
+        "lumaNcc": 0.444,
+        "lineNcc": 0.078,
+        "pos": [
+          -3,
+          -8
+        ]
+      },
+      "sack": {
+        "edgeNcc": 0.8,
+        "lumaNcc": 0.898,
+        "lineNcc": 0.7,
+        "pos": [
+          0,
+          0
+        ]
+      },
+      "eyesOrange": 85.6,
+      "visorOrange": 63.8,
+      "silIou": 0.625,
+      "erosion": 54.22,
+      "headTop": -6,
+      "headWidthRatio": 0.905,
+      "newDarkObj": 0,
+      "glowX": 300
+    },
+    {
+      "i": 11,
+      "file": "f057.png",
+      "face": {
+        "edgeNcc": 0.068,
+        "lumaNcc": 0.272,
+        "lineNcc": 0.024,
+        "pos": [
+          8,
+          -2
+        ]
+      },
+      "eyes": {
+        "edgeNcc": 0.076,
+        "lumaNcc": 0.101,
+        "lineNcc": 0.046,
+        "pos": [
+          8,
+          -4
+        ]
+      },
+      "visor": {
+        "edgeNcc": 0.184,
+        "lumaNcc": 0.27,
+        "lineNcc": 0.128,
+        "pos": [
+          2,
+          -3
+        ]
+      },
+      "brows": {
+        "edgeNcc": 0.071,
+        "lumaNcc": -0.12,
+        "lineNcc": 0.068,
+        "pos": [
+          8,
+          0
+        ]
+      },
+      "mouth": {
+        "edgeNcc": 0.2,
+        "lumaNcc": 0.153,
+        "lineNcc": 0.155,
+        "pos": [
+          -5,
+          6
+        ]
+      },
+      "hood": {
+        "edgeNcc": 0.331,
+        "lumaNcc": 0.65,
+        "lineNcc": 0.169,
+        "pos": [
+          8,
+          -1
+        ]
+      },
+      "crest": {
+        "edgeNcc": 0.144,
+        "lumaNcc": 0.469,
+        "lineNcc": 0.086,
+        "pos": [
+          -1,
+          1
+        ]
+      },
+      "hand": {
+        "edgeNcc": 0.159,
+        "lumaNcc": 0.443,
+        "lineNcc": 0.086,
+        "pos": [
+          -8,
+          -3
+        ]
+      },
+      "cannonBody": {
+        "edgeNcc": 0.068,
+        "lumaNcc": 0.407,
+        "lineNcc": 0.051,
+        "pos": [
+          0,
+          -2
+        ]
+      },
+      "sack": {
+        "edgeNcc": 0.777,
+        "lumaNcc": 0.881,
+        "lineNcc": 0.679,
+        "pos": [
+          0,
+          0
+        ]
+      },
+      "eyesOrange": 80.8,
+      "visorOrange": 56.7,
+      "silIou": 0.607,
+      "erosion": 54.55,
+      "headTop": -9,
+      "headWidthRatio": 0.862,
+      "newDarkObj": 0,
+      "glowX": 300
+    },
+    {
+      "i": 12,
+      "file": "f060.png",
+      "face": {
+        "edgeNcc": 0.022,
+        "lumaNcc": 0.221,
+        "lineNcc": 0.02,
+        "pos": [
+          6,
+          -2
+        ]
+      },
+      "eyes": {
+        "edgeNcc": 0.04,
+        "lumaNcc": 0.067,
+        "lineNcc": 0.028,
+        "pos": [
+          7,
+          -8
+        ]
+      },
+      "visor": {
+        "edgeNcc": 0.164,
+        "lumaNcc": 0.224,
+        "lineNcc": 0.134,
+        "pos": [
+          5,
+          -4
+        ]
+      },
+      "brows": {
+        "edgeNcc": 0.085,
+        "lumaNcc": -0.066,
+        "lineNcc": -0.03,
+        "pos": [
+          -3,
+          4
+        ]
+      },
+      "mouth": {
+        "edgeNcc": 0.16,
+        "lumaNcc": 0.125,
+        "lineNcc": 0.158,
+        "pos": [
+          -3,
+          5
+        ]
+      },
+      "hood": {
+        "edgeNcc": 0.302,
+        "lumaNcc": 0.631,
+        "lineNcc": 0.167,
+        "pos": [
+          8,
+          -3
+        ]
+      },
+      "crest": {
+        "edgeNcc": 0.143,
+        "lumaNcc": 0.433,
+        "lineNcc": 0.082,
+        "pos": [
+          3,
+          0
+        ]
+      },
+      "hand": {
+        "edgeNcc": 0.154,
+        "lumaNcc": 0.423,
+        "lineNcc": 0.096,
+        "pos": [
+          -8,
+          -4
+        ]
+      },
+      "cannonBody": {
+        "edgeNcc": 0.076,
+        "lumaNcc": 0.393,
+        "lineNcc": 0.052,
+        "pos": [
+          -8,
+          -2
+        ]
+      },
+      "sack": {
+        "edgeNcc": 0.763,
+        "lumaNcc": 0.87,
+        "lineNcc": 0.666,
+        "pos": [
+          0,
+          0
+        ]
+      },
+      "eyesOrange": 80.5,
+      "visorOrange": 54.7,
+      "silIou": 0.598,
+      "erosion": 54.69,
+      "headTop": -9,
+      "headWidthRatio": 0.826,
+      "newDarkObj": 0,
+      "glowX": 300
+    },
+    {
+      "i": 13,
+      "file": "f063.png",
+      "face": {
+        "edgeNcc": 0.005,
+        "lumaNcc": 0.161,
+        "lineNcc": 0.006,
+        "pos": [
+          -1,
+          -1
+        ]
+      },
+      "eyes": {
+        "edgeNcc": 0.01,
+        "lumaNcc": -0.006,
+        "lineNcc": 0.022,
+        "pos": [
+          -1,
+          0
+        ]
+      },
+      "visor": {
+        "edgeNcc": 0.163,
+        "lumaNcc": 0.129,
+        "lineNcc": 0.094,
+        "pos": [
+          8,
+          -4
+        ]
+      },
+      "brows": {
+        "edgeNcc": 0.076,
+        "lumaNcc": 0.059,
+        "lineNcc": 0.039,
+        "pos": [
+          -6,
+          2
+        ]
+      },
+      "mouth": {
+        "edgeNcc": 0.147,
+        "lumaNcc": 0.1,
+        "lineNcc": 0.166,
+        "pos": [
+          2,
+          3
+        ]
+      },
+      "hood": {
+        "edgeNcc": 0.265,
+        "lumaNcc": 0.592,
+        "lineNcc": 0.15,
+        "pos": [
+          8,
+          -4
+        ]
+      },
+      "crest": {
+        "edgeNcc": 0.101,
+        "lumaNcc": 0.346,
+        "lineNcc": 0.044,
+        "pos": [
+          8,
+          1
+        ]
+      },
+      "hand": {
+        "edgeNcc": 0.172,
+        "lumaNcc": 0.383,
+        "lineNcc": 0.135,
+        "pos": [
+          -8,
+          -5
+        ]
+      },
+      "cannonBody": {
+        "edgeNcc": 0.075,
+        "lumaNcc": 0.38,
+        "lineNcc": 0.086,
+        "pos": [
+          -8,
+          -5
+        ]
+      },
+      "sack": {
+        "edgeNcc": 0.749,
+        "lumaNcc": 0.847,
+        "lineNcc": 0.643,
+        "pos": [
+          0,
+          0
+        ]
+      },
+      "eyesOrange": 78.5,
+      "visorOrange": 49.2,
+      "silIou": 0.582,
+      "erosion": 54.99,
+      "headTop": -10,
+      "headWidthRatio": 0.802,
+      "newDarkObj": 0.01,
+      "glowX": 300
+    },
+    {
+      "i": 14,
+      "file": "f066.png",
+      "face": {
+        "edgeNcc": -0.003,
+        "lumaNcc": 0.14,
+        "lineNcc": 0.01,
+        "pos": [
+          -1,
+          -2
+        ]
+      },
+      "eyes": {
+        "edgeNcc": -0.005,
+        "lumaNcc": 0,
+        "lineNcc": 0.022,
+        "pos": [
+          1,
+          0
+        ]
+      },
+      "visor": {
+        "edgeNcc": 0.151,
+        "lumaNcc": 0.085,
+        "lineNcc": 0.063,
+        "pos": [
+          8,
+          -4
+        ]
+      },
+      "brows": {
+        "edgeNcc": 0.073,
+        "lumaNcc": 0.128,
+        "lineNcc": 0.039,
+        "pos": [
+          -2,
+          0
+        ]
+      },
+      "mouth": {
+        "edgeNcc": 0.12,
+        "lumaNcc": 0.06,
+        "lineNcc": 0.155,
+        "pos": [
+          5,
+          2
+        ]
+      },
+      "hood": {
+        "edgeNcc": 0.257,
+        "lumaNcc": 0.566,
+        "lineNcc": 0.152,
+        "pos": [
+          4,
+          -6
+        ]
+      },
+      "crest": {
+        "edgeNcc": 0.083,
+        "lumaNcc": 0.311,
+        "lineNcc": 0.053,
+        "pos": [
+          -6,
+          0
+        ]
+      },
+      "hand": {
+        "edgeNcc": 0.162,
+        "lumaNcc": 0.36,
+        "lineNcc": 0.136,
+        "pos": [
+          -8,
+          -6
+        ]
+      },
+      "cannonBody": {
+        "edgeNcc": 0.071,
+        "lumaNcc": 0.361,
+        "lineNcc": 0.076,
+        "pos": [
+          -7,
+          -6
+        ]
+      },
+      "sack": {
+        "edgeNcc": 0.741,
+        "lumaNcc": 0.835,
+        "lineNcc": 0.634,
+        "pos": [
+          0,
+          0
+        ]
+      },
+      "eyesOrange": 78.9,
+      "visorOrange": 47,
+      "silIou": 0.57,
+      "erosion": 54.84,
+      "headTop": -12,
+      "headWidthRatio": 0.802,
+      "newDarkObj": 0.01,
+      "glowX": 300
+    },
+    {
+      "i": 15,
+      "file": "f069.png",
+      "face": {
+        "edgeNcc": 0.003,
+        "lumaNcc": 0.124,
+        "lineNcc": 0.01,
+        "pos": [
+          7,
+          -4
+        ]
+      },
+      "eyes": {
+        "edgeNcc": -0.018,
+        "lumaNcc": 0.008,
+        "lineNcc": 0.025,
+        "pos": [
+          8,
+          -2
+        ]
+      },
+      "visor": {
+        "edgeNcc": 0.114,
+        "lumaNcc": 0.045,
+        "lineNcc": 0.093,
+        "pos": [
+          -4,
+          -1
+        ]
+      },
+      "brows": {
+        "edgeNcc": 0.061,
+        "lumaNcc": 0.149,
+        "lineNcc": 0.048,
+        "pos": [
+          -8,
+          8
+        ]
+      },
+      "mouth": {
+        "edgeNcc": 0.114,
+        "lumaNcc": 0.036,
+        "lineNcc": 0.118,
+        "pos": [
+          8,
+          7
+        ]
+      },
+      "hood": {
+        "edgeNcc": 0.231,
+        "lumaNcc": 0.519,
+        "lineNcc": 0.155,
+        "pos": [
+          8,
+          -6
+        ]
+      },
+      "crest": {
+        "edgeNcc": 0.078,
+        "lumaNcc": 0.25,
+        "lineNcc": 0.061,
+        "pos": [
+          8,
+          8
+        ]
+      },
+      "hand": {
+        "edgeNcc": 0.151,
+        "lumaNcc": 0.314,
+        "lineNcc": 0.112,
+        "pos": [
+          -5,
+          -8
+        ]
+      },
+      "cannonBody": {
+        "edgeNcc": 0.05,
+        "lumaNcc": 0.291,
+        "lineNcc": 0.042,
+        "pos": [
+          -5,
+          -8
+        ]
+      },
+      "sack": {
+        "edgeNcc": 0.722,
+        "lumaNcc": 0.812,
+        "lineNcc": 0.613,
+        "pos": [
+          0,
+          0
+        ]
+      },
+      "eyesOrange": 77.2,
+      "visorOrange": 43.6,
+      "silIou": 0.549,
+      "erosion": 54.44,
+      "headTop": -15,
+      "headWidthRatio": 0.783,
+      "newDarkObj": 0,
+      "glowX": 300
+    },
+    {
+      "i": 16,
+      "file": "f072.png",
+      "face": {
+        "edgeNcc": 0.003,
+        "lumaNcc": 0.112,
+        "lineNcc": 0.011,
+        "pos": [
+          0,
+          -2
+        ]
+      },
+      "eyes": {
+        "edgeNcc": -0.012,
+        "lumaNcc": 0.005,
+        "lineNcc": 0.015,
+        "pos": [
+          0,
+          -1
+        ]
+      },
+      "visor": {
+        "edgeNcc": 0.066,
+        "lumaNcc": 0,
+        "lineNcc": 0.091,
+        "pos": [
+          -2,
+          -3
+        ]
+      },
+      "brows": {
+        "edgeNcc": 0.076,
+        "lumaNcc": 0.151,
+        "lineNcc": 0.091,
+        "pos": [
+          -2,
+          8
+        ]
+      },
+      "mouth": {
+        "edgeNcc": 0.124,
+        "lumaNcc": -0.001,
+        "lineNcc": 0.121,
+        "pos": [
+          -3,
+          3
+        ]
+      },
+      "hood": {
+        "edgeNcc": 0.221,
+        "lumaNcc": 0.488,
+        "lineNcc": 0.161,
+        "pos": [
+          7,
+          -7
+        ]
+      },
+      "crest": {
+        "edgeNcc": 0.083,
+        "lumaNcc": 0.216,
+        "lineNcc": 0.056,
+        "pos": [
+          6,
+          -6
+        ]
+      },
+      "hand": {
+        "edgeNcc": 0.15,
+        "lumaNcc": 0.289,
+        "lineNcc": 0.095,
+        "pos": [
+          -8,
+          -8
+        ]
+      },
+      "cannonBody": {
+        "edgeNcc": 0.049,
+        "lumaNcc": 0.253,
+        "lineNcc": 0.032,
+        "pos": [
+          0,
+          -2
+        ]
+      },
+      "sack": {
+        "edgeNcc": 0.711,
+        "lumaNcc": 0.798,
+        "lineNcc": 0.604,
+        "pos": [
+          0,
+          0
+        ]
+      },
+      "eyesOrange": 76.1,
+      "visorOrange": 41.8,
+      "silIou": 0.541,
+      "erosion": 54.4,
+      "headTop": -15,
+      "headWidthRatio": 1.545,
+      "newDarkObj": 0.02,
+      "glowX": 300
+    },
+    {
+      "i": 17,
+      "file": "f075.png",
+      "face": {
+        "edgeNcc": -0.018,
+        "lumaNcc": 0.126,
+        "lineNcc": 0.005,
+        "pos": [
+          8,
+          -5
+        ]
+      },
+      "eyes": {
+        "edgeNcc": -0.028,
+        "lumaNcc": -0.012,
+        "lineNcc": 0.006,
+        "pos": [
+          6,
+          4
+        ]
+      },
+      "visor": {
+        "edgeNcc": 0.05,
+        "lumaNcc": -0.042,
+        "lineNcc": 0.094,
+        "pos": [
+          -8,
+          -8
+        ]
+      },
+      "brows": {
+        "edgeNcc": 0.089,
+        "lumaNcc": 0.176,
+        "lineNcc": 0.13,
+        "pos": [
+          -5,
+          8
+        ]
+      },
+      "mouth": {
+        "edgeNcc": 0.109,
+        "lumaNcc": -0.057,
+        "lineNcc": 0.09,
+        "pos": [
+          -8,
+          3
+        ]
+      },
+      "hood": {
+        "edgeNcc": 0.194,
+        "lumaNcc": 0.431,
+        "lineNcc": 0.143,
+        "pos": [
+          8,
+          -8
+        ]
+      },
+      "crest": {
+        "edgeNcc": 0.09,
+        "lumaNcc": 0.154,
+        "lineNcc": 0.055,
+        "pos": [
+          1,
+          -3
+        ]
+      },
+      "hand": {
+        "edgeNcc": 0.13,
+        "lumaNcc": 0.2,
+        "lineNcc": 0.051,
+        "pos": [
+          -8,
+          1
+        ]
+      },
+      "cannonBody": {
+        "edgeNcc": 0.048,
+        "lumaNcc": 0.211,
+        "lineNcc": 0.032,
+        "pos": [
+          -8,
+          1
+        ]
+      },
+      "sack": {
+        "edgeNcc": 0.692,
+        "lumaNcc": 0.774,
+        "lineNcc": 0.584,
+        "pos": [
+          0,
+          0
+        ]
+      },
+      "eyesOrange": 75.5,
+      "visorOrange": 40.8,
+      "silIou": 0.517,
+      "erosion": 54.05,
+      "headTop": -15,
+      "headWidthRatio": 0.767,
+      "newDarkObj": 0.03,
+      "glowX": 300
+    },
+    {
+      "i": 18,
+      "file": "f078.png",
+      "face": {
+        "edgeNcc": -0.034,
+        "lumaNcc": 0.117,
+        "lineNcc": 0.006,
+        "pos": [
+          0,
+          -7
+        ]
+      },
+      "eyes": {
+        "edgeNcc": -0.058,
+        "lumaNcc": -0.051,
+        "lineNcc": -0.013,
+        "pos": [
+          8,
+          -8
+        ]
+      },
+      "visor": {
+        "edgeNcc": 0.015,
+        "lumaNcc": -0.049,
+        "lineNcc": 0.107,
+        "pos": [
+          8,
+          -6
+        ]
+      },
+      "brows": {
+        "edgeNcc": 0.065,
+        "lumaNcc": 0.02,
+        "lineNcc": 0.04,
+        "pos": [
+          0,
+          -5
+        ]
+      },
+      "mouth": {
+        "edgeNcc": 0.114,
+        "lumaNcc": -0.045,
+        "lineNcc": 0.087,
+        "pos": [
+          7,
+          4
+        ]
+      },
+      "hood": {
+        "edgeNcc": 0.181,
+        "lumaNcc": 0.396,
+        "lineNcc": 0.147,
+        "pos": [
+          8,
+          -8
+        ]
+      },
+      "crest": {
+        "edgeNcc": 0.068,
+        "lumaNcc": 0.115,
+        "lineNcc": 0.049,
+        "pos": [
+          6,
+          -5
+        ]
+      },
+      "hand": {
+        "edgeNcc": 0.148,
+        "lumaNcc": 0.251,
+        "lineNcc": 0.063,
+        "pos": [
+          -8,
+          1
+        ]
+      },
+      "cannonBody": {
+        "edgeNcc": 0.041,
+        "lumaNcc": 0.198,
+        "lineNcc": 0.036,
+        "pos": [
+          3,
+          -7
+        ]
+      },
+      "sack": {
+        "edgeNcc": 0.687,
+        "lumaNcc": 0.763,
+        "lineNcc": 0.581,
+        "pos": [
+          0,
+          0
+        ]
+      },
+      "eyesOrange": 74.7,
+      "visorOrange": 41.6,
+      "silIou": 0.516,
+      "erosion": 54.23,
+      "headTop": -16,
+      "headWidthRatio": 1.688,
+      "newDarkObj": 0.05,
+      "glowX": 300
+    },
+    {
+      "i": 19,
+      "file": "f081.png",
+      "face": {
+        "edgeNcc": -0.06,
+        "lumaNcc": 0.075,
+        "lineNcc": -0.004,
+        "pos": [
+          8,
+          -8
+        ]
+      },
+      "eyes": {
+        "edgeNcc": -0.128,
+        "lumaNcc": -0.096,
+        "lineNcc": -0.017,
+        "pos": [
+          -5,
+          8
+        ]
+      },
+      "visor": {
+        "edgeNcc": -0.073,
+        "lumaNcc": -0.195,
+        "lineNcc": 0.011,
+        "pos": [
+          8,
+          8
+        ]
+      },
+      "brows": {
+        "edgeNcc": 0.01,
+        "lumaNcc": 0.102,
+        "lineNcc": 0.103,
+        "pos": [
+          -6,
+          -4
+        ]
+      },
+      "mouth": {
+        "edgeNcc": 0.066,
+        "lumaNcc": 0.055,
+        "lineNcc": 0.13,
+        "pos": [
+          1,
+          0
+        ]
+      },
+      "hood": {
+        "edgeNcc": 0.175,
+        "lumaNcc": 0.328,
+        "lineNcc": 0.142,
+        "pos": [
+          8,
+          -7
+        ]
+      },
+      "crest": {
+        "edgeNcc": 0.088,
+        "lumaNcc": 0.045,
+        "lineNcc": 0.058,
+        "pos": [
+          4,
+          -5
+        ]
+      },
+      "hand": {
+        "edgeNcc": 0.115,
+        "lumaNcc": 0.222,
+        "lineNcc": 0.069,
+        "pos": [
+          -6,
+          -5
+        ]
+      },
+      "cannonBody": {
+        "edgeNcc": 0.024,
+        "lumaNcc": 0.174,
+        "lineNcc": 0.022,
+        "pos": [
+          -5,
+          -5
+        ]
+      },
+      "sack": {
+        "edgeNcc": 0.674,
+        "lumaNcc": 0.741,
+        "lineNcc": 0.575,
+        "pos": [
+          0,
+          0
+        ]
+      },
+      "eyesOrange": 71.9,
+      "visorOrange": 41.3,
+      "silIou": 0.492,
+      "erosion": 53.37,
+      "headTop": -92,
+      "headWidthRatio": 0.783,
+      "newDarkObj": 0.04,
+      "glowX": 300
+    },
+    {
+      "i": 20,
+      "file": "f084.png",
+      "face": {
+        "edgeNcc": -0.061,
+        "lumaNcc": 0.07,
+        "lineNcc": 0.009,
+        "pos": [
+          -2,
+          8
+        ]
+      },
+      "eyes": {
+        "edgeNcc": -0.12,
+        "lumaNcc": -0.128,
+        "lineNcc": -0.006,
+        "pos": [
+          -1,
+          8
+        ]
+      },
+      "visor": {
+        "edgeNcc": -0.047,
+        "lumaNcc": -0.211,
+        "lineNcc": 0.011,
+        "pos": [
+          -1,
+          -5
+        ]
+      },
+      "brows": {
+        "edgeNcc": -0.03,
+        "lumaNcc": 0.095,
+        "lineNcc": 0.045,
+        "pos": [
+          -1,
+          -7
+        ]
+      },
+      "mouth": {
+        "edgeNcc": 0.136,
+        "lumaNcc": -0.001,
+        "lineNcc": 0.136,
+        "pos": [
+          -5,
+          -5
+        ]
+      },
+      "hood": {
+        "edgeNcc": 0.176,
+        "lumaNcc": 0.367,
+        "lineNcc": 0.144,
+        "pos": [
+          8,
+          -5
+        ]
+      },
+      "crest": {
+        "edgeNcc": 0.097,
+        "lumaNcc": 0.137,
+        "lineNcc": 0.055,
+        "pos": [
+          -3,
+          4
+        ]
+      },
+      "hand": {
+        "edgeNcc": 0.077,
+        "lumaNcc": 0.168,
+        "lineNcc": 0.056,
+        "pos": [
+          -6,
+          -7
+        ]
+      },
+      "cannonBody": {
+        "edgeNcc": -0.007,
+        "lumaNcc": 0.185,
+        "lineNcc": 0.023,
+        "pos": [
+          6,
+          -8
+        ]
+      },
+      "sack": {
+        "edgeNcc": 0.667,
+        "lumaNcc": 0.73,
+        "lineNcc": 0.563,
+        "pos": [
+          0,
+          0
+        ]
+      },
+      "eyesOrange": 71.4,
+      "visorOrange": 41.7,
+      "silIou": 0.479,
+      "erosion": 52.31,
+      "headTop": -108,
+      "headWidthRatio": 0.079,
+      "newDarkObj": 0.04,
+      "glowX": 300
+    },
+    {
+      "i": 21,
+      "file": "f087.png",
+      "face": {
+        "edgeNcc": -0.026,
+        "lumaNcc": -0.002,
+        "lineNcc": 0.013,
+        "pos": [
+          8,
+          8
+        ]
+      },
+      "eyes": {
+        "edgeNcc": -0.072,
+        "lumaNcc": -0.151,
+        "lineNcc": 0.002,
+        "pos": [
+          8,
+          8
+        ]
+      },
+      "visor": {
+        "edgeNcc": 0.033,
+        "lumaNcc": -0.129,
+        "lineNcc": 0.043,
+        "pos": [
+          8,
+          8
+        ]
+      },
+      "brows": {
+        "edgeNcc": -0.02,
+        "lumaNcc": 0.204,
+        "lineNcc": 0.021,
+        "pos": [
+          2,
+          1
+        ]
+      },
+      "mouth": {
+        "edgeNcc": 0.108,
+        "lumaNcc": 0.049,
+        "lineNcc": 0.108,
+        "pos": [
+          -1,
+          8
+        ]
+      },
+      "hood": {
+        "edgeNcc": 0.145,
+        "lumaNcc": 0.26,
+        "lineNcc": 0.142,
+        "pos": [
+          7,
+          -7
+        ]
+      },
+      "crest": {
+        "edgeNcc": 0.053,
+        "lumaNcc": 0.012,
+        "lineNcc": 0.052,
+        "pos": [
+          7,
+          -7
+        ]
+      },
+      "hand": {
+        "edgeNcc": 0.057,
+        "lumaNcc": 0.162,
+        "lineNcc": 0.055,
+        "pos": [
+          -3,
+          -8
+        ]
+      },
+      "cannonBody": {
+        "edgeNcc": -0.006,
+        "lumaNcc": 0.158,
+        "lineNcc": 0.011,
+        "pos": [
+          -8,
+          0
+        ]
+      },
+      "sack": {
+        "edgeNcc": 0.657,
+        "lumaNcc": 0.708,
+        "lineNcc": 0.558,
+        "pos": [
+          0,
+          0
+        ]
+      },
+      "eyesOrange": 69,
+      "visorOrange": 42.4,
+      "silIou": 0.453,
+      "erosion": 50.78,
+      "headTop": -53,
+      "headWidthRatio": 1.719,
+      "newDarkObj": 0.08,
+      "glowX": 300
+    },
+    {
+      "i": 22,
+      "file": "f090.png",
+      "face": {
+        "edgeNcc": -0.014,
+        "lumaNcc": -0.016,
+        "lineNcc": 0.001,
+        "pos": [
+          -8,
+          -8
+        ]
+      },
+      "eyes": {
+        "edgeNcc": -0.002,
+        "lumaNcc": -0.178,
+        "lineNcc": -0.001,
+        "pos": [
+          -7,
+          0
+        ]
+      },
+      "visor": {
+        "edgeNcc": 0.072,
+        "lumaNcc": -0.042,
+        "lineNcc": 0.034,
+        "pos": [
+          8,
+          8
+        ]
+      },
+      "brows": {
+        "edgeNcc": 0.024,
+        "lumaNcc": 0.208,
+        "lineNcc": 0.045,
+        "pos": [
+          -8,
+          -4
+        ]
+      },
+      "mouth": {
+        "edgeNcc": 0.101,
+        "lumaNcc": 0.087,
+        "lineNcc": 0.13,
+        "pos": [
+          2,
+          7
+        ]
+      },
+      "hood": {
+        "edgeNcc": 0.12,
+        "lumaNcc": 0.243,
+        "lineNcc": 0.141,
+        "pos": [
+          5,
+          6
+        ]
+      },
+      "crest": {
+        "edgeNcc": 0.071,
+        "lumaNcc": 0.057,
+        "lineNcc": 0.062,
+        "pos": [
+          7,
+          4
+        ]
+      },
+      "hand": {
+        "edgeNcc": 0.062,
+        "lumaNcc": 0.183,
+        "lineNcc": 0.056,
+        "pos": [
+          8,
+          -4
+        ]
+      },
+      "cannonBody": {
+        "edgeNcc": 0.005,
+        "lumaNcc": 0.108,
+        "lineNcc": 0.03,
+        "pos": [
+          -6,
+          -2
+        ]
+      },
+      "sack": {
+        "edgeNcc": 0.649,
+        "lumaNcc": 0.696,
+        "lineNcc": 0.552,
+        "pos": [
+          0,
+          0
+        ]
+      },
+      "eyesOrange": 69.5,
+      "visorOrange": 43.6,
+      "silIou": 0.452,
+      "erosion": 50.29,
+      "headTop": -100,
+      "headWidthRatio": 0.375,
+      "newDarkObj": 0.07,
+      "glowX": 300
+    },
+    {
+      "i": 23,
+      "file": "f093.png",
+      "face": {
+        "edgeNcc": 0.006,
+        "lumaNcc": -0.009,
+        "lineNcc": 0.007,
+        "pos": [
+          1,
+          -8
+        ]
+      },
+      "eyes": {
+        "edgeNcc": 0.073,
+        "lumaNcc": -0.096,
+        "lineNcc": 0.032,
+        "pos": [
+          -5,
+          8
+        ]
+      },
+      "visor": {
+        "edgeNcc": 0.138,
+        "lumaNcc": 0.066,
+        "lineNcc": 0.047,
+        "pos": [
+          -8,
+          1
+        ]
+      },
+      "brows": {
+        "edgeNcc": 0.048,
+        "lumaNcc": 0.193,
+        "lineNcc": 0.084,
+        "pos": [
+          -1,
+          -6
+        ]
+      },
+      "mouth": {
+        "edgeNcc": 0.071,
+        "lumaNcc": 0.182,
+        "lineNcc": 0.113,
+        "pos": [
+          7,
+          4
+        ]
+      },
+      "hood": {
+        "edgeNcc": 0.117,
+        "lumaNcc": 0.208,
+        "lineNcc": 0.142,
+        "pos": [
+          8,
+          8
+        ]
+      },
+      "crest": {
+        "edgeNcc": 0.09,
+        "lumaNcc": 0.133,
+        "lineNcc": 0.075,
+        "pos": [
+          8,
+          8
+        ]
+      },
+      "hand": {
+        "edgeNcc": 0.056,
+        "lumaNcc": 0.258,
+        "lineNcc": 0.071,
+        "pos": [
+          0,
+          -8
+        ]
+      },
+      "cannonBody": {
+        "edgeNcc": -0.009,
+        "lumaNcc": 0.152,
+        "lineNcc": 0.039,
+        "pos": [
+          0,
+          -8
+        ]
+      },
+      "sack": {
+        "edgeNcc": 0.641,
+        "lumaNcc": 0.687,
+        "lineNcc": 0.543,
+        "pos": [
+          0,
+          0
+        ]
+      },
+      "eyesOrange": 70.4,
+      "visorOrange": 46.7,
+      "silIou": 0.427,
+      "erosion": 48.2,
+      "headTop": -108,
+      "headWidthRatio": 0.897,
+      "newDarkObj": 0.1,
+      "glowX": 300
+    },
+    {
+      "i": 24,
+      "file": "f096.png",
+      "face": {
+        "edgeNcc": 0.031,
+        "lumaNcc": -0.023,
+        "lineNcc": 0.01,
+        "pos": [
+          -3,
+          8
+        ]
+      },
+      "eyes": {
+        "edgeNcc": 0.12,
+        "lumaNcc": -0.048,
+        "lineNcc": 0.069,
+        "pos": [
+          -8,
+          5
+        ]
+      },
+      "visor": {
+        "edgeNcc": 0.164,
+        "lumaNcc": 0.162,
+        "lineNcc": 0.046,
+        "pos": [
+          2,
+          -6
+        ]
+      },
+      "brows": {
+        "edgeNcc": 0.106,
+        "lumaNcc": 0.19,
+        "lineNcc": 0.118,
+        "pos": [
+          -1,
+          7
+        ]
+      },
+      "mouth": {
+        "edgeNcc": 0.118,
+        "lumaNcc": 0.186,
+        "lineNcc": 0.15,
+        "pos": [
+          5,
+          -8
+        ]
+      },
+      "hood": {
+        "edgeNcc": 0.098,
+        "lumaNcc": 0.175,
+        "lineNcc": 0.126,
+        "pos": [
+          8,
+          -4
+        ]
+      },
+      "crest": {
+        "edgeNcc": 0.079,
+        "lumaNcc": 0.159,
+        "lineNcc": 0.053,
+        "pos": [
+          -7,
+          6
+        ]
+      },
+      "hand": {
+        "edgeNcc": 0.005,
+        "lumaNcc": 0.173,
+        "lineNcc": 0.033,
+        "pos": [
+          6,
+          2
+        ]
+      },
+      "cannonBody": {
+        "edgeNcc": -0.007,
+        "lumaNcc": 0.139,
+        "lineNcc": 0.03,
+        "pos": [
+          3,
+          2
+        ]
+      },
+      "sack": {
+        "edgeNcc": 0.636,
+        "lumaNcc": 0.663,
+        "lineNcc": 0.534,
+        "pos": [
+          0,
+          0
+        ]
+      },
+      "eyesOrange": 70.9,
+      "visorOrange": 51.1,
+      "silIou": 0.406,
+      "erosion": 43.48,
+      "headTop": -108,
+      "headWidthRatio": 1.316,
+      "newDarkObj": 0.13,
+      "glowX": 300
+    },
+    {
+      "i": 25,
+      "file": "f099.png",
+      "face": {
+        "edgeNcc": 0.013,
+        "lumaNcc": 0.033,
+        "lineNcc": 0.001,
+        "pos": [
+          4,
+          -4
+        ]
+      },
+      "eyes": {
+        "edgeNcc": 0.126,
+        "lumaNcc": 0.019,
+        "lineNcc": 0.039,
+        "pos": [
+          -8,
+          4
+        ]
+      },
+      "visor": {
+        "edgeNcc": 0.111,
+        "lumaNcc": 0.089,
+        "lineNcc": 0.073,
+        "pos": [
+          1,
+          7
+        ]
+      },
+      "brows": {
+        "edgeNcc": 0.068,
+        "lumaNcc": 0.169,
+        "lineNcc": 0.059,
+        "pos": [
+          -8,
+          4
+        ]
+      },
+      "mouth": {
+        "edgeNcc": 0.097,
+        "lumaNcc": 0.206,
+        "lineNcc": 0.063,
+        "pos": [
+          3,
+          4
+        ]
+      },
+      "hood": {
+        "edgeNcc": 0.094,
+        "lumaNcc": 0.248,
+        "lineNcc": 0.133,
+        "pos": [
+          7,
+          5
+        ]
+      },
+      "crest": {
+        "edgeNcc": 0.059,
+        "lumaNcc": 0.248,
+        "lineNcc": 0.052,
+        "pos": [
+          7,
+          3
+        ]
+      },
+      "hand": {
+        "edgeNcc": -0.007,
+        "lumaNcc": 0.196,
+        "lineNcc": 0.044,
+        "pos": [
+          8,
+          0
+        ]
+      },
+      "cannonBody": {
+        "edgeNcc": -0.006,
+        "lumaNcc": 0.126,
+        "lineNcc": 0.026,
+        "pos": [
+          -3,
+          8
+        ]
+      },
+      "sack": {
+        "edgeNcc": 0.623,
+        "lumaNcc": 0.638,
+        "lineNcc": 0.525,
+        "pos": [
+          0,
+          0
+        ]
+      },
+      "eyesOrange": 76.6,
+      "visorOrange": 62.3,
+      "silIou": 0.363,
+      "erosion": 40.2,
+      "headTop": -82,
+      "headWidthRatio": 0.87,
+      "newDarkObj": 0.15,
+      "glowX": 300
+    },
+    {
+      "i": 26,
+      "file": "f102.png",
+      "face": {
+        "edgeNcc": 0.028,
+        "lumaNcc": 0.021,
+        "lineNcc": 0.019,
+        "pos": [
+          -3,
+          0
+        ]
+      },
+      "eyes": {
+        "edgeNcc": 0.162,
+        "lumaNcc": -0.058,
+        "lineNcc": 0.092,
+        "pos": [
+          -4,
+          0
+        ]
+      },
+      "visor": {
+        "edgeNcc": 0.163,
+        "lumaNcc": 0.195,
+        "lineNcc": 0.089,
+        "pos": [
+          8,
+          2
+        ]
+      },
+      "brows": {
+        "edgeNcc": 0.119,
+        "lumaNcc": 0.261,
+        "lineNcc": 0.124,
+        "pos": [
+          -2,
+          3
+        ]
+      },
+      "mouth": {
+        "edgeNcc": 0.096,
+        "lumaNcc": 0.22,
+        "lineNcc": 0.111,
+        "pos": [
+          5,
+          -5
+        ]
+      },
+      "hood": {
+        "edgeNcc": 0.07,
+        "lumaNcc": 0.212,
+        "lineNcc": 0.123,
+        "pos": [
+          6,
+          5
+        ]
+      },
+      "crest": {
+        "edgeNcc": 0.029,
+        "lumaNcc": 0.216,
+        "lineNcc": 0.059,
+        "pos": [
+          8,
+          7
+        ]
+      },
+      "hand": {
+        "edgeNcc": 0.005,
+        "lumaNcc": 0.24,
+        "lineNcc": 0.053,
+        "pos": [
+          -1,
+          6
+        ]
+      },
+      "cannonBody": {
+        "edgeNcc": -0.003,
+        "lumaNcc": 0.13,
+        "lineNcc": 0.031,
+        "pos": [
+          -1,
+          6
+        ]
+      },
+      "sack": {
+        "edgeNcc": 0.625,
+        "lumaNcc": 0.622,
+        "lineNcc": 0.523,
+        "pos": [
+          0,
+          0
+        ]
+      },
+      "eyesOrange": 78.5,
+      "visorOrange": 65.5,
+      "silIou": 0.346,
+      "erosion": 37.66,
+      "headTop": -108,
+      "headWidthRatio": 1.229,
+      "newDarkObj": 0.14,
+      "glowX": 300
+    },
+    {
+      "i": 27,
+      "file": "f105.png",
+      "face": {
+        "edgeNcc": 0.038,
+        "lumaNcc": 0.086,
+        "lineNcc": 0.044,
+        "pos": [
+          -8,
+          -8
+        ]
+      },
+      "eyes": {
+        "edgeNcc": 0.18,
+        "lumaNcc": 0.066,
+        "lineNcc": 0.1,
+        "pos": [
+          -1,
+          -8
+        ]
+      },
+      "visor": {
+        "edgeNcc": 0.115,
+        "lumaNcc": 0.313,
+        "lineNcc": 0.096,
+        "pos": [
+          -6,
+          -8
+        ]
+      },
+      "brows": {
+        "edgeNcc": 0.141,
+        "lumaNcc": 0.211,
+        "lineNcc": 0.118,
+        "pos": [
+          6,
+          -4
+        ]
+      },
+      "mouth": {
+        "edgeNcc": 0.14,
+        "lumaNcc": 0.2,
+        "lineNcc": 0.127,
+        "pos": [
+          -4,
+          -8
+        ]
+      },
+      "hood": {
+        "edgeNcc": 0.061,
+        "lumaNcc": 0.276,
+        "lineNcc": 0.113,
+        "pos": [
+          -3,
+          -8
+        ]
+      },
+      "crest": {
+        "edgeNcc": 0.01,
+        "lumaNcc": 0.155,
+        "lineNcc": 0.049,
+        "pos": [
+          -2,
+          -8
+        ]
+      },
+      "hand": {
+        "edgeNcc": -0.031,
+        "lumaNcc": 0.196,
+        "lineNcc": 0.033,
+        "pos": [
+          -1,
+          4
+        ]
+      },
+      "cannonBody": {
+        "edgeNcc": -0.018,
+        "lumaNcc": 0.168,
+        "lineNcc": 0.017,
+        "pos": [
+          1,
+          3
+        ]
+      },
+      "sack": {
+        "edgeNcc": 0.607,
+        "lumaNcc": 0.641,
+        "lineNcc": 0.506,
+        "pos": [
+          0,
+          0
+        ]
+      },
+      "eyesOrange": 88.8,
+      "visorOrange": 62.7,
+      "silIou": 0.295,
+      "erosion": 28.47,
+      "headTop": -108,
+      "headWidthRatio": 2.743,
+      "newDarkObj": 0.11,
+      "glowX": 300
+    },
+    {
+      "i": 28,
+      "file": "f108.png",
+      "face": {
+        "edgeNcc": 0.036,
+        "lumaNcc": 0.066,
+        "lineNcc": 0.031,
+        "pos": [
+          5,
+          -8
+        ]
+      },
+      "eyes": {
+        "edgeNcc": 0.187,
+        "lumaNcc": 0.073,
+        "lineNcc": 0.091,
+        "pos": [
+          5,
+          -8
+        ]
+      },
+      "visor": {
+        "edgeNcc": 0.09,
+        "lumaNcc": 0.019,
+        "lineNcc": 0.032,
+        "pos": [
+          1,
+          4
+        ]
+      },
+      "brows": {
+        "edgeNcc": 0.093,
+        "lumaNcc": 0.15,
+        "lineNcc": 0.05,
+        "pos": [
+          -7,
+          6
+        ]
+      },
+      "mouth": {
+        "edgeNcc": 0.152,
+        "lumaNcc": 0.236,
+        "lineNcc": 0.104,
+        "pos": [
+          -7,
+          -8
+        ]
+      },
+      "hood": {
+        "edgeNcc": 0.035,
+        "lumaNcc": 0.153,
+        "lineNcc": 0.112,
+        "pos": [
+          6,
+          -7
+        ]
+      },
+      "crest": {
+        "edgeNcc": -0.011,
+        "lumaNcc": 0.039,
+        "lineNcc": 0.055,
+        "pos": [
+          5,
+          -6
+        ]
+      },
+      "hand": {
+        "edgeNcc": -0.065,
+        "lumaNcc": 0.156,
+        "lineNcc": 0.024,
+        "pos": [
+          6,
+          1
+        ]
+      },
+      "cannonBody": {
+        "edgeNcc": -0.039,
+        "lumaNcc": 0.157,
+        "lineNcc": 0.011,
+        "pos": [
+          6,
+          1
+        ]
+      },
+      "sack": {
+        "edgeNcc": 0.582,
+        "lumaNcc": 0.569,
+        "lineNcc": 0.498,
+        "pos": [
+          0,
+          0
+        ]
+      },
+      "eyesOrange": 98.6,
+      "visorOrange": 65.1,
+      "silIou": 0.279,
+      "erosion": 24.12,
+      "headTop": -108,
+      "headWidthRatio": 1.862,
+      "newDarkObj": 0.06,
+      "glowX": 300
+    },
+    {
+      "i": 29,
+      "file": "f111.png",
+      "face": {
+        "edgeNcc": 0.05,
+        "lumaNcc": 0.143,
+        "lineNcc": 0.027,
+        "pos": [
+          -2,
+          -8
+        ]
+      },
+      "eyes": {
+        "edgeNcc": 0.213,
+        "lumaNcc": 0.148,
+        "lineNcc": 0.087,
+        "pos": [
+          8,
+          -5
+        ]
+      },
+      "visor": {
+        "edgeNcc": 0.107,
+        "lumaNcc": 0.076,
+        "lineNcc": 0.034,
+        "pos": [
+          6,
+          -1
+        ]
+      },
+      "brows": {
+        "edgeNcc": 0.123,
+        "lumaNcc": 0.085,
+        "lineNcc": 0.045,
+        "pos": [
+          -1,
+          5
+        ]
+      },
+      "mouth": {
+        "edgeNcc": 0.225,
+        "lumaNcc": 0.23,
+        "lineNcc": 0.131,
+        "pos": [
+          -4,
+          -8
+        ]
+      },
+      "hood": {
+        "edgeNcc": 0.005,
+        "lumaNcc": 0.271,
+        "lineNcc": 0.095,
+        "pos": [
+          1,
+          -7
+        ]
+      },
+      "crest": {
+        "edgeNcc": 0.031,
+        "lumaNcc": 0.295,
+        "lineNcc": 0.056,
+        "pos": [
+          1,
+          5
+        ]
+      },
+      "hand": {
+        "edgeNcc": -0.063,
+        "lumaNcc": 0.275,
+        "lineNcc": 0.032,
+        "pos": [
+          -8,
+          8
+        ]
+      },
+      "cannonBody": {
+        "edgeNcc": -0.029,
+        "lumaNcc": 0.168,
+        "lineNcc": 0.029,
+        "pos": [
+          -8,
+          -7
+        ]
+      },
+      "sack": {
+        "edgeNcc": 0.583,
+        "lumaNcc": 0.627,
+        "lineNcc": 0.501,
+        "pos": [
+          0,
+          0
+        ]
+      },
+      "eyesOrange": 58.3,
+      "visorOrange": 24.4,
+      "silIou": 0.18,
+      "erosion": 2.82,
+      "headTop": -108,
+      "headWidthRatio": 2.763,
+      "newDarkObj": 0.05,
+      "glowX": 300
+    }
+  ],
+  "drift": [
+    {
+      "i": 1,
+      "face": {
+        "edgeDrop": 0.195,
+        "lumaDrop": 0.073,
+        "lineDrop": 0.182,
+        "posDrift": 1
+      },
+      "eyes": {
+        "edgeDrop": 0.068,
+        "lumaDrop": 0.025,
+        "lineDrop": 0.098,
+        "posDrift": 1
+      },
+      "visor": {
+        "edgeDrop": 0.118,
+        "lumaDrop": 0.042,
+        "lineDrop": 0.131,
+        "posDrift": 2
+      },
+      "brows": {
+        "edgeDrop": 0.097,
+        "lumaDrop": 0.036,
+        "lineDrop": 0.082,
+        "posDrift": 1
+      },
+      "mouth": {
+        "edgeDrop": 0.1,
+        "lumaDrop": 0.045,
+        "lineDrop": 0.121,
+        "posDrift": 2
+      },
+      "hood": {
+        "edgeDrop": 0.174,
+        "lumaDrop": 0.047,
+        "lineDrop": 0.195,
+        "posDrift": 0
+      },
+      "crest": {
+        "edgeDrop": 0.142,
+        "lumaDrop": 0.032,
+        "lineDrop": 0.178,
+        "posDrift": 1
+      },
+      "hand": {
+        "edgeDrop": 0.313,
+        "lumaDrop": 0.159,
+        "lineDrop": 0.269,
+        "posDrift": 4
+      },
+      "cannonBody": {
+        "edgeDrop": 0.325,
+        "lumaDrop": 0.147,
+        "lineDrop": 0.287,
+        "posDrift": 4
+      },
+      "sack": {
+        "edgeDrop": 0.035,
+        "lumaDrop": 0.012,
+        "lineDrop": 0.043,
+        "posDrift": 0
+      },
+      "eyesOrangeDelta": 2.7,
+      "visorOrangeDelta": 2.4,
+      "silIouDrop": 0.092,
+      "erosionDelta": -0.15,
+      "headTopShift": 0,
+      "headWidthDev": 0,
+      "newDarkObjDelta": 0,
+      "glowX": 300,
+      "pan": [
+        0,
+        0
+      ],
+      "zoomPx": 2
+    },
+    {
+      "i": 2,
+      "face": {
+        "edgeDrop": 0.307,
+        "lumaDrop": 0.129,
+        "lineDrop": 0.292,
+        "posDrift": 1
+      },
+      "eyes": {
+        "edgeDrop": 0.165,
+        "lumaDrop": 0.068,
+        "lineDrop": 0.173,
+        "posDrift": 1
+      },
+      "visor": {
+        "edgeDrop": 0.175,
+        "lumaDrop": 0.07,
+        "lineDrop": 0.184,
+        "posDrift": 2
+      },
+      "brows": {
+        "edgeDrop": 0.154,
+        "lumaDrop": 0.06,
+        "lineDrop": 0.118,
+        "posDrift": 1
+      },
+      "mouth": {
+        "edgeDrop": 0.108,
+        "lumaDrop": 0.053,
+        "lineDrop": 0.132,
+        "posDrift": 2
+      },
+      "hood": {
+        "edgeDrop": 0.253,
+        "lumaDrop": 0.091,
+        "lineDrop": 0.33,
+        "posDrift": 0
+      },
+      "crest": {
+        "edgeDrop": 0.271,
+        "lumaDrop": 0.077,
+        "lineDrop": 0.295,
+        "posDrift": 1
+      },
+      "hand": {
+        "edgeDrop": 0.428,
+        "lumaDrop": 0.222,
+        "lineDrop": 0.355,
+        "posDrift": 6
+      },
+      "cannonBody": {
+        "edgeDrop": 0.42,
+        "lumaDrop": 0.201,
+        "lineDrop": 0.381,
+        "posDrift": 6
+      },
+      "sack": {
+        "edgeDrop": 0.047,
+        "lumaDrop": 0.018,
+        "lineDrop": 0.06,
+        "posDrift": 0
+      },
+      "eyesOrangeDelta": 3.7,
+      "visorOrangeDelta": 1.9,
+      "silIouDrop": 0.122,
+      "erosionDelta": 0,
+      "headTopShift": 0,
+      "headWidthDev": 0.004,
+      "newDarkObjDelta": 0,
+      "glowX": 300,
+      "pan": [
+        0,
+        0
+      ],
+      "zoomPx": 3
+    },
+    {
+      "i": 3,
+      "face": {
+        "edgeDrop": 0.417,
+        "lumaDrop": 0.219,
+        "lineDrop": 0.436,
+        "posDrift": 3
+      },
+      "eyes": {
+        "edgeDrop": 0.247,
+        "lumaDrop": 0.117,
+        "lineDrop": 0.257,
+        "posDrift": 2
+      },
+      "visor": {
+        "edgeDrop": 0.299,
+        "lumaDrop": 0.134,
+        "lineDrop": 0.32,
+        "posDrift": 4
+      },
+      "brows": {
+        "edgeDrop": 0.218,
+        "lumaDrop": 0.142,
+        "lineDrop": 0.247,
+        "posDrift": 2
+      },
+      "mouth": {
+        "edgeDrop": 0.164,
+        "lumaDrop": 0.076,
+        "lineDrop": 0.166,
+        "posDrift": 5
+      },
+      "hood": {
+        "edgeDrop": 0.362,
+        "lumaDrop": 0.163,
+        "lineDrop": 0.498,
+        "posDrift": 2
+      },
+      "crest": {
+        "edgeDrop": 0.408,
+        "lumaDrop": 0.142,
+        "lineDrop": 0.456,
+        "posDrift": 2
+      },
+      "hand": {
+        "edgeDrop": 0.659,
+        "lumaDrop": 0.422,
+        "lineDrop": 0.692,
+        "posDrift": 8
+      },
+      "cannonBody": {
+        "edgeDrop": 0.707,
+        "lumaDrop": 0.421,
+        "lineDrop": 0.717,
+        "posDrift": 8
+      },
+      "sack": {
+        "edgeDrop": 0.066,
+        "lumaDrop": 0.03,
+        "lineDrop": 0.09,
+        "posDrift": 0
+      },
+      "eyesOrangeDelta": 4.6,
+      "visorOrangeDelta": 2.3,
+      "silIouDrop": 0.158,
+      "erosionDelta": 0.22,
+      "headTopShift": 0,
+      "headWidthDev": 0.02,
+      "newDarkObjDelta": 0,
+      "glowX": 300,
+      "pan": [
+        -1,
+        0
+      ],
+      "zoomPx": 5
+    },
+    {
+      "i": 4,
+      "face": {
+        "edgeDrop": 0.457,
+        "lumaDrop": 0.254,
+        "lineDrop": 0.492,
+        "posDrift": 3
+      },
+      "eyes": {
+        "edgeDrop": 0.222,
+        "lumaDrop": 0.119,
+        "lineDrop": 0.292,
+        "posDrift": 3
+      },
+      "visor": {
+        "edgeDrop": 0.353,
+        "lumaDrop": 0.176,
+        "lineDrop": 0.39,
+        "posDrift": 5
+      },
+      "brows": {
+        "edgeDrop": 0.249,
+        "lumaDrop": 0.181,
+        "lineDrop": 0.298,
+        "posDrift": 3
+      },
+      "mouth": {
+        "edgeDrop": 0.159,
+        "lumaDrop": 0.092,
+        "lineDrop": 0.194,
+        "posDrift": 5
+      },
+      "hood": {
+        "edgeDrop": 0.375,
+        "lumaDrop": 0.177,
+        "lineDrop": 0.531,
+        "posDrift": 3
+      },
+      "crest": {
+        "edgeDrop": 0.436,
+        "lumaDrop": 0.163,
+        "lineDrop": 0.502,
+        "posDrift": 3
+      },
+      "hand": {
+        "edgeDrop": 0.724,
+        "lumaDrop": 0.446,
+        "lineDrop": 0.74,
+        "posDrift": 8
+      },
+      "cannonBody": {
+        "edgeDrop": 0.787,
+        "lumaDrop": 0.463,
+        "lineDrop": 0.751,
+        "posDrift": 2
+      },
+      "sack": {
+        "edgeDrop": 0.077,
+        "lumaDrop": 0.035,
+        "lineDrop": 0.101,
+        "posDrift": 0
+      },
+      "eyesOrangeDelta": 5.2,
+      "visorOrangeDelta": 2.9,
+      "silIouDrop": 0.168,
+      "erosionDelta": 0.26,
+      "headTopShift": 1,
+      "headWidthDev": 0.02,
+      "newDarkObjDelta": 0,
+      "glowX": 300,
+      "pan": [
+        -1,
+        0
+      ],
+      "zoomPx": 5
+    },
+    {
+      "i": 5,
+      "face": {
+        "edgeDrop": 0.526,
+        "lumaDrop": 0.304,
+        "lineDrop": 0.562,
+        "posDrift": 4
+      },
+      "eyes": {
+        "edgeDrop": 0.322,
+        "lumaDrop": 0.176,
+        "lineDrop": 0.375,
+        "posDrift": 4
+      },
+      "visor": {
+        "edgeDrop": 0.419,
+        "lumaDrop": 0.252,
+        "lineDrop": 0.476,
+        "posDrift": 7
+      },
+      "brows": {
+        "edgeDrop": 0.314,
+        "lumaDrop": 0.226,
+        "lineDrop": 0.397,
+        "posDrift": 3
+      },
+      "mouth": {
+        "edgeDrop": 0.217,
+        "lumaDrop": 0.139,
+        "lineDrop": 0.243,
+        "posDrift": 7
+      },
+      "hood": {
+        "edgeDrop": 0.448,
+        "lumaDrop": 0.201,
+        "lineDrop": 0.56,
+        "posDrift": 4
+      },
+      "crest": {
+        "edgeDrop": 0.521,
+        "lumaDrop": 0.198,
+        "lineDrop": 0.56,
+        "posDrift": 4
+      },
+      "hand": {
+        "edgeDrop": 0.76,
+        "lumaDrop": 0.508,
+        "lineDrop": 0.764,
+        "posDrift": 4
+      },
+      "cannonBody": {
+        "edgeDrop": 0.827,
+        "lumaDrop": 0.508,
+        "lineDrop": 0.783,
+        "posDrift": 7
+      },
+      "sack": {
+        "edgeDrop": 0.094,
+        "lumaDrop": 0.04,
+        "lineDrop": 0.112,
+        "posDrift": 0
+      },
+      "eyesOrangeDelta": 5.5,
+      "visorOrangeDelta": 3.8,
+      "silIouDrop": 0.185,
+      "erosionDelta": 0.5,
+      "headTopShift": 2,
+      "headWidthDev": 0.051,
+      "newDarkObjDelta": 0,
+      "glowX": 300,
+      "pan": [
+        0,
+        0
+      ],
+      "zoomPx": 5
+    },
+    {
+      "i": 6,
+      "face": {
+        "edgeDrop": 0.567,
+        "lumaDrop": 0.333,
+        "lineDrop": 0.606,
+        "posDrift": 4
+      },
+      "eyes": {
+        "edgeDrop": 0.338,
+        "lumaDrop": 0.2,
+        "lineDrop": 0.417,
+        "posDrift": 5
+      },
+      "visor": {
+        "edgeDrop": 0.468,
+        "lumaDrop": 0.294,
+        "lineDrop": 0.538,
+        "posDrift": 8
+      },
+      "brows": {
+        "edgeDrop": 0.362,
+        "lumaDrop": 0.266,
+        "lineDrop": 0.454,
+        "posDrift": 4
+      },
+      "mouth": {
+        "edgeDrop": 0.256,
+        "lumaDrop": 0.175,
+        "lineDrop": 0.299,
+        "posDrift": 8
+      },
+      "hood": {
+        "edgeDrop": 0.481,
+        "lumaDrop": 0.216,
+        "lineDrop": 0.573,
+        "posDrift": 5
+      },
+      "crest": {
+        "edgeDrop": 0.563,
+        "lumaDrop": 0.212,
+        "lineDrop": 0.586,
+        "posDrift": 5
+      },
+      "hand": {
+        "edgeDrop": 0.787,
+        "lumaDrop": 0.545,
+        "lineDrop": 0.769,
+        "posDrift": 2
+      },
+      "cannonBody": {
+        "edgeDrop": 0.861,
+        "lumaDrop": 0.551,
+        "lineDrop": 0.821,
+        "posDrift": 2
+      },
+      "sack": {
+        "edgeDrop": 0.108,
+        "lumaDrop": 0.045,
+        "lineDrop": 0.128,
+        "posDrift": 0
+      },
+      "eyesOrangeDelta": 7.4,
+      "visorOrangeDelta": 7.3,
+      "silIouDrop": 0.197,
+      "erosionDelta": 0.73,
+      "headTopShift": 4,
+      "headWidthDev": 0.043,
+      "newDarkObjDelta": 0,
+      "glowX": 300,
+      "pan": [
+        1,
+        0
+      ],
+      "zoomPx": 7
+    },
+    {
+      "i": 7,
+      "face": {
+        "edgeDrop": 0.507,
+        "lumaDrop": 0.282,
+        "lineDrop": 0.535,
+        "posDrift": 7
+      },
+      "eyes": {
+        "edgeDrop": 0.276,
+        "lumaDrop": 0.153,
+        "lineDrop": 0.345,
+        "posDrift": 8
+      },
+      "visor": {
+        "edgeDrop": 0.52,
+        "lumaDrop": 0.32,
+        "lineDrop": 0.524,
+        "posDrift": 8
+      },
+      "brows": {
+        "edgeDrop": 0.289,
+        "lumaDrop": 0.21,
+        "lineDrop": 0.381,
+        "posDrift": 7
+      },
+      "mouth": {
+        "edgeDrop": 0.328,
+        "lumaDrop": 0.226,
+        "lineDrop": 0.36,
+        "posDrift": 8
+      },
+      "hood": {
+        "edgeDrop": 0.416,
+        "lumaDrop": 0.185,
+        "lineDrop": 0.547,
+        "posDrift": 3
+      },
+      "crest": {
+        "edgeDrop": 0.483,
+        "lumaDrop": 0.177,
+        "lineDrop": 0.532,
+        "posDrift": 3
+      },
+      "hand": {
+        "edgeDrop": 0.794,
+        "lumaDrop": 0.541,
+        "lineDrop": 0.768,
+        "posDrift": 3
+      },
+      "cannonBody": {
+        "edgeDrop": 0.872,
+        "lumaDrop": 0.537,
+        "lineDrop": 0.824,
+        "posDrift": 4
+      },
+      "sack": {
+        "edgeDrop": 0.134,
+        "lumaDrop": 0.057,
+        "lineDrop": 0.158,
+        "posDrift": 0
+      },
+      "eyesOrangeDelta": 8.7,
+      "visorOrangeDelta": 2.2,
+      "silIouDrop": 0.206,
+      "erosionDelta": 0.93,
+      "headTopShift": 1,
+      "headWidthDev": 0.028,
+      "newDarkObjDelta": 0,
+      "glowX": 300,
+      "pan": [
+        3,
+        0
+      ],
+      "zoomPx": 6
+    },
+    {
+      "i": 8,
+      "face": {
+        "edgeDrop": 0.631,
+        "lumaDrop": 0.375,
+        "lineDrop": 0.644,
+        "posDrift": 8
+      },
+      "eyes": {
+        "edgeDrop": 0.575,
+        "lumaDrop": 0.41,
+        "lineDrop": 0.596,
+        "posDrift": 8
+      },
+      "visor": {
+        "edgeDrop": 0.572,
+        "lumaDrop": 0.367,
+        "lineDrop": 0.525,
+        "posDrift": 8
+      },
+      "brows": {
+        "edgeDrop": 0.468,
+        "lumaDrop": 0.261,
+        "lineDrop": 0.363,
+        "posDrift": 8
+      },
+      "mouth": {
+        "edgeDrop": 0.414,
+        "lumaDrop": 0.321,
+        "lineDrop": 0.427,
+        "posDrift": 8
+      },
+      "hood": {
+        "edgeDrop": 0.331,
+        "lumaDrop": 0.149,
+        "lineDrop": 0.47,
+        "posDrift": 8
+      },
+      "crest": {
+        "edgeDrop": 0.367,
+        "lumaDrop": 0.127,
+        "lineDrop": 0.413,
+        "posDrift": 8
+      },
+      "hand": {
+        "edgeDrop": 0.781,
+        "lumaDrop": 0.517,
+        "lineDrop": 0.767,
+        "posDrift": 5
+      },
+      "cannonBody": {
+        "edgeDrop": 0.833,
+        "lumaDrop": 0.529,
+        "lineDrop": 0.81,
+        "posDrift": 8
+      },
+      "sack": {
+        "edgeDrop": 0.151,
+        "lumaDrop": 0.067,
+        "lineDrop": 0.176,
+        "posDrift": 0
+      },
+      "eyesOrangeDelta": 7.9,
+      "visorOrangeDelta": -2.2,
+      "silIouDrop": 0.218,
+      "erosionDelta": 0.95,
+      "headTopShift": 1,
+      "headWidthDev": 0.02,
+      "newDarkObjDelta": 0,
+      "glowX": 300,
+      "pan": [
+        3,
+        0
+      ],
+      "zoomPx": 6
+    },
+    {
+      "i": 9,
+      "face": {
+        "edgeDrop": 0.825,
+        "lumaDrop": 0.527,
+        "lineDrop": 0.774,
+        "posDrift": 8
+      },
+      "eyes": {
+        "edgeDrop": 0.796,
+        "lumaDrop": 0.682,
+        "lineDrop": 0.788,
+        "posDrift": 8
+      },
+      "visor": {
+        "edgeDrop": 0.68,
+        "lumaDrop": 0.521,
+        "lineDrop": 0.73,
+        "posDrift": 8
+      },
+      "brows": {
+        "edgeDrop": 0.822,
+        "lumaDrop": 0.614,
+        "lineDrop": 0.629,
+        "posDrift": 8
+      },
+      "mouth": {
+        "edgeDrop": 0.573,
+        "lumaDrop": 0.54,
+        "lineDrop": 0.653,
+        "posDrift": 8
+      },
+      "hood": {
+        "edgeDrop": 0.589,
+        "lumaDrop": 0.261,
+        "lineDrop": 0.669,
+        "posDrift": 8
+      },
+      "crest": {
+        "edgeDrop": 0.766,
+        "lumaDrop": 0.39,
+        "lineDrop": 0.765,
+        "posDrift": 7
+      },
+      "hand": {
+        "edgeDrop": 0.77,
+        "lumaDrop": 0.485,
+        "lineDrop": 0.777,
+        "posDrift": 8
+      },
+      "cannonBody": {
+        "edgeDrop": 0.855,
+        "lumaDrop": 0.533,
+        "lineDrop": 0.826,
+        "posDrift": 8
+      },
+      "sack": {
+        "edgeDrop": 0.179,
+        "lumaDrop": 0.087,
+        "lineDrop": 0.208,
+        "posDrift": 0
+      },
+      "eyesOrangeDelta": 5,
+      "visorOrangeDelta": -10.5,
+      "silIouDrop": 0.243,
+      "erosionDelta": 1.1,
+      "headTopShift": -5,
+      "headWidthDev": 0.04,
+      "newDarkObjDelta": 0,
+      "glowX": 300,
+      "pan": [
+        0,
+        0
+      ],
+      "zoomPx": 15
+    },
+    {
+      "i": 10,
+      "face": {
+        "edgeDrop": 0.855,
+        "lumaDrop": 0.606,
+        "lineDrop": 0.831,
+        "posDrift": 8
+      },
+      "eyes": {
+        "edgeDrop": 0.85,
+        "lumaDrop": 0.783,
+        "lineDrop": 0.826,
+        "posDrift": 6
+      },
+      "visor": {
+        "edgeDrop": 0.705,
+        "lumaDrop": 0.591,
+        "lineDrop": 0.774,
+        "posDrift": 3
+      },
+      "brows": {
+        "edgeDrop": 0.86,
+        "lumaDrop": 0.816,
+        "lineDrop": 0.713,
+        "posDrift": 8
+      },
+      "mouth": {
+        "edgeDrop": 0.671,
+        "lumaDrop": 0.634,
+        "lineDrop": 0.696,
+        "posDrift": 8
+      },
+      "hood": {
+        "edgeDrop": 0.612,
+        "lumaDrop": 0.295,
+        "lineDrop": 0.676,
+        "posDrift": 8
+      },
+      "crest": {
+        "edgeDrop": 0.793,
+        "lumaDrop": 0.443,
+        "lineDrop": 0.776,
+        "posDrift": 8
+      },
+      "hand": {
+        "edgeDrop": 0.796,
+        "lumaDrop": 0.494,
+        "lineDrop": 0.785,
+        "posDrift": 8
+      },
+      "cannonBody": {
+        "edgeDrop": 0.888,
+        "lumaDrop": 0.549,
+        "lineDrop": 0.844,
+        "posDrift": 8
+      },
+      "sack": {
+        "edgeDrop": 0.188,
+        "lumaDrop": 0.096,
+        "lineDrop": 0.222,
+        "posDrift": 0
+      },
+      "eyesOrangeDelta": 3.9,
+      "visorOrangeDelta": -13.4,
+      "silIouDrop": 0.254,
+      "erosionDelta": 1.29,
+      "headTopShift": -6,
+      "headWidthDev": 0.095,
+      "newDarkObjDelta": 0,
+      "glowX": 300,
+      "pan": [
+        -3,
+        0
+      ],
+      "zoomPx": 13
+    },
+    {
+      "i": 11,
+      "face": {
+        "edgeDrop": 0.913,
+        "lumaDrop": 0.718,
+        "lineDrop": 0.874,
+        "posDrift": 8
+      },
+      "eyes": {
+        "edgeDrop": 0.91,
+        "lumaDrop": 0.89,
+        "lineDrop": 0.897,
+        "posDrift": 8
+      },
+      "visor": {
+        "edgeDrop": 0.8,
+        "lumaDrop": 0.718,
+        "lineDrop": 0.775,
+        "posDrift": 3
+      },
+      "brows": {
+        "edgeDrop": 0.913,
+        "lumaDrop": 1.11,
+        "lineDrop": 0.866,
+        "posDrift": 8
+      },
+      "mouth": {
+        "edgeDrop": 0.783,
+        "lumaDrop": 0.833,
+        "lineDrop": 0.758,
+        "posDrift": 6
+      },
+      "hood": {
+        "edgeDrop": 0.65,
+        "lumaDrop": 0.343,
+        "lineDrop": 0.688,
+        "posDrift": 8
+      },
+      "crest": {
+        "edgeDrop": 0.831,
+        "lumaDrop": 0.522,
+        "lineDrop": 0.775,
+        "posDrift": 1
+      },
+      "hand": {
+        "edgeDrop": 0.829,
+        "lumaDrop": 0.549,
+        "lineDrop": 0.827,
+        "posDrift": 8
+      },
+      "cannonBody": {
+        "edgeDrop": 0.918,
+        "lumaDrop": 0.586,
+        "lineDrop": 0.871,
+        "posDrift": 2
+      },
+      "sack": {
+        "edgeDrop": 0.211,
+        "lumaDrop": 0.113,
+        "lineDrop": 0.243,
+        "posDrift": 0
+      },
+      "eyesOrangeDelta": -0.9,
+      "visorOrangeDelta": -20.5,
+      "silIouDrop": 0.272,
+      "erosionDelta": 1.62,
+      "headTopShift": -9,
+      "headWidthDev": 0.138,
+      "newDarkObjDelta": 0,
+      "glowX": 300,
+      "pan": [
+        0,
+        -2
+      ],
+      "zoomPx": 4
+    },
+    {
+      "i": 12,
+      "face": {
+        "edgeDrop": 0.959,
+        "lumaDrop": 0.769,
+        "lineDrop": 0.878,
+        "posDrift": 6
+      },
+      "eyes": {
+        "edgeDrop": 0.946,
+        "lumaDrop": 0.924,
+        "lineDrop": 0.915,
+        "posDrift": 8
+      },
+      "visor": {
+        "edgeDrop": 0.82,
+        "lumaDrop": 0.764,
+        "lineDrop": 0.769,
+        "posDrift": 5
+      },
+      "brows": {
+        "edgeDrop": 0.899,
+        "lumaDrop": 1.056,
+        "lineDrop": 0.964,
+        "posDrift": 4
+      },
+      "mouth": {
+        "edgeDrop": 0.823,
+        "lumaDrop": 0.861,
+        "lineDrop": 0.755,
+        "posDrift": 5
+      },
+      "hood": {
+        "edgeDrop": 0.679,
+        "lumaDrop": 0.362,
+        "lineDrop": 0.69,
+        "posDrift": 8
+      },
+      "crest": {
+        "edgeDrop": 0.832,
+        "lumaDrop": 0.558,
+        "lineDrop": 0.779,
+        "posDrift": 3
+      },
+      "hand": {
+        "edgeDrop": 0.834,
+        "lumaDrop": 0.569,
+        "lineDrop": 0.817,
+        "posDrift": 8
+      },
+      "cannonBody": {
+        "edgeDrop": 0.91,
+        "lumaDrop": 0.6,
+        "lineDrop": 0.87,
+        "posDrift": 8
+      },
+      "sack": {
+        "edgeDrop": 0.225,
+        "lumaDrop": 0.124,
+        "lineDrop": 0.256,
+        "posDrift": 0
+      },
+      "eyesOrangeDelta": -1.2,
+      "visorOrangeDelta": -22.5,
+      "silIouDrop": 0.281,
+      "erosionDelta": 1.76,
+      "headTopShift": -9,
+      "headWidthDev": 0.174,
+      "newDarkObjDelta": 0,
+      "glowX": 300,
+      "pan": [
+        0,
+        -2
+      ],
+      "zoomPx": 4
+    },
+    {
+      "i": 13,
+      "face": {
+        "edgeDrop": 0.976,
+        "lumaDrop": 0.829,
+        "lineDrop": 0.892,
+        "posDrift": 1
+      },
+      "eyes": {
+        "edgeDrop": 0.976,
+        "lumaDrop": 0.997,
+        "lineDrop": 0.921,
+        "posDrift": 1
+      },
+      "visor": {
+        "edgeDrop": 0.821,
+        "lumaDrop": 0.859,
+        "lineDrop": 0.809,
+        "posDrift": 8
+      },
+      "brows": {
+        "edgeDrop": 0.908,
+        "lumaDrop": 0.931,
+        "lineDrop": 0.895,
+        "posDrift": 6
+      },
+      "mouth": {
+        "edgeDrop": 0.836,
+        "lumaDrop": 0.886,
+        "lineDrop": 0.747,
+        "posDrift": 3
+      },
+      "hood": {
+        "edgeDrop": 0.716,
+        "lumaDrop": 0.401,
+        "lineDrop": 0.707,
+        "posDrift": 8
+      },
+      "crest": {
+        "edgeDrop": 0.874,
+        "lumaDrop": 0.645,
+        "lineDrop": 0.817,
+        "posDrift": 8
+      },
+      "hand": {
+        "edgeDrop": 0.816,
+        "lumaDrop": 0.609,
+        "lineDrop": 0.778,
+        "posDrift": 8
+      },
+      "cannonBody": {
+        "edgeDrop": 0.911,
+        "lumaDrop": 0.613,
+        "lineDrop": 0.836,
+        "posDrift": 8
+      },
+      "sack": {
+        "edgeDrop": 0.239,
+        "lumaDrop": 0.147,
+        "lineDrop": 0.279,
+        "posDrift": 0
+      },
+      "eyesOrangeDelta": -3.2,
+      "visorOrangeDelta": -28,
+      "silIouDrop": 0.297,
+      "erosionDelta": 2.06,
+      "headTopShift": -10,
+      "headWidthDev": 0.198,
+      "newDarkObjDelta": 0.01,
+      "glowX": 300,
+      "pan": [
+        0,
+        -4
+      ],
+      "zoomPx": 6
+    },
+    {
+      "i": 14,
+      "face": {
+        "edgeDrop": 0.984,
+        "lumaDrop": 0.85,
+        "lineDrop": 0.888,
+        "posDrift": 2
+      },
+      "eyes": {
+        "edgeDrop": 0.991,
+        "lumaDrop": 0.991,
+        "lineDrop": 0.921,
+        "posDrift": 1
+      },
+      "visor": {
+        "edgeDrop": 0.833,
+        "lumaDrop": 0.903,
+        "lineDrop": 0.84,
+        "posDrift": 8
+      },
+      "brows": {
+        "edgeDrop": 0.911,
+        "lumaDrop": 0.862,
+        "lineDrop": 0.895,
+        "posDrift": 2
+      },
+      "mouth": {
+        "edgeDrop": 0.863,
+        "lumaDrop": 0.926,
+        "lineDrop": 0.758,
+        "posDrift": 5
+      },
+      "hood": {
+        "edgeDrop": 0.724,
+        "lumaDrop": 0.427,
+        "lineDrop": 0.705,
+        "posDrift": 6
+      },
+      "crest": {
+        "edgeDrop": 0.892,
+        "lumaDrop": 0.68,
+        "lineDrop": 0.808,
+        "posDrift": 6
+      },
+      "hand": {
+        "edgeDrop": 0.826,
+        "lumaDrop": 0.632,
+        "lineDrop": 0.777,
+        "posDrift": 8
+      },
+      "cannonBody": {
+        "edgeDrop": 0.915,
+        "lumaDrop": 0.632,
+        "lineDrop": 0.846,
+        "posDrift": 7
+      },
+      "sack": {
+        "edgeDrop": 0.247,
+        "lumaDrop": 0.159,
+        "lineDrop": 0.288,
+        "posDrift": 0
+      },
+      "eyesOrangeDelta": -2.8,
+      "visorOrangeDelta": -30.2,
+      "silIouDrop": 0.309,
+      "erosionDelta": 1.91,
+      "headTopShift": -12,
+      "headWidthDev": 0.198,
+      "newDarkObjDelta": 0.01,
+      "glowX": 300,
+      "pan": [
+        -6,
+        -4
+      ],
+      "zoomPx": 6
+    },
+    {
+      "i": 15,
+      "face": {
+        "edgeDrop": 0.978,
+        "lumaDrop": 0.866,
+        "lineDrop": 0.888,
+        "posDrift": 7
+      },
+      "eyes": {
+        "edgeDrop": 1.004,
+        "lumaDrop": 0.983,
+        "lineDrop": 0.918,
+        "posDrift": 8
+      },
+      "visor": {
+        "edgeDrop": 0.87,
+        "lumaDrop": 0.943,
+        "lineDrop": 0.81,
+        "posDrift": 4
+      },
+      "brows": {
+        "edgeDrop": 0.923,
+        "lumaDrop": 0.841,
+        "lineDrop": 0.886,
+        "posDrift": 8
+      },
+      "mouth": {
+        "edgeDrop": 0.869,
+        "lumaDrop": 0.95,
+        "lineDrop": 0.795,
+        "posDrift": 8
+      },
+      "hood": {
+        "edgeDrop": 0.75,
+        "lumaDrop": 0.474,
+        "lineDrop": 0.702,
+        "posDrift": 8
+      },
+      "crest": {
+        "edgeDrop": 0.897,
+        "lumaDrop": 0.741,
+        "lineDrop": 0.8,
+        "posDrift": 8
+      },
+      "hand": {
+        "edgeDrop": 0.837,
+        "lumaDrop": 0.678,
+        "lineDrop": 0.801,
+        "posDrift": 8
+      },
+      "cannonBody": {
+        "edgeDrop": 0.936,
+        "lumaDrop": 0.702,
+        "lineDrop": 0.88,
+        "posDrift": 8
+      },
+      "sack": {
+        "edgeDrop": 0.266,
+        "lumaDrop": 0.182,
+        "lineDrop": 0.309,
+        "posDrift": 0
+      },
+      "eyesOrangeDelta": -4.5,
+      "visorOrangeDelta": -33.6,
+      "silIouDrop": 0.33,
+      "erosionDelta": 1.51,
+      "headTopShift": -15,
+      "headWidthDev": 0.217,
+      "newDarkObjDelta": 0,
+      "glowX": 300,
+      "pan": [
+        -4,
+        -1
+      ],
+      "zoomPx": 16
+    },
+    {
+      "i": 16,
+      "face": {
+        "edgeDrop": 0.978,
+        "lumaDrop": 0.878,
+        "lineDrop": 0.887,
+        "posDrift": 2
+      },
+      "eyes": {
+        "edgeDrop": 0.998,
+        "lumaDrop": 0.986,
+        "lineDrop": 0.928,
+        "posDrift": 1
+      },
+      "visor": {
+        "edgeDrop": 0.918,
+        "lumaDrop": 0.988,
+        "lineDrop": 0.812,
+        "posDrift": 3
+      },
+      "brows": {
+        "edgeDrop": 0.908,
+        "lumaDrop": 0.839,
+        "lineDrop": 0.843,
+        "posDrift": 8
+      },
+      "mouth": {
+        "edgeDrop": 0.859,
+        "lumaDrop": 0.987,
+        "lineDrop": 0.792,
+        "posDrift": 3
+      },
+      "hood": {
+        "edgeDrop": 0.76,
+        "lumaDrop": 0.505,
+        "lineDrop": 0.696,
+        "posDrift": 7
+      },
+      "crest": {
+        "edgeDrop": 0.892,
+        "lumaDrop": 0.775,
+        "lineDrop": 0.805,
+        "posDrift": 6
+      },
+      "hand": {
+        "edgeDrop": 0.838,
+        "lumaDrop": 0.703,
+        "lineDrop": 0.818,
+        "posDrift": 8
+      },
+      "cannonBody": {
+        "edgeDrop": 0.937,
+        "lumaDrop": 0.74,
+        "lineDrop": 0.89,
+        "posDrift": 2
+      },
+      "sack": {
+        "edgeDrop": 0.277,
+        "lumaDrop": 0.196,
+        "lineDrop": 0.318,
+        "posDrift": 0
+      },
+      "eyesOrangeDelta": -5.6,
+      "visorOrangeDelta": -35.4,
+      "silIouDrop": 0.338,
+      "erosionDelta": 1.47,
+      "headTopShift": -15,
+      "headWidthDev": 0.545,
+      "newDarkObjDelta": 0.02,
+      "glowX": 300,
+      "pan": [
+        0,
+        -3
+      ],
+      "zoomPx": 2
+    },
+    {
+      "i": 17,
+      "face": {
+        "edgeDrop": 0.999,
+        "lumaDrop": 0.864,
+        "lineDrop": 0.893,
+        "posDrift": 8
+      },
+      "eyes": {
+        "edgeDrop": 1.014,
+        "lumaDrop": 1.003,
+        "lineDrop": 0.937,
+        "posDrift": 6
+      },
+      "visor": {
+        "edgeDrop": 0.934,
+        "lumaDrop": 1.03,
+        "lineDrop": 0.809,
+        "posDrift": 8
+      },
+      "brows": {
+        "edgeDrop": 0.895,
+        "lumaDrop": 0.814,
+        "lineDrop": 0.804,
+        "posDrift": 8
+      },
+      "mouth": {
+        "edgeDrop": 0.874,
+        "lumaDrop": 1.043,
+        "lineDrop": 0.823,
+        "posDrift": 8
+      },
+      "hood": {
+        "edgeDrop": 0.787,
+        "lumaDrop": 0.562,
+        "lineDrop": 0.714,
+        "posDrift": 8
+      },
+      "crest": {
+        "edgeDrop": 0.885,
+        "lumaDrop": 0.837,
+        "lineDrop": 0.806,
+        "posDrift": 3
+      },
+      "hand": {
+        "edgeDrop": 0.858,
+        "lumaDrop": 0.792,
+        "lineDrop": 0.862,
+        "posDrift": 8
+      },
+      "cannonBody": {
+        "edgeDrop": 0.938,
+        "lumaDrop": 0.782,
+        "lineDrop": 0.89,
+        "posDrift": 8
+      },
+      "sack": {
+        "edgeDrop": 0.296,
+        "lumaDrop": 0.22,
+        "lineDrop": 0.338,
+        "posDrift": 0
+      },
+      "eyesOrangeDelta": -6.2,
+      "visorOrangeDelta": -36.4,
+      "silIouDrop": 0.362,
+      "erosionDelta": 1.12,
+      "headTopShift": -15,
+      "headWidthDev": 0.233,
+      "newDarkObjDelta": 0.03,
+      "glowX": 300,
+      "pan": [
+        -8,
+        0
+      ],
+      "zoomPx": 4
+    },
+    {
+      "i": 18,
+      "face": {
+        "edgeDrop": 1.015,
+        "lumaDrop": 0.873,
+        "lineDrop": 0.892,
+        "posDrift": 7
+      },
+      "eyes": {
+        "edgeDrop": 1.044,
+        "lumaDrop": 1.042,
+        "lineDrop": 0.956,
+        "posDrift": 8
+      },
+      "visor": {
+        "edgeDrop": 0.969,
+        "lumaDrop": 1.037,
+        "lineDrop": 0.796,
+        "posDrift": 8
+      },
+      "brows": {
+        "edgeDrop": 0.919,
+        "lumaDrop": 0.97,
+        "lineDrop": 0.894,
+        "posDrift": 5
+      },
+      "mouth": {
+        "edgeDrop": 0.869,
+        "lumaDrop": 1.031,
+        "lineDrop": 0.826,
+        "posDrift": 7
+      },
+      "hood": {
+        "edgeDrop": 0.8,
+        "lumaDrop": 0.597,
+        "lineDrop": 0.71,
+        "posDrift": 8
+      },
+      "crest": {
+        "edgeDrop": 0.907,
+        "lumaDrop": 0.876,
+        "lineDrop": 0.812,
+        "posDrift": 6
+      },
+      "hand": {
+        "edgeDrop": 0.84,
+        "lumaDrop": 0.741,
+        "lineDrop": 0.85,
+        "posDrift": 8
+      },
+      "cannonBody": {
+        "edgeDrop": 0.945,
+        "lumaDrop": 0.795,
+        "lineDrop": 0.886,
+        "posDrift": 7
+      },
+      "sack": {
+        "edgeDrop": 0.301,
+        "lumaDrop": 0.231,
+        "lineDrop": 0.341,
+        "posDrift": 0
+      },
+      "eyesOrangeDelta": -7,
+      "visorOrangeDelta": -35.6,
+      "silIouDrop": 0.363,
+      "erosionDelta": 1.3,
+      "headTopShift": -16,
+      "headWidthDev": 0.688,
+      "newDarkObjDelta": 0.05,
+      "glowX": 300,
+      "pan": [
+        3,
+        -5
+      ],
+      "zoomPx": 6
+    },
+    {
+      "i": 19,
+      "face": {
+        "edgeDrop": 1.041,
+        "lumaDrop": 0.915,
+        "lineDrop": 0.902,
+        "posDrift": 8
+      },
+      "eyes": {
+        "edgeDrop": 1.114,
+        "lumaDrop": 1.087,
+        "lineDrop": 0.96,
+        "posDrift": 8
+      },
+      "visor": {
+        "edgeDrop": 1.057,
+        "lumaDrop": 1.183,
+        "lineDrop": 0.892,
+        "posDrift": 8
+      },
+      "brows": {
+        "edgeDrop": 0.974,
+        "lumaDrop": 0.888,
+        "lineDrop": 0.831,
+        "posDrift": 6
+      },
+      "mouth": {
+        "edgeDrop": 0.917,
+        "lumaDrop": 0.931,
+        "lineDrop": 0.783,
+        "posDrift": 1
+      },
+      "hood": {
+        "edgeDrop": 0.806,
+        "lumaDrop": 0.665,
+        "lineDrop": 0.715,
+        "posDrift": 8
+      },
+      "crest": {
+        "edgeDrop": 0.887,
+        "lumaDrop": 0.946,
+        "lineDrop": 0.803,
+        "posDrift": 5
+      },
+      "hand": {
+        "edgeDrop": 0.873,
+        "lumaDrop": 0.77,
+        "lineDrop": 0.844,
+        "posDrift": 6
+      },
+      "cannonBody": {
+        "edgeDrop": 0.962,
+        "lumaDrop": 0.819,
+        "lineDrop": 0.9,
+        "posDrift": 5
+      },
+      "sack": {
+        "edgeDrop": 0.314,
+        "lumaDrop": 0.253,
+        "lineDrop": 0.347,
+        "posDrift": 0
+      },
+      "eyesOrangeDelta": -9.8,
+      "visorOrangeDelta": -35.9,
+      "silIouDrop": 0.387,
+      "erosionDelta": 0.44,
+      "headTopShift": -92,
+      "headWidthDev": 0.217,
+      "newDarkObjDelta": 0.04,
+      "glowX": 300,
+      "pan": [
+        0,
+        -5
+      ],
+      "zoomPx": 0
+    },
+    {
+      "i": 20,
+      "face": {
+        "edgeDrop": 1.042,
+        "lumaDrop": 0.92,
+        "lineDrop": 0.889,
+        "posDrift": 8
+      },
+      "eyes": {
+        "edgeDrop": 1.106,
+        "lumaDrop": 1.119,
+        "lineDrop": 0.949,
+        "posDrift": 8
+      },
+      "visor": {
+        "edgeDrop": 1.031,
+        "lumaDrop": 1.199,
+        "lineDrop": 0.892,
+        "posDrift": 5
+      },
+      "brows": {
+        "edgeDrop": 1.014,
+        "lumaDrop": 0.895,
+        "lineDrop": 0.889,
+        "posDrift": 7
+      },
+      "mouth": {
+        "edgeDrop": 0.847,
+        "lumaDrop": 0.987,
+        "lineDrop": 0.777,
+        "posDrift": 5
+      },
+      "hood": {
+        "edgeDrop": 0.805,
+        "lumaDrop": 0.626,
+        "lineDrop": 0.713,
+        "posDrift": 8
+      },
+      "crest": {
+        "edgeDrop": 0.878,
+        "lumaDrop": 0.854,
+        "lineDrop": 0.806,
+        "posDrift": 4
+      },
+      "hand": {
+        "edgeDrop": 0.911,
+        "lumaDrop": 0.824,
+        "lineDrop": 0.857,
+        "posDrift": 7
+      },
+      "cannonBody": {
+        "edgeDrop": 0.993,
+        "lumaDrop": 0.808,
+        "lineDrop": 0.899,
+        "posDrift": 8
+      },
+      "sack": {
+        "edgeDrop": 0.321,
+        "lumaDrop": 0.264,
+        "lineDrop": 0.359,
+        "posDrift": 0
+      },
+      "eyesOrangeDelta": -10.3,
+      "visorOrangeDelta": -35.5,
+      "silIouDrop": 0.4,
+      "erosionDelta": -0.62,
+      "headTopShift": -108,
+      "headWidthDev": 0.921,
+      "newDarkObjDelta": 0.04,
+      "glowX": 300,
+      "pan": [
+        -1,
+        -5
+      ],
+      "zoomPx": 11
+    },
+    {
+      "i": 21,
+      "face": {
+        "edgeDrop": 1.007,
+        "lumaDrop": 0.992,
+        "lineDrop": 0.885,
+        "posDrift": 8
+      },
+      "eyes": {
+        "edgeDrop": 1.058,
+        "lumaDrop": 1.142,
+        "lineDrop": 0.941,
+        "posDrift": 8
+      },
+      "visor": {
+        "edgeDrop": 0.951,
+        "lumaDrop": 1.117,
+        "lineDrop": 0.86,
+        "posDrift": 8
+      },
+      "brows": {
+        "edgeDrop": 1.004,
+        "lumaDrop": 0.786,
+        "lineDrop": 0.913,
+        "posDrift": 2
+      },
+      "mouth": {
+        "edgeDrop": 0.875,
+        "lumaDrop": 0.937,
+        "lineDrop": 0.805,
+        "posDrift": 8
+      },
+      "hood": {
+        "edgeDrop": 0.836,
+        "lumaDrop": 0.733,
+        "lineDrop": 0.715,
+        "posDrift": 7
+      },
+      "crest": {
+        "edgeDrop": 0.922,
+        "lumaDrop": 0.979,
+        "lineDrop": 0.809,
+        "posDrift": 7
+      },
+      "hand": {
+        "edgeDrop": 0.931,
+        "lumaDrop": 0.83,
+        "lineDrop": 0.858,
+        "posDrift": 8
+      },
+      "cannonBody": {
+        "edgeDrop": 0.992,
+        "lumaDrop": 0.835,
+        "lineDrop": 0.911,
+        "posDrift": 8
+      },
+      "sack": {
+        "edgeDrop": 0.331,
+        "lumaDrop": 0.286,
+        "lineDrop": 0.364,
+        "posDrift": 0
+      },
+      "eyesOrangeDelta": -12.7,
+      "visorOrangeDelta": -34.8,
+      "silIouDrop": 0.426,
+      "erosionDelta": -2.15,
+      "headTopShift": -53,
+      "headWidthDev": 0.719,
+      "newDarkObjDelta": 0.08,
+      "glowX": 300,
+      "pan": [
+        0,
+        0
+      ],
+      "zoomPx": 1
+    },
+    {
+      "i": 22,
+      "face": {
+        "edgeDrop": 0.995,
+        "lumaDrop": 1.006,
+        "lineDrop": 0.897,
+        "posDrift": 8
+      },
+      "eyes": {
+        "edgeDrop": 0.988,
+        "lumaDrop": 1.169,
+        "lineDrop": 0.944,
+        "posDrift": 7
+      },
+      "visor": {
+        "edgeDrop": 0.912,
+        "lumaDrop": 1.03,
+        "lineDrop": 0.869,
+        "posDrift": 8
+      },
+      "brows": {
+        "edgeDrop": 0.96,
+        "lumaDrop": 0.782,
+        "lineDrop": 0.889,
+        "posDrift": 8
+      },
+      "mouth": {
+        "edgeDrop": 0.882,
+        "lumaDrop": 0.899,
+        "lineDrop": 0.783,
+        "posDrift": 7
+      },
+      "hood": {
+        "edgeDrop": 0.861,
+        "lumaDrop": 0.75,
+        "lineDrop": 0.716,
+        "posDrift": 6
+      },
+      "crest": {
+        "edgeDrop": 0.904,
+        "lumaDrop": 0.934,
+        "lineDrop": 0.799,
+        "posDrift": 7
+      },
+      "hand": {
+        "edgeDrop": 0.926,
+        "lumaDrop": 0.809,
+        "lineDrop": 0.857,
+        "posDrift": 8
+      },
+      "cannonBody": {
+        "edgeDrop": 0.981,
+        "lumaDrop": 0.885,
+        "lineDrop": 0.892,
+        "posDrift": 6
+      },
+      "sack": {
+        "edgeDrop": 0.339,
+        "lumaDrop": 0.298,
+        "lineDrop": 0.37,
+        "posDrift": 0
+      },
+      "eyesOrangeDelta": -12.2,
+      "visorOrangeDelta": -33.6,
+      "silIouDrop": 0.427,
+      "erosionDelta": -2.64,
+      "headTopShift": -100,
+      "headWidthDev": 0.625,
+      "newDarkObjDelta": 0.07,
+      "glowX": 300,
+      "pan": [
+        7,
+        0
+      ],
+      "zoomPx": 8
+    },
+    {
+      "i": 23,
+      "face": {
+        "edgeDrop": 0.975,
+        "lumaDrop": 0.999,
+        "lineDrop": 0.891,
+        "posDrift": 8
+      },
+      "eyes": {
+        "edgeDrop": 0.913,
+        "lumaDrop": 1.087,
+        "lineDrop": 0.911,
+        "posDrift": 8
+      },
+      "visor": {
+        "edgeDrop": 0.846,
+        "lumaDrop": 0.922,
+        "lineDrop": 0.856,
+        "posDrift": 8
+      },
+      "brows": {
+        "edgeDrop": 0.936,
+        "lumaDrop": 0.797,
+        "lineDrop": 0.85,
+        "posDrift": 6
+      },
+      "mouth": {
+        "edgeDrop": 0.912,
+        "lumaDrop": 0.804,
+        "lineDrop": 0.8,
+        "posDrift": 7
+      },
+      "hood": {
+        "edgeDrop": 0.864,
+        "lumaDrop": 0.785,
+        "lineDrop": 0.715,
+        "posDrift": 8
+      },
+      "crest": {
+        "edgeDrop": 0.885,
+        "lumaDrop": 0.858,
+        "lineDrop": 0.786,
+        "posDrift": 8
+      },
+      "hand": {
+        "edgeDrop": 0.932,
+        "lumaDrop": 0.734,
+        "lineDrop": 0.842,
+        "posDrift": 8
+      },
+      "cannonBody": {
+        "edgeDrop": 0.995,
+        "lumaDrop": 0.841,
+        "lineDrop": 0.883,
+        "posDrift": 8
+      },
+      "sack": {
+        "edgeDrop": 0.347,
+        "lumaDrop": 0.307,
+        "lineDrop": 0.379,
+        "posDrift": 0
+      },
+      "eyesOrangeDelta": -11.3,
+      "visorOrangeDelta": -30.5,
+      "silIouDrop": 0.452,
+      "erosionDelta": -4.73,
+      "headTopShift": -108,
+      "headWidthDev": 0.103,
+      "newDarkObjDelta": 0.1,
+      "glowX": 300,
+      "pan": [
+        0,
+        0
+      ],
+      "zoomPx": 16
+    },
+    {
+      "i": 24,
+      "face": {
+        "edgeDrop": 0.95,
+        "lumaDrop": 1.013,
+        "lineDrop": 0.888,
+        "posDrift": 8
+      },
+      "eyes": {
+        "edgeDrop": 0.866,
+        "lumaDrop": 1.039,
+        "lineDrop": 0.874,
+        "posDrift": 8
+      },
+      "visor": {
+        "edgeDrop": 0.82,
+        "lumaDrop": 0.826,
+        "lineDrop": 0.857,
+        "posDrift": 6
+      },
+      "brows": {
+        "edgeDrop": 0.878,
+        "lumaDrop": 0.8,
+        "lineDrop": 0.816,
+        "posDrift": 7
+      },
+      "mouth": {
+        "edgeDrop": 0.865,
+        "lumaDrop": 0.8,
+        "lineDrop": 0.763,
+        "posDrift": 8
+      },
+      "hood": {
+        "edgeDrop": 0.883,
+        "lumaDrop": 0.818,
+        "lineDrop": 0.731,
+        "posDrift": 8
+      },
+      "crest": {
+        "edgeDrop": 0.896,
+        "lumaDrop": 0.832,
+        "lineDrop": 0.808,
+        "posDrift": 7
+      },
+      "hand": {
+        "edgeDrop": 0.983,
+        "lumaDrop": 0.819,
+        "lineDrop": 0.88,
+        "posDrift": 6
+      },
+      "cannonBody": {
+        "edgeDrop": 0.993,
+        "lumaDrop": 0.854,
+        "lineDrop": 0.892,
+        "posDrift": 3
+      },
+      "sack": {
+        "edgeDrop": 0.352,
+        "lumaDrop": 0.331,
+        "lineDrop": 0.388,
+        "posDrift": 0
+      },
+      "eyesOrangeDelta": -10.8,
+      "visorOrangeDelta": -26.1,
+      "silIouDrop": 0.473,
+      "erosionDelta": -9.45,
+      "headTopShift": -108,
+      "headWidthDev": 0.316,
+      "newDarkObjDelta": 0.13,
+      "glowX": 300,
+      "pan": [
+        2,
+        2
+      ],
+      "zoomPx": 4
+    },
+    {
+      "i": 25,
+      "face": {
+        "edgeDrop": 0.968,
+        "lumaDrop": 0.957,
+        "lineDrop": 0.897,
+        "posDrift": 4
+      },
+      "eyes": {
+        "edgeDrop": 0.86,
+        "lumaDrop": 0.972,
+        "lineDrop": 0.904,
+        "posDrift": 8
+      },
+      "visor": {
+        "edgeDrop": 0.873,
+        "lumaDrop": 0.899,
+        "lineDrop": 0.83,
+        "posDrift": 7
+      },
+      "brows": {
+        "edgeDrop": 0.916,
+        "lumaDrop": 0.821,
+        "lineDrop": 0.875,
+        "posDrift": 8
+      },
+      "mouth": {
+        "edgeDrop": 0.886,
+        "lumaDrop": 0.78,
+        "lineDrop": 0.85,
+        "posDrift": 4
+      },
+      "hood": {
+        "edgeDrop": 0.887,
+        "lumaDrop": 0.745,
+        "lineDrop": 0.724,
+        "posDrift": 7
+      },
+      "crest": {
+        "edgeDrop": 0.916,
+        "lumaDrop": 0.743,
+        "lineDrop": 0.809,
+        "posDrift": 7
+      },
+      "hand": {
+        "edgeDrop": 0.995,
+        "lumaDrop": 0.796,
+        "lineDrop": 0.869,
+        "posDrift": 8
+      },
+      "cannonBody": {
+        "edgeDrop": 0.992,
+        "lumaDrop": 0.867,
+        "lineDrop": 0.896,
+        "posDrift": 8
+      },
+      "sack": {
+        "edgeDrop": 0.365,
+        "lumaDrop": 0.356,
+        "lineDrop": 0.397,
+        "posDrift": 0
+      },
+      "eyesOrangeDelta": -5.1,
+      "visorOrangeDelta": -14.9,
+      "silIouDrop": 0.516,
+      "erosionDelta": -12.73,
+      "headTopShift": -82,
+      "headWidthDev": 0.13,
+      "newDarkObjDelta": 0.15,
+      "glowX": 300,
+      "pan": [
+        1,
+        3
+      ],
+      "zoomPx": 3
+    },
+    {
+      "i": 26,
+      "face": {
+        "edgeDrop": 0.953,
+        "lumaDrop": 0.969,
+        "lineDrop": 0.879,
+        "posDrift": 3
+      },
+      "eyes": {
+        "edgeDrop": 0.824,
+        "lumaDrop": 1.049,
+        "lineDrop": 0.851,
+        "posDrift": 4
+      },
+      "visor": {
+        "edgeDrop": 0.821,
+        "lumaDrop": 0.793,
+        "lineDrop": 0.814,
+        "posDrift": 8
+      },
+      "brows": {
+        "edgeDrop": 0.865,
+        "lumaDrop": 0.729,
+        "lineDrop": 0.81,
+        "posDrift": 3
+      },
+      "mouth": {
+        "edgeDrop": 0.887,
+        "lumaDrop": 0.766,
+        "lineDrop": 0.802,
+        "posDrift": 5
+      },
+      "hood": {
+        "edgeDrop": 0.911,
+        "lumaDrop": 0.781,
+        "lineDrop": 0.734,
+        "posDrift": 6
+      },
+      "crest": {
+        "edgeDrop": 0.946,
+        "lumaDrop": 0.775,
+        "lineDrop": 0.802,
+        "posDrift": 8
+      },
+      "hand": {
+        "edgeDrop": 0.983,
+        "lumaDrop": 0.752,
+        "lineDrop": 0.86,
+        "posDrift": 6
+      },
+      "cannonBody": {
+        "edgeDrop": 0.989,
+        "lumaDrop": 0.863,
+        "lineDrop": 0.891,
+        "posDrift": 6
+      },
+      "sack": {
+        "edgeDrop": 0.363,
+        "lumaDrop": 0.372,
+        "lineDrop": 0.399,
+        "posDrift": 0
+      },
+      "eyesOrangeDelta": -3.2,
+      "visorOrangeDelta": -11.7,
+      "silIouDrop": 0.533,
+      "erosionDelta": -15.27,
+      "headTopShift": -108,
+      "headWidthDev": 0.229,
+      "newDarkObjDelta": 0.14,
+      "glowX": 300,
+      "pan": [
+        0,
+        6
+      ],
+      "zoomPx": 1
+    },
+    {
+      "i": 27,
+      "face": {
+        "edgeDrop": 0.943,
+        "lumaDrop": 0.904,
+        "lineDrop": 0.854,
+        "posDrift": 8
+      },
+      "eyes": {
+        "edgeDrop": 0.806,
+        "lumaDrop": 0.925,
+        "lineDrop": 0.843,
+        "posDrift": 8
+      },
+      "visor": {
+        "edgeDrop": 0.869,
+        "lumaDrop": 0.675,
+        "lineDrop": 0.807,
+        "posDrift": 8
+      },
+      "brows": {
+        "edgeDrop": 0.843,
+        "lumaDrop": 0.779,
+        "lineDrop": 0.816,
+        "posDrift": 6
+      },
+      "mouth": {
+        "edgeDrop": 0.843,
+        "lumaDrop": 0.786,
+        "lineDrop": 0.786,
+        "posDrift": 8
+      },
+      "hood": {
+        "edgeDrop": 0.92,
+        "lumaDrop": 0.717,
+        "lineDrop": 0.744,
+        "posDrift": 8
+      },
+      "crest": {
+        "edgeDrop": 0.965,
+        "lumaDrop": 0.836,
+        "lineDrop": 0.812,
+        "posDrift": 8
+      },
+      "hand": {
+        "edgeDrop": 1.019,
+        "lumaDrop": 0.796,
+        "lineDrop": 0.88,
+        "posDrift": 4
+      },
+      "cannonBody": {
+        "edgeDrop": 1.004,
+        "lumaDrop": 0.825,
+        "lineDrop": 0.905,
+        "posDrift": 3
+      },
+      "sack": {
+        "edgeDrop": 0.381,
+        "lumaDrop": 0.353,
+        "lineDrop": 0.416,
+        "posDrift": 0
+      },
+      "eyesOrangeDelta": 7.1,
+      "visorOrangeDelta": -14.5,
+      "silIouDrop": 0.584,
+      "erosionDelta": -24.46,
+      "headTopShift": -108,
+      "headWidthDev": 1.743,
+      "newDarkObjDelta": 0.11,
+      "glowX": 300,
+      "pan": [
+        -1,
+        0
+      ],
+      "zoomPx": 12
+    },
+    {
+      "i": 28,
+      "face": {
+        "edgeDrop": 0.945,
+        "lumaDrop": 0.924,
+        "lineDrop": 0.867,
+        "posDrift": 8
+      },
+      "eyes": {
+        "edgeDrop": 0.799,
+        "lumaDrop": 0.918,
+        "lineDrop": 0.852,
+        "posDrift": 8
+      },
+      "visor": {
+        "edgeDrop": 0.894,
+        "lumaDrop": 0.969,
+        "lineDrop": 0.871,
+        "posDrift": 4
+      },
+      "brows": {
+        "edgeDrop": 0.891,
+        "lumaDrop": 0.84,
+        "lineDrop": 0.884,
+        "posDrift": 7
+      },
+      "mouth": {
+        "edgeDrop": 0.831,
+        "lumaDrop": 0.75,
+        "lineDrop": 0.809,
+        "posDrift": 8
+      },
+      "hood": {
+        "edgeDrop": 0.946,
+        "lumaDrop": 0.84,
+        "lineDrop": 0.745,
+        "posDrift": 7
+      },
+      "crest": {
+        "edgeDrop": 0.986,
+        "lumaDrop": 0.952,
+        "lineDrop": 0.806,
+        "posDrift": 6
+      },
+      "hand": {
+        "edgeDrop": 1.053,
+        "lumaDrop": 0.836,
+        "lineDrop": 0.889,
+        "posDrift": 6
+      },
+      "cannonBody": {
+        "edgeDrop": 1.025,
+        "lumaDrop": 0.836,
+        "lineDrop": 0.911,
+        "posDrift": 6
+      },
+      "sack": {
+        "edgeDrop": 0.406,
+        "lumaDrop": 0.425,
+        "lineDrop": 0.424,
+        "posDrift": 0
+      },
+      "eyesOrangeDelta": 16.9,
+      "visorOrangeDelta": -12.1,
+      "silIouDrop": 0.6,
+      "erosionDelta": -28.81,
+      "headTopShift": -108,
+      "headWidthDev": 0.862,
+      "newDarkObjDelta": 0.06,
+      "glowX": 300,
+      "pan": [
+        5,
+        1
+      ],
+      "zoomPx": 7
+    },
+    {
+      "i": 29,
+      "face": {
+        "edgeDrop": 0.931,
+        "lumaDrop": 0.847,
+        "lineDrop": 0.871,
+        "posDrift": 8
+      },
+      "eyes": {
+        "edgeDrop": 0.773,
+        "lumaDrop": 0.843,
+        "lineDrop": 0.856,
+        "posDrift": 8
+      },
+      "visor": {
+        "edgeDrop": 0.877,
+        "lumaDrop": 0.912,
+        "lineDrop": 0.869,
+        "posDrift": 6
+      },
+      "brows": {
+        "edgeDrop": 0.861,
+        "lumaDrop": 0.905,
+        "lineDrop": 0.889,
+        "posDrift": 5
+      },
+      "mouth": {
+        "edgeDrop": 0.758,
+        "lumaDrop": 0.756,
+        "lineDrop": 0.782,
+        "posDrift": 8
+      },
+      "hood": {
+        "edgeDrop": 0.976,
+        "lumaDrop": 0.722,
+        "lineDrop": 0.762,
+        "posDrift": 7
+      },
+      "crest": {
+        "edgeDrop": 0.944,
+        "lumaDrop": 0.696,
+        "lineDrop": 0.805,
+        "posDrift": 5
+      },
+      "hand": {
+        "edgeDrop": 1.051,
+        "lumaDrop": 0.717,
+        "lineDrop": 0.881,
+        "posDrift": 8
+      },
+      "cannonBody": {
+        "edgeDrop": 1.015,
+        "lumaDrop": 0.825,
+        "lineDrop": 0.893,
+        "posDrift": 8
+      },
+      "sack": {
+        "edgeDrop": 0.405,
+        "lumaDrop": 0.367,
+        "lineDrop": 0.421,
+        "posDrift": 0
+      },
+      "eyesOrangeDelta": -23.4,
+      "visorOrangeDelta": -52.8,
+      "silIouDrop": 0.699,
+      "erosionDelta": -50.11,
+      "headTopShift": -108,
+      "headWidthDev": 1.763,
+      "newDarkObjDelta": 0.05,
+      "glowX": 300,
+      "pan": [
+        0,
+        0
+      ],
+      "zoomPx": 3
+    }
+  ]
+}

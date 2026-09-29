@@ -1,0 +1,203 @@
+/* Decision245 regression check for the candidate spec (E1 + B3) vs baseline: stakes ladder, Daily modifier, defensive policy, score. Scratch only. */
+import { describe, it } from 'vitest'
+import { writeFileSync } from 'node:fs'
+import { GODS } from '../core/data/gods'
+import { ENEMIES } from '../core/data/enemies'
+import { getCardDef } from '../core/data/cards'
+import { getRecommendedDeck } from '../core/data/deckBuilder'
+import { RULES } from '../core/data/rules'
+import { NO_STAKE_RULES } from '../core/data/stakes'
+import { applyAction } from '../core/engine/reducer'
+import { getFinalScore } from '../core/engine/score'
+import { enemyActionTotal } from '../core/engine/intent'
+import { sumBuff } from '../core/engine/buffs'
+import type { CardDef, CardInstance, Difficulty, EnemyActionDef, EnemyId, GameState, GodId } from '../core/types'
+
+const OUT = 'C:/Users/kimi1/AppData/Local/Temp/claude/C--Users-kimi1-SevenGodsGame/a0e18275-1268-469e-968b-aee727aa4007/scratchpad/out245'
+const a = (amount: number): EnemyActionDef => ({ kind: 'attack', amount })
+const c = (label: string): EnemyActionDef => ({ kind: 'charge', label })
+const m = (hits: number[], special?: string): EnemyActionDef => (special ? { kind: 'multiAttack', hits, name: special, special: true } : { kind: 'multiAttack', hits })
+const sp = (amount: number, name: string): EnemyActionDef => ({ kind: 'special', amount, name })
+const E1: Record<string, EnemyActionDef[]> = {
+  enemy_01: [5, 8, 11, 15, 13, 9, 6].map(a),
+  enemy_02: [5, 9, 13, 17, 15, 11, 7].map(a),
+  enemy_03: [3, 6, 13, 23, 18, 9, 4].map(a),
+  enemy_04: [a(6), c('砲身に魔力を溜めている…'), a(22), c('⚠ 主砲充填開始…！'), sp(24, '主砲・神滅甲'), a(7), a(9)],
+  enemy_05: [m([5, 4]), m([5, 5]), m([4, 4, 4], '双牙乱撃'), m([8, 8]), m([8, 7]), m([7, 7]), m([7, 6])],
+  enemy_06: [4, 7, 12, 20, 16, 9, 5].map(a),
+  enemy_07: [a(4), c('カードを宙に舞わせている…'), a(19), c('カードを宙に舞わせている…'), a(24), a(12), a(6)],
+}
+const BASE = new Map(ENEMIES.map((e) => [e.id as string, e.actions]))
+type Spec = 'baseline' | 'candidate'
+function applySpec(s: Spec) {
+  for (const e of ENEMIES) (e as { actions: EnemyActionDef[] }).actions = s === 'candidate' ? E1[e.id as string] : BASE.get(e.id as string)!
+  ;(NO_STAKE_RULES as { divinationCount: number }).divinationCount = s === 'candidate' ? 3 : 7
+  ;(RULES.stakes as { divinationCount: number }).divinationCount = s === 'candidate' ? 2 : 4
+}
+
+type Policy = 'reader' | 'naive' | 'greedy' | 'defensive'
+const eff = (def: CardDef, kind: string, target?: string) => def.effects.filter((e: any) => e.kind === kind && (target ? e.target === target : true)).reduce((s, e: any) => s + (e.amount ?? 0), 0)
+const dmgOf = (x: CardInstance) => eff(getCardDef(x.defId), 'damage', 'enemy')
+const blockOf = (x: CardInstance) => eff(getCardDef(x.defId), 'block')
+const healOf = (x: CardInstance) => eff(getCardDef(x.defId), 'heal')
+const selfDmgOf = (x: CardInstance) => eff(getCardDef(x.defId), 'damage', 'self')
+const debuffOf = (x: CardInstance) => getCardDef(x.defId).effects.filter((e: any) => e.kind === 'debuff' && e.target === 'enemy').reduce((s, e: any) => s + e.amount, 0)
+const costOf = (x: CardInstance) => getCardDef(x.defId).cost + (x.costModifier ?? 0)
+const utilOf = (x: CardInstance) => getCardDef(x.defId).effects.reduce((s, e: any) => {
+  if (e.kind === 'draw' || e.kind === 'gainAp') return s + e.amount * 4
+  if (e.kind === 'resonance') return s + e.amount * 2.5
+  if ((e.kind === 'buff' && e.target === 'self') || (e.kind === 'debuff' && e.target === 'enemy')) return s + e.amount * e.rounds
+  return s
+}, 0)
+const incomingOf = (s: GameState) => (s.enemy.intent ? enemyActionTotal(s.enemy.intent) : 0)
+const effIncoming = (s: GameState) => Math.max(0, incomingOf(s) + sumBuff(s.enemy.buffs, 'atk'))
+const projectedHp = (s: GameState) => s.player.hp - Math.max(0, effIncoming(s) - s.player.block)
+function bonusDmgIf(state: GameState, x: CardInstance): number {
+  const def = getCardDef(x.defId)
+  if (!def.bonus) return 0
+  const extra = def.bonus.effects.filter((e: any) => e.kind === 'damage' && e.target === 'enemy').reduce((s, e: any) => s + e.amount, 0)
+  if (extra === 0) return 0
+  const inc = incomingOf(state)
+  switch (def.bonus.when) {
+    case 'combo': return state.cardsPlayedThisRound >= 1 ? extra : 0
+    case 'charged': return state.resonance.value >= RULES.cardBonus.chargedThreshold ? extra : 0
+    case 'enemyBig': return inc >= RULES.cardBonus.enemyBigThreshold ? extra : 0
+    case 'lowHp': return state.player.hp <= Math.floor(state.player.maxHp * 0.5) ? extra : 0
+    case 'blocked': return inc > 0 && state.player.block + blockOf(x) >= inc ? extra : 0
+  }
+  return 0
+}
+const totalDmg = (s: GameState, x: CardInstance) => dmgOf(x) + bonusDmgIf(s, x) + (dmgOf(x) > 0 ? Math.max(0, sumBuff(s.player.buffs, 'atk')) : 0)
+function canKillNow(state: GameState, affordable: CardInstance[]): boolean {
+  const dmgCards = affordable.filter((x) => dmgOf(x) > 0).sort((p, q) => totalDmg(state, q) / costOf(q) - totalDmg(state, p) / costOf(p))
+  let ap = state.ap.current
+  let sum = 0
+  for (const x of dmgCards) if (costOf(x) <= ap) { ap -= costOf(x); sum += totalDmg(state, x) }
+  return sum >= state.enemy.hp + state.enemy.block
+}
+function pickCard(state: GameState, policy: Policy): CardInstance | null {
+  const affordable = state.hand.filter((x) => costOf(x) <= state.ap.current)
+  if (affordable.length === 0) return null
+  if (policy === 'naive') return affordable[0]
+  const inc = effIncoming(state)
+  const hpAfter = projectedHp(state)
+  const lethal = hpAfter <= 0
+  const dangerous = hpAfter < state.player.maxHp * 0.35
+  const guarded = state.player.block >= inc
+  const byDmg = (arr: CardInstance[]) => arr.filter((x) => dmgOf(x) > 0).sort((p, q) => totalDmg(state, q) / costOf(q) - totalDmg(state, p) / costOf(p))
+  const bestBlock = () => affordable.filter((x) => blockOf(x) > 0).sort((p, q) => blockOf(q) - blockOf(p))[0]
+  const bestDebuff = () => affordable.filter((x) => debuffOf(x) > 0).sort((p, q) => debuffOf(q) - debuffOf(p))[0]
+  const bestHeal = () => affordable.filter((x) => healOf(x) > 0).sort((p, q) => healOf(q) - healOf(p))[0]
+  const bestUtil = () => affordable.filter((x) => utilOf(x) > 0 && dmgOf(x) === 0 && blockOf(x) === 0 && healOf(x) === 0).sort((p, q) => utilOf(q) / costOf(q) - utilOf(p) / costOf(p))[0]
+  if (policy === 'greedy') return byDmg(affordable)[0] ?? bestUtil() ?? bestBlock() ?? bestHeal() ?? affordable.sort((p, q) => costOf(q) - costOf(p))[0]
+  if (policy === 'defensive') {
+    if (!guarded) { const b = bestBlock(); if (b) return b }
+    const h = bestHeal()
+    if (h && state.player.hp < state.player.maxHp * 0.6) return h
+    return byDmg(affordable)[0] ?? bestUtil() ?? affordable.sort((p, q) => costOf(q) - costOf(p))[0]
+  }
+  const free = affordable.find((x) => { const def = getCardDef(x.defId); return def.effects.some((e: any) => e.kind === 'gainAp' && e.amount >= def.cost) })
+  if (free) return free
+  if (canKillNow(state, affordable)) { const d = byDmg(affordable)[0]; if (d) return d }
+  if ((lethal || dangerous) && !guarded) {
+    const b = bestBlock(); if (b) return b
+    const db = bestDebuff(); if (db) return db
+    const h = bestHeal(); if (h) return h
+  }
+  if (lethal) { const h = bestHeal(); if (h) return h }
+  const safe = affordable.filter((x) => selfDmgOf(x) === 0 || state.player.hp - selfDmgOf(x) - Math.max(0, inc - state.player.block) > 0)
+  const d = byDmg(safe)[0]
+  if (d) return d
+  const u = bestUtil(); if (u) return u
+  const h = bestHeal(); if (h && state.player.hp < state.player.maxHp * 0.7) return h
+  const b = bestBlock(); if (b && !guarded && inc > 0) return b
+  return null
+}
+function pickOracle(state: GameState, policy: Policy): number {
+  if (state.divination.remaining <= 0 || state.divination.usedThisRound) return -1
+  if (policy === 'naive' || policy === 'greedy') return 2
+  if (policy === 'defensive') return 0
+  const inc = effIncoming(state)
+  const hpAfter = projectedHp(state)
+  const lethal = hpAfter <= 0
+  const dangerous = hpAfter < state.player.maxHp * 0.35
+  if (state.enemy.hp + state.enemy.block <= 4) return 2
+  if (lethal && inc > 0) return 0
+  const roundsLeft = RULES.totalRounds - state.round + 1
+  if (state.divination.remaining >= roundsLeft) return dangerous && inc > 0 ? 0 : 2
+  if (dangerous && inc > 0) return 0
+  if (roundsLeft <= state.divination.remaining) return inc >= 10 && state.player.block < inc ? 0 : 2
+  return -1
+}
+type Res = { status: string; round: number; score: number; hp: number }
+function play(godId: GodId, enemyId: EnemyId, diff: Difficulty, policy: Policy, seed: number, extra: { stake?: number; stakeChoice?: 'race' | 'pressure' | 'tempo'; daily?: boolean }): Res {
+  const deck = getRecommendedDeck(godId)
+  let { state } = applyAction(null, {
+    type: 'START_GAME', seed: `d245r-${seed}`, godId, enemyId, deck, difficulty: diff,
+    ...(extra.daily ? { mode: 'daily' as const, dailyKey: '2026-09-28', modifier: RULES.daily.modifier } : {}),
+    ...(extra.stake ? { stake: extra.stake, ...(extra.stakeChoice ? { stakeChoice: extra.stakeChoice } : {}) } : {}),
+  })
+  let guard = 0
+  while (state.status === 'playing' && guard < 600) {
+    guard++
+    const card = pickCard(state, policy)
+    if (card) { state = applyAction(state, { type: 'PLAY_CARD', uid: card.uid }).state; continue }
+    const o = pickOracle(state, policy)
+    if (o >= 0) { state = applyAction(state, { type: 'USE_DIVINATION', choiceIndex: o }).state; continue }
+    state = applyAction(state, { type: 'END_ROUND' }).state
+  }
+  return { status: state.status, round: state.round, score: getFinalScore(state.score, state.stake), hp: state.player.hp }
+}
+const mean = (xs: number[]) => (xs.length ? xs.reduce((p, q) => p + q, 0) / xs.length : 0)
+const pct = (n: number) => `${(n * 100).toFixed(1)}%`
+const SEEDS = 60
+
+describe('Decision245 regression', () => {
+  it('stakes / daily / defensive / score', () => {
+    const md: string[] = ['# Decision245 regression: candidate (E1 + oracle 3 / 神階 2) vs baseline (E0 + 7 / 4)', '']
+    type Cell = { label: string; diff: Difficulty; policy: Policy; extra: { stake?: number; stakeChoice?: 'race' | 'pressure' | 'tempo'; daily?: boolean } }
+    const cells: Cell[] = []
+    for (const diff of ['easy', 'normal', 'hard'] as Difficulty[]) for (const policy of ['reader', 'naive', 'greedy', 'defensive'] as Policy[]) cells.push({ label: 'normal-mode', diff, policy, extra: {} })
+    for (const policy of ['reader', 'naive', 'greedy', 'defensive'] as Policy[]) cells.push({ label: 'daily(神域強化)', diff: 'normal', policy, extra: { daily: true } })
+    for (const st of [1, 3, 5, 7]) for (const policy of ['reader', 'naive', 'defensive'] as Policy[]) cells.push({ label: `神階${st}${st === 7 ? '(pressure)' : ''}`, diff: 'normal', policy, extra: { stake: st, ...(st === 7 ? { stakeChoice: 'pressure' as const } : {}) } })
+    md.push('| cell | diff | policy | baseline win | baseline lost | baseline unfinished | baseline score(won) | candidate win | candidate lost | candidate unfinished | candidate score(won) | Δwin | Δscore |', '|---|---|---|---|---|---|---|---|---|---|---|---|---|')
+    const perEnemyStake7: Record<Spec, Record<string, number[]>> = { baseline: {}, candidate: {} }
+    // 決定58/DAILY-01 style check: per god×enemy, best policy win rate (hard & daily)
+    const bestByCell: Record<string, Record<Spec, number>> = {}
+    for (const cell of cells) {
+      const out: Record<Spec, Res[]> = { baseline: [], candidate: [] }
+      for (const spec of ['baseline', 'candidate'] as Spec[]) {
+        applySpec(spec)
+        for (const god of GODS) for (const enemy of ENEMIES) {
+          let wins = 0
+          for (let i = 0; i < SEEDS; i++) {
+            const r = play(god.id, enemy.id, cell.diff, cell.policy, i, cell.extra)
+            out[spec].push(r)
+            if (r.status === 'won') wins++
+            if (cell.extra.stake === 7 && cell.policy === 'reader') (perEnemyStake7[spec][enemy.name] ??= []).push(r.status === 'won' ? 1 : 0)
+          }
+          if ((cell.label === 'normal-mode' && cell.diff === 'hard') || cell.label.startsWith('daily')) {
+            const key = `${cell.label}/${cell.diff}/${god.nameJa}×${enemy.name}`
+            bestByCell[key] ??= { baseline: 0, candidate: 0 }
+            bestByCell[key][spec] = Math.max(bestByCell[key][spec], wins / SEEDS)
+          }
+        }
+      }
+      const w = (rs: Res[]) => rs.filter((r) => r.status === 'won').length / rs.length
+      const l = (rs: Res[]) => rs.filter((r) => r.status === 'lost').length / rs.length
+      const f = (rs: Res[]) => rs.filter((r) => r.status === 'finished').length / rs.length
+      const sc = (rs: Res[]) => mean(rs.filter((r) => r.status === 'won').map((r) => r.score))
+      md.push(`| ${cell.label} | ${cell.diff} | ${cell.policy} | ${pct(w(out.baseline))} | ${pct(l(out.baseline))} | ${pct(f(out.baseline))} | ${sc(out.baseline).toFixed(0)} | ${pct(w(out.candidate))} | ${pct(l(out.candidate))} | ${pct(f(out.candidate))} | ${sc(out.candidate).toFixed(0)} | ${((w(out.candidate) - w(out.baseline)) * 100).toFixed(1)}pt | ${(sc(out.candidate) - sc(out.baseline)).toFixed(0)} |`)
+    }
+    md.push('', '## 決定58／DAILY-01 型チェック：god×enemy で最善方策の勝率 < 50% のセル', '')
+    for (const spec of ['baseline', 'candidate'] as Spec[]) {
+      const bad = Object.entries(bestByCell).filter(([, v]) => v[spec] < 0.5).map(([k, v]) => `${k} best=${pct(v[spec])}`)
+      md.push(`- ${spec}: ${bad.length} cells${bad.length ? ' — ' + bad.join('; ') : ''}`)
+    }
+    md.push('', '## 神階Ⅶ(pressure) reader win per enemy', '', '| enemy | baseline | candidate |', '|---|---|---|')
+    for (const enemy of ENEMIES) md.push(`| ${enemy.name} | ${pct(mean(perEnemyStake7.baseline[enemy.name] ?? []))} | ${pct(mean(perEnemyStake7.candidate[enemy.name] ?? []))} |`)
+    applySpec('baseline')
+    writeFileSync(`${OUT}/regression245.md`, md.join('\n'))
+    console.log('done')
+  }, 3_600_000)
+})

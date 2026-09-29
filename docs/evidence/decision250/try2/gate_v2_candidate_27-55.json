@@ -1,0 +1,917 @@
+{
+  "summary": {
+    "frames": [
+      27,
+      55
+    ],
+    "thresholds": {
+      "face": 14,
+      "brows": 16,
+      "mouth": 16,
+      "eyesTintDelta": 15,
+      "cheekTintDelta": 20,
+      "crestNcc": 0.85,
+      "hood": 16,
+      "hand": 14,
+      "cannon": 20,
+      "sack": 14,
+      "silIou": 0.9,
+      "scale": 0.03,
+      "bboxShift": 12,
+      "newObj": 0.8
+    },
+    "refTint": {
+      "eyes": 83.08984615384615,
+      "cheek": 79.06820512820512
+    },
+    "plateBbox": {
+      "x0": 147,
+      "y0": 109,
+      "x1": 936,
+      "y1": 902,
+      "h": 793,
+      "w": 789
+    },
+    "max": {
+      "face": 45.4,
+      "brows": 32.6,
+      "mouth": 27.9,
+      "eyesTintDelta": 34.4,
+      "cheekTintDelta": 30.3,
+      "crestMae": 36.2,
+      "hood": 25.6,
+      "hand": 79.2,
+      "cannon": 89.5,
+      "sack": 21.4,
+      "newObj": 25.35
+    },
+    "min": {
+      "crestNcc": 0.862,
+      "silIou": 0.362
+    },
+    "scaleRange": [
+      0.999,
+      1.29
+    ],
+    "verdict": {
+      "face": false,
+      "eyebrows": false,
+      "mouth": false,
+      "eyes_through_visor": false,
+      "hood_emblem": true,
+      "hood": false,
+      "hand": false,
+      "cannon_body": false,
+      "treasure_bag": false,
+      "silhouette": false,
+      "camera_zoom": false,
+      "camera_movement": false,
+      "new_objects": false,
+      "orientation": true
+    },
+    "PASS": false
+  },
+  "rows": [
+    {
+      "i": 27,
+      "file": "f028.png",
+      "face": 17.4,
+      "faceShift": [
+        0,
+        0
+      ],
+      "brows": 9.6,
+      "mouth": 14.3,
+      "eyesTint": 81,
+      "cheekTint": 76.2,
+      "eyesTintDelta": -2.1,
+      "cheekTintDelta": -2.9,
+      "crestNcc": 0.956,
+      "crestMae": 16.2,
+      "hood": 11.1,
+      "hand": 14.5,
+      "cannon": 30,
+      "sack": 17,
+      "silIou": 0.845,
+      "scale": 1.001,
+      "bboxShift": [
+        -43,
+        0
+      ],
+      "newObj": 5.17,
+      "glowX": 477
+    },
+    {
+      "i": 28,
+      "file": "f029.png",
+      "face": 17.4,
+      "faceShift": [
+        0,
+        0
+      ],
+      "brows": 9.6,
+      "mouth": 14.3,
+      "eyesTint": 81,
+      "cheekTint": 76,
+      "eyesTintDelta": -2.1,
+      "cheekTintDelta": -3.1,
+      "crestNcc": 0.956,
+      "crestMae": 16.2,
+      "hood": 11.1,
+      "hand": 14.6,
+      "cannon": 30.7,
+      "sack": 17,
+      "silIou": 0.845,
+      "scale": 1.001,
+      "bboxShift": [
+        -42,
+        0
+      ],
+      "newObj": 5.18,
+      "glowX": 428
+    },
+    {
+      "i": 29,
+      "file": "f030.png",
+      "face": 17.3,
+      "faceShift": [
+        0,
+        0
+      ],
+      "brows": 9.5,
+      "mouth": 13.7,
+      "eyesTint": 80.2,
+      "cheekTint": 75.7,
+      "eyesTintDelta": -2.9,
+      "cheekTintDelta": -3.4,
+      "crestNcc": 0.956,
+      "crestMae": 16.1,
+      "hood": 11.1,
+      "hand": 15.1,
+      "cannon": 31.8,
+      "sack": 17,
+      "silIou": 0.846,
+      "scale": 1.001,
+      "bboxShift": [
+        -43,
+        0
+      ],
+      "newObj": 5.27,
+      "glowX": 420
+    },
+    {
+      "i": 30,
+      "file": "f031.png",
+      "face": 18,
+      "faceShift": [
+        0,
+        0
+      ],
+      "brows": 10.5,
+      "mouth": 13.5,
+      "eyesTint": 81,
+      "cheekTint": 75.3,
+      "eyesTintDelta": -2.1,
+      "cheekTintDelta": -3.7,
+      "crestNcc": 0.955,
+      "crestMae": 16.3,
+      "hood": 11.1,
+      "hand": 16,
+      "cannon": 33.1,
+      "sack": 17,
+      "silIou": 0.846,
+      "scale": 1.001,
+      "bboxShift": [
+        -40,
+        0
+      ],
+      "newObj": 6.01,
+      "glowX": 451
+    },
+    {
+      "i": 31,
+      "file": "f032.png",
+      "face": 19.1,
+      "faceShift": [
+        0,
+        0
+      ],
+      "brows": 11.5,
+      "mouth": 14.2,
+      "eyesTint": 80.7,
+      "cheekTint": 74.7,
+      "eyesTintDelta": -2.4,
+      "cheekTintDelta": -4.4,
+      "crestNcc": 0.951,
+      "crestMae": 17,
+      "hood": 11.4,
+      "hand": 16.8,
+      "cannon": 34.9,
+      "sack": 17,
+      "silIou": 0.844,
+      "scale": 1.001,
+      "bboxShift": [
+        -43,
+        0
+      ],
+      "newObj": 7.8,
+      "glowX": 445
+    },
+    {
+      "i": 32,
+      "file": "f033.png",
+      "face": 20.7,
+      "faceShift": [
+        0,
+        0
+      ],
+      "brows": 12.7,
+      "mouth": 15.6,
+      "eyesTint": 80,
+      "cheekTint": 73.1,
+      "eyesTintDelta": -3.1,
+      "cheekTintDelta": -5.9,
+      "crestNcc": 0.946,
+      "crestMae": 17.9,
+      "hood": 11.7,
+      "hand": 17.9,
+      "cannon": 41.4,
+      "sack": 17,
+      "silIou": 0.83,
+      "scale": 1.001,
+      "bboxShift": [
+        -76,
+        0
+      ],
+      "newObj": 9.2,
+      "glowX": 379
+    },
+    {
+      "i": 33,
+      "file": "f034.png",
+      "face": 21.9,
+      "faceShift": [
+        0,
+        0
+      ],
+      "brows": 13.9,
+      "mouth": 16.6,
+      "eyesTint": 79.9,
+      "cheekTint": 73,
+      "eyesTintDelta": -3.2,
+      "cheekTintDelta": -6.1,
+      "crestNcc": 0.94,
+      "crestMae": 18.8,
+      "hood": 12,
+      "hand": 18.8,
+      "cannon": 43.8,
+      "sack": 17,
+      "silIou": 0.812,
+      "scale": 1.001,
+      "bboxShift": [
+        -107,
+        0
+      ],
+      "newObj": 9.94,
+      "glowX": 364
+    },
+    {
+      "i": 34,
+      "file": "f035.png",
+      "face": 24.8,
+      "faceShift": [
+        0,
+        0
+      ],
+      "brows": 16.4,
+      "mouth": 20.6,
+      "eyesTint": 78.5,
+      "cheekTint": 70,
+      "eyesTintDelta": -4.6,
+      "cheekTintDelta": -9.1,
+      "crestNcc": 0.927,
+      "crestMae": 20.5,
+      "hood": 12.6,
+      "hand": 20.5,
+      "cannon": 44,
+      "sack": 17.3,
+      "silIou": 0.8,
+      "scale": 1.001,
+      "bboxShift": [
+        -124,
+        0
+      ],
+      "newObj": 10.77,
+      "glowX": 382
+    },
+    {
+      "i": 35,
+      "file": "f036.png",
+      "face": 27.7,
+      "faceShift": [
+        0,
+        0
+      ],
+      "brows": 19.3,
+      "mouth": 21.4,
+      "eyesTint": 78.8,
+      "cheekTint": 69.8,
+      "eyesTintDelta": -4.3,
+      "cheekTintDelta": -9.2,
+      "crestNcc": 0.906,
+      "crestMae": 22.9,
+      "hood": 13.4,
+      "hand": 22,
+      "cannon": 45.3,
+      "sack": 17,
+      "silIou": 0.799,
+      "scale": 1.001,
+      "bboxShift": [
+        -138,
+        0
+      ],
+      "newObj": 11.31,
+      "glowX": 382
+    },
+    {
+      "i": 36,
+      "file": "f037.png",
+      "face": 30.9,
+      "faceShift": [
+        0,
+        0
+      ],
+      "brows": 22,
+      "mouth": 23.8,
+      "eyesTint": 77.6,
+      "cheekTint": 69.7,
+      "eyesTintDelta": -5.5,
+      "cheekTintDelta": -9.4,
+      "crestNcc": 0.891,
+      "crestMae": 25.3,
+      "hood": 14.5,
+      "hand": 25.4,
+      "cannon": 47.9,
+      "sack": 16.9,
+      "silIou": 0.796,
+      "scale": 1.001,
+      "bboxShift": [
+        -147,
+        0
+      ],
+      "newObj": 11.92,
+      "glowX": 378
+    },
+    {
+      "i": 37,
+      "file": "f038.png",
+      "face": 32.4,
+      "faceShift": [
+        -2,
+        2
+      ],
+      "brows": 21.5,
+      "mouth": 25.3,
+      "eyesTint": 77.7,
+      "cheekTint": 69.7,
+      "eyesTintDelta": -5.4,
+      "cheekTintDelta": -9.3,
+      "crestNcc": 0.904,
+      "crestMae": 23.9,
+      "hood": 14.7,
+      "hand": 23.4,
+      "cannon": 47.7,
+      "sack": 17,
+      "silIou": 0.792,
+      "scale": 1,
+      "bboxShift": [
+        -147,
+        1
+      ],
+      "newObj": 12.31,
+      "glowX": 374
+    },
+    {
+      "i": 38,
+      "file": "f039.png",
+      "face": 32,
+      "faceShift": [
+        -2,
+        2
+      ],
+      "brows": 21.4,
+      "mouth": 25.3,
+      "eyesTint": 77.4,
+      "cheekTint": 70.2,
+      "eyesTintDelta": -5.7,
+      "cheekTintDelta": -8.9,
+      "crestNcc": 0.911,
+      "crestMae": 22.9,
+      "hood": 14.1,
+      "hand": 24.7,
+      "cannon": 48.7,
+      "sack": 16.9,
+      "silIou": 0.789,
+      "scale": 1,
+      "bboxShift": [
+        -147,
+        1
+      ],
+      "newObj": 12.56,
+      "glowX": 371
+    },
+    {
+      "i": 39,
+      "file": "f040.png",
+      "face": 32.2,
+      "faceShift": [
+        0,
+        2
+      ],
+      "brows": 22.1,
+      "mouth": 25.7,
+      "eyesTint": 77.1,
+      "cheekTint": 69.8,
+      "eyesTintDelta": -6,
+      "cheekTintDelta": -9.2,
+      "crestNcc": 0.91,
+      "crestMae": 22.9,
+      "hood": 13.9,
+      "hand": 27.3,
+      "cannon": 50.1,
+      "sack": 17,
+      "silIou": 0.789,
+      "scale": 1,
+      "bboxShift": [
+        -147,
+        1
+      ],
+      "newObj": 12.48,
+      "glowX": 366
+    },
+    {
+      "i": 40,
+      "file": "f041.png",
+      "face": 32.1,
+      "faceShift": [
+        0,
+        2
+      ],
+      "brows": 22.4,
+      "mouth": 26,
+      "eyesTint": 76.8,
+      "cheekTint": 69.2,
+      "eyesTintDelta": -6.3,
+      "cheekTintDelta": -9.8,
+      "crestNcc": 0.91,
+      "crestMae": 23,
+      "hood": 13.9,
+      "hand": 25,
+      "cannon": 49.4,
+      "sack": 17,
+      "silIou": 0.788,
+      "scale": 1,
+      "bboxShift": [
+        -130,
+        1
+      ],
+      "newObj": 12.48,
+      "glowX": 355
+    },
+    {
+      "i": 41,
+      "file": "f042.png",
+      "face": 32.2,
+      "faceShift": [
+        0,
+        2
+      ],
+      "brows": 22.4,
+      "mouth": 26.4,
+      "eyesTint": 76.3,
+      "cheekTint": 68.9,
+      "eyesTintDelta": -6.8,
+      "cheekTintDelta": -10.2,
+      "crestNcc": 0.91,
+      "crestMae": 22.9,
+      "hood": 13.8,
+      "hand": 24.4,
+      "cannon": 48.4,
+      "sack": 17,
+      "silIou": 0.787,
+      "scale": 1,
+      "bboxShift": [
+        -136,
+        1
+      ],
+      "newObj": 12.48,
+      "glowX": 363
+    },
+    {
+      "i": 42,
+      "file": "f043.png",
+      "face": 32.2,
+      "faceShift": [
+        0,
+        2
+      ],
+      "brows": 22.4,
+      "mouth": 26.2,
+      "eyesTint": 76.5,
+      "cheekTint": 69.7,
+      "eyesTintDelta": -6.6,
+      "cheekTintDelta": -9.4,
+      "crestNcc": 0.911,
+      "crestMae": 22.5,
+      "hood": 13.6,
+      "hand": 24.4,
+      "cannon": 49.3,
+      "sack": 16.9,
+      "silIou": 0.781,
+      "scale": 1,
+      "bboxShift": [
+        -141,
+        1
+      ],
+      "newObj": 12.49,
+      "glowX": 347
+    },
+    {
+      "i": 43,
+      "file": "f044.png",
+      "face": 32.3,
+      "faceShift": [
+        0,
+        2
+      ],
+      "brows": 22.1,
+      "mouth": 25.8,
+      "eyesTint": 76.7,
+      "cheekTint": 69.6,
+      "eyesTintDelta": -6.4,
+      "cheekTintDelta": -9.4,
+      "crestNcc": 0.912,
+      "crestMae": 22.4,
+      "hood": 13.5,
+      "hand": 24.4,
+      "cannon": 49.5,
+      "sack": 17,
+      "silIou": 0.778,
+      "scale": 1,
+      "bboxShift": [
+        -147,
+        1
+      ],
+      "newObj": 12.52,
+      "glowX": 344
+    },
+    {
+      "i": 44,
+      "file": "f045.png",
+      "face": 32.4,
+      "faceShift": [
+        0,
+        2
+      ],
+      "brows": 22,
+      "mouth": 25.6,
+      "eyesTint": 76.5,
+      "cheekTint": 69.8,
+      "eyesTintDelta": -6.6,
+      "cheekTintDelta": -9.3,
+      "crestNcc": 0.91,
+      "crestMae": 22.5,
+      "hood": 13.3,
+      "hand": 24.6,
+      "cannon": 49.8,
+      "sack": 17,
+      "silIou": 0.777,
+      "scale": 0.999,
+      "bboxShift": [
+        -147,
+        2
+      ],
+      "newObj": 12.58,
+      "glowX": 343
+    },
+    {
+      "i": 45,
+      "file": "f046.png",
+      "face": 32.7,
+      "faceShift": [
+        0,
+        2
+      ],
+      "brows": 21.8,
+      "mouth": 25.6,
+      "eyesTint": 76.2,
+      "cheekTint": 69.8,
+      "eyesTintDelta": -6.9,
+      "cheekTintDelta": -9.3,
+      "crestNcc": 0.909,
+      "crestMae": 22.6,
+      "hood": 13.4,
+      "hand": 25.6,
+      "cannon": 50.6,
+      "sack": 17,
+      "silIou": 0.775,
+      "scale": 0.999,
+      "bboxShift": [
+        -147,
+        2
+      ],
+      "newObj": 12.67,
+      "glowX": 335
+    },
+    {
+      "i": 46,
+      "file": "f047.png",
+      "face": 33.2,
+      "faceShift": [
+        0,
+        2
+      ],
+      "brows": 21.6,
+      "mouth": 25.1,
+      "eyesTint": 76.4,
+      "cheekTint": 70.2,
+      "eyesTintDelta": -6.7,
+      "cheekTintDelta": -8.8,
+      "crestNcc": 0.902,
+      "crestMae": 23.3,
+      "hood": 13.4,
+      "hand": 28.1,
+      "cannon": 52.4,
+      "sack": 17,
+      "silIou": 0.77,
+      "scale": 0.999,
+      "bboxShift": [
+        -147,
+        2
+      ],
+      "newObj": 12.77,
+      "glowX": 319
+    },
+    {
+      "i": 47,
+      "file": "f048.png",
+      "face": 32.5,
+      "faceShift": [
+        -2,
+        2
+      ],
+      "brows": 21.2,
+      "mouth": 25.4,
+      "eyesTint": 76.4,
+      "cheekTint": 70.8,
+      "eyesTintDelta": -6.7,
+      "cheekTintDelta": -8.3,
+      "crestNcc": 0.894,
+      "crestMae": 24.1,
+      "hood": 13.7,
+      "hand": 25,
+      "cannon": 51.3,
+      "sack": 17.1,
+      "silIou": 0.769,
+      "scale": 0.999,
+      "bboxShift": [
+        -147,
+        2
+      ],
+      "newObj": 12.92,
+      "glowX": 320
+    },
+    {
+      "i": 48,
+      "file": "f049.png",
+      "face": 32.3,
+      "faceShift": [
+        -2,
+        2
+      ],
+      "brows": 21,
+      "mouth": 25.6,
+      "eyesTint": 76.2,
+      "cheekTint": 71,
+      "eyesTintDelta": -6.9,
+      "cheekTintDelta": -8.1,
+      "crestNcc": 0.891,
+      "crestMae": 24.2,
+      "hood": 13.7,
+      "hand": 24.2,
+      "cannon": 51.6,
+      "sack": 17.5,
+      "silIou": 0.765,
+      "scale": 0.999,
+      "bboxShift": [
+        -147,
+        2
+      ],
+      "newObj": 12.94,
+      "glowX": 302
+    },
+    {
+      "i": 49,
+      "file": "f050.png",
+      "face": 32.7,
+      "faceShift": [
+        -2,
+        2
+      ],
+      "brows": 21,
+      "mouth": 25.6,
+      "eyesTint": 76.2,
+      "cheekTint": 71,
+      "eyesTintDelta": -6.9,
+      "cheekTintDelta": -8.1,
+      "crestNcc": 0.894,
+      "crestMae": 24,
+      "hood": 14.3,
+      "hand": 26.3,
+      "cannon": 52.5,
+      "sack": 17.7,
+      "silIou": 0.767,
+      "scale": 0.999,
+      "bboxShift": [
+        -147,
+        2
+      ],
+      "newObj": 12.86,
+      "glowX": 305
+    },
+    {
+      "i": 50,
+      "file": "f051.png",
+      "face": 33,
+      "faceShift": [
+        -2,
+        2
+      ],
+      "brows": 21,
+      "mouth": 25.4,
+      "eyesTint": 76.2,
+      "cheekTint": 70.8,
+      "eyesTintDelta": -6.9,
+      "cheekTintDelta": -8.3,
+      "crestNcc": 0.896,
+      "crestMae": 23.8,
+      "hood": 14.6,
+      "hand": 27.5,
+      "cannon": 52.8,
+      "sack": 17.9,
+      "silIou": 0.764,
+      "scale": 0.999,
+      "bboxShift": [
+        -147,
+        2
+      ],
+      "newObj": 12.75,
+      "glowX": 291
+    },
+    {
+      "i": 51,
+      "file": "f052.png",
+      "face": 31.7,
+      "faceShift": [
+        -2,
+        2
+      ],
+      "brows": 21.3,
+      "mouth": 25.5,
+      "eyesTint": 74.7,
+      "cheekTint": 70.5,
+      "eyesTintDelta": -8.4,
+      "cheekTintDelta": -8.5,
+      "crestNcc": 0.888,
+      "crestMae": 24.4,
+      "hood": 15.6,
+      "hand": 27,
+      "cannon": 54.9,
+      "sack": 19.1,
+      "silIou": 0.749,
+      "scale": 0.999,
+      "bboxShift": [
+        -147,
+        2
+      ],
+      "newObj": 13.39,
+      "glowX": 275
+    },
+    {
+      "i": 52,
+      "file": "f053.png",
+      "face": 31.7,
+      "faceShift": [
+        -2,
+        2
+      ],
+      "brows": 22.8,
+      "mouth": 24,
+      "eyesTint": 75.6,
+      "cheekTint": 71.8,
+      "eyesTintDelta": -7.5,
+      "cheekTintDelta": -7.2,
+      "crestNcc": 0.891,
+      "crestMae": 24.2,
+      "hood": 16,
+      "hand": 26.6,
+      "cannon": 54.8,
+      "sack": 19.3,
+      "silIou": 0.743,
+      "scale": 0.999,
+      "bboxShift": [
+        -147,
+        2
+      ],
+      "newObj": 13.54,
+      "glowX": 265
+    },
+    {
+      "i": 53,
+      "file": "f054.png",
+      "face": 32,
+      "faceShift": [
+        -2,
+        2
+      ],
+      "brows": 23.4,
+      "mouth": 23.8,
+      "eyesTint": 76,
+      "cheekTint": 71.8,
+      "eyesTintDelta": -7.1,
+      "cheekTintDelta": -7.3,
+      "crestNcc": 0.889,
+      "crestMae": 24.5,
+      "hood": 16.5,
+      "hand": 26.5,
+      "cannon": 55.3,
+      "sack": 19.7,
+      "silIou": 0.712,
+      "scale": 1.29,
+      "bboxShift": [
+        -147,
+        -109
+      ],
+      "newObj": 13.56,
+      "glowX": 260
+    },
+    {
+      "i": 54,
+      "file": "f055.png",
+      "face": 32.3,
+      "faceShift": [
+        -2,
+        2
+      ],
+      "brows": 24.1,
+      "mouth": 23.3,
+      "eyesTint": 77,
+      "cheekTint": 72.7,
+      "eyesTintDelta": -6.1,
+      "cheekTintDelta": -6.4,
+      "crestNcc": 0.883,
+      "crestMae": 25,
+      "hood": 16.8,
+      "hand": 27.3,
+      "cannon": 56.1,
+      "sack": 20.4,
+      "silIou": 0.547,
+      "scale": 1.29,
+      "bboxShift": [
+        -147,
+        -109
+      ],
+      "newObj": 13.69,
+      "glowX": 251
+    },
+    {
+      "i": 55,
+      "file": "f056.png",
+      "face": 45.4,
+      "faceShift": [
+        -2,
+        2
+      ],
+      "brows": 32.6,
+      "mouth": 27.9,
+      "eyesTint": 48.7,
+      "cheekTint": 48.7,
+      "eyesTintDelta": -34.4,
+      "cheekTintDelta": -30.3,
+      "crestNcc": 0.862,
+      "crestMae": 36.2,
+      "hood": 25.6,
+      "hand": 79.2,
+      "cannon": 89.5,
+      "sack": 21.4,
+      "silIou": 0.362,
+      "scale": 1.29,
+      "bboxShift": [
+        -147,
+        -109
+      ],
+      "newObj": 25.35,
+      "glowX": 261
+    }
+  ]
+}

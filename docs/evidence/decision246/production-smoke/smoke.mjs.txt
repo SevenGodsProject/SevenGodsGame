@@ -1,0 +1,108 @@
+// Decision246 Production Smoke (read-only browsing of the Production URL)
+import { createRequire } from 'node:module'
+import { writeFileSync, mkdirSync } from 'node:fs'
+const require = createRequire('C:/Users/kimi1/SevenGodsGame/package.json')
+const { chromium } = require('playwright')
+const BASE = process.argv[2] ?? 'https://seven-gods-game.vercel.app'
+const OUT = process.argv[3]
+mkdirSync(OUT, { recursive: true })
+const VPS = { pc: { width: 1508, height: 660 }, sp: { width: 390, height: 844 } }
+
+const clickText = (page, text) => page.evaluate((t) => { const el = [...document.querySelectorAll('button')].find((x) => x.textContent.replace(/\s+/g, '').includes(t) && !x.disabled); if (!el) return false; el.click(); return true }, text)
+const clickSel = (page, sel) => page.evaluate((s) => { const el = document.querySelector(s); if (!el || el.disabled) return false; el.click(); return true }, sel)
+const ended = (page) => page.evaluate(() => !!document.querySelector('.game-over-overlay, .victory-stage'))
+const waitReady = (page, ms = 12000) => page.waitForFunction(() => { const b = document.querySelector('.end-round-button'); return (b && !b.disabled) || document.querySelector('.game-over-overlay, .victory-stage') }, null, { timeout: ms }).catch(() => {})
+
+async function start(page, seed, god, enemy) {
+  await page.goto(`${BASE}/?seed=${seed}`)
+  await page.waitForSelector('.home-screen .home-cta-primary', { timeout: 30000 })
+  const home = await page.evaluate(() => ({ title: document.querySelector('.app-title')?.textContent ?? '', hero: !!document.querySelector('[data-testid="home-hero-god"]') }))
+  await page.waitForTimeout(400)
+  if (await clickText(page, 'わかった')) await page.waitForTimeout(300)
+  if (!(await clickSel(page, '[data-testid="home-start"]'))) await clickText(page, '神を選ぶ')
+  await page.waitForTimeout(400)
+  if (await clickText(page, '新しく始める')) await page.waitForTimeout(300)
+  await clickText(page, god); await page.waitForTimeout(300)
+  await clickText(page, 'この構成で始める'); await page.waitForTimeout(300)
+  await clickText(page, enemy); await page.waitForTimeout(500)
+  await clickText(page, 'この構成でバトル開始')
+  await page.waitForFunction(() => { const b = document.querySelector('.end-round-button'); return b && !b.disabled }, null, { timeout: 20000 })
+  await page.waitForTimeout(2000)
+  return home
+}
+const snap = (page) => page.evaluate(() => {
+  const t = (s) => document.querySelector(s)?.textContent.replace(/\s+/g, ' ').trim() ?? null
+  const round = (document.body.innerText.match(/R\s*([1-7])\s*\/\s*7|ラウンド\s*([1-7])/) ?? [])
+  return {
+    round: round[1] ?? round[2] ?? null,
+    intent: t('.intent'),
+    divination: [...document.querySelectorAll('*')].map((e) => e.childElementCount === 0 || e.classList?.contains('divination-panel-title') ? e.textContent : '').find((x) => /託宣（残り\d+回/.test(x ?? ''))?.match(/託宣（残り\d+回[^）]*）/)?.[0] ?? null,
+    enemyType: t('.enemy-type-desc'),
+    burstBanner: !!document.querySelector('.resonance-cutin, .god-burst-strike, [class*="burst-banner"]'),
+    hScroll: document.documentElement.scrollWidth > window.innerWidth + 1,
+  }
+})
+async function playRound(page, mode, useOracle) {
+  if (mode === 'attack') {
+    for (let i = 0; i < 8; i++) {
+      const ok = await page.evaluate(() => {
+        const cards = [...document.querySelectorAll('.hand .card-view')].filter((c) => !c.disabled)
+        if (!cards.length) return false
+        cards[0].click(); return true
+      })
+      if (!ok) break
+      await page.waitForTimeout(900)
+      if (await ended(page)) return
+    }
+  }
+  if (useOracle) {
+    if (await clickText(page, useOracle)) await page.waitForTimeout(900)
+  }
+  if (await ended(page)) return
+  await clickSel(page, '.end-round-button')
+  await page.waitForTimeout(3200)
+  await waitReady(page)
+}
+
+const report = { base: BASE, runs: [] }
+const browser = await chromium.launch()
+for (const [vpName, vp] of Object.entries(VPS)) {
+  for (const sc of [
+    { name: 'victory-path', god: '大耀', enemy: '蒼海の龍神', seed: 'd246-smoke-01', mode: 'attack', oracleAt: { 4: '加護の託宣', 5: '天啓の託宣', 6: '天啓の託宣', 7: '天啓の託宣' } },
+    { name: 'defeat-path', god: '大耀', enemy: '藍花の怨霊', seed: 'd246-smoke-02', mode: 'idle', oracleAt: {} },
+  ]) {
+    const ctx = await browser.newContext({ viewport: vp })
+    const page = await ctx.newPage()
+    const errors = []
+    page.on('console', (m) => { if (m.type() === 'error') errors.push(m.text()) })
+    page.on('pageerror', (e) => errors.push(String(e)))
+    const run = { vp: vpName, scenario: sc.name, rounds: [], errors }
+    try {
+      run.home = await start(page, sc.seed, sc.god, sc.enemy)
+      await page.screenshot({ path: `${OUT}/${vpName}-${sc.name}-start.png` })
+      for (let r = 1; r <= 7; r++) {
+        const s = await snap(page)
+        run.rounds.push({ r, ...s })
+        if (r === 4) await page.screenshot({ path: `${OUT}/${vpName}-${sc.name}-R4.png` })
+        await playRound(page, sc.mode, sc.oracleAt[r])
+        const after = await snap(page)
+        if (after.burstBanner) run.sawBurst = true
+        if (await ended(page)) break
+      }
+      await page.waitForTimeout(4000)
+      run.result = await page.evaluate(() => ({
+        victory: !!document.querySelector('.victory-stage') || /勝利|撃破/.test(document.querySelector('.game-over-overlay')?.textContent ?? ''),
+        overlay: document.querySelector('.game-over-overlay')?.textContent.replace(/\s+/g, ' ').slice(0, 120) ?? null,
+      }))
+      await page.screenshot({ path: `${OUT}/${vpName}-${sc.name}-end.png` })
+    } catch (e) {
+      run.failure = String(e)
+      await page.screenshot({ path: `${OUT}/${vpName}-${sc.name}-fail.png` }).catch(() => {})
+    }
+    report.runs.push(run)
+    await ctx.close()
+  }
+}
+await browser.close()
+writeFileSync(`${OUT}/smoke.json`, JSON.stringify(report, null, 2))
+console.log(JSON.stringify(report.runs.map((r) => ({ vp: r.vp, sc: r.scenario, fail: r.failure ?? null, errors: r.errors.length, home: r.home, sawBurst: !!r.sawBurst, result: r.result, rounds: r.rounds.map((x) => `${x.r}:${x.intent}|${x.divination}|hs=${x.hScroll}`) })), null, 1))
