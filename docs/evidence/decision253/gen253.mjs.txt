@@ -1,0 +1,45 @@
+// 決定253 — generate SIMULATION_SUMMARY.md directly from evidence JSON (source of truth; no manual transcription)
+import { readFileSync, writeFileSync } from 'node:fs'
+const D = 'C:/Users/kimi1/SevenGodsGame-d253/docs/evidence/decision253/'
+const A = JSON.parse(readFileSync(D + 'sim253-audit.json', 'utf8'))
+const T = JSON.parse(readFileSync(D + 'sim253-tune.json', 'utf8'))
+const pc = (x) => (x * 100).toFixed(1), f2 = (x) => Number(x).toFixed(2)
+const E = ['試練の影', '業斧の鬼将', '藍花の怨霊', '銀甲の機工師', '双牙の魔獣', '蒼海の龍神', '乱舞の道化']
+const LV = [['0', '通常'], ['1', 'Ⅰ'], ['2', 'Ⅱ'], ['3', 'Ⅲ'], ['4', 'Ⅳ'], ['5', 'Ⅴ'], ['6', 'Ⅵ'], ['7p', 'Ⅶ猛威'], ['7r', 'Ⅶ巨躯'], ['7t', 'Ⅶ静寂']]
+const FACES = [['prod', '0', '通常'], ['prod@easy', '0', 'Easy'], ['prod@hard', '0', 'Hard'], ['prod@daily', '0', 'Daily'], ['prod', '3', 'Ⅲ'], ['prod', '5', 'Ⅴ'], ['prod', '6', 'Ⅵ'], ['prod', '7p', 'Ⅶ猛威']]
+const a = (o, f, lv, p) => o.out[f][lv][p].agg
+const L = []
+L.push(`# 決定253 Oracle Choice & Readability — simulation summary（evidence JSON から自動生成・${new Date().toISOString()}）`, '',
+  `- audit：\`sim253-audit.json\`（Production runtime 9316ce1・現行 託宣数値・**${A.games} 試合**・8 方策のうち 7・通常 0〜Ⅶ × 100 seed・easy／hard／Daily × 60）`,
+  `- tune：\`sim253-tune.json\`（導き 8 変種 × 6 方策 × 通常 0〜Ⅶ × 40 seed ＋ easy／hard／Daily × 40・**${T.games} 試合**）`,
+  `- 方策：reader／readerPlus／naive／greedy／ignoreUlt＝決定252 と同一（加護・天啓しか選ばない）。**oracleAware**＝同じカード方策＋3 択の期待値比較（加護＝救える HP・導き＝+神力で今すぐ出せる札の価値＋引き札・天啓＝40 or 撃破）。**oracleAwareNoGuide**＝同じ枠組みで導きを禁止（導きの限界効用の対照）。**oracleAwareStrict**＝導きは「必殺用の加護を 1 回残せる」ときだけ`, '')
+
+L.push('## 1. Current usage（Production 数値・reader＝現行の基準方策 vs oracleAware）', '', '| 面 | 方策 | win | 託宣/戦 | 加護% | 導き% | 天啓% | 残り | 使用 R1..R7（/戦） |', '|---|---|---|---|---|---|---|---|---|')
+for (const [f, lv, name] of FACES) for (const p of ['reader', 'naive', 'greedy', 'oracleAware', 'oracleAwareNoGuide']) { const x = a(A, f, lv, p); L.push(`| ${name} | ${p} | ${pc(x.win)} | ${f2(x.oracleUses)} | ${pc(x.shareGuard)} | ${pc(x.shareGuide)} | ${pc(x.shareStrike)} | ${f2(x.oracleLeftMean)} | ${x.byRoundT.map((r) => f2(r[0] + r[1] + r[2])).join(' ')} |`) }
+
+L.push('', '## 2. 導き（oracleAware・現行数値）の使われ方', '', '### 2-1. 敵別（通常／Ⅴ）— win・託宣/戦・3 種 share・導きが有効化した札（上位）・必殺ラウンドでの選択', '', '| 面 | 敵 | win | 託宣/戦 | 加護% | 導き% | 天啓% | 導き→出せた札 | 必殺 R での加護 | 必殺 R での導き |', '|---|---|---|---|---|---|---|---|---|---|')
+for (const lv of ['0', '5']) for (const e of E) { const x = A.out.prod[lv].oracleAware.byEnemy[e]; L.push(`| ${lv === '0' ? '通常' : 'Ⅴ'} | ${e} | ${pc(x.win)} | ${f2(x.oracleUses)} | ${pc(x.shareGuard)} | ${pc(x.shareGuide)} | ${pc(x.shareStrike)} | ${x.guideCards.slice(0, 4).map(([k, n]) => `${k} ${n}`).join('・')} | ${pc(x.guardOnUlt)} | ${pc(x.guideOnUlt)} |`) }
+L.push('', '### 2-2. ラウンド別（通常・/戦）加護／導き／天啓', '', '| 方策 | R1 | R2 | R3 | R4 | R5 | R6 | R7 |', '|---|---|---|---|---|---|---|---|')
+for (const p of ['reader', 'oracleAware']) { const x = a(A, 'prod', '0', p); L.push(`| ${p} | ${x.byRoundT.map((r) => r.map(f2).join('/')).join(' | ')} |`) }
+L.push('', `- oracleAware 通常：未使用神力 ${f2(a(A, 'prod', '0', 'oracleAware').unusedApMean)}（reader ${f2(a(A, 'prod', '0', 'reader').unusedApMean)}）・勝利時残 HP ${a(A, 'prod', '0', 'oracleAware').meanHpWon.toFixed(1)}（reader ${a(A, 'prod', '0', 'reader').meanHpWon.toFixed(1)}）・God Strike ${pc(a(A, 'prod', '0', 'oracleAware').godStrikeRate)}（reader ${pc(a(A, 'prod', '0', 'reader').godStrikeRate)}）`)
+
+L.push('', '## 3. 段別 win（現行数値・100 seed）', '', '| 段 | reader | naive | greedy | ignoreUlt | oracleAware | oracleAwareNoGuide | OA−NoGuide | 導き% (OA) | reader<50% セル R / OA |', '|---|---|---|---|---|---|---|---|---|---|')
+for (const [lv, name] of LV) { const x = (p) => a(A, 'prod', lv, p); const cells = (p) => Object.values(A.out.prod[lv][p].cells).filter((v) => v < 0.5).length
+  L.push(`| ${name} | ${pc(x('reader').win)} | ${pc(x('naive').win)} | ${pc(x('greedy').win)} | ${pc(x('ignoreUlt').win)} | ${pc(x('oracleAware').win)} | ${pc(x('oracleAwareNoGuide').win)} | ${((x('oracleAware').win - x('oracleAwareNoGuide').win) * 100).toFixed(1)} | ${pc(x('oracleAware').shareGuide)} | ${cells('reader')} / ${cells('oracleAware')} |`) }
+for (const [f, name] of [['prod@easy', 'Easy'], ['prod@hard', 'Hard'], ['prod@daily', 'Daily']]) { const x = (p) => a(A, f, '0', p); L.push(`| ${name} | ${pc(x('reader').win)} | ${pc(x('naive').win)} | ${pc(x('greedy').win)} | ${pc(x('ignoreUlt').win)} | ${pc(x('oracleAware').win)} | ${pc(x('oracleAwareNoGuide').win)} | ${((x('oracleAware').win - x('oracleAwareNoGuide').win) * 100).toFixed(1)} | ${pc(x('oracleAware').shareGuide)} | — |`) }
+
+L.push('', '## 4. 決定252 counter timing の維持（通常／Ⅴ・必殺ラウンドで加護を使った率／ブロック≥50%）', '', '| 敵 | reader 通常 | OA 通常 | reader Ⅴ | OA Ⅴ |', '|---|---|---|---|---|')
+for (const e of E) { const g = (lv, p) => A.out.prod[lv][p].byEnemy[e]; L.push(`| ${e} | ${pc(g('0', 'reader').ultGuardOracleRate)}/${pc(g('0', 'reader').ultGuardRate)} | ${pc(g('0', 'oracleAware').ultGuardOracleRate)}/${pc(g('0', 'oracleAware').ultGuardRate)} | ${pc(g('5', 'reader').ultGuardOracleRate)}/${pc(g('5', 'reader').ultGuardRate)} | ${pc(g('5', 'oracleAware').ultGuardOracleRate)}/${pc(g('5', 'oracleAware').ultGuardRate)} |`) }
+
+L.push('', '## 5. 導き変種（tune・40 seed）— oracleAware', '', '| 変種 | 導き効果 | OA 通常 | Hard | Daily | Ⅲ | Ⅴ | Ⅵ | Ⅶ猛威 | 導き% 通常 | 導き% Ⅴ | 導き% Ⅶ猛威 | OA−NoGuide 通常/Ⅴ/Ⅶ猛威 | GS 通常 | 未撃破 Ⅲ | reader Ⅴ | naive 通常 |', '|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|')
+const vd = (v) => T.variants[v].map((e) => e.kind === 'draw' ? `引く${e.amount}` : e.kind === 'gainAp' ? `神力+${e.amount}` : `共鳴+${e.amount}`).join('・')
+for (const v of Object.keys(T.variants)) { const x = (f, lv, p) => a(T, f, lv, p); const oa = (f, lv) => x(f, lv, 'oracleAware'), ng = (f, lv) => x(f, lv, 'oracleAwareNoGuide')
+  L.push(`| ${v} | ${vd(v)} | ${pc(oa(v, '0').win)} | ${pc(oa(v + '@hard', '0').win)} | ${pc(oa(v + '@daily', '0').win)} | ${pc(oa(v, '3').win)} | ${pc(oa(v, '5').win)} | ${pc(oa(v, '6').win)} | ${pc(oa(v, '7p').win)} | ${pc(oa(v, '0').shareGuide)} | ${pc(oa(v, '5').shareGuide)} | ${pc(oa(v, '7p').shareGuide)} | ${((oa(v, '0').win - ng(v, '0').win) * 100).toFixed(1)}/${((oa(v, '5').win - ng(v, '5').win) * 100).toFixed(1)}/${((oa(v, '7p').win - ng(v, '7p').win) * 100).toFixed(1)} | ${pc(oa(v, '0').godStrikeRate)} | ${pc(oa(v, '3').unfinished)} | ${pc(x(v, '5', 'reader').win)} | ${pc(x(v, '0', 'naive').win)} |`) }
+L.push('', '### 5-1. oracleAwareStrict（導きは必殺用の加護を残せるときだけ）', '', '| 変種 | win 通常 / Hard / Daily / Ⅴ / Ⅶ猛威 | 導き% 通常 / Ⅴ / Ⅶ猛威 | Strict−NoGuide 通常 / Ⅴ / Ⅶ猛威 | Strict−reader Ⅴ / Ⅶ猛威 |', '|---|---|---|---|---|')
+for (const v of Object.keys(T.variants)) { const s = (f, lv) => a(T, f, lv, 'oracleAwareStrict'), n = (f, lv) => a(T, f, lv, 'oracleAwareNoGuide'), r = (f, lv) => a(T, f, lv, 'reader')
+  L.push(`| ${v} | ${pc(s(v, '0').win)} / ${pc(s(v + '@hard', '0').win)} / ${pc(s(v + '@daily', '0').win)} / ${pc(s(v, '5').win)} / ${pc(s(v, '7p').win)} | ${pc(s(v, '0').shareGuide)} / ${pc(s(v, '5').shareGuide)} / ${pc(s(v, '7p').shareGuide)} | ${((s(v, '0').win - n(v, '0').win) * 100).toFixed(1)} / ${((s(v, '5').win - n(v, '5').win) * 100).toFixed(1)} / ${((s(v, '7p').win - n(v, '7p').win) * 100).toFixed(1)} | ${((s(v, '5').win - r(v, '5').win) * 100).toFixed(1)} / ${((s(v, '7p').win - r(v, '7p').win) * 100).toFixed(1)} |`) }
+
+L.push('', '## 6. 49 セル reader<50%（現行・100 seed）', '')
+for (const [lv, name] of LV) for (const p of ['reader', 'oracleAware']) { const bad = Object.entries(A.out.prod[lv][p].cells).filter(([, v]) => v < 0.5).map(([k, v]) => `${k} ${pc(v)}`); if (bad.length) L.push(`- ${name} ${p}：${bad.length}（${bad.join('・')}）`) }
+writeFileSync(D + 'SIMULATION_SUMMARY.md', L.join('\n'))
+console.log(L.join('\n'))

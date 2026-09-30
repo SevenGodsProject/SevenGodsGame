@@ -1,0 +1,39 @@
+// 決定253 readability measurement (scratch): renders the battle at PC/SP and records how the 3 oracle choices are presented.
+import { chromium } from 'playwright'
+import { writeFileSync, mkdirSync } from 'node:fs'
+const BASE = process.argv[2] ?? 'http://127.0.0.1:4291'
+const OUT = 'C:/Users/kimi1/SevenGodsGame-d253/docs/evidence/decision253/readability'
+mkdirSync(OUT, { recursive: true })
+const VIEWPORTS = [{ name: 'pc-1508x660', width: 1508, height: 660 }, { name: 'sp-390x844', width: 390, height: 844, mobile: true }, { name: 'sp-390x660', width: 390, height: 660, mobile: true }, { name: 'pc-1280x720', width: 1280, height: 720 }]
+const browser = await chromium.launch()
+const result = {}
+for (const vp of VIEWPORTS) {
+  const ctx = await browser.newContext({ viewport: { width: vp.width, height: vp.height }, isMobile: !!vp.mobile, hasTouch: !!vp.mobile, deviceScaleFactor: 1 })
+  const page = await ctx.newPage()
+  const url = `${BASE}/?seed=d253-read&enemy=oni`
+  await page.goto(url, { waitUntil: 'networkidle' }); await page.evaluate(() => { try { localStorage.clear() } catch {} }); await page.goto(url, { waitUntil: 'networkidle' })
+  await page.click('[data-testid="home-start"]'); await page.locator('.god-select-card').nth(1).click(); await page.locator('.difficulty-select button').nth(1).click(); await page.click('.god-select-confirm')
+  if (await page.locator('.enemy-select-card').count()) await page.locator('.enemy-select-card').nth(1).click()
+  await page.getByRole('button', { name: 'この構成でバトル開始' }).click(); await page.waitForSelector('.divination-panel', { timeout: 15000 }); await page.waitForTimeout(2500)
+  const m = await page.evaluate(() => {
+    const cs = (el) => getComputedStyle(el)
+    const box = (el) => { const r = el.getBoundingClientRect(); return { x: Math.round(r.x), y: Math.round(r.y), w: Math.round(r.width), h: Math.round(r.height) } }
+    const vis = (el) => !!el && cs(el).display !== 'none' && el.getBoundingClientRect().height > 0
+    const panel = document.querySelector('.divination-panel')
+    const title = document.querySelector('.divination-panel-title')
+    const choices = [...document.querySelectorAll('.divination-choice')].map((b) => {
+      const name = b.querySelector('.divination-choice-name'), text = b.querySelector('.divination-choice-text'), glyph = b.querySelector('.divination-choice-glyph'), prev = b.querySelector('.divination-choice-preview')
+      return { box: box(b), name: name?.textContent, nameFont: cs(name).fontSize, nameColor: cs(name).color, text: text?.textContent, textVisible: vis(text), textFont: text ? cs(text).fontSize : null, textColor: text ? cs(text).color : null, glyph: glyph ? { box: box(glyph), color: cs(glyph).color, bg: cs(glyph).backgroundColor } : null, preview: prev?.textContent ?? null, previewColor: prev ? cs(prev).color : null, bg: cs(b).backgroundColor, border: cs(b).borderColor, title: b.getAttribute('title'), disabled: b.disabled }
+    })
+    const hand = document.querySelector('.hand'); const endBtn = [...document.querySelectorAll('button')].find((x) => x.textContent.includes('ラウンドを終える'))
+    return { viewport: [innerWidth, innerHeight], panel: box(panel), title: title?.textContent, titleFont: cs(title).fontSize, choices, endBtn: endBtn ? box(endBtn) : null, hand: hand ? box(hand) : null, intent: document.querySelector('.intent')?.textContent }
+  })
+  result[vp.name] = m
+  const panel = page.locator('.divination-panel')
+  await panel.screenshot({ path: `${OUT}/oracle-panel-${vp.name}.png` }).catch(() => {})
+  await page.screenshot({ path: `${OUT}/battle-${vp.name}.png` }).catch(() => {})
+  await ctx.close()
+}
+await browser.close()
+writeFileSync(`${OUT}/readability.json`, JSON.stringify(result, null, 1))
+for (const [k, v] of Object.entries(result)) { console.log('==', k, 'panel', JSON.stringify(v.panel), 'title', v.titleFont, v.title); for (const c of v.choices) console.log('  ', c.name, c.nameFont, 'text', c.textVisible ? 'shown ' + c.textFont : 'HIDDEN', '| box', JSON.stringify(c.box), '| glyph', c.glyph ? c.glyph.box.w + 'px ' + c.glyph.color : '-', '| preview', c.preview, '| title', c.title) }
