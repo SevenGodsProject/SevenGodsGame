@@ -43,7 +43,7 @@ branch `feat/d252-enemy-ultimate`（`ccb5237` から。worktree `C:/Users/kimi1/
 - Parity（`pilot/PARITY.md`・`pilot/PARITY_BEFORE.md`）：**全 3,185 セル Δ 0.00pt**（Preflight は Ⅵ〜Ⅶ の倍率順序だけ emulation だったが、丸めの差は 0 件）。
 
 ### 3-1. Normal／Easy／Hard／Daily（reader・Before→Pilot）
-通常 99.8→99.8／easy 100.0→100.0／hard 95.9→96.7／Daily 91.4→92.4（すべて Preflight §6-1 と同値）。naive 84.6→84.2・greedy 74.7→72.7（通常）。
+通常 99.8→99.8／easy 100.0→100.0／hard 96.6→97.0／Daily 91.1→91.8（Preflight JSON と同値。Preflight 文書初版の hard 96.7／Daily 92.4 は誤記で、Release Gate で発見・訂正）。naive 84.6→84.2・greedy 74.7→72.7（通常）。
 
 ### 3-2. 神階Ⅰ〜Ⅶ（reader・Before→Pilot）
 Ⅰ 99.7→99.7／Ⅱ 98.0→98.1／Ⅲ 89.4→90.2／Ⅳ 86.4→87.9／**Ⅴ 83.7→85.9／Ⅵ 78.9→83.9／Ⅶ猛威 64.5→71.1**／Ⅶ巨躯 55.0→60.4／Ⅶ静寂 78.2→82.7。未撃破 全段 ±1pt。reader > naive > greedy 全段（R−N 15.6〜59.6pt）。
