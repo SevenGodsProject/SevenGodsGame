@@ -1,0 +1,264 @@
+// 決定254 Game Entry / Home Immersion Preflight — 計測専用（ゲームコードではない・commit しない）。
+// 使い方: node scripts/decision254/measure.mjs http://127.0.0.1:4281 [shots]
+import { chromium } from 'playwright'
+import { writeFileSync, mkdirSync } from 'node:fs'
+
+const BASE = process.argv[2] ?? 'http://127.0.0.1:4281'
+const SHOTS = process.argv[3] === 'shots'
+const OUT = 'docs/evidence/decision254'
+mkdirSync(OUT, { recursive: true })
+const VPS = {
+  pc1508: { viewport: { width: 1508, height: 660 }, isMobile: false, hasTouch: false, deviceScaleFactor: 1 },
+  sp844: { viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true, deviceScaleFactor: 2 },
+}
+
+const INIT = () => {
+  window.__log = []
+  const now = () => Math.round(performance.now())
+  const origPlay = HTMLMediaElement.prototype.play
+  HTMLMediaElement.prototype.play = function (...a) {
+    const src = (this.currentSrc || this.src || '').replace(location.origin, '')
+    const p = origPlay.apply(this, a)
+    const rec = { t: now(), kind: 'media.play', src, tag: this.tagName }
+    window.__log.push(rec)
+    if (p && p.then) p.then(() => (rec.ok = now()), (e) => (rec.rejected = String(e.name)))
+    return p
+  }
+  const origStart = AudioBufferSourceNode.prototype.start
+  AudioBufferSourceNode.prototype.start = function (when, ...rest) {
+    window.__log.push({ t: now(), kind: 'se.start', dur: this.buffer ? +this.buffer.duration.toFixed(3) : null, when: when ?? 0, ctxTime: +this.context.currentTime.toFixed(3) })
+    return origStart.call(this, when, ...rest)
+  }
+  window.__cls = []
+  try {
+    new PerformanceObserver((l) => {
+      for (const e of l.getEntries()) if (!e.hadRecentInput) window.__cls.push({ t: Math.round(e.startTime), v: e.value, src: (e.sources || []).map((s) => (s.node && s.node.className ? String(s.node.className).slice(0, 60) : '?')) })
+    }).observe({ type: 'layout-shift', buffered: true })
+  } catch {}
+  window.__lcp = []
+  try {
+    new PerformanceObserver((l) => {
+      for (const e of l.getEntries()) window.__lcp.push({ t: Math.round(e.startTime), size: e.size, el: e.element ? String(e.element.className || e.element.tagName) : null, url: (e.url || '').replace(location.origin, '') })
+    }).observe({ type: 'largest-contentful-paint', buffered: true })
+  } catch {}
+}
+
+// ページ内：クリック → 各マーカー時刻・フレーム・HUD 箱の差分を記録
+const PROBE = async ({ clickSel, clickText, durMs, hud }) => {
+  const q = (s) => document.querySelector(s)
+  const box = (s) => {
+    const el = q(s)
+    if (!el) return null
+    const r = el.getBoundingClientRect()
+    return { x: Math.round(r.x), y: Math.round(r.y), w: Math.round(r.width), h: Math.round(r.height) }
+  }
+  const btn = clickSel ? q(clickSel) : [...document.querySelectorAll('button')].find((b) => b.textContent.replace(/\s+/g, '').includes(clickText) && !b.disabled)
+  if (!btn) return { error: 'button not found ' + (clickSel || clickText) }
+  const logStart = window.__log.length
+  const clsStart = window.__cls.length
+  const marks = {}
+  const frames = []
+  let anims0 = null
+  let boxesFirst = null
+  let boxesLate = null
+  const t0 = performance.now()
+  btn.click()
+  const tAfterClick = performance.now() - t0
+  await new Promise((resolve) => {
+    let last = performance.now()
+    const tick = () => {
+      const now = performance.now()
+      const t = Math.round(now - t0)
+      frames.push(Math.round(now - last))
+      last = now
+      const mark = (k, cond) => {
+        if (marks[k] === undefined && cond) marks[k] = t
+      }
+      const be = q('[data-testid="boss-entrance"]')
+      mark('battleScreenMounted', !!q('.battle-topbar'))
+      mark('bossEntranceShown', !!be)
+      if (be) marks.bossEntranceLastSeen = t
+      mark('bossEntranceGone', marks.bossEntranceShown !== undefined && !be)
+      const av = q('.enemy-avatar')
+      const avr = av && av.getBoundingClientRect()
+      mark('enemyAvatarVisible', !!avr && avr.width > 0 && avr.height > 0)
+      mark('handCardsPresent', document.querySelectorAll('.hand .card-view').length > 0)
+      mark('handCardEnabled', [...document.querySelectorAll('.hand .card-view')].some((c) => !c.disabled))
+      const er = q('.end-round-button')
+      mark('endRoundEnabled', !!er && !er.disabled)
+      if (anims0 === null && t >= 120) {
+        anims0 = document.getAnimations().map((a) => {
+          const tm = a.effect && a.effect.getComputedTiming ? a.effect.getComputedTiming() : {}
+          const tg = a.effect && a.effect.target
+          return { name: a.animationName || a.transitionProperty || a.constructor.name, dur: Math.round(tm.duration || 0), delay: Math.round(tm.delay || 0), iter: tm.iterations, target: tg ? String(tg.className || tg.tagName).slice(0, 50) : null }
+        })
+      }
+      if (!boxesFirst && marks.endRoundEnabled !== undefined) boxesFirst = { t, ...Object.fromEntries(hud.map((s) => [s, box(s)])) }
+      if (!boxesLate && t >= durMs - 150) boxesLate = { t, ...Object.fromEntries(hud.map((s) => [s, box(s)])) }
+      if (t < durMs) requestAnimationFrame(tick)
+      else resolve()
+    }
+    requestAnimationFrame(tick)
+  })
+  const log = window.__log.slice(logStart).map((e) => ({ ...e, t: Math.round(e.t - t0), ok: e.ok ? Math.round(e.ok - t0) : undefined }))
+  const cls = window.__cls.slice(clsStart).map((e) => ({ ...e, t: Math.round(e.t - t0) }))
+  const diff = {}
+  if (boxesFirst && boxesLate)
+    for (const s of hud) {
+      const a = boxesFirst[s]
+      const b = boxesLate[s]
+      diff[s] = !a || !b ? (a === b ? 'both-null' : 'missing') : a.x === b.x && a.y === b.y && a.w === b.w && a.h === b.h ? 0 : { first: a, late: b }
+    }
+  const ft = frames.slice(1)
+  const liveAnims = document
+    .getAnimations()
+    .filter((a) => a.playState === 'running')
+    .map((a) => a.animationName || a.transitionProperty)
+    .reduce((m, n) => ((m[n] = (m[n] || 0) + 1), m), {})
+  const sorted = [...ft].sort((a, b) => a - b)
+  return {
+    tAfterClick: Math.round(tAfterClick),
+    marks,
+    frames: { n: ft.length, over33: ft.filter((x) => x > 33).length, over50: ft.filter((x) => x > 50).length, max: Math.max(...ft), median: sorted[Math.floor(sorted.length / 2)] },
+    animsAt120ms: anims0,
+    liveAnimsAtEnd: liveAnims,
+    log,
+    cls,
+    clsSum: +cls.reduce((s, e) => s + e.v, 0).toFixed(4),
+    boxesFirst,
+    boxesLate,
+    hudBoxDiff: diff,
+  }
+}
+
+const HUD = ['.battle-topbar', '.enemy-avatar', '.hand', '.end-round-button', '.god-otomo-plate', '.hp-bar-fill', '.intent']
+
+const timedClick = async (page, clickFn, waitSel) => {
+  const t0 = Date.now()
+  await clickFn()
+  await page.waitForSelector(waitSel, { timeout: 15000 })
+  return Date.now() - t0
+}
+const clickBtnText = (page, text) =>
+  page.evaluate((t) => {
+    const el = [...document.querySelectorAll('button')].find((x) => x.textContent.replace(/\s+/g, '').includes(t) && !x.disabled)
+    if (!el) return false
+    el.click()
+    return true
+  }, text)
+
+async function newCtx(browser, vp, extra = {}) {
+  const ctx = await browser.newContext({ ...VPS[vp], ...extra })
+  await ctx.addInitScript(INIT)
+  const page = await ctx.newPage()
+  const errors = []
+  page.on('pageerror', (e) => errors.push(String(e)))
+  page.on('console', (m) => m.type() === 'error' && errors.push('console: ' + m.text()))
+  const reqs = []
+  page.on('requestfinished', async (r) => {
+    const t = Date.now()
+    try {
+      const s = await r.sizes()
+      reqs.push({ url: r.url().replace(BASE, ''), bytes: s.responseBodySize, t })
+    } catch {}
+  })
+  return { ctx, page, errors, reqs }
+}
+
+async function coldHome(page) {
+  const t0 = Date.now()
+  await page.goto(BASE + '/', { waitUntil: 'load' })
+  await page.waitForSelector('.home-cta-primary', { timeout: 30000 })
+  const primaryMs = Date.now() - t0
+  await page.waitForFunction(() => { const i = document.querySelector('.home-hero-img'); return i && i.complete }, null, { timeout: 20000 }).catch(() => {})
+  await page.waitForTimeout(1500)
+  return page.evaluate((primaryMs) => {
+    const nav = performance.getEntriesByType('navigation')[0]
+    const paints = Object.fromEntries(performance.getEntriesByType('paint').map((p) => [p.name, Math.round(p.startTime)]))
+    const hero = document.querySelector('.home-hero-img')
+    const heroRes = performance.getEntriesByType('resource').find((r) => hero && r.name === hero.currentSrc)
+    const anims = document.getAnimations().map((a) => a.animationName || a.transitionProperty)
+    return {
+      primaryVisibleMs_node: primaryMs,
+      domContentLoaded: Math.round(nav.domContentLoadedEventEnd),
+      load: Math.round(nav.loadEventEnd),
+      paints,
+      lcp: window.__lcp,
+      heroSrc: hero ? hero.currentSrc.replace(location.origin, '') : null,
+      heroLoadedAt: heroRes ? Math.round(heroRes.responseEnd) : null,
+      heroBytes: heroRes ? heroRes.encodedBodySize : null,
+      homeAnimations: anims.reduce((m, n) => ((m[n] = (m[n] || 0) + 1), m), {}),
+      homeClsSum: +window.__cls.reduce((s, e) => s + e.v, 0).toFixed(4),
+      homeLog: window.__log,
+      primaryText: document.querySelector('.home-cta-primary')?.textContent.trim(),
+    }
+  }, primaryMs)
+}
+
+async function shotSeries(page, vp, label, delays) {
+  const out = []
+  const start = Date.now()
+  for (const d of delays) {
+    const wait = d - (Date.now() - start)
+    if (wait > 0) await page.waitForTimeout(wait)
+    const f = `${OUT}/${vp}-${label}-${d}ms.jpg`
+    await page.screenshot({ path: f, type: 'jpeg', quality: 45 })
+    out.push({ requestedMs: d, actualMs: Date.now() - start, f })
+  }
+  return out
+}
+
+async function normalFlow(browser, vp, opts = {}) {
+  const { ctx, page, errors, reqs } = await newCtx(browser, vp, opts.ctx)
+  const home = await coldHome(page)
+  if (opts.shots) await page.screenshot({ path: `${OUT}/${vp}-home.jpg`, type: 'jpeg', quality: 45 })
+  const steps = {}
+  steps.home_to_godSelect = await timedClick(page, () => page.locator('[data-testid="home-start"]').click(), '.god-select-back')
+  await page.waitForTimeout(400)
+  steps.godCard_to_confirm = await timedClick(page, () => clickBtnText(page, '大耀'), '.god-select-confirm')
+  await page.waitForTimeout(300)
+  steps.godConfirm_to_enemySelect = await timedClick(page, () => page.locator('.god-select-confirm').click(), '.enemy-select-back')
+  await page.waitForTimeout(300)
+  steps.enemy_to_deckBuilder = await timedClick(page, () => clickBtnText(page, '蒼海の龍神'), '.deck-builder-clear-button')
+  await page.waitForTimeout(800)
+  const reqMark = Date.now()
+  let shots = null
+  const probeP = page.evaluate(PROBE, { clickText: 'この構成でバトル開始', durMs: 4000, hud: HUD })
+  if (opts.shots) shots = await shotSeries(page, vp, opts.label || 'start', [150, 500, 900, 1300, 2200])
+  const probe = await probeP
+  const battleReqs = reqs.filter((r) => r.t >= reqMark).map((r) => ({ url: r.url, bytes: r.bytes, afterClickMs: r.t - reqMark }))
+  await ctx.close()
+  return { home, steps, probe, battleReqs, shots, errors }
+}
+
+async function firstBattleFlow(browser, vp) {
+  const { ctx, page, errors } = await newCtx(browser, vp)
+  const home = await coldHome(page)
+  const steps = {}
+  steps.firstBattle_to_brief = await timedClick(page, () => page.locator('[data-testid="home-first-battle"]').click(), '[data-testid="first-battle-brief"]')
+  await page.waitForTimeout(500)
+  const probe = await page.evaluate(PROBE, { clickText: '出陣する', durMs: 3000, hud: HUD })
+  await page.waitForTimeout(300)
+  await page.reload({ waitUntil: 'load' })
+  await page.waitForSelector('.home-cta-primary', { timeout: 30000 })
+  await page.waitForTimeout(800)
+  const resumeText = await page.evaluate(() => document.querySelector('.home-cta-primary')?.textContent.trim())
+  const resume = await page.evaluate(PROBE, { clickSel: '[data-testid="home-resume"]', durMs: 2500, hud: HUD })
+  await ctx.close()
+  return { home: { primaryText: home.primaryText, lcp: home.lcp, paints: home.paints }, steps, probe, resumeText, resume, errors }
+}
+
+const browser = await chromium.launch({ args: ['--autoplay-policy=user-gesture-required'] })
+const result = { base: BASE, at: new Date().toISOString(), note: 'headless Chromium（GPU なし）。フレーム値は目安で実機の代替ではない', runs: {} }
+for (const vp of Object.keys(VPS)) {
+  result.runs[vp] = {}
+  result.runs[vp].normal = await normalFlow(browser, vp)
+  result.runs[vp].normal2 = await normalFlow(browser, vp)
+  result.runs[vp].reduced = await normalFlow(browser, vp, { ctx: { reducedMotion: 'reduce' } })
+  result.runs[vp].firstBattle = await firstBattleFlow(browser, vp)
+  if (SHOTS) result.runs[vp].shots = (await normalFlow(browser, vp, { shots: true, label: 'battle-start' })).shots
+  console.log(vp, JSON.stringify(result.runs[vp].normal.probe.marks), 'reduced', JSON.stringify(result.runs[vp].reduced.probe.marks))
+}
+await browser.close()
+writeFileSync(`${OUT}/measure.json`, JSON.stringify(result, null, 1))
+console.log('wrote', `${OUT}/measure.json`)

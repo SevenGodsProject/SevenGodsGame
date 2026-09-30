@@ -1,0 +1,3707 @@
+{
+ "base": "http://127.0.0.1:4281",
+ "at": "2026-09-30T15:10:45.336Z",
+ "note": "headless Chromium（GPU なし）。フレーム値は目安で実機の代替ではない",
+ "runs": {
+  "pc1508": {
+   "normal": {
+    "home": {
+     "primaryVisibleMs_node": 1133,
+     "domContentLoaded": 203,
+     "load": 203,
+     "paints": {
+      "first-paint": 628,
+      "first-contentful-paint": 1084
+     },
+     "lcp": [
+      {
+       "t": 1084,
+       "size": 517440,
+       "el": "home-hero-img",
+       "url": "/assets/gods/ebisu/keyvisual-hero.webp"
+      }
+     ],
+     "heroSrc": "/assets/gods/ebisu/keyvisual-hero.webp",
+     "heroLoadedAt": 649,
+     "heroBytes": 523108,
+     "homeAnimations": {
+      "particle-drift": 1,
+      "star-twinkle": 1,
+      "magic-circle-spin": 1
+     },
+     "homeClsSum": 0,
+     "homeLog": [
+      {
+       "t": 912,
+       "kind": "media.play",
+       "src": "/assets/bgm/home.webm",
+       "tag": "AUDIO",
+       "rejected": "NotAllowedError"
+      }
+     ],
+     "primaryText": "初陣へおすすめの構成ですぐ戦う"
+    },
+    "steps": {
+     "home_to_godSelect": 581,
+     "godCard_to_confirm": 258,
+     "godConfirm_to_enemySelect": 471,
+     "enemy_to_deckBuilder": 758
+    },
+    "probe": {
+     "tAfterClick": 5,
+     "marks": {
+      "battleScreenMounted": 82,
+      "bossEntranceShown": 82,
+      "bossEntranceLastSeen": 1570,
+      "enemyAvatarVisible": 82,
+      "handCardsPresent": 82,
+      "handCardEnabled": 82,
+      "endRoundEnabled": 82,
+      "bossEntranceGone": 1593
+     },
+     "frames": {
+      "n": 78,
+      "over33": 60,
+      "over50": 20,
+      "max": 335,
+      "median": 45
+     },
+     "animsAt120ms": [
+      {
+       "name": "particle-drift",
+       "dur": 140000,
+       "delay": 0,
+       "iter": null,
+       "target": "battle-viewport"
+      },
+      {
+       "name": "star-twinkle",
+       "dur": 5000,
+       "delay": 0,
+       "iter": null,
+       "target": "battle-viewport"
+      },
+      {
+       "name": "magic-circle-spin",
+       "dur": 120000,
+       "delay": 0,
+       "iter": null,
+       "target": "battle-viewport"
+      },
+      {
+       "name": "arena-glow-breathe",
+       "dur": 9000,
+       "delay": 0,
+       "iter": null,
+       "target": "battle-arena-glow"
+      },
+      {
+       "name": "enemy-idle",
+       "dur": 3400,
+       "delay": 0,
+       "iter": null,
+       "target": "enemy-avatar"
+      },
+      {
+       "name": "enemy-idle",
+       "dur": 3400,
+       "delay": 0,
+       "iter": null,
+       "target": "player-avatar"
+      },
+      {
+       "name": "portrait-aura-spin",
+       "dur": 14000,
+       "delay": 0,
+       "iter": null,
+       "target": "portrait portrait-otomo"
+      },
+      {
+       "name": "mini-result-fade",
+       "dur": 700,
+       "delay": 0,
+       "iter": 1,
+       "target": "battle-mini-result battle-mini-result-neutral"
+      },
+      {
+       "name": "boss-entrance-fade",
+       "dur": 1500,
+       "delay": 0,
+       "iter": 1,
+       "target": "boss-entrance"
+      },
+      {
+       "name": "boss-entrance-bg",
+       "dur": 1500,
+       "delay": 0,
+       "iter": 1,
+       "target": "boss-entrance-bg"
+      },
+      {
+       "name": "boss-entrance-rise",
+       "dur": 500,
+       "delay": 0,
+       "iter": 1,
+       "target": "boss-entrance-stage"
+      },
+      {
+       "name": "boss-entrance-art",
+       "dur": 600,
+       "delay": 100,
+       "iter": 1,
+       "target": "boss-entrance-art"
+      },
+      {
+       "name": "boss-entrance-rise",
+       "dur": 500,
+       "delay": 300,
+       "iter": 1,
+       "target": "boss-entrance-name"
+      },
+      {
+       "name": "boss-entrance-rise",
+       "dur": 500,
+       "delay": 450,
+       "iter": 1,
+       "target": "boss-entrance-meta"
+      },
+      {
+       "name": "boss-entrance-rise",
+       "dur": 400,
+       "delay": 700,
+       "iter": 1,
+       "target": "boss-entrance-start"
+      }
+     ],
+     "liveAnimsAtEnd": {
+      "particle-drift": 1,
+      "star-twinkle": 1,
+      "magic-circle-spin": 1,
+      "arena-glow-breathe": 1,
+      "enemy-idle": 2,
+      "portrait-aura-spin": 1
+     },
+     "log": [
+      {
+       "t": 74,
+       "kind": "media.play",
+       "src": "/assets/bgm/home.webm",
+       "tag": "AUDIO",
+       "ok": 787
+      },
+      {
+       "t": 389,
+       "kind": "se.start",
+       "dur": 0.11,
+       "when": 0,
+       "ctxTime": 0
+      },
+      {
+       "t": 708,
+       "kind": "se.start",
+       "dur": 0.96,
+       "when": 0.224,
+       "ctxTime": 0.224
+      }
+     ],
+     "cls": [
+      {
+       "t": 281,
+       "v": 0.00001814532764409285,
+       "src": [
+        "[object SVGAnimatedString]",
+        "[object SVGAnimatedString]",
+        "[object SVGAnimatedString]"
+       ]
+      }
+     ],
+     "clsSum": 0,
+     "boxesFirst": {
+      "t": 82,
+      ".battle-topbar": {
+       "x": 134,
+       "y": 41,
+       "w": 1240,
+       "h": 43
+      },
+      ".enemy-avatar": {
+       "x": 238,
+       "y": 204,
+       "w": 290,
+       "h": 194
+      },
+      ".hand": {
+       "x": 134,
+       "y": 490,
+       "w": 1118,
+       "h": 164
+      },
+      ".end-round-button": {
+       "x": 1262,
+       "y": 524,
+       "w": 112,
+       "h": 62
+      },
+      ".god-otomo-plate": {
+       "x": 1059,
+       "y": 113,
+       "w": 294,
+       "h": 76
+      },
+      ".hp-bar-fill": {
+       "x": 164,
+       "y": 145,
+       "w": 438,
+       "h": 18
+      },
+      ".intent": {
+       "x": 164,
+       "y": 167,
+       "w": 44,
+       "h": 25
+      }
+     },
+     "boxesLate": {
+      "t": 3871,
+      ".battle-topbar": {
+       "x": 134,
+       "y": 41,
+       "w": 1240,
+       "h": 43
+      },
+      ".enemy-avatar": {
+       "x": 238,
+       "y": 203,
+       "w": 290,
+       "h": 194
+      },
+      ".hand": {
+       "x": 134,
+       "y": 490,
+       "w": 1118,
+       "h": 164
+      },
+      ".end-round-button": {
+       "x": 1262,
+       "y": 524,
+       "w": 112,
+       "h": 62
+      },
+      ".god-otomo-plate": {
+       "x": 1059,
+       "y": 113,
+       "w": 294,
+       "h": 76
+      },
+      ".hp-bar-fill": {
+       "x": 164,
+       "y": 145,
+       "w": 438,
+       "h": 18
+      },
+      ".intent": {
+       "x": 164,
+       "y": 167,
+       "w": 44,
+       "h": 25
+      }
+     },
+     "hudBoxDiff": {
+      ".battle-topbar": 0,
+      ".enemy-avatar": {
+       "first": {
+        "x": 238,
+        "y": 204,
+        "w": 290,
+        "h": 194
+       },
+       "late": {
+        "x": 238,
+        "y": 203,
+        "w": 290,
+        "h": 194
+       }
+      },
+      ".hand": 0,
+      ".end-round-button": 0,
+      ".god-otomo-plate": 0,
+      ".hp-bar-fill": 0,
+      ".intent": 0
+     }
+    },
+    "battleReqs": [
+     {
+      "url": "/assets/gods/taiyo/front_640.webp",
+      "bytes": 101898,
+      "afterClickMs": 407
+     },
+     {
+      "url": "/assets/otomo/kozuchi/spirit_320.webp",
+      "bytes": 24616,
+      "afterClickMs": 409
+     },
+     {
+      "url": "/assets/gods/taiyo/god-strike-v2-poster.webp",
+      "bytes": 61866,
+      "afterClickMs": 413
+     },
+     {
+      "url": "/assets/se/card_draw.wav",
+      "bytes": 4896,
+      "afterClickMs": 426
+     },
+     {
+      "url": "/assets/se/card_play.wav",
+      "bytes": 2690,
+      "afterClickMs": 426
+     },
+     {
+      "url": "/assets/se/divination.wav",
+      "bytes": 12834,
+      "afterClickMs": 426
+     },
+     {
+      "url": "/assets/se/hit_l1.wav",
+      "bytes": 5336,
+      "afterClickMs": 427
+     },
+     {
+      "url": "/assets/se/hit_l2.wav",
+      "bytes": 7542,
+      "afterClickMs": 427
+     },
+     {
+      "url": "/assets/se/hit_l3.wav",
+      "bytes": 11510,
+      "afterClickMs": 427
+     },
+     {
+      "url": "/assets/se/hit_l4.wav",
+      "bytes": 25622,
+      "afterClickMs": 427
+     },
+     {
+      "url": "/assets/se/self_hit.wav",
+      "bytes": 6660,
+      "afterClickMs": 428
+     },
+     {
+      "url": "/assets/se/self_hit_heavy.wav",
+      "bytes": 18566,
+      "afterClickMs": 428
+     },
+     {
+      "url": "/assets/se/block.wav",
+      "bytes": 4014,
+      "afterClickMs": 428
+     },
+     {
+      "url": "/assets/se/heal.wav",
+      "bytes": 19448,
+      "afterClickMs": 429
+     },
+     {
+      "url": "/assets/se/resonance_gain.wav",
+      "bytes": 6660,
+      "afterClickMs": 429
+     },
+     {
+      "url": "/assets/se/burst_ready.wav",
+      "bytes": 18566,
+      "afterClickMs": 429
+     },
+     {
+      "url": "/assets/se/evolve.wav",
+      "bytes": 28710,
+      "afterClickMs": 429
+     },
+     {
+      "url": "/assets/se/enemy_turn.wav",
+      "bytes": 6660,
+      "afterClickMs": 430
+     },
+     {
+      "url": "/assets/se/enemy_charge.wav",
+      "bytes": 22094,
+      "afterClickMs": 430
+     },
+     {
+      "url": "/assets/se/boss_entrance.wav",
+      "bytes": 42380,
+      "afterClickMs": 453
+     },
+     {
+      "url": "/assets/se/reward.wav",
+      "bytes": 22536,
+      "afterClickMs": 455
+     },
+     {
+      "url": "/assets/se/victory_sting.wav",
+      "bytes": 39734,
+      "afterClickMs": 455
+     },
+     {
+      "url": "/assets/se/defeat_sting.wav",
+      "bytes": 30914,
+      "afterClickMs": 457
+     },
+     {
+      "url": "/assets/gods/taiyo/god-strike-v2.mp4",
+      "bytes": 166058,
+      "afterClickMs": 741
+     },
+     {
+      "url": "/assets/bgm/battle.webm",
+      "bytes": 1945366,
+      "afterClickMs": 748
+     }
+    ],
+    "shots": null,
+    "errors": []
+   },
+   "normal2": {
+    "home": {
+     "primaryVisibleMs_node": 1058,
+     "domContentLoaded": 94,
+     "load": 94,
+     "paints": {
+      "first-paint": 644,
+      "first-contentful-paint": 1100
+     },
+     "lcp": [
+      {
+       "t": 1100,
+       "size": 42592,
+       "el": "home-title",
+       "url": ""
+      },
+      {
+       "t": 1144,
+       "size": 517440,
+       "el": "home-hero-img",
+       "url": "/assets/gods/ebisu/keyvisual-hero.webp"
+      }
+     ],
+     "heroSrc": "/assets/gods/ebisu/keyvisual-hero.webp",
+     "heroLoadedAt": 672,
+     "heroBytes": 523108,
+     "homeAnimations": {
+      "particle-drift": 1,
+      "star-twinkle": 1,
+      "magic-circle-spin": 1
+     },
+     "homeClsSum": 0,
+     "homeLog": [
+      {
+       "t": 874,
+       "kind": "media.play",
+       "src": "/assets/bgm/home.webm",
+       "tag": "AUDIO",
+       "rejected": "NotAllowedError"
+      }
+     ],
+     "primaryText": "初陣へおすすめの構成ですぐ戦う"
+    },
+    "steps": {
+     "home_to_godSelect": 383,
+     "godCard_to_confirm": 137,
+     "godConfirm_to_enemySelect": 407,
+     "enemy_to_deckBuilder": 605
+    },
+    "probe": {
+     "tAfterClick": 3,
+     "marks": {
+      "battleScreenMounted": 72,
+      "bossEntranceShown": 72,
+      "bossEntranceLastSeen": 1560,
+      "enemyAvatarVisible": 72,
+      "handCardsPresent": 72,
+      "handCardEnabled": 72,
+      "endRoundEnabled": 72,
+      "bossEntranceGone": 1588
+     },
+     "frames": {
+      "n": 81,
+      "over33": 55,
+      "over50": 28,
+      "max": 259,
+      "median": 44
+     },
+     "animsAt120ms": [
+      {
+       "name": "particle-drift",
+       "dur": 140000,
+       "delay": 0,
+       "iter": null,
+       "target": "battle-viewport"
+      },
+      {
+       "name": "star-twinkle",
+       "dur": 5000,
+       "delay": 0,
+       "iter": null,
+       "target": "battle-viewport"
+      },
+      {
+       "name": "magic-circle-spin",
+       "dur": 120000,
+       "delay": 0,
+       "iter": null,
+       "target": "battle-viewport"
+      },
+      {
+       "name": "arena-glow-breathe",
+       "dur": 9000,
+       "delay": 0,
+       "iter": null,
+       "target": "battle-arena-glow"
+      },
+      {
+       "name": "enemy-idle",
+       "dur": 3400,
+       "delay": 0,
+       "iter": null,
+       "target": "enemy-avatar"
+      },
+      {
+       "name": "enemy-idle",
+       "dur": 3400,
+       "delay": 0,
+       "iter": null,
+       "target": "player-avatar"
+      },
+      {
+       "name": "portrait-aura-spin",
+       "dur": 14000,
+       "delay": 0,
+       "iter": null,
+       "target": "portrait portrait-otomo"
+      },
+      {
+       "name": "mini-result-fade",
+       "dur": 700,
+       "delay": 0,
+       "iter": 1,
+       "target": "battle-mini-result battle-mini-result-neutral"
+      },
+      {
+       "name": "boss-entrance-fade",
+       "dur": 1500,
+       "delay": 0,
+       "iter": 1,
+       "target": "boss-entrance"
+      },
+      {
+       "name": "boss-entrance-bg",
+       "dur": 1500,
+       "delay": 0,
+       "iter": 1,
+       "target": "boss-entrance-bg"
+      },
+      {
+       "name": "boss-entrance-rise",
+       "dur": 500,
+       "delay": 0,
+       "iter": 1,
+       "target": "boss-entrance-stage"
+      },
+      {
+       "name": "boss-entrance-art",
+       "dur": 600,
+       "delay": 100,
+       "iter": 1,
+       "target": "boss-entrance-art"
+      },
+      {
+       "name": "boss-entrance-rise",
+       "dur": 500,
+       "delay": 300,
+       "iter": 1,
+       "target": "boss-entrance-name"
+      },
+      {
+       "name": "boss-entrance-rise",
+       "dur": 500,
+       "delay": 450,
+       "iter": 1,
+       "target": "boss-entrance-meta"
+      },
+      {
+       "name": "boss-entrance-rise",
+       "dur": 400,
+       "delay": 700,
+       "iter": 1,
+       "target": "boss-entrance-start"
+      }
+     ],
+     "liveAnimsAtEnd": {
+      "particle-drift": 1,
+      "star-twinkle": 1,
+      "magic-circle-spin": 1,
+      "arena-glow-breathe": 1,
+      "enemy-idle": 2,
+      "portrait-aura-spin": 1
+     },
+     "log": [
+      {
+       "t": 67,
+       "kind": "media.play",
+       "src": "/assets/bgm/home.webm",
+       "tag": "AUDIO",
+       "ok": 955
+      },
+      {
+       "t": 205,
+       "kind": "se.start",
+       "dur": 0.11,
+       "when": 0,
+       "ctxTime": 0
+      },
+      {
+       "t": 721,
+       "kind": "se.start",
+       "dur": 0.96,
+       "when": 0.17066666666666666,
+       "ctxTime": 0.171
+      }
+     ],
+     "cls": [
+      {
+       "t": 189,
+       "v": 0.00001814532764409285,
+       "src": [
+        "[object SVGAnimatedString]",
+        "[object SVGAnimatedString]",
+        "[object SVGAnimatedString]"
+       ]
+      }
+     ],
+     "clsSum": 0,
+     "boxesFirst": {
+      "t": 72,
+      ".battle-topbar": {
+       "x": 134,
+       "y": 41,
+       "w": 1240,
+       "h": 43
+      },
+      ".enemy-avatar": {
+       "x": 238,
+       "y": 204,
+       "w": 290,
+       "h": 194
+      },
+      ".hand": {
+       "x": 134,
+       "y": 490,
+       "w": 1118,
+       "h": 164
+      },
+      ".end-round-button": {
+       "x": 1262,
+       "y": 524,
+       "w": 112,
+       "h": 62
+      },
+      ".god-otomo-plate": {
+       "x": 1059,
+       "y": 113,
+       "w": 294,
+       "h": 76
+      },
+      ".hp-bar-fill": {
+       "x": 164,
+       "y": 145,
+       "w": 438,
+       "h": 18
+      },
+      ".intent": {
+       "x": 164,
+       "y": 167,
+       "w": 44,
+       "h": 25
+      }
+     },
+     "boxesLate": {
+      "t": 3867,
+      ".battle-topbar": {
+       "x": 134,
+       "y": 41,
+       "w": 1240,
+       "h": 43
+      },
+      ".enemy-avatar": {
+       "x": 238,
+       "y": 203,
+       "w": 290,
+       "h": 194
+      },
+      ".hand": {
+       "x": 134,
+       "y": 490,
+       "w": 1118,
+       "h": 164
+      },
+      ".end-round-button": {
+       "x": 1262,
+       "y": 524,
+       "w": 112,
+       "h": 62
+      },
+      ".god-otomo-plate": {
+       "x": 1059,
+       "y": 113,
+       "w": 294,
+       "h": 76
+      },
+      ".hp-bar-fill": {
+       "x": 164,
+       "y": 145,
+       "w": 438,
+       "h": 18
+      },
+      ".intent": {
+       "x": 164,
+       "y": 167,
+       "w": 44,
+       "h": 25
+      }
+     },
+     "hudBoxDiff": {
+      ".battle-topbar": 0,
+      ".enemy-avatar": {
+       "first": {
+        "x": 238,
+        "y": 204,
+        "w": 290,
+        "h": 194
+       },
+       "late": {
+        "x": 238,
+        "y": 203,
+        "w": 290,
+        "h": 194
+       }
+      },
+      ".hand": 0,
+      ".end-round-button": 0,
+      ".god-otomo-plate": 0,
+      ".hp-bar-fill": 0,
+      ".intent": 0
+     }
+    },
+    "battleReqs": [
+     {
+      "url": "/assets/se/card_draw.wav",
+      "bytes": 4896,
+      "afterClickMs": 213
+     },
+     {
+      "url": "/assets/se/card_play.wav",
+      "bytes": 2690,
+      "afterClickMs": 219
+     },
+     {
+      "url": "/assets/se/divination.wav",
+      "bytes": 12834,
+      "afterClickMs": 256
+     },
+     {
+      "url": "/assets/se/hit_l1.wav",
+      "bytes": 5336,
+      "afterClickMs": 256
+     },
+     {
+      "url": "/assets/se/hit_l2.wav",
+      "bytes": 7542,
+      "afterClickMs": 540
+     },
+     {
+      "url": "/assets/se/hit_l3.wav",
+      "bytes": 11510,
+      "afterClickMs": 540
+     },
+     {
+      "url": "/assets/se/hit_l4.wav",
+      "bytes": 25622,
+      "afterClickMs": 609
+     },
+     {
+      "url": "/assets/se/block.wav",
+      "bytes": 4014,
+      "afterClickMs": 610
+     },
+     {
+      "url": "/assets/se/self_hit.wav",
+      "bytes": 6660,
+      "afterClickMs": 611
+     },
+     {
+      "url": "/assets/se/self_hit_heavy.wav",
+      "bytes": 18566,
+      "afterClickMs": 611
+     },
+     {
+      "url": "/assets/se/resonance_gain.wav",
+      "bytes": 6660,
+      "afterClickMs": 611
+     },
+     {
+      "url": "/assets/se/heal.wav",
+      "bytes": 19448,
+      "afterClickMs": 612
+     },
+     {
+      "url": "/assets/se/burst_ready.wav",
+      "bytes": 18566,
+      "afterClickMs": 692
+     },
+     {
+      "url": "/assets/se/evolve.wav",
+      "bytes": 28710,
+      "afterClickMs": 724
+     },
+     {
+      "url": "/assets/se/enemy_turn.wav",
+      "bytes": 6660,
+      "afterClickMs": 726
+     },
+     {
+      "url": "/assets/se/reward.wav",
+      "bytes": 22536,
+      "afterClickMs": 726
+     },
+     {
+      "url": "/assets/se/enemy_charge.wav",
+      "bytes": 22094,
+      "afterClickMs": 727
+     },
+     {
+      "url": "/assets/se/boss_entrance.wav",
+      "bytes": 42380,
+      "afterClickMs": 727
+     },
+     {
+      "url": "/assets/se/victory_sting.wav",
+      "bytes": 39734,
+      "afterClickMs": 875
+     },
+     {
+      "url": "/assets/se/defeat_sting.wav",
+      "bytes": 30914,
+      "afterClickMs": 878
+     },
+     {
+      "url": "/assets/gods/taiyo/god-strike-v2-poster.webp",
+      "bytes": 61866,
+      "afterClickMs": 880
+     },
+     {
+      "url": "/assets/otomo/kozuchi/spirit_320.webp",
+      "bytes": 24616,
+      "afterClickMs": 881
+     },
+     {
+      "url": "/assets/gods/taiyo/front_640.webp",
+      "bytes": 101898,
+      "afterClickMs": 900
+     },
+     {
+      "url": "/assets/gods/taiyo/god-strike-v2.mp4",
+      "bytes": 166058,
+      "afterClickMs": 902
+     },
+     {
+      "url": "/assets/bgm/battle.webm",
+      "bytes": 1945366,
+      "afterClickMs": 1016
+     }
+    ],
+    "shots": null,
+    "errors": []
+   },
+   "reduced": {
+    "home": {
+     "primaryVisibleMs_node": 811,
+     "domContentLoaded": 102,
+     "load": 102,
+     "paints": {
+      "first-paint": 556,
+      "first-contentful-paint": 812
+     },
+     "lcp": [
+      {
+       "t": 812,
+       "size": 517440,
+       "el": "home-hero-img",
+       "url": "/assets/gods/ebisu/keyvisual-hero.webp"
+      }
+     ],
+     "heroSrc": "/assets/gods/ebisu/keyvisual-hero.webp",
+     "heroLoadedAt": 132,
+     "heroBytes": 523108,
+     "homeAnimations": {},
+     "homeClsSum": 0,
+     "homeLog": [
+      {
+       "t": 750,
+       "kind": "media.play",
+       "src": "/assets/bgm/home.webm",
+       "tag": "AUDIO",
+       "rejected": "NotAllowedError"
+      }
+     ],
+     "primaryText": "初陣へおすすめの構成ですぐ戦う"
+    },
+    "steps": {
+     "home_to_godSelect": 286,
+     "godCard_to_confirm": 435,
+     "godConfirm_to_enemySelect": 202,
+     "enemy_to_deckBuilder": 354
+    },
+    "probe": {
+     "tAfterClick": 2,
+     "marks": {
+      "battleScreenMounted": 56,
+      "bossEntranceShown": 56,
+      "bossEntranceLastSeen": 957,
+      "enemyAvatarVisible": 56,
+      "handCardsPresent": 56,
+      "handCardEnabled": 56,
+      "endRoundEnabled": 56,
+      "bossEntranceGone": 974
+     },
+     "frames": {
+      "n": 178,
+      "over33": 4,
+      "over50": 3,
+      "max": 144,
+      "median": 21
+     },
+     "animsAt120ms": [
+      {
+       "name": "arena-glow-breathe",
+       "dur": 9000,
+       "delay": 0,
+       "iter": null,
+       "target": "battle-arena-glow"
+      },
+      {
+       "name": "enemy-idle",
+       "dur": 3400,
+       "delay": 0,
+       "iter": null,
+       "target": "enemy-avatar"
+      },
+      {
+       "name": "enemy-idle",
+       "dur": 3400,
+       "delay": 0,
+       "iter": null,
+       "target": "player-avatar"
+      },
+      {
+       "name": "portrait-aura-spin",
+       "dur": 14000,
+       "delay": 0,
+       "iter": null,
+       "target": "portrait portrait-otomo"
+      },
+      {
+       "name": "mini-result-fade",
+       "dur": 700,
+       "delay": 0,
+       "iter": 1,
+       "target": "battle-mini-result battle-mini-result-neutral"
+      },
+      {
+       "name": "boss-entrance-fade-reduced",
+       "dur": 900,
+       "delay": 0,
+       "iter": 1,
+       "target": "boss-entrance boss-entrance-reduced"
+      }
+     ],
+     "liveAnimsAtEnd": {
+      "arena-glow-breathe": 1,
+      "enemy-idle": 2,
+      "portrait-aura-spin": 1
+     },
+     "log": [
+      {
+       "t": 50,
+       "kind": "media.play",
+       "src": "/assets/bgm/home.webm",
+       "tag": "AUDIO",
+       "ok": 445
+      },
+      {
+       "t": 406,
+       "kind": "se.start",
+       "dur": 0.11,
+       "when": 0.256,
+       "ctxTime": 0.256
+      },
+      {
+       "t": 408,
+       "kind": "se.start",
+       "dur": 0.96,
+       "when": 0.256,
+       "ctxTime": 0.256
+      }
+     ],
+     "cls": [
+      {
+       "t": 177,
+       "v": 0.00001814532764409285,
+       "src": [
+        "[object SVGAnimatedString]",
+        "[object SVGAnimatedString]",
+        "[object SVGAnimatedString]"
+       ]
+      }
+     ],
+     "clsSum": 0,
+     "boxesFirst": {
+      "t": 56,
+      ".battle-topbar": {
+       "x": 134,
+       "y": 41,
+       "w": 1240,
+       "h": 43
+      },
+      ".enemy-avatar": {
+       "x": 238,
+       "y": 204,
+       "w": 290,
+       "h": 194
+      },
+      ".hand": {
+       "x": 134,
+       "y": 490,
+       "w": 1118,
+       "h": 164
+      },
+      ".end-round-button": {
+       "x": 1262,
+       "y": 524,
+       "w": 112,
+       "h": 62
+      },
+      ".god-otomo-plate": {
+       "x": 1059,
+       "y": 113,
+       "w": 294,
+       "h": 76
+      },
+      ".hp-bar-fill": {
+       "x": 164,
+       "y": 145,
+       "w": 438,
+       "h": 18
+      },
+      ".intent": {
+       "x": 164,
+       "y": 167,
+       "w": 44,
+       "h": 25
+      }
+     },
+     "boxesLate": {
+      "t": 3861,
+      ".battle-topbar": {
+       "x": 134,
+       "y": 41,
+       "w": 1240,
+       "h": 43
+      },
+      ".enemy-avatar": {
+       "x": 238,
+       "y": 203,
+       "w": 290,
+       "h": 194
+      },
+      ".hand": {
+       "x": 134,
+       "y": 490,
+       "w": 1118,
+       "h": 164
+      },
+      ".end-round-button": {
+       "x": 1262,
+       "y": 524,
+       "w": 112,
+       "h": 62
+      },
+      ".god-otomo-plate": {
+       "x": 1059,
+       "y": 113,
+       "w": 294,
+       "h": 76
+      },
+      ".hp-bar-fill": {
+       "x": 164,
+       "y": 145,
+       "w": 438,
+       "h": 18
+      },
+      ".intent": {
+       "x": 164,
+       "y": 167,
+       "w": 44,
+       "h": 25
+      }
+     },
+     "hudBoxDiff": {
+      ".battle-topbar": 0,
+      ".enemy-avatar": {
+       "first": {
+        "x": 238,
+        "y": 204,
+        "w": 290,
+        "h": 194
+       },
+       "late": {
+        "x": 238,
+        "y": 203,
+        "w": 290,
+        "h": 194
+       }
+      },
+      ".hand": 0,
+      ".end-round-button": 0,
+      ".god-otomo-plate": 0,
+      ".hp-bar-fill": 0,
+      ".intent": 0
+     }
+    },
+    "battleReqs": [
+     {
+      "url": "/assets/gods/taiyo/front_640.webp",
+      "bytes": 101898,
+      "afterClickMs": 186
+     },
+     {
+      "url": "/assets/otomo/kozuchi/spirit_320.webp",
+      "bytes": 24616,
+      "afterClickMs": 186
+     },
+     {
+      "url": "/assets/se/card_draw.wav",
+      "bytes": 4896,
+      "afterClickMs": 200
+     },
+     {
+      "url": "/assets/se/card_play.wav",
+      "bytes": 2690,
+      "afterClickMs": 202
+     },
+     {
+      "url": "/assets/se/divination.wav",
+      "bytes": 12834,
+      "afterClickMs": 206
+     },
+     {
+      "url": "/assets/se/hit_l2.wav",
+      "bytes": 7542,
+      "afterClickMs": 207
+     },
+     {
+      "url": "/assets/se/hit_l1.wav",
+      "bytes": 5336,
+      "afterClickMs": 207
+     },
+     {
+      "url": "/assets/se/hit_l3.wav",
+      "bytes": 11510,
+      "afterClickMs": 207
+     },
+     {
+      "url": "/assets/se/hit_l4.wav",
+      "bytes": 25622,
+      "afterClickMs": 208
+     },
+     {
+      "url": "/assets/se/self_hit.wav",
+      "bytes": 6660,
+      "afterClickMs": 208
+     },
+     {
+      "url": "/assets/se/self_hit_heavy.wav",
+      "bytes": 18566,
+      "afterClickMs": 208
+     },
+     {
+      "url": "/assets/se/block.wav",
+      "bytes": 4014,
+      "afterClickMs": 209
+     },
+     {
+      "url": "/assets/se/burst_ready.wav",
+      "bytes": 18566,
+      "afterClickMs": 209
+     },
+     {
+      "url": "/assets/se/resonance_gain.wav",
+      "bytes": 6660,
+      "afterClickMs": 209
+     },
+     {
+      "url": "/assets/se/heal.wav",
+      "bytes": 19448,
+      "afterClickMs": 209
+     },
+     {
+      "url": "/assets/se/evolve.wav",
+      "bytes": 28710,
+      "afterClickMs": 209
+     },
+     {
+      "url": "/assets/se/enemy_turn.wav",
+      "bytes": 6660,
+      "afterClickMs": 210
+     },
+     {
+      "url": "/assets/se/enemy_charge.wav",
+      "bytes": 22094,
+      "afterClickMs": 210
+     },
+     {
+      "url": "/assets/se/boss_entrance.wav",
+      "bytes": 42380,
+      "afterClickMs": 210
+     },
+     {
+      "url": "/assets/se/reward.wav",
+      "bytes": 22536,
+      "afterClickMs": 211
+     },
+     {
+      "url": "/assets/se/defeat_sting.wav",
+      "bytes": 30914,
+      "afterClickMs": 219
+     },
+     {
+      "url": "/assets/se/victory_sting.wav",
+      "bytes": 39734,
+      "afterClickMs": 220
+     },
+     {
+      "url": "/assets/bgm/battle.webm",
+      "bytes": 1945366,
+      "afterClickMs": 409
+     }
+    ],
+    "shots": null,
+    "errors": []
+   },
+   "firstBattle": {
+    "home": {
+     "primaryText": "初陣へおすすめの構成ですぐ戦う",
+     "lcp": [
+      {
+       "t": 960,
+       "size": 517440,
+       "el": "home-hero-img",
+       "url": "/assets/gods/ebisu/keyvisual-hero.webp"
+      }
+     ],
+     "paints": {
+      "first-paint": 652,
+      "first-contentful-paint": 960
+     }
+    },
+    "steps": {
+     "firstBattle_to_brief": 175
+    },
+    "probe": {
+     "tAfterClick": 2,
+     "marks": {
+      "battleScreenMounted": 72,
+      "bossEntranceShown": 72,
+      "bossEntranceLastSeen": 1572,
+      "enemyAvatarVisible": 72,
+      "handCardsPresent": 72,
+      "handCardEnabled": 72,
+      "endRoundEnabled": 72,
+      "bossEntranceGone": 1587
+     },
+     "frames": {
+      "n": 85,
+      "over33": 40,
+      "over50": 10,
+      "max": 184,
+      "median": 22
+     },
+     "animsAt120ms": [
+      {
+       "name": "particle-drift",
+       "dur": 140000,
+       "delay": 0,
+       "iter": null,
+       "target": "battle-viewport"
+      },
+      {
+       "name": "star-twinkle",
+       "dur": 5000,
+       "delay": 0,
+       "iter": null,
+       "target": "battle-viewport"
+      },
+      {
+       "name": "magic-circle-spin",
+       "dur": 120000,
+       "delay": 0,
+       "iter": null,
+       "target": "battle-viewport"
+      },
+      {
+       "name": "arena-glow-breathe",
+       "dur": 9000,
+       "delay": 0,
+       "iter": null,
+       "target": "battle-arena-glow"
+      },
+      {
+       "name": "enemy-idle",
+       "dur": 3400,
+       "delay": 0,
+       "iter": null,
+       "target": "enemy-avatar"
+      },
+      {
+       "name": "enemy-idle",
+       "dur": 3400,
+       "delay": 0,
+       "iter": null,
+       "target": "player-avatar"
+      },
+      {
+       "name": "portrait-aura-spin",
+       "dur": 14000,
+       "delay": 0,
+       "iter": null,
+       "target": "portrait portrait-otomo"
+      },
+      {
+       "name": "mini-result-fade",
+       "dur": 700,
+       "delay": 0,
+       "iter": 1,
+       "target": "battle-mini-result battle-mini-result-neutral"
+      },
+      {
+       "name": "boss-entrance-fade",
+       "dur": 1500,
+       "delay": 0,
+       "iter": 1,
+       "target": "boss-entrance"
+      },
+      {
+       "name": "boss-entrance-bg",
+       "dur": 1500,
+       "delay": 0,
+       "iter": 1,
+       "target": "boss-entrance-bg"
+      },
+      {
+       "name": "boss-entrance-rise",
+       "dur": 500,
+       "delay": 0,
+       "iter": 1,
+       "target": "boss-entrance-stage"
+      },
+      {
+       "name": "boss-entrance-art",
+       "dur": 600,
+       "delay": 100,
+       "iter": 1,
+       "target": "boss-entrance-art"
+      },
+      {
+       "name": "boss-entrance-rise",
+       "dur": 500,
+       "delay": 300,
+       "iter": 1,
+       "target": "boss-entrance-name"
+      },
+      {
+       "name": "boss-entrance-rise",
+       "dur": 500,
+       "delay": 450,
+       "iter": 1,
+       "target": "boss-entrance-meta"
+      },
+      {
+       "name": "boss-entrance-rise",
+       "dur": 400,
+       "delay": 700,
+       "iter": 1,
+       "target": "boss-entrance-start"
+      }
+     ],
+     "liveAnimsAtEnd": {
+      "particle-drift": 1,
+      "star-twinkle": 1,
+      "magic-circle-spin": 1,
+      "arena-glow-breathe": 1,
+      "enemy-idle": 2,
+      "portrait-aura-spin": 1
+     },
+     "log": [
+      {
+       "t": 64,
+       "kind": "media.play",
+       "src": "/assets/bgm/home.webm",
+       "tag": "AUDIO",
+       "ok": 549
+      },
+      {
+       "t": 268,
+       "kind": "se.start",
+       "dur": 0.11,
+       "when": 0.07466666666666667,
+       "ctxTime": 0.075
+      },
+      {
+       "t": 396,
+       "kind": "se.start",
+       "dur": 0.96,
+       "when": 0.20266666666666666,
+       "ctxTime": 0.203
+      }
+     ],
+     "cls": [
+      {
+       "t": 237,
+       "v": 0.00001814532764409285,
+       "src": [
+        "[object SVGAnimatedString]",
+        "[object SVGAnimatedString]",
+        "[object SVGAnimatedString]"
+       ]
+      }
+     ],
+     "clsSum": 0,
+     "boxesFirst": {
+      "t": 72,
+      ".battle-topbar": {
+       "x": 134,
+       "y": 41,
+       "w": 1240,
+       "h": 43
+      },
+      ".enemy-avatar": {
+       "x": 238,
+       "y": 204,
+       "w": 290,
+       "h": 194
+      },
+      ".hand": {
+       "x": 134,
+       "y": 490,
+       "w": 1118,
+       "h": 164
+      },
+      ".end-round-button": {
+       "x": 1262,
+       "y": 524,
+       "w": 112,
+       "h": 62
+      },
+      ".god-otomo-plate": {
+       "x": 1059,
+       "y": 113,
+       "w": 294,
+       "h": 76
+      },
+      ".hp-bar-fill": {
+       "x": 164,
+       "y": 145,
+       "w": 438,
+       "h": 18
+      },
+      ".intent": {
+       "x": 164,
+       "y": 167,
+       "w": 43,
+       "h": 25
+      }
+     },
+     "boxesLate": {
+      "t": 2868,
+      ".battle-topbar": {
+       "x": 134,
+       "y": 41,
+       "w": 1240,
+       "h": 43
+      },
+      ".enemy-avatar": {
+       "x": 237,
+       "y": 201,
+       "w": 292,
+       "h": 195
+      },
+      ".hand": {
+       "x": 134,
+       "y": 490,
+       "w": 1118,
+       "h": 164
+      },
+      ".end-round-button": {
+       "x": 1262,
+       "y": 524,
+       "w": 112,
+       "h": 62
+      },
+      ".god-otomo-plate": {
+       "x": 1059,
+       "y": 113,
+       "w": 294,
+       "h": 76
+      },
+      ".hp-bar-fill": {
+       "x": 164,
+       "y": 145,
+       "w": 438,
+       "h": 18
+      },
+      ".intent": {
+       "x": 164,
+       "y": 167,
+       "w": 43,
+       "h": 25
+      }
+     },
+     "hudBoxDiff": {
+      ".battle-topbar": 0,
+      ".enemy-avatar": {
+       "first": {
+        "x": 238,
+        "y": 204,
+        "w": 290,
+        "h": 194
+       },
+       "late": {
+        "x": 237,
+        "y": 201,
+        "w": 292,
+        "h": 195
+       }
+      },
+      ".hand": 0,
+      ".end-round-button": 0,
+      ".god-otomo-plate": 0,
+      ".hp-bar-fill": 0,
+      ".intent": 0
+     }
+    },
+    "resumeText": "続きから恵比寿 vs 試練の影・ラウンド1",
+    "resume": {
+     "tAfterClick": 1,
+     "marks": {
+      "battleScreenMounted": 19,
+      "enemyAvatarVisible": 19,
+      "handCardsPresent": 19,
+      "handCardEnabled": 19,
+      "endRoundEnabled": 19
+     },
+     "frames": {
+      "n": 54,
+      "over33": 52,
+      "over50": 11,
+      "max": 143,
+      "median": 44
+     },
+     "animsAt120ms": [
+      {
+       "name": "particle-drift",
+       "dur": 140000,
+       "delay": 0,
+       "iter": null,
+       "target": "battle-viewport"
+      },
+      {
+       "name": "star-twinkle",
+       "dur": 5000,
+       "delay": 0,
+       "iter": null,
+       "target": "battle-viewport"
+      },
+      {
+       "name": "magic-circle-spin",
+       "dur": 120000,
+       "delay": 0,
+       "iter": null,
+       "target": "battle-viewport"
+      },
+      {
+       "name": "arena-glow-breathe",
+       "dur": 9000,
+       "delay": 0,
+       "iter": null,
+       "target": "battle-arena-glow"
+      },
+      {
+       "name": "enemy-idle",
+       "dur": 3400,
+       "delay": 0,
+       "iter": null,
+       "target": "enemy-avatar"
+      },
+      {
+       "name": "enemy-idle",
+       "dur": 3400,
+       "delay": 0,
+       "iter": null,
+       "target": "player-avatar"
+      },
+      {
+       "name": "portrait-aura-spin",
+       "dur": 14000,
+       "delay": 0,
+       "iter": null,
+       "target": "portrait portrait-otomo"
+      }
+     ],
+     "liveAnimsAtEnd": {
+      "particle-drift": 1,
+      "star-twinkle": 1,
+      "magic-circle-spin": 1,
+      "arena-glow-breathe": 1,
+      "enemy-idle": 2,
+      "portrait-aura-spin": 1
+     },
+     "log": [
+      {
+       "t": 13,
+       "kind": "media.play",
+       "src": "/assets/bgm/home.webm",
+       "tag": "AUDIO",
+       "ok": 219
+      }
+     ],
+     "cls": [
+      {
+       "t": 31,
+       "v": 0.00001814532764409285,
+       "src": [
+        "[object SVGAnimatedString]",
+        "[object SVGAnimatedString]",
+        "[object SVGAnimatedString]"
+       ]
+      }
+     ],
+     "clsSum": 0,
+     "boxesFirst": {
+      "t": 19,
+      ".battle-topbar": {
+       "x": 134,
+       "y": 41,
+       "w": 1240,
+       "h": 43
+      },
+      ".enemy-avatar": {
+       "x": 238,
+       "y": 204,
+       "w": 290,
+       "h": 194
+      },
+      ".hand": {
+       "x": 134,
+       "y": 490,
+       "w": 1118,
+       "h": 164
+      },
+      ".end-round-button": {
+       "x": 1262,
+       "y": 524,
+       "w": 112,
+       "h": 62
+      },
+      ".god-otomo-plate": {
+       "x": 1059,
+       "y": 113,
+       "w": 294,
+       "h": 76
+      },
+      ".hp-bar-fill": {
+       "x": 164,
+       "y": 145,
+       "w": 438,
+       "h": 18
+      },
+      ".intent": {
+       "x": 164,
+       "y": 167,
+       "w": 43,
+       "h": 25
+      }
+     },
+     "boxesLate": {
+      "t": 2363,
+      ".battle-topbar": {
+       "x": 134,
+       "y": 41,
+       "w": 1240,
+       "h": 43
+      },
+      ".enemy-avatar": {
+       "x": 236,
+       "y": 200,
+       "w": 294,
+       "h": 196
+      },
+      ".hand": {
+       "x": 134,
+       "y": 490,
+       "w": 1118,
+       "h": 164
+      },
+      ".end-round-button": {
+       "x": 1262,
+       "y": 524,
+       "w": 112,
+       "h": 62
+      },
+      ".god-otomo-plate": {
+       "x": 1059,
+       "y": 113,
+       "w": 294,
+       "h": 76
+      },
+      ".hp-bar-fill": {
+       "x": 164,
+       "y": 145,
+       "w": 438,
+       "h": 18
+      },
+      ".intent": {
+       "x": 164,
+       "y": 167,
+       "w": 43,
+       "h": 25
+      }
+     },
+     "hudBoxDiff": {
+      ".battle-topbar": 0,
+      ".enemy-avatar": {
+       "first": {
+        "x": 238,
+        "y": 204,
+        "w": 290,
+        "h": 194
+       },
+       "late": {
+        "x": 236,
+        "y": 200,
+        "w": 294,
+        "h": 196
+       }
+      },
+      ".hand": 0,
+      ".end-round-button": 0,
+      ".god-otomo-plate": 0,
+      ".hp-bar-fill": 0,
+      ".intent": 0
+     }
+    },
+    "errors": []
+   },
+   "shots": [
+    {
+     "requestedMs": 150,
+     "actualMs": 783,
+     "f": "docs/evidence/decision254/pc1508-battle-start-150ms.jpg"
+    },
+    {
+     "requestedMs": 500,
+     "actualMs": 871,
+     "f": "docs/evidence/decision254/pc1508-battle-start-500ms.jpg"
+    },
+    {
+     "requestedMs": 900,
+     "actualMs": 966,
+     "f": "docs/evidence/decision254/pc1508-battle-start-900ms.jpg"
+    },
+    {
+     "requestedMs": 1300,
+     "actualMs": 1379,
+     "f": "docs/evidence/decision254/pc1508-battle-start-1300ms.jpg"
+    },
+    {
+     "requestedMs": 2200,
+     "actualMs": 2324,
+     "f": "docs/evidence/decision254/pc1508-battle-start-2200ms.jpg"
+    }
+   ]
+  },
+  "sp844": {
+   "normal": {
+    "home": {
+     "primaryVisibleMs_node": 548,
+     "domContentLoaded": 100,
+     "load": 100,
+     "paints": {
+      "first-paint": 232,
+      "first-contentful-paint": 544
+     },
+     "lcp": [
+      {
+       "t": 544,
+       "size": 21328,
+       "el": "home-title",
+       "url": ""
+      },
+      {
+       "t": 560,
+       "size": 144690,
+       "el": "home-hero-img",
+       "url": "/assets/gods/ebisu/keyvisual-hero.webp"
+      }
+     ],
+     "heroSrc": "/assets/gods/ebisu/keyvisual-hero.webp",
+     "heroLoadedAt": 256,
+     "heroBytes": 523108,
+     "homeAnimations": {
+      "particle-drift": 1,
+      "star-twinkle": 1,
+      "magic-circle-spin": 1
+     },
+     "homeClsSum": 0,
+     "homeLog": [
+      {
+       "t": 426,
+       "kind": "media.play",
+       "src": "/assets/bgm/home.webm",
+       "tag": "AUDIO",
+       "rejected": "NotAllowedError"
+      }
+     ],
+     "primaryText": "初陣へおすすめの構成ですぐ戦う"
+    },
+    "steps": {
+     "home_to_godSelect": 239,
+     "godCard_to_confirm": 107,
+     "godConfirm_to_enemySelect": 387,
+     "enemy_to_deckBuilder": 401
+    },
+    "probe": {
+     "tAfterClick": 2,
+     "marks": {
+      "battleScreenMounted": 185,
+      "bossEntranceShown": 185,
+      "bossEntranceLastSeen": 1556,
+      "enemyAvatarVisible": 185,
+      "handCardsPresent": 185,
+      "handCardEnabled": 185,
+      "endRoundEnabled": 185,
+      "bossEntranceGone": 1581
+     },
+     "frames": {
+      "n": 205,
+      "over33": 2,
+      "over50": 1,
+      "max": 202,
+      "median": 17
+     },
+     "animsAt120ms": [
+      {
+       "name": "particle-drift",
+       "dur": 140000,
+       "delay": 0,
+       "iter": null,
+       "target": "battle-viewport"
+      },
+      {
+       "name": "star-twinkle",
+       "dur": 5000,
+       "delay": 0,
+       "iter": null,
+       "target": "battle-viewport"
+      },
+      {
+       "name": "magic-circle-spin",
+       "dur": 120000,
+       "delay": 0,
+       "iter": null,
+       "target": "battle-viewport"
+      },
+      {
+       "name": "arena-glow-breathe",
+       "dur": 9000,
+       "delay": 0,
+       "iter": null,
+       "target": "battle-arena-glow"
+      },
+      {
+       "name": "enemy-line-pop",
+       "dur": 300,
+       "delay": 0,
+       "iter": 1,
+       "target": "enemy-speech-bubble"
+      },
+      {
+       "name": "enemy-idle",
+       "dur": 3400,
+       "delay": 0,
+       "iter": null,
+       "target": "enemy-avatar"
+      },
+      {
+       "name": "enemy-idle",
+       "dur": 3400,
+       "delay": 0,
+       "iter": null,
+       "target": "player-avatar"
+      },
+      {
+       "name": "portrait-aura-spin",
+       "dur": 14000,
+       "delay": 0,
+       "iter": null,
+       "target": "portrait portrait-otomo"
+      },
+      {
+       "name": "boss-entrance-fade",
+       "dur": 1500,
+       "delay": 0,
+       "iter": 1,
+       "target": "boss-entrance"
+      },
+      {
+       "name": "boss-entrance-bg",
+       "dur": 1500,
+       "delay": 0,
+       "iter": 1,
+       "target": "boss-entrance-bg"
+      },
+      {
+       "name": "boss-entrance-rise",
+       "dur": 500,
+       "delay": 0,
+       "iter": 1,
+       "target": "boss-entrance-stage"
+      },
+      {
+       "name": "boss-entrance-art",
+       "dur": 600,
+       "delay": 100,
+       "iter": 1,
+       "target": "boss-entrance-art"
+      },
+      {
+       "name": "boss-entrance-rise",
+       "dur": 500,
+       "delay": 300,
+       "iter": 1,
+       "target": "boss-entrance-name"
+      },
+      {
+       "name": "boss-entrance-rise",
+       "dur": 500,
+       "delay": 450,
+       "iter": 1,
+       "target": "boss-entrance-meta"
+      },
+      {
+       "name": "boss-entrance-rise",
+       "dur": 400,
+       "delay": 700,
+       "iter": 1,
+       "target": "boss-entrance-start"
+      }
+     ],
+     "liveAnimsAtEnd": {
+      "particle-drift": 1,
+      "star-twinkle": 1,
+      "magic-circle-spin": 1,
+      "arena-glow-breathe": 1,
+      "enemy-idle": 2,
+      "portrait-aura-spin": 1
+     },
+     "log": [
+      {
+       "t": 45,
+       "kind": "media.play",
+       "src": "/assets/bgm/home.webm",
+       "tag": "AUDIO",
+       "ok": 607
+      },
+      {
+       "t": 421,
+       "kind": "se.start",
+       "dur": 0.11,
+       "when": 0.24533333333333332,
+       "ctxTime": 0.245
+      },
+      {
+       "t": 423,
+       "kind": "se.start",
+       "dur": 0.96,
+       "when": 0.24533333333333332,
+       "ctxTime": 0.256
+      }
+     ],
+     "cls": [
+      {
+       "t": 184,
+       "v": 0.00009803066141647935,
+       "src": [
+        "[object SVGAnimatedString]",
+        "[object SVGAnimatedString]",
+        "[object SVGAnimatedString]"
+       ]
+      },
+      {
+       "t": 209,
+       "v": 0.0010177781271759395,
+       "src": [
+        "?"
+       ]
+      }
+     ],
+     "clsSum": 0.0011,
+     "boxesFirst": {
+      "t": 185,
+      ".battle-topbar": {
+       "x": 6,
+       "y": 41,
+       "w": 378,
+       "h": 43
+      },
+      ".enemy-avatar": {
+       "x": 10,
+       "y": 389,
+       "w": 176,
+       "h": 168
+      },
+      ".hand": {
+       "x": 6,
+       "y": 650,
+       "w": 378,
+       "h": 188
+      },
+      ".end-round-button": {
+       "x": 272,
+       "y": 582,
+       "w": 58,
+       "h": 44
+      },
+      ".god-otomo-plate": {
+       "x": 294,
+       "y": 109,
+       "w": 73,
+       "h": 94
+      },
+      ".hp-bar-fill": {
+       "x": 30,
+       "y": 136,
+       "w": 110,
+       "h": 18
+      },
+      ".intent": {
+       "x": 30,
+       "y": 158,
+       "w": 37,
+       "h": 21
+      }
+     },
+     "boxesLate": {
+      "t": 3852,
+      ".battle-topbar": {
+       "x": 6,
+       "y": 41,
+       "w": 378,
+       "h": 43
+      },
+      ".enemy-avatar": {
+       "x": 10,
+       "y": 389,
+       "w": 176,
+       "h": 168
+      },
+      ".hand": {
+       "x": 6,
+       "y": 650,
+       "w": 378,
+       "h": 188
+      },
+      ".end-round-button": {
+       "x": 272,
+       "y": 582,
+       "w": 58,
+       "h": 44
+      },
+      ".god-otomo-plate": {
+       "x": 294,
+       "y": 109,
+       "w": 73,
+       "h": 94
+      },
+      ".hp-bar-fill": {
+       "x": 30,
+       "y": 136,
+       "w": 110,
+       "h": 18
+      },
+      ".intent": {
+       "x": 30,
+       "y": 158,
+       "w": 37,
+       "h": 21
+      }
+     },
+     "hudBoxDiff": {
+      ".battle-topbar": 0,
+      ".enemy-avatar": 0,
+      ".hand": 0,
+      ".end-round-button": 0,
+      ".god-otomo-plate": 0,
+      ".hp-bar-fill": 0,
+      ".intent": 0
+     }
+    },
+    "battleReqs": [
+     {
+      "url": "/assets/gods/taiyo/front_640.webp",
+      "bytes": 101898,
+      "afterClickMs": 247
+     },
+     {
+      "url": "/assets/otomo/kozuchi/spirit_320.webp",
+      "bytes": 24616,
+      "afterClickMs": 247
+     },
+     {
+      "url": "/assets/gods/taiyo/god-strike-v2-poster.webp",
+      "bytes": 61866,
+      "afterClickMs": 249
+     },
+     {
+      "url": "/assets/se/card_draw.wav",
+      "bytes": 4896,
+      "afterClickMs": 259
+     },
+     {
+      "url": "/assets/se/divination.wav",
+      "bytes": 12834,
+      "afterClickMs": 260
+     },
+     {
+      "url": "/assets/se/hit_l1.wav",
+      "bytes": 5336,
+      "afterClickMs": 260
+     },
+     {
+      "url": "/assets/se/hit_l2.wav",
+      "bytes": 7542,
+      "afterClickMs": 261
+     },
+     {
+      "url": "/assets/se/card_play.wav",
+      "bytes": 2690,
+      "afterClickMs": 261
+     },
+     {
+      "url": "/assets/se/hit_l3.wav",
+      "bytes": 11510,
+      "afterClickMs": 262
+     },
+     {
+      "url": "/assets/se/hit_l4.wav",
+      "bytes": 25622,
+      "afterClickMs": 262
+     },
+     {
+      "url": "/assets/se/self_hit.wav",
+      "bytes": 6660,
+      "afterClickMs": 262
+     },
+     {
+      "url": "/assets/se/self_hit_heavy.wav",
+      "bytes": 18566,
+      "afterClickMs": 263
+     },
+     {
+      "url": "/assets/se/block.wav",
+      "bytes": 4014,
+      "afterClickMs": 263
+     },
+     {
+      "url": "/assets/se/heal.wav",
+      "bytes": 19448,
+      "afterClickMs": 263
+     },
+     {
+      "url": "/assets/se/resonance_gain.wav",
+      "bytes": 6660,
+      "afterClickMs": 264
+     },
+     {
+      "url": "/assets/se/burst_ready.wav",
+      "bytes": 18566,
+      "afterClickMs": 264
+     },
+     {
+      "url": "/assets/se/evolve.wav",
+      "bytes": 28710,
+      "afterClickMs": 264
+     },
+     {
+      "url": "/assets/se/enemy_turn.wav",
+      "bytes": 6660,
+      "afterClickMs": 265
+     },
+     {
+      "url": "/assets/se/enemy_charge.wav",
+      "bytes": 22094,
+      "afterClickMs": 265
+     },
+     {
+      "url": "/assets/se/boss_entrance.wav",
+      "bytes": 42380,
+      "afterClickMs": 265
+     },
+     {
+      "url": "/assets/se/reward.wav",
+      "bytes": 22536,
+      "afterClickMs": 265
+     },
+     {
+      "url": "/assets/se/victory_sting.wav",
+      "bytes": 39734,
+      "afterClickMs": 266
+     },
+     {
+      "url": "/assets/se/defeat_sting.wav",
+      "bytes": 30914,
+      "afterClickMs": 266
+     },
+     {
+      "url": "/assets/gods/taiyo/god-strike-v2.mp4",
+      "bytes": 166058,
+      "afterClickMs": 386
+     },
+     {
+      "url": "/assets/cards/card_taiyo_support_02.webp",
+      "bytes": 102260,
+      "afterClickMs": 388
+     },
+     {
+      "url": "/assets/cards/card_common_hinder_01.webp",
+      "bytes": 121034,
+      "afterClickMs": 391
+     },
+     {
+      "url": "/assets/bgm/battle.webm",
+      "bytes": 1945366,
+      "afterClickMs": 395
+     }
+    ],
+    "shots": null,
+    "errors": []
+   },
+   "normal2": {
+    "home": {
+     "primaryVisibleMs_node": 670,
+     "domContentLoaded": 109,
+     "load": 109,
+     "paints": {
+      "first-paint": 276,
+      "first-contentful-paint": 644
+     },
+     "lcp": [
+      {
+       "t": 644,
+       "size": 21328,
+       "el": "home-title",
+       "url": ""
+      },
+      {
+       "t": 664,
+       "size": 144690,
+       "el": "home-hero-img",
+       "url": "/assets/gods/ebisu/keyvisual-hero.webp"
+      }
+     ],
+     "heroSrc": "/assets/gods/ebisu/keyvisual-hero.webp",
+     "heroLoadedAt": 305,
+     "heroBytes": 523108,
+     "homeAnimations": {
+      "particle-drift": 1,
+      "star-twinkle": 1,
+      "magic-circle-spin": 1
+     },
+     "homeClsSum": 0,
+     "homeLog": [
+      {
+       "t": 518,
+       "kind": "media.play",
+       "src": "/assets/bgm/home.webm",
+       "tag": "AUDIO",
+       "rejected": "NotAllowedError"
+      }
+     ],
+     "primaryText": "初陣へおすすめの構成ですぐ戦う"
+    },
+    "steps": {
+     "home_to_godSelect": 227,
+     "godCard_to_confirm": 92,
+     "godConfirm_to_enemySelect": 217,
+     "enemy_to_deckBuilder": 361
+    },
+    "probe": {
+     "tAfterClick": 2,
+     "marks": {
+      "battleScreenMounted": 171,
+      "bossEntranceShown": 171,
+      "bossEntranceLastSeen": 1550,
+      "enemyAvatarVisible": 171,
+      "handCardsPresent": 171,
+      "handCardEnabled": 171,
+      "endRoundEnabled": 171,
+      "bossEntranceGone": 1570
+     },
+     "frames": {
+      "n": 205,
+      "over33": 4,
+      "over50": 1,
+      "max": 129,
+      "median": 18
+     },
+     "animsAt120ms": [
+      {
+       "name": "particle-drift",
+       "dur": 140000,
+       "delay": 0,
+       "iter": null,
+       "target": "battle-viewport"
+      },
+      {
+       "name": "star-twinkle",
+       "dur": 5000,
+       "delay": 0,
+       "iter": null,
+       "target": "battle-viewport"
+      },
+      {
+       "name": "magic-circle-spin",
+       "dur": 120000,
+       "delay": 0,
+       "iter": null,
+       "target": "battle-viewport"
+      },
+      {
+       "name": "arena-glow-breathe",
+       "dur": 9000,
+       "delay": 0,
+       "iter": null,
+       "target": "battle-arena-glow"
+      },
+      {
+       "name": "enemy-line-pop",
+       "dur": 300,
+       "delay": 0,
+       "iter": 1,
+       "target": "enemy-speech-bubble"
+      },
+      {
+       "name": "enemy-idle",
+       "dur": 3400,
+       "delay": 0,
+       "iter": null,
+       "target": "enemy-avatar"
+      },
+      {
+       "name": "enemy-idle",
+       "dur": 3400,
+       "delay": 0,
+       "iter": null,
+       "target": "player-avatar"
+      },
+      {
+       "name": "portrait-aura-spin",
+       "dur": 14000,
+       "delay": 0,
+       "iter": null,
+       "target": "portrait portrait-otomo"
+      },
+      {
+       "name": "boss-entrance-fade",
+       "dur": 1500,
+       "delay": 0,
+       "iter": 1,
+       "target": "boss-entrance"
+      },
+      {
+       "name": "boss-entrance-bg",
+       "dur": 1500,
+       "delay": 0,
+       "iter": 1,
+       "target": "boss-entrance-bg"
+      },
+      {
+       "name": "boss-entrance-rise",
+       "dur": 500,
+       "delay": 0,
+       "iter": 1,
+       "target": "boss-entrance-stage"
+      },
+      {
+       "name": "boss-entrance-art",
+       "dur": 600,
+       "delay": 100,
+       "iter": 1,
+       "target": "boss-entrance-art"
+      },
+      {
+       "name": "boss-entrance-rise",
+       "dur": 500,
+       "delay": 300,
+       "iter": 1,
+       "target": "boss-entrance-name"
+      },
+      {
+       "name": "boss-entrance-rise",
+       "dur": 500,
+       "delay": 450,
+       "iter": 1,
+       "target": "boss-entrance-meta"
+      },
+      {
+       "name": "boss-entrance-rise",
+       "dur": 400,
+       "delay": 700,
+       "iter": 1,
+       "target": "boss-entrance-start"
+      }
+     ],
+     "liveAnimsAtEnd": {
+      "particle-drift": 1,
+      "star-twinkle": 1,
+      "magic-circle-spin": 1,
+      "arena-glow-breathe": 1,
+      "enemy-idle": 2,
+      "portrait-aura-spin": 1
+     },
+     "log": [
+      {
+       "t": 38,
+       "kind": "media.play",
+       "src": "/assets/bgm/home.webm",
+       "tag": "AUDIO",
+       "ok": 374
+      },
+      {
+       "t": 282,
+       "kind": "se.start",
+       "dur": 0.11,
+       "when": 0.032,
+       "ctxTime": 0.032
+      },
+      {
+       "t": 357,
+       "kind": "se.start",
+       "dur": 0.96,
+       "when": 0.10666666666666667,
+       "ctxTime": 0.107
+      }
+     ],
+     "cls": [
+      {
+       "t": 170,
+       "v": 0.00009803066141647935,
+       "src": [
+        "[object SVGAnimatedString]",
+        "[object SVGAnimatedString]",
+        "[object SVGAnimatedString]"
+       ]
+      },
+      {
+       "t": 206,
+       "v": 0.0010177781271759395,
+       "src": [
+        "?"
+       ]
+      }
+     ],
+     "clsSum": 0.0011,
+     "boxesFirst": {
+      "t": 171,
+      ".battle-topbar": {
+       "x": 6,
+       "y": 41,
+       "w": 378,
+       "h": 43
+      },
+      ".enemy-avatar": {
+       "x": 10,
+       "y": 389,
+       "w": 176,
+       "h": 168
+      },
+      ".hand": {
+       "x": 6,
+       "y": 650,
+       "w": 378,
+       "h": 188
+      },
+      ".end-round-button": {
+       "x": 272,
+       "y": 582,
+       "w": 58,
+       "h": 44
+      },
+      ".god-otomo-plate": {
+       "x": 294,
+       "y": 109,
+       "w": 73,
+       "h": 94
+      },
+      ".hp-bar-fill": {
+       "x": 30,
+       "y": 136,
+       "w": 110,
+       "h": 18
+      },
+      ".intent": {
+       "x": 30,
+       "y": 158,
+       "w": 37,
+       "h": 21
+      }
+     },
+     "boxesLate": {
+      "t": 3857,
+      ".battle-topbar": {
+       "x": 6,
+       "y": 41,
+       "w": 378,
+       "h": 43
+      },
+      ".enemy-avatar": {
+       "x": 10,
+       "y": 389,
+       "w": 176,
+       "h": 168
+      },
+      ".hand": {
+       "x": 6,
+       "y": 650,
+       "w": 378,
+       "h": 188
+      },
+      ".end-round-button": {
+       "x": 272,
+       "y": 582,
+       "w": 58,
+       "h": 44
+      },
+      ".god-otomo-plate": {
+       "x": 294,
+       "y": 109,
+       "w": 73,
+       "h": 94
+      },
+      ".hp-bar-fill": {
+       "x": 30,
+       "y": 136,
+       "w": 110,
+       "h": 18
+      },
+      ".intent": {
+       "x": 30,
+       "y": 158,
+       "w": 37,
+       "h": 21
+      }
+     },
+     "hudBoxDiff": {
+      ".battle-topbar": 0,
+      ".enemy-avatar": 0,
+      ".hand": 0,
+      ".end-round-button": 0,
+      ".god-otomo-plate": 0,
+      ".hp-bar-fill": 0,
+      ".intent": 0
+     }
+    },
+    "battleReqs": [
+     {
+      "url": "/assets/gods/taiyo/front_640.webp",
+      "bytes": 101898,
+      "afterClickMs": 241
+     },
+     {
+      "url": "/assets/gods/taiyo/god-strike-v2-poster.webp",
+      "bytes": 61866,
+      "afterClickMs": 242
+     },
+     {
+      "url": "/assets/otomo/kozuchi/spirit_320.webp",
+      "bytes": 24616,
+      "afterClickMs": 242
+     },
+     {
+      "url": "/assets/cards/card_common_oracle_01.webp",
+      "bytes": 93416,
+      "afterClickMs": 243
+     },
+     {
+      "url": "/assets/cards/card_taiyo_support_02.webp",
+      "bytes": 102260,
+      "afterClickMs": 243
+     },
+     {
+      "url": "/assets/se/card_draw.wav",
+      "bytes": 4896,
+      "afterClickMs": 243
+     },
+     {
+      "url": "/assets/se/card_play.wav",
+      "bytes": 2690,
+      "afterClickMs": 243
+     },
+     {
+      "url": "/assets/se/divination.wav",
+      "bytes": 12834,
+      "afterClickMs": 250
+     },
+     {
+      "url": "/assets/se/hit_l1.wav",
+      "bytes": 5336,
+      "afterClickMs": 254
+     },
+     {
+      "url": "/assets/se/hit_l2.wav",
+      "bytes": 7542,
+      "afterClickMs": 254
+     },
+     {
+      "url": "/assets/se/hit_l3.wav",
+      "bytes": 11510,
+      "afterClickMs": 255
+     },
+     {
+      "url": "/assets/se/hit_l4.wav",
+      "bytes": 25622,
+      "afterClickMs": 255
+     },
+     {
+      "url": "/assets/se/self_hit.wav",
+      "bytes": 6660,
+      "afterClickMs": 255
+     },
+     {
+      "url": "/assets/se/self_hit_heavy.wav",
+      "bytes": 18566,
+      "afterClickMs": 256
+     },
+     {
+      "url": "/assets/se/block.wav",
+      "bytes": 4014,
+      "afterClickMs": 256
+     },
+     {
+      "url": "/assets/se/heal.wav",
+      "bytes": 19448,
+      "afterClickMs": 256
+     },
+     {
+      "url": "/assets/se/resonance_gain.wav",
+      "bytes": 6660,
+      "afterClickMs": 256
+     },
+     {
+      "url": "/assets/se/burst_ready.wav",
+      "bytes": 18566,
+      "afterClickMs": 257
+     },
+     {
+      "url": "/assets/se/evolve.wav",
+      "bytes": 28710,
+      "afterClickMs": 260
+     },
+     {
+      "url": "/assets/se/enemy_turn.wav",
+      "bytes": 6660,
+      "afterClickMs": 260
+     },
+     {
+      "url": "/assets/gods/taiyo/god-strike-v2.mp4",
+      "bytes": 166058,
+      "afterClickMs": 261
+     },
+     {
+      "url": "/assets/se/enemy_charge.wav",
+      "bytes": 22094,
+      "afterClickMs": 261
+     },
+     {
+      "url": "/assets/se/boss_entrance.wav",
+      "bytes": 42380,
+      "afterClickMs": 264
+     },
+     {
+      "url": "/assets/se/reward.wav",
+      "bytes": 22536,
+      "afterClickMs": 264
+     },
+     {
+      "url": "/assets/se/victory_sting.wav",
+      "bytes": 39734,
+      "afterClickMs": 265
+     },
+     {
+      "url": "/assets/se/defeat_sting.wav",
+      "bytes": 30914,
+      "afterClickMs": 265
+     },
+     {
+      "url": "/assets/bgm/battle.webm",
+      "bytes": 1945366,
+      "afterClickMs": 323
+     }
+    ],
+    "shots": null,
+    "errors": []
+   },
+   "reduced": {
+    "home": {
+     "primaryVisibleMs_node": 495,
+     "domContentLoaded": 109,
+     "load": 109,
+     "paints": {
+      "first-paint": 260,
+      "first-contentful-paint": 456
+     },
+     "lcp": [
+      {
+       "t": 456,
+       "size": 144690,
+       "el": "home-hero-img",
+       "url": "/assets/gods/ebisu/keyvisual-hero.webp"
+      }
+     ],
+     "heroSrc": "/assets/gods/ebisu/keyvisual-hero.webp",
+     "heroLoadedAt": 138,
+     "heroBytes": 523108,
+     "homeAnimations": {},
+     "homeClsSum": 0,
+     "homeLog": [
+      {
+       "t": 431,
+       "kind": "media.play",
+       "src": "/assets/bgm/home.webm",
+       "tag": "AUDIO",
+       "rejected": "NotAllowedError"
+      }
+     ],
+     "primaryText": "初陣へおすすめの構成ですぐ戦う"
+    },
+    "steps": {
+     "home_to_godSelect": 252,
+     "godCard_to_confirm": 139,
+     "godConfirm_to_enemySelect": 214,
+     "enemy_to_deckBuilder": 336
+    },
+    "probe": {
+     "tAfterClick": 2,
+     "marks": {
+      "battleScreenMounted": 167,
+      "bossEntranceShown": 167,
+      "bossEntranceLastSeen": 961,
+      "enemyAvatarVisible": 167,
+      "handCardsPresent": 167,
+      "handCardEnabled": 167,
+      "endRoundEnabled": 167,
+      "bossEntranceGone": 978
+     },
+     "frames": {
+      "n": 226,
+      "over33": 2,
+      "over50": 2,
+      "max": 71,
+      "median": 17
+     },
+     "animsAt120ms": [
+      {
+       "name": "arena-glow-breathe",
+       "dur": 9000,
+       "delay": 0,
+       "iter": null,
+       "target": "battle-arena-glow"
+      },
+      {
+       "name": "enemy-line-pop",
+       "dur": 300,
+       "delay": 0,
+       "iter": 1,
+       "target": "enemy-speech-bubble"
+      },
+      {
+       "name": "enemy-idle",
+       "dur": 3400,
+       "delay": 0,
+       "iter": null,
+       "target": "enemy-avatar"
+      },
+      {
+       "name": "enemy-idle",
+       "dur": 3400,
+       "delay": 0,
+       "iter": null,
+       "target": "player-avatar"
+      },
+      {
+       "name": "portrait-aura-spin",
+       "dur": 14000,
+       "delay": 0,
+       "iter": null,
+       "target": "portrait portrait-otomo"
+      },
+      {
+       "name": "boss-entrance-fade-reduced",
+       "dur": 900,
+       "delay": 0,
+       "iter": 1,
+       "target": "boss-entrance boss-entrance-reduced"
+      }
+     ],
+     "liveAnimsAtEnd": {
+      "arena-glow-breathe": 1,
+      "enemy-idle": 2,
+      "portrait-aura-spin": 1
+     },
+     "log": [
+      {
+       "t": 48,
+       "kind": "media.play",
+       "src": "/assets/bgm/home.webm",
+       "tag": "AUDIO",
+       "ok": 349
+      },
+      {
+       "t": 321,
+       "kind": "se.start",
+       "dur": 0.11,
+       "when": 0.18133333333333335,
+       "ctxTime": 0.181
+      },
+      {
+       "t": 322,
+       "kind": "se.start",
+       "dur": 0.96,
+       "when": 0.18133333333333335,
+       "ctxTime": 0.181
+      }
+     ],
+     "cls": [
+      {
+       "t": 166,
+       "v": 0.00009803066141647935,
+       "src": [
+        "[object SVGAnimatedString]",
+        "[object SVGAnimatedString]",
+        "[object SVGAnimatedString]"
+       ]
+      },
+      {
+       "t": 184,
+       "v": 0.0010177781271759395,
+       "src": [
+        "?"
+       ]
+      }
+     ],
+     "clsSum": 0.0011,
+     "boxesFirst": {
+      "t": 167,
+      ".battle-topbar": {
+       "x": 6,
+       "y": 41,
+       "w": 378,
+       "h": 43
+      },
+      ".enemy-avatar": {
+       "x": 10,
+       "y": 389,
+       "w": 176,
+       "h": 168
+      },
+      ".hand": {
+       "x": 6,
+       "y": 650,
+       "w": 378,
+       "h": 188
+      },
+      ".end-round-button": {
+       "x": 272,
+       "y": 582,
+       "w": 58,
+       "h": 44
+      },
+      ".god-otomo-plate": {
+       "x": 294,
+       "y": 109,
+       "w": 73,
+       "h": 94
+      },
+      ".hp-bar-fill": {
+       "x": 30,
+       "y": 136,
+       "w": 110,
+       "h": 18
+      },
+      ".intent": {
+       "x": 30,
+       "y": 158,
+       "w": 37,
+       "h": 21
+      }
+     },
+     "boxesLate": {
+      "t": 3860,
+      ".battle-topbar": {
+       "x": 6,
+       "y": 41,
+       "w": 378,
+       "h": 43
+      },
+      ".enemy-avatar": {
+       "x": 10,
+       "y": 389,
+       "w": 176,
+       "h": 168
+      },
+      ".hand": {
+       "x": 6,
+       "y": 650,
+       "w": 378,
+       "h": 188
+      },
+      ".end-round-button": {
+       "x": 272,
+       "y": 582,
+       "w": 58,
+       "h": 44
+      },
+      ".god-otomo-plate": {
+       "x": 294,
+       "y": 109,
+       "w": 73,
+       "h": 94
+      },
+      ".hp-bar-fill": {
+       "x": 30,
+       "y": 136,
+       "w": 110,
+       "h": 18
+      },
+      ".intent": {
+       "x": 30,
+       "y": 158,
+       "w": 37,
+       "h": 21
+      }
+     },
+     "hudBoxDiff": {
+      ".battle-topbar": 0,
+      ".enemy-avatar": 0,
+      ".hand": 0,
+      ".end-round-button": 0,
+      ".god-otomo-plate": 0,
+      ".hp-bar-fill": 0,
+      ".intent": 0
+     }
+    },
+    "battleReqs": [
+     {
+      "url": "/assets/gods/taiyo/front_640.webp",
+      "bytes": 101898,
+      "afterClickMs": 179
+     },
+     {
+      "url": "/assets/otomo/kozuchi/spirit_320.webp",
+      "bytes": 24616,
+      "afterClickMs": 186
+     },
+     {
+      "url": "/assets/se/card_draw.wav",
+      "bytes": 4896,
+      "afterClickMs": 195
+     },
+     {
+      "url": "/assets/se/card_play.wav",
+      "bytes": 2690,
+      "afterClickMs": 198
+     },
+     {
+      "url": "/assets/se/divination.wav",
+      "bytes": 12834,
+      "afterClickMs": 200
+     },
+     {
+      "url": "/assets/se/hit_l1.wav",
+      "bytes": 5336,
+      "afterClickMs": 200
+     },
+     {
+      "url": "/assets/se/hit_l2.wav",
+      "bytes": 7542,
+      "afterClickMs": 201
+     },
+     {
+      "url": "/assets/se/hit_l3.wav",
+      "bytes": 11510,
+      "afterClickMs": 201
+     },
+     {
+      "url": "/assets/se/hit_l4.wav",
+      "bytes": 25622,
+      "afterClickMs": 201
+     },
+     {
+      "url": "/assets/se/self_hit.wav",
+      "bytes": 6660,
+      "afterClickMs": 202
+     },
+     {
+      "url": "/assets/se/self_hit_heavy.wav",
+      "bytes": 18566,
+      "afterClickMs": 202
+     },
+     {
+      "url": "/assets/se/block.wav",
+      "bytes": 4014,
+      "afterClickMs": 202
+     },
+     {
+      "url": "/assets/se/heal.wav",
+      "bytes": 19448,
+      "afterClickMs": 202
+     },
+     {
+      "url": "/assets/se/resonance_gain.wav",
+      "bytes": 6660,
+      "afterClickMs": 203
+     },
+     {
+      "url": "/assets/se/burst_ready.wav",
+      "bytes": 18566,
+      "afterClickMs": 204
+     },
+     {
+      "url": "/assets/se/evolve.wav",
+      "bytes": 28710,
+      "afterClickMs": 204
+     },
+     {
+      "url": "/assets/se/enemy_turn.wav",
+      "bytes": 6660,
+      "afterClickMs": 204
+     },
+     {
+      "url": "/assets/se/enemy_charge.wav",
+      "bytes": 22094,
+      "afterClickMs": 205
+     },
+     {
+      "url": "/assets/cards/card_common_hinder_01.webp",
+      "bytes": 121034,
+      "afterClickMs": 205
+     },
+     {
+      "url": "/assets/se/boss_entrance.wav",
+      "bytes": 42380,
+      "afterClickMs": 210
+     },
+     {
+      "url": "/assets/se/reward.wav",
+      "bytes": 22536,
+      "afterClickMs": 210
+     },
+     {
+      "url": "/assets/se/victory_sting.wav",
+      "bytes": 39734,
+      "afterClickMs": 210
+     },
+     {
+      "url": "/assets/se/defeat_sting.wav",
+      "bytes": 30914,
+      "afterClickMs": 211
+     },
+     {
+      "url": "/assets/bgm/battle.webm",
+      "bytes": 1945366,
+      "afterClickMs": 323
+     }
+    ],
+    "shots": null,
+    "errors": []
+   },
+   "firstBattle": {
+    "home": {
+     "primaryText": "初陣へおすすめの構成ですぐ戦う",
+     "lcp": [
+      {
+       "t": 520,
+       "size": 144690,
+       "el": "home-hero-img",
+       "url": "/assets/gods/ebisu/keyvisual-hero.webp"
+      }
+     ],
+     "paints": {
+      "first-paint": 268,
+      "first-contentful-paint": 520
+     }
+    },
+    "steps": {
+     "firstBattle_to_brief": 170
+    },
+    "probe": {
+     "tAfterClick": 4,
+     "marks": {
+      "battleScreenMounted": 89,
+      "bossEntranceShown": 89,
+      "bossEntranceLastSeen": 1593,
+      "enemyAvatarVisible": 89,
+      "handCardsPresent": 89,
+      "handCardEnabled": 89,
+      "endRoundEnabled": 89,
+      "bossEntranceGone": 1612
+     },
+     "frames": {
+      "n": 126,
+      "over33": 6,
+      "over50": 3,
+      "max": 180,
+      "median": 20
+     },
+     "animsAt120ms": [
+      {
+       "name": "particle-drift",
+       "dur": 140000,
+       "delay": 0,
+       "iter": null,
+       "target": "battle-viewport"
+      },
+      {
+       "name": "star-twinkle",
+       "dur": 5000,
+       "delay": 0,
+       "iter": null,
+       "target": "battle-viewport"
+      },
+      {
+       "name": "magic-circle-spin",
+       "dur": 120000,
+       "delay": 0,
+       "iter": null,
+       "target": "battle-viewport"
+      },
+      {
+       "name": "arena-glow-breathe",
+       "dur": 9000,
+       "delay": 0,
+       "iter": null,
+       "target": "battle-arena-glow"
+      },
+      {
+       "name": "enemy-line-pop",
+       "dur": 300,
+       "delay": 0,
+       "iter": 1,
+       "target": "enemy-speech-bubble"
+      },
+      {
+       "name": "enemy-idle",
+       "dur": 3400,
+       "delay": 0,
+       "iter": null,
+       "target": "enemy-avatar"
+      },
+      {
+       "name": "enemy-idle",
+       "dur": 3400,
+       "delay": 0,
+       "iter": null,
+       "target": "player-avatar"
+      },
+      {
+       "name": "portrait-aura-spin",
+       "dur": 14000,
+       "delay": 0,
+       "iter": null,
+       "target": "portrait portrait-otomo"
+      },
+      {
+       "name": "mini-result-fade",
+       "dur": 700,
+       "delay": 0,
+       "iter": 1,
+       "target": "battle-mini-result battle-mini-result-neutral"
+      },
+      {
+       "name": "boss-entrance-fade",
+       "dur": 1500,
+       "delay": 0,
+       "iter": 1,
+       "target": "boss-entrance"
+      },
+      {
+       "name": "boss-entrance-bg",
+       "dur": 1500,
+       "delay": 0,
+       "iter": 1,
+       "target": "boss-entrance-bg"
+      },
+      {
+       "name": "boss-entrance-rise",
+       "dur": 500,
+       "delay": 0,
+       "iter": 1,
+       "target": "boss-entrance-stage"
+      },
+      {
+       "name": "boss-entrance-art",
+       "dur": 600,
+       "delay": 100,
+       "iter": 1,
+       "target": "boss-entrance-art"
+      },
+      {
+       "name": "boss-entrance-rise",
+       "dur": 500,
+       "delay": 300,
+       "iter": 1,
+       "target": "boss-entrance-name"
+      },
+      {
+       "name": "boss-entrance-rise",
+       "dur": 500,
+       "delay": 450,
+       "iter": 1,
+       "target": "boss-entrance-meta"
+      },
+      {
+       "name": "boss-entrance-rise",
+       "dur": 400,
+       "delay": 700,
+       "iter": 1,
+       "target": "boss-entrance-start"
+      }
+     ],
+     "liveAnimsAtEnd": {
+      "particle-drift": 1,
+      "star-twinkle": 1,
+      "magic-circle-spin": 1,
+      "arena-glow-breathe": 1,
+      "enemy-idle": 2,
+      "portrait-aura-spin": 1
+     },
+     "log": [
+      {
+       "t": 75,
+       "kind": "media.play",
+       "src": "/assets/bgm/home.webm",
+       "tag": "AUDIO",
+       "ok": 508
+      },
+      {
+       "t": 476,
+       "kind": "se.start",
+       "dur": 0.11,
+       "when": 0.2986666666666667,
+       "ctxTime": 0.299
+      },
+      {
+       "t": 478,
+       "kind": "se.start",
+       "dur": 0.96,
+       "when": 0.30933333333333335,
+       "ctxTime": 0.309
+      }
+     ],
+     "cls": [
+      {
+       "t": 226,
+       "v": 0.00009803066141647935,
+       "src": [
+        "[object SVGAnimatedString]",
+        "[object SVGAnimatedString]",
+        "[object SVGAnimatedString]"
+       ]
+      },
+      {
+       "t": 260,
+       "v": 0.0010177781271759395,
+       "src": [
+        "?"
+       ]
+      }
+     ],
+     "clsSum": 0.0011,
+     "boxesFirst": {
+      "t": 89,
+      ".battle-topbar": {
+       "x": 6,
+       "y": 41,
+       "w": 378,
+       "h": 43
+      },
+      ".enemy-avatar": {
+       "x": 10,
+       "y": 389,
+       "w": 176,
+       "h": 168
+      },
+      ".hand": {
+       "x": 6,
+       "y": 650,
+       "w": 378,
+       "h": 188
+      },
+      ".end-round-button": {
+       "x": 272,
+       "y": 582,
+       "w": 58,
+       "h": 44
+      },
+      ".god-otomo-plate": {
+       "x": 294,
+       "y": 109,
+       "w": 73,
+       "h": 94
+      },
+      ".hp-bar-fill": {
+       "x": 30,
+       "y": 136,
+       "w": 110,
+       "h": 18
+      },
+      ".intent": {
+       "x": 30,
+       "y": 158,
+       "w": 37,
+       "h": 21
+      }
+     },
+     "boxesLate": {
+      "t": 2861,
+      ".battle-topbar": {
+       "x": 6,
+       "y": 41,
+       "w": 378,
+       "h": 43
+      },
+      ".enemy-avatar": {
+       "x": 10,
+       "y": 387,
+       "w": 177,
+       "h": 169
+      },
+      ".hand": {
+       "x": 6,
+       "y": 650,
+       "w": 378,
+       "h": 188
+      },
+      ".end-round-button": {
+       "x": 272,
+       "y": 582,
+       "w": 58,
+       "h": 44
+      },
+      ".god-otomo-plate": {
+       "x": 294,
+       "y": 109,
+       "w": 73,
+       "h": 94
+      },
+      ".hp-bar-fill": {
+       "x": 30,
+       "y": 136,
+       "w": 110,
+       "h": 18
+      },
+      ".intent": {
+       "x": 30,
+       "y": 158,
+       "w": 37,
+       "h": 21
+      }
+     },
+     "hudBoxDiff": {
+      ".battle-topbar": 0,
+      ".enemy-avatar": {
+       "first": {
+        "x": 10,
+        "y": 389,
+        "w": 176,
+        "h": 168
+       },
+       "late": {
+        "x": 10,
+        "y": 387,
+        "w": 177,
+        "h": 169
+       }
+      },
+      ".hand": 0,
+      ".end-round-button": 0,
+      ".god-otomo-plate": 0,
+      ".hp-bar-fill": 0,
+      ".intent": 0
+     }
+    },
+    "resumeText": "続きから恵比寿 vs 試練の影・ラウンド1",
+    "resume": {
+     "tAfterClick": 1,
+     "marks": {
+      "battleScreenMounted": 13,
+      "enemyAvatarVisible": 13,
+      "handCardsPresent": 13,
+      "handCardEnabled": 13,
+      "endRoundEnabled": 13
+     },
+     "frames": {
+      "n": 118,
+      "over33": 5,
+      "over50": 2,
+      "max": 136,
+      "median": 20
+     },
+     "animsAt120ms": [
+      {
+       "name": "particle-drift",
+       "dur": 140000,
+       "delay": 0,
+       "iter": null,
+       "target": "battle-viewport"
+      },
+      {
+       "name": "star-twinkle",
+       "dur": 5000,
+       "delay": 0,
+       "iter": null,
+       "target": "battle-viewport"
+      },
+      {
+       "name": "magic-circle-spin",
+       "dur": 120000,
+       "delay": 0,
+       "iter": null,
+       "target": "battle-viewport"
+      },
+      {
+       "name": "arena-glow-breathe",
+       "dur": 9000,
+       "delay": 0,
+       "iter": null,
+       "target": "battle-arena-glow"
+      },
+      {
+       "name": "enemy-line-pop",
+       "dur": 300,
+       "delay": 0,
+       "iter": 1,
+       "target": "enemy-speech-bubble"
+      },
+      {
+       "name": "enemy-idle",
+       "dur": 3400,
+       "delay": 0,
+       "iter": null,
+       "target": "enemy-avatar"
+      },
+      {
+       "name": "enemy-idle",
+       "dur": 3400,
+       "delay": 0,
+       "iter": null,
+       "target": "player-avatar"
+      },
+      {
+       "name": "portrait-aura-spin",
+       "dur": 14000,
+       "delay": 0,
+       "iter": null,
+       "target": "portrait portrait-otomo"
+      }
+     ],
+     "liveAnimsAtEnd": {
+      "particle-drift": 1,
+      "star-twinkle": 1,
+      "magic-circle-spin": 1,
+      "arena-glow-breathe": 1,
+      "enemy-idle": 2,
+      "portrait-aura-spin": 1
+     },
+     "log": [
+      {
+       "t": 12,
+       "kind": "media.play",
+       "src": "/assets/bgm/home.webm",
+       "tag": "AUDIO",
+       "ok": 182
+      }
+     ],
+     "cls": [
+      {
+       "t": 22,
+       "v": 0.00009803066141647935,
+       "src": [
+        "[object SVGAnimatedString]",
+        "[object SVGAnimatedString]",
+        "[object SVGAnimatedString]"
+       ]
+      }
+     ],
+     "clsSum": 0.0001,
+     "boxesFirst": {
+      "t": 13,
+      ".battle-topbar": {
+       "x": 6,
+       "y": 41,
+       "w": 378,
+       "h": 43
+      },
+      ".enemy-avatar": {
+       "x": 10,
+       "y": 389,
+       "w": 176,
+       "h": 168
+      },
+      ".hand": {
+       "x": 6,
+       "y": 650,
+       "w": 378,
+       "h": 188
+      },
+      ".end-round-button": {
+       "x": 272,
+       "y": 582,
+       "w": 58,
+       "h": 44
+      },
+      ".god-otomo-plate": {
+       "x": 294,
+       "y": 109,
+       "w": 73,
+       "h": 94
+      },
+      ".hp-bar-fill": {
+       "x": 30,
+       "y": 136,
+       "w": 110,
+       "h": 18
+      },
+      ".intent": {
+       "x": 30,
+       "y": 158,
+       "w": 37,
+       "h": 21
+      }
+     },
+     "boxesLate": {
+      "t": 2368,
+      ".battle-topbar": {
+       "x": 6,
+       "y": 41,
+       "w": 378,
+       "h": 43
+      },
+      ".enemy-avatar": {
+       "x": 9,
+       "y": 386,
+       "w": 178,
+       "h": 170
+      },
+      ".hand": {
+       "x": 6,
+       "y": 650,
+       "w": 378,
+       "h": 188
+      },
+      ".end-round-button": {
+       "x": 272,
+       "y": 582,
+       "w": 58,
+       "h": 44
+      },
+      ".god-otomo-plate": {
+       "x": 294,
+       "y": 109,
+       "w": 73,
+       "h": 94
+      },
+      ".hp-bar-fill": {
+       "x": 30,
+       "y": 136,
+       "w": 110,
+       "h": 18
+      },
+      ".intent": {
+       "x": 30,
+       "y": 158,
+       "w": 37,
+       "h": 21
+      }
+     },
+     "hudBoxDiff": {
+      ".battle-topbar": 0,
+      ".enemy-avatar": {
+       "first": {
+        "x": 10,
+        "y": 389,
+        "w": 176,
+        "h": 168
+       },
+       "late": {
+        "x": 9,
+        "y": 386,
+        "w": 178,
+        "h": 170
+       }
+      },
+      ".hand": 0,
+      ".end-round-button": 0,
+      ".god-otomo-plate": 0,
+      ".hp-bar-fill": 0,
+      ".intent": 0
+     }
+    },
+    "errors": []
+   },
+   "shots": [
+    {
+     "requestedMs": 150,
+     "actualMs": 2705,
+     "f": "docs/evidence/decision254/sp844-battle-start-150ms.jpg"
+    },
+    {
+     "requestedMs": 500,
+     "actualMs": 4470,
+     "f": "docs/evidence/decision254/sp844-battle-start-500ms.jpg"
+    },
+    {
+     "requestedMs": 900,
+     "actualMs": 5662,
+     "f": "docs/evidence/decision254/sp844-battle-start-900ms.jpg"
+    },
+    {
+     "requestedMs": 1300,
+     "actualMs": 7197,
+     "f": "docs/evidence/decision254/sp844-battle-start-1300ms.jpg"
+    },
+    {
+     "requestedMs": 2200,
+     "actualMs": 8687,
+     "f": "docs/evidence/decision254/sp844-battle-start-2200ms.jpg"
+    }
+   ]
+  }
+ }
+}

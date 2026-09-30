@@ -1,0 +1,59 @@
+// 決定254：BossEntrance の各時刻を決定論的に止めて撮る（document.getAnimations() を pause→currentTime 指定）。計測専用・commit しない
+import { chromium } from 'playwright'
+import { rmSync, readdirSync } from 'node:fs'
+
+const BASE = process.argv[2] ?? 'http://127.0.0.1:4281'
+const OUT = 'docs/evidence/decision254'
+for (const f of readdirSync(OUT)) if (f.includes('battle-start')) rmSync(`${OUT}/${f}`)
+const VPS = {
+  pc1508: { viewport: { width: 1508, height: 660 }, isMobile: false, hasTouch: false, deviceScaleFactor: 1 },
+  sp844: { viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true, deviceScaleFactor: 1 },
+}
+const clickBtnText = (page, text) =>
+  page.evaluate((t) => {
+    const el = [...document.querySelectorAll('button')].find((x) => x.textContent.replace(/\s+/g, '').includes(t) && !x.disabled)
+    if (!el) return false
+    el.click()
+    return true
+  }, text)
+
+const browser = await chromium.launch()
+for (const [vp, opt] of Object.entries(VPS)) {
+  const ctx = await browser.newContext(opt)
+  const page = await ctx.newPage()
+  await page.goto(BASE + '/', { waitUntil: 'load' })
+  await page.waitForSelector('.home-cta-primary')
+  await page.waitForTimeout(800)
+  await page.locator('[data-testid="home-start"]').click()
+  await page.waitForSelector('.god-select-back')
+  await clickBtnText(page, '大耀')
+  await page.waitForSelector('.god-select-confirm')
+  await page.locator('.god-select-confirm').click()
+  await page.waitForSelector('.enemy-select-back')
+  await clickBtnText(page, '蒼海の龍神')
+  await page.waitForSelector('.deck-builder-clear-button')
+  await page.waitForTimeout(800)
+  await page.screenshot({ path: `${OUT}/${vp}-f0-deckbuilder.jpg`, type: 'jpeg', quality: 45 })
+  await clickBtnText(page, 'この構成でバトル開始')
+  await page.waitForSelector('[data-testid="boss-entrance"]')
+  // 画像の読み込みを待ってから時刻を指定して止める（見た目は各時刻の完成フレーム）
+  await page.waitForTimeout(150)
+  for (const ms of [100, 450, 900, 1300]) {
+    const ok = await page.evaluate((ms) => {
+      const anims = document.getAnimations().filter((a) => String(a.animationName || '').startsWith('boss-entrance'))
+      for (const a of anims) {
+        a.pause()
+        a.currentTime = ms
+      }
+      return anims.length
+    }, ms)
+    if (!ok) break
+    await page.screenshot({ path: `${OUT}/${vp}-f1-entrance-${ms}ms.jpg`, type: 'jpeg', quality: 45 })
+  }
+  await page.evaluate(() => document.getAnimations().forEach((a) => String(a.animationName || '').startsWith('boss-entrance') && a.finish()))
+  await page.waitForTimeout(1600)
+  await page.screenshot({ path: `${OUT}/${vp}-f2-battle-ready.jpg`, type: 'jpeg', quality: 45 })
+  await ctx.close()
+}
+await browser.close()
+console.log('done')
