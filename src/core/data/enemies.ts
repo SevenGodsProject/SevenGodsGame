@@ -81,7 +81,10 @@ export const ENEMIES: EnemyDef[] = [
   {
     id: ENEMY_IDS.oni,
     name: '業斧の鬼将',
-    maxHp: 100,
+    // 決定252：100 → 94。R3 溜め→R4 必殺「業斧・断岩」で R4 に防御を集中させる分、撃破が遅れて
+    // 未撃破が神階Ⅲ〜Ⅵで 15〜18% に増えた（HP100）。94 で 7〜8%（Production 9〜11%）へ戻る。
+    // 通常 reader 99.6／greedy 69.6（Production 64.1）。docs/ENEMY_ULTIMATE_THREAT_DIFFERENTIATION_PREFLIGHT.md §3-2
+    maxHp: 94,
     // STEP-L2：敵アセット最終調整の第一弾としてoniもPNGからWebPへ本番切り替え
     // （STEP-L1で軽加工候補を検証・A判定。新規生成は行わず、512×512化・余白調整
     // のみ。datenshi/karakuri/doukeshiと同じ最小変更方式。数値・AIには一切触れていない）。
@@ -90,7 +93,7 @@ export const ENEMIES: EnemyDef[] = [
     // 完全一致（512×512／本体360×435@(76,39)）で、表示位置・サイズは不変。
     art: '/assets/enemies/oni/art_hq.webp',
     typeLabel: '重撃型',
-    typeDescription: '攻撃が重い。防御を切らさない。',
+    typeDescription: '溜めの次に断岩。R4を受け切れ。',
     visualType: 'standard',
     rank: 2,
     stage: { nameJa: '戦火の陣', accent: '#e5484d', bg: '/assets/backgrounds/stages/02-oni-castle.webp' },
@@ -107,11 +110,13 @@ export const ENEMIES: EnemyDef[] = [
     // シミュレーターが蒼毘・寿楽・笑蓮のdefensive戦略で7ラウンド以内に倒し切れない
     // ケースを検出したため108→100に調整）
     actions: [
-      // 決定246：同じ7値・7R合計（77）のまま峰を R4 へ。旧：5/7/9/11/13/15/17
+      // 決定252（Enemy Ultimate）：「受け切る」問題。R3 を溜め（予兆）にし、R4 を名前つき必殺「業斧・断岩」26 へ。
+      // 7R合計 77→73。通常 reader−必殺無視 34pt・神階Ⅵ 78→90・Ⅶ猛威 50→76（paired-seed）。
+      // 旧（決定246）：5/9/13/17/15/11/7
       { kind: 'attack', amount: 5 },
       { kind: 'attack', amount: 9 },
-      { kind: 'attack', amount: 13 },
-      { kind: 'attack', amount: 17 },
+      { kind: 'charge', label: '斧を振りかぶっている…' },
+      { kind: 'special', amount: 26, name: '業斧・断岩' },
       { kind: 'attack', amount: 15 },
       { kind: 'attack', amount: 11 },
       { kind: 'attack', amount: 7 },
@@ -125,7 +130,7 @@ export const ENEMIES: EnemyDef[] = [
     // 寸法・構図は無変更の純粋な再エンコードで、アルファは完全可逆（PSNR ∞）。
     art: '/assets/enemies/onryo/art_hq.webp',
     typeLabel: '遅咲き型',
-    typeDescription: 'R4に祟りが極まる。峰を読め。',
+    typeDescription: 'R4に怨嗟の花。峰に備え温存せよ。',
     // 決定246：攻撃の峰が R4 へ移ったため「終盤の強調（R5〜）」表示をやめる
     visualType: 'standard',
     rank: 3,
@@ -145,7 +150,9 @@ export const ENEMIES: EnemyDef[] = [
       { kind: 'attack', amount: 3 },
       { kind: 'attack', amount: 6 },
       { kind: 'attack', amount: 13 },
-      { kind: 'attack', amount: 23 },
+      // 決定252：R4 の峰 23 は数値そのままで名前つき必殺「怨嗟の花」に（カットイン・🔥表示）。
+      // 神階Ⅵの必殺倍率は specialMulCap 1.0（峰そのものが必殺。Ⅵ〜Ⅶ は Production と同値）。
+      { kind: 'special', amount: 23, name: '怨嗟の花' },
       { kind: 'attack', amount: 18 },
       { kind: 'attack', amount: 9 },
       { kind: 'attack', amount: 4 },
@@ -237,7 +244,7 @@ export const ENEMIES: EnemyDef[] = [
     // STEP-VISUAL-ASSETS：onryoと同じく寸法・構図無変更の再エンコード。
     art: '/assets/enemies/ryujin/art_hq.webp',
     typeLabel: '耐久型',
-    typeDescription: 'R4の大波を受け切れ。',
+    typeDescription: 'R4の大海嘯。長い波を受け続けろ。',
     visualType: 'heavy',
     rank: 3,
     stage: { nameJa: '蒼海の宮', accent: '#1a3a6b', bg: '/assets/backgrounds/stages/06-dragon-ocean.webp' },
@@ -258,7 +265,8 @@ export const ENEMIES: EnemyDef[] = [
       { kind: 'attack', amount: 4 },
       { kind: 'attack', amount: 7 },
       { kind: 'attack', amount: 12 },
-      { kind: 'attack', amount: 20 },
+      // 決定252：R4 の峰 20 は数値そのままで名前つき必殺「大海嘯」に。神階Ⅵの必殺倍率は specialMulCap 1.0。
+      { kind: 'special', amount: 20, name: '大海嘯' },
       { kind: 'attack', amount: 16 },
       { kind: 'attack', amount: 9 },
       { kind: 'attack', amount: 5 },
@@ -273,7 +281,7 @@ export const ENEMIES: EnemyDef[] = [
     // 同じ最小変更方式で、この1体だけ直接パスを指定する。数値・AIには一切触れていない）。
     art: '/assets/enemies/doukeshi/art.webp',
     typeLabel: 'トリック型',
-    typeDescription: '不規則な溜め攻撃。毎ターン予告確認が重要。',
+    typeDescription: 'R3に開幕の必殺。託宣を先に切れ。',
     visualType: 'standard',
     rank: 4,
     stage: { nameJa: '幻惑の舞台', accent: '#c0122f', bg: '/assets/backgrounds/stages/07-jester-festival.webp' },
@@ -288,15 +296,17 @@ export const ENEMIES: EnemyDef[] = [
     ],
     // 攪乱型。小さな一撃と「溜め」からの大技を織り交ぜる、最も予測しにくい行動パターン
     actions: [
+      // 決定252（Enemy Ultimate）：「開幕」問題。ゲーム最速の必殺「乱舞・狂宴」24 を R3 に置き、
+      // R2 の溜め（⚠）で予兆する。託宣（加護）を R3 に先に切る判断が生まれる（Ⅴ 託宣 R3 使用 13→53%）。
+      // R5 溜め→R6 19 はアンコール（到達率 ≈35%）。同じ7行動・同じ合計 65。
+      // 旧（決定246）：4/溜/19/溜/24/12/6 ＝ 通常で greedy 97.6% と読む価値が無かった。
       { kind: 'attack', amount: 4 },
-      { kind: 'charge', label: 'カードを宙に舞わせている…' },
+      { kind: 'charge', label: '⚠ 手品を仕込んでいる…' },
+      { kind: 'special', amount: 24, name: '乱舞・狂宴' },
+      { kind: 'attack', amount: 9 },
+      { kind: 'charge', label: 'また何か仕込んでいる…' },
       { kind: 'attack', amount: 19 },
-      // 決定246：2回目の溜め→大技 24 を R6→R7 から R4→R5 へ（同じ7行動・同じ合計 65）。
-      // 旧：4/溜/19/6/12/溜/24
-      { kind: 'charge', label: 'カードを宙に舞わせている…' },
-      { kind: 'attack', amount: 24 },
-      { kind: 'attack', amount: 12 },
-      { kind: 'attack', amount: 6 },
+      { kind: 'attack', amount: 9 },
     ],
   },
 ]

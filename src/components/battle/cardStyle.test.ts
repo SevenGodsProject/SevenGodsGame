@@ -149,7 +149,8 @@ describe('決定240 getIntentDangerLevel／getIntentGlyph／formatEnemyIntentTex
     expect(getIntentStanceClass({ kind: 'multiAttack', hits: [4, 4, 4], name: 'x', special: true })).toBe('enemy-avatar-intent-special')
   })
 
-  it('台帳（通常難度・修正子なし）：7 敵 × 7 行動＝49、normal 21／strong 10／huge 12／special 2／charge 4（危険 28）', () => {
+  // 決定252（Enemy Ultimate）：special 2→6・charge 4→5（Expected Specification Update。旧 normal 21／strong 10／huge 12／special 2／charge 4）
+  it('台帳（通常難度・修正子なし）：7 敵 × 7 行動＝49、normal 22／strong 8／huge 8／special 6／charge 5（危険 27）', () => {
     const counts: Record<IntentDangerLevel, number> = { none: 0, strong: 0, huge: 0, special: 0, charge: 0 }
     let total = 0
     for (const def of ENEMIES) {
@@ -170,6 +171,6 @@ describe('決定240 getIntentDangerLevel／getIntentGlyph／formatEnemyIntentTex
       }
     }
     expect(total).toBe(49)
-    expect(counts).toEqual({ none: 21, strong: 10, huge: 12, special: 2, charge: 4 })
+    expect(counts).toEqual({ none: 22, strong: 8, huge: 8, special: 6, charge: 5 })
   })
 })

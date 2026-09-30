@@ -72,7 +72,10 @@ function nextEnemyAction(state: GameState): EnemyActionDef {
   // 1つの倍率にまとめてから合計保存丸め（決定118のengine恒久ルール(b)）で適用する。
   const stakeRules = resolveStakeRules(state.stake, state.stakeChoice)
   const lateMul = stakeRules.lateRoundFrom !== null && state.round >= stakeRules.lateRoundFrom ? stakeRules.lateRoundAtkMul : 1
-  const specialMul = raw.kind === 'special' || raw.kind === 'multiAttack' ? specialMultiplierFor(stakeRules, state.enemy.defId) : 1
+  // 決定252：必殺倍率は special（単発必殺・技名つき必殺連撃）だけに乗る。通常の連撃には乗らない
+  // （旧仕様では連撃のみの魔獣に全ラウンド乗り、神階Ⅵで崩落していた）。
+  const isSpecial = raw.kind === 'special' || (raw.kind === 'multiAttack' && !!raw.special)
+  const specialMul = isSpecial ? specialMultiplierFor(stakeRules, state.enemy.defId) : 1
   const multiplier =
     RULES.difficulty[state.difficulty].enemyAtkMultiplier *
     (state.modifier?.enemyAtkMul ?? 1) *

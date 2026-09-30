@@ -124,11 +124,12 @@ describe('Action数 / payloadサイズの分布（Step 6）', () => {
     // Phase 5-C：大耀・蒼毘の専用3枚に条件が付き、打ち筋がわずかに動いた（payload の median・p95 が1byteずつ）。
     // 決定246（Combat Tension v1）：託宣 7→3・敵の峰 R4 で決着ラウンドと託宣の手数が動いた（median 22→17・max 32→42）。
     // 上限400に対する余裕は不変（max 42）。Measurement Baseline Update
+    // 決定252（Enemy Ultimate）：鬼将 R3 溜め・道化 R3 必殺で一部の対局の手数が動いた（p90 26→25・payload median 1122→1109・p90 1385→1361・p95 1432→1424）。上限400に対する余裕は不変。Measurement Baseline Update
     expect(measurement.actions).toEqual({
       n: 1470,
       min: 7,
       median: 17,
-      p90: 26,
+      p90: 25,
       p95: 27,
       p99: 30,
       max: 42,
@@ -136,9 +137,9 @@ describe('Action数 / payloadサイズの分布（Step 6）', () => {
     expect(measurement.bytes).toEqual({
       n: 1470,
       min: 790,
-      median: 1122,
-      p90: 1385,
-      p95: 1432,
+      median: 1109,
+      p90: 1361,
+      p95: 1424,
       p99: 1537,
       max: 1929,
     })

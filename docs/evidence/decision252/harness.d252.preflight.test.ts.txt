@@ -412,6 +412,11 @@ describe('Decision252 preflight', () => {
       const hard = runMatrix(['prod', 'prodA', 'prodB'], ['0'], P4, 100, 'hard', false, ['enemy_05'])
       const daily = runMatrix(['prod', 'prodA', 'prodB'], ['0'], P4, 100, 'normal', true, ['enemy_05'])
       result = { out: { ...result.out, 'prod@hard': hard.out.prod, 'prodA@hard': hard.out.prodA, 'prodB@hard': hard.out.prodB, 'prod@daily': daily.out.prod, 'prodA@daily': daily.out.prodA, 'prodB@daily': daily.out.prodB }, games: result.games + hard.games + daily.games }
+    } else if (MODE === 'pilot') {
+      // Pilot Gate: the real runtime (no table override, no emulation) — same shape as 'final' so it can be compared with finalF1
+      const main = runMatrix(['prod'], LEVELS.map((l) => l.key), P4, 100)
+      const easy = runMatrix(['prod'], ['0'], P4, 60, 'easy'); const hard = runMatrix(['prod'], ['0'], P4, 60, 'hard'); const daily = runMatrix(['prod'], ['0'], P4, 60, 'normal', true)
+      result = { out: { pilot: main.out.prod, 'pilot@easy': easy.out.prod, 'pilot@hard': hard.out.prod, 'pilot@daily': daily.out.prod }, games: main.games + easy.games + hard.games + daily.games }
     } else if (MODE === 'tune') {
       const ids = (process.env.D252_SPECS ?? 'prodA,oniA,oniB,oniB28,oniB26,onryoE,onryoE4,onryoN,ryujinA15,ryujinA20,ryujinB20,ryujinB25,douk1220,douk1524,douk1018,trialS').split(',')
       const out: Out = {}; let games = 0

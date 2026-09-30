@@ -1,6 +1,5 @@
 import type { EnemyId } from '../types/index.js'
 import { RULES } from './rules.js'
-import { ENEMY_IDS } from './enemies.js'
 
 /**
  * 決定126：神階（しんかい）Ⅰ〜Ⅶ — Stakes型チャレンジシステム。
@@ -48,7 +47,7 @@ export const STAKE_LEVELS: StakeLevelDef[] = [
   { level: 3, numeral: 'Ⅲ', nameJa: '拝殿', addedRuleJa: `敵HP+${Math.round((RULES.stakes.enemyHpStep - 1) * 100)}%`, flavorJa: '拝殿の敵は、ひとまわり頑丈だ。' },
   { level: 4, numeral: 'Ⅳ', nameJa: '本殿', addedRuleJa: blockEfficiencyLabel(Math.round(RULES.stakes.blockEfficiency * 100)), flavorJa: '本殿の気配に、盾が軋む。' },
   { level: 5, numeral: 'Ⅴ', nameJa: '奥宮', addedRuleJa: `回復効率${Math.round(RULES.stakes.healEfficiency * 100)}%`, flavorJa: '奥宮では、傷が癒えにくい。' },
-  { level: 6, numeral: 'Ⅵ', nameJa: '禁足地', addedRuleJa: `敵の必殺・連撃+${Math.round((RULES.stakes.specialMul - 1) * 100)}%`, flavorJa: '踏み入れてはならぬ地。敵の大技が牙を剥く。' },
+  { level: 6, numeral: 'Ⅵ', nameJa: '禁足地', addedRuleJa: `敵の必殺+${Math.round((RULES.stakes.specialMul - 1) * 100)}%`, flavorJa: '踏み入れてはならぬ地。敵の大技が牙を剥く。' },
   { level: 7, numeral: 'Ⅶ', nameJa: '高天原', addedRuleJa: '最終試練を1つ選ぶ', flavorJa: '最終試練を越えた者だけが、高天原へ至る。' },
 ]
 
@@ -132,12 +131,14 @@ export function resolveStakeRules(level: number | undefined, choice?: StakeChoic
 }
 
 /**
- * 必殺・連撃の倍率（敵別上限つき）。機工師の主砲（24）は倍率を重ねると受け切れない
+ * 必殺の倍率（敵別上限つき）。機工師の主砲（24）は倍率を重ねると受け切れない
  * 組み合わせになるため、決定126で上限を設けた（敵バランス監査）。
+ * 決定252：上限は `RULES.stakes.specialMulCap`（enemy id → 上限）へ一般化（機工師 1.1・怨霊 1.0・龍神 1.0）。
+ * 通常の連撃には掛けない（round.ts が special 行動だけにこの値を使う）。
  */
 export function specialMultiplierFor(rules: StakeRules, enemyId: EnemyId): number {
   if (rules.specialMul <= 1) return 1
-  const cap = enemyId === ENEMY_IDS.karakuri ? RULES.stakes.specialMulCapKarakuri : Infinity
+  const cap = RULES.stakes.specialMulCap[enemyId as string] ?? Infinity
   return Math.min(rules.specialMul, cap)
 }
 
@@ -159,7 +160,7 @@ export function describeStakeRules(level: number | undefined, choice?: StakeChoi
   if (r.enemyHpMul > 1) lines.push(`敵HP+${Math.round((r.enemyHpMul - 1) * 100)}%`)
   if (r.blockEfficiency < 1) lines.push(blockEfficiencyLabel(Math.round(r.blockEfficiency * 100)))
   if (r.healEfficiency < 1) lines.push(`回復効率${Math.round(r.healEfficiency * 100)}%`)
-  if (r.specialMul > 1) lines.push(`敵の必殺・連撃+${Math.round((r.specialMul - 1) * 100)}%`)
+  if (r.specialMul > 1) lines.push(`敵の必殺+${Math.round((r.specialMul - 1) * 100)}%`)
   if (r.round1ApMinus > 0) lines.push(`ラウンド1の神力−${r.round1ApMinus}`)
   return lines
 }

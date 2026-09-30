@@ -1,0 +1,81 @@
+/* Decision252 Pilot — Enemy Identity Gate (scratch, never committed; output goes to docs/evidence/decision252/pilot/).
+ * Runs the real runtime: for every enemy × {normal, hard, 神階Ⅵ} the game is advanced round by round (player HP forced to 1000
+ * so every round is reached) and the intent shown to the player is recorded exactly as the UI would format it. */
+import { describe, it, expect } from 'vitest'
+import { mkdirSync, writeFileSync } from 'node:fs'
+import { ENEMIES } from '../../src/core/data/enemies'
+import { GOD_IDS } from '../../src/core/data/gods'
+import { getRecommendedDeck } from '../../src/core/data/deckBuilder'
+import { RULES } from '../../src/core/data/rules'
+import { describeStakeRules } from '../../src/core/data/stakes'
+import { applyAction } from '../../src/core/engine/reducer'
+import { enemyActionTotal } from '../../src/core/engine/intent'
+import { formatEnemyIntent, getIntentDangerLevel, getIntentStanceClass, getIntentTierClass } from '../../src/components/battle/cardStyle'
+import type { Difficulty, GameState } from '../../src/core/types'
+
+const OUT = 'C:/Users/kimi1/SevenGodsGame-d252/docs/evidence/decision252/pilot'
+mkdirSync(OUT, { recursive: true })
+
+type Row = { enemy: string; ctx: string; hp: number; round: number; kind: string; label: string; amount: number; text: string; danger: string; tierClass: string; stance: string; chargingSuper: boolean; acted: string }
+
+function run(enemyIdx: number, diff: Difficulty, stake: number, ctx: string): Row[] {
+  const def = ENEMIES[enemyIdx]
+  let { state } = applyAction(null, { type: 'START_GAME', seed: 'd252-identity', godId: GOD_IDS.taiyo, enemyId: def.id, deck: getRecommendedDeck(GOD_IDS.taiyo), difficulty: diff, ...(stake ? { stake } : {}) } as any)
+  state = { ...state, player: { ...state.player, hp: 1000, maxHp: 1000 } } as GameState
+  const rows: Row[] = []
+  while (state.status === 'playing') {
+    const intent = state.enemy.intent
+    const next = def.actions[state.round] // next round's base action (UI EnemyPanel uses this for charging-super)
+    const nextIsSpecial = !!next && (next.kind === 'special' || (next.kind === 'multiAttack' && !!next.special))
+    const res = applyAction(state, { type: 'END_ROUND' })
+    const acted = res.events.find((e) => e.t === 'ENEMY_ACTED') as { kind: string; amount: number; label?: string } | undefined
+    rows.push({
+      enemy: def.name, ctx, hp: state.enemy.maxHp, round: state.round,
+      kind: intent?.kind ?? '-', label: intent ? (intent.kind === 'charge' ? intent.label : intent.kind === 'special' ? intent.name : intent.kind === 'multiAttack' ? intent.name ?? '' : '') : '',
+      amount: intent ? enemyActionTotal(intent) : 0, text: formatEnemyIntent(intent), danger: getIntentDangerLevel(intent), tierClass: getIntentTierClass(intent), stance: getIntentStanceClass(intent),
+      chargingSuper: intent?.kind === 'charge' && nextIsSpecial, acted: acted ? `${acted.kind} ${acted.amount}${acted.label ? ' ' + acted.label : ''}` : '',
+    })
+    state = res.state
+  }
+  return rows
+}
+
+describe('Decision252 Enemy Identity Gate', () => {
+  it('records every enemy intent on the real runtime', () => {
+    const all: Row[] = []
+    for (let i = 0; i < ENEMIES.length; i++) {
+      all.push(...run(i, 'normal', 0, 'normal'))
+      all.push(...run(i, 'hard', 0, 'hard'))
+      all.push(...run(i, 'normal', 6, 'Ⅵ'))
+    }
+    const md: string[] = ['# 決定252 Pilot — Enemy Identity Gate（実 runtime・大耀 推奨デッキ・seed d252-identity・自HP 1000 固定で全 7R を観測）', '', `rules: specialMul ${RULES.stakes.specialMul} / specialMulCap ${JSON.stringify(RULES.stakes.specialMulCap)} / 神階Ⅵ 表示: ${describeStakeRules(6).join('・')}`, '']
+    for (const def of ENEMIES) {
+      md.push(`## ${def.name}（HP ${def.maxHp}・${def.typeLabel}「${def.typeDescription}」）`, '', '| ctx | R | kind | 名前／label | 予告 amount | 予告表示（formatEnemyIntent） | danger | 名札 class | 構え class | charging-super | ENEMY_ACTED |', '|---|---|---|---|---|---|---|---|---|---|---|')
+      for (const r of all.filter((r) => r.enemy === def.name)) md.push(`| ${r.ctx} | ${r.round} | ${r.kind} | ${r.label} | ${r.amount} | ${r.text} | ${r.danger} | ${r.tierClass || '—'} | ${r.stance || '—'} | ${r.chargingSuper ? '**yes**' : ''} | ${r.acted} |`)
+      md.push('')
+    }
+    writeFileSync(`${OUT}/ENEMY_IDENTITY_GATE.md`, md.join('\n'))
+    writeFileSync(`${OUT}/enemy-identity-gate.json`, JSON.stringify(all, null, 1))
+    // hard assertions on the Signature Threats
+    const at = (name: string, ctx: string, round: number) => all.find((r) => r.enemy === name && r.ctx === ctx && r.round === round)!
+    expect(at('業斧の鬼将', 'normal', 3).kind).toBe('charge'); expect(at('業斧の鬼将', 'normal', 3).chargingSuper).toBe(true)
+    expect(at('業斧の鬼将', 'normal', 4).text).toBe('🔥 業斧・断岩 260'); expect(at('業斧の鬼将', 'normal', 4).stance).toBe('enemy-avatar-intent-special')
+    expect(at('藍花の怨霊', 'normal', 4).text).toBe('🔥 怨嗟の花 230')
+    expect(at('蒼海の龍神', 'normal', 4).text).toBe('🔥 大海嘯 200')
+    expect(at('乱舞の道化', 'normal', 2).kind).toBe('charge'); expect(at('乱舞の道化', 'normal', 2).chargingSuper).toBe(true)
+    expect(at('乱舞の道化', 'normal', 3).text).toBe('🔥 乱舞・狂宴 240')
+    expect(at('乱舞の道化', 'normal', 5).kind).toBe('charge'); expect(at('乱舞の道化', 'normal', 5).chargingSuper).toBe(false)
+    expect(at('乱舞の道化', 'normal', 6).text).toBe('🔥 特大 190')
+    expect(at('銀甲の機工師', 'normal', 5).text).toBe('🔥 主砲・神滅甲 240')
+    // 魔獣 Ⅵ: R1 normal multi gets only ATK ×1.15 (9→10), R3 special multi gets ×1.15×1.2 (12→14)
+    expect(at('双牙の魔獣', 'Ⅵ', 1).amount).toBe(Math.round(9 * 1.15)); expect(at('双牙の魔獣', 'Ⅵ', 3).amount).toBe(Math.round(12 * 1.15 * 1.2))
+    // 怨霊／龍神 Ⅵ: cap 1.0 → only ATK ×1.15
+    expect(at('藍花の怨霊', 'Ⅵ', 4).amount).toBe(Math.round(23 * 1.15)); expect(at('蒼海の龍神', 'Ⅵ', 4).amount).toBe(Math.round(20 * 1.15))
+    // 機工師 Ⅵ: cap 1.1
+    expect(at('銀甲の機工師', 'Ⅵ', 5).amount).toBe(Math.round(24 * 1.15 * 1.1))
+    // 鬼将／道化 Ⅵ: full 1.2
+    expect(at('業斧の鬼将', 'Ⅵ', 4).amount).toBe(Math.round(26 * 1.15 * 1.2)); expect(at('乱舞の道化', 'Ⅵ', 3).amount).toBe(Math.round(24 * 1.15 * 1.2))
+    // 試練: attack only, table unchanged
+    expect(all.filter((r) => r.enemy === '試練の影' && r.ctx === 'normal').map((r) => r.amount)).toEqual([5, 8, 11, 15, 13, 9, 6])
+  })
+})

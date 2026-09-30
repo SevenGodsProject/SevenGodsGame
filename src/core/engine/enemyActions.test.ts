@@ -68,14 +68,30 @@ describe('K-C2/M-G 敵データ（CEO GO仕様）', () => {
     expect(def.actions[2]).toEqual({ kind: 'multiAttack', hits: [4, 4, 4], name: '双牙乱撃', special: true })
   })
 
-  it('機工師・魔獣以外の5体は従来のattack/chargeのみ（横展開前の現状保証）', () => {
-    const untouched = ENEMIES.filter(
-      (e) => e.id !== ENEMY_IDS.karakuri && e.id !== ENEMY_IDS.juuma,
-    )
-    expect(untouched.length).toBe(5)
-    for (const e of untouched) {
-      for (const a of e.actions) expect(['attack', 'charge']).toContain(a.kind)
-    }
+  // 決定252（Enemy Ultimate）：4 体に名前つき必殺を追加（Expected Specification Update。旧「5体は attack/charge のみ」）。
+  // 試練の影（入門）だけ attack のみのまま。
+  it('決定252：鬼将 R3溜め→R4「業斧・断岩」26（HP94）／怨霊 R4「怨嗟の花」23／龍神 R4「大海嘯」20／道化 R2溜め→R3「乱舞・狂宴」24＋R5溜め→R6 19。試練の影は attack のみ', () => {
+    const oni = getEnemyDef(ENEMY_IDS.oni)
+    expect(oni.maxHp).toBe(94)
+    expect(oni.actions[2].kind).toBe('charge')
+    expect(oni.actions[3]).toEqual({ kind: 'special', amount: 26, name: '業斧・断岩' })
+    expect(oni.actions.map((a) => enemyActionTotal(a))).toEqual([5, 9, 0, 26, 15, 11, 7])
+    const onryo = getEnemyDef(ENEMY_IDS.onryo)
+    expect(onryo.actions[3]).toEqual({ kind: 'special', amount: 23, name: '怨嗟の花' })
+    expect(onryo.actions.map((a) => enemyActionTotal(a))).toEqual([3, 6, 13, 23, 18, 9, 4])
+    const ryujin = getEnemyDef(ENEMY_IDS.ryujin)
+    expect(ryujin.actions[3]).toEqual({ kind: 'special', amount: 20, name: '大海嘯' })
+    expect(ryujin.actions.map((a) => enemyActionTotal(a))).toEqual([4, 7, 12, 20, 16, 9, 5])
+    const douk = getEnemyDef(ENEMY_IDS.doukeshi)
+    expect(douk.actions[1].kind).toBe('charge')
+    expect(douk.actions[2]).toEqual({ kind: 'special', amount: 24, name: '乱舞・狂宴' })
+    expect(douk.actions[4].kind).toBe('charge')
+    expect(douk.actions.map((a) => enemyActionTotal(a))).toEqual([4, 0, 24, 9, 0, 19, 9])
+    expect(douk.actions.map((a) => enemyActionTotal(a)).reduce((s, t) => s + t, 0)).toBe(65)
+    for (const a of getEnemyDef(ENEMY_IDS.trial).actions) expect(a.kind).toBe('attack')
+    // 名前つき必殺は 6 行動（機工師 1・魔獣 1・鬼将 1・怨霊 1・龍神 1・道化 1）
+    const specials = ENEMIES.flatMap((e) => e.actions.filter((a) => a.kind === 'special' || (a.kind === 'multiAttack' && a.special)))
+    expect(specials.length).toBe(6)
   })
 })
 

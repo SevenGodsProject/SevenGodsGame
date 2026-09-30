@@ -430,8 +430,20 @@ export const RULES = {
     initialHandMinus: 1,
     blockEfficiency: 0.75,
     healEfficiency: 0.6,
+    /**
+     * 決定252：必殺倍率は special 行動（`kind: 'special'` と `special: true` の連撃）だけに乗る。
+     * 通常の連撃には乗らない（round.ts）。旧仕様では連撃のみの双牙の魔獣に全 7 ラウンド +20% が乗り、
+     * 神階Ⅵで 4 神が 16〜38% まで崩落していた（決定251 Known Issue）。A（本値）／B（表の並べ替え）を
+     * paired-seed で比較し、通常／Ⅰ〜Ⅴ／むずかしい／Daily を一切変えない A を採用（魔獣 Ⅵ 50.6→74.1）。
+     */
     specialMul: 1.2,
-    specialMulCapKarakuri: 1.1,
+    /**
+     * 必殺倍率の敵別上限（enemy id → 上限）。未記載の敵は specialMul そのまま。
+     * - enemy_04 機工師 1.1：決定126（主砲 24 は倍率を重ねると受け切れない）
+     * - enemy_03 怨霊 1.0／enemy_06 龍神 1.0：決定252。「怨嗟の花」「大海嘯」は溜めの無い峰そのもので
+     *   数値も Production と同じ。Ⅵ で伸ばすと Ⅶ猛威 −8〜11pt になるため上限 1.0（Ⅵ〜Ⅶ は従来と同値）
+     */
+    specialMulCap: { enemy_04: 1.1, enemy_03: 1.0, enemy_06: 1.0 } as Partial<Record<string, number>>,
     unlockDifficulty: 'hard' as const,
   },
   saveVersion: 9,

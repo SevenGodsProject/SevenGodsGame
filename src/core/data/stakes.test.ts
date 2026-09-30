@@ -90,10 +90,16 @@ describe('resolveStakeRules (累積方式)', () => {
 })
 
 describe('specialMultiplierFor / stakeScoreScale / describe', () => {
-  it('caps the special multiplier for 機工師 (主砲24) and applies it fully to others', () => {
+  // 決定252：上限は RULES.stakes.specialMulCap（機工師 1.1・怨霊 1.0・龍神 1.0）。未記載の敵は specialMul そのまま
+  it('caps the special multiplier per enemy (機工師 1.1 / 怨霊 1.0 / 龍神 1.0, 決定252) and applies it fully to others', () => {
     const r6 = resolveStakeRules(6)
-    expect(specialMultiplierFor(r6, ENEMY_IDS.karakuri)).toBe(RULES.stakes.specialMulCapKarakuri)
+    expect(specialMultiplierFor(r6, ENEMY_IDS.karakuri)).toBe(RULES.stakes.specialMulCap.enemy_04)
+    expect(RULES.stakes.specialMulCap.enemy_04).toBe(1.1)
+    expect(specialMultiplierFor(r6, ENEMY_IDS.onryo)).toBe(1)
+    expect(specialMultiplierFor(r6, ENEMY_IDS.ryujin)).toBe(1)
     expect(specialMultiplierFor(r6, ENEMY_IDS.juuma)).toBe(RULES.stakes.specialMul)
+    expect(specialMultiplierFor(r6, ENEMY_IDS.oni)).toBe(RULES.stakes.specialMul)
+    expect(specialMultiplierFor(r6, ENEMY_IDS.doukeshi)).toBe(RULES.stakes.specialMul)
     expect(specialMultiplierFor(resolveStakeRules(5), ENEMY_IDS.karakuri)).toBe(1)
   })
 

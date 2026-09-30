@@ -97,13 +97,20 @@ describe('神階 engine integration (決定126)', () => {
     expect(intentAmount(s)).toBe(expected)
   })
 
-  it('Ⅵ: special/multi attacks are scaled with the per-enemy cap (機工師 main cannon)', () => {
+  it('Ⅵ: only special attacks are scaled (決定252), with the per-enemy cap (機工師 main cannon)', () => {
     const r6 = resolveStakeRules(6)
-    // 魔獣 R1 は連撃（multiAttack）→ 必殺・連撃倍率が乗る
-    const juuma = start({ stake: 6, enemyId: ENEMY_IDS.juuma })
+    // 決定252：魔獣 R1 の通常連撃（multiAttack・special なし）には必殺倍率が乗らない（Expected Specification Update）
+    let juuma = start({ stake: 6, enemyId: ENEMY_IDS.juuma })
     const rawJ = getEnemyDef(ENEMY_IDS.juuma).actions[0]
     const rawTotal = rawJ.kind === 'multiAttack' ? rawJ.hits.reduce((a, b) => a + b, 0) : 0
-    expect(intentAmount(juuma)).toBe(Math.round(rawTotal * r6.enemyAtkMul * RULES.stakes.specialMul))
+    expect(intentAmount(juuma)).toBe(Math.round(rawTotal * r6.enemyAtkMul))
+    // R3「双牙乱撃」（special: true の連撃）には乗る
+    juuma = { ...juuma, player: { ...juuma.player, hp: 1000, maxHp: 1000 } }
+    for (let i = 0; i < 2; i++) juuma = applyAction(juuma, { type: 'END_ROUND' }).state
+    const rawJ3 = getEnemyDef(ENEMY_IDS.juuma).actions[2]
+    const rawJ3Total = rawJ3.kind === 'multiAttack' ? rawJ3.hits.reduce((a, b) => a + b, 0) : 0
+    expect(juuma.enemy.intent?.kind).toBe('multiAttack')
+    expect(intentAmount(juuma)).toBe(Math.round(rawJ3Total * r6.enemyAtkMul * RULES.stakes.specialMul))
     // 機工師 R5 主砲（special）は上限 specialMulCapKarakuri。決定251：R5 は late surge（R6 起点）の前なので ×1.3 は乗らない
     let k = start({ stake: 6, enemyId: ENEMY_IDS.karakuri })
     k = { ...k, player: { ...k.player, hp: 1000, maxHp: 1000 } }
@@ -112,7 +119,14 @@ describe('神階 engine integration (決定126)', () => {
     const rawK5 = rawK.kind === 'special' ? rawK.amount : 0
     expect(k.enemy.intent?.kind).toBe('special')
     expect(5).toBeLessThan(RULES.stakes.lateRoundFrom)
-    expect(intentAmount(k)).toBe(Math.round(rawK5 * r6.enemyAtkMul * RULES.stakes.specialMulCapKarakuri))
+    expect(intentAmount(k)).toBe(Math.round(rawK5 * r6.enemyAtkMul * (RULES.stakes.specialMulCap.enemy_04 ?? 1)))
+    // 決定252：怨霊 R4「怨嗟の花」は cap 1.0 ＝ Ⅵ でも神階 ATK 倍率だけ（Production と同値）
+    let o = start({ stake: 6, enemyId: ENEMY_IDS.onryo })
+    o = { ...o, player: { ...o.player, hp: 1000, maxHp: 1000 } }
+    for (let i = 0; i < 3; i++) o = applyAction(o, { type: 'END_ROUND' }).state
+    const rawO4 = getEnemyDef(ENEMY_IDS.onryo).actions[3]
+    expect(o.enemy.intent?.kind).toBe('special')
+    expect(intentAmount(o)).toBe(Math.round((rawO4.kind === 'special' ? rawO4.amount : 0) * r6.enemyAtkMul))
   })
 
   it('Ⅶ choices: race scales HP, pressure scales attack, tempo removes 1 AP in round 1 only', () => {
