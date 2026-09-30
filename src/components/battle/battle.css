@@ -7172,3 +7172,54 @@ body.battle-viewport .battle-main > .battle-callout {
   }
   .card-view.card-view-dealt { animation: rl-deal 0.16s ease-out; animation-delay: var(--rl-deal-delay, 0ms); animation-fill-mode: backwards; }
 }
+
+/* ==========================================================================
+ * 決定253 Oracle Readability v1（末尾追記のみ・presentation-only）
+ * 3 択に役割語「守る／整える／攻める」と状況表示を常時つける。ボタンの箱（PC 342×44／SP 79×39）は
+ * 動かさない：役割語は名前と同じ行、状況表示は既存 .divination-choice-preview（dockControls.css の
+ * 行送り固定）。SP（≤899px）は「◯◯の託宣」の接尾辞を畳み「加護 守る」の 1 行＋状況表示の 1 行＝2 行。
+ * 色だけに頼らない（役割語は文字）。新しい色は使わず既存 token（琥珀 #ffc868／紫 #c9a8ff）だけ。
+ * ========================================================================== */
+.divination-choice-name {
+  display: flex;
+  align-items: baseline;
+  min-width: 0;
+}
+.divination-choice-name-main,
+.divination-choice-name-suffix {
+  white-space: nowrap;
+}
+.divination-choice-role {
+  margin-left: 4px; /* 「加護の託宣」と役割語の間だけ空ける（本体と接尾辞は続けて 1 語） */
+  font-weight: 700;
+  color: #ffc868;
+  white-space: nowrap;
+}
+.divination-choice-preview {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+}
+/* 長い形（PC）と短い形（SP）：同じ事実の 2 表記。片方だけ表示（inline 要素なので行数は 1 のまま） */
+.divination-choice-preview-short {
+  display: none;
+}
+@media (max-width: 899px) {
+  body.battle-viewport .divination-choice-preview-long {
+    display: none;
+  }
+  body.battle-viewport .divination-choice-preview-short {
+    display: inline;
+  }
+  /* 79px の枠：接尾辞「の託宣」を畳み、「加護 守る」（4 字＋空き）に収める。省略は状況表示側だけ */
+  body.battle-viewport .divination-choice-name-suffix {
+    display: none;
+  }
+  body.battle-viewport .divination-choice-role {
+    margin-left: 3px;
+  }
+  body.battle-viewport .divination-choice-role {
+    font-size: 10px;
+  }
+}

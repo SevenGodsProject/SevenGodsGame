@@ -1,6 +1,6 @@
 import { DIVINATION_CHOICES } from '../../core/data/divination'
-import { formatScaled } from '../displayScale'
 import { GlyphIcon, type GlyphKey } from './cardIcon'
+import { ORACLE_ROLE_WORDS, splitOracleName } from './oraclePreview'
 import './dockControls.css'
 
 type DivinationPanelProps = {
@@ -9,10 +9,13 @@ type DivinationPanelProps = {
   playable: boolean
   onChoose: (choiceIndex: number) => void
   /**
-   * Phase 5-D：選択肢ごとの「今使えば得るブロック」（内部値・実効値）。
-   * 予告連動の加護だけが値を持ち、他は null。計算は `previewIntentGuard`（engineと同じ関数）。
+   * 決定253（Oracle Readability v1）：選択肢ごとの「今使えば何が起きるか」の文（`oraclePreviewTexts`）。
+   * 加護＝Phase 5-D の実数「今なら ブロック20」／導き＝「今なら『剛撃』が出せる」／天啓＝「今なら 撃破」or「40ダメージ」。
+   * null の選択肢は行を出さない。
    */
-  guardPreviews?: (number | null)[]
+  previews?: (string | null)[]
+  /** 決定253：同じ内容の短い形（SP の 79px 枠用）。CSS で PC は長い形・SP は短い形だけを表示する */
+  previewsShort?: (string | null)[]
 }
 
 /**
@@ -29,7 +32,8 @@ export function DivinationPanel({
   usedThisRound,
   playable,
   onChoose,
-  guardPreviews,
+  previews,
+  previewsShort,
 }: DivinationPanelProps) {
   const disabled = !playable || remaining <= 0 || usedThisRound
 
@@ -53,11 +57,21 @@ export function DivinationPanel({
           >
             <GlyphIcon glyph={DIVINATION_GLYPHS[i]} className="divination-choice-glyph" />
             <span className="divination-choice-body">
-              <span className="divination-choice-name">{choice.name}</span>
+              {/* 決定253：名前を本体＋接尾辞に分け（SP では接尾辞を畳む）、役割語「守る／整える／攻める」を常時添える。
+                  色だけに頼らず文字で役割を示す。データの name は不変 */}
+              <span className="divination-choice-name">
+                <span className="divination-choice-name-main">{splitOracleName(choice.name).main}</span>
+                <span className="divination-choice-name-suffix">{splitOracleName(choice.name).suffix}</span>
+                <span className="divination-choice-role">{ORACLE_ROLE_WORDS[i]}</span>
+              </span>
               <span className="divination-choice-text">{choice.text}</span>
-              {guardPreviews?.[i] != null && (
-                // 押す前に「今ならいくつ」を実数で見せる。予告を見て使うかどうかを決める材料
-                <span className="divination-choice-preview">今なら ブロック{formatScaled(guardPreviews[i]!)}</span>
+              {previews?.[i] != null && (
+                // 押す前に「今なら何が起きるか」を見せる。予告・手札・敵 HP を見て、どれを使うかを決める材料。
+                // 長い形（PC）と短い形（SP）を両方描き、CSS の media query で片方だけ表示する（箱は不変）
+                <span className="divination-choice-preview">
+                  <span className="divination-choice-preview-long">{previews[i]}</span>
+                  <span className="divination-choice-preview-short">{previewsShort?.[i] ?? previews[i]}</span>
+                </span>
               )}
             </span>
           </button>

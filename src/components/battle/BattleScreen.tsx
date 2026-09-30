@@ -2,8 +2,6 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 import { RULES } from '../../core/data/rules'
 import { getFinalScore, getMastery } from '../../core/engine'
 import { previewBonusTrigger } from '../../core/engine/cardBonus'
-import { previewIntentGuard } from '../../core/engine/effects'
-import { DIVINATION_CHOICES } from '../../core/data/divination'
 import { isGodPassiveArmed } from '../../core/engine/godPassive'
 import { formatScaled } from '../displayScale'
 import { getCardDef } from '../../core/data/cards'
@@ -45,6 +43,7 @@ import { RewardOverlay } from './RewardOverlay'
 import { collectResultContext } from './resultContext'
 import type { ResultTransitionAction } from '../resultTransitions'
 import { DivinationPanel } from './DivinationPanel'
+import { oraclePreviewShortTexts, oraclePreviewTexts } from './oraclePreview'
 import { formatEvent } from './formatEvent'
 import { READY_MATERIAL_PILOT, readyIgniteDelays } from './readyMaterial'
 import { VictoryStage } from './VictoryStage'
@@ -591,9 +590,10 @@ export function BattleScreen({
           remaining={state.divination.remaining}
           usedThisRound={state.divination.usedThisRound}
           playable={isPlayerTurn}
-          // Phase 5-D：加護は予告で量が変わるので、押す前に実数を見せる（engineと同じ計算）。
-          // 並び順に依存しないよう、全選択肢について求め、該当しないものは null になる
-          guardPreviews={DIVINATION_CHOICES.map((c) => previewIntentGuard(state, c.effects))}
+          // 決定253：3 択すべてに「今なら何が起きるか」（加護＝Phase 5-D の実数・導き＝出せるようになる札・天啓＝撃破 or 40）。
+          // 並び順に依存しないよう effects から判定する（oraclePreview.ts・表示専用の純関数）
+          previews={oraclePreviewTexts(state)}
+          previewsShort={oraclePreviewShortTexts(state)}
           onChoose={(i) => {
             // 決定125：敵ダメージを伴う託宣（天啓）だけ敵パネルへフォーカス。engine呼び出しは即時
             focusForDivination(i)
