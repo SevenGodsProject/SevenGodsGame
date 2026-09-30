@@ -68,3 +68,37 @@ branch `feat/d253-oracle-readability`（`2b165c1` から。worktree `C:/Users/ki
 
 ## 7. 触っていないこと・STOP
 master merge／push／deploy 0。`scripts/decision253/` は scratch（未コミット・写しを evidence に保存）。Human QA 結果が出るまで Release Gate に進まない。
+
+---
+
+## 8. Production Release（2026-10-01・PRODUCTION LIVE / CLOSED）
+
+Human QA：**Q1〜Q3 3/3 YES**（CEO・2026-10-01）→ CEO 承認 → Release Gate → 統合 → deploy → Smoke。
+
+| 項目 | 結果 |
+|---|---|
+| RC | `release/d253-oracle-readability-rc` = **`4d7b940`**（clean worktree `SevenGodsGame-d253-rc`） |
+| lineage | `6d6c272`（旧 master）→ `2b165c1`（Preflight docs）→ `4d7b940`。fast-forward。`src/core` 差分 0 |
+| git diff scope | src：`oraclePreview.ts`（新規）／`oraclePreview.test.ts`（新規）／`DivinationPanel.tsx`／`BattleScreen.tsx`／`battle.css`／`TutorialOverlay.tsx`＝6 ファイル・+343／−14。数値・engine・回数 3／2・1R1回・enemies／HP／AP／cards／God／OTOMO／God Strike／score／seed／7R・save v9・gameVersion（golden `1.d794038a00b5b53c` PASS）不変。新規 asset 0 |
+| tsc／lint／tests／build（RC） | 0／0／**1,275 PASS**／`index-CzXreZSv.js` md5 `c1ba6f85…`＝Human QA dist・`index-BT3mxnO_.css` |
+| metric lock（RC） | Production dist :4271 vs RC dist :4273・PC／SP／SP660 × 3 組・154 時点：**不一致 0**（hand／AP／HP／block／敵 HP・block／託宣残／共鳴／intent／rngCursor／score／status） |
+| 決定252／249／250 回帰（RC） | 予告文・立ち絵 class 同一／反応クラス集合 同一／God Strike 発火 Before・After とも 6/6（`release/gate-d253.json`） |
+| master → origin/master | **`4d7b940`**（ff・push 2026-10-01 05:38 JST） |
+| Vercel Production deployment | **`6769633163`**（sha `4d7b940`・Production・success・2026-09-30T20:39:07Z） |
+| Production URL | `https://seven-gods-game.vercel.app/`（配信 JS md5 `c1ba6f85…`＝RC build・CSS 200） |
+| rollback target | Vercel **`6761977135`**（sha `6d6c272`・runtime `9316ce1`＝決定252） |
+
+### 8-1. Production Smoke（`production-smoke/gate-d253.json`・RC dist :4273 vs 本番・PC／SP／SP660 × 3 組＝14 走）
+1 加護「守る」＋「今なら ブロック20」✔／2 導き「整える」＋「今なら『一心不乱』が出せる」✔／3 導き候補なし「札を1枚引く（出せる札は増えない）」（R6〜R7）✔／4 天啓「攻める」＋「40ダメージ」✔／5 撃破可能時「今なら 撃破」（鬼将 R7）✔／6 通常 託宣残 3 ✔／7 神階Ⅴ 残 2 ✔／8 SP 3 択・役割語・短形 visible（79×39 枠不変）✔／9 枠外 overflow 0 ✔／10 横スクロール 0 ✔／11 決定252 予告・必殺（鬼将 R3 溜め→R4 断岩 260・道化 R2 ⚠→R3 狂宴 240・魔獣 Ⅴ 連撃）同一 ✔／12 決定249 反応（rl-brace／rl-rise／rl-stagger／rl-breathe／rl-otomo-subtle／rl-ap-flash）同一 ✔／13 God Strike 発火 6/6 ✔／14 console error 0 ✔。**同 seed で RC と本番の表示（box・役割語・状況表示）と保存 GameState が 154 時点すべて一致**。
+
+### 8-2. simulation（evidence JSON が source of truth）
+Preflight：`sim253-audit.json` 404,740 ＋ `sim253-tune.json` 1,223,040 ＝ **1,627,780 試合**（数値表は `gen253.mjs.txt` で生成した `SIMULATION_SUMMARY.md`）。runtime balance 変更 0 のため Pilot／Release の paired-seed は Production と定義上同一（metric lock で実機確認）。
+
+### 8-3. cleanup
+QA サーバー :4271／:4272／RC :4273 停止。一時ファイアウォール規則 0 件（追加していない）。RC worktree・branch は保持。
+
+### 8-4. Known Issues（CLOSED 時点）
+1. 導きの候補が複数のときは価値順の先頭 1 枚だけ表示。
+2. SP の短形でも 8 字以上の札名は末尾 ellipsis（title 属性に全文）。
+3. 神力満タン時は導きが fallback になりやすい（札を使った後に判断する設計）。
+4. 決定244 の人間データ「導き ≈0%」が実際に解消されるかは、次回 Practical QA で観測する。
