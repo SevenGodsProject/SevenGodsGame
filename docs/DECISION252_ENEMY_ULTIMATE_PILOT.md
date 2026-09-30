@@ -111,3 +111,45 @@ branch `feat/d252-enemy-ultimate`（`ccb5237` から。worktree `C:/Users/kimi1/
 
 ## 8. 触っていないこと・STOP
 master merge／push／Production deploy 0。Preflight commit `ccb5237` 保持（本 branch の親）。`scripts/decision252/` は scratch（未コミット。写しを `docs/evidence/decision252/` に保存）。Human QA 結果が出るまで Release Gate に進まない。
+
+---
+
+## 9. Production Release（2026-09-30・PRODUCTION LIVE / CLOSED）
+
+Human QA：**Q1〜Q7 7/7 YES**（CEO・2026-09-30）→ CEO 承認 → Release Gate → 統合 → deploy → Smoke。数値はすべて evidence JSON から生成（`release/RELEASE_NUMBERS.md`・`release-numbers.mjs.txt`）。
+
+| 項目 | 結果 |
+|---|---|
+| RC | `release/d252-enemy-ultimate-rc` = **`76a67a8`**（`9316ce1` runtime ＋ `76a67a8` docs 訂正。clean worktree `SevenGodsGame-d252-rc`） |
+| lineage | `7db95ae`（旧 master）→ `ccb5237`（Preflight docs）→ `9316ce1` → `76a67a8`。fast-forward。feat/d224・決定213 runtime 混入 0 |
+| git diff scope | src：runtime 4（`enemies.ts`／`rules.ts`／`stakes.ts`／`round.ts`）＋テスト 6。試練・機工師・魔獣の表 不変。新 kind／新 asset／追加 balance 0 |
+| tsc／lint／tests／build | 0／0／**1,266 PASS**（決定58・DAILY-01・STAKE-01 含む）／`index-0DI4r-CG.js` md5 `7316c9bc…`＝Human QA dist、CSS＝Production |
+| paired-seed（RC） | 289,100 試合＝Pilot と 3,185 セル Δ 0.00pt（`release/PARITY_RC.md`）。Pilot 578,200（Before 含む）＝Preflight と Δ 0 |
+| Identity Gate（RC） | Pilot と完全一致（`release/identity/`） |
+| 決定240／249 回帰 | bundle md5 同一のため Pilot の Playwright 24 走がそのまま成立。Production Smoke でも再確認 |
+| Gate 訂正 | Preflight／Pilot 文書初版の hard 96.7／Daily 92.4 は転記誤り。JSON 実測 **hard 96.6→97.0／Daily 91.1→91.8**。CEO が実測値で承認（2026-09-30） |
+| master → origin/master | **`76a67a8`**（ff・push 2026-09-30 22:29 JST） |
+| Vercel Production deployment | **`6760632211`**（sha `76a67a8`・Production・success・2026-09-30T13:29:50Z） |
+| Production URL | `https://seven-gods-game.vercel.app/`（配信 JS md5 `7316c9bc…`＝RC build・bundle 内に 業斧・断岩／怨嗟の花／大海嘯／乱舞・狂宴／specialMulCap を確認・CSS 200） |
+| rollback target | Vercel **`6745421768`**（sha `7db95ae`・runtime `b9b126e`＝決定251） |
+
+### 9-1. simulation（JSON 生成・Before＝Production runtime → After＝RC）
+- 通常 99.8→99.8／Easy 100.0→100.0／**Hard 96.6→97.0／Daily 91.1→91.8**（reader）。naive 84.6→84.2・greedy 74.7→72.7（通常）
+- 神階 reader：Ⅰ 99.7→99.7／Ⅱ 98.0→98.1／Ⅲ 89.4→90.2／Ⅳ 86.4→87.9／**Ⅴ 83.7→85.9／Ⅵ 78.9→83.9／Ⅶ猛威 64.5→71.1**／巨躯 55.0→60.4／静寂 78.2→82.7。R−N 15.6〜59.6・R−G 27.1〜68.4 で reader＞naive＞greedy 全段維持。未撃破 全段 ±1pt
+- 双牙の魔獣 reader：Ⅵ **50.6→74.1**／Ⅶ猛威 **31.0→52.9**／巨躯 36.1→58.0／静寂 43.1→66.0。通常／Ⅴ／hard／Daily 同一
+- 49 セル reader<50%（Before→After・100 seed）：Ⅴ 0→0／Ⅵ 4→1／Ⅶ猛威 12→7／Ⅶ巨躯 20→15／Ⅶ静寂 5→2
+- reader−必殺無視（After・通常／Hard／Ⅵ／Ⅶ猛威）：鬼将 33.9／65.0／73.7／72.4・怨霊 35.0／66.7／57.1／50.3・龍神 20.3／54.8／49.3／43.7・道化 6.4／47.4／61.1／81.6・機工師 9.4／41.2／48.9／57.6・魔獣 7.0／15.2／26.9／28.6（Before は鬼将・怨霊・龍神・道化 0）
+- 託宣（通常 reader）：道化 R3 使用 1.1→9.3%・加護率 6.5→17.1%／鬼将 R4 15.6→18.9%／他 不変。GS 率：鬼将 61.0→55.7・道化 45.0→43.9・他 不変
+
+### 9-2. Production Smoke（`production-smoke/`・Playwright・PC 7 組＋SP 2 組・同 seed）
+1 鬼将 R3「斧を振りかぶっている…」（charging-super）→ R4「業斧・断岩 260」カットイン ✔／2 怨霊 R4「怨嗟の花 230」✔／3 龍神 R4「大海嘯 200」✔／4 道化 hard R2「⚠ 手品を仕込んでいる…」→ R3「乱舞・狂宴 280」・R5「また何か仕込んでいる…」→ R6「特大 220」✔／5 魔獣 Ⅵ R1「連撃 60+40」（倍率無し）・R3「双牙乱撃 60+60+50」（×1.2）✔／6 機工師 既存 ✔／7 試練 既存（50/80/110/150）✔／8 託宣 通常 3・神階Ⅵ 2 ✔／9 God Strike 発火（鬼将・道化 PC/SP）✔／10 決定240（名札 class・構え・足元の環 PC 9.4／17.4・SP 15.1）✔／11 決定249（rl-brace／rl-rise／rl-breathe／rl-stagger／rl-otomo-subtle）✔／12 console error 0 ✔／13 横スクロール 0 ✔。Pilot との same-seed parity：比較可能 34 行すべて一致（`PARITY_SMOKE.md`）。
+
+### 9-3. cleanup
+QA サーバー :4271／:4272 停止（PID 9448／17616）。一時ファイアウォール規則 0 件（追加していない）。RC worktree `SevenGodsGame-d252-rc`・branch は保持。
+
+### 9-4. Known Issues（CLOSED 時点）
+1. 道化 hard は無防御なら R3「乱舞・狂宴」280 で致死し得る。Human QA Q2 YES で「予兆→理解→加護で counter」成立を確認済み。
+2. 鬼将 HP 94 により God Strike 率 61→56（撃破 R 5.75→5.64）。
+3. Ⅶ猛威 才華×魔獣 15%（Ⅵ 39%）。才華は盾 0 の技巧デッキ。
+4. gameVersion 変更（`1.d97db7abd39e51e1`→`1.d794038a00b5b53c`）。進行中 save は次ラウンドから新表。
+5. 決定252 文書の数値転記ミス（hard／Daily）。以後は JSON からの生成表のみ使う（`release-numbers.mjs.txt`）。

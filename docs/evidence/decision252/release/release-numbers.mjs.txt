@@ -1,0 +1,49 @@
+// 決定252 Release — generate the simulation tables for docs/report DIRECTLY from evidence JSON (source of truth; no manual transcription)
+import { readFileSync, writeFileSync } from 'node:fs'
+const D = 'C:/Users/kimi1/SevenGodsGame-d252/docs/evidence/decision252/'
+const F1 = JSON.parse(readFileSync(D + 'sim252-final-F1.json', 'utf8'))
+const PILOT = JSON.parse(readFileSync(D + 'sim252-pilot.json', 'utf8'))
+const BEFORE = JSON.parse(readFileSync(D + 'sim252-pilot-before.json', 'utf8'))
+const RC = JSON.parse(readFileSync(D + 'release/sim252-pilot-rc.json', 'utf8'))
+const pc = (x) => (x * 100).toFixed(1)
+const ENEMIES = ['試練の影', '業斧の鬼将', '藍花の怨霊', '銀甲の機工師', '双牙の魔獣', '蒼海の龍神', '乱舞の道化']
+const LV = [['0', '通常'], ['1', 'Ⅰ'], ['2', 'Ⅱ'], ['3', 'Ⅲ'], ['4', 'Ⅳ'], ['5', 'Ⅴ'], ['6', 'Ⅵ'], ['7p', 'Ⅶ猛威'], ['7r', 'Ⅶ巨躯'], ['7t', 'Ⅶ静寂']]
+const b = (face, lv, p) => BEFORE.out[face][lv][p], a = (face, lv, p) => RC.out[face][lv][p]
+const L = []
+L.push(`# 決定252 Release — simulation numbers（evidence JSON から自動生成・${new Date().toISOString()}）`, '',
+  `source: Before = \`sim252-pilot-before.json\`（Production runtime 7db95ae・${BEFORE.games} 試合）／After = \`release/sim252-pilot-rc.json\`（RC 76a67a8・${RC.games} 試合）。Pilot \`sim252-pilot.json\`（${PILOT.games}）と Preflight \`sim252-final-F1.json\`（${F1.games}）との parity は PARITY.md／PARITY_RC.md（全セル Δ0）。`, '')
+L.push('## 1. 難易度・Daily（神階 0・60 seed・overall）', '', '| 面 | reader B→A | naive B→A | greedy B→A | ignoreUlt B→A | 未撃破 reader B→A |', '|---|---|---|---|---|---|')
+for (const [face, name] of [['pilot', '通常（100 seed）'], ['pilot@easy', 'Easy'], ['pilot@hard', 'Hard'], ['pilot@daily', 'Daily']]) {
+  const c = (p) => `${pc(b(face, '0', p).agg.win)}→${pc(a(face, '0', p).agg.win)}`
+  L.push(`| ${name} | ${c('reader')} | ${c('naive')} | ${c('greedy')} | ${c('ignoreUlt')} | ${pc(b(face, '0', 'reader').agg.unfinished)}→${pc(a(face, '0', 'reader').agg.unfinished)} |`)
+}
+L.push('', '## 2. 神階Ⅰ〜Ⅶ（100 seed・overall）', '', '| 段 | reader B→A | naive B→A | greedy B→A | R−N (A) | R−G (A) | 未撃破 reader B→A | reader<50% セル B→A |', '|---|---|---|---|---|---|---|---|')
+for (const [lv, name] of LV) {
+  const c = (p) => `${pc(b('pilot', lv, p).agg.win)}→${pc(a('pilot', lv, p).agg.win)}`
+  const cells = (o) => Object.values(o.cells).filter((v) => v < 0.5).length
+  L.push(`| ${name} | ${c('reader')} | ${c('naive')} | ${c('greedy')} | ${((a('pilot', lv, 'reader').agg.win - a('pilot', lv, 'naive').agg.win) * 100).toFixed(1)} | ${((a('pilot', lv, 'reader').agg.win - a('pilot', lv, 'greedy').agg.win) * 100).toFixed(1)} | ${pc(b('pilot', lv, 'reader').agg.unfinished)}→${pc(a('pilot', lv, 'reader').agg.unfinished)} | ${cells(b('pilot', lv, 'reader'))}→${cells(a('pilot', lv, 'reader'))} |`)
+}
+L.push('', '## 3. 敵別 reader（B→A）', '', '| 敵 | 通常 | Hard | Daily | Ⅲ | Ⅴ | Ⅵ | Ⅶ猛威 | Ⅶ巨躯 |', '|---|---|---|---|---|---|---|---|---|')
+for (const e of ENEMIES) {
+  const c = (face, lv) => `${pc(b(face, lv, 'reader').byEnemy[e].win)}→${pc(a(face, lv, 'reader').byEnemy[e].win)}`
+  L.push(`| ${e} | ${c('pilot', '0')} | ${c('pilot@hard', '0')} | ${c('pilot@daily', '0')} | ${c('pilot', '3')} | ${c('pilot', '5')} | ${c('pilot', '6')} | ${c('pilot', '7p')} | ${c('pilot', '7r')} |`)
+}
+L.push('', '## 4. reader − ignoreUlt（必殺無視）After（通常／Hard／Ⅵ／Ⅶ猛威）と Before', '', '| 敵 | 通常 A (B) | Hard A (B) | Ⅵ A (B) | Ⅶ猛威 A (B) |', '|---|---|---|---|---|')
+for (const e of ENEMIES) {
+  const g = (o, face, lv) => ((o.out[face][lv].reader.byEnemy[e].win - o.out[face][lv].ignoreUlt.byEnemy[e].win) * 100).toFixed(1)
+  L.push(`| ${e} | ${g(RC, 'pilot', '0')} (${g(BEFORE, 'pilot', '0')}) | ${g(RC, 'pilot@hard', '0')} (${g(BEFORE, 'pilot@hard', '0')}) | ${g(RC, 'pilot', '6')} (${g(BEFORE, 'pilot', '6')}) | ${g(RC, 'pilot', '7p')} (${g(BEFORE, 'pilot', '7p')}) |`)
+}
+L.push('', '## 5. 49 セル reader<50%（After）', '')
+for (const [lv, name] of LV) { const bad = Object.entries(a('pilot', lv, 'reader').cells).filter(([, v]) => v < 0.5).map(([k, v]) => `${k} ${pc(v)}`); L.push(`- ${name}：${bad.length}${bad.length ? '（' + bad.join('・') + '）' : ''}`) }
+L.push('', '## 6. 双牙の魔獣（reader B→A・7 神セル）', '', '| 段 | overall | 恵比寿 | 大耀 | 蒼毘 | 才華 | 寿楽 | 福永 | 笑蓮 |', '|---|---|---|---|---|---|---|---|---|')
+for (const [lv, name] of [['0', '通常'], ['5', 'Ⅴ'], ['6', 'Ⅵ'], ['7p', 'Ⅶ猛威'], ['7r', 'Ⅶ巨躯'], ['7t', 'Ⅶ静寂']]) {
+  const cell = (g) => `${pc(b('pilot', lv, 'reader').cells[`${g}×双牙の魔獣`])}→${pc(a('pilot', lv, 'reader').cells[`${g}×双牙の魔獣`])}`
+  L.push(`| ${name} | ${pc(b('pilot', lv, 'reader').byEnemy['双牙の魔獣'].win)}→${pc(a('pilot', lv, 'reader').byEnemy['双牙の魔獣'].win)} | ${['恵比寿', '大耀', '蒼毘', '才華', '寿楽', '福永', '笑蓮'].map(cell).join(' | ')} |`)
+}
+L.push('', '## 7. 託宣・God Strike（通常・reader・B→A）', '', '| 敵 | 託宣/戦 | 加護率 | 託宣 R3 使用 | 託宣 R4 使用 | GS 率 | 撃破 R |', '|---|---|---|---|---|---|---|')
+for (const e of ENEMIES) {
+  const x = b('pilot', '0', 'reader').byEnemy[e], y = a('pilot', '0', 'reader').byEnemy[e]
+  L.push(`| ${e} | ${x.oracleUses.toFixed(2)}→${y.oracleUses.toFixed(2)} | ${pc(x.oracleGuardShare)}→${pc(y.oracleGuardShare)} | ${pc(x.oracleByRound[2])}→${pc(y.oracleByRound[2])} | ${pc(x.oracleByRound[3])}→${pc(y.oracleByRound[3])} | ${pc(x.godStrikeRate)}→${pc(y.godStrikeRate)} | ${x.winRoundMean.toFixed(2)}→${y.winRoundMean.toFixed(2)} |`)
+}
+writeFileSync(D + 'release/RELEASE_NUMBERS.md', L.join('\n'))
+console.log(L.join('\n'))
