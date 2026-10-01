@@ -297,6 +297,8 @@ export const sfx = {
   enemyCharge: () => playBuffer('enemy_charge', { gain: SE_GAIN.warning }),
   // Big moments
   bossEntrance: () => playBuffer('boss_entrance', { gain: SE_GAIN.bigMoment }),
+  /** 決定254：「降臨の間」の神紋。既存 resonance_gain を 0.8 倍速（低く・長く）で鳴らす（新規音源 0） */
+  godDescend: () => playBuffer('resonance_gain', { gain: SE_GAIN.stateChange, rate: 0.8 }),
   reward: () => playBuffer('reward', { gain: SE_GAIN.reward }),
   victory: () => playBuffer('victory_sting', { gain: SE_GAIN.bigMoment * 0.8 }),
   defeat: () => playBuffer('defeat_sting', { gain: SE_GAIN.stateChange }),

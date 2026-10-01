@@ -1,6 +1,7 @@
 import { useEffect } from 'react'
 import { GODS } from '../core/data/gods'
 import { safeEnemyName } from './enemyLookup'
+import { preloadBattleEntrance } from './battle/battleEntrance'
 import { FIRST_BATTLE_BRIEF_LINES, FIRST_BATTLE_PRESET } from './setup/firstBattle'
 import './tutorial.css'
 
@@ -30,6 +31,10 @@ export function FirstBattleBrief({ onConfirm, onCancel, onOpenTutorial }: FirstB
     return () => window.removeEventListener('keydown', onKey)
   }, [onCancel])
 
+  // 決定254：「出陣する」はデッキ構築を通らないため、ここで「降臨の間」の素材を先読みする（storage には触れない）
+  useEffect(() => {
+    preloadBattleEntrance(FIRST_BATTLE_PRESET.godId, FIRST_BATTLE_PRESET.enemyId)
+  }, [])
   const god = GODS.find((g) => g.id === FIRST_BATTLE_PRESET.godId)
 
   return (

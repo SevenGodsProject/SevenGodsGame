@@ -1,0 +1,596 @@
+// 決定254 Pilot — 「降臨の間」自動 Gate v2（T1〜T7・性能・転送量）。計測専用・commit しない（写しは docs/evidence/decision254/pilot/gate2.mjs.txt）。
+// node scripts/decision254/gate2.mjs [only=t1,t3,...]
+// v1 との違い：毎 frame の elementFromPoint を止め（操作開放後だけ）、各時刻を「入口 root の animation startTime（＝CSS の時計＝JS の start()）」基準で出す。
+import { chromium } from 'playwright'
+import { writeFileSync, mkdirSync } from 'node:fs'
+
+const OUT = 'docs/evidence/decision254/pilot'
+mkdirSync(OUT, { recursive: true })
+const BEFORE = 'http://127.0.0.1:4271'
+const AFTER = 'http://127.0.0.1:4272'
+const ONLY = (process.argv.find((a) => a.startsWith('only=')) ?? '').slice(5).split(',').filter(Boolean)
+const VPS = {
+  pc: { viewport: { width: 1508, height: 660 }, isMobile: false, hasTouch: false, deviceScaleFactor: 1 },
+  sp: { viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true, deviceScaleFactor: 2 },
+  sp660: { viewport: { width: 390, height: 660 }, isMobile: true, hasTouch: true, deviceScaleFactor: 2 },
+}
+const HUD = ['.battle-topbar', '.enemy-plate', '.player-plate', '.hand', '.battle-dock', '.divination-panel', '.end-round-button', '.god-otomo-plate', '.intent', '.enemy-avatar']
+
+const INIT = () => {
+  window.__log = []
+  const now = () => performance.now()
+  const origStart = AudioBufferSourceNode.prototype.start
+  AudioBufferSourceNode.prototype.start = function (when, ...rest) {
+    window.__log.push({ t: now(), kind: 'se.start', dur: this.buffer ? +this.buffer.duration.toFixed(3) : null, rate: +this.playbackRate.value.toFixed(2), delay: when ? +(when - this.context.currentTime).toFixed(3) : 0 })
+    return origStart.call(this, when, ...rest)
+  }
+  const origOsc = OscillatorNode.prototype.start
+  OscillatorNode.prototype.start = function (...a) {
+    window.__log.push({ t: now(), kind: 'fallbackTone' })
+    return origOsc.apply(this, a)
+  }
+  for (const type of ['pointerdown', 'pointerup', 'click', 'keydown', 'keyup'])
+    window.addEventListener(type, (e) => window.__log.push({ t: now(), kind: 'in.' + type, key: e.key, ent: !!document.querySelector('[data-testid="boss-entrance"]:not(.is-released):not(.is-skipped)'), target: String(e.target?.className ?? e.target?.tagName ?? '').slice(0, 60) }), true)
+  window.__cls = []
+  try {
+    new PerformanceObserver((l) => {
+      for (const e of l.getEntries()) if (!e.hadRecentInput) window.__cls.push({ t: e.startTime, v: e.value, src: (e.sources || []).map((s) => (s.node && s.node.className ? String(s.node.className).slice(0, 50) : '?')) })
+    }).observe({ type: 'layout-shift', buffered: true })
+  } catch {}
+}
+
+// ページ内：click から入口の各時刻を記録。hit test は操作開放後（pe none／入口なし）と t_rel≈1000 の 1 回だけ
+const PROBE = async ({ clickText, clickSel, light = false, afterGoneMs = 700, maxMs = 7000, hud }) => {
+  const q = (s) => document.querySelector(s)
+  const btn = clickSel ? q(clickSel) : [...document.querySelectorAll('button')].find((b) => b.textContent.replace(/\s+/g, '').includes(clickText) && !b.disabled)
+  if (!btn) return { error: 'button not found ' + (clickSel || clickText) }
+  const logStart = window.__log.length
+  const clsStart = window.__cls.length
+  const hit = (sel) => {
+    const el = q(sel)
+    if (!el) return null
+    const r = el.getBoundingClientRect()
+    if (!r.width) return null
+    const h = document.elementFromPoint(r.x + r.width / 2, r.y + r.height / 2)
+    return !!h && el.contains(h)
+  }
+  const op = (sel) => {
+    const el = q(sel)
+    return el ? +(+getComputedStyle(el).opacity).toFixed(2) : null
+  }
+  const boxes = () =>
+    Object.fromEntries(
+      hud.map((s) => {
+        const el = q(s)
+        if (!el) return [s, null]
+        const r = el.getBoundingClientRect()
+        return [s, [Math.round(r.x), Math.round(r.y), Math.round(r.width), Math.round(r.height)]]
+      }),
+    )
+  const samples = []
+  const frames = []
+  const marks = {}
+  const extra = {}
+  const t0 = performance.now()
+  window.__t0 = t0
+  btn.click()
+  let last = t0
+  let goneAt = null
+  let animStart = null
+  let midHitDone = false
+  let hudAtGone = null
+  await new Promise((resolve) => {
+    const tick = () => {
+      const now = performance.now()
+      const t = Math.round(now - t0)
+      frames.push(+(now - last).toFixed(1))
+      last = now
+      const be = q('[data-testid="boss-entrance"]')
+      const s = { t, ent: !!be, hud: !!q('.battle-topbar') }
+      if (be) {
+        s.variant = be.dataset.variant ?? 'legacy'
+        s.rootOp = +(+getComputedStyle(be).opacity).toFixed(2)
+        s.pe = getComputedStyle(be).pointerEvents
+        s.skipped = be.classList.contains('is-skipped')
+        if (animStart === null) {
+          const an = be.getAnimations()[0]
+          if (an && an.startTime != null) {
+            animStart = an.startTime
+            extra.animStartMs = Math.round(animStart - t0)
+            window.__animStart = animStart
+          }
+        }
+        if (!light) {
+          s.godOp = op('.battle-entrance-god')
+          s.sigilOp = op('.battle-entrance-sigil')
+          s.artOp = op('[data-testid="boss-entrance"] .boss-entrance-art')
+          s.bgOp = op('[data-testid="boss-entrance"] .battle-entrance-bg') ?? op('[data-testid="boss-entrance"] .boss-entrance-bg')
+        }
+      }
+      const released = !be || s.pe === 'none'
+      if (!light && (released || (!midHitDone && animStart !== null && now - animStart >= 1000))) {
+        if (!released) midHitDone = true
+        s.endHit = hit('.end-round-button')
+        s.cardHit = hit('.hand .card-view')
+        s.oracleHit = hit('.divination-choice')
+        if (!released) extra.midEntranceHit = { tRel: Math.round(now - animStart), end: s.endHit, card: s.cardHit, oracle: s.oracleHit }
+      }
+      samples.push(s)
+      const mark = (k, c) => {
+        if (marks[k] === undefined && c) marks[k] = t
+      }
+      mark('hudMounted', s.hud)
+      mark('entranceMounted', s.ent)
+      if (s.ent && extra.firstRootOpacity === undefined) extra.firstRootOpacity = s.rootOp
+      if (s.hud && !s.ent && marks.entranceMounted === undefined) extra.hudFramesWithoutEntranceBeforeMount = (extra.hudFramesWithoutEntranceBeforeMount ?? 0) + 1
+      mark('released', s.ent && s.pe === 'none')
+      mark('skipped', s.skipped)
+      if (!light) {
+        mark('sigilVisible', s.sigilOp > 0.3)
+        mark('godVisible', s.godOp > 0.5)
+        mark('enemyArtVisible', s.artOp > 0.5)
+        mark('stageVisible', s.bgOp > 0.5)
+        mark('endRoundHittable', s.endHit === true)
+        mark('cardHittable', s.cardHit === true)
+        mark('oracleHittable', s.oracleHit === true)
+      }
+      if (marks.entranceMounted !== undefined && !s.ent && goneAt === null) {
+        goneAt = t
+        marks.entranceGone = t
+        hudAtGone = boxes()
+      }
+      if ((goneAt !== null && t > goneAt + afterGoneMs) || t > maxMs) resolve()
+      else requestAnimationFrame(tick)
+    }
+    requestAnimationFrame(tick)
+  })
+  const a0 = extra.animStartMs ?? null
+  const rel = (v) => (v === undefined || a0 === null ? null : v - a0)
+  const log = window.__log.slice(logStart).map((e) => ({ ...e, t: Math.round(e.t - t0), rel: a0 === null ? null : Math.round(e.t - t0 - a0) }))
+  const cls = window.__cls.slice(clsStart).map((e) => ({ ...e, t: Math.round(e.t - t0) }))
+  const win = frames.slice(1).filter((_, i) => samples[i + 1] && (goneAt === null || samples[i + 1].t <= goneAt))
+  const sorted = [...win].sort((a, b) => a - b)
+  return {
+    marks,
+    relMarks: Object.fromEntries(Object.entries(marks).map(([k, v]) => [k, rel(v)])),
+    extra,
+    se: log.filter((e) => e.kind === 'se.start' || e.kind === 'fallbackTone'),
+    input: log.filter((e) => e.kind.startsWith('in.')),
+    frames: { n: win.length, over33: win.filter((x) => x > 33).length, over50: win.filter((x) => x > 50).length, max: Math.max(...win), median: sorted[Math.floor(sorted.length / 2)] },
+    firstFrameMs: frames[1] ?? null,
+    cls,
+    clsSum: +cls.reduce((s, e) => s + e.v, 0).toFixed(5),
+    samples50: samples.filter((s, i) => i === 0 || Math.floor(s.t / 50) !== Math.floor(samples[i - 1].t / 50)),
+    hudAtGone,
+    hudAtEnd: boxes(),
+    leftover: { entrance: !!q('[data-testid="boss-entrance"], .battle-entrance'), anyEntranceClass: document.querySelectorAll('[class*="battle-entrance"]').length },
+    hScroll: document.documentElement.scrollWidth > document.documentElement.clientWidth,
+  }
+}
+
+const clickBtnText = (page, text) =>
+  page.evaluate((t) => {
+    const el = [...document.querySelectorAll('button')].find((x) => x.textContent.replace(/\s+/g, '').includes(t) && !x.disabled)
+    if (!el) return false
+    el.click()
+    return true
+  }, text)
+
+async function newCtx(browser, base, vp, extra = {}) {
+  const ctx = await browser.newContext({ ...VPS[vp], ...extra })
+  await ctx.addInitScript(INIT)
+  const page = await ctx.newPage()
+  const errors = []
+  page.on('pageerror', (e) => errors.push(String(e).slice(0, 200)))
+  page.on('console', (m) => m.type() === 'error' && errors.push('console: ' + m.text().slice(0, 200)))
+  const reqs = []
+  page.on('request', (r) => reqs.push({ url: r.url().replace(base, ''), t: Date.now(), req: r }))
+  return { ctx, page, errors, reqs }
+}
+
+async function toDeck(page, base, { god = 1, enemy = 5, query = '' } = {}) {
+  const url = `${base}/${query}`
+  await page.goto(url, { waitUntil: 'load' })
+  await page.evaluate(() => {
+    try {
+      localStorage.clear()
+    } catch {}
+  })
+  await page.goto(url, { waitUntil: 'load' })
+  await page.waitForSelector('[data-testid="home-start"]', { timeout: 30000 })
+  await page.waitForTimeout(500)
+  await page.click('[data-testid="home-start"]')
+  await page.locator('.god-select-card').nth(god).click()
+  await page.locator('.difficulty-select button').nth(1).click()
+  await page.click('.god-select-confirm')
+  await page.locator('.enemy-select-card').nth(enemy).click()
+  await page.waitForSelector('.deck-builder-clear-button', { timeout: 15000 })
+  await page.waitForTimeout(1500) // デッキ構築の滞在（先読みが終わる時間。実プレイでは構築に数秒以上かかる）
+}
+
+async function reqBytes(list) {
+  let bytes = 0
+  const out = []
+  for (const r of list) {
+    let b = null
+    try {
+      const resp = await r.req.response()
+      const s = await r.req.sizes()
+      b = s.responseBodySize
+      out.push({ url: r.url, status: resp?.status() ?? null, bytes: b })
+    } catch {
+      out.push({ url: r.url, bytes: null })
+    }
+    bytes += b ?? 0
+  }
+  return { count: list.length, bytes, list: out }
+}
+
+const ENTRANCE_ASSET = /front_640|backgrounds\/stages|\/enemies\/|resonance_gain|boss_entrance/
+
+async function fullRun(browser, base, vp, opts = {}) {
+  const { ctx, page, errors, reqs } = await newCtx(browser, base, vp, opts.ctx)
+  await toDeck(page, base, opts)
+  const preloaded = reqs.filter((r) => ENTRANCE_ASSET.test(r.url)).map((r) => r.url)
+  const mark = Date.now()
+  const probe = await page.evaluate(PROBE, { clickText: 'この構成でバトル開始', light: !!opts.light, afterGoneMs: opts.afterGoneMs ?? 700, hud: HUD })
+  const after = reqs.filter((r) => r.t >= mark)
+  const transfer = await reqBytes(after)
+  const entranceAssetsAfterClick = transfer.list.filter((r) => ENTRANCE_ASSET.test(r.url))
+  const res = { probe, preloadedBeforeClick: preloaded, transfer: { count: transfer.count, bytes: transfer.bytes, entranceAssetsAfterClick, list: transfer.list }, errors }
+  if (opts.keep) return { ...res, ctx, page, reqs }
+  await ctx.close()
+  return res
+}
+
+async function saveState(page) {
+  return page.evaluate(() => {
+    try {
+      const s = JSON.parse(localStorage.getItem('sevengods.battleSave') || 'null')
+      const st = s?.state ?? s
+      if (!st) return null
+      return JSON.stringify({ round: st.round, ap: st.ap, hp: st.player?.hp, block: st.player?.block, enemyHp: st.enemy?.hp, hand: st.hand?.map((c) => c.defId), deck: st.deck?.length, discard: st.discard?.length, div: st.divination, res: st.resonance, score: st.score?.total, status: st.status, rng: st.rngCursor, intent: st.enemy?.intent, log: st.log?.length })
+    } catch {
+      return 'ERR'
+    }
+  })
+}
+
+const uiState = (page) =>
+  page.evaluate(() => ({
+    hand: document.querySelectorAll('.hand .card-view').length,
+    text: document.body.innerText.replace(/\s+/g, ' ').match(/神力[^0-9]*\d+\s*\/\s*\d+|AP[^0-9]*\d+\s*\/\s*\d+/)?.[0] ?? null,
+    round: (document.body.innerText.match(/ラウンド\s*(\d)\s*\/\s*7/) || [])[1] ?? null,
+    remaining: (document.body.innerText.match(/託宣（残り(\d)回/) || [])[1] ?? null,
+  }))
+
+// T3：入口の途中（animation 開始から ≈300ms）で skip。target＝card／end／oracle（タップ）または key
+async function skipRun(browser, vp, how, atRelMs = 300) {
+  const { ctx, page, errors } = await newCtx(browser, AFTER, vp)
+  await toDeck(page, AFTER)
+  const probeP = page.evaluate(PROBE, { clickText: 'この構成でバトル開始', hud: HUD, afterGoneMs: 1500 })
+  await page.waitForSelector('[data-testid="boss-entrance"]', { state: 'attached', timeout: 20000 })
+  await page.waitForFunction(() => window.__animStart != null, null, { timeout: 10000 }).catch(() => {})
+  const sel = { card: '.hand .card-view', end: '.end-round-button', oracle: '.divination-choice' }[how] ?? '.hand .card-view'
+  const target = await page.evaluate((s) => {
+    const el = document.querySelector(s)
+    if (!el) return null
+    const r = el.getBoundingClientRect()
+    return { x: r.x + r.width / 2, y: r.y + r.height / 2 }
+  }, sel)
+  if (how === 'Enter' || how === 'Space') await page.evaluate(() => document.querySelector('.hand .card-view')?.focus())
+  if (how === 'EscapeOracle') await page.evaluate(() => document.querySelector('.divination-choice')?.focus())
+  const stateBefore = await saveState(page)
+  const uiBefore = await uiState(page)
+  // animation 開始から atRelMs まで待つ
+  await page.waitForFunction((ms) => window.__animStart != null && performance.now() - window.__animStart >= ms, atRelMs, { timeout: 10000 }).catch(() => {})
+  const tInputRel = await page.evaluate(() => Math.round(performance.now() - (window.__animStart ?? NaN)))
+  if (['card', 'end', 'oracle'].includes(how)) {
+    if (VPS[vp].hasTouch) await page.touchscreen.tap(target.x, target.y)
+    else await page.mouse.click(target.x, target.y)
+  } else {
+    await page.keyboard.press(how === 'EscapeOracle' ? 'Escape' : how)
+  }
+  const probe = await probeP
+  await page.waitForTimeout(800)
+  const stateAfter = await saveState(page)
+  const uiAfter = await uiState(page)
+  const endEnabled = await page.locator('.end-round-button').isEnabled().catch(() => null)
+  await ctx.close()
+  const inp = probe.input.find((e) => e.kind === 'in.pointerdown' || e.kind === 'in.keydown')
+  const tIn = inp ? inp.t : NaN
+  const seAfterInput = probe.se.filter((e) => e.t >= tIn)
+  return {
+    how,
+    vp,
+    tInputRel,
+    inputEvent: inp ?? null,
+    validDuringEntrance: !!inp?.ent,
+    skipToGone: probe.marks.entranceGone - tIn,
+    skipToControl: (probe.marks.endRoundHittable ?? NaN) - tIn,
+    stateUnchanged: stateBefore === stateAfter,
+    uiBefore,
+    uiAfter,
+    uiUnchanged: JSON.stringify(uiBefore) === JSON.stringify(uiAfter),
+    endEnabled,
+    seAll: probe.se.map((e) => [e.t, e.rel, e.dur, e.rate]),
+    seAfterInput: seAfterInput.map((e) => [e.t, e.rel, e.dur, e.rate]),
+    bossSePlayedAfterSkip: seAfterInput.some((e) => e.dur === 0.96),
+    inputLog: probe.input,
+    marks: probe.marks,
+    relMarks: probe.relMarks,
+    leftover: probe.leftover,
+    errors,
+  }
+}
+
+async function playToResult(page) {
+  const t0 = Date.now()
+  while (Date.now() - t0 < 150000) {
+    const s = await page.evaluate(() => ({ over: !!document.querySelector('.game-over-overlay'), reward: !!document.querySelector('.reward-overlay') }))
+    if (s.over) return true
+    if (s.reward) await clickBtnText(page, 'スキップ')
+    const btn = page.getByRole('button', { name: 'ラウンドを終える' })
+    if (await btn.isEnabled().catch(() => false)) await btn.click({ timeout: 3000 }).catch(() => {})
+    await page.waitForTimeout(400)
+  }
+  return false
+}
+
+const brief = (p) => ({ variant: p.samples50?.find((s) => s.ent)?.variant ?? null, marks: p.marks, relMarks: p.relMarks, animStartMs: p.extra?.animStartMs ?? null, se: p.se.map((e) => [e.t, e.rel, e.dur, e.rate]), frames: p.frames, clsSum: p.clsSum, leftover: p.leftover, hScroll: p.hScroll })
+
+// T2：同じページで 2 戦目（「もう一度」・ホーム経由の新規開始）→ reload（新セッション）で続きから＝入口なし／新規開始＝Full
+async function revisitRun(browser, vp) {
+  const first = await fullRun(browser, AFTER, vp, { keep: true, light: true })
+  const { ctx, page, errors } = first
+  const out = { first: brief(first.probe) }
+  await page.waitForTimeout(500)
+  out.reachedResult1 = await playToResult(page)
+  await page.waitForTimeout(2500)
+  out.rematchButton = await page.evaluate(() => [...document.querySelectorAll('.game-over-overlay button')].map((b) => b.textContent.trim()).find((t) => t.includes('もう一度')) ?? null)
+  const p2 = await page.evaluate(PROBE, { clickText: 'もう一度', light: true, hud: HUD })
+  out.rematch = brief(p2)
+  await page.waitForTimeout(500)
+  out.reachedResult2 = await playToResult(page)
+  await page.waitForTimeout(2500)
+  const homeClicked = await page.evaluate(() => {
+    const b = [...document.querySelectorAll('.game-over-overlay button')].find((x) => x.textContent.includes('ホーム'))
+    if (!b) return false
+    b.click()
+    return true
+  })
+  out.homeClicked = homeClicked
+  if (homeClicked) {
+    await page.waitForSelector('[data-testid="home-start"]', { timeout: 10000 })
+    await page.click('[data-testid="home-start"]')
+    await page.locator('.god-select-card').nth(0).click()
+    await page.locator('.difficulty-select button').nth(1).click()
+    await page.click('.god-select-confirm')
+    await page.locator('.enemy-select-card').nth(2).click()
+    await page.waitForSelector('.deck-builder-clear-button', { timeout: 15000 })
+    await page.waitForTimeout(1200)
+    const p3 = await page.evaluate(PROBE, { clickText: 'この構成でバトル開始', light: true, hud: HUD })
+    out.viaHome = { ...brief(p3), godTitle: null }
+    out.viaHome.godTitle = await page.evaluate(() => document.querySelector('.battle-entrance-god-title')?.textContent ?? null)
+  }
+  // 再読み込み＝新しいセッション：「続きから」は入口なし
+  await page.reload({ waitUntil: 'load' })
+  await page.waitForSelector('.home-cta-primary', { timeout: 30000 })
+  await page.waitForTimeout(800)
+  const hasResume = await page.locator('[data-testid="home-resume"]').count()
+  out.resumeButton = hasResume
+  if (hasResume) {
+    const p4 = await page.evaluate(PROBE, { clickSel: '[data-testid="home-resume"]', light: true, hud: HUD, maxMs: 2500 })
+    out.resume = { entranceEverShown: p4.marks.entranceMounted !== undefined, marks: p4.marks, se: p4.se.map((e) => [e.t, e.dur, e.rate]) }
+  }
+  // 再読み込み後の新規開始＝Full に戻る
+  await page.reload({ waitUntil: 'load' })
+  await page.waitForSelector('.home-cta-primary', { timeout: 30000 })
+  await page.waitForTimeout(800)
+  await page.click('[data-testid="home-start"]')
+  await page.waitForTimeout(300)
+  if (await clickBtnText(page, '新しく始める')) await page.waitForTimeout(300)
+  await page.locator('.god-select-card').nth(1).click()
+  await page.locator('.difficulty-select button').nth(1).click()
+  await page.click('.god-select-confirm')
+  await page.locator('.enemy-select-card').nth(5).click()
+  await page.waitForSelector('.deck-builder-clear-button', { timeout: 15000 })
+  await page.waitForTimeout(1200)
+  const p5 = await page.evaluate(PROBE, { clickText: 'この構成でバトル開始', light: true, hud: HUD })
+  out.afterReloadNewStart = brief(p5)
+  out.errors = errors
+  await ctx.close()
+  return out
+}
+
+// T6：続きから（Before／After とも）
+async function resumeRun(browser, base, vp) {
+  const first = await fullRun(browser, base, vp, { keep: true, light: true })
+  const { ctx, page, errors } = first
+  await page.waitForTimeout(800)
+  await page.reload({ waitUntil: 'load' })
+  await page.waitForSelector('[data-testid="home-resume"]', { timeout: 30000 })
+  await page.waitForTimeout(800)
+  const p = await page.evaluate(PROBE, { clickSel: '[data-testid="home-resume"]', light: true, hud: HUD, maxMs: 2500 })
+  await ctx.close()
+  return { entranceEverShown: p.marks.entranceMounted !== undefined, marks: p.marks, se: p.se.map((e) => [e.t, e.dur, e.rate]), errors }
+}
+
+// T7：初陣（FirstBattleBrief「出陣する」）・Daily（今日の神域挑戦）
+async function firstBattleRun(browser, base, vp) {
+  const { ctx, page, errors, reqs } = await newCtx(browser, base, vp)
+  await page.goto(base + '/', { waitUntil: 'load' })
+  await page.evaluate(() => localStorage.clear())
+  await page.goto(base + '/', { waitUntil: 'load' })
+  await page.waitForSelector('[data-testid="home-first-battle"]', { timeout: 30000 })
+  await page.click('[data-testid="home-first-battle"]')
+  await page.waitForSelector('[data-testid="first-battle-brief"]')
+  await page.waitForTimeout(1200)
+  const preloaded = reqs.filter((r) => ENTRANCE_ASSET.test(r.url)).map((r) => r.url)
+  const mark = Date.now()
+  const p = await page.evaluate(PROBE, { clickText: '出陣する', light: true, hud: HUD })
+  const transfer = await reqBytes(reqs.filter((r) => r.t >= mark))
+  const godTitle = null
+  const endEnabled = await page.locator('.end-round-button').isEnabled().catch(() => null)
+  await ctx.close()
+  return { ...brief(p), godTitle, endEnabled, preloaded, entranceAssetsAfterClick: transfer.list.filter((r) => ENTRANCE_ASSET.test(r.url)).map((r) => r.url), errors }
+}
+
+async function dailyRun(browser, base, vp) {
+  const { ctx, page, errors } = await newCtx(browser, base, vp)
+  await page.goto(base + '/', { waitUntil: 'load' })
+  await page.evaluate(() => localStorage.clear())
+  await page.goto(base + '/', { waitUntil: 'load' })
+  await page.waitForSelector('.home-cta-primary', { timeout: 30000 })
+  await page.waitForTimeout(600)
+  const opened = await page.evaluate(() => {
+    const el = document.querySelector('[data-testid="home-today-cta"]')
+    if (!el) return false
+    el.click()
+    return true
+  })
+  await page.waitForTimeout(900)
+  await clickBtnText(page, '挑戦開始')
+  await page.waitForTimeout(500)
+  if (await clickBtnText(page, '新しく始める')) await page.waitForTimeout(300)
+  await clickBtnText(page, '大耀')
+  await page.waitForTimeout(1500)
+  const p = await page.evaluate(PROBE, { clickText: 'この構成でバトル開始', light: true, hud: HUD })
+  const tag = await page.evaluate(() => document.body.innerText.includes('DAILY') || !!document.querySelector('[class*="daily"]'))
+  const endEnabled = await page.locator('.end-round-button').isEnabled().catch(() => null)
+  await ctx.close()
+  return { opened, ...brief(p), error: p.error ?? null, dailyTag: tag, endEnabled, errors }
+}
+
+// 7 柱：神名と画像が選んだ神になる（Full の見出しと img src）
+async function godsRun(browser, vp) {
+  const out = []
+  for (let god = 0; god < 7; god++) {
+    const { ctx, page, errors } = await newCtx(browser, AFTER, vp)
+    await toDeck(page, AFTER, { god, enemy: god % 7 })
+    const selected = await page.evaluate(() => document.body.innerText.replace(/\s+/g, ' ').slice(0, 300))
+    const probeP = page.evaluate(PROBE, { clickText: 'この構成でバトル開始', light: true, hud: HUD })
+    await page.waitForSelector('.battle-entrance-god-title', { state: 'attached', timeout: 20000 })
+    const shown = await page.evaluate(() => ({
+      title: document.querySelector('.battle-entrance-god-title')?.textContent ?? null,
+      img: (document.querySelector('.battle-entrance-god')?.getAttribute('src') ?? null),
+      enemyName: document.querySelector('[data-testid="boss-entrance"] .boss-entrance-name')?.textContent ?? null,
+      accent: getComputedStyle(document.querySelector('[data-testid="boss-entrance"]')).getPropertyValue('--god-accent').trim(),
+    }))
+    const p = await probeP
+    const hudGod = await page.evaluate(() => ({ playerAvatar: document.querySelector('.player-avatar img, .player-avatar')?.getAttribute('src') ?? document.querySelector('.player-avatar')?.style?.backgroundImage ?? null, playerName: document.querySelector('.player-name, .player-plate-name')?.textContent ?? null }))
+    await ctx.close()
+    out.push({ god, deckText: selected.slice(0, 120), shown, hudGod, variant: p.samples50?.find((s) => s.ent)?.variant ?? null, gone: p.relMarks.entranceGone, errors })
+  }
+  return out
+}
+
+const browser = await chromium.launch({ args: ['--autoplay-policy=no-user-gesture-required'] })
+const R = { at: new Date().toISOString(), before: BEFORE, after: AFTER, note: 'headless Chromium（GPU なし）。PC のフレーム値は参考値。relMarks＝入口 root animation の startTime（＝JS start()）基準', runs: {} }
+const want = (n) => !ONLY.length || ONLY.includes(n)
+const log = (k, v) => console.log(k, JSON.stringify(v).slice(0, 600))
+
+if (want('t1')) {
+  for (const vp of ['pc', 'sp', 'sp660']) {
+    for (const [name, base] of [['before', BEFORE], ['after', AFTER]]) {
+      const k = `t1/${vp}/${name}`
+      R.runs[k] = await fullRun(browser, base, vp, { afterGoneMs: 2000 })
+      log(k, { rel: R.runs[k].probe.relMarks, animStart: R.runs[k].probe.extra.animStartMs, mid: R.runs[k].probe.extra.midEntranceHit, se: R.runs[k].probe.se.map((e) => [e.rel, e.dur, e.rate]), frames: R.runs[k].probe.frames, transfer: [R.runs[k].transfer.count, R.runs[k].transfer.bytes], entAfterClick: R.runs[k].transfer.entranceAssetsAfterClick.length, errors: R.runs[k].errors.length })
+    }
+  }
+}
+if (want('t4')) {
+  for (const vp of ['pc', 'sp']) {
+    for (const [name, base] of [['before', BEFORE], ['after', AFTER]]) {
+      const k = `t4-reduced/${vp}/${name}`
+      R.runs[k] = await fullRun(browser, base, vp, { ctx: { reducedMotion: 'reduce' }, afterGoneMs: 1200 })
+      const an = await (async () => null)()
+      log(k, { rel: R.runs[k].probe.relMarks, animStart: R.runs[k].probe.extra.animStartMs, se: R.runs[k].probe.se.map((e) => [e.rel, e.dur, e.rate]), an })
+    }
+  }
+}
+if (want('anims')) {
+  // reduced：入口中の getAnimations() に transform 系 keyframes 0（static）
+  for (const vp of ['pc', 'sp']) {
+    const { ctx, page } = await newCtx(browser, AFTER, vp, { reducedMotion: 'reduce' })
+    await toDeck(page, AFTER)
+    await clickBtnText(page, 'この構成でバトル開始')
+    await page.waitForSelector('[data-testid="boss-entrance"]', { state: 'attached', timeout: 20000 })
+    const anims = await page.evaluate(() => {
+      const root = document.querySelector('[data-testid="boss-entrance"]')
+      return root.getAnimations({ subtree: true }).map((a) => {
+        const kf = a.effect.getKeyframes()
+        return { name: a.animationName, target: String(a.effect.target.className).slice(0, 40), props: [...new Set(kf.flatMap((k) => Object.keys(k).filter((x) => !['offset', 'easing', 'composite', 'computedOffset'].includes(x))))] }
+      })
+    })
+    await ctx.close()
+    R.runs[`anims-reduced/${vp}`] = anims
+    log(`anims-reduced/${vp}`, anims)
+  }
+  for (const vp of ['pc', 'sp']) {
+    const { ctx, page } = await newCtx(browser, AFTER, vp)
+    await toDeck(page, AFTER)
+    await clickBtnText(page, 'この構成でバトル開始')
+    await page.waitForSelector('[data-testid="boss-entrance"]', { state: 'attached', timeout: 20000 })
+    await page.waitForTimeout(100)
+    const anims = await page.evaluate(() => {
+      const root = document.querySelector('[data-testid="boss-entrance"]')
+      const st = root.getAnimations()[0]?.startTime ?? null
+      return root.getAnimations({ subtree: true }).map((a) => ({ name: a.animationName, target: String(a.effect.target.className).slice(0, 40), startDelta: st == null || a.startTime == null ? null : Math.round(a.startTime - st) }))
+    })
+    await ctx.close()
+    R.runs[`anims-full/${vp}`] = anims
+    log(`anims-full/${vp}`, anims)
+  }
+}
+if (want('perf')) {
+  for (let i = 1; i <= 3; i++) {
+    for (const [name, base] of [['before', BEFORE], ['after', AFTER]]) {
+      const k = `perf/sp/${name}/${i}`
+      const r = await fullRun(browser, base, 'sp', { light: true })
+      R.runs[k] = { frames: r.probe.frames, firstFrameMs: r.probe.firstFrameMs, clsSum: r.probe.clsSum, marks: r.probe.marks, relMarks: r.probe.relMarks, transfer: { count: r.transfer.count, bytes: r.transfer.bytes, entranceAssetsAfterClick: r.transfer.entranceAssetsAfterClick }, preloadedBeforeClick: r.preloadedBeforeClick, errors: r.errors }
+      log(k, { frames: R.runs[k].frames, cls: R.runs[k].clsSum, transfer: [r.transfer.count, r.transfer.bytes], entAfterClick: r.transfer.entranceAssetsAfterClick.map((x) => x.url) })
+    }
+  }
+}
+if (want('t3')) {
+  for (const [vp, how, at] of [['pc', 'card', 300], ['pc', 'end', 300], ['pc', 'oracle', 300], ['pc', 'Enter', 300], ['pc', 'Space', 300], ['pc', 'EscapeOracle', 300], ['pc', 'card', 60], ['pc', 'card', 1800], ['sp', 'card', 300], ['sp', 'end', 300], ['sp', 'oracle', 300], ['sp', 'card', 1800]]) {
+    const k = `t3-skip/${vp}/${how}@${at}`
+    R.runs[k] = await skipRun(browser, vp, how, at)
+    const r = R.runs[k]
+    log(k, { valid: r.validDuringEntrance, tInputRel: r.tInputRel, toGone: r.skipToGone, toControl: r.skipToControl, same: r.stateUnchanged, ui: r.uiUnchanged, hand: [r.uiBefore.hand, r.uiAfter.hand], bossAfterSkip: r.bossSePlayedAfterSkip, seAll: r.seAll, inputs: r.inputLog.map((e) => [e.t, e.kind, e.ent ? 'E' : '-', e.target.slice(0, 25)]), leftover: r.leftover, errors: r.errors.length })
+  }
+}
+if (want('t2')) {
+  for (const vp of ['pc', 'sp']) {
+    const k = `t2-revisit/${vp}`
+    R.runs[k] = await revisitRun(browser, vp)
+    const r = R.runs[k]
+    log(k, { first: [r.first.variant, r.first.relMarks], result1: r.reachedResult1, rematch: [r.rematch.variant, r.rematch.relMarks, r.rematch.se], result2: r.reachedResult2, viaHome: r.viaHome && [r.viaHome.variant, r.viaHome.relMarks, r.viaHome.godTitle], resume: r.resume, afterReloadNewStart: [r.afterReloadNewStart.variant, r.afterReloadNewStart.relMarks], errors: r.errors })
+  }
+}
+if (want('t6')) {
+  for (const [name, base] of [['before', BEFORE], ['after', AFTER]]) {
+    const k = `t6-resume/pc/${name}`
+    R.runs[k] = await resumeRun(browser, base, 'pc')
+    log(k, R.runs[k])
+  }
+}
+if (want('t7')) {
+  for (const [name, base] of [['before', BEFORE], ['after', AFTER]]) {
+    for (const vp of ['pc', 'sp']) {
+      R.runs[`t7-first/${vp}/${name}`] = await firstBattleRun(browser, base, vp)
+      log(`t7-first/${vp}/${name}`, R.runs[`t7-first/${vp}/${name}`])
+    }
+    R.runs[`t7-daily/pc/${name}`] = await dailyRun(browser, base, 'pc')
+    log(`t7-daily/pc/${name}`, R.runs[`t7-daily/pc/${name}`])
+  }
+}
+if (want('gods')) {
+  R.runs['gods/pc'] = await godsRun(browser, 'pc')
+  log('gods/pc', R.runs['gods/pc'])
+}
+await browser.close()
+const file = `${OUT}/gate2${ONLY.length ? '-' + ONLY.join('-') : ''}.json`
+writeFileSync(file, JSON.stringify(R, null, 1))
+console.log('wrote', file)

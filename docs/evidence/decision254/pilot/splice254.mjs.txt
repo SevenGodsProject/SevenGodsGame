@@ -1,0 +1,29 @@
+// 決定254：tables.md（gen254 の出力）の各節を DECISION254_GAME_ENTRY_PILOT.md のプレースホルダへ流し込む（計測専用・commit しない）
+import { readFileSync, writeFileSync } from 'node:fs'
+const T = readFileSync('docs/evidence/decision254/pilot/tables.md', 'utf8')
+const sec = (title) => {
+  const i = T.indexOf('### ' + title)
+  if (i < 0) throw new Error('section not found: ' + title)
+  const j = T.indexOf('\n### ', i + 4)
+  return T.slice(i, j < 0 ? T.length : j).trim()
+}
+const map = {
+  '<<T1>>': sec('T1 Full'),
+  '<<T1_TRANSFER>>': sec('T1 転送量'),
+  '<<T2>>': sec('T2 Revisit'),
+  '<<T3>>': sec('T3 Skip'),
+  '<<T4>>': sec('T4 Reduced motion'),
+  '<<T6T7>>': sec('T6 続きから'),
+  '<<GODS>>': sec('7 柱'),
+  '<<PERF>>': sec('性能（SP 390×844 headless') + '\n\n' + sec('性能（追加サンプル perf2'),
+  '<<T5>>': sec('T5 Layout'),
+  '<<LOCK>>': sec('T8 METRIC LOCK'),
+}
+const p = 'docs/DECISION254_GAME_ENTRY_PILOT.md'
+let d = readFileSync(p, 'utf8')
+for (const [k, v] of Object.entries(map)) {
+  if (!d.includes(k)) throw new Error('placeholder missing: ' + k)
+  d = d.replace(k, v)
+}
+writeFileSync(p, d)
+console.log('spliced', Object.keys(map).length)

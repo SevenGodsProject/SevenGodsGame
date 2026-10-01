@@ -1,0 +1,109 @@
+// 決定254 Pilot — SP 入口中の frame 計測（追加サンプル）。headless（GPU なし）N 本 ＋ 実 Chrome headed（GPU あり）N 本。計測専用・commit しない
+// node scripts/decision254/perf2.mjs [headlessN=6] [headedN=4]
+import { chromium } from 'playwright'
+import { writeFileSync } from 'node:fs'
+const BEFORE = 'http://127.0.0.1:4271'
+const AFTER = 'http://127.0.0.1:4272'
+const HN = +(process.argv[2] ?? 6)
+const GN = +(process.argv[3] ?? 4)
+const SP = { viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true, deviceScaleFactor: 2 }
+
+const PROBE = async () => {
+  const q = (s) => document.querySelector(s)
+  const btn = [...document.querySelectorAll('button')].find((b) => b.textContent.replace(/\s+/g, '').includes('この構成でバトル開始') && !b.disabled)
+  if (!btn) return { error: 'no button' }
+  const frames = []
+  const t0 = performance.now()
+  btn.click()
+  let last = t0
+  let mounted = null
+  let goneAt = null
+  await new Promise((resolve) => {
+    const tick = () => {
+      const now = performance.now()
+      frames.push({ t: now - t0, d: now - last })
+      last = now
+      const be = q('[data-testid="boss-entrance"]')
+      if (be && mounted === null) mounted = now - t0
+      if (mounted !== null && !be && goneAt === null) goneAt = now - t0
+      if ((goneAt !== null && now - t0 > goneAt + 500) || now - t0 > 7000) resolve()
+      else requestAnimationFrame(tick)
+    }
+    requestAnimationFrame(tick)
+  })
+  const win = frames.filter((f, i) => i > 0 && f.t >= (mounted ?? 0) && (goneAt === null || f.t <= goneAt)).map((f) => +f.d.toFixed(1))
+  const sorted = [...win].sort((a, b) => a - b)
+  return { mounted: Math.round(mounted), gone: Math.round(goneAt), n: win.length, over33: win.filter((x) => x > 33).length, over50: win.filter((x) => x > 50).length, max: Math.max(...win), median: sorted[Math.floor(sorted.length / 2)], firstFrame: frames[1]?.d ?? null, all: win }
+}
+
+async function one(browser, base) {
+  const ctx = await browser.newContext(SP)
+  const page = await ctx.newPage()
+  const errors = []
+  page.on('pageerror', (e) => errors.push(String(e).slice(0, 100)))
+  await page.goto(base + '/', { waitUntil: 'load' })
+  await page.evaluate(() => {
+    try {
+      localStorage.clear()
+    } catch {}
+  })
+  await page.goto(base + '/', { waitUntil: 'load' })
+  await page.waitForSelector('[data-testid="home-start"]', { timeout: 30000 })
+  await page.waitForTimeout(500)
+  await page.click('[data-testid="home-start"]')
+  await page.locator('.god-select-card').nth(1).click()
+  await page.locator('.difficulty-select button').nth(1).click()
+  await page.click('.god-select-confirm')
+  await page.locator('.enemy-select-card').nth(5).click()
+  await page.waitForSelector('.deck-builder-clear-button', { timeout: 15000 })
+  await page.waitForTimeout(1500)
+  const r = await page.evaluate(PROBE)
+  await ctx.close()
+  return { ...r, errors }
+}
+
+const out = { at: new Date().toISOString(), headless: {}, headed: {} }
+const log = (k, r) => console.log(k, JSON.stringify({ n: r.n, over33: r.over33, over50: r.over50, max: r.max, median: r.median, first: r.firstFrame, gone: r.gone - r.mounted, err: r.errors.length }))
+{
+  const browser = await chromium.launch({ args: ['--autoplay-policy=no-user-gesture-required'] })
+  for (let i = 1; i <= HN; i++) {
+    for (const [name, base] of [['before', BEFORE], ['after', AFTER]]) {
+      const k = `${name}/${i}`
+      out.headless[k] = await one(browser, base)
+      log('headless ' + k, out.headless[k])
+    }
+  }
+  await browser.close()
+}
+if (GN > 0) {
+  let browser = null
+  try {
+    browser = await chromium.launch({ channel: 'chrome', headless: false, args: ['--autoplay-policy=no-user-gesture-required', '--window-position=40,40', '--window-size=420,900'] })
+  } catch (e) {
+    console.log('headed chrome unavailable', String(e).slice(0, 120))
+  }
+  if (browser) {
+    for (let i = 1; i <= GN; i++) {
+      for (const [name, base] of [['before', BEFORE], ['after', AFTER]]) {
+        const k = `${name}/${i}`
+        out.headed[k] = await one(browser, base)
+        log('headed ' + k, out.headed[k])
+      }
+    }
+    await browser.close()
+  }
+}
+const summ = (o) => {
+  const s = {}
+  for (const name of ['before', 'after']) {
+    const rs = Object.entries(o).filter(([k]) => k.startsWith(name)).map(([, r]) => r)
+    if (!rs.length) continue
+    const ov = rs.map((r) => r.over33).sort((a, b) => a - b)
+    s[name] = { runs: rs.length, over33: ov, over33Median: ov[Math.floor(ov.length / 2)], over33Max: Math.max(...ov), medianFrame: rs.map((r) => r.median), max: rs.map((r) => r.max) }
+  }
+  return s
+}
+out.summary = { headless: summ(out.headless), headed: summ(out.headed) }
+console.log('summary', JSON.stringify(out.summary))
+writeFileSync('docs/evidence/decision254/pilot/perf2.json', JSON.stringify(out, null, 1))
+console.log('wrote docs/evidence/decision254/pilot/perf2.json')

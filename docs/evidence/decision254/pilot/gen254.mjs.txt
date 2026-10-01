@@ -1,0 +1,154 @@
+// 決定254 Pilot：evidence JSON → Markdown 表（docs に貼る表はすべてここから生成。手打ちしない）
+// node scripts/decision254/gen254.mjs > docs/evidence/decision254/pilot/tables.md
+import { readFileSync } from 'node:fs'
+const P = 'docs/evidence/decision254/pilot'
+const G = JSON.parse(readFileSync(`${P}/gate2-all.json`, 'utf8'))
+let P2 = null
+try {
+  P2 = JSON.parse(readFileSync(`${P}/perf2.json`, 'utf8'))
+} catch {}
+let L = null
+try {
+  L = JSON.parse(readFileSync(`${P}/gate-lock.json`, 'utf8')).out
+} catch {}
+const runs = G.runs
+const n = (v) => (v === null || v === undefined || Number.isNaN(v) ? '—' : String(v))
+const out = []
+const H = (s) => out.push('', s, '')
+const T = (head, rows) => {
+  out.push('| ' + head.join(' | ') + ' |')
+  out.push('|' + head.map(() => '---').join('|') + '|')
+  for (const r of rows) out.push('| ' + r.map(n).join(' | ') + ' |')
+}
+
+H(`### T1 Full（初回）— 各時刻（ms・root animation startTime 基準）／計測 ${G.at}`)
+T(['run', 'mount→anim', '神紋>0.3', '神>0.5', '敵art>0.5', '舞台>0.5', '操作可（pe none）', 'End Round 押せる', '消滅', 'SE1（神紋）', 'SE2（顕現）', '入口中 hit（t≈1000）', 'frames >33 / n', 'median', 'CLS', 'error'], ['pc', 'sp', 'sp660'].flatMap((vp) =>
+  ['before', 'after'].map((b) => {
+    const r = runs[`t1/${vp}/${b}`]
+    const p = r.probe
+    const rm = p.relMarks
+    const se = p.se.filter((e) => e.dur === 0.15 || e.dur === 0.96)
+    const se1 = se.find((e) => e.dur === 0.15)
+    const se2 = se.find((e) => e.dur === 0.96)
+    const mid = p.extra.midEntranceHit
+    return [`${vp}/${b}`, rm.entranceMounted === null ? '—' : -rm.entranceMounted, rm.sigilVisible, rm.godVisible, rm.enemyArtVisible, rm.stageVisible, rm.released, rm.endRoundHittable, rm.entranceGone, se1 ? se1.rel : '—', se2 ? se2.rel : '—', mid ? `end ${mid.end}／card ${mid.card}／oracle ${mid.oracle}` : '—', `${p.frames.over33} / ${p.frames.n}`, p.frames.median, p.clsSum, r.errors.length]
+  }),
+))
+
+H('### T1 転送量（click 後の request・bytes）と入口素材の先読み')
+T(['run', 'click 後 request 数', 'click 後 bytes', 'click 後に取得した入口素材', 'click 前に取得済みの入口素材（数）'], ['pc', 'sp', 'sp660'].flatMap((vp) =>
+  ['before', 'after'].map((b) => {
+    const r = runs[`t1/${vp}/${b}`]
+    return [`${vp}/${b}`, r.transfer.count, r.transfer.bytes.toLocaleString(), r.transfer.entranceAssetsAfterClick.map((x) => x.url.replace('/assets/', '')).join('・') || '0', r.preloadedBeforeClick.length]
+  }),
+))
+
+H('### T5 Layout：HUD 箱（入口消滅直後 vs +2s・Before vs After）')
+{
+  const rows = []
+  for (const vp of ['pc', 'sp', 'sp660']) {
+    const a = runs[`t1/${vp}/after`].probe
+    const b = runs[`t1/${vp}/before`].probe
+    for (const sel of Object.keys(a.hudAtEnd)) {
+      const same1 = JSON.stringify(a.hudAtGone?.[sel]) === JSON.stringify(a.hudAtEnd[sel])
+      const same2 = JSON.stringify(b.hudAtEnd[sel]) === JSON.stringify(a.hudAtEnd[sel])
+      const px = (x, y) => (x && y ? Math.max(...x.map((v, i) => Math.abs(v - y[i]))) : '—')
+      const note = sel === '.enemy-avatar' ? '（enemy-idle の呼吸 transform・layout ではない）' : ''
+      rows.push([vp, sel, JSON.stringify(a.hudAtGone?.[sel]), JSON.stringify(a.hudAtEnd[sel]), (same1 ? '0' : px(a.hudAtGone?.[sel], a.hudAtEnd[sel]) + 'px') + note, JSON.stringify(b.hudAtEnd[sel]), (same2 ? '0' : px(b.hudAtEnd[sel], a.hudAtEnd[sel]) + 'px') + note])
+    }
+  }
+  T(['vp', 'HUD', 'After 消滅直後', 'After +2s', '差', 'Before +2s', 'Before/After 差'], rows)
+}
+
+H('### T4 Reduced motion')
+T(['run', '消滅', '操作可', '神/敵 表示', 'SE', 'animation（transform 系）'], ['pc', 'sp'].flatMap((vp) =>
+  ['before', 'after'].map((b) => {
+    const r = runs[`t4-reduced/${vp}/${b}`]
+    const rm = r.probe.relMarks
+    const an = runs[`anims-reduced/${vp}`]
+    return [`${vp}/${b}`, rm.entranceGone, rm.released, `神 ${n(rm.godVisible)}／敵 ${n(rm.enemyArtVisible)}`, r.probe.se.map((e) => `${e.rel}ms ${e.dur}s×${e.rate}`).join('・'), b === 'after' && an ? an.map((x) => `${x.name}[${x.props.join(',')}]`).join('・') : '—']
+  }),
+))
+
+H('### 性能（SP 390×844 headless・入口中の frame）')
+T(['run', 'n', '>33ms', '>50ms', 'max', 'median', '最初の frame', 'CLS', 'click 後 bytes', '入口素材 click 後'], [1, 2, 3].flatMap((i) =>
+  ['before', 'after'].map((b) => {
+    const r = runs[`perf/sp/${b}/${i}`]
+    return [`${b}/${i}`, r.frames.n, r.frames.over33, r.frames.over50, r.frames.max, r.frames.median, r.firstFrameMs, r.clsSum, r.transfer.bytes.toLocaleString(), r.transfer.entranceAssetsAfterClick.length]
+  }),
+))
+
+if (P2) {
+  H('### 性能（追加サンプル perf2：headless N 本＋実 Chrome headed（GPU）N 本・SP 390×844・入口中の >33ms frame）')
+  T(['環境', 'run', 'n', '>33ms', '>50ms', 'max', 'median'], [...Object.entries(P2.headless).map(([k, r]) => ['headless', k, r.n, r.over33, r.over50, r.max, r.median]), ...Object.entries(P2.headed).map(([k, r]) => ['headed(GPU)', k, r.n, r.over33, r.over50, r.max, r.median])])
+  out.push('', 'summary: ' + JSON.stringify(P2.summary))
+}
+
+H('### T3 Skip（入力貫通 0・未再生 SE キャンセル）')
+T(['run', '入力時刻（rel）', '入口中の入力', 'skip→消滅', 'skip→End Round 押せる', 'save 不変', 'UI 不変（手札/AP/R/残り）', '手札 before→after', '顕現 SE が skip 後に鳴った', 'SE（rel）', '入力イベント（target）', 'error'], Object.keys(runs).filter((k) => k.startsWith('t3-skip/')).map((k) => {
+  const r = runs[k]
+  return [k.replace('t3-skip/', ''), r.tInputRel, r.validDuringEntrance, r.skipToGone, r.skipToControl, r.stateUnchanged, r.uiUnchanged, `${r.uiBefore.hand}→${r.uiAfter.hand}`, r.bossSePlayedAfterSkip, r.seAll.map((e) => `${e[1]}:${e[2]}s`).join('・'), r.inputLog.map((e) => `${e.kind.slice(3)}${e.ent ? '(入口)' : ''}→${e.target.slice(0, 22)}`).join('・'), r.errors.length]
+}))
+
+H('### T2 Revisit（同セッション 2 戦目・ホーム経由・reload 後）')
+T(['vp', '1 戦目 variant／消滅', '結果到達', 'もう一度 variant／操作可／消滅／SE', 'ホーム経由 variant／消滅／見出し', 'reload→続きから 入口', 'reload→新規 variant／消滅', 'error'], ['pc', 'sp'].map((vp) => {
+  const r = runs[`t2-revisit/${vp}`]
+  return [vp, `${r.first.variant}／${n(r.first.relMarks.entranceGone)}`, `${r.reachedResult1}／${r.reachedResult2}`, `${r.rematch.variant}／${n(r.rematch.relMarks.released)}／${n(r.rematch.relMarks.entranceGone)}／${r.rematch.se.map((e) => `${e[1]}:${e[2]}s`).join('・')}`, r.viaHome ? `${r.viaHome.variant}／${n(r.viaHome.relMarks.entranceGone)}／${r.viaHome.godTitle}` : '—', r.resume ? (r.resume.entranceEverShown ? 'あり' : 'なし') : '—', `${r.afterReloadNewStart.variant}／${n(r.afterReloadNewStart.relMarks.entranceGone)}`, r.errors.length]
+}))
+
+H('### T6 続きから（入口なし）／T7 初陣・Daily')
+T(['run', 'variant', '入口', '消滅（rel）', 'SE', 'End Round 有効', 'click 後に取得した入口素材', 'error'], [
+  ...['before', 'after'].map((b) => {
+    const r = runs[`t6-resume/pc/${b}`]
+    return [`t6-resume/pc/${b}`, '—', r.entranceEverShown ? 'あり' : 'なし', '—', r.se.map((e) => `${e[0]}:${e[1]}s`).join('・') || '0', '—', '—', r.errors.length]
+  }),
+  ...['before', 'after'].flatMap((b) =>
+    ['pc', 'sp'].map((vp) => {
+      const r = runs[`t7-first/${vp}/${b}`]
+      return [`t7-first/${vp}/${b}`, r.variant, r.marks.entranceMounted !== undefined ? 'あり' : 'なし', r.relMarks.entranceGone, r.se.map((e) => `${e[1]}:${e[2]}s`).join('・'), r.endEnabled, r.entranceAssetsAfterClick.map((u) => u.replace('/assets/', '')).join('・') || '0', r.errors.length]
+    }),
+  ),
+  ...['before', 'after'].map((b) => {
+    const r = runs[`t7-daily/pc/${b}`]
+    return [`t7-daily/pc/${b}`, r.variant, r.marks.entranceMounted !== undefined ? 'あり' : 'なし', r.relMarks.entranceGone, r.se.map((e) => `${e[1]}:${e[2]}s`).join('・'), r.endEnabled, `DAILY tag ${r.dailyTag}`, r.errors.length]
+  }),
+])
+
+H('### 7 柱（選んだ神の見出し・画像・神色）')
+T(['god idx', '見出し', 'img', '敵名', '--god-accent', 'variant', '消滅', 'error'], (runs['gods/pc'] ?? []).map((g) => [g.god, g.shown.title, g.shown.img, g.shown.enemyName, g.shown.accent, g.variant, g.gone, g.errors.length]))
+
+if (L) {
+  H('### T8 METRIC LOCK（同 seed・同 action 列・Before vs After の保存 state）')
+  const keys = Object.keys(L).filter((k) => k.endsWith('/before'))
+  const rows = []
+  let total = 0
+  let mism = 0
+  for (const kb of keys) {
+    const ka = kb.replace('/before', '/after')
+    const b = L[kb]
+    const a = L[ka]
+    if (!b?.rounds || !a?.rounds) {
+      rows.push([kb.replace('/before', ''), 'ERR', '—', '—', '—', '—', '—'])
+      continue
+    }
+    let cnt = 0
+    let bad = 0
+    for (let i = 0; i < Math.max(b.rounds.length, a.rounds.length); i++) {
+      for (const ph of ['before', 'afterPlay', 'afterEnemy']) {
+        const sb = b.rounds[i]?.[ph]
+        const sa = a.rounds[i]?.[ph]
+        if (!sb || !sa) continue
+        cnt++
+        const same = JSON.stringify(sb.save) === JSON.stringify(sa.save) && sb.intentText === sa.intentText && sb.remaining === sa.remaining
+        if (!same) bad++
+      }
+    }
+    total += cnt
+    mism += bad
+    rows.push([kb.replace('/before', ''), `${b.rounds.length}／${a.rounds.length}`, cnt, bad, `${b.finalStatus} ${b.finalScore}／${a.finalStatus} ${a.finalScore}`, `${JSON.stringify(b.reactions) === JSON.stringify(a.reactions)}（${a.reactions.length}）`, `${b.godStrike}／${a.godStrike}`, `${b.errors.length}／${a.errors.length}`])
+  }
+  T(['case/vp', 'rounds B／A', '比較 snapshot 数', '不一致', 'final status score B／A', 'reaction 同一（種類数）', 'God Strike B／A', 'error B／A'], rows)
+  out.push('', `合計 snapshot ${total}・不一致 ${mism}`)
+}
+
+console.log(out.join('\n'))

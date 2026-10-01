@@ -22,11 +22,12 @@ import { CUTIN_FALLBACK_MS } from './BattleResonanceCutin'
 import { GOD_STRIKE_POSTER_SRC, createGodStrikeVideoPreload, isGodStrikeVideoReady, preloadGodStrikePoster, releaseGodStrikeVideo } from './godStrikeVideo'
 import { prefersReducedMotion } from './reducedMotion'
 import { BossEntrance } from './BossEntrance'
+import { takeBattleEntranceVariant, type BattleEntranceVariant } from './battleEntrance'
 import { deriveDefeatCause } from './defeatCause'
 import { useDecisionCallout } from './useDecisionCallout'
 import { BattleCallout } from './BattleCallout'
 import { buildBattleRecap } from './battleRecap'
-import { preloadSe, sfx } from './sound'
+import { preloadSe } from './sound'
 import { useBattleSound } from './useBattleSound'
 import { useFloatingNumbers } from './useFloatingNumbers'
 import { CAST_FX, getEnemyDamagePowerTier, TYPE_STYLE } from './cardStyle'
@@ -258,14 +259,16 @@ export function BattleScreen({
 
   // 決定128（Game Feel）：Boss Entrance。新規開始（battleStartKey 増分）のときだけ約1.5秒表示し、
   // 「続きから」再開では出さない。SE のプリロードもここで行う（初回再生の遅延を無くす）。
+  // 決定254：入口は「降臨の間」（セッション最初の 1 戦は Full、以後 Short）。SE は入口が時刻どおり予約する
   const [entranceKey, setEntranceKey] = useState(0)
+  const [entranceVariant, setEntranceVariant] = useState<BattleEntranceVariant>('full')
   const seenStartKeyRef = useRef(0)
   useEffect(() => {
     if (battleStartKey > seenStartKeyRef.current) {
       seenStartKeyRef.current = battleStartKey
       preloadSe()
+      setEntranceVariant(takeBattleEntranceVariant())
       setEntranceKey(battleStartKey)
-      sfx.bossEntrance()
     }
   }, [battleStartKey])
   const handleEntranceDone = useCallback(() => setEntranceKey(0), [])
@@ -638,7 +641,7 @@ export function BattleScreen({
       </div>
 
       {entranceKey > 0 && (
-        <BossEntrance key={`entrance-${entranceKey}`} enemyId={state.enemy.defId} stake={state.stake} daily={state.mode === 'daily'} onDone={handleEntranceDone} />
+        <BossEntrance key={`entrance-${entranceKey}`} enemyId={state.enemy.defId} godId={state.godId} variant={entranceVariant} stake={state.stake} daily={state.mode === 'daily'} onDone={handleEntranceDone} />
       )}
 
       {showVictoryStage && (

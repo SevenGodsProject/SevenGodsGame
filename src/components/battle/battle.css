@@ -7223,3 +7223,293 @@ body.battle-viewport .battle-main > .battle-callout {
     font-size: 10px;
   }
 }
+
+/* ============================================================
+   決定254 Game Entry「降臨の間」Pilot（docs/GAME_ENTRY_IMMERSION_PREFLIGHT.md §4〜§7・C3）
+   暗転 → 神紋 → 選んだ神の降臨 → 舞台と敵の顕現（対峙）→ HUD 開示。時刻は BossEntrance.tsx の
+   BATTLE_ENTRANCE_TIMING と一致させる（Full 2.8s／操作 2.4s・Short 1.5s／1.15s・reduced 0.9s／0.72s・skip 0.2s）。
+   ・mount の最初の frame から不透明（旧 `.boss-entrance` の fade-in で HUD が透けていた問題を解消）
+   ・動かすのは transform／opacity だけ（filter・blend・box-shadow の animation なし）。HUD は animate しない
+   ・敵の絵は原画の向きのまま（決定247 の反転は戦闘 HUD の `.enemy-avatar` だけ。ボス登場は従来どおり原画）
+   ・`.resonance-cutin-*`（決定250）とは selector を共有しない
+   ============================================================ */
+.battle-entrance {
+  position: fixed;
+  inset: 0;
+  z-index: 5;
+  overflow: hidden;
+  background: #05060d;
+  pointer-events: auto;
+  touch-action: manipulation;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  cursor: pointer;
+}
+.battle-entrance.is-released {
+  pointer-events: none;
+}
+.battle-entrance-full {
+  animation: battle-entrance-out 0.4s ease-in 2.4s forwards;
+}
+.battle-entrance-short {
+  animation: battle-entrance-out 0.35s ease-in 1.15s forwards;
+}
+.battle-entrance-reduced {
+  animation: battle-entrance-out 0.18s linear 0.72s forwards;
+}
+.battle-entrance.is-skipped {
+  animation: battle-entrance-out 0.2s ease-out forwards;
+}
+.battle-entrance-reduced.is-skipped {
+  animation: none;
+  opacity: 0;
+}
+@keyframes battle-entrance-out {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+@keyframes battle-entrance-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* P4 舞台：既存 keyframe `boss-entrance-bg`（scale 1.08→1）を再利用し、暗転の上に現れる */
+.battle-entrance-bg {
+  position: absolute;
+  inset: -4%;
+  background: #05060d center / cover no-repeat;
+  opacity: 0;
+}
+.battle-entrance-bg::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, #05060dcc 0%, #05060d88 45%, #05060dee 100%);
+}
+.battle-entrance-full .battle-entrance-bg {
+  animation: battle-entrance-in 0.4s ease-out 1.5s both, boss-entrance-bg 0.9s ease-out 1.5s both;
+}
+.battle-entrance-short .battle-entrance-bg {
+  animation: battle-entrance-in 0.3s ease-out 0.45s both, boss-entrance-bg 0.7s ease-out 0.45s both;
+}
+
+/* 神（SP 基準：中央上 → P4 で下へ沈み、敵に舞台を渡す） */
+.battle-entrance-god-slot {
+  position: absolute;
+  top: 9vh;
+  left: 0;
+  right: 0;
+  margin: 0 auto;
+  width: min(64vw, 300px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  transform-origin: 50% 40%;
+  will-change: transform, opacity;
+}
+.battle-entrance-sigil {
+  position: absolute;
+  top: 0;
+  left: -8%;
+  width: 116%;
+  margin-top: -8%; /* %＝slot の幅基準（画像は正方形なので中心が画像の中心に合う） */
+  aspect-ratio: 1;
+  border-radius: 50%;
+  border: 2px solid color-mix(in srgb, var(--god-accent) 75%, transparent);
+  background: radial-gradient(circle, color-mix(in srgb, var(--god-accent) 42%, transparent) 0%, color-mix(in srgb, var(--god-accent) 14%, transparent) 45%, transparent 70%);
+  opacity: 0;
+  will-change: transform, opacity;
+}
+/* 外周の刻み（神紋の輪）。中心へは線を引かない */
+.battle-entrance-sigil::before {
+  content: '';
+  position: absolute;
+  inset: 3%;
+  border-radius: 50%;
+  background: repeating-conic-gradient(from 0deg, color-mix(in srgb, var(--god-accent) 80%, transparent) 0deg 1.5deg, transparent 1.5deg 10deg);
+  -webkit-mask: radial-gradient(circle closest-side, transparent 0 84%, #000 85% 100%);
+  mask: radial-gradient(circle closest-side, transparent 0 84%, #000 85% 100%);
+}
+.battle-entrance-sigil::after {
+  content: '';
+  position: absolute;
+  inset: 16%;
+  border-radius: 50%;
+  border: 1px solid color-mix(in srgb, var(--god-accent) 55%, transparent);
+}
+.battle-entrance-full .battle-entrance-sigil {
+  animation: battle-entrance-sigil 0.5s ease-out 0.25s both, battle-entrance-sigil-dim 0.3s ease-out 1.25s forwards;
+}
+@keyframes battle-entrance-sigil {
+  from { opacity: 0; transform: scale(0.6) rotate(0deg); }
+  to { opacity: 0.85; transform: scale(1) rotate(40deg); }
+}
+@keyframes battle-entrance-sigil-dim {
+  from { opacity: 0.85; }
+  to { opacity: 0.35; }
+}
+.battle-entrance-god {
+  position: relative;
+  display: block;
+  width: 100%;
+  aspect-ratio: 1;
+  object-fit: contain;
+  opacity: 0;
+  will-change: transform, opacity;
+}
+.battle-entrance-full .battle-entrance-god {
+  animation: battle-entrance-descend 0.65s ease-out 0.6s both;
+}
+.battle-entrance-short .battle-entrance-god {
+  --descend-y: -12px;
+  --descend-scale: 1;
+  animation: battle-entrance-descend 0.4s ease-out 0.1s both;
+}
+@keyframes battle-entrance-descend {
+  from { opacity: 0; transform: translateY(var(--descend-y, -18px)) scale(var(--descend-scale, 1.04)); }
+  to { opacity: 1; transform: none; }
+}
+.battle-entrance-god-title {
+  position: relative;
+  font-size: 18px;
+  font-weight: 800;
+  letter-spacing: 0.3em;
+  padding-left: 0.3em;
+  color: #fff;
+  text-shadow: 0 0 14px var(--god-accent), 0 2px 6px #000000ee;
+  white-space: nowrap;
+  opacity: 0;
+}
+.battle-entrance-full .battle-entrance-god-title {
+  animation: boss-entrance-rise 0.5s ease-out 0.9s both;
+}
+.battle-entrance-short .battle-entrance-god-title {
+  animation: boss-entrance-rise 0.35s ease-out 0.2s both;
+}
+.battle-entrance-full .battle-entrance-god-slot {
+  animation: battle-entrance-sink 0.6s ease-in-out 1.5s forwards;
+}
+.battle-entrance-short .battle-entrance-god-slot {
+  animation: battle-entrance-sink 0.5s ease-in-out 0.45s forwards;
+}
+@keyframes battle-entrance-sink {
+  from { opacity: 1; transform: none; }
+  to { opacity: 0.55; transform: translateY(34vh) scale(0.62); }
+}
+
+/* 敵（既存 `.boss-entrance-*` の中身・既存 keyframes を P4 の時刻へ移す） */
+.battle-entrance .battle-entrance-enemy {
+  position: absolute;
+  top: 5vh;
+  left: 0;
+  right: 0;
+}
+.battle-entrance-full .boss-entrance-stage { animation: boss-entrance-rise 0.5s ease-out 1.5s both; }
+.battle-entrance-full .boss-entrance-art { animation: boss-entrance-art 0.6s cubic-bezier(0.2, 0.9, 0.3, 1.2) 1.55s both; }
+.battle-entrance-full .boss-entrance-name { animation: boss-entrance-rise 0.5s ease-out 1.65s both; }
+.battle-entrance-full .boss-entrance-meta { animation: boss-entrance-rise 0.5s ease-out 1.75s both; }
+.battle-entrance-full .boss-entrance-start { animation: boss-entrance-rise 0.4s ease-out 1.85s both; }
+.battle-entrance-short .boss-entrance-stage { animation: boss-entrance-rise 0.35s ease-out 0.45s both; }
+.battle-entrance-short .boss-entrance-art { animation: boss-entrance-art 0.45s cubic-bezier(0.2, 0.9, 0.3, 1.2) 0.45s both; }
+.battle-entrance-short .boss-entrance-name { animation: boss-entrance-rise 0.35s ease-out 0.55s both; }
+.battle-entrance-short .boss-entrance-meta { animation: boss-entrance-rise 0.35s ease-out 0.65s both; }
+.battle-entrance-short .boss-entrance-start { animation: boss-entrance-rise 0.3s ease-out 0.75s both; }
+
+/* skip のヒント（SP：下中央「タップでスキップ」／PC：右下「クリックでスキップ」） */
+.battle-entrance-skip-hint {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: max(14px, env(safe-area-inset-bottom));
+  text-align: center;
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  color: #e8e9f2;
+  opacity: 0;
+}
+.battle-entrance-full .battle-entrance-skip-hint { animation: battle-entrance-hint 0.3s ease-out 0.8s both; }
+.battle-entrance-short .battle-entrance-skip-hint { animation: battle-entrance-hint 0.3s ease-out 0.3s both; }
+@keyframes battle-entrance-hint {
+  from { opacity: 0; }
+  to { opacity: 0.55; }
+}
+.battle-entrance-skip-pc { display: none; }
+
+/* reduced-motion：神と敵を最初から静止で同時表示（transform の animation なし・opacity だけで閉じる） */
+.battle-entrance-reduced .battle-entrance-bg,
+.battle-entrance-reduced .battle-entrance-god,
+.battle-entrance-reduced .battle-entrance-god-title,
+.battle-entrance-reduced .boss-entrance-stage,
+.battle-entrance-reduced .boss-entrance-art,
+.battle-entrance-reduced .boss-entrance-name,
+.battle-entrance-reduced .boss-entrance-meta,
+.battle-entrance-reduced .boss-entrance-start {
+  animation: none;
+  opacity: 1;
+  transform: none;
+}
+.battle-entrance-reduced .battle-entrance-skip-hint {
+  opacity: 0.55;
+}
+.battle-entrance-reduced .battle-entrance-god-slot {
+  opacity: 0.55;
+  transform: translateY(34vh) scale(0.62);
+}
+
+/* 背の低い SP（高さ ≤700px）：沈んだ神と重ならないよう「START」を省く（敵名・★・型は残す） */
+@media (max-width: 899px) and (max-height: 700px) {
+  .battle-entrance .boss-entrance-start {
+    display: none;
+  }
+}
+
+/* PC（≥900px）：横の対峙。神＝左（中心 x 30%）・敵＝右（中心 x 68%） */
+@media (min-width: 900px) {
+  .battle-entrance-god-slot {
+    top: 50%;
+    left: 30%;
+    right: auto;
+    width: auto;
+    margin: 0;
+    translate: -50% -50%;
+  }
+  .battle-entrance-god {
+    width: auto;
+    height: min(62vh, 560px);
+  }
+  .battle-entrance-god-title {
+    font-size: 22px;
+  }
+  .battle-entrance-full .battle-entrance-god-slot {
+    animation: battle-entrance-face 0.6s ease-out 1.5s forwards;
+  }
+  .battle-entrance-short .battle-entrance-god-slot {
+    animation: battle-entrance-face 0.5s ease-out 0.45s forwards;
+  }
+  .battle-entrance-reduced .battle-entrance-god-slot {
+    opacity: 0.9;
+    transform: none;
+  }
+  .battle-entrance .battle-entrance-enemy {
+    top: 50%;
+    left: 68%;
+    right: auto;
+    translate: -50% -50%;
+  }
+  .battle-entrance .boss-entrance-art {
+    width: min(34vh, 260px);
+  }
+  .battle-entrance-skip-hint {
+    left: auto;
+    right: 18px;
+    text-align: right;
+  }
+  .battle-entrance-skip-pc { display: inline; }
+  .battle-entrance-skip-sp { display: none; }
+}
+@keyframes battle-entrance-face {
+  from { opacity: 1; }
+  to { opacity: 0.9; }
+}

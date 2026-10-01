@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import type { CardDef, CardDefId, EnemyId, GodId, GrowthPath } from '../../core/types'
 import { RULES } from '../../core/data/rules'
 import { getEnemyDef } from '../../core/data/enemies'
@@ -10,6 +10,7 @@ import { loadDeckPreference } from '../../hooks/deckPreferenceStorage'
 import { loadRewardBonuses } from '../../hooks/rewardStorage'
 import { RARITY_STYLE, TYPE_STYLE } from '../battle/cardStyle'
 import { CardIcon } from '../battle/cardIcon'
+import { preloadBattleEntrance } from '../battle/battleEntrance'
 import { formatCardBonus } from '../cardBonusText'
 import { describeEffectList } from './otomoEffectText'
 import { ThreatStars } from './EnemySelectScreen'
@@ -84,6 +85,10 @@ export function DeckBuilderScreen({
   const opponent = enemyId ? getEnemyDef(enemyId) : null
   const otomo = getOtomoDef(god.otomoId)
   const pool = useMemo(() => getCardPoolForGod(godId), [godId])
+  // 決定254：「降臨の間」の素材（神 front_640・敵 art・舞台・SE 2 本）を開始 click より前に取得・decode する（表示・操作は不変）
+  useEffect(() => {
+    preloadBattleEntrance(godId, enemyId)
+  }, [godId, enemyId])
   /**
    * Phase 4.1（Daily公平性）：神域挑戦では報酬ボーナス（決定43）を**使わない**。
    *

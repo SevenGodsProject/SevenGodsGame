@@ -1,0 +1,66 @@
+// 決定254 Pilot：「降臨の間」の各時刻を止めて撮る（計測専用・commit しない）
+// node scripts/decision254/pilot-frames.mjs http://127.0.0.1:4272 [reduced]
+import { chromium } from 'playwright'
+import { mkdirSync } from 'node:fs'
+const BASE = process.argv[2] ?? 'http://127.0.0.1:4272'
+const REDUCED = process.argv[3] === 'reduced'
+const OUT = 'docs/evidence/decision254/pilot'
+mkdirSync(OUT, { recursive: true })
+const VPS = {
+  pc1508: { viewport: { width: 1508, height: 660 }, isMobile: false, hasTouch: false, deviceScaleFactor: 1 },
+  sp844: { viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true, deviceScaleFactor: 1 },
+  sp660: { viewport: { width: 390, height: 660 }, isMobile: true, hasTouch: true, deviceScaleFactor: 1 },
+}
+const clickBtnText = (page, text) =>
+  page.evaluate((t) => {
+    const el = [...document.querySelectorAll('button')].find((x) => x.textContent.replace(/\s+/g, '').includes(t) && !x.disabled)
+    if (!el) return false
+    el.click()
+    return true
+  }, text)
+const browser = await chromium.launch()
+const TIMES = REDUCED ? [100, 450] : [100, 450, 900, 1300, 2000]
+for (const [vp, opt] of Object.entries(VPS)) {
+  const ctx = await browser.newContext({ ...opt, reducedMotion: REDUCED ? 'reduce' : 'no-preference' })
+  const page = await ctx.newPage()
+  await page.goto(BASE + '/', { waitUntil: 'load' })
+  await page.waitForSelector('.home-cta-primary')
+  await page.waitForTimeout(600)
+  await page.locator('[data-testid="home-start"]').click()
+  await page.waitForSelector('.god-select-back')
+  await clickBtnText(page, '大耀')
+  await page.waitForSelector('.god-select-confirm')
+  await page.locator('.god-select-confirm').click()
+  await page.waitForSelector('.enemy-select-back')
+  await clickBtnText(page, '蒼海の龍神')
+  await page.waitForSelector('.deck-builder-clear-button')
+  await page.waitForTimeout(1200)
+  await clickBtnText(page, 'この構成でバトル開始')
+  await page.waitForSelector('[data-testid="boss-entrance"]')
+  const overflow = []
+  for (const ms of TIMES) {
+    const n = await page.evaluate((ms) => {
+      const anims = document.getAnimations().filter((a) => /^(boss|battle)-entrance/.test(String(a.animationName || '')))
+      for (const a of anims) { a.pause(); a.currentTime = ms }
+      return anims.length
+    }, ms)
+    if (!n && !REDUCED) { console.log(vp, 'no anims at', ms); break }
+    const of = await page.evaluate(() => {
+      const r = []
+      for (const el of document.querySelectorAll('[data-testid="boss-entrance"] *')) {
+        const b = el.getBoundingClientRect()
+        if (b.width && (b.left < -1 || b.right > innerWidth + 1 || b.top < -1 || b.bottom > innerHeight + 1) && !el.classList.contains('battle-entrance-bg') && !el.classList.contains('battle-entrance-sigil')) r.push({ c: String(el.className).slice(0, 40), l: Math.round(b.left), r: Math.round(b.right), t: Math.round(b.top), b: Math.round(b.bottom) })
+      }
+      return r
+    })
+    overflow.push({ ms, of })
+    await page.screenshot({ path: `${OUT}/${vp}${REDUCED ? '-reduced' : ''}-entrance-${ms}ms.jpg`, type: 'jpeg', quality: 50 })
+  }
+  console.log(vp, JSON.stringify(overflow))
+  await page.evaluate(() => document.getAnimations().forEach((a) => /^(boss|battle)-entrance/.test(String(a.animationName || '')) && a.finish()))
+  await page.waitForTimeout(3000)
+  if (!REDUCED) await page.screenshot({ path: `${OUT}/${vp}-battle-ready.jpg`, type: 'jpeg', quality: 45 })
+  await ctx.close()
+}
+await browser.close()
+console.log('done')
