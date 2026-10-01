@@ -9,7 +9,17 @@
  * ①ホーム・神選択・デッキ構築画面用（`home`）・②戦闘用（`battle`）はループ再生。
  * ③決着ジングル（`victory`/`defeat`）は1回だけ鳴らし、鳴っている間はループBGMを
  * 止め、終わったら元の音量で再開する（`playJingle`）。
+ *
+ * 決定257 Sound Layer v1：神の一撃・敵の必殺の間だけ BGM を下げる（duck）。iOS Safari は
+ * `HTMLMediaElement.volume` を無視するため、duck は WebAudio の GainNode で行う
+ * （`createMediaElementSource` → GainNode → destination）。経路は初めて duck するときに作る
+ * （AudioContext が running＝ユーザー操作済み・BGM 再生中・非ミュートのときだけ）。
+ * element の `volume`（0.35）はそのまま残し、GainNode は 1.0 を基準に相対倍率で下げる＝
+ * duck 以外の時間の音量は従来と同一。条件を満たさない環境では duck しない（従来どおり）。
  */
+import { getAudioContext } from './sound'
+import { SOUND_LAYER } from './feelTier'
+
 
 const BGM_VOLUME = 0.35
 const JINGLE_VOLUME = 0.5
@@ -69,6 +79,12 @@ let currentTrack: BgmTrack | null = null
 let muted = false
 let pendingRetryTrack: BgmTrack | null = null
 
+// 決定257：BGM の GainNode 経路（一度作ったら element と結び付いたまま。失敗したら以後作らない）
+let bgmGain: GainNode | null = null
+let graphFailed = false
+/** duck の復帰開始時刻（AudioContext の秒）。0＝duck していない */
+let duckUntil = 0
+
 let jingleAudio: HTMLAudioElement | null = null
 let jingleTimer: ReturnType<typeof setTimeout> | null = null
 let jingleFadeTimer: ReturnType<typeof setInterval> | null = null
@@ -114,6 +130,8 @@ export function playTrack(track: BgmTrack): void {
     currentTrack = track
   }
   el.muted = muted
+  // 決定257：経路を作った後は BGM が AudioContext から出るので、止まっていたら起こす（ユーザー操作の中で呼ばれる）
+  if (bgmGain && bgmGain.context.state === 'suspended') void (bgmGain.context as AudioContext).resume().catch(() => {})
 
   const result = el.play()
   if (result && typeof result.catch === 'function') {
@@ -133,6 +151,73 @@ export function setBgmMuted(value: boolean): void {
   muted = value
   if (audio) audio.muted = value
   if (jingleAudio) jingleAudio.muted = value
+}
+
+/**
+ * 決定257：BGM を GainNode 経路へ載せる（初回だけ）。AudioContext が running でないと BGM が
+ * 無音になるため、running・再生中・非ミュートのときだけ作る。作れなければ null（duck しない）。
+ */
+function ensureBgmGraph(): GainNode | null {
+  if (bgmGain) return bgmGain
+  if (graphFailed || muted || !audio || audio.paused || !currentTrack) return null
+  const ctx = getAudioContext()
+  if (!ctx || ctx.state !== 'running' || typeof ctx.createMediaElementSource !== 'function') return null
+  try {
+    const source = ctx.createMediaElementSource(audio)
+    const g = ctx.createGain()
+    g.gain.value = 1
+    source.connect(g)
+    g.connect(ctx.destination)
+    bgmGain = g
+    return g
+  } catch {
+    graphFailed = true
+    return null
+  }
+}
+
+/** 現在値から予約を組み直す（cancel 後に今の値で固定してから次の ramp を積む） */
+function holdCurrent(param: AudioParam, now: number): void {
+  const current = param.value
+  param.cancelScheduledValues(now)
+  param.setValueAtTime(current, now)
+}
+
+/**
+ * 決定257：BGM を `holdMs` の間だけ下げ（60ms で 0.343 倍へ）、その後 300ms で 1.0 に戻す。
+ * 連続して呼ばれたら「最後に終わるもの」の時刻に合流する（予約の最後は必ず 1.0＝残留しない）。
+ * duck できない環境（経路なし・BGM 停止中・ミュート・AudioContext 不可）では何もせず false。
+ */
+export function duckBgm(holdMs: number): boolean {
+  if (muted || jingleTimer || !audio || audio.paused) return false
+  const g = ensureBgmGraph()
+  if (!g) return false
+  const now = g.context.currentTime
+  duckUntil = Math.max(duckUntil, now + holdMs / 1000)
+  const p = g.gain
+  holdCurrent(p, now)
+  p.linearRampToValueAtTime(SOUND_LAYER.duckLevel, Math.min(now + SOUND_LAYER.duckRampInMs / 1000, duckUntil))
+  p.setValueAtTime(SOUND_LAYER.duckLevel, duckUntil)
+  p.linearRampToValueAtTime(1, duckUntil + SOUND_LAYER.duckRampOutMs / 1000)
+  return true
+}
+
+/** 決定257：戦闘画面を離れるとき（Retry／もう一度／Home）。duck 中なら 120ms で 1.0 へ戻す */
+export function releaseBgmDuck(): void {
+  if (!bgmGain) return
+  const now = bgmGain.context.currentTime
+  if (duckUntil === 0 || now >= duckUntil + SOUND_LAYER.duckRampOutMs / 1000) {
+    duckUntil = 0
+    return
+  }
+  duckUntil = 0
+  holdCurrent(bgmGain.gain, now)
+  bgmGain.gain.linearRampToValueAtTime(1, now + SOUND_LAYER.duckReleaseMs / 1000)
+}
+
+/** 決定257（計測・テスト用）：BGM の GainNode の現在値。経路が無ければ null */
+export function getBgmGainValue(): number | null {
+  return bgmGain ? bgmGain.gain.value : null
 }
 
 function clearJingleTimers(): void {
@@ -167,6 +252,13 @@ export function playJingle(track: JingleTrack): void {
 
   clearJingleTimers()
   bg?.pause()
+  // 決定257：ジングル中の BGM は止まっているので duck を解除しておく（再開時に残さない）
+  if (bgmGain) {
+    duckUntil = 0
+    const now = bgmGain.context.currentTime
+    bgmGain.gain.cancelScheduledValues(now)
+    bgmGain.gain.setValueAtTime(1, now)
+  }
 
   jingle.src = JINGLE_TRACKS[track]
   jingle.volume = JINGLE_VOLUME
@@ -179,6 +271,14 @@ export function playJingle(track: JingleTrack): void {
     if (bg && currentTrack) {
       bg.volume = BGM_VOLUME
       bg.muted = muted
+      // 決定257：GainNode 経路があるときは 0→1.0 を 400ms でフェードインして再開（段差を無くす）。
+      // 予約の最後は 1.0 なので、途中で画面が変わっても音量は残らない
+      if (bgmGain) {
+        const now = bgmGain.context.currentTime
+        bgmGain.gain.cancelScheduledValues(now)
+        bgmGain.gain.setValueAtTime(0, now)
+        bgmGain.gain.linearRampToValueAtTime(1, now + SOUND_LAYER.jingleResumeFadeMs / 1000)
+      }
       void bg.play().catch(() => {})
     }
   }

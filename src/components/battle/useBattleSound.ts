@@ -1,9 +1,11 @@
 import { useEffect, useRef } from 'react'
 import type { GameEvent } from '../../core/types'
 import { sfx } from './sound'
-import { BURST_EVOLVE_MS } from './enemyVfxTiming'
+import { BURST_EVOLVE_MS, BURST_IMPACT_MS, MULTI_CUTIN_LEAD_MS, SPECIAL_IMPACT_MS } from './enemyVfxTiming'
 import { planBatch } from './combatTimeline'
 import { prefersReducedMotion } from './reducedMotion'
+import { planSoundLayer } from './feelTier'
+import { duckBgm, releaseBgmDuck } from './bgm'
 
 /**
  * イベントログを見て効果音を鳴らすフック。
@@ -17,9 +19,16 @@ import { prefersReducedMotion } from './reducedMotion'
  *
  * Tap Feedback v1（Sound lane）：カードの押下音は useGameEngine.playCard がクリックの瞬間に
  * 鳴らす（sfx.cardTap）。commit 時の CARD_PLAYED では鳴らさない（二重の「カチッ」を無くす）。
+ *
+ * 決定257 Sound Layer v1：神の一撃・敵の必殺のバッチだけ、rise SE（burst_rise／enemy_rise）を
+ * 既存の時刻表から導いた時刻に予約し、BGM を着弾＋300ms まで下げる（duck）。入力ロック・
+ * 着弾時刻・GameState には一切触れない（音の予約を足すだけ）。
  */
 export function useBattleSound(log: GameEvent[], enemyVisualType?: string): void {
   const seenCount = useRef(0)
+
+  // 決定257：戦闘画面を離れる（Retry／もう一度／Home）ときに duck を残さない
+  useEffect(() => () => releaseBgmDuck(), [])
 
   useEffect(() => {
     if (log.length < seenCount.current) seenCount.current = 0
@@ -50,6 +59,21 @@ export function useBattleSound(log: GameEvent[], enemyVisualType?: string): void
         sfx.damageSelf(st.tier >= 3, st.atMs)
       }
     }
+
+    // 決定257：決め所の rise と BGM duck（時刻は planBatch／enemyVfxTiming から導くだけ）
+    const ultimateAct = newEvents.find((e) => e.t === 'ENEMY_ACTED' && (e.kind === 'special' || (e.kind === 'multiAttack' && !!e.label)))
+    const enemyImpacts = selfEnemyHits.map((s) => s.atMs)
+    const enemyFirstImpactMs = ultimateAct?.t === 'ENEMY_ACTED' && ultimateAct.kind === 'multiAttack' ? MULTI_CUTIN_LEAD_MS : SPECIAL_IMPACT_MS
+    const layer = planSoundLayer({
+      burst: plan.burst,
+      burstImpactMs: BURST_IMPACT_MS,
+      enemyUltimate: isSpecial,
+      enemyFirstImpactMs: enemyImpacts.length > 0 ? Math.min(...enemyImpacts) : enemyFirstImpactMs,
+      enemyLastImpactMs: enemyImpacts.length > 0 ? Math.max(...enemyImpacts) : enemyFirstImpactMs,
+    })
+    if (layer.rise?.name === 'burst_rise') sfx.burstRise(layer.rise.delayMs)
+    else if (layer.rise?.name === 'enemy_rise') sfx.enemyRise(layer.rise.delayMs)
+    if (layer.duckHoldMs !== null) duckBgm(layer.duckHoldMs)
 
     let afterBurst = false
     for (const event of newEvents) {

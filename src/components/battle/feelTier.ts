@@ -58,3 +58,65 @@ export const SE_DEDUP_WINDOW_MS = 30
 export function feelTierClass(prefix: string, tier: FeelTier): string {
   return `${prefix}-l${tier}`
 }
+
+/**
+ * 決定257 Sound Layer v1：決め所（神の一撃・敵の必殺）の音の係数。音だけの値で、時刻は既存の
+ * 時刻表（enemyVfxTiming.ts）から引き算で導く（既存の時刻定数は変更しない）。
+ * 詳細 docs/DECISION257_SOUND_LAYER_V1_PILOT.md §2。
+ */
+export const SOUND_LAYER = {
+  /** rise SE の音量係数（master を掛ける前）。ともに ≤0.8・着弾（impact[4]=1.0）未満 */
+  riseGain: { burst: 0.7, enemy: 0.75 },
+  /** 神の一撃の rise（burst_rise 900ms）は着弾の 1,150ms 前＝T+450 に始め、突き（1,300）の直後に消える */
+  burstRiseLeadMs: 1150,
+  /** 敵必殺の rise（enemy_rise 1,000ms）は最初の着弾の 1,060ms 前に始め、着弾の 60ms 前に消える */
+  enemyRiseLeadMs: 1060,
+  /** BGM duck：最後の着弾からこの時間だけ下げたままにしてから戻す */
+  duckTailMs: 300,
+  duckRampInMs: 60,
+  duckRampOutMs: 300,
+  /** 戦闘画面を離れる（Retry／Home）ときの強制復帰 */
+  duckReleaseMs: 120,
+  /** BGM の GainNode 倍率。element の volume 0.35 × 0.343 ＝ 実効 0.12（≈1/3） */
+  duckLevel: 0.12 / 0.35,
+  /** ジングル後に BGM を再開するときのフェードイン（GainNode 経路があるときのみ） */
+  jingleResumeFadeMs: 400,
+} as const
+
+export type SoundLayerInput = {
+  /** このバッチで神の一撃（RESONANCE_BURST）が起きた */
+  burst: boolean
+  /** 神の一撃の着弾（commit 基準） */
+  burstImpactMs: number
+  /** 敵の必殺（special、または技名付きの連撃）＝カットインが出る */
+  enemyUltimate: boolean
+  /** 敵必殺の最初／最後の着弾（commit 基準） */
+  enemyFirstImpactMs: number
+  enemyLastImpactMs: number
+}
+
+export type SoundLayerPlan = {
+  rise: { name: 'burst_rise' | 'enemy_rise'; delayMs: number } | null
+  /** BGM を下げておく時間（commit から復帰開始まで）。null＝duck しない */
+  duckHoldMs: number | null
+}
+
+/**
+ * 決定257：1 バッチの「rise SE と BGM duck」の計画（純関数）。神の一撃を優先する
+ * （同じバッチで両方は起きない：一撃はカード、必殺はラウンド終了のバッチ）。
+ */
+export function planSoundLayer(input: SoundLayerInput): SoundLayerPlan {
+  if (input.burst) {
+    return {
+      rise: { name: 'burst_rise', delayMs: Math.max(0, input.burstImpactMs - SOUND_LAYER.burstRiseLeadMs) },
+      duckHoldMs: input.burstImpactMs + SOUND_LAYER.duckTailMs,
+    }
+  }
+  if (input.enemyUltimate) {
+    return {
+      rise: { name: 'enemy_rise', delayMs: Math.max(0, input.enemyFirstImpactMs - SOUND_LAYER.enemyRiseLeadMs) },
+      duckHoldMs: Math.max(input.enemyFirstImpactMs, input.enemyLastImpactMs) + SOUND_LAYER.duckTailMs,
+    }
+  }
+  return { rise: null, duckHoldMs: null }
+}

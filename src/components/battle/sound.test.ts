@@ -14,8 +14,9 @@ describe('SE assets (決定128)', () => {
     expect(SE_BASE_PATH).toBe('/assets/se/')
   })
 
-  it('keeps the SE set small (no bloat): 20 files', () => {
-    expect(SE_NAMES).toHaveLength(20)
+  // 決定257：Sound Layer v1 で rise 2 本（burst_rise／enemy_rise）を追加＝22 本
+  it('keeps the SE set small (no bloat): 22 files', () => {
+    expect(SE_NAMES).toHaveLength(22)
     expect(new Set(SE_NAMES).size).toBe(SE_NAMES.length)
   })
 })
@@ -26,17 +27,17 @@ describe('決定224：条件⚡の音は既存音源の加工（新規 SE 0）',
     expect(names).toContain(BONUS_PAYOFF_SE.name)
     expect(BONUS_PAYOFF_SE.name).toBe('reward')
     expect(BONUS_PAYOFF_SE.rate).toBeGreaterThan(1)
-    expect(names).toHaveLength(20)
+    expect(names).toHaveLength(22) // 決定257 の rise 2 本を含む（決定224 自体は新規 0）
   })
 })
 
 describe('Tap Feedback v1：押下音は既存 card_play の再利用（新規 SE 0）', () => {
-  it('cardTap／endRoundTap を持ち、旧 commit 用 cardPlay は無い。SE は 20 本のまま', async () => {
+  it('cardTap／endRoundTap を持ち、旧 commit 用 cardPlay は無い。SE は 22 本（決定257 の rise 2 本を含む）', async () => {
     const { sfx, SE_NAMES: names } = await import('./sound')
     expect(typeof sfx.cardTap).toBe('function')
     expect(typeof sfx.endRoundTap).toBe('function')
     expect('cardPlay' in sfx).toBe(false)
     expect(names).toContain('card_play')
-    expect(names).toHaveLength(20)
+    expect(names).toHaveLength(22)
   })
 })

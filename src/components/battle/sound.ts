@@ -1,4 +1,4 @@
-import { SE_DEDUP_WINDOW_MS, SE_GAIN, TAP_END_ROUND_RATE, type FeelTier } from './feelTier'
+import { SE_DEDUP_WINDOW_MS, SE_GAIN, SOUND_LAYER, TAP_END_ROUND_RATE, type FeelTier } from './feelTier'
 
 /**
  * 決定128（Game Feel Phase）：効果音エンジン。
@@ -21,6 +21,14 @@ function getCtx(): AudioContext | null {
   if (!ctx) ctx = new Ctor()
   if (ctx.state === 'suspended') void ctx.resume()
   return ctx
+}
+
+/**
+ * 決定257：SE と BGM（bgm.ts の GainNode 経路）で AudioContext を 1 つに共有する。
+ * 生成・resume の扱いは SE と同じ（suspended なら resume を試みる。初回 gesture 前は suspended のまま）。
+ */
+export function getAudioContext(): AudioContext | null {
+  return getCtx()
 }
 
 export function setSoundMuted(value: boolean): void {
@@ -52,6 +60,9 @@ export type SeName =
   | 'reward'
   | 'victory_sting'
   | 'defeat_sting'
+  // 決定257 Sound Layer v1：決め所の rise（溜め）2 本
+  | 'burst_rise'
+  | 'enemy_rise'
 
 export const SE_NAMES: SeName[] = [
   'card_play',
@@ -74,6 +85,8 @@ export const SE_NAMES: SeName[] = [
   'reward',
   'victory_sting',
   'defeat_sting',
+  'burst_rise',
+  'enemy_rise',
 ]
 
 export const SE_BASE_PATH = '/assets/se/'
@@ -150,6 +163,11 @@ function playBuffer(name: SeName, opts: PlayOptions = {}): void {
     g.gain.value = Math.max(0, Math.min(1, gain * SE_GAIN.master))
     src.connect(g)
     g.connect(audioCtx.destination)
+    // 決定257：鳴り終わったらノードを外す（イベントごとに作るノードを残さない）
+    src.onended = () => {
+      src.disconnect()
+      g.disconnect()
+    }
     src.start(at)
   }
   const cached = buffers.get(name)
@@ -175,7 +193,8 @@ function playBuffer(name: SeName, opts: PlayOptions = {}): void {
     }
     const late = (audioCtx.currentTime - requestedAt) * 1000
     // 大きく遅れた（>400ms）Feedback系は鳴らさない（タイミングがズレて違和感になるため）
-    if (late > 400 && (name === 'card_play' || name === 'card_draw' || name === 'resonance_gain')) return
+    // 決定257：rise も同じ（遅れると着弾に重なり、impact の役割を食うため）
+    if (late > 400 && (name === 'card_play' || name === 'card_draw' || name === 'resonance_gain' || name === 'burst_rise' || name === 'enemy_rise')) return
     start(buf)
   })
 }
@@ -246,6 +265,10 @@ function fallbackTone(name: SeName, opts: PlayOptions): void {
       return tone(1175, 260, { type: 'triangle', volume: v, delayMs: d + 130 })
     case 'victory_sting':
       return [523, 659, 784, 1047].forEach((f, i) => tone(f, 220, { type: 'triangle', volume: v, delayMs: d + i * 130 }))
+    case 'burst_rise':
+    case 'enemy_rise':
+      // 決定257：rise は装飾。wav が無い環境では鳴らさない（合成トーンで代用しない）
+      return
     case 'defeat_sting':
       return [440, 349, 293].forEach((f, i) => tone(f, 320, { type: 'sawtooth', volume: v, delayMs: d + i * 180 }))
   }
@@ -295,6 +318,11 @@ export const sfx = {
   // Warning
   enemyTurn: () => playBuffer('enemy_turn', { gain: SE_GAIN.warning }),
   enemyCharge: () => playBuffer('enemy_charge', { gain: SE_GAIN.warning }),
+  // 決定257 Sound Layer v1：決め所の rise（溜め）。着弾は既存の hit_l4／self_hit_heavy が担う
+  /** 神の一撃：burst_ready の後〜突きまでの明るい上昇（commit 基準の予約） */
+  burstRise: (delayMs: number) => playBuffer('burst_rise', { gain: SOUND_LAYER.riseGain.burst, delayMs }),
+  /** 敵の必殺：カットイン中の低く暗い圧（commit 基準の予約） */
+  enemyRise: (delayMs: number) => playBuffer('enemy_rise', { gain: SOUND_LAYER.riseGain.enemy, delayMs }),
   // Big moments
   bossEntrance: () => playBuffer('boss_entrance', { gain: SE_GAIN.bigMoment }),
   /** 決定254：「降臨の間」の神紋。既存 resonance_gain を 0.8 倍速（低く・長く）で鳴らす（新規音源 0） */
