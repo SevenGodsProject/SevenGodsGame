@@ -1,0 +1,124 @@
+// Post-D254 Practical QA Re-Audit — generate SIMULATION_SUMMARY.md from sim-post254.json (JSON is the source of truth; no hand-typed numbers).
+import { readFileSync, writeFileSync } from 'node:fs'
+const DIR = process.argv[2] ?? 'C:/Users/kimi1/SevenGodsGame-d254-rc/docs/evidence/post-d254-practical-qa'
+const J = JSON.parse(readFileSync(`${DIR}/sim-post254.json`, 'utf8'))
+const O = J.out
+const p1 = (x) => (x * 100).toFixed(1)
+const f2 = (x) => (x ?? 0).toFixed(2)
+const f1 = (x) => (x ?? 0).toFixed(1)
+const FACES = [['normal', '通常'], ['easy', 'Easy'], ['hard', 'Hard'], ['daily', 'Daily'], ['rank1', '神階Ⅰ'], ['rank2', 'Ⅱ'], ['rank3', 'Ⅲ'], ['rank4', 'Ⅳ'], ['rank5', 'Ⅴ'], ['rank6', 'Ⅵ'], ['rank7p', 'Ⅶ猛威'], ['rank7r', 'Ⅶ巨躯'], ['rank7t', 'Ⅶ静寂']]
+const L = []
+L.push(`# Post-D254 Practical QA Re-Audit — simulation summary（\`sim-post254.json\` から自動生成・${J.date}）`, '')
+L.push(`- runtime：Production **${J.runtime}**（master 3dd8b5c の runtime）。src 変更 0・数値変更 0。harness は \`harness.post254.test.ts.txt\`（scratch で実行・repo 未コミット）`)
+L.push(`- 総試合数 **${J.games.toLocaleString()}**（${J.elapsed.toFixed(0)}s）。通常／Easy／Hard／Daily＝7 神 × 7 敵 × ${J.seedsMain} seed × 8 方策、神階Ⅰ〜Ⅶ（Ⅶ は 3 択）＝× ${J.seedsRank} seed × 5 方策`)
+L.push(`- 方策：**reader**（予告を読む・決定252/253 と同一）／**naive**（左から出す・託宣は毎 R 天啓）／**greedy**（攻撃一辺倒）／**ignoreUlt**（必殺 R だけ greedy＝必殺を無視）／**oracleAware**（3 択の期待値比較・決定253）／**noGuard**／**noMend**／**noWeaken**（reader から GUARD／MEND／WEAKEN 札を禁止＝カード class 依存の対照。noGuard は加護も使わない）`)
+L.push(`- 用語：撃破 R＝勝利試合の決着ラウンド平均／R5 敵ターン経験＝R5 の敵の行動を受けた率（≈R6 まで戦いが続いた率）／GS＝神の一撃 発動率／dead-card＝手札に来たのに一度も出されなかった札の割合／top5＝使用回数上位 5 種の占有率／Gini＝カード使用回数の集中度（0＝均等）／plan 多様度＝同じ神×敵で seed ごとの「7 R の手の型（class 構成＋託宣）」が互いに異なる割合／ult-sig 多様度＝必殺ラウンドの手の型が seed 間で異なる割合`, '')
+
+// 1. face × policy
+L.push('## 1. 面 × 方策（勝率・敗北・未撃破・撃破 R・R6/R7 到達・GS・託宣・dead-card）', '')
+L.push('| 面 | 方策 | win | lost | 未撃破 | 撃破 R | R5 敵ターン経験（≈R6 到達） | R6 敵ターン経験（≈R7 到達） | GS | 託宣/戦 | 加護% | 導き% | 天啓% | 最低 HP≤50% | dead-card | plan 多様度 |')
+L.push('|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|')
+for (const [k, name] of FACES) for (const pol of Object.keys(O[k])) {
+  const a = O[k][pol].agg
+  L.push(`| ${name} | ${pol} | ${p1(a.win)} | ${p1(a.lost)} | ${p1(a.unfinished)} | ${f2(a.winRoundMean)} | ${p1(a.reachR6)} | ${p1(a.reachR7)} | ${p1(a.godStrikeRate)} | ${f2(a.oracleUses)} | ${p1(a.shareGuard)} | ${p1(a.shareGuide)} | ${p1(a.shareStrike)} | ${p1(a.minHpLe50)} | ${p1(a.deadCardRate)} | ${p1(a.planDistinct)} |`)
+}
+L.push('')
+// 2. gaps
+L.push('## 2. 読む価値（reader − naive／greedy／ignoreUlt・pt）と class 依存（reader − noGuard／noMend／noWeaken・pt）', '')
+L.push('| 面 | reader | −naive | −greedy | −ignoreUlt | −noGuard | −noMend | −noWeaken | oracleAware |')
+L.push('|---|---|---|---|---|---|---|---|---|')
+for (const [k, name] of FACES) {
+  const g = O[k]; const r = g.reader.agg.win
+  const d = (p) => (g[p] ? (100 * (r - g[p].agg.win)).toFixed(1) : '—')
+  L.push(`| ${name} | ${p1(r)} | ${d('naive')} | ${d('greedy')} | ${d('ignoreUlt')} | ${d('noGuard')} | ${d('noMend')} | ${d('noWeaken')} | ${g.oracleAware ? p1(g.oracleAware.agg.win) : '—'} |`)
+}
+L.push('')
+// 3. enemy identity (normal/hard/rank6/rank7p reader)
+L.push('## 3. 敵 identity（reader）— 敵別 win／撃破 R／必殺到達／必殺 R で盾を構えた率／加護の必殺 R 集中／reader−naive／reader−ignoreUlt／被ダメ', '')
+for (const k of ['normal', 'hard', 'daily', 'rank5', 'rank6', 'rank7p']) {
+  const name = FACES.find((f) => f[0] === k)[1]
+  L.push(`### 3-${k}（${name}）`, '')
+  L.push('| 敵 | win | 撃破 R | 必殺到達 | 必殺 R 盾≥50% | 加護が必殺 R | 託宣/戦 | 加護% | reader−naive | reader−ignoreUlt | 被ダメ合計 | 最低 HP≤50% | GS | plan 多様度 | ult-sig 多様度 |')
+  L.push('|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|')
+  for (const en of Object.keys(O[k].reader.byEnemy)) {
+    const a = O[k].reader.byEnemy[en], nv = O[k].naive.byEnemy[en], ig = O[k].ignoreUlt.byEnemy[en]
+    L.push(`| ${en} | ${p1(a.win)} | ${f2(a.winRoundMean)} | ${p1(a.ultReach)} | ${p1(a.ultGuardRate)} | ${p1(a.guardOnUlt)} | ${f2(a.oracleUses)} | ${p1(a.shareGuard)} | ${(100 * (a.win - nv.win)).toFixed(1)} | ${(100 * (a.win - ig.win)).toFixed(1)} | ${f1(a.dmgTakenMean)} | ${p1(a.minHpLe50)} | ${p1(a.godStrikeRate)} | ${p1(a.planDistinct)} | ${p1(a.ultSigDistinct)} |`)
+  }
+  L.push('')
+}
+// 3b. enemy play profile distance (normal reader): AP share by semantic + guard oracle share + dmg taken/30 + killR/7
+const SEMS = ['STRIKE', 'GUARD', 'MEND', 'WEAKEN', 'ATTUNE', 'TEMPO', 'EMPOWER']
+function profile(a) { return [...SEMS.map((s) => a.semApShare[s]), a.shareGuard, a.dmgTakenMean / 30, a.winRoundMean / 7] }
+for (const k of ['normal', 'hard']) {
+  const ens = Object.keys(O[k].reader.byEnemy)
+  const P = ens.map((e) => profile(O[k].reader.byEnemy[e]))
+  const dist = []
+  for (let i = 0; i < ens.length; i++) for (let j = i + 1; j < ens.length; j++) dist.push(Math.sqrt(P[i].reduce((s, v, t) => s + (v - P[j][t]) ** 2, 0)))
+  const mean = dist.reduce((p, q) => p + q, 0) / dist.length, max = Math.max(...dist), min = Math.min(...dist)
+  L.push(`### 3-profile-${k}：敵別プレイ・プロファイル（reader・${k}）— AP 配分 7 class ＋ 加護率 ＋ 被ダメ/30 ＋ 撃破 R/7 の 10 次元。ペア距離 平均 ${mean.toFixed(3)}／最小 ${min.toFixed(3)}／最大 ${max.toFixed(3)}（決定244 §3-C の 8 次元：平均 0.15／最大 0.37）`, '')
+  L.push('| 敵 | STRIKE | GUARD | MEND | WEAKEN | ATTUNE | TEMPO | EMPOWER | 加護% | 被ダメ | 撃破 R |')
+  L.push('|---|---|---|---|---|---|---|---|---|---|---|')
+  for (const e of ens) { const a = O[k].reader.byEnemy[e]; L.push(`| ${e} | ${SEMS.map((s) => p1(a.semApShare[s])).join(' | ')} | ${p1(a.shareGuard)} | ${f1(a.dmgTakenMean)} | ${f2(a.winRoundMean)} |`) }
+  L.push('')
+}
+// 4. Item 10 — draw variance
+L.push('## 4. Item 10「引いた手札で作戦を変える必要があるか」', '')
+L.push('### 4-1. カード使用の集中（reader）— 出した枚数/戦・見た枚数/戦・dead-card・使用種類数（≥0.1 回/戦）・top5 占有・Gini', '')
+L.push('| 面 | 方策 | 出した/戦 | 見た/戦 | dead-card | 使用種類（≥0.1/戦） | top5 占有 | Gini |')
+L.push('|---|---|---|---|---|---|---|---|')
+for (const [k, name] of FACES) for (const pol of ['reader', 'naive', 'greedy', 'oracleAware']) { if (!O[k][pol]) continue; const a = O[k][pol].agg; L.push(`| ${name} | ${pol} | ${f2(a.cardsPlayedMean)} | ${f2(a.cardsSeenMean)} | ${p1(a.deadCardRate)} | ${a.distinctDefsUsed}/${a.deckDistinct} | ${p1(a.top5Share)} | ${f2(a.giniPlays)} |`) }
+L.push('')
+L.push('### 4-2. 札ごとの使用（reader・通常・全 49 セル合算）— 回/戦・見たときに出した率。下位は「手札に来ても出されない札」', '')
+const pd = O.normal.reader.agg.perDef
+L.push('| 札 | class | 回/戦 | 見た/戦 | 見たら出す率 |'); L.push('|---|---|---|---|---|')
+for (const d of pd) L.push(`| ${d.name} | ${d.sem} | ${f2(d.playsPerGame)} | ${f2(d.seenPerGame)} | ${p1(d.useWhenSeen)} |`)
+L.push('')
+L.push('### 4-3. 手札感度 — 初手に GUARD 札が「ある／ない」・必殺 R の手札に出せる GUARD 札が「ある／ない」での結果差（reader）', '')
+L.push('| 面 | 初手 GUARD あり n／win／最低 HP | 初手 GUARD なし n／win／最低 HP | 必殺 R GUARD あり n／win／必殺被ダメ | 必殺 R GUARD なし n／win／必殺被ダメ |')
+L.push('|---|---|---|---|---|')
+for (const [k, name] of FACES) { const a = O[k].reader.agg; L.push(`| ${name} | ${a.openGuard.n}／${p1(a.openGuard.win)}／${f1(a.openGuard.minHp)} | ${a.openNoGuard.n}／${p1(a.openNoGuard.win)}／${f1(a.openNoGuard.minHp)} | ${a.ultHandGuard.n}／${p1(a.ultHandGuard.win)}／${f1(a.ultHandGuard.ultDmg)} | ${a.ultHandNoGuard.n}／${p1(a.ultHandNoGuard.win)}／${f1(a.ultHandNoGuard.ultDmg)} |`) }
+L.push('')
+L.push('### 4-4. seed 依存（reader）— 49 セルのうち「全 seed 勝ち」のセル数・1 seed でも負けるセル数・撃破 R の標準偏差・最低 HP の標準偏差・reader と naive の結果が分かれた seed 率（paired）', '')
+L.push('| 面 | 100% セル | 負け seed ありセル | <50% セル | 撃破 R σ | 最低 HP σ | reader≠naive seed 率（平均／最大セル） | reader だけ勝つ seed 率 |')
+L.push('|---|---|---|---|---|---|---|---|')
+for (const [k, name] of FACES) {
+  const cells = Object.values(O[k].reader.cells); const a = O[k].reader.agg
+  const pv = O[k].reader.pairedVsNaive ? Object.entries(O[k].reader.pairedVsNaive) : []
+  const dv = pv.map(([, v]) => v.divergeSeeds); const ro = pv.map(([, v]) => v.readerOnlyWin)
+  const maxCell = pv.length ? pv.reduce((b, c) => (c[1].divergeSeeds > b[1].divergeSeeds ? c : b)) : null
+  L.push(`| ${name} | ${cells.filter((c) => c.win === 1).length}/49 | ${cells.filter((c) => c.lossSeeds > 0).length}/49 | ${cells.filter((c) => c.win < 0.5).length}/49 | ${f2(a.winRoundStd)} | ${f2(a.minHpStd)} | ${pv.length ? p1(dv.reduce((p, q) => p + q, 0) / dv.length) + '／' + p1(maxCell[1].divergeSeeds) + '（' + maxCell[0] + '）' : '—'} | ${pv.length ? p1(ro.reduce((p, q) => p + q, 0) / ro.length) : '—'} |`)
+}
+L.push('')
+L.push('### 4-5. 同じ方策で勝てるか（same-policy success）— naive／greedy の面別勝率と、reader の plan 多様度（手の型が seed ごとに変わる割合）・必殺 R の手の型の多様度', '')
+L.push('| 面 | naive win | greedy win | reader plan 多様度 | reader 初手型 多様度 | reader 必殺 R 型 多様度 | naive plan 多様度 |')
+L.push('|---|---|---|---|---|---|---|')
+for (const [k, name] of FACES) { const r = O[k].reader.agg, n = O[k].naive.agg, g = O[k].greedy.agg; L.push(`| ${name} | ${p1(n.win)} | ${p1(g.win)} | ${p1(r.planDistinct)} | ${p1(r.openDistinct)} | ${p1(r.ultSigDistinct)} | ${p1(n.planDistinct)} |`) }
+L.push('')
+// 5. 49 cells
+L.push('## 5. 49 セル（reader win%）— 通常／Hard／Daily／Ⅴ／Ⅵ／Ⅶ猛威', '')
+const gods = [...new Set(Object.keys(O.normal.reader.cells).map((c) => c.split('×')[0]))]
+const ens = Object.keys(O.normal.reader.byEnemy)
+for (const k of ['normal', 'hard', 'daily', 'rank5', 'rank6', 'rank7p', 'rank7r']) {
+  const name = FACES.find((f) => f[0] === k)[1]
+  L.push(`### 5-${k}（${name}）`, '')
+  L.push(`| 神＼敵 | ${ens.join(' | ')} |`); L.push(`|---|${ens.map(() => '---').join('|')}|`)
+  for (const g of gods) L.push(`| ${g} | ${ens.map((e) => { const c = O[k].reader.cells[`${g}×${e}`]; return c.win < 0.5 ? `**${p1(c.win)}**` : p1(c.win) }).join(' | ')} |`)
+  L.push('')
+}
+// 6. oracle by round
+L.push('## 6. 託宣の使用時期（/戦・R1..R7）と神の一撃', '')
+L.push('| 面 | 方策 | R1 | R2 | R3 | R4 | R5 | R6 | R7 | 残り | GS | GS 発動 R |'); L.push('|---|---|---|---|---|---|---|---|---|---|---|---|')
+for (const [k, name] of FACES) for (const pol of ['reader', 'oracleAware', 'naive']) { if (!O[k][pol]) continue; const a = O[k][pol].agg; L.push(`| ${name} | ${pol} | ${a.oracleByRound.map(f2).join(' | ')} | ${f2(a.oracleLeftMean)} | ${p1(a.godStrikeRate)} | ${f2(a.burstRMean)} |`) }
+L.push('')
+// 7. death class
+L.push('## 7. 敗北の内訳（reader）— 必殺で死亡／峰の前／峰／峰の後／未撃破', '')
+L.push('| 面 | lost | ultimate | pre-peak | peak | post-peak | timeout(GS 前) | timeout(GS 後) |'); L.push('|---|---|---|---|---|---|---|---|')
+for (const [k, name] of FACES) { const a = O[k].reader.agg; const d = a.deathClass; L.push(`| ${name} | ${p1(a.lost)} | ${p1(d.ultimate ?? 0)} | ${p1(d['pre-peak'] ?? 0)} | ${p1(d.peak ?? 0)} | ${p1(d['post-peak'] ?? 0)} | ${p1(d['timeout-no-burst'] ?? 0)} | ${p1(d['timeout-after-burst'] ?? 0)} |`) }
+L.push('')
+// 8. god diversity (normal reader & naive)
+L.push('## 8. 神の差（通常・reader／naive／greedy の神別 win・撃破 R・GS）', '')
+L.push('| 神 | reader win | 撃破 R | GS | naive win | greedy win | hard reader | Ⅵ reader | Ⅶ猛威 reader |'); L.push('|---|---|---|---|---|---|---|---|---|')
+for (const g of Object.keys(O.normal.reader.byGod)) { const a = O.normal.reader.byGod[g]; L.push(`| ${g} | ${p1(a.win)} | ${f2(a.winRoundMean)} | ${p1(a.godStrikeRate)} | ${p1(O.normal.naive.byGod[g].win)} | ${p1(O.normal.greedy.byGod[g].win)} | ${p1(O.hard.reader.byGod[g].win)} | ${p1(O.rank6.reader.byGod[g].win)} | ${p1(O.rank7p.reader.byGod[g].win)} |`) }
+L.push('')
+writeFileSync(`${DIR}/SIMULATION_SUMMARY.md`, L.join('\n'))
+console.log('written', `${DIR}/SIMULATION_SUMMARY.md`, L.length, 'lines')

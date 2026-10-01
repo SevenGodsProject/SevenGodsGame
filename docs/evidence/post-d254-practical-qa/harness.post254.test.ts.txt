@@ -1,0 +1,387 @@
+/* Post-D254 Practical QA Re-Audit harness — scratch only (never committed; a .txt copy goes to docs/evidence/post-d254-practical-qa/).
+ * Runs on the Production runtime a611270 (= master 3dd8b5c runtime; src/core identical to 9316ce1 / 4d7b940). src/ is never touched.
+ * Policies reader / naive / greedy / ignoreUlt / oracleAware are the Decision252/253 policies (unchanged, comparable).
+ * NEW (Item 10 "draw variance"): class-ban readers noGuard / noMend / noWeaken, per-card usage concentration, dead-card rate,
+ * plan signatures (decision diversity), hand-at-ultimate sensitivity, opening-hand sensitivity, per-seed paired reader-vs-naive. */
+import { describe, it } from 'vitest'
+import { mkdirSync, writeFileSync } from 'node:fs'
+import { GODS } from '../../src/core/data/gods'
+import { ENEMIES } from '../../src/core/data/enemies'
+import { getCardDef } from '../../src/core/data/cards'
+import { getRecommendedDeck } from '../../src/core/data/deckBuilder'
+import { RULES } from '../../src/core/data/rules'
+import { DIVINATION_CHOICES } from '../../src/core/data/divination'
+import { applyAction } from '../../src/core/engine/reducer'
+import { enemyActionTotal } from '../../src/core/engine/intent'
+import { sumBuff } from '../../src/core/engine/buffs'
+import { primarySemantic, type CardSemantic } from '../../src/components/battle/cardSemantic'
+import type { CardDef, CardInstance, Difficulty, Effect, EnemyActionDef, EnemyId, GameState, GodId } from '../../src/core/types'
+
+const OUT = process.env.P254_OUT ?? 'C:/Users/kimi1/SevenGodsGame-d254-rc/docs/evidence/post-d254-practical-qa'
+mkdirSync(OUT, { recursive: true })
+const SEEDS_MAIN = Number(process.env.P254_SEEDS ?? 100)
+const SEEDS_RANK = Number(process.env.P254_SEEDS_RANK ?? 60)
+
+const guideAp = () => DIVINATION_CHOICES[1].effects.filter((e): e is Extract<Effect, { kind: 'gainAp' }> => e.kind === 'gainAp').reduce((s, e) => s + e.amount, 0)
+const guideDraw = () => DIVINATION_CHOICES[1].effects.filter((e): e is Extract<Effect, { kind: 'draw' }> => e.kind === 'draw').reduce((s, e) => s + e.amount, 0)
+
+// ---------------- policies ----------------
+type Policy = 'reader' | 'naive' | 'greedy' | 'ignoreUlt' | 'oracleAware' | 'noGuard' | 'noMend' | 'noWeaken'
+const BAN: Partial<Record<Policy, CardSemantic>> = { noGuard: 'GUARD', noMend: 'MEND', noWeaken: 'WEAKEN' }
+const isUlt = (x: EnemyActionDef | null | undefined) => !!x && (x.kind === 'special' || (x.kind === 'multiAttack' && !!x.special))
+const eff = (def: CardDef, kind: string, target?: string) => def.effects.filter((e: any) => e.kind === kind && (target ? e.target === target : true)).reduce((s, e: any) => s + (e.amount ?? 0), 0)
+const semOf = (x: CardInstance): CardSemantic => primarySemantic(getCardDef(x.defId).effects) ?? 'STRIKE'
+const dmgOf = (x: CardInstance) => eff(getCardDef(x.defId), 'damage', 'enemy')
+const blockOf = (x: CardInstance) => eff(getCardDef(x.defId), 'block')
+const healOf = (x: CardInstance) => eff(getCardDef(x.defId), 'heal')
+const selfDmgOf = (x: CardInstance) => eff(getCardDef(x.defId), 'damage', 'self')
+const debuffOf = (x: CardInstance) => getCardDef(x.defId).effects.filter((e: any) => e.kind === 'debuff' && e.target === 'enemy').reduce((s, e: any) => s + e.amount, 0)
+const debuffRoundsOf = (x: CardInstance) => getCardDef(x.defId).effects.filter((e: any) => e.kind === 'debuff' && e.target === 'enemy').reduce((s, e: any) => Math.max(s, e.rounds), 0)
+const costOf = (x: CardInstance) => getCardDef(x.defId).cost + (x.costModifier ?? 0)
+const utilOf = (x: CardInstance) => getCardDef(x.defId).effects.reduce((s, e: any) => {
+  if (e.kind === 'draw' || e.kind === 'gainAp') return s + e.amount * 4
+  if (e.kind === 'resonance') return s + e.amount * 2.5
+  if ((e.kind === 'buff' && e.target === 'self') || (e.kind === 'debuff' && e.target === 'enemy')) return s + e.amount * e.rounds
+  return s
+}, 0)
+const incomingOf = (s: GameState) => (s.enemy.intent ? enemyActionTotal(s.enemy.intent) : 0)
+const effIncoming = (s: GameState) => Math.max(0, incomingOf(s) + sumBuff(s.enemy.buffs, 'atk'))
+const projectedHp = (s: GameState) => s.player.hp - Math.max(0, effIncoming(s) - s.player.block)
+function bonusDmgIf(state: GameState, x: CardInstance): number {
+  const def = getCardDef(x.defId)
+  if (!def.bonus) return 0
+  const extra = def.bonus.effects.filter((e: any) => e.kind === 'damage' && e.target === 'enemy').reduce((s, e: any) => s + e.amount, 0)
+  if (extra === 0) return 0
+  const inc = incomingOf(state)
+  switch (def.bonus.when) {
+    case 'combo': return state.cardsPlayedThisRound >= 1 ? extra : 0
+    case 'charged': return state.resonance.value >= RULES.cardBonus.chargedThreshold ? extra : 0
+    case 'enemyBig': return inc >= RULES.cardBonus.enemyBigThreshold ? extra : 0
+    case 'lowHp': return state.player.hp <= Math.floor(state.player.maxHp * 0.5) ? extra : 0
+    case 'blocked': return inc > 0 && state.player.block + blockOf(x) >= inc ? extra : 0
+  }
+  return 0
+}
+const totalDmg = (s: GameState, x: CardInstance) => dmgOf(x) + bonusDmgIf(s, x) + (dmgOf(x) > 0 ? Math.max(0, sumBuff(s.player.buffs, 'atk')) : 0)
+function maxDmgNow(state: GameState, affordable: CardInstance[]): number {
+  const dmgCards = affordable.filter((x) => dmgOf(x) > 0).sort((p, q) => totalDmg(state, q) / costOf(q) - totalDmg(state, p) / costOf(p))
+  let ap = state.ap.current, sum = 0
+  for (const x of dmgCards) if (costOf(x) <= ap) { ap -= costOf(x); sum += totalDmg(state, x) }
+  return sum
+}
+function canKillNow(state: GameState, affordable: CardInstance[]): boolean { return maxDmgNow(state, affordable) >= state.enemy.hp + state.enemy.block }
+function upcomingUltimates(state: GameState): number {
+  const def = ENEMIES.find((e) => e.id === state.enemy.defId)!
+  let n = 0
+  for (let r = state.round + 1; r <= RULES.totalRounds; r++) { const x = def.actions[r - 1]; if (isUlt(x)) n++ }
+  return n
+}
+function cardValue(state: GameState, x: CardInstance): number {
+  const inc = effIncoming(state)
+  const d = totalDmg(state, x)
+  const b = Math.min(blockOf(x), Math.max(0, inc - state.player.block))
+  const h = Math.min(healOf(x), state.player.maxHp - state.player.hp)
+  const u = utilOf(x) * 0.5
+  return d + b + h * 0.8 + u
+}
+function pickCard(state: GameState, policy: Policy): CardInstance | null {
+  let affordable = state.hand.filter((x) => costOf(x) <= state.ap.current)
+  const ban = BAN[policy]
+  if (ban) affordable = affordable.filter((x) => semOf(x) !== ban)
+  if (affordable.length === 0) return null
+  if (policy === 'naive') return affordable[0]
+  if (policy === 'ignoreUlt' && isUlt(state.enemy.intent)) policy = 'greedy'
+  const inc = effIncoming(state)
+  const hpAfter = projectedHp(state)
+  const lethal = hpAfter <= 0
+  const dangerous = hpAfter < state.player.maxHp * 0.35
+  const guarded = state.player.block >= inc
+  const byDmg = (arr: CardInstance[]) => arr.filter((x) => dmgOf(x) > 0).sort((p, q) => totalDmg(state, q) / costOf(q) - totalDmg(state, p) / costOf(p))
+  const bestBlock = () => affordable.filter((x) => blockOf(x) > 0).sort((p, q) => blockOf(q) - blockOf(p))[0]
+  const bestDebuff = () => affordable.filter((x) => debuffOf(x) > 0).sort((p, q) => debuffOf(q) * debuffRoundsOf(q) - debuffOf(p) * debuffRoundsOf(p))[0]
+  const bestHeal = () => affordable.filter((x) => healOf(x) > 0).sort((p, q) => healOf(q) - healOf(p))[0]
+  const bestUtil = () => affordable.filter((x) => utilOf(x) > 0 && dmgOf(x) === 0 && blockOf(x) === 0 && healOf(x) === 0).sort((p, q) => utilOf(q) / costOf(q) - utilOf(p) / costOf(p))[0]
+  if (policy === 'greedy') {
+    const d = byDmg(affordable)[0]
+    if (d) return d
+    return bestUtil() ?? bestBlock() ?? bestHeal() ?? affordable.sort((p, q) => costOf(q) - costOf(p))[0]
+  }
+  const free = affordable.find((x) => { const def = getCardDef(x.defId); return def.effects.some((e: any) => e.kind === 'gainAp' && e.amount >= def.cost) })
+  if (free) return free
+  if (canKillNow(state, affordable)) { const d = byDmg(affordable)[0]; if (d) return d }
+  if ((lethal || dangerous) && !guarded) {
+    const b = bestBlock(); if (b) return b
+    const db = bestDebuff(); if (db) return db
+    const h = bestHeal(); if (h) return h
+  }
+  if (lethal) { const h = bestHeal(); if (h) return h }
+  const safe = affordable.filter((x) => selfDmgOf(x) === 0 || state.player.hp - selfDmgOf(x) - Math.max(0, inc - state.player.block) > 0)
+  const d = byDmg(safe)[0]
+  if (d) return d
+  const u = bestUtil(); if (u) return u
+  const h = bestHeal(); if (h && state.player.hp < state.player.maxHp * 0.7) return h
+  const b = bestBlock(); if (b && !guarded && inc > 0) return b
+  return null
+}
+type OracleEv = { guard: number; guide: number; strike: number }
+function oracleEv(state: GameState): OracleEv {
+  const inc = effIncoming(state)
+  const rawInc = incomingOf(state)
+  const guardGain = Math.max(RULES.divination.guardMin, Math.floor(rawInc * RULES.divination.guardRatio))
+  const hpAfter = projectedHp(state)
+  const unblocked = Math.max(0, inc - state.player.block)
+  const saved = Math.min(guardGain, unblocked)
+  const lethalNow = hpAfter <= 0
+  const lowHp = state.player.hp <= state.player.maxHp * 0.35
+  const guard = lethalNow && saved > 0 && hpAfter + saved > 0 ? 1000 : saved * (lowHp ? 2 : 1)
+  const strikeDmg = 4
+  const strike = state.enemy.hp + state.enemy.block <= strikeDmg ? 1000 : strikeDmg + (state.round >= 5 ? 1 : 0)
+  const ap = state.ap.current + guideAp()
+  const newly = state.hand.filter((x) => costOf(x) > state.ap.current && costOf(x) <= ap)
+  let best = 0
+  for (const x of newly) { const v = cardValue(state, x); if (v > best) best = v }
+  const drawEv = guideDraw() * (ap - (newly.length ? Math.min(...newly.map(costOf)) : 0) >= 1 ? 2.5 : 1.0)
+  return { guard, guide: best + drawEv, strike }
+}
+function pickOracle(state: GameState, policy: Policy): number {
+  if (state.divination.remaining <= 0 || state.divination.usedThisRound) return -1
+  if (policy === 'naive' || policy === 'greedy') return 2
+  if (policy === 'ignoreUlt' && isUlt(state.enemy.intent)) return 2
+  const inc = effIncoming(state)
+  const hpAfter = projectedHp(state)
+  const lethal = hpAfter <= 0
+  const dangerous = hpAfter < state.player.maxHp * 0.35
+  const roundsLeft = RULES.totalRounds - state.round + 1
+  if (state.enemy.hp + state.enemy.block <= 4) return 2
+  if (policy === 'oracleAware') {
+    const ev = oracleEv(state)
+    const ult = upcomingUltimates(state)
+    const mustHold = state.divination.remaining <= ult && !lethal && !dangerous && roundsLeft > state.divination.remaining
+    const dump = roundsLeft <= state.divination.remaining
+    const best = Math.max(ev.guard, ev.guide, ev.strike)
+    const choice = best === ev.guard ? 0 : best === ev.guide ? 1 : 2
+    if (best >= 1000) return choice
+    if (mustHold) return -1
+    if (dump) return choice
+    if (best >= 8) return choice
+    if ((lethal || dangerous) && inc > 0 && ev.guard > 0) return 0
+    return -1
+  }
+  // reader (and class-ban readers). noGuard never takes 加護.
+  const guardOk = policy !== 'noGuard'
+  if (lethal && inc > 0) return guardOk ? 0 : 2
+  if (state.divination.remaining >= roundsLeft) return dangerous && inc > 0 && guardOk ? 0 : 2
+  if (dangerous && inc > 0) return guardOk ? 0 : -1
+  if (roundsLeft <= state.divination.remaining) return inc >= 10 && state.player.block < inc && guardOk ? 0 : 2
+  return -1
+}
+
+// ---------------- game ----------------
+type Stake = { level: number; choice?: 'race' | 'pressure' | 'tempo' }
+const SEM_KEY: Record<CardSemantic, string> = { STRIKE: 'S', GUARD: 'G', MEND: 'M', WEAKEN: 'W', ATTUNE: 'A', TEMPO: 'T', EMPOWER: 'E' }
+const SEMS: CardSemantic[] = ['STRIKE', 'GUARD', 'MEND', 'WEAKEN', 'ATTUNE', 'TEMPO', 'EMPOWER']
+type Rec = {
+  status: 'won' | 'lost' | 'finished'; round: number; hp: number; minHp: number; enemyLeft: number
+  uses: { r: number; t: number; ult: boolean }[]; oracleLeft: number; bursts: number; burstR: number; dmgTaken: number[]; deathClass: string
+  ultR: number; ultGuarded: number; unusedAp: number
+  played: { r: number; defId: string; cost: number; sem: CardSemantic }[]; seen: number; seenDef: Record<string, number>
+  planSig: string; openSig: string; ultSig: string
+  openHasGuard: boolean; openHasWeaken: boolean; openStrikeN: number
+  ultHandGuard: boolean | null; ultDmg: number | null
+  apBySem: Record<string, number>; roundsPlayed: number; apTotal: number
+}
+const peakRoundOf = (actions: EnemyActionDef[]) => { let best = 0, br = 1; actions.forEach((x, i) => { const t = enemyActionTotal(x); if (t > best) { best = t; br = i + 1 } }); return br }
+function play(godId: GodId, enemyId: EnemyId, diff: Difficulty, policy: Policy, seed: number, stake: Stake, daily = false): Rec {
+  const deck = getRecommendedDeck(godId)
+  let { state } = applyAction(null, {
+    type: 'START_GAME', seed: `p254-${seed}`, godId, enemyId, deck, difficulty: diff,
+    ...(daily ? { mode: 'daily' as const, dailyKey: '2026-10-02', modifier: RULES.daily.modifier } : {}),
+    ...(stake.level ? { stake: stake.level, ...(stake.choice ? { stakeChoice: stake.choice } : {}) } : {}),
+  } as any)
+  const enemyDef = ENEMIES.find((e) => e.id === enemyId)!
+  const peakR = peakRoundOf(enemyDef.actions)
+  const maxEnemyHp = state.enemy.maxHp
+  let minHp = state.player.hp, bursts = 0, burstR = 0, ultR = 0, ultGuarded = 0, unusedAp = 0, apTotal = 0
+  const uses: Rec['uses'] = [], dmgTaken: number[] = [], played: Rec['played'] = []
+  const seenDef: Record<string, number> = {}
+  let seen = 0
+  const noteSeen = (defId: string) => { seen++; seenDef[defId] = (seenDef[defId] ?? 0) + 1 }
+  for (const c of state.hand) noteSeen(c.defId)
+  const openSems = state.hand.map(semOf)
+  const openHasGuard = openSems.includes('GUARD'), openHasWeaken = openSems.includes('WEAKEN'), openStrikeN = openSems.filter((s) => s === 'STRIKE').length
+  const apBySem: Record<string, number> = {}
+  const roundSigs: string[] = []
+  let ultHandGuard: boolean | null = null, ultDmg: number | null = null, ultSig = ''
+  let guard = 0
+  while (state.status === 'playing' && guard < 600) {
+    guard++
+    const r = state.round
+    const ult = isUlt(state.enemy.intent)
+    apTotal += state.ap.current
+    if (ult && ultHandGuard === null) ultHandGuard = state.hand.some((x) => semOf(x) === 'GUARD' && costOf(x) <= state.ap.current)
+    const cnt: Record<string, number> = {}
+    let oracleSig = '-'
+    let inner = 0
+    while (state.status === 'playing' && inner < 60) {
+      inner++
+      const card = pickCard(state, policy)
+      if (card) {
+        const sem = semOf(card), cost = costOf(card)
+        const res = applyAction(state, { type: 'PLAY_CARD', uid: card.uid })
+        for (const e of res.events) { if (e.t === 'RESONANCE_BURST') { bursts++; if (!burstR) burstR = r } else if (e.t === 'CARD_DRAWN') noteSeen(e.defId) }
+        state = res.state
+        played.push({ r, defId: card.defId, cost, sem })
+        cnt[SEM_KEY[sem]] = (cnt[SEM_KEY[sem]] ?? 0) + 1
+        apBySem[sem] = (apBySem[sem] ?? 0) + cost
+        continue
+      }
+      const o = pickOracle(state, policy)
+      if (o >= 0) {
+        const res = applyAction(state, { type: 'USE_DIVINATION', choiceIndex: o })
+        for (const e of res.events) { if (e.t === 'RESONANCE_BURST') { bursts++; if (!burstR) burstR = r } else if (e.t === 'CARD_DRAWN') noteSeen(e.defId) }
+        state = res.state
+        uses.push({ r, t: o, ult })
+        oracleSig = ['g', 'd', 's'][o]
+        continue
+      }
+      break
+    }
+    const sig = SEMS.map((s) => (cnt[SEM_KEY[s]] ? `${SEM_KEY[s]}${cnt[SEM_KEY[s]]}` : '')).join('') + '|' + oracleSig
+    roundSigs.push(sig)
+    if (ult && !ultSig) ultSig = sig
+    if (state.status !== 'playing') break
+    if (ult) { ultR++; if (state.player.block >= effIncoming(state) * 0.5) ultGuarded++ }
+    unusedAp += state.ap.current
+    const hpBefore = state.player.hp
+    const res = applyAction(state, { type: 'END_ROUND' })
+    for (const e of res.events) { if (e.t === 'RESONANCE_BURST') { bursts++; if (!burstR) burstR = r } else if (e.t === 'CARD_DRAWN') noteSeen(e.defId) }
+    state = res.state
+    const taken = Math.max(0, hpBefore - state.player.hp)
+    dmgTaken.push(taken)
+    if (ult && ultDmg === null) ultDmg = taken
+    minHp = Math.min(minHp, state.player.hp)
+  }
+  const status = state.status as Rec['status']
+  let deathClass = 'won'
+  if (status === 'lost') { const rr = dmgTaken.length; const act = enemyDef.actions[rr - 1]; deathClass = isUlt(act) ? 'ultimate' : rr < peakR ? 'pre-peak' : rr === peakR ? 'peak' : 'post-peak' }
+  else if (status === 'finished') deathClass = burstR ? 'timeout-after-burst' : 'timeout-no-burst'
+  return {
+    status, round: state.round, hp: state.player.hp, minHp, enemyLeft: state.enemy.hp / maxEnemyHp, uses, oracleLeft: state.divination.remaining, bursts, burstR, dmgTaken, deathClass,
+    ultR, ultGuarded, unusedAp, played, seen, seenDef, planSig: roundSigs.join(' '), openSig: roundSigs[0] ?? '', ultSig,
+    openHasGuard, openHasWeaken, openStrikeN, ultHandGuard, ultDmg, apBySem, roundsPlayed: dmgTaken.length, apTotal,
+  }
+}
+
+// ---------------- aggregation ----------------
+const mean = (xs: number[]) => (xs.length ? xs.reduce((p, q) => p + q, 0) / xs.length : 0)
+const std = (xs: number[]) => { if (xs.length < 2) return 0; const m = mean(xs); return Math.sqrt(mean(xs.map((x) => (x - m) ** 2))) }
+const ratio = (num: number, den: number) => (den ? num / den : 0)
+function gini(xs: number[]): number {
+  const a = [...xs].sort((p, q) => p - q); const n = a.length; const s = a.reduce((p, q) => p + q, 0)
+  if (!n || !s) return 0
+  let acc = 0
+  for (let i = 0; i < n; i++) acc += (2 * (i + 1) - n - 1) * a[i]
+  return acc / (n * s)
+}
+function aggregate(recs: Rec[], deckSize = RULES.deck.size) {
+  const n = recs.length
+  const won = recs.filter((r) => r.status === 'won'), lost = recs.filter((r) => r.status === 'lost'), fin = recs.filter((r) => r.status === 'finished')
+  const uses = recs.flatMap((r) => r.uses)
+  const byT = [0, 1, 2].map((t) => uses.filter((u) => u.t === t).length)
+  const byRound = [1, 2, 3, 4, 5, 6, 7].map((k) => uses.filter((u) => u.r === k).length / n)
+  const cls: Record<string, number> = {}
+  for (const r of recs) if (r.status !== 'won') cls[r.deathClass] = (cls[r.deathClass] ?? 0) + 1
+  const killR: Record<string, number> = {}
+  for (const r of won) killR[r.round] = (killR[r.round] ?? 0) + 1
+  // card usage
+  const playsByDef: Record<string, number> = {}, seenByDef: Record<string, number> = {}
+  let plays = 0, seen = 0
+  for (const r of recs) { for (const p of r.played) { playsByDef[p.defId] = (playsByDef[p.defId] ?? 0) + 1; plays++ } for (const [k, v] of Object.entries(r.seenDef)) seenByDef[k] = (seenByDef[k] ?? 0) + v; seen += r.seen }
+  const defIds = Object.keys(seenByDef)
+  const perDef = defIds.map((d) => ({ id: d, name: getCardDef(d as any).name, sem: primarySemantic(getCardDef(d as any).effects) ?? 'STRIKE', playsPerGame: (playsByDef[d] ?? 0) / n, seenPerGame: seenByDef[d] / n, useWhenSeen: ratio(playsByDef[d] ?? 0, seenByDef[d]) })).sort((a, b) => b.playsPerGame - a.playsPerGame)
+  const playVec = perDef.map((d) => d.playsPerGame)
+  const top5Share = ratio(playVec.slice(0, 5).reduce((p, q) => p + q, 0), playVec.reduce((p, q) => p + q, 0))
+  const semPlays: Record<string, number> = {}, semAp: Record<string, number> = {}
+  let apSpent = 0
+  for (const r of recs) { for (const p of r.played) semPlays[p.sem] = (semPlays[p.sem] ?? 0) + 1; for (const [k, v] of Object.entries(r.apBySem)) { semAp[k] = (semAp[k] ?? 0) + v; apSpent += v } }
+  // plan diversity
+  const plans = new Set(recs.map((r) => r.planSig)), opens = new Set(recs.map((r) => r.openSig)), ultSigs = new Set(recs.filter((r) => r.ultSig).map((r) => r.ultSig))
+  const ultN = recs.filter((r) => r.ultSig).length
+  // hand sensitivity
+  const og = recs.filter((r) => r.openHasGuard), ong = recs.filter((r) => !r.openHasGuard)
+  const ug = recs.filter((r) => r.ultHandGuard === true), ung = recs.filter((r) => r.ultHandGuard === false)
+  return {
+    n, win: won.length / n, lost: lost.length / n, unfinished: fin.length / n,
+    deathClass: Object.fromEntries(Object.entries(cls).map(([k, v]) => [k, v / n])),
+    killRoundDist: Object.fromEntries(Object.entries(killR).map(([k, v]) => [k, v / n])),
+    winRoundMean: mean(won.map((r) => r.round)), winRoundStd: std(won.map((r) => r.round)), defeatRoundMean: mean(lost.map((r) => r.dmgTaken.length)),
+    reachR6: mean(recs.map((r) => +(r.roundsPlayed >= 5 && (r.status !== 'won' || r.round >= 6)))), reachR7: mean(recs.map((r) => +(r.roundsPlayed >= 6 && (r.status !== 'won' || r.round >= 7)))),
+    minHpMean: mean(recs.map((r) => r.minHp)), minHpStd: std(recs.map((r) => r.minHp)), minHpLe50: mean(recs.map((r) => +(r.minHp <= 15))), meanHpWon: mean(won.map((r) => r.hp)),
+    dmgTakenMean: mean(recs.map((r) => r.dmgTaken.reduce((p, q) => p + q, 0))),
+    oracleUses: uses.length / n, shareGuard: ratio(byT[0], uses.length), shareGuide: ratio(byT[1], uses.length), shareStrike: ratio(byT[2], uses.length), oracleByRound: byRound, oracleLeftMean: mean(recs.map((r) => r.oracleLeft)),
+    guardOnUlt: ratio(uses.filter((u) => u.t === 0 && u.ult).length, byT[0]),
+    godStrikeRate: mean(recs.map((r) => +(r.bursts > 0))), burstRMean: mean(recs.filter((r) => r.burstR).map((r) => r.burstR)),
+    ultReach: mean(recs.map((r) => +(r.ultR > 0))), ultGuardRate: ratio(recs.reduce((s, r) => s + r.ultGuarded, 0), recs.reduce((s, r) => s + r.ultR, 0)),
+    unusedApMean: mean(recs.map((r) => r.unusedAp)), apTotalMean: mean(recs.map((r) => r.apTotal)),
+    cardsPlayedMean: plays / n, cardsSeenMean: seen / n, deadCardRate: 1 - ratio(plays, seen),
+    distinctDefsUsed: perDef.filter((d) => d.playsPerGame >= 0.1).length, deckDistinct: defIds.length, deckSize,
+    top5Share, giniPlays: gini(playVec), perDef,
+    semPlayShare: Object.fromEntries(SEMS.map((s) => [s, ratio(semPlays[s] ?? 0, plays)])), semApShare: Object.fromEntries(SEMS.map((s) => [s, ratio(semAp[s] ?? 0, apSpent)])),
+    planDistinct: plans.size / n, openDistinct: opens.size / n, ultSigDistinct: ratio(ultSigs.size, ultN),
+    openGuard: { n: og.length, win: mean(og.map((r) => +(r.status === 'won'))), minHp: mean(og.map((r) => r.minHp)), killR: mean(og.filter((r) => r.status === 'won').map((r) => r.round)) },
+    openNoGuard: { n: ong.length, win: mean(ong.map((r) => +(r.status === 'won'))), minHp: mean(ong.map((r) => r.minHp)), killR: mean(ong.filter((r) => r.status === 'won').map((r) => r.round)) },
+    ultHandGuard: { n: ug.length, win: mean(ug.map((r) => +(r.status === 'won'))), ultDmg: mean(ug.map((r) => r.ultDmg ?? 0)) },
+    ultHandNoGuard: { n: ung.length, win: mean(ung.map((r) => +(r.status === 'won'))), ultDmg: mean(ung.map((r) => r.ultDmg ?? 0)) },
+  }
+}
+type Agg = ReturnType<typeof aggregate>
+const LEVELS: { key: string; stake: Stake }[] = [
+  { key: '0', stake: { level: 0 } }, { key: '1', stake: { level: 1 } }, { key: '2', stake: { level: 2 } }, { key: '3', stake: { level: 3 } }, { key: '4', stake: { level: 4 } },
+  { key: '5', stake: { level: 5 } }, { key: '6', stake: { level: 6 } }, { key: '7p', stake: { level: 7, choice: 'pressure' } }, { key: '7r', stake: { level: 7, choice: 'race' } }, { key: '7t', stake: { level: 7, choice: 'tempo' } },
+]
+type CellStat = { win: number; killR: number; lossSeeds: number; minHpStd: number; planDistinct: number }
+type Face = { agg: Agg; byEnemy: Record<string, Agg>; byGod: Record<string, Agg>; cells: Record<string, CellStat>; pairedVsNaive?: Record<string, { divergeSeeds: number; readerOnlyWin: number; naiveOnlyWin: number }> }
+type Out = Record<string, Record<string, Face>>
+const POLICIES: Policy[] = ['reader', 'naive', 'greedy', 'ignoreUlt', 'oracleAware', 'noGuard', 'noMend', 'noWeaken']
+function runFace(faceKey: string, stake: Stake, policies: Policy[], seeds: number, diff: Difficulty, daily: boolean, out: Out, counter: { games: number }) {
+  out[faceKey] = {}
+  const perSeedWin: Record<Policy, Record<string, number[]>> = {} as any
+  for (const policy of policies) {
+    const recs: Rec[] = []; const byEnemy: Record<string, Rec[]> = {}; const byGod: Record<string, Rec[]> = {}; const cells: Record<string, CellStat> = {}
+    perSeedWin[policy] = {}
+    for (const god of GODS) for (const enemy of ENEMIES) {
+      const key = `${god.nameJa}×${enemy.name}`; byEnemy[enemy.name] ??= []; byGod[god.nameJa] ??= []
+      const cr: Rec[] = []
+      for (let i = 0; i < seeds; i++) { const r = play(god.id, enemy.id, diff, policy, i, stake, daily); recs.push(r); byEnemy[enemy.name].push(r); byGod[god.nameJa].push(r); cr.push(r); counter.games++ }
+      perSeedWin[policy][key] = cr.map((r) => (r.status === 'won' ? 1 : 0))
+      cells[key] = { win: mean(cr.map((r) => +(r.status === 'won'))), killR: mean(cr.filter((r) => r.status === 'won').map((r) => r.round)), lossSeeds: cr.filter((r) => r.status !== 'won').length, minHpStd: std(cr.map((r) => r.minHp)), planDistinct: new Set(cr.map((r) => r.planSig)).size / cr.length }
+    }
+    out[faceKey][policy] = { agg: aggregate(recs), byEnemy: Object.fromEntries(Object.entries(byEnemy).map(([k, v]) => [k, aggregate(v)])), byGod: Object.fromEntries(Object.entries(byGod).map(([k, v]) => [k, aggregate(v)])), cells }
+  }
+  if (perSeedWin.reader && perSeedWin.naive) {
+    const paired: Face['pairedVsNaive'] = {}
+    for (const key of Object.keys(perSeedWin.reader)) {
+      const a = perSeedWin.reader[key], b = perSeedWin.naive[key]
+      let div = 0, ro = 0, no = 0
+      for (let i = 0; i < a.length; i++) { if (a[i] !== b[i]) div++; if (a[i] && !b[i]) ro++; if (!a[i] && b[i]) no++ }
+      paired[key] = { divergeSeeds: div / a.length, readerOnlyWin: ro / a.length, naiveOnlyWin: no / a.length }
+    }
+    out[faceKey].reader.pairedVsNaive = paired
+  }
+}
+
+describe('Post-D254 Practical QA re-audit', () => {
+  it('matrix', () => {
+    const t0 = Date.now()
+    const out: Out = {}; const counter = { games: 0 }
+    runFace('normal', { level: 0 }, POLICIES, SEEDS_MAIN, 'normal', false, out, counter)
+    runFace('easy', { level: 0 }, POLICIES, SEEDS_MAIN, 'easy', false, out, counter)
+    runFace('hard', { level: 0 }, POLICIES, SEEDS_MAIN, 'hard', false, out, counter)
+    runFace('daily', { level: 0 }, POLICIES, SEEDS_MAIN, 'normal', true, out, counter)
+    const RANK_POLICIES: Policy[] = ['reader', 'naive', 'greedy', 'ignoreUlt', 'oracleAware']
+    for (const lv of LEVELS.filter((l) => l.key !== '0')) runFace(`rank${lv.key}`, lv.stake, RANK_POLICIES, SEEDS_RANK, 'normal', false, out, counter)
+    const elapsed = (Date.now() - t0) / 1000
+    writeFileSync(`${OUT}/sim-post254.json`, JSON.stringify({ runtime: 'a611270', date: new Date().toISOString(), games: counter.games, elapsed, seedsMain: SEEDS_MAIN, seedsRank: SEEDS_RANK, policies: POLICIES, out }, null, 1))
+    console.log(`P254: games=${counter.games} elapsed=${elapsed.toFixed(0)}s`)
+  }, 7_200_000)
+})

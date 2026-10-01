@@ -1,0 +1,14 @@
+// Item 10 / 11 の追加集計（sim-post254.json から。SIMULATION_SUMMARY.md の補助・手入力なし）
+const j=JSON.parse(require('fs').readFileSync(process.argv[2]??'./sim-post254.json','utf8'));
+for(const f of ['normal','hard','daily','rank5']){const pv=j.out[f].reader.pairedVsNaive;const ents=Object.entries(pv);const zero=ents.filter(([k,v])=>v.divergeSeeds===0).length;const byE={};for(const [k,v] of ents){const e=k.split('×')[1];(byE[e]??=[]).push(v.divergeSeeds)}
+console.log(f,'cells diverge=0:',zero+'/49','| by enemy:',Object.entries(byE).map(([e,a])=>e+' '+(100*a.reduce((p,q)=>p+q,0)/a.length).toFixed(0)).join(', '))}
+const n=j.out.normal;for(const p of ['reader','naive','greedy']){const a=n[p].agg;console.log(p,'GS',(a.godStrikeRate*100).toFixed(1),'burstR',a.burstRMean.toFixed(2),'minHp',a.minHpMean.toFixed(1),'dmgTaken',a.dmgTakenMean.toFixed(1),'hpWon',a.meanHpWon.toFixed(1),'unusedAp',a.unusedApMean.toFixed(2))}
+const c=n.reader.cells;console.log('normal reader cells <100:',Object.entries(c).filter(([k,v])=>v.win<1).map(([k,v])=>k+' '+(v.win*100).toFixed(0)).join(', '));
+console.log('normal reader killRoundDist',JSON.stringify(n.reader.agg.killRoundDist));
+console.log('hard reader killRoundDist',JSON.stringify(j.out.hard.reader.agg.killRoundDist));
+console.log('saika x juuma', ['rank6','rank7p','rank7r','rank7t','hard','daily'].map(f=>f+' '+(100*j.out[f].reader.cells['才華×双牙の魔獣'].win).toFixed(1)).join(' | '));
+console.log('sobi x karakuri', ['hard','daily','rank5','rank6','rank7p'].map(f=>f+' '+(100*j.out[f].reader.cells['蒼毘×銀甲の機工師'].win).toFixed(1)).join(' | '));
+console.log('normal noGuard byEnemy', Object.entries(n.noGuard.byEnemy).map(([e,a])=>e+' '+(100*a.win).toFixed(0)).join(', '));
+console.log('normal noWeaken byEnemy', Object.entries(n.noWeaken.byEnemy).map(([e,a])=>e+' '+(100*a.win).toFixed(0)).join(', '));
+console.log('hard noMend byEnemy', Object.entries(j.out.hard.noMend.byEnemy).map(([e,a])=>e+' '+(100*a.win).toFixed(0)).join(', '));
+console.log('normal reader semPlayShare', JSON.stringify(Object.fromEntries(Object.entries(n.reader.agg.semPlayShare).map(([k,v])=>[k,(v*100).toFixed(1)]))));
