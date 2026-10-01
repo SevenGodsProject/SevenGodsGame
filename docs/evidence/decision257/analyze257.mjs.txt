@@ -1,0 +1,118 @@
+// 決定257 FAST GATE の集計（gate-raw.json → gate.json／gate.md）。計測専用・runtime に含めない
+import { readFileSync, writeFileSync } from 'node:fs'
+const OUT = process.env.D257_OUT ?? 'docs/evidence/decision257'
+const raw = JSON.parse(readFileSync(`${OUT}/gate-raw.json`, 'utf8'))
+const NEW = new Set(['burst_rise', 'enemy_rise'])
+const ms = (s) => Math.round(s * 1000)
+
+function duckOf(gain, A, until = 3.2) {
+  const win = gain.filter((g) => g.t >= A - 0.05 && g.t <= A + until)
+  const firstDip = win.find((g) => g.v < 0.99)
+  if (!firstDip) return { duck: false }
+  const minV = Math.min(...win.map((g) => g.v))
+  const atMin = win.filter((g) => g.v <= minV + 0.005)
+  const rising = win.find((g) => g.t > atMin[0].t && g.v > minV + 0.005)
+  const retStart = rising ?? atMin[atMin.length - 1]
+  const done = win.find((g) => g.t >= retStart.t && g.v >= 0.999)
+  const after = gain.filter((g) => g.t <= A + until).pop()
+  return { duck: true, startMs: ms(firstDip.t - A), minV, minEffective: +(minV * 0.35).toFixed(4), minReachedMs: ms(atMin[0].t - A), returnStartMs: ms(retStart.t - A), returnDoneMs: done ? ms(done.t - A) : null, valueAfter: after ? after.v : null }
+}
+
+function analyze(r) {
+  if (!r || !r.probe) return null
+  const P = r.probe
+  const se = P.se.filter((s) => s.name)
+  const bursts = se.filter((s) => s.name === 'burst_ready').map((b) => {
+    const rise = se.find((s) => s.name === 'burst_rise' && Math.abs(s.at - (b.at + 0.45)) < 0.15)
+    const hit = se.find((s) => s.name === 'hit_l4' && s.at > b.at + 1.4 && s.at < b.at + 1.8)
+    const lockRel = P.lock.find((l) => l.perf > b.perf + 50 && l.n > 0)
+    return { riseMs: rise ? ms(rise.at - b.at) : null, riseGain: rise?.gain ?? null, hitL4Ms: hit ? ms(hit.at - b.at) : null, lockReleaseMs: lockRel ? Math.round(lockRel.perf - b.perf) : null, ...duckOf(P.gain, b.at) }
+  })
+  // 敵の必殺：After は enemy_rise、Before は着弾の予約（special 1,260／技名付き連撃 1,100）で見つける
+  const ultAnchors = se.filter((s) => (s.name === 'self_hit_heavy' && s.delayMs >= 1250 && s.delayMs <= 1270) || (s.name === 'self_hit' && s.delayMs >= 1090 && s.delayMs <= 1110)).map((s) => s.now)
+  for (const s of se) if (s.name === 'enemy_rise') ultAnchors.push(s.now)
+  const uniq = [...new Set(ultAnchors.map((x) => x.toFixed(1)))].map(Number)
+  const ultimates = uniq.map((now) => {
+    const turn = se.filter((s) => s.name === 'enemy_turn' && Math.abs(s.now - now) < 0.06).pop()
+    const A = turn ? turn.at : now
+    const rise = se.find((s) => s.name === 'enemy_rise' && s.at >= A - 0.01 && s.at < A + 0.5)
+    const impacts = se.filter((s) => (s.name === 'self_hit_heavy' || s.name === 'self_hit') && Math.abs(s.now - A) < 0.06).map((s) => s.delayMs)
+    return { riseMs: rise ? ms(rise.at - A) : null, riseGain: rise?.gain ?? null, impactsMs: impacts, ...duckOf(P.gain, A) }
+  })
+  // duck の回数（0.343 付近まで下がった谷）と、ジングル後のフェードイン（0 から）の回数
+  let dips = 0, jingleFades = 0, inDip = false, dipMin = 1
+  for (const g of P.gain) {
+    if (!inDip && g.v < 0.99) { inDip = true; dipMin = g.v }
+    else if (inDip) { dipMin = Math.min(dipMin, g.v); if (g.v >= 0.999) { inDip = false; if (dipMin < 0.05) jingleFades++; else dips++ } }
+  }
+  if (inDip) { if (dipMin < 0.05) jingleFades++; else dips++ }
+  let dup = 0
+  for (let i = 0; i < se.length; i++) for (let j = i + 1; j < se.length; j++) if (se[i].name === se[j].name && se[i].rate === se[j].rate && Math.abs(se[i].at - se[j].at) < 0.03) dup++
+  const entryDescend = se.find((s) => s.name === 'resonance_gain' && Math.abs(s.rate - 0.8) < 1e-6)
+  const entryBoss = se.find((s) => s.name === 'boss_entrance')
+  const bc = P.marks.battleClick
+  return {
+    seTotal: se.length,
+    newSe: { burst_rise: se.filter((s) => s.name === 'burst_rise').length, enemy_rise: se.filter((s) => s.name === 'enemy_rise').length },
+    existingSeq: se.filter((s) => !NEW.has(s.name)).map((s) => `${s.name}@${s.rate}+${s.delayMs}`),
+    bursts, ultimates, duckDips: dips, jingleFades,
+    finalBgmGain: P.bgmGainNow, hasBgmGain: P.hasBgmGain, ctxState: P.ctxState,
+    duplicates: dup,
+    entry: { descendMs: entryDescend && bc ? Math.round(entryDescend.perf - bc) : null, bossMs: entryBoss && bc ? Math.round(entryBoss.perf - bc) : null, descendDelay: entryDescend?.delayMs ?? null, bossDelay: entryBoss?.delayMs ?? null, duckDuringEntry: P.gain.some((g) => entryBoss && g.perf < entryBoss.perf + 1500 && g.v < 0.99) },
+    nodes: P.nodes,
+  }
+}
+
+const res = {}
+for (const [k, r] of Object.entries(raw)) if (k !== 'lockrep') res[k] = { error: r.error ?? null, errors: r.errors ?? [], finalStatus: r.finalStatus, finalScore: r.finalScore, hScroll: (r.rounds ?? []).some((x) => x.before?.hScroll || x.afterPlay?.hScroll || x.afterEnemy?.hScroll), a: analyze(r), retry: r.retry ? { gainNow: r.retry.gainNow, minAfter: r.retry.samplesAfter.length ? Math.min(...r.retry.samplesAfter.map((g) => g.v)) : null, round: r.retry.round } : null, volumeProbe: r.volumeProbe ?? null }
+
+// ---- METRIC LOCK・SE 列・Entry・ロック時間・箱の Before/After 比較 ----
+const lock = []
+const pairs = []
+for (const k of Object.keys(raw).filter((k) => k.endsWith('/before'))) {
+  const kb = k, ka = k.replace('/before', '/after')
+  const A = raw[kb], B = raw[ka]
+  if (!A?.rounds || !B?.rounds) { lock.push({ k, error: 'missing' }); continue }
+  const id = k.replace('/before', '')
+  for (let i = 0; i < Math.max(A.rounds.length, B.rounds.length); i++) for (const ph of ['before', 'afterPlay', 'afterEnemy']) {
+    const sa = JSON.stringify(A.rounds[i]?.[ph]?.save ?? null), sb = JSON.stringify(B.rounds[i]?.[ph]?.save ?? null)
+    lock.push({ k: id, round: i + 1, phase: ph, same: sa === sb })
+  }
+  lock.push({ k: id, round: 'final', phase: 'final', same: A.finalScore === B.finalScore && A.finalStatus === B.finalStatus, a: `${A.finalStatus} ${A.finalScore}`, b: `${B.finalStatus} ${B.finalScore}` })
+  const ra = res[kb].a, rb = res[ka].a
+  const boxesA = A.rounds[0]?.before?.boxes, boxesB = B.rounds[0]?.before?.boxes
+  let boxDiff = null
+  if (boxesA && boxesB) { const sa = new Set(boxesA), sb = new Set(boxesB); boxDiff = boxesA.filter((x) => !sb.has(x)).length + boxesB.filter((x) => !sa.has(x)).length }
+  pairs.push({
+    id,
+    existingSeSame: ra && rb ? ra.existingSeq.length === rb.existingSeq.length && ra.existingSeq.every((x, i) => { const [na, da] = x.split('+'), [nb, db] = rb.existingSeq[i].split('+'); return na === nb && Math.abs(Number(da) - Number(db)) <= 15 }) : null,
+    existingSeMaxDelayDiffMs: ra && rb && ra.existingSeq.length === rb.existingSeq.length ? Math.max(0, ...ra.existingSeq.map((x, i) => Math.abs(Number(x.split('+')[1]) - Number(rb.existingSeq[i].split('+')[1])))) : null,
+    existingSeCount: [ra?.existingSeq.length ?? null, rb?.existingSeq.length ?? null],
+    lockReleaseMs: [ra?.bursts.map((b) => b.lockReleaseMs) ?? [], rb?.bursts.map((b) => b.lockReleaseMs) ?? []],
+    lockReleaseMaxDiff: ra && rb && ra.bursts.length === rb.bursts.length ? Math.max(0, ...ra.bursts.map((b, i) => Math.abs((b.lockReleaseMs ?? 0) - (rb.bursts[i].lockReleaseMs ?? 0)))) : null,
+    hitL4Ms: [ra?.bursts.map((b) => b.hitL4Ms) ?? [], rb?.bursts.map((b) => b.hitL4Ms) ?? []],
+    entry: [ra?.entry ?? null, rb?.entry ?? null],
+    entryIntervalMs: [ra?.entry ? ra.entry.bossMs - ra.entry.descendMs : null, rb?.entry ? rb.entry.bossMs - rb.entry.descendMs : null],
+    entryIntervalDiffMs: ra?.entry && rb?.entry ? Math.abs((ra.entry.bossMs - ra.entry.descendMs) - (rb.entry.bossMs - rb.entry.descendMs)) : null,
+    boxDiff, boxCount: [boxesA?.length ?? null, boxesB?.length ?? null],
+  })
+}
+const mismatches = lock.filter((l) => l.same === false)
+const after = Object.entries(res).filter(([k]) => k.endsWith('/after'))
+const summary = {
+  lockRows: lock.length, lockMismatches: mismatches.length,
+  consoleErrors: Object.fromEntries(Object.entries(res).map(([k, v]) => [k, v.errors.length])),
+  runErrors: Object.entries(res).filter(([, v]) => v.error).map(([k, v]) => `${k}: ${v.error}`),
+  hScroll: Object.entries(res).filter(([, v]) => v.hScroll).map(([k]) => k),
+  afterBursts: after.flatMap(([k, v]) => (v.a?.bursts ?? []).map((b) => ({ k, ...b }))),
+  afterUltimates: after.flatMap(([k, v]) => (v.a?.ultimates ?? []).map((u) => ({ k, ...u }))),
+  beforeDuckDips: Object.entries(res).filter(([k]) => k.endsWith('/before')).reduce((s, [, v]) => s + (v.a?.duckDips ?? 0), 0),
+  afterDuckDips: after.map(([k, v]) => ({ k, dips: v.a?.duckDips, bursts: v.a?.bursts.length, ultimates: v.a?.ultimates.length, newSe: v.a?.newSe, jingleFades: v.a?.jingleFades, finalBgmGain: v.a?.finalBgmGain, duplicates: v.a?.duplicates, nodes: v.a?.nodes })),
+  pairs,
+  retry: Object.entries(res).filter(([, v]) => v.retry).map(([k, v]) => ({ k, ...v.retry })),
+  volumeProbe: Object.entries(res).filter(([, v]) => v.volumeProbe).map(([k, v]) => ({ k, ...v.volumeProbe })),
+  lockrep: raw.lockrep ? (() => { const med = (a) => { const v = a.map((x) => x.lockReleaseMs).filter((x) => x !== null).sort((x, y) => x - y); return v.length ? v[Math.floor(v.length / 2)] : null }; return { before: raw.lockrep.before.map((x) => x.lockReleaseMs), after: raw.lockrep.after.map((x) => x.lockReleaseMs), medianBefore: med(raw.lockrep.before), medianAfter: med(raw.lockrep.after), medianDiff: Math.abs(med(raw.lockrep.before) - med(raw.lockrep.after)) } })() : null,
+  fallback: Object.fromEntries(Object.entries(res).filter(([k]) => /^(reduced|noaudio|mute)\//.test(k)).map(([k, v]) => [k, { status: v.finalStatus, score: v.finalScore, errors: v.errors.length, seTotal: v.a?.seTotal ?? 0, newSe: v.a?.newSe ?? null, hasBgmGain: v.a?.hasBgmGain ?? false, bursts: v.a?.bursts.map((b) => ({ riseMs: b.riseMs, hitL4Ms: b.hitL4Ms, lockReleaseMs: b.lockReleaseMs })) ?? [] }])),
+}
+writeFileSync(`${OUT}/gate.json`, JSON.stringify({ summary, lock, res }, null, 1))
+console.log(JSON.stringify(summary, null, 1).slice(0, 12000))

@@ -6,7 +6,17 @@
 
 ## §0 結論
 
-（Fast Gate 実施後に記入）
+**FAST GATE：未完了（INCOMPLETE）— HUMAN QA READY ではない。** ブラウザ計測（gate257）が実行中にシステムのメモリ不足で Claude Code により停止された（コマンド自体の不具合ではない）。指示があるまで再実行しない。
+
+| 項目 | 結果 |
+|---|---|
+| 静的 | tsc 0／oxlint 0（警告は scripts/ の既存のみ・src 0）／vitest **1,303 PASS**（1,289＋14）・skip 9／build OK |
+| bundle | JS 453,199→455,809B（**+2,610B**・gzip 138,867→139,640＝+773B）／CSS md5 同一（） |
+| 新 SE | burst_rise 900ms 39,734B／enemy_rise 1,000ms 44,144B。既存 20 本 md5 不変（全 22 本を別ディレクトリへ再生成しても 20 本一致） |
+| runtime 保護 |  0・CSS 0・時刻定数ファイル（combatTimeline／enemyVfxTiming／battleEntrance）diff 0・golden（useReactionLanguage 等）PASS |
+| ブラウザ smoke（PC・大耀×鬼将・1 回） | METRIC LOCK 22 行 不一致 0／console error 0／God Strike：rise T+450（gain 0.595）・hit_l4 1,600・duck 開始 11ms・最低 0.343（実効 0.12）・復帰完了 2,208ms・復帰後 1.0／Enemy Ultimate（R4 断岩）enemy_rise +200 発火／duplicate 0／SE ノード 80 本すべて ended・disconnect 160（=2×80）＝orphan 0／GainNode 経路後も element volume が効く（RMS 比 0.367≈0.35） |
+| 全件 gate | lock 14 run（3 case × PC/SP＋SP660）は errors 0 で完走したが、raw JSON は最後に書く設計のため **結果は失われた**。lockrep（入力ロック反復）は 2 周で停止・値 null（計測側の検出不具合の疑い・要修正） |
+
 
 ## §1 設計（SOUND LAW）
 

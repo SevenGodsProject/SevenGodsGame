@@ -1,0 +1,85 @@
+diff --git a/scripts/gen-se.mjs b/scripts/gen-se.mjs
+index 622d67b..3c1f029 100644
+--- a/scripts/gen-se.mjs
++++ b/scripts/gen-se.mjs
+@@ -12,7 +12,14 @@ import { dirname, join } from 'node:path'
+ import { fileURLToPath } from 'node:url'
+ 
+ const SR = 22050
+-const OUT = join(dirname(fileURLToPath(import.meta.url)), '..', 'public', 'assets', 'se')
++// 決定257：SE_OUT で書き出し先を変えられる（決定論の検証用）。既定は public/assets/se
++const OUT = process.env.SE_OUT ?? join(dirname(fileURLToPath(import.meta.url)), '..', 'public', 'assets', 'se')
++// 決定257：--only a,b で指定した音だけ書き出す（既存 20 本を再生成しない）。
++// 乱数列を変えないため、計算は全音で行い、書き出しだけを絞る
++const ONLY = (() => {
++  const i = process.argv.indexOf('--only')
++  return i >= 0 ? new Set(process.argv[i + 1].split(',')) : null
++})()
+ 
+ // ---------- deterministic noise ----------
+ let seed = 0x2f6e2b1
+@@ -127,6 +134,23 @@ function normalize(x, peak = 0.9) {
+   for (const v of x) m = Math.max(m, Math.abs(v))
+   return m > 0 ? gain(x, peak / m) : x
+ }
++// 決定257：クレッシェンド（ゆっくり膨らみ、最後に短く消える）。curve>1 で終盤に寄る
++function swell(n, releaseMs, curve = 2) {
++  const r = Math.max(1, ms(releaseMs))
++  const out = new Float32Array(n)
++  for (let i = 0; i < n; i++) out[i] = i < n - r ? Math.pow(i / (n - r), curve) : 1 - (i - (n - r)) / r
++  return out
++}
++// 決定257：振幅のゆらぎ（トレモロ）。rate は開始→終了で直線的に変わる
++function tremolo(n, rateStartHz, rateEndHz, depth) {
++  const out = new Float32Array(n)
++  let ph = 0
++  for (let i = 0; i < n; i++) {
++    ph += (2 * Math.PI * (rateStartHz + (rateEndHz - rateStartHz) * (i / n))) / SR
++    out[i] = 1 - depth * (0.5 + 0.5 * Math.sin(ph))
++  }
++  return out
++}
+ function writeWav(name, samples) {
+   const n = samples.length
+   const buf = Buffer.alloc(44 + n * 2)
+@@ -179,6 +203,32 @@ const SOUNDS = {
+   reward: () => chime([784, 1175], 380, 130, 0.35),
+   victory_sting: () => mix(at(chime([523, 659, 784], 420, 120, 0.4)), at(gain(mul(osc(1047, 1047, ms(500)), env(ms(500), 5, 480, 0, 0, 4)), 0.35), 360), at(gain(bandpass(mul(noise(ms(600)), env(ms(600), 100, 480, 0, 20)), 4000, 9000, 3), 0.25), 300)),
+   defeat_sting: () => mix(at(gain(lowpass(mul(osc(330, 247, ms(700), 'tri'), env(ms(700), 10, 660, 0, 30)), 1200, 500), 0.8)), at(gain(mul(osc(165, 124, ms(700)), env(ms(700), 10, 660, 0, 30)), 0.6)), at(gain(lowpass(mul(noise(ms(500)), env(ms(500), 30, 460, 0, 10)), 600, 200), 0.3))),
++  // ↓ 決定257：既存 20 本の乱数列を変えないため、新しい音は必ず末尾に足す
++  // 決定257 Sound Layer v1：決め所の「溜め（rise）」2 本。着弾（impact）は鳴らさない＝既存 hit_l4／self_hit_heavy の役割と重ならない
++  // 神の一撃：明るい上昇。基音 220→880Hz に 5 度（×1.5）・オクターブ（×2）・×3 の倍音を重ね、高域シマーを足す（協和・上へ）
++  burst_rise: () => {
++    const n = ms(900)
++    const sw = swell(n, 70, 2.2)
++    return mix(
++      at(gain(mul(osc(220, 880, n), sw), 0.55)),
++      at(gain(mul(osc(330, 1320, n), sw), 0.3)),
++      at(gain(mul(osc(440, 1760, n), sw), 0.22)),
++      at(gain(mul(osc(660, 2640, n, 'tri'), sw), 0.1)),
++      at(gain(mul(bandpass(noise(n), 2000, 9000, 4), sw), 0.3)),
++    )
++  },
++  // 敵の必殺：低く暗い圧。のこぎり波 2 本を短 2 度（×1.06）でぶつけてうなりを作り、地鳴りのノイズとトレモロを重ねる（不協和・下に溜まる）
++  enemy_rise: () => {
++    const n = ms(1000)
++    const sw = swell(n, 80, 1.6)
++    const trem = tremolo(n, 8, 14, 0.45)
++    return mix(
++      at(gain(mul(mul(lowpass(osc(55, 82, n, 'saw'), 300, 900), sw), trem), 0.9)),
++      at(gain(mul(mul(lowpass(osc(58.3, 87, n, 'saw'), 300, 900), sw), trem), 0.7)),
++      at(gain(mul(osc(41, 55, n), sw), 0.8)),
++      at(gain(mul(lowpass(noise(n), 200, 600), sw), 0.6)),
++    )
++  },
+ }
+ 
+ mkdirSync(OUT, { recursive: true })
+@@ -186,6 +236,7 @@ let total = 0
+ const manifest = []
+ for (const [name, make] of Object.entries(SOUNDS)) {
+   const samples = normalize(softclip(make()), 0.9)
++  if (ONLY && !ONLY.has(name)) continue
+   const bytes = writeWav(name, samples)
+   total += bytes
+   manifest.push({ name, ms: Math.round((samples.length / SR) * 1000), bytes })
