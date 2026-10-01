@@ -220,7 +220,12 @@
 - 証明（監査終了時に実行・§9 実行ログに転記）：worktree `SevenGodsGame-d254-rc` の `git status --porcelain` が docs 以外 0／`src/core/data/rules.ts`・`enemies.ts`・`divination.ts` の md5 が監査前後で同一／`git diff --stat -- src public` が 0
 
 ### §9 実行ログ
-（監査完了時に転記）
+- 実行：2026-10-02（監査完了時・worktree `C:/Users/kimi1/SevenGodsGame-d254-rc`・branch `docs/lane1-post-d254-practical-qa-reaudit`（`3dd8b5c` から）・HEAD `3dd8b5c`）
+- `git status --porcelain`：監査前 **0 行** → 監査後 `?? docs/POST_D254_PRACTICAL_QA_REAUDIT.md`・`?? docs/evidence/post-d254-practical-qa/` の **2 行のみ**（`scripts/post-d254-reaudit/` は削除済み・`src`／`public` の変更 0）
+- md5（`src/core/data/rules.ts` `abfc36a1…`・`enemies.ts` `534936d5…`・`divination.ts` `99d5176f…`）：監査前後で **同一**
+- `git diff --stat -- src public`：**0 行**
+- simulation は Production engine をそのまま実行（データ差し替え・mutate 0・`node_modules` 共有）。vitest 1 ファイル・1 テスト PASS（`vitest-run.log.txt`）
+- merge／push／deploy／Production 変更：**0**
 
 ## 10. Deliverables
 1. 本書 `docs/POST_D254_PRACTICAL_QA_REAUDIT.md`
