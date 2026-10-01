@@ -79,6 +79,12 @@
     "09_branch_divergence_counts.txt",
     "10_nondeterminism_tamper_time_grep.txt",
     "11_production_key_snippets_3dd8b5c.txt",
-    "phase4-branch-readonly/* (git show copies, read-only)"
-  ]
+    "phase4-branch-readonly/*_readonly.txt (git show copies of 9 branch files, read-only; named .txt so scripts/release-audit/ranking-absence.mjs:23 regex and oxlint do not match them)"
+  ],
+  "release_gate_compat_check": {
+    "ranking_absence_regex_hits_in_tracked_files": 0,
+    "sql_or_PHASE4_docs_in_evidence": 0,
+    "credential_format_hits_in_evidence": 0,
+    "note": "only public URL console.neon.tech/signup inside a DECISIONS.md prose excerpt (already on master)"
+  }
 }

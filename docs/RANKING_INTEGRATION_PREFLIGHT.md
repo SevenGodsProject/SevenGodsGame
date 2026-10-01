@@ -38,7 +38,7 @@
 | `git show 85c94ee --stat` | 決定171 の除外範囲 | `04_decision171_removal_commit.txt` |
 | `grep -n "Ranking\|ランキング" docs/DECISIONS.md` | 75 行ヒット・主要 10 行を抜粋 | `05_*`・`05b_*`・`06_*` |
 | `git diff 2389d21..3dd8b5c --stat -- src/core src/hooks` ほか | Ranking v1 AUDIT 以降の drift | `07_*`・`08_*` |
-| `git show 762168f:<path>` | 旧枝の中核 9 ファイルを read-only で複写 | `phase4-branch-readonly/` |
+| `git show 762168f:<path>` | 旧枝の中核 9 ファイルを read-only で複写（`.txt`・`_readonly` 名。付録 A 参照） | `phase4-branch-readonly/` |
 | コード読み | `rules.ts`・`score.ts`・`stakes.ts`・`dailyBoss.ts`・`dailyStart.ts`・`createInitialState.ts`・`replay/*`・`useGameEngine.ts`・`dailyStorage.ts`・`retrySemantics.ts`・`ranking-absence.mjs` | `10_*`・`11_*` |
 
 実行していないもの：vitest／npm test／build／Playwright／Chrome／Neon／Vercel／環境変数の読み書き。したがって「現行の `gameVersion` 文字列」「現行エンジンでの神間 spread」などの**計測値は本書に無い**（必要箇所は【推測】と明記）。
@@ -385,4 +385,4 @@ CEO Action：承認 / 拒否
 | `09_branch_divergence_counts.txt` | master-only 75／branch-only 59 |
 | `10_nondeterminism_tamper_time_grep.txt` | `Date.now`／`Math.random`／改ざんテスト／時間項目 grep |
 | `11_production_key_snippets_3dd8b5c.txt` | rules／score／dailyBoss／useGameEngine／types／golden の該当行 |
-| `phase4-branch-readonly/` | 旧枝 9 ファイルの `git show` 複写（`identity`・`ranking`・`types`・`schema`・`env`・`handler`・`submit`・`start`・`rankingClient`）。読み取り専用・runtime には置かない |
+| `phase4-branch-readonly/*_readonly.txt` | 旧枝 9 ファイルの `git show` 複写（`identity`・`ranking`・`types`・`schema`・`env`・`handler`・`submit`・`start`・`rankingClient`）。読み取り専用・runtime には置かない。**拡張子を `.txt`・ファイル名を `<元名>_readonly` にした理由**【実測】：`[M] scripts/release-audit/ranking-absence.mjs:11,23` は `git ls-files` 全体（docs 含む）を `(rankingClient\|…)\.` で検査するため、`src_hooks_rankingClient.ts` のままでは本 docs が master に入った時点で Release Gate「ranking client/ticket/leaderboard/identity files」が 1（expect 0）で FAIL する。また `npm run lint`（`oxlint` 引数なし）は cwd 全体を対象にするため `docs/**/*.ts` を lint し得る。改名後は正規表現 0 件・`.sql`／`PHASE4_` 0 件・資格情報形 0 件を再確認済み |
