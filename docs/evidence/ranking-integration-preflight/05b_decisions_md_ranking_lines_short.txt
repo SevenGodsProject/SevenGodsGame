@@ -1,0 +1,75 @@
+122:| ランキング・アカウント | やらない | サーバー導入時 |
+227:| 2026-08-15 | 決定73を追加。Task E1（自己ベスト・記録画面の新設）として、`recordStorage.ts`（決定48フォローアップ）に�
+253:| 2026-08-19 | 決定98を追加。「第三次完成フェーズ」として、CEO実プレイで残っていた本質課題（①攻撃偏重、②神ご�
+257:| 2026-08-24 | 決定102を追加。8/31提出版に向けた総合監査（STEP-FINAL-A、コード変更なしの調査フェーズ）を実施し、残�
+262:| 2026-08-27 | 決定107を追加。「STEP-SCORE2-A：七神七道＋スコア共同最適化」の設計・大規模シミュレーションを実施し�
+263:| 2026-08-27 | 決定108を追加。「STEP-SCORE2-A REDTEAM：案B反証監査とスコア再設計順序の変更」を実施した（コード変更な�
+264:| 2026-08-27 | 決定109を追加。「STEP-SCORE2-B改（BASE）：共通Battle Score再設計」を実施した（コード変更なしの設計・大規�
+265:| 2026-08-27 | 決定110を追加。「STEP-SCORE2-C-MASTERY：Battle Score＋七神七道Mastery二軸設計」を実施した（コード変更なしの�
+266:| 2026-08-27 | 決定111を追加。「STEP-SCORE2-D/D2 prototype CEO実プレイ承認 — BASE-D＋神技評価＋表示スケールUX」。simulation・t
+267:| 2026-08-27 | 決定112を追加。「STEP-SCORE2-F2：旧score仕様廃止＋B'戦闘効果への正式置換」。**B'採用判断**：BASE-D（決定109
+268:| 2026-08-27 | 決定113を追加。「STEP-SCORE2-G1 寿楽Mastery「無力化」— 敵依存問題の検証とJ-G方式採用方向」（HEAD=`67ec57f`�
+276:| 2026-08-30 | 決定121を追加。「DAILY CHALLENGE Phase 1：神域挑戦」（CEO承認、commit `feat: add daily challenge and release polish`）。**
+289:| 2026-09-06 | 決定129フォローアップ（Production採用）。「神格 v0.1 を本番採用（RELEASED）」（AI判断で実行・CEO承認：Huma
+291:| 2026-09-06 | 決定130フォローアップ（Production採用）。「Visual Quality Assets を本番採用（**RELEASED**）」（AI判断で実行・CE
+293:| 2026-09-07 | 決定131を追加。「Phase 4.0 Daily Ranking Competitive Gate：現行Dailyの競技適性を本番エンジンで数値検証」（**AI�
+294:| 2026-09-07 | 決定132を追加。「Phase 4.1：Daily公平性修正 ＋ Replay Foundation」（**AI判断**・CLAUDE.md §6-2。CEOはPhase 4.0のCONDIT
+295:| 2026-09-07 | 決定133を追加。「Phase 4.2：Daily実プレイのAction Log記録とReplay統合」（**AI判断**・CLAUDE.md §6-2。CEOはPhase 4.1
+296:| 2026-09-07 | 決定134を追加。「Phase 4.3：Daily ランキングBackend（契約なしで完成させ、外部契約・deployの直前で停止）�
+297:| 2026-09-07 | 決定135を追加。「Phase 4.4：Pre-Production DB Validation（実DB検証の準備完了・実行はStep 1でブロック）」（**AI�
+298:| 2026-09-07 | 決定136を追加。「Phase 4.4 follow-up：実DB検証テストの3件のbug修正（Neon HTTPドライバの呼び出し方・複数文DD
+301:| 2026-09-08 | 決定139を追加。「Phase 4.5：Production Security & Fairness Gate（設計監査）— run ticket 方式による『1日3回勝負』�
+302:| 2026-09-08 | 決定140を追加。「Phase 4.6：PSF Production Implementation（run ticket・client-held secret・day-locked gameVersion を本番コー�
+305:| 2026-09-09 | 決定143を追加。「Phase 4.8：Daily Ranking Production API（Vercel Functions 実装 ＋ Preview QA 準備）」（**AI判断**・CLAUD
+306:| 2026-09-09 | 決定144を追加。「Phase 4.8 follow-up：Preview 実機で判明した **Vercel は Functions を束ねない** 問題の修正と、閉
+310:| 2026-09-10 | 決定148を追加。「Phase 4.9：Daily Ranking Leaderboard UI（完成済みAPIを画面にする。新機能は増やさない）」（**
+311:| 2026-09-10 | 決定149を追加。「Phase 4.9 Preview 実機QA（読み取りUIのみ）を通過。ただし GameOver の導線に dead button を発見
+312:| 2026-09-10 | 決定150を追加。「Phase 4.9 提出QA：Preview 実機で start → 実プレイ → submit → leaderboard が一周し、**サーバ�
+313:| 2026-09-11 | 決定151を追加。「**Phase 4.9（Daily Ranking Leaderboard UI）を正式CLOSE**。Preview の提出口を閉じ直したことを実測
+314:| 2026-09-11 | 決定152を追加。「Phase 4.10：Production Release Gate（ランキング公開前監査）— **現時点 NO-GO、Blocker 2件はいず
+315:| 2026-09-11 | 決定153を追加。「ゲーム本体のリプレイ性監査 — 次に実装する1テーマを**共通カードへの『条件・連携�
+317:| 2026-09-11 | 決定155を追加。「**Phase 5-B：難易度の再センタリング — PASS / CLOSE**。神階ラダーの敵側 modifier 3値だけを�
+318:| 2026-09-11 | 決定156を追加。「Phase 5-A/5-B 後の総合再監査 — 次テーマは**神託『加護』の予告連動化（Phase 5-D 仮）**。
+319:| 2026-09-11 | 決定157を追加。「**Phase 5-D：神託『加護』を予告連動の防御手段へ — PASS / CLOSE**。仕組みは採用し、数値
+320:| 2026-09-11 | 決定158を追加。「**Phase 5-E：神階の受け構造 — 加護だけ神階Ⅳ以降のブロック効率0.75の対象外にする（B
+321:| 2026-09-12 | 決定159を追加。「**Phase 5-C：神専用カードによる神格差別化 — 縮小パイロット（大耀2枚・蒼毘1枚）PASS /
+322:| 2026-09-12 | 決定160を追加。「**Phase 5-F：統合リプレイ性 / Release Candidate 監査 — PASS / CLOSE。Phase 5 全体を PASS / CLOSE と�
+323:| 2026-09-12 | 決定162を追加。「**Phase 6 商用品質監査を承認し、Phase 5 RC はそのまま公開せず Phase 6-A Combat Juice Patch を先
+324:| 2026-09-12 | 決定163を追加。「**Phase 6-A Combat Juice Patch — 実装完了・Acceptance PASS**」（実装方式・時刻設計・テスト方�
+325:| 2026-09-12 | 決定164を追加。「**Phase 6-B：Battle Viewport Layout を正式採用**」（設計監査・比較・計測は **AI判断**（CLAUDE.m
+327:| 2026-09-12 | 決定166を追加。「**Phase 6 Commercial Benchmark Audit v2（commit `24e71d9`）を正式受理（PASS）。Production 前の Pre-Releas
+328:| 2026-09-12 | 決定167を追加。「**Phase 6-C「判断の手応え」＝ Decision Feedback ＋ Battle Recap — 実装完了・Acceptance PASS**」（�
+329:| 2026-09-12 | 決定168を追加。「**Phase 6-D Visual Direction Audit（commit `27a2225`）を正式受理（GO / PASS）。Production 前の Visual Pat
+330:| 2026-09-12 | 決定169を追加。「**Phase 6-D Visual Patch v1「神の一撃・専用舞台化」— 実装完了・Acceptance PASS/CLOSE**」（舞台
+331:| 2026-09-12 | 決定170を追加。「**Release Hygiene Gate — 配信容量・画面安定性・Mobile 操作性・不要アセットの整理：PASS / C
+332:| 2026-09-13 | 決定171を追加。「**Clean Release Audit — Production Release Candidate 監査：Clean Release Candidate PASS / READY FOR CEO QA**（P
+333:| 2026-09-13 | 決定172を追加。「**Production Release：SEVEN GODS Clean Release Candidate（`release/game-v1-rc` `de039d8`）を Production へ公開
+337:| 2026-09-14 | 決定178を追加。「**Enemy Visual Batch A Production Release：datenshi／karakuri／doukeshi の 3 体を 768px WebP で Production へ
+338:| 2026-09-15 | 決定179を追加。「**Enemy Batch B-1 juuma M4 Production Release Candidate：PASS — READY FOR CEO RELEASE APPROVAL**（Production 反�
+339:| 2026-09-15 | 決定180を追加。「**Enemy Batch B-1 juuma M4 Production Release：768px WebP を Production へ公開 — PASS / LIVE**」（Production
+340:| 2026-09-15 | 決定181を追加。「**敵ビジュアル世代A oni M4 Production Release Candidate：PASS — READY FOR CEO RELEASE APPROVAL**（Product
+341:| 2026-09-15 | 決定182を追加。「**敵ビジュアル世代A ryujin M4i Production Release Candidate：PASS — READY FOR CEO RELEASE APPROVAL**（Pro
+342:| 2026-09-16 | 決定183を追加。「**敵ビジュアル世代A onryo M4i Production Release Candidate：PASS — READY FOR CEO RELEASE APPROVAL**（Prod
+343:| 2026-09-16 | 決定184を追加。「**敵ビジュアル世代A 統合 Production Release Candidate（oni＋ryujin＋onryo）：Integrated Release Gate P
+344:| 2026-09-16 | 決定185を追加。「**敵ビジュアル世代A Final Production Release：oni／ryujin／onryo の3 asset を Production へ公開 — P
+345:| 2026-09-16 | 決定186を追加。「**Phase 7 Return Loop Commercial Direction Audit：B. GO WITH MODIFICATIONS（Confidence: High）— AUDIT / DESIGN O
+346:| 2026-09-17 | 決定187を追加。「**Phase 7 P1 Implementation Gate：Result Hub＋Home Today＋Daily Difference — PASS / READY FOR CEO QA**（Product
+348:| 2026-09-17 | 決定188を追加。「**Phase 7 P1 Production Release：Result Hub＋Home Today＋Daily Difference＋Next Goal を Production へ公開 —
+349:| 2026-09-17 | 決定189を追加。「**Phase 7 P2 Implementation Gate：神×敵の攻略記録（Matchup Progression）— PASS / READY FOR CEO QA**（Pr
+351:| 2026-09-17 | 決定190を追加。「**Phase 7 P2 Production Release：神×敵 攻略（Matchup Progression）を Production へ公開 — PASS / LIVE**�
+352:| 2026-09-17 | 決定191を追加。「**Post-P2 Hardening：未知 enemyId 耐性（Invalid Enemy ID Hardening Patch）— PASS / READY FOR CEO QA**（Prod
+354:| 2026-09-17 | 決定192を追加。「**Invalid Enemy ID Hardening Production Release — PASS / LIVE**」（Release Gate の設計・各判定・LIVE 判�
+355:| 2026-09-18 | 決定193を追加。「**Phase 7 Entrance E1（入口の再構成）実装 — PASS / READY FOR CEO QA**（Production 反映ではない。b
+356:| 2026-09-18 | 決定196を追加。「**Solve Loop v1（敗北した通常戦だけ「同じ盤面でもう一度」）実装 — PASS / READY FOR CEO QA**
+358:| 2026-09-18 | 決定197を追加。「**Entrance E1 ＋ Solve Loop v1 統合 Production Release Gate：PASS — READY FOR CEO PRODUCTION RELEASE APPROVAL**
+359:| 2026-09-19 | 決定198を追加。「**Entrance E1 ＋ Solve Loop v1 Production Release — PRODUCTION LIVE / PASS**」（Production 公開は **CEO承認
+360:| 2026-09-19 | 決定200を追加。「**Interaction Feel v1（押した瞬間の手応え）実装 — CEO Human QA：PASS / CLOSED**（Production 反映�
+361:| 2026-09-19 | 決定201を追加。「**Interaction Feel v1 Production Release Gate：PASS — READY FOR CEO PRODUCTION RELEASE APPROVAL**（Production 反
+362:| 2026-09-19 | 決定202を追加。「**Interaction Feel v1 Production Release — PRODUCTION LIVE / PASS**」（Production 公開は **CEO承認**（2026-
+363:| 2026-09-19 | 決定206を追加。「**Solve Legibility v1（予告を読む戦いへの誘導 ＋ 予告された攻撃の事実表示）実装 — 自�
+364:| 2026-09-20 | 決定206に追記。「**Solve Legibility v1 — CEO Human QA：PASS / CLOSED**」（Human QA 判定は **CEO**。close-out の記録は **A
+365:| 2026-09-20 | 決定207を追加。「**Solve Legibility v1 Production Release Gate：PASS — READY FOR CEO PRODUCTION RELEASE APPROVAL**」（Production 
+366:| 2026-09-20 | 決定208を追加。「**Solve Legibility v1 Production Release — PRODUCTION LIVE / PASS**」（Production 公開は **CEO承認**（2026-
+368:| 2026-09-22 | 決定213を追加。「**OTOMO Strategic Identity v0.1「Stance Narrow Pilot」実装 — Automated QA 全通過 / PASS — READY FOR CEO HU
+427:| 2026-09-27 | Ranking v1 AUDIT／DESIGN（CEO 指示・並列レーン・docs-only）。「**推奨 v1.0＝「今日（Daily）」1 面のみ・サーバ�
+440:| 2026-09-28 | 決定244を追加。「**2026-09-28 CEO Practical QA ／ Combat Alive Root-Cause Audit：AUDIT COMPLETE — 14 件＝SUPPORTED 9／PARTIAL 3

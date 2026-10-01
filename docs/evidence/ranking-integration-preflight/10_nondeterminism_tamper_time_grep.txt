@@ -1,0 +1,59 @@
+## Date.now / Math.random / performance.now / new Date in src (non-test)
+src/components/battle/BossEntrance.tsx:52:    if (e.pointerId === id) upAt = performance.now()
+src/components/battle/BossEntrance.tsx:55:    if (upAt >= 0 && performance.now() - upAt < 150) swallow(e)
+src/components/battle/EnemyPanel.tsx:74: * 決定40：ラウンドごとに敵の掛け声を吹き出しで表示する（`Math.random`は使わず`round`から決定論的に選ぶ）。
+src/components/battle/GameOverOverlay.tsx:171:    const start = performance.now()
+src/components/battle/nextGoal.ts:103:      text: `今日の挑戦は終了。次の敵まで ${formatDailyCountdown(msUntilNextDailyKey(new Date(input.nowMs)))}`,
+src/components/battle/resultContext.ts:59:export function collectResultContext(state: GameState, engine: ResultEngineSnapshot, now: Date = new Date()): ResultContext | null {
+src/components/battle/rewardPicker.ts:4: * 決定43：報酬カードの3択を、`seed`から決定論的に選ぶ（`Math.random`は使わない、
+src/components/setup/HomeScreen.tsx:82:  const todayKey = todayDailyKey(new Date(nowMs))
+src/components/setup/HomeTodayPanel.tsx:52:  const now = new Date(nowMs)
+src/components/setup/MatchupBoard.tsx:32:  const seededDate = data.seeded.at > 0 ? dailyKeyOf(new Date(data.seeded.at)) : null
+src/core/data/dailyBoss.ts:9: * ★不変ルール：Math.random()・new Date()を使わない。日付は引数で受け取る
+src/core/data/dailyBoss.ts:43:  const shifted = new Date(now.getTime() + RULES.daily.timezoneOffsetMinutes * 60_000)
+src/core/data/dailyBoss.ts:51:  const date = new Date(Date.UTC(y, m - 1, d))
+src/core/data/dailyBoss.ts:59:  const date = new Date(Date.UTC(y, m - 1, d))
+src/core/data/dailyBoss.ts:61:  const monday = new Date(date.getTime() - dayIndex * DAY_MS)
+src/core/data/enemies.ts:325: * シードから決定論的に対戦する敵を選ぶ（決定32）。`Math.random`は使わず、
+src/core/engine/round.ts:44: * 配分はhit比例のfloor＋残りを先頭から+1（決定論・Math.random不使用）。
+src/core/replay/replayTestUtils.ts:17: * ★不変ルール2：`Math.random()`は使わない。打ち筋のばらつきはLCG（線形合同法）で作る。
+src/core/rng/seededRandom.ts:4: * ★不変ルール2：core では Math.random() を使いません。
+src/core/types/enemy.ts:74:   * 順番に表示する（`Math.random`は使わない、決定不変ルール2）。
+src/hooks/dailyClock.ts:7: * `new Date()`はここでもデフォルト引数としてだけ使う（決定72と同じ「時刻の注入」方針）。
+src/hooks/dailyClock.ts:10:export function todayDailyKey(now: Date = new Date()): string {
+src/hooks/dailyClock.ts:19:export function isExpiredDailySave(state: GameState, now: Date = new Date()): boolean {
+src/hooks/dailyClock.ts:34:export function msUntilNextDailyKey(now: Date = new Date()): number {
+src/hooks/dailyClock.ts:36:  const shifted = new Date(now.getTime() + offsetMs)
+src/hooks/dailyStorage.ts:144:export function recordDailyResult(state: GameState, now = Date.now()): DailyRecordResult | null {
+src/hooks/localQuotaProvider.ts:125:    async getState(featureKey: string, limit: number, now: Date = new Date()): Promise<QuotaState> {
+src/hooks/localQuotaProvider.ts:134:    async consume(featureKey: string, limit: number, now: Date = new Date()): Promise<QuotaConsumeResult> {
+src/hooks/matchupStorage.ts:157:export function loadMatchups(now: number = Date.now()): MatchupView {
+src/hooks/matchupStorage.ts:205:export function recordMatchupClear(state: GameState, now: number = Date.now()): MatchupClearResult | null {
+src/hooks/pendingRunStorage.ts:128:  now = Date.now(),
+src/hooks/quotaProvider.ts:9: * このファイル・`localQuotaProvider.ts`とも、内部で`Date.now()`/`new Date()`を
+src/hooks/quotaProvider.ts:12: * 検証できる。`core/`の不変ルール2「Math.random()禁止・シード注入」と
+src/hooks/useGameEngine.ts:317:      const seed = resolveForcedSeed() ?? requestedSeed ?? `seed-${Date.now()}`
+src/hooks/useMinuteClock.ts:12:  const [now, setNow] = useState(() => Date.now())
+src/hooks/useMinuteClock.ts:15:    setNow(Date.now())
+src/hooks/useMinuteClock.ts:16:    const id = window.setInterval(() => setNow(Date.now()), MINUTE_CLOCK_TICK_MS)
+
+## 改ざん (tamper) tests
+src/components/enemyIdResilience.test.ts:10: * Post-P2 Hardening（決定191）：破損・改ざんされた保存データ（未知 enemyId）に対する耐性。
+src/components/enemyLookup.test.ts:9: * 破損・改ざんされた保存に現在の敵定義に存在しない ID が入っていても、ここで例外を吸収する。
+src/components/enemyLookup.ts:11: * 保存が壊れる・改ざんされるなどして現在の敵定義に存在しない ID が入っていた場合、そのまま
+src/core/replay/gameVersion.ts:35: * 違う入力なら高確率で違う文字列」だけで、秘密も改ざん耐性も要らない
+src/core/replay/replay.test.ts:309:  /** 改ざん結果は「拒否される」か「別の正規結果になる」かのどちらかでなければならない */
+src/core/replay/replay.test.ts:319:    // 受理された場合は、必ず改ざん前とは違う正規結果でなければならない
+src/core/replay/replay.test.ts:320:    expect(result.state, `${label}：改ざんしたのに結果が同一になった`).not.toEqual(honest.state)
+src/core/replay/replay.test.ts:348:      // 改ざん検出の欠陥ではなくテスト前提の問題のため、入れ替え位置を
+src/core/replay/replay.test.ts:359:  it('card uidの改ざんを拒否する', () => {
+src/core/replay/replay.test.ts:364:    const outcome = expectRejectedOrDifferent({ ...input, actions: tampered }, honest, 'uid改ざん')
+src/core/replay/replay.test.ts:368:  it('enemy改ざん・seed改ざんを拒否する', () => {
+src/core/replay/replay.test.ts:374:        'enemy改ざん',
+src/core/replay/replay.test.ts:378:      expectRejectedOrDifferent({ ...input, claimedSeed: 'daily-9999-12-31-oni' }, honest, 'seed改ざん'),
+src/core/replay/replay.test.ts:389:  it('deck改ざんを拒否するか、別結果になる', () => {
+src/core/replay/resume.test.ts:152:  it('盤面と食い違うログ（改ざん・欠落）は引き継がず捨てる', () => {
+
+## elapsed/time fields in replay/score
+src/core/types/enemy.ts:31: * AIロジック・数値には一切関与しない（`enemy-lunge`のanimation-duration違いと、
+(none above = 0 hits)

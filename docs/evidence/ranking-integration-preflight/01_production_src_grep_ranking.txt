@@ -1,0 +1,97 @@
+src/components/battle/battle.css:4371:.game-over-daily-rank {
+src/components/battle/battle.css:4393:.game-over-rank-link {
+src/components/battle/battle.css:4405:.game-over-rank-link:hover {
+src/components/battle/battle.css:4409:.game-over-rank-note {
+src/components/battle/BossEntrance.tsx:185:  const stars = daily ? 5 : def.rank
+src/components/battle/masteryDisplay.test.ts:212:    expect(step?.rank).toBe('S')
+src/components/battle/masteryDisplay.test.ts:224:    expect(nextMasteryStep(juraku('A', 0.85, { sGateMet: true }), GOD_IDS.juraku)?.rank).toBe('S')
+src/components/battle/masteryDisplay.ts:106:): { rank: MasteryGrade; threshold: number } | null {
+src/components/battle/masteryDisplay.ts:109:      return { rank: 'B', threshold: t.b }
+src/components/battle/masteryDisplay.ts:111:      return { rank: 'A', threshold: t.a }
+src/components/battle/masteryDisplay.ts:113:      return { rank: 'S', threshold: t.s }
+src/components/battle/masteryDisplay.ts:142:    ? `${pct(mastery.raw)}${note} → ${next.rank}（${MASTERY_GRADE_WORD[next.rank]}）は ${pct(next.threshold)}`
+src/components/battle/masteryDisplay.ts:154:  rank: MasteryGrade
+src/components/battle/masteryDisplay.ts:185:  return { rank: next.rank, word: MASTERY_GRADE_WORD[next.rank], raw: mastery.raw, threshold: next.threshold, gap }
+src/components/battle/nextGoal.ts:176:        text: `神技評価 ${step.rank}（${step.word}）へ：${formatMasteryPercent(step.raw)} → ${formatMasteryPercent(step.threshold)}`,
+src/components/setup/daily.css:321:.daily-ranking {
+src/components/setup/daily.css:331:.daily-ranking-head {
+src/components/setup/daily.css:339:.daily-ranking-title {
+src/components/setup/daily.css:346:.daily-ranking-total {
+src/components/setup/daily.css:354:.daily-ranking-state {
+src/components/setup/daily.css:363:.daily-ranking-self {
+src/components/setup/daily.css:373:.daily-ranking-self-main {
+src/components/setup/daily.css:380:.daily-ranking-self-rank {
+src/components/setup/daily.css:387:.daily-ranking-self-score {
+src/components/setup/daily.css:394:.daily-ranking-self-sub {
+src/components/setup/daily.css:404:.daily-ranking-list-wrap {
+src/components/setup/daily.css:411:.daily-ranking-table {
+src/components/setup/daily.css:417:.daily-ranking-table th {
+src/components/setup/daily.css:432:.daily-ranking-table th.num,
+src/components/setup/daily.css:433:.daily-ranking-table td.num {
+src/components/setup/daily.css:438:.daily-ranking-table th:first-child,
+src/components/setup/daily.css:439:.daily-ranking-table td:first-child {
+src/components/setup/daily.css:443:.daily-ranking-table td {
+src/components/setup/daily.css:453:.daily-ranking-row-self td {
+src/components/setup/daily.css:458:.daily-ranking-row-self td:first-child {
+src/components/setup/daily.css:462:.daily-ranking-rank {
+src/components/setup/daily.css:468:.daily-ranking-tie {
+src/components/setup/daily.css:476:.daily-ranking-name {
+src/components/setup/daily.css:481:.daily-ranking-you {
+src/components/setup/daily.css:486:.daily-ranking-god {
+src/components/setup/daily.css:490:.daily-ranking-score {
+src/components/setup/daily.css:496:.daily-ranking-outcome {
+src/components/setup/daily.css:504:.daily-ranking-more {
+src/components/setup/daily.css:511:.daily-ranking-notice {
+src/components/setup/daily.css:523:  .daily-ranking {
+src/components/setup/daily.css:527:  .daily-ranking-list-wrap {
+src/components/setup/daily.css:531:  .daily-ranking-table {
+src/components/setup/daily.css:535:  .daily-ranking-table td {
+src/components/setup/daily.css:539:  .daily-ranking-self-rank {
+src/components/setup/DailyChallengeScreen.tsx:20:/** Daily専用の★表示。`EnemyDef.rank`ではなく「神域強化状態＝5」を常に満たす */
+src/components/setup/DeckBuilderScreen.tsx:177:                <ThreatStars rank={dailyChallenge ? 5 : opponent.rank} />
+src/components/setup/EnemySelectScreen.tsx:19:export function ThreatStars({ rank }: { rank: number }) {
+src/components/setup/EnemySelectScreen.tsx:21:    <span className="threat-stars" role="img" aria-label={`脅威度 ${rank} / ${MAX_THREAT_STARS}`}>
+src/components/setup/EnemySelectScreen.tsx:23:        <span key={i} className={i < rank ? 'star-filled' : 'star-empty'}>
+src/components/setup/EnemySelectScreen.tsx:106:                <ThreatStars rank={enemy.rank} />
+src/components/setup/OtomoGrowthScreen.tsx:119:                    <span className="otomo-growth-rank-stars" aria-hidden="true" title={`絆ランク ${display.bondTier}/${BOND_RANK_MAX}`}>
+src/components/setup/setup.css:1267:.otomo-growth-rank-stars {
+src/components/setup/setup.css:1272:.otomo-growth-rank-stars .star-filled {
+src/components/setup/setup.css:1277:.otomo-growth-rank-stars .star-empty {
+src/core/data/enemies.test.ts:41:  it('gives every enemy a threat rank between 1 and 4 (★5 is reserved for future bosses) (LANE-D)', () => {
+src/core/data/enemies.test.ts:43:      expect(Number.isInteger(enemy.rank)).toBe(true)
+src/core/data/enemies.test.ts:44:      expect(enemy.rank).toBeGreaterThanOrEqual(1)
+src/core/data/enemies.test.ts:45:      expect(enemy.rank).toBeLessThanOrEqual(4)
+src/core/data/enemies.test.ts:50:    const rankById = new Map(ENEMIES.map((e) => [e.id, e.rank]))
+src/core/data/enemies.ts:58:    rank: 1,
+src/core/data/enemies.ts:98:    rank: 2,
+src/core/data/enemies.ts:136:    rank: 3,
+src/core/data/enemies.ts:172:    rank: 4,
+src/core/data/enemies.ts:213:    rank: 2,
+src/core/data/enemies.ts:249:    rank: 3,
+src/core/data/enemies.ts:286:    rank: 4,
+src/core/data/rules.ts:207:   * - `EnemyDef.rank`は変更しない。★★★★★「神域強化」はDailyモードの表示専用状態
+src/core/data/rules.ts:253:  ranking: {
+src/core/data/rules.ts:262:    leaderboardLimit: 100,
+src/core/data/rules.ts:265:     * サーバーは最大 `leaderboardLimit` 件返せるが、**画面には10件しか出さない**。
+src/core/data/rules.ts:269:    leaderboardTopCount: 10,
+src/core/data/rules.ts:275:    leaderboardTimeoutMs: 6000,
+src/core/data/rules.ts:298:    leaderboardCacheSeconds: 15,
+src/core/replay/gameVersion.test.ts:5:import { dataFingerprint, getGameVersion, rankingImpactSnapshot, resetGameVersionCache, stableStringify } from './gameVersion'
+src/core/replay/gameVersion.test.ts:18: * これはデータに現れないため `RULES.ranking.engineVersion` を人が上げるしかない。
+src/core/replay/gameVersion.test.ts:22: *   2. データを変えた覚えが無いなら **`RULES.ranking.engineVersion` を +1 する**
+src/core/replay/gameVersion.test.ts:135:    expect(getGameVersion()).toBe(`${RULES.ranking.engineVersion}.${dataFingerprint()}`)
+src/core/replay/gameVersion.test.ts:144:    // `RULES.ranking` を除いていることの確認。含まれていれば下の文字列が現れる
+src/core/replay/gameVersion.test.ts:145:    const snapshot = rankingImpactSnapshot()
+src/core/replay/gameVersion.test.ts:147:    expect(snapshot).not.toContain('leaderboardCacheSeconds')
+src/core/replay/gameVersion.test.ts:163:    const snapshot = rankingImpactSnapshot()
+src/core/replay/gameVersion.test.ts:190:    const base = rankingImpactSnapshot()
+src/core/replay/gameVersion.test.ts:212:          'エンジンの挙動を変えた場合は `RULES.ranking.engineVersion` を +1 してください。',
+src/core/replay/gameVersion.ts:19: *   1. `RULES.ranking.engineVersion`（手動）
+src/core/replay/gameVersion.ts:27: * `RULES.ranking`（提出の受け口の設定。kill switch・cache秒数・上限など、対局の結果に
+src/core/replay/gameVersion.ts:33: * `rankingBoundary.test.ts` が機械検査している）。Web Crypto の SHA-256 は非同期で、
+src/core/replay/gameVersion.ts:67:export function rankingImpactSnapshot(): string {
+src/core/replay/gameVersion.ts:68:  const { ranking: _ranking, replay, ...rest } = RULES
+src/core/replay/gameVersion.ts:84:  const snapshot = rankingImpactSnapshot()
+src/core/replay/gameVersion.ts:97:  if (cached === null) cached = `${RULES.ranking.engineVersion}.${dataFingerprint()}`
+src/core/replay/index.ts:37:  rankingImpactSnapshot,
+src/core/types/enemy.ts:92:  rank: number

@@ -1,0 +1,14 @@
+ src/components/battle/BattleScreen.tsx | 81 +++++++++++++++++++++++++++++-----
+ src/core/data/rules.ts                 | 36 +++++++++++++--
+ 2 files changed, 101 insertions(+), 16 deletions(-)
+ package.json                                  |   2 +
+ src/components/GameFlow.tsx                   | 157 +++--------
+ src/components/battle/BattleScreen.tsx        | 148 ++--------
+ src/components/battle/GameOverOverlay.tsx     | 372 ++++++++++----------------
+ src/components/setup/DailyChallengeScreen.tsx |  26 ++
+ src/components/setup/HomeScreen.tsx           | 209 +++++----------
+ src/core/data/rules.ts                        |  36 +--
+ src/core/replay/index.ts                      |   3 +
+ src/hooks/useGameEngine.ts                    | 100 ++++---
+ tsconfig.json                                 |   3 +
+ 10 files changed, 378 insertions(+), 678 deletions(-)

@@ -1,0 +1,59 @@
+762168f 2026-09-12 chore(release): Release Hygiene Gate — 配信容量・CLS・44px・不要アセットの整理（決定170）
+f22544a 2026-09-12 feat(battle): Phase 6-D Visual Patch v1「神の一撃・専用舞台化」（決定168・169）
+27a2225 2026-09-12 docs: Phase 6-D Visual Direction Audit（月蝕綺譚の画面完成度の転用可否・監査のみ）
+25a385a 2026-09-12 feat(battle): Phase 6-C「判断の手応え」— Decision Feedback callout と Battle Recap（決定166・167）
+24e71d9 2026-09-12 docs: Phase 6 commercial benchmark audit v2 (audit only, no game code)
+7583595 2026-09-12 feat(battle): Phase 6-B - fit the battle screen to the viewport so hits land on screen
+f02a920 2026-09-12 docs: Phase 6-B battle HUD / viewport design audit (design only)
+3a9ffbe 2026-09-12 feat(battle): Phase 6-A Combat Juice - make hits land before the HP moves
+6f823dd 2026-09-12 docs: Phase 6 UX / commercial quality audit (audit only, no game code)
+ec917cc 2026-09-12 chore: stop tracking the local Claude settings; record Decision 160
+9fbb38e 2026-09-12 docs: Phase 5-F replayability and release-candidate audit
+c2c1f0c 2026-09-12 docs: record Decision 159 - Phase 5-C passes and closes
+6221a54 2026-09-12 feat(cards): give 大耀 and 蒼毘 exclusive cards a condition to play around
+aac52b8 2026-09-11 docs: Phase 5-C design audit - conditions on god-exclusive cards
+09c1f7b 2026-09-11 docs: record Decision 158 - Phase 5-E passes and closes
+1be3502 2026-09-11 feat(oracle): keep the guard oracle out of the stake block penalty
+f3141e9 2026-09-11 docs: Phase 5-E design audit - exempt the guard oracle from block efficiency
+496d217 2026-09-11 docs: record Decision 157 - Phase 5-D passes and closes
+c1a034d 2026-09-11 docs: Phase 5-D results - guard oracle is conditional
+9fee273 2026-09-11 feat(oracle): make the guard oracle scale with the enemy's intent
+f0a3bae 2026-09-11 docs: re-audit after 5-A/5-B - next theme is intent-linked oracle guard
+864bb3d 2026-09-11 docs: record Decision 155 - Phase 5-B passes and closes
+ef8ebad 2026-09-11 tune(stakes): re-centre the stake ladder after the card conditions
+3343404 2026-09-11 feat(cards): give the 16 core common cards a condition to play around
+46a450f 2026-09-11 docs: replayability audit - pick card conditions as the next theme
+e6785c0 2026-09-11 docs: Phase 4.10 production release gate - NO-GO for now, two small blockers
+804736d 2026-09-11 docs: close Phase 4.9 and record why the gate took three rebuilds
+9d43a43 2026-09-11 chore: rebuild Preview after RANKING_PREVIEW_UNLOCK was fully removed
+b3e5b27 2026-09-11 chore: rebuild Preview after RANKING_PREVIEW_UNLOCK was removed again
+c4cdf86 2026-09-11 chore: rebuild Preview so removing RANKING_PREVIEW_UNLOCK takes effect
+dd46863 2026-09-10 docs: record the Phase 4.9 submission QA end to end on Preview
+9af0595 2026-09-10 docs: record the Phase 4.9 Preview QA pass and the dead button it found
+da1e481 2026-09-10 fix(ui): make the game over ranking link actually leave the battle
+969fa5e 2026-09-10 feat(ui): show the daily ranking on the challenge screen
+a3b07ed 2026-09-10 docs: record cleanup and that removing a variable also needs a rebuild
+c5ac1d3 2026-09-09 chore: rebuild Preview so removing RANKING_PREVIEW_UNLOCK takes effect
+5a0b7c3 2026-09-09 docs: Phase 4.8 passes - Preview QA steps 4 and 5 complete
+83f19e5 2026-09-09 chore: rebuild Preview after the RANKING_PREVIEW_UNLOCK value was corrected
+6790a5c 2026-09-09 test(qa): add a replay fixture generator and document the two unlock pitfalls
+0b80b18 2026-09-09 fix(api): trim env values and explain a closed submission gate outside production
+ebc527a 2026-09-09 chore: trigger a Preview rebuild to pick up RANKING_PREVIEW_UNLOCK
+df0bc71 2026-09-09 docs: record Preview QA step 3 - Neon read path verified end to end
+7b7169a 2026-09-09 docs: record Decision 144 and the Preview closed-state verification
+d4eb575 2026-09-09 fix(api): extend .js extensions to the whole server import graph
+d57af9c 2026-09-09 fix(api): give api/ relative imports explicit .js extensions
+7ed9143 2026-09-09 test(qa): handle Vercel deployment protection in the Preview QA runner
+e744660 2026-09-09 feat(api): Phase 4.8 Daily Ranking Production API, closed by default
+100ab74 2026-09-09 docs: record Decision 142 — Phase 4.6 schema migration applied to Neon (CEO approved)
+fc3610f 2026-09-08 feat(migration): Phase 4.7 DB migration package with real-Postgres dry run
+9f56e45 2026-09-08 feat(ranking): implement run tickets, client-held secret and day-locked gameVersion
+2b67d0b 2026-09-08 docs(phase4.5): PSF gate design audit, ticket state-machine model and retry-inflation sim
+9ebbfd6 2026-09-08 docs: record Phase 4.4 final pass after credential rotation
+de63996 2026-09-08 docs: record Phase 4.4 real-DB validation, secrets audit and PSF gate
+f5c5aba 2026-09-07 fix(ranking): correct Neon driver usage and redact secrets in real-DB test
+5062311 2026-09-07 feat: make daily run limit a DB constraint and add postgres store
+3e3f01e 2026-09-07 feat: add daily ranking backend (verification, store port, tie ranking)
+9c4f803 2026-09-07 feat: record daily action logs and integrate with replay
+4aed4ca 2026-09-07 feat: add daily fairness fix and replay foundation
+7ef714a 2026-09-07 test: add phase 4.0 daily ranking competitive gate simulation

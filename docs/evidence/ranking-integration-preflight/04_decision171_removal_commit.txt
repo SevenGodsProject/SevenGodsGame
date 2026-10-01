@@ -1,0 +1,52 @@
+85c94ee 2026-09-13 release: Clean Release Candidate — game changes only, ranking/Neon removed（決定171）
+origin/master 489352c から分岐し、feat/daily-ranking-phase4（762168f）の tree を
+「ランキング経路を除いて」載せた Production Release Candidate。
+
+Included: Phase 4.1（Daily 公平化＋replay 基盤・オフライン）、Phase 5-A/B/C/D/E/F、
+Phase 6 監査・6-A/B/C/D、Release Hygiene Gate（決定170）、.gitignore の秘密除外、
+.claude/settings.local.json の追跡停止。
+
+Excluded (path removal): api/, src/server/, tsconfig.api.json, ranking hooks
+(rankingClient / rankingTicketStorage / leaderboardClient / anonymousPlayerId /
+dailySessionStart), DailyRankingPanel + dailyRanking, core/replay/ranking.ts,
+core/identity.ts, docs/PHASE4_*, scripts/phase4*, deps @neondatabase/serverless
+and @electric-sql/pglite (package.json / package-lock.json are byte-identical to master).
+
+Severed by hand (no gameplay change): useGameEngine ticket/session wiring,
+GameFlow prepareDailyStart/onOpenRanking, DailyChallengeScreen ranking panel,
+GameOverOverlay ranking block, BattleScreen onOpenRanking, replay/index rank exports,
+tsconfig.json api reference, .vercelignore phase47 line.
+
+Gates: ranking-absence 17/17, secret audit 0 credential-format hits, tests 928 passed /
+9 skipped, tsc 0, lint error 0, build OK (dist 51 MB), gameVersion 1.80c6eda23ed082dc,
+saveVersion 9, master-build save migration 0 loss. Not merged, not deployed.
+
+Co-Authored-By: Claude Fable 5.1 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_019CkYPUER78APbb4Enb53YY
+
+
+ src/components/GameFlow.tsx                |  66 +++--
+ src/components/battle/GameOverOverlay.tsx  |  64 +++-
+ src/core/replay/actionDistribution.test.ts | 144 +++++++++
+ src/core/replay/actionLog.test.ts          | 392 +++++++++++++++++++++++++
+ src/core/replay/determinism.test.ts        | 220 ++++++++++++++
+ src/core/replay/gameVersion.test.ts        | 237 +++++++++++++++
+ src/core/replay/gameVersion.ts             | 104 +++++++
+ src/core/replay/index.ts                   |  40 +++
+ src/core/replay/replay.test.ts             | 456 +++++++++++++++++++++++++++++
+ src/core/replay/replay.ts                  | 164 +++++++++++
+ src/core/replay/replayBoundary.test.ts     | 162 ++++++++++
+ src/core/replay/replayTestUtils.ts         | 231 +++++++++++++++
+ src/core/replay/resume.test.ts             | 195 ++++++++++++
+ src/core/replay/resume.ts                  |  78 +++++
+ src/core/replay/runLog.ts                  | 133 +++++++++
+ src/core/replay/types.ts                   | 130 ++++++++
+ src/hooks/clientRunId.ts                   |  39 +++
+ src/hooks/dailyFairness.test.ts            | 343 ++++++++++++++++++++++
+ src/hooks/dailyRunLogStorage.ts            |  83 ++++++
+ src/hooks/dailyRunStorage.test.ts          | 386 ++++++++++++++++++++++++
+ src/hooks/pendingRunStorage.ts             | 168 +++++++++++
+ src/hooks/startDaily.ts                    |  34 +--
+ src/hooks/useGameEngine.ts                 | 116 +++++++-
+ tsconfig.json                              |   8 +-
+ 24 files changed, 3912 insertions(+), 81 deletions(-)

@@ -1,0 +1,84 @@
+{
+  "preflight": "Lane2 Ranking Integration Preflight",
+  "date": "2026-10-02",
+  "baseline": {
+    "production_master": "3dd8b5c",
+    "production_runtime": "a611270",
+    "worktree": "C:/Users/kimi1/SevenGodsGame-lane2-ranking",
+    "branch": "docs/lane2-ranking-integration-preflight"
+  },
+  "phase4_branch": {
+    "name": "feat/daily-ranking-phase4",
+    "head": "762168f",
+    "merge_base_with_master": "489352c",
+    "master_only_commits_since_base": 75,
+    "branch_only_commits": 59,
+    "ranking_only_files": 46,
+    "ranking_only_insertions": 8630,
+    "ranking_only_diffstat_file": "02_phase4_branch_ranking_diffstat.txt",
+    "removal_commit_decision171": "85c94ee",
+    "docs_phase4": 12,
+    "deps_added": {
+      "dependencies": { "@neondatabase/serverless": "^1.1.0" },
+      "devDependencies": { "@electric-sql/pglite": "^0.5.8" }
+    },
+    "env_var_names_only": ["RANKING_API_ENABLED", "RANKING_DATABASE_URL", "RANKING_PREVIEW_UNLOCK", "VERCEL_ENV"]
+  },
+  "production_3dd8b5c": {
+    "api_dir": false,
+    "vercel_json": false,
+    "tracked_env_files": 0,
+    "import_meta_env_or_VITE_in_src": 0,
+    "ranking_deps_in_package_json": 0,
+    "rules_ranking_block": "src/core/data/rules.ts:253-328",
+    "submissionEnabled": false,
+    "engineVersion": 1,
+    "engineVersion_bump_commits": ["85c94ee (initial landing on master only; never bumped since)"],
+    "replay_foundation_present": [
+      "src/core/replay/types.ts",
+      "src/core/replay/replay.ts",
+      "src/core/replay/runLog.ts",
+      "src/core/replay/resume.ts",
+      "src/core/replay/gameVersion.ts",
+      "src/core/replay/index.ts",
+      "src/hooks/pendingRunStorage.ts",
+      "src/hooks/clientRunId.ts",
+      "src/hooks/dailyRunLogStorage.ts",
+      "src/hooks/useGameEngine.ts (applyAndRecord / enqueuePendingRun wiring)"
+    ],
+    "dead_css_remnants": [
+      "src/components/battle/battle.css:4371-4409 (.game-over-daily-rank, .game-over-rank-link, .game-over-rank-note)",
+      "src/components/setup/daily.css:321-539 (.daily-ranking-*)"
+    ],
+    "tsx_users_of_dead_css": 0,
+    "release_gate_script": "scripts/release-audit/ranking-absence.mjs (17 checks)",
+    "tamper_tests": "src/core/replay/replay.test.ts:309-389, src/core/replay/resume.test.ts:152",
+    "nondeterminism_in_core": 0,
+    "Date_now_seed_generation": "src/hooks/useGameEngine.ts:317 (normal mode only)",
+    "elapsed_time_fields_in_score_or_replay": 0
+  },
+  "drift_since_ranking_v1_audit": {
+    "from": "2389d21",
+    "to": "3dd8b5c",
+    "core_hooks_files_changed": 13,
+    "replay_runtime_files_changed": 0,
+    "shared_ui_files_changed": ["src/components/battle/BattleScreen.tsx", "src/core/data/rules.ts"],
+    "commits": ["47940f1 決定246", "b9b126e 決定251", "9316ce1 決定252"]
+  },
+  "verdict": "NO-GO (integration not started now; READY-DORMANT maintained)",
+  "evidence_files": [
+    "01_production_src_grep_ranking.txt",
+    "02_phase4_branch_ranking_diffstat.txt",
+    "03_phase4_branch_log.txt",
+    "04_decision171_removal_commit.txt",
+    "05_decisions_md_ranking_lines.txt",
+    "05b_decisions_md_ranking_lines_short.txt",
+    "06_decisions_phase4_rows_excerpt.txt",
+    "07_master_drift_since_ranking_v1_audit_2389d21.txt",
+    "08_shared_ui_drift_2389d21_to_3dd8b5c.txt",
+    "09_branch_divergence_counts.txt",
+    "10_nondeterminism_tamper_time_grep.txt",
+    "11_production_key_snippets_3dd8b5c.txt",
+    "phase4-branch-readonly/* (git show copies, read-only)"
+  ]
+}

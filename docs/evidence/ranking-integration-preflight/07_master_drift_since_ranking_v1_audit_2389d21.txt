@@ -1,0 +1,17 @@
+ src/core/data/cardArt.ts                   |  2 +-
+ src/core/data/enemies.ts                   | 84 ++++++++++++++++++------------
+ src/core/data/rules.ts                     | 36 +++++++++++--
+ src/core/data/stakes.test.ts               | 10 +++-
+ src/core/data/stakes.ts                    | 11 ++--
+ src/core/engine/balanceSim.test.ts         | 11 +++-
+ src/core/engine/enemyActions.test.ts       | 39 ++++++++++----
+ src/core/engine/reducer.test.ts            |  3 +-
+ src/core/engine/round.ts                   |  5 +-
+ src/core/engine/stakeRules.test.ts         | 47 ++++++++++++-----
+ src/core/replay/actionDistribution.test.ts | 21 ++++----
+ src/core/replay/gameVersion.test.ts        | 28 ++++------
+ src/core/replay/replay.test.ts             |  8 ++-
+ 13 files changed, 205 insertions(+), 100 deletions(-)
+9316ce1 2026-09-30 feat(core): 決定252 Enemy Ultimate / Threat Differentiation Pilot — 鬼将・怨霊・龍神・道化に名前つき必殺、必殺倍率
+b9b126e 2026-09-30 feat(core): 決定251 神階Ⅴ〜Ⅶ Re-centering Pilot — stakes.lateRoundFrom 5→6（late surge を E1 の峰の窓の後へ）
+47940f1 2026-09-28 feat(balance): 決定246 Combat Tension v1 Narrow Pilot — 託宣 1戦3回（神階2回）＋敵6体の峰をR4へ並べ替え
