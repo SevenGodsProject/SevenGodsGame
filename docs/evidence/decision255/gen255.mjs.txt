@@ -1,0 +1,74 @@
+// Decision255 — generate SIMULATION_SUMMARY tables from sim255-*.json (JSON is the source of truth; no hand-typed numbers).
+import { readFileSync, writeFileSync, existsSync } from 'node:fs'
+const DIR = process.argv[2] ?? 'C:/Users/kimi1/SevenGodsGame-d254-rc/docs/evidence/decision255'
+const p1 = (x) => (100 * (x ?? 0)).toFixed(1)
+const f2 = (x) => (x ?? 0).toFixed(2)
+const f1 = (x) => (x ?? 0).toFixed(1)
+const pt = (a, b) => (100 * (a - b)).toFixed(1)
+const L = []
+const FACES = [['normal', '通常'], ['easy', 'Easy'], ['hard', 'Hard'], ['daily', 'Daily']]
+const RANKS = [['rank1', '神階Ⅰ'], ['rank2', 'Ⅱ'], ['rank3', 'Ⅲ'], ['rank4', 'Ⅳ'], ['rank5', 'Ⅴ'], ['rank6', 'Ⅵ'], ['rank7p', 'Ⅶ猛威'], ['rank7r', 'Ⅶ巨躯'], ['rank7t', 'Ⅶ静寂']]
+const SEMS = ['STRIKE', 'GUARD', 'MEND', 'WEAKEN', 'ATTUNE', 'TEMPO', 'EMPOWER']
+
+function section(J, title) {
+  const O = J.out
+  L.push(`## ${title}（\`${J.mode}\`・${J.games.toLocaleString()} 試合・${J.elapsed.toFixed(0)}s・seed ${J.seeds}／神階 ${J.seedsRank}・${J.date}）`, '')
+  L.push('variant：' + Object.entries(J.variants).map(([k, v]) => `**${k}**＝${v}`).join('／'), '')
+  // A. win by variant × face × policy
+  L.push(`### ${title}-A. 勝率（variant × 面 × 方策）`, '')
+  const pols = Object.keys(O[Object.keys(O)[0]].normal)
+  L.push(`| variant | 面 | ${pols.join(' | ')} |`); L.push(`|---|---|${pols.map(() => '---').join('|')}|`)
+  for (const v of Object.keys(O)) for (const [f, fn] of [...FACES, ...RANKS]) { if (!O[v][f]) continue; L.push(`| ${v} | ${fn} | ${pols.map((p) => (O[v][f][p] ? p1(O[v][f][p].agg.win) : '—')).join(' | ')} |`) }
+  L.push('')
+  // B. class dependence under planner and reader
+  L.push(`### ${title}-B. class 依存（planner − p_no<CLASS>／reader − r_no<CLASS>・pt）と読む価値（reader−naive／planner−naive）`, '')
+  L.push('| variant | 面 | planner | −noGuard | −noWeaken | −noMend | −noTempo | −noAttune | −noEmpower | reader | r−noGuard | r−noWeaken | r−noMend | reader−naive | planner−naive | planner−greedy |')
+  L.push('|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|')
+  for (const v of Object.keys(O)) for (const [f, fn] of [...FACES, ...RANKS]) {
+    const g = O[v][f]; if (!g || !g.planner) continue
+    const pw = g.planner.agg.win, rw = g.reader.agg.win
+    const d = (p, base) => (g[p] ? pt(base, g[p].agg.win) : '—')
+    L.push(`| ${v} | ${fn} | ${p1(pw)} | ${d('p_noGuard', pw)} | ${d('p_noWeaken', pw)} | ${d('p_noMend', pw)} | ${d('p_noTempo', pw)} | ${d('p_noAttune', pw)} | ${d('p_noEmpower', pw)} | ${p1(rw)} | ${d('r_noGuard', rw)} | ${d('r_noWeaken', rw)} | ${d('r_noMend', rw)} | ${pt(rw, g.naive.agg.win)} | ${pt(pw, g.naive.agg.win)} | ${pt(pw, g.greedy.agg.win)} |`)
+  }
+  L.push('')
+  // C. beyond win: kill round / score / HP for planner vs ablations (normal, hard)
+  L.push(`### ${title}-C. 勝率以外の class 価値（planner と p_no<CLASS>：撃破 R・勝利スコア・勝利時 HP・最低 HP・被ダメ・GS）`, '')
+  L.push('| variant | 面 | 方策 | win | 撃破 R | 勝利スコア | 勝利時 HP | 最低 HP | 被ダメ | GS | 託宣/戦 | 加護% |'); L.push('|---|---|---|---|---|---|---|---|---|---|---|---|')
+  for (const v of Object.keys(O)) for (const [f, fn] of FACES) for (const p of ['planner', 'p_noGuard', 'p_noWeaken', 'p_noMend', 'p_noTempo', 'p_noAttune', 'reader']) { const a = O[v][f]?.[p]?.agg; if (!a) continue; L.push(`| ${v} | ${fn} | ${p} | ${p1(a.win)} | ${f2(a.winRoundMean)} | ${f1(a.scoreWonMean)} | ${f1(a.hpWonMean)} | ${f1(a.minHpMean)} | ${f1(a.dmgTakenMean)} | ${p1(a.godStrikeRate)} | ${f2(a.oracleUses)} | ${p1(a.shareGuard)} |`) }
+  L.push('')
+  // D. ultimate-round answer classes (planner, normal/hard) by variant
+  L.push(`### ${title}-D. 必殺ラウンドの答え（planner）— GUARD／加護／WEAKEN（効いている弱体）／MEND／撃破／素受け の率と答えの型の多様度・必殺前に WEAKEN を置いた率`, '')
+  L.push('| variant | 面 | guard | oracle | weaken | mend | kill | tank | ult-sig 多様度 | 必殺前 WEAKEN | 必殺前 class 集合の種類 | AP: STRIKE/GUARD/MEND/WEAKEN/ATTUNE/TEMPO/EMPOWER |'); L.push('|---|---|---|---|---|---|---|---|---|---|---|---|')
+  for (const v of Object.keys(O)) for (const [f, fn] of FACES) { const a = O[v][f]?.planner?.agg; if (!a) continue; const c = a.ultAnswerClass; L.push(`| ${v} | ${fn} | ${p1(c.guard)} | ${p1(c.oracle)} | ${p1(c.weaken)} | ${p1(c.mend)} | ${p1(c.kill)} | ${p1(c.tank)} | ${p1(a.ultSigDistinct)} | ${p1(a.preUltWeakenRate)} | ${a.preUltSetDistinct} | ${SEMS.map((s) => p1(a.semApShare[s])).join('/')} |`) }
+  L.push('')
+  // E. per-enemy answer (planner, normal & hard) for prod and each variant
+  L.push(`### ${title}-E. 敵ごとの答え（planner・通常／Hard）— 必殺 R の答え class と撃破 R・reader−naive`, '')
+  L.push('| variant | 面 | 敵 | win | 撃破 R | guard | oracle | weaken | mend | kill | 必殺前 WEAKEN | WEAKEN AP% | MEND AP% | planner−naive |'); L.push('|---|---|---|---|---|---|---|---|---|---|---|---|---|---|')
+  for (const v of Object.keys(O)) for (const [f, fn] of [['normal', '通常'], ['hard', 'Hard']]) { const g = O[v][f]; if (!g?.planner) continue; for (const e of Object.keys(g.planner.byEnemy)) { const a = g.planner.byEnemy[e], c = a.ultAnswerClass; L.push(`| ${v} | ${fn} | ${e} | ${p1(a.win)} | ${f2(a.winRoundMean)} | ${p1(c.guard)} | ${p1(c.oracle)} | ${p1(c.weaken)} | ${p1(c.mend)} | ${p1(c.kill)} | ${p1(a.preUltWeakenRate)} | ${p1(a.semApShare.WEAKEN)} | ${p1(a.semApShare.MEND)} | ${pt(a.win, g.naive.byEnemy[e].win)} |`) } }
+  L.push('')
+  // F. protections: easy naive, 49 cells <50%, unfinished, GS
+  L.push(`### ${title}-F. 保護条件（Easy naive／49 セル <50%／未撃破／GS／dead-card／reader>naive>greedy）`, '')
+  L.push('| variant | 面 | easy naive | reader<50% セル | planner<50% セル | reader 未撃破 | planner 未撃破 | reader GS | planner GS | reader dead-card | 順序 reader>naive>greedy |'); L.push('|---|---|---|---|---|---|---|---|---|---|---|')
+  for (const v of Object.keys(O)) for (const [f, fn] of [...FACES, ...RANKS]) { const g = O[v][f]; if (!g) continue; const cells = (p) => (g[p] ? Object.values(g[p].cells).filter((c) => c.win < 0.5).length : '—'); const r = g.reader.agg, n = g.naive.agg, gr = g.greedy.agg, pl = g.planner?.agg; L.push(`| ${v} | ${fn} | ${O[v].easy ? p1(O[v].easy.naive.agg.win) : '—'} | ${cells('reader')} | ${cells('planner')} | ${p1(r.unfinished)} | ${pl ? p1(pl.unfinished) : '—'} | ${p1(r.godStrikeRate)} | ${pl ? p1(pl.godStrikeRate) : '—'} | ${p1(r.deadCardRate)} | ${r.win >= n.win && n.win >= gr.win ? '○' : '**×**'} |`) }
+  L.push('')
+  // G. hand sensitivity at ult & paired divergence (planner/reader)
+  L.push(`### ${title}-G. 手札感度（必殺 R に GUARD 札あり／なしの win・必殺被ダメ）と paired 分岐率（reader≠naive／planner≠naive）`, '')
+  L.push('| variant | 面 | 方策 | GUARD あり n／win／被ダメ | GUARD なし n／win／被ダメ | ≠naive seed 率 | 100% セル |'); L.push('|---|---|---|---|---|---|---|')
+  for (const v of Object.keys(O)) for (const [f, fn] of FACES) for (const p of ['reader', 'planner']) { const g = O[v][f]?.[p]; if (!g) continue; const a = g.agg; const pv = g.pairedVsNaive ? Object.values(g.pairedVsNaive) : []; L.push(`| ${v} | ${fn} | ${p} | ${a.ultHandGuard.n}／${p1(a.ultHandGuard.win)}／${f1(a.ultHandGuard.ultDmg)} | ${a.ultHandNoGuard.n}／${p1(a.ultHandNoGuard.win)}／${f1(a.ultHandNoGuard.ultDmg)} | ${pv.length ? p1(pv.reduce((x, y) => x + y, 0) / pv.length) : '—'} | ${Object.values(g.cells).filter((c) => c.win === 1).length}/49 |`) }
+  L.push('')
+  // H. card usage shift (planner normal): WEAKEN/MEND cards use-when-seen prod vs variants
+  L.push(`### ${title}-H. WEAKEN／MEND／ATTUNE 札の使用（planner・通常）— 回/戦・見たら出す率`, '')
+  const vs = Object.keys(O)
+  const defs = O[vs[0]].normal.planner.agg.perDef.filter((d) => ['WEAKEN', 'MEND', 'ATTUNE', 'TEMPO'].includes(d.sem)).map((d) => d.id)
+  L.push(`| 札 | class | ${vs.map((v) => v + ' 回/戦').join(' | ')} | ${vs.map((v) => v + ' 出す率').join(' | ')} |`); L.push(`|---|---|${vs.map(() => '---').join('|')}|${vs.map(() => '---').join('|')}|`)
+  for (const id of defs) { const rows = vs.map((v) => O[v].normal.planner.agg.perDef.find((d) => d.id === id)); L.push(`| ${rows[0].name} | ${rows[0].sem} | ${rows.map((r) => f2(r?.playsPerGame)).join(' | ')} | ${rows.map((r) => p1(r?.useWhenSeen)).join(' | ')} |`) }
+  L.push('')
+}
+L.push('# 決定255 Solution Diversity v1 Preflight — simulation summary（evidence JSON から自動生成）', '')
+L.push('- runtime：Production **a611270**（master e2add7a docs）。src 変更 0。variant は harness 内で card／RULES オブジェクトを一時的に書き換えて実行し、各 variant 後に Production 値へ復元（`harness.d255.test.ts.txt`）', '')
+L.push('- 方策：reader／naive／greedy／oracleAware＝Lane 1 と同一。**planner**＝新規（敵の既知の表を 3R 先読みし、GUARD＝今 R の未ブロック分・WEAKEN＝持続 R 分の軽減合計・MEND＝回復可能量を HP 単位で評価、圧力に応じて防御の重みを 0.6〜3 に変える。託宣は oracleAware と同じ 3 択 EV）。`p_no<CLASS>`＝planner から class を禁止／`r_no<CLASS>`＝reader から禁止（Lane 1 と同一）', '')
+L.push('- 用語：必殺 R の答え＝必殺ラウンドに「ブロックを積んだ（guard）／加護を切った（oracle）／弱体が効いている（weaken）／回復札を出した（mend）／その R に撃破（kill）／何もせず受けた（tank）」の該当率（重複あり）。必殺前 WEAKEN＝必殺 R より前に WEAKEN 札を出した試合の率', '')
+if (existsSync(`${DIR}/sim255-tune.json`)) section(JSON.parse(readFileSync(`${DIR}/sim255-tune.json`, 'utf8')), '1. tune')
+if (existsSync(`${DIR}/sim255-final.json`)) section(JSON.parse(readFileSync(`${DIR}/sim255-final.json`, 'utf8')), '2. final')
+writeFileSync(`${DIR}/SIMULATION_SUMMARY.md`, L.join('\n'))
+console.log('written', L.length, 'lines')

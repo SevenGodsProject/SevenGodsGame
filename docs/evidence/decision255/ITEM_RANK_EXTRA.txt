@@ -1,0 +1,24 @@
+normal planner ultAns guard 86.0 oracle 50.0 weaken 53.1 mend 28.6 kill 8.0 | preUltW 45.3 ultSig 14.6 | AP 49.0/14.2/7.6/11.2/11.2/6.0 | noG/noW/noM 81.9 99.9 99.7
+hard planner ultAns guard 92.1 oracle 67.2 weaken 51.3 mend 34.9 kill 2.4 | preUltW 45.5 ultSig 14.1 | AP 47.1/14.2/8.5/10.7/11.9/6.9 | noG/noW/noM 52.2 96.4 94.7
+rank3 planner ultAns guard 92.0 oracle 69.3 weaken 49.6 mend 36.6 kill 1.6 | preUltW 41.4 ultSig 18.4 | AP 46.3/13.9/9.2/10.1/12.2/7.6 | noG/noW/noM 48.8 85.2 80.8
+rank5 planner ultAns guard 93.7 oracle 75.8 weaken 48.3 mend 41.3 kill 1.3 | preUltW 41.2 ultSig 17.7 | AP 45.8/14.0/9.8/10.1/12.0/7.5 | noG/noW/noM 36.4 69.1 70.0
+rank6 planner ultAns guard 96.3 oracle 82.3 weaken 47.5 mend 43.2 kill 1.3 | preUltW 41.2 ultSig 17.4 | AP 45.7/14.0/9.9/10.2/12.0/7.5 | noG/noW/noM 31.1 65.6 67.2
+rank7p planner ultAns guard 97.2 oracle 86.5 weaken 46.9 mend 45.5 kill 1.3 | preUltW 41.1 ultSig 16.7 | AP 45.2/14.2/10.2/10.5/12.0/7.2 | noG/noW/noM 17.8 43.6 50.3
+--- rank6 by enemy planner: win | weaken-necessity (planner-noWeaken) | mend-necessity
+試練の影 86.4 | 17.1 | 19.8 | ultAns g/o/w/m 0.0 0.0 0.0 0.0
+業斧の鬼将 93.1 | 15.7 | 22.1 | ultAns g/o/w/m 100.0 95.0 45.5 43.3
+藍花の怨霊 81.4 | 26.9 | 21.4 | ultAns g/o/w/m 98.8 88.3 45.5 50.7
+銀甲の機工師 91.2 | 15.7 | 14.0 | ultAns g/o/w/m 97.1 74.5 50.0 39.5
+双牙の魔獣 70.7 | 30.7 | 20.0 | ultAns g/o/w/m 87.6 60.7 50.5 45.7
+蒼海の龍神 76.9 | 24.5 | 20.7 | ultAns g/o/w/m 94.5 78.6 45.5 50.2
+乱舞の道化 98.1 | 8.1 | 9.3 | ultAns g/o/w/m 100.0 96.9 48.3 29.8
+--- normal by enemy planner ultAns g/o/w/m/kill + planner-naive
+試練の影 0.0 0.0 0.0 0.0 0.0 | 5.9
+業斧の鬼将 94.6 64.4 52.2 22.7 5.4 | 19.4
+藍花の怨霊 91.6 65.6 51.0 37.6 4.7 | 28.4
+銀甲の機工師 84.8 35.6 55.0 22.9 36.6 | 13.7
+双牙の魔獣 58.7 5.7 54.4 37.9 0.1 | 16.1
+蒼海の龍神 91.0 56.0 52.3 35.4 1.9 | 20.4
+乱舞の道化 95.6 71.9 53.9 15.0 0.3 | 8.7
+--- normal planner top ultAnswers {"ORACLE+GUARD":"17.3","ORACLE+GUARD+WEAKEN":"16.5","GUARD+WEAKEN":"16.0","ORACLE+GUARD+MEND":"9.9","GUARD":"8.1","ORACLE+GUARD+WEAKEN+MEND":"6.3","WEAKEN":"5.7","GUARD+MEND":"4.1","GUARD+WEAKEN+MEND":"3.4","WEAKEN+MEND":"2.3","KILL+GUARD":"2.3","KILL":"2.0"}
+--- paired planner≠naive by face normal 16.1 | hard 52.1 | daily 45.7
