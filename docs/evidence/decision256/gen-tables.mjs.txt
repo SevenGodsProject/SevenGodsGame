@@ -1,0 +1,108 @@
+// 決定256：evidence JSON → 監査文書の表（Markdown）を生成する。手入力ゼロ。
+//   node scripts/d256-daily-gate/gen-tables.mjs
+// 入力：docs/evidence/decision256/{gate_report.json, parity.json, decision131_gate_report_readonly.json}
+// 出力：docs/evidence/decision256/tables.generated.md（DAILY_COMPETITIVE_GATE_REJUDGMENT.md へそのまま貼る）
+import { readFileSync, writeFileSync } from 'node:fs'
+import path from 'node:path'
+import { fileURLToPath } from 'node:url'
+
+const here = path.dirname(fileURLToPath(import.meta.url))
+const E = path.resolve(here, '../../docs/evidence/decision256')
+const J = (n) => JSON.parse(readFileSync(path.join(E, n), 'utf8'))
+const now = J('gate_report.json')
+const old = J('decision131_gate_report_readonly.json')
+const par = J('parity.json')
+
+const GODS = ['恵比寿', '大耀', '蒼毘', '才華', '寿楽', '福永', '笑蓮']
+const ENEMIES = Object.keys(now.step3.perEnemy)
+const t = (h, rows) => [`| ${h.join(' | ')} |`, `| ${h.map(() => '---').join(' | ')} |`, ...rows.map((r) => `| ${r.join(' | ')} |`)].join('\n')
+const pf = (b) => (b ? 'PASS' : 'FAIL')
+const sd = (x, d = 2) => (x >= 0 ? '+' : '') + x.toFixed(d)
+const out = []
+const H = (s) => out.push('', s, '')
+
+H('### T1. ゲート判定サマリ（現行 a611270 vs 決定131 旧枝 762168f）【実測】')
+out.push(t(['ゲート', '基準', '決定131（2026-09-07）', '決定256（本監査）', 'Δ', '判定'], [
+  ['G1 全敵込みの神間 best-score spread', '≤ 5%', `${old.g1.overallSpreadPct}%（${pf(old.g1.passOverall)}）`, `${now.g1.overallSpreadPct}%`, `${sd(now.g1.overallSpreadPct - old.g1.overallSpreadPct)}pt`, pf(now.g1.passOverall)],
+  ['G1b 敵ごとの最悪 spread', '≤ 5%', `${old.g1.worstEnemySpreadPct}%（${pf(old.g1.passAllEnemies)}）`, `${now.g1.worstEnemySpreadPct}%（${now.g1.worstEnemy}）`, `${sd(now.g1.worstEnemySpreadPct - old.g1.worstEnemySpreadPct)}pt`, pf(now.g1.passAllEnemies)],
+  ['G2 最小勝率（Wilson 95%CI 下限）', '≥ 90%', `${old.g2.minWinRatePct}%（下限 ${old.g2.worstGodCiLoPct}%）`, `${now.g2.minWinRatePct}%（下限 ${now.g2.worstGodCiLoPct}%・${now.g2.worstGod}）`, `${sd(now.g2.minWinRatePct - old.g2.minWinRatePct, 1)}pt`, pf(now.g2.pass)],
+  ['same-seed fairness（同日同 seed・7神×2路線）', '全一致', 'parity 7件 PASS', `${par.sameSeedFairness.days}日 × ${par.sameSeedFairness.startGamesCompared} START_GAME 比較・7R 予告表一致`, '—', pf(par.sameSeedFairness.pass)],
+]))
+out.push('', `- G1 最良神＝**${now.g1.bestGod}**／最下位神＝**${now.g1.worstGod}**（決定131：才華／寿楽）`)
+out.push(`- 神別 best 平均（全敵・168日）：${GODS.map((g) => `${g} ${now.g1.overallBestByGod[g]}`).join('／')}`)
+out.push(`- 1 柱を除いた 6 神 spread：${GODS.map((g) => `${g}除外 ${now.g1.spreadExcludingGod[g]}%`).join('／')}`)
+
+H('### T2. 敵別 × 神別 best score（各日の 6 打ち筋の最良を、その敵の 24 seed で平均）— 決定256【実測】')
+out.push(t(['敵', 'seed', ...GODS, 'spread%', '最良神', '最下位神'], ENEMIES.map((e) => { const p = now.step3.perEnemy[e]; return [e, p.seeds, ...GODS.map((g) => p.byGod[g]), p.spreadPct, p.bestGod, p.worstGod] })))
+
+H('### T3. 同じ表の決定131 値と paired Δ（同一日付＝同一 seed・同一打ち筋・同一デッキ）【実測／docs】')
+out.push(t(['敵', ...GODS.map((g) => `${g} 131→256`), 'spread 131→256'], ENEMIES.map((e) => { const p = now.step3.perEnemy[e]; const q = old.step3.perEnemy[e]; return [e, ...GODS.map((g) => `${q.byGod[g]}→${p.byGod[g]} (${sd(p.byGod[g] - q.byGod[g], 0)})`), `${q.spreadPct}→${p.spreadPct} (${sd(p.spreadPct - q.spreadPct)})`] })))
+
+H('### T4. 神別サマリ（全敵・全 seed・n=168／神）【実測】')
+out.push(t(['神', 'n', '勝率%（256）', '95%CI 下限', '勝率%（131）', 'best平均 256', 'best平均 131', 'Δ', '中央', 'P90', 'P95', 'min', 'max'], GODS.map((g) => { const p = now.step3.perGod[g]; const q = old.g2.perGod[g]; const qb = Object.values(old.step3.perEnemy).reduce((s, e) => s + e.byGod[g], 0) / ENEMIES.length; return [g, p.n, p.winRatePct, p.ci95.lo, q.winRate, p.bestMean, qb.toFixed(1), sd(p.bestMean - qb, 1), p.bestMedian, p.p90, p.p95, p.min, p.max] })))
+out.push('', '（決定131 の best 平均は旧 gate_report.json の敵別 byGod 7 値の平均＝旧表の「best平均」と同値）')
+
+H('### T5. best-of-N：1 試行／best-of-3／best-of-6 の神間 spread と分布【実測】')
+const models = Object.entries(now.step4b.models)
+out.push(t(['試行モデル', ...GODS.map((g) => `${g} 平均`), 'spread%', '最悪敵%', 'G1', '最小勝率%'], models.map(([, m]) => [m.label, ...GODS.map((g) => Math.round(m.perGod[g].mean)), m.overallSpreadPct, m.worstEnemySpreadPct, pf(m.g1Pass), m.minWinRatePct])))
+out.push('', t(['試行モデル', ...GODS.map((g) => `${g} P10/P50/P90`)], models.map(([, m]) => [m.label, ...GODS.map((g) => `${m.perGod[g].p10}/${m.perGod[g].p50}/${m.perGod[g].p90}`)])))
+const gf = now.step4b.gainFirstToBo3
+out.push('', `- 1 試行 → best-of-3 の伸び（paired・168日×7神）：平均アーキタイプ（h-balanced → h-*3本の最良）平均 **+${gf.average.meanPct}%**（中央 +${gf.average.medianPct}%・最大 +${gf.average.maxPct}%・伸び 0 の割合 ${gf.average.zeroShare}）／上級（s-balanced → s-*3本）平均 **+${gf.advanced.meanPct}%**（中央 +${gf.advanced.medianPct}%・最大 +${gf.advanced.maxPct}%・伸び 0 の割合 ${gf.advanced.zeroShare}）`)
+out.push(`- best-of-3（上級）→ best-of-6 の伸び：平均 +${now.step4b.gainBo3ToBo6.meanPct}%（最大 +${now.step4b.gainBo3ToBo6.maxPct}%）`)
+
+H('### T6. 原因切り分け：神別 best 打ち筋の素点内訳（168 試合／神の平均）【実測】')
+out.push(t(['神', 'damage', 'combo', 'victory', 'tempo', 'survival', 'total(素点)', '表示score', '撃破R平均', '撃破R分布', 'BURST', '託宣使用', '託宣 加護/天啓/一撃', '必殺R被弾/R', '被弾/試合', '残HP率'], GODS.map((g) => { const p = now.step9.perGod[g]; const b = p.breakdown; const kr = Object.entries(p.killRounds).sort().map(([k, v]) => `${k}:${v}`).join(' '); const d = p.divinationChoices; return [g, b.damage, b.combo, b.victory, b.tempo, b.survival, b.total, p.finalScoreMean, p.killRoundMean, kr, p.bursts, p.divinationUsed, `${d.guard}/${d.guide}/${d.strike}`, p.specialHpLostPerRound, p.hpLostPerGame, p.hpRemainRatio] })))
+out.push('', t(['神', 'best 打ち筋の構成比'], GODS.map((g) => [g, Object.entries(now.step9.perGod[g].bestLineShare).sort((a, b) => b[1] - a[1]).map(([l, s]) => `${l} ${s}`).join('・')])))
+
+H('### T7. 敵別：最良神との差（gap%）と差の内訳（素点差：負＝最良神より低い）【実測】')
+for (const e of ENEMIES) {
+  const p = now.step9.perEnemyGap[e]
+  out.push(`**${e}**（最良神 ${p.bestGod}・spread ${now.step3.perEnemy[e].spreadPct}%）`, '')
+  out.push(t(['神', 'best平均', 'gap%', '撃破R平均', '勝率%', 'Δdamage', 'Δcombo', 'Δtempo', 'Δsurvival', 'Δvictory'], GODS.map((g) => { const x = p.byGod[g]; return [g, x.mean, x.gapPct, x.killRoundMean, x.winRatePct, x.dDamage, x.dCombo, x.dTempo, x.dSurvival, x.dVictory] })), '')
+}
+
+H('### T8. 直近 7 日（2026-09-28〜10-04・本日 10-02 を含む JST 週）の 7 敵巡回【実測】')
+out.push(t(['日付', '敵', 'seedId', ...GODS, 'spread%', '最良神', '最下位神'], Object.entries(now.step10.perDay).map(([d, p]) => [d, p.enemy, p.seedId, ...GODS.map((g) => `${p.byGod[g].best}${p.byGod[g].won ? '' : '✗'}(R${p.byGod[g].round})`), p.spreadPct, p.bestGod, p.worstGod])))
+out.push('', `- 週平均 spread（7 日の神別平均で算出）：**${now.step10.weekSpreadPct}%**／最悪日 **${now.step10.worstDaySpreadPct}%**（✗＝未撃破。R＝終了ラウンド）`)
+
+H('### T9. プレイヤー場（300 人 × 21 日）：Tie Density・God Dominance・Three Attempts — 決定256 vs 決定131【実測】')
+const b5 = (k) => [k, now.step5[k].uniqueRatio, old.step5[k].uniqueRatio, now.step5[k].tiedShare, old.step5[k].tiedShare, now.step5[k].avgPlayersPerRank, old.step5[k].avgPlayersPerRank, now.step5[k].maxTie ?? '—', old.step5[k].maxTie ?? '—']
+out.push(t(['帯', 'ユニーク率 256', '131', '同点者割合 256', '131', '1順位あたり人数 256', '131', '最大同点 256', '131'], [b5('top1'), b5('top5'), b5('top10'), b5('all')]))
+out.push('', `- 全体ユニークスコア数（300 人・日平均）：${now.step5.uniqueScoresAllMean}（決定131：137 前後）`)
+out.push('', t(['帯', '最多神の平均構成比 256', '131', '最悪日 256', '131'], ['top1', 'top5', 'top10'].map((k) => [k, now.step6[k].avgTopGodShare, old.step6[k].avgTopGodShare, now.step6[k].maxTopGodShare, old.step6[k].maxTopGodShare])))
+out.push('', t(['Top10% 構成比', ...GODS], [['決定256', ...GODS.map((g) => now.step6.perGodTop10[g])], ['決定131', ...GODS.map((g) => old.step6.perGodTop10[g])]]))
+out.push('', `- Top10% で最多だった神（日数）：${now.step6.top10MostFrequentGod}`)
+out.push('', t(['技量アーキタイプ', '平均到達パーセンタイル 256', '131'], Object.keys(now.step7.archetypeMeanPercentile).map((k) => [k, now.step7.archetypeMeanPercentile[k], old.step7.archetypeMeanPercentile[k]])))
+out.push('', `- 3 回で打ち筋を変えた場合の改善（h-balanced → h-*3本）：平均 +${now.step7.attemptGainPct.mean}%（決定131：+${old.step7.attemptGainPct.mean}%）・最大 +${now.step7.attemptGainPct.max}%`)
+
+H('### T10. same-seed fairness（parity.json）【実測】')
+out.push(t(['日付', '敵', '敵HP（×1.25）', '必殺R', '7R 予告表（kind 合計、!＝必殺）', 'END_ROUNDのみ観測R', 'h-defensive 到達R（神別）'], Object.entries(par.sameSeedFairness.perDay).map(([d, p]) => [d, p.enemy, p.enemyMaxHp, p.specialRounds.join(',') || '—', p.expectedIntents.map((i) => `${i.kind === 'charge' ? '溜' : i.kind === 'multiAttack' ? '連' : i.kind === 'special' ? '必' : '攻'}${i.total}${i.special ? '!' : ''}`).join(' '), [...new Set(Object.values(p.observedRoundsByGod))].join('/'), GODS.map((g) => p.observedRoundsByGodDefensivePlay[g]).join('/')])))
+out.push('', `- 比較した START_GAME：${par.sameSeedFairness.startGamesCompared}（${par.sameSeedFairness.days} 日 × 7 神 × 2 OTOMO 路線）。enemyId・seed・enemy.maxHp・modifier・stake=undefined・difficulty=normal・divination.remaining=${par.modifier.divinationCount} が全一致。観測した各ラウンドの予告（kind・合計・必殺フラグ・連撃 hits）は EnemyDef × normal × Daily 1.15 の静的期待表と一致し、神間でも一致`)
+
+H('### T11. 実行規模【実測】')
+out.push(t(['項目', '値'], [
+  ['エンジン', now.meta.engine],
+  ['Matrix', `${now.meta.matrixDays} 日 × 7 神 × ${now.meta.lines.length} 打ち筋（${now.meta.startDay} 起点＝決定131 と同一 seed 群）`],
+  ['プレイヤー場', `${now.meta.fieldPlayers} 人 × ${now.meta.fieldDays} 日`],
+  ['直近週', now.meta.recentDays.join(', ')],
+  ['エンジン実行（ユニーク試合・メモ化後）', `${now.meta.engineRunsTotal.toLocaleString()} 試合（決定131：${old.meta.engineRuns.toLocaleString()}）`],
+  ['所要', `エンジン ${now.meta.engineSecTotal}s／壁時計 ${now.meta.wallSecTotal}s（単一プロセス）`],
+  ['RULES', `託宣 ${now.meta.rules.divinationCount} 回・Daily ×${now.meta.rules.dailyModifier.enemyHpMul}/×${now.meta.rules.dailyModifier.enemyAtkMul}・1日 ${now.meta.rules.attemptsPerDay} 回・specialMul ${now.meta.rules.specialMul}（神階 0 では非適用）`],
+  ['生成時刻', now.meta.generatedAt],
+]))
+
+try {
+  const cf = J('counterfactual.json')
+  H('### T12. 反実仮想：決定131 以降の runtime 変更を 1 つずつ戻す — 56 日 × 7 神 × 探索 3 本／variant【実測・プロセス内データ差し替え、本番ファイル無変更】')
+  const vs = Object.entries(cf.variants)
+  const v0 = cf.variants.V0
+  out.push(t(['variant', ...GODS, 'spread%', 'Δ vs V0', '最悪敵%', '才華除外%', '寿楽除外%', '最良／最下位'], vs.map(([id, v]) => [`${id} ${v.label}`, ...GODS.map((g) => Math.round(v.perGod[g].mean)), v.overallSpreadPct, sd(v.overallSpreadPct - v0.overallSpreadPct), v.worstEnemySpreadPct, v.spreadExcludingSaika, v.spreadExcludingJuraku, `${v.bestGod}／${v.worstGod}`])))
+  out.push('', t(['variant', ...GODS.map((g) => `${g} combo/tempo/撃破R/BURST/託宣`)], vs.map(([id, v]) => [id, ...GODS.map((g) => `${v.perGod[g].combo}/${v.perGod[g].tempo}/${v.perGod[g].killRound}/${v.perGod[g].bursts}/${v.perGod[g].divinationUsed}`)])))
+  out.push('', `- sanity：${cf.sanity.dateKey} ${cf.sanity.enemy} 敵HP 現行 ${cf.sanity.currentMaxHp} → 旧 ${cf.sanity.oldMaxHp}・託宣 ${cf.sanity.currentDivination} → ${cf.sanity.v5Divination}。各 variant 後に現行へ復元（assert PASS・restoredToProduction=${cf.meta.restoredToProduction}）。エンジン実行 ${cf.meta.engineRuns.toLocaleString()} 試合・${cf.meta.elapsedSec}s`)
+} catch (e) {
+  out.push('', `（counterfactual.json 未生成：${e.message}）`)
+}
+
+writeFileSync(path.join(E, 'tables.generated.md'), out.join('\n') + '\n', 'utf8')
+console.log('wrote', path.join(E, 'tables.generated.md'))
+console.log(JSON.stringify({ g1: now.g1.overallSpreadPct, g1b: now.g1.worstEnemySpreadPct, g1pass: now.g1.passOverall && now.g1.passAllEnemies, g2: now.g2.minWinRatePct, g2lo: now.g2.worstGodCiLoPct, g2pass: now.g2.pass, best: now.g1.bestGod, worst: now.g1.worstGod, runs: now.meta.engineRunsTotal, sec: now.meta.wallSecTotal }))

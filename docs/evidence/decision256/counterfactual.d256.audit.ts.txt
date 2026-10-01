@@ -1,0 +1,189 @@
+/**
+ * 決定256 — 原因切り分けの反実仮想（counterfactual）シミュレーション。
+ *
+ * 決定131（旧枝 7ef714a・2026-09-07）以降に変わった runtime 要素のうち、神階 0 の Daily に効くものを 1 つずつ戻し、
+ * G1 悪化（7.91% → 13.82%）がどこから来たかを分解する：
+ *   V0 現行（a611270）
+ *   V1 託宣 7 回（決定246 の 7→3 を戻す。NO_STAKE_RULES.divinationCount を差し替え）
+ *   V2 敵の行動表・HP を旧 762168f へ（決定246 E1 峰 R4・決定252 必殺 special 化を戻す）
+ *   V3 カードの条件付き追加効果（Phase 5-A/5-C `CardDef.bonus`）OFF（RULES.godIdentity.cardBonusEnabled=false）
+ *   V4 託宣「加護」を旧式（HP+3・ブロック+2）へ（Phase 5-D/5-E の blockOfIntent を戻す）
+ *   V5 V1+V2+V3+V4 すべて（≒決定131 時点 7ef714a の条件）
+ *
+ * 置き換えは **プロセス内のデータ差し替え** で、本番ファイルは変更しない。各 variant の前後で復元し、最後に現行値へ戻ったことを assert する。
+ * 規模：8 週 56 日（敵ごと 8 seed）× 7 神 × 探索 3 本（s-balanced／s-rush／s-score）＝ 1,176 試合／variant・計 7,056 試合。
+ */
+import { describe, expect, it } from 'vitest'
+import { applyAction } from '../../src/core/engine/reducer'
+import { ENEMIES } from '../../src/core/data/enemies'
+import { getRecommendedDeck } from '../../src/core/data/deckBuilder'
+import { RULES } from '../../src/core/data/rules'
+import { NO_STAKE_RULES } from '../../src/core/data/stakes'
+import { DIVINATION_CHOICES } from '../../src/core/data/divination'
+import { resolveDailyStart } from '../../src/hooks/startDaily'
+import type { Effect, EnemyActionDef, EnemyId, GodId } from '../../src/core/types'
+import { ENEMIES as OLD_ENEMIES } from './enemies_762168f'
+import {
+  avg,
+  dateKeysByEnemy,
+  dateKeysFrom,
+  ENEMY_NAME,
+  GOD_NAME,
+  GOD_ORDER,
+  PROFILES,
+  r1,
+  r2,
+  runDailyGame,
+  searchAgent,
+  spreadPct,
+  writeOut,
+  type Agent,
+  type DailyMetrics,
+} from './dailyHarness'
+
+const DAYS = dateKeysFrom('2026-09-07', 8 * 7)
+const LINES: { id: string; make: () => Agent }[] = [
+  { id: 's-balanced', make: () => searchAgent(PROFILES.balanced, 800) },
+  { id: 's-rush', make: () => searchAgent(PROFILES.rush, 800) },
+  { id: 's-score', make: () => searchAgent(PROFILES.score, 800) },
+]
+
+type Variant = { id: string; label: string; divination7: boolean; oldEnemies: boolean; bonusOff: boolean; oldGuard: boolean }
+const VARIANTS: Variant[] = [
+  { id: 'V0', label: '現行 a611270', divination7: false, oldEnemies: false, bonusOff: false, oldGuard: false },
+  { id: 'V1', label: '託宣 7 回（決定246 を戻す）', divination7: true, oldEnemies: false, bonusOff: false, oldGuard: false },
+  { id: 'V2', label: '敵表 旧 762168f（決定246 E1／252 を戻す）', divination7: false, oldEnemies: true, bonusOff: false, oldGuard: false },
+  { id: 'V3', label: 'カード bonus OFF（Phase 5-A/5-C を戻す）', divination7: false, oldEnemies: false, bonusOff: true, oldGuard: false },
+  { id: 'V4', label: '加護 旧式 HP+3/ブロック+2（Phase 5-D/5-E を戻す）', divination7: false, oldEnemies: false, bonusOff: false, oldGuard: true },
+  { id: 'V5', label: 'V1+V2+V3+V4（≒決定131 時点 7ef714a）', divination7: true, oldEnemies: true, bonusOff: true, oldGuard: true },
+]
+
+const rulesAny = RULES as unknown as { godIdentity: { cardBonusEnabled: boolean } }
+const CURRENT_DIV = NO_STAKE_RULES.divinationCount
+const CURRENT_BONUS = RULES.godIdentity.cardBonusEnabled
+const CURRENT_GUARD_EFFECTS = DIVINATION_CHOICES[0].effects
+const OLD_GUARD_EFFECTS: Effect[] = [{ kind: 'heal', amount: 3 }, { kind: 'block', amount: 2 }]
+const snapshot = ENEMIES.map((e) => ({ id: e.id, maxHp: e.maxHp, actions: e.actions }))
+
+function applyVariant(v: Variant) {
+  ;(NO_STAKE_RULES as { divinationCount: number }).divinationCount = v.divination7 ? 7 : CURRENT_DIV
+  rulesAny.godIdentity.cardBonusEnabled = v.bonusOff ? false : CURRENT_BONUS
+  ;(DIVINATION_CHOICES[0] as { effects: Effect[] }).effects = v.oldGuard ? OLD_GUARD_EFFECTS : CURRENT_GUARD_EFFECTS
+  for (const e of ENEMIES) {
+    const src = v.oldEnemies ? OLD_ENEMIES.find((o) => o.id === e.id)! : snapshot.find((s) => s.id === e.id)!
+    ;(e as { maxHp: number }).maxHp = src.maxHp
+    ;(e as { actions: EnemyActionDef[] }).actions = src.actions
+  }
+}
+function restore() {
+  applyVariant(VARIANTS[0])
+}
+function assertRestored() {
+  expect(NO_STAKE_RULES.divinationCount).toBe(CURRENT_DIV)
+  expect(RULES.godIdentity.cardBonusEnabled).toBe(CURRENT_BONUS)
+  expect(DIVINATION_CHOICES[0].effects).toBe(CURRENT_GUARD_EFFECTS)
+  for (const e of ENEMIES) {
+    const s = snapshot.find((x) => x.id === e.id)!
+    expect(e.maxHp).toBe(s.maxHp)
+    expect(e.actions).toBe(s.actions)
+  }
+}
+
+describe('決定256 counterfactual（決定131 以降の runtime 変更を 1 つずつ戻す）', () => {
+  const report: Record<string, unknown> = {}
+  let runs = 0
+
+  it('差し替えが実際に GameState に反映され、復元できること', () => {
+    expect(OLD_ENEMIES.length).toBe(7)
+    expect(CURRENT_DIV).toBe(3)
+    expect(CURRENT_BONUS).toBe(true)
+    expect(CURRENT_GUARD_EFFECTS.some((e) => e.kind === 'blockOfIntent')).toBe(true)
+    const dateKey = DAYS[0]
+    const daily = resolveDailyStart(dateKey)
+    const start = () => applyAction(null, { type: 'START_GAME', seed: daily.seed, godId: GOD_ORDER[0], enemyId: daily.enemyId, deck: getRecommendedDeck(GOD_ORDER[0]), difficulty: daily.difficulty, mode: daily.mode, dailyKey: daily.dailyKey, modifier: daily.modifier }).state
+    const base = start()
+    applyVariant(VARIANTS[5])
+    const v5 = start()
+    restore()
+    const back = start()
+    expect(base.divination.remaining).toBe(3)
+    expect(v5.divination.remaining).toBe(7)
+    // 2026-09-07 の敵（道化）は HP が旧新同値のため「旧定義 × 1.25」との一致で差し替えを確認する
+    const oldDef = OLD_ENEMIES.find((o) => o.id === daily.enemyId)!
+    expect(v5.enemy.maxHp).toBe(Math.round(oldDef.maxHp * RULES.daily.modifier.enemyHpMul))
+    expect(v5.enemy.intent?.kind).toBe(oldDef.actions[0].kind)
+    expect(base.enemy.intent?.kind).toBe(snapshot.find((s) => s.id === daily.enemyId)!.actions[0].kind)
+    expect(back).toEqual(base)
+    assertRestored()
+    report.sanity = { dateKey, enemy: ENEMY_NAME[daily.enemyId], currentMaxHp: base.enemy.maxHp, oldMaxHp: v5.enemy.maxHp, currentDivination: base.divination.remaining, v5Divination: v5.divination.remaining, currentIntentR1: base.enemy.intent, oldIntentR1: v5.enemy.intent }
+  })
+
+  it('variants', () => {
+    const t0 = Date.now()
+    const byEnemy = dateKeysByEnemy(DAYS)
+    const out: Record<string, unknown> = {}
+    for (const v of VARIANTS) {
+      applyVariant(v)
+      const godVals = new Map<GodId, number[]>()
+      const godMetrics = new Map<GodId, DailyMetrics[]>()
+      const perEnemySpread: Record<string, number> = {}
+      const wins = new Map<GodId, number>()
+      for (const [enemyId, days] of byEnemy) {
+        const means: number[] = []
+        for (const g of GOD_ORDER) {
+          const vals: number[] = []
+          for (const dateKey of days) {
+            let best: DailyMetrics | null = null
+            let won = false
+            for (const line of LINES) {
+              const m = runDailyGame({ dateKey, godId: g, deck: getRecommendedDeck(g), growthPath: 'guardian' }, line.make())
+              runs++
+              if (m.status === 'won') won = true
+              if (!best || m.finalScore > best.finalScore) best = m
+            }
+            vals.push(best!.finalScore)
+            godMetrics.set(g, [...(godMetrics.get(g) ?? []), best!])
+            if (won) wins.set(g, (wins.get(g) ?? 0) + 1)
+          }
+          godVals.set(g, [...(godVals.get(g) ?? []), ...vals])
+          means.push(avg(vals))
+        }
+        perEnemySpread[ENEMY_NAME[enemyId as EnemyId]] = r2(spreadPct(means))
+      }
+      restore()
+      const godMeans = GOD_ORDER.map((g) => avg(godVals.get(g)!))
+      const top = Math.max(...godMeans)
+      out[v.id] = {
+        label: v.label,
+        flags: { divination7: v.divination7, oldEnemies: v.oldEnemies, bonusOff: v.bonusOff, oldGuard: v.oldGuard },
+        overallSpreadPct: r2(spreadPct(godMeans)),
+        worstEnemySpreadPct: r2(Math.max(...Object.values(perEnemySpread))),
+        perEnemySpreadPct: perEnemySpread,
+        spreadExcludingSaika: r2(spreadPct(GOD_ORDER.filter((g) => GOD_NAME[g] !== '才華').map((g) => avg(godVals.get(g)!)))),
+        spreadExcludingJuraku: r2(spreadPct(GOD_ORDER.filter((g) => GOD_NAME[g] !== '寿楽').map((g) => avg(godVals.get(g)!)))),
+        bestGod: GOD_NAME[GOD_ORDER[godMeans.indexOf(top)]],
+        worstGod: GOD_NAME[GOD_ORDER[godMeans.indexOf(Math.min(...godMeans))]],
+        perGod: Object.fromEntries(GOD_ORDER.map((g, i) => {
+          const ms = godMetrics.get(g)!
+          return [GOD_NAME[g], {
+            mean: r2(godMeans[i]),
+            gapPct: r2(((top - godMeans[i]) / top) * 100),
+            winRatePct: r1(((wins.get(g) ?? 0) / DAYS.length) * 100),
+            combo: r1(avg(ms.map((m) => m.breakdown.combo))),
+            tempo: r1(avg(ms.map((m) => m.breakdown.tempo))),
+            survival: r1(avg(ms.map((m) => m.breakdown.survival))),
+            killRound: r2(avg(ms.filter((m) => m.status === 'won').map((m) => m.round))),
+            bursts: r2(avg(ms.map((m) => m.bursts))),
+            divinationUsed: r2(avg(ms.map((m) => m.divinationUsed))),
+          }]
+        })),
+      }
+    }
+    restore()
+    assertRestored()
+    report.variants = out
+    report.meta = { days: DAYS.length, seedsPerEnemy: DAYS.length / 7, lines: LINES.map((l) => l.id), engineRuns: runs, elapsedSec: r1((Date.now() - t0) / 1000), restoredToProduction: true, generatedAt: new Date().toISOString() }
+    writeOut('counterfactual.json', report)
+    expect(Object.keys(out).length).toBe(VARIANTS.length)
+  })
+})

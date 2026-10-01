@@ -1,0 +1,806 @@
+diff --git a/C:/Users/kimi1/SevenGodsGame-d256/docs/evidence/decision256/old_762168f_gate.audit.ts.txt b/C:/Users/kimi1/SevenGodsGame-d256/scripts/d256-daily-gate/gate.d256.audit.ts
+index f6be397..6fb3a76 100644
+--- a/C:/Users/kimi1/SevenGodsGame-d256/docs/evidence/decision256/old_762168f_gate.audit.ts.txt
++++ b/C:/Users/kimi1/SevenGodsGame-d256/scripts/d256-daily-gate/gate.d256.audit.ts
+@@ -1,19 +1,20 @@
+ /**
+- * Phase 4.0 Daily Ranking Competitive Gate — 本体シミュレーション
++ * 決定256 Daily Competitive Gate 再判定 — 本体シミュレーション
+  *
+- * Step 3  Simulation Matrix     7神 × 7敵 × 実Dailyシード × 複数戦略
+- * Step 4  Primary Gates         G1（神間 best-score spread）／G2（神別 win rate、Wilson 95%CI付き）
+- * Step 5  Tie Density Gate      上位帯の同点密度（本命リスク）
+- * Step 6  God Dominance         上位帯の神構成比
+- * Step 7  Three Attempts        1日3runのみのプレイヤー場をモンテカルロで再現
+- * Step 8  bonusCopies Impact    現行Daily（報酬編成ボーナス有）vs 公平版（無）の paired 比較
++ * 旧枝 scripts/phase4-daily-gate/gate.audit.ts（決定131）を file-level で複写し、現行エンジン a611270 で再実行する。
++ * G1／G2／spread／best-of-3 の定義・しきい値・START_DAY・日数・打ち筋・デッキは **決定131 と同一**（paired：同じ日付＝同じ seed）。
+  *
+- * 出力は out/ 配下。監査報告は docs/PHASE4_DAILY_RANKING_COMPETITIVE_GATE.md。
++ * Step 3  Simulation Matrix     7神 × 7敵 × 実Dailyシード24本 × 6打ち筋（決定131 と同一）
++ * Step 4  Primary Gates         G1（神間 best-score spread ≤5%）／G2（神別 win rate、Wilson 95%CI 下限 ≥90%）
++ * Step 4b best-of-N             [D256] 1試行（各打ち筋）／best-of-3（技量アーキタイプ）／best-of-6 の分布と G1 spread
++ * Step 5/6/7 Field              Tie Density・God Dominance・Three Attempts（決定131 と同一モデル。bonusCopies 比較 Step 8 は除外＝既に無効化済み）
++ * Step 9  Cause Breakdown       [D256] 神別・敵別の内訳（damage/combo/tempo/survival・撃破R・託宣・必殺被弾）
++ * Step 10 Recent Week           [D256] 直近 7 日（2026-09-28〜10-04）の 7 敵巡回での spread
++ *
++ * 出力は docs/evidence/decision256/ 配下。監査報告は docs/DAILY_COMPETITIVE_GATE_REJUDGMENT.md。
+  */
+ import { describe, expect, it } from 'vitest'
+ import { dailyBossFor } from '../../src/core/data/dailyBoss'
+-import { getCardDef } from '../../src/core/data/cards'
+-import { getCardPoolForGod, getRecommendedDeck, validateDeck } from '../../src/core/data/deckBuilder'
+ import { RULES } from '../../src/core/data/rules'
+ import { createRng } from '../../src/core/rng/seededRandom'
+ import type { CardDefId, EnemyId, GodId, GrowthPath } from '../../src/core/types'
+@@ -43,15 +44,17 @@ import {
+ } from './dailyHarness'
+ 
+ // ---------------------------------------------------------------------------
+-// 実行規模
++// 実行規模（決定131 と同一）
+ // ---------------------------------------------------------------------------
+-const START_DAY = '2026-09-07' // 月曜。週境界と揃える
++const START_DAY = '2026-09-07' // 月曜。週境界と揃える（決定131 と同じ＝同じ seed 群で paired 比較できる）
+ const MATRIX_WEEKS = 24 // 168日 ＝ 敵ごとに実Dailyシード24本
+ const FIELD_WEEKS = 3 //  21日 ＝ 7敵 × 3seed でプレイヤー場を作る
+ const FIELD_PLAYERS = 300 // 1日あたりの想定参加者
++const RECENT_START = '2026-09-28' // [D256] 本日 2026-10-02 を含む JST 週（月曜起点）
+ 
+ const MATRIX_DAYS = dateKeysFrom(START_DAY, MATRIX_WEEKS * 7)
+ const FIELD_DAYS = dateKeysFrom(START_DAY, FIELD_WEEKS * 7)
++const RECENT_DAYS = dateKeysFrom(RECENT_START, 7)
+ 
+ // ---------------------------------------------------------------------------
+ // エージェント一覧（プレイヤーの「打ち筋」）
+@@ -89,10 +92,12 @@ type Cfg = {
+ }
+ const runCache = new Map<string, DailyMetrics>()
+ let engineRuns = 0
++let engineMs = 0
+ function run(cfg: Cfg): DailyMetrics {
+   const key = `${cfg.dateKey}|${cfg.godId}|${cfg.deckKind}|${cfg.growthPath}|${cfg.line}|${cfg.bonusKey ?? '-'}`
+   const hit = runCache.get(key)
+   if (hit) return hit
++  const t0 = Date.now()
+   const m = runDailyGame(
+     {
+       dateKey: cfg.dateKey,
+@@ -104,66 +109,16 @@ function run(cfg: Cfg): DailyMetrics {
+     agentOf(cfg.line),
+   )
+   engineRuns++
++  engineMs += Date.now() - t0
+   runCache.set(key, m)
+   return m
+ }
+ 
+-// ---------------------------------------------------------------------------
+-// Step 8 用：報酬編成ボーナスを持つ「熟練プレイヤー」のモデル
+-// ---------------------------------------------------------------------------
+-const cardDmg = (id: CardDefId) =>
+-  getCardDef(id).effects.reduce((s, e) => s + (e.kind === 'damage' && e.target === 'enemy' ? e.amount : 0), 0)
+-
+-/** その神のプール内で「3枚積みたくなる」上位K枚に +1 の編成上限を与える */
+-function veteranBonus(godId: GodId, k: number): Partial<Record<CardDefId, number>> {
+-  const pool = getCardPoolForGod(godId).map((c) => c.id)
+-  const ranked = [...pool].sort((a, b) => cardDmg(b) / getCardDef(b).cost - cardDmg(a) / getCardDef(a).cost)
+-  const out: Partial<Record<CardDefId, number>> = {}
+-  for (const id of ranked.slice(0, k)) out[id] = 1
+-  return out
+-}
+-
+-/** ボーナスを実際に使い切るデッキ（上位K枚を3枚ずつ入れ、残りを推奨デッキで埋める） */
+-function veteranDeck(godId: GodId, bonus: Partial<Record<CardDefId, number>>): CardDefId[] {
+-  const deck: CardDefId[] = []
+-  for (const [id, extra] of Object.entries(bonus) as [CardDefId, number][]) {
+-    for (let i = 0; i < RULES.deckBuilding.maxCopiesPerCard + extra; i++) deck.push(id)
+-  }
+-  const counts = new Map<CardDefId, number>()
+-  for (const id of deck) counts.set(id, (counts.get(id) ?? 0) + 1)
+-  for (const id of getRecommendedDeck(godId)) {
+-    if (deck.length >= RULES.deck.size) break
+-    const max = RULES.deckBuilding.maxCopiesPerCard + (bonus[id] ?? 0)
+-    const cur = counts.get(id) ?? 0
+-    if (cur < max) {
+-      deck.push(id)
+-      counts.set(id, cur + 1)
+-    }
+-  }
+-  // まだ埋まらなければプールから補充
+-  for (const c of getCardPoolForGod(godId)) {
+-    while (deck.length < RULES.deck.size) {
+-      const max = RULES.deckBuilding.maxCopiesPerCard + (bonus[c.id] ?? 0)
+-      const cur = counts.get(c.id) ?? 0
+-      if (cur >= max) break
+-      deck.push(c.id)
+-      counts.set(c.id, cur + 1)
+-    }
+-    if (deck.length >= RULES.deck.size) break
+-  }
+-  return deck.slice(0, RULES.deck.size)
+-}
+-
+ // ---------------------------------------------------------------------------
+ // プレイヤー場（Step 5・6・7）
+ // ---------------------------------------------------------------------------
+ const DECK_KINDS = ['recommended', 'variant1', 'variant2', 'variant3', 'variant4', 'variant5'] as const
+ 
+-/**
+- * 技量アーキタイプ＝「3回の挑戦で試す打ち筋の列」。
+- * Daily は決定論なので**挑戦を重ねても引き直しは起きない**。3回は「同じ問題を学習して
+- * 詰める」機会であり、モデルもそれに合わせて「別の打ち筋を試して最良を採る」形にする。
+- */
+ type Archetype = { id: string; label: string; weight: number; lines: LineId[] }
+ const ARCHETYPES: Archetype[] = [
+   { id: 'casual', label: '初級（同じ打ち筋を繰り返す）', weight: 0.40, lines: ['h-balanced'] },
+@@ -172,13 +127,7 @@ const ARCHETYPES: Archetype[] = [
+   { id: 'optimal', label: '最適寄り（スコア最大化を探索）', weight: 0.05, lines: ['s-score', 's-score-deep'] },
+ ]
+ 
+-type PlayerResult = {
+-  godId: GodId
+-  archetype: string
+-  best: number
+-  attempts: number
+-  won: boolean
+-}
++type PlayerResult = { godId: GodId; archetype: string; best: number; attempts: number; won: boolean }
+ 
+ function buildField(dateKey: string): PlayerResult[] {
+   const rng = createRng(`field-${dateKey}`)
+@@ -206,9 +155,6 @@ function buildField(dateKey: string): PlayerResult[] {
+   return out
+ }
+ 
+-// ---------------------------------------------------------------------------
+-// 同点密度
+-// ---------------------------------------------------------------------------
+ function tieStats(scores: number[], topFrac: number) {
+   const sorted = [...scores].sort((a, b) => b - a)
+   const n = Math.max(1, Math.round(sorted.length * topFrac))
+@@ -218,7 +164,6 @@ function tieStats(scores: number[], topFrac: number) {
+   const uniqueRatio = counts.size / top.length
+   const tiedPlayers = [...counts.values()].filter((v) => v > 1).reduce((a, b) => a + b, 0)
+   const avgPerRank = top.length / counts.size
+-  // 1点差以内（内部値。表示は×10なので表示上は10点差以内）
+   let within1 = 0
+   for (let i = 1; i < top.length; i++) if (Math.abs(top[i] - top[i - 1]) <= 1) within1++
+   return {
+@@ -245,40 +190,36 @@ function godShare(players: PlayerResult[], topFrac: number) {
+ }
+ 
+ // ===========================================================================
+-describe('Phase 4.0 Daily Ranking Competitive Gate', () => {
++describe('決定256 Daily Competitive Gate 再判定（現行エンジン a611270）', () => {
+   const report: Record<string, unknown> = {}
+   const md: string[] = []
++  const tStart = Date.now()
+ 
+-  it('Step 3 — Simulation Matrix（7神 × 7敵 × 実Dailyシード × 6打ち筋）', () => {
+-    const byEnemy = dateKeysByEnemy(MATRIX_DAYS)
+-    const t0 = Date.now()
+-
+-    // cell[enemy][god] = { scores(各日の最良), wins, n, byLine }
+-    type Cell = { best: number[]; wins: number; n: number; rounds: number[]; bursts: number[]; allScores: number[] }
+-    const cells = new Map<string, Cell>()
+-    const key = (e: EnemyId, g: GodId) => `${e}|${g}`
++  // 各 (enemy, god) セル。best は「その日の6打ち筋の最良」。bestLine はその打ち筋と metrics（原因切り分け用）
++  type Cell = { best: number[]; wins: number; n: number; bestMetrics: DailyMetrics[]; bestLine: LineId[]; allScores: number[] }
++  const cells = new Map<string, Cell>()
++  const key = (e: EnemyId, g: GodId) => `${e}|${g}`
++  const byEnemy = dateKeysByEnemy(MATRIX_DAYS)
+ 
++  it('Step 3 — Simulation Matrix（7神 × 7敵 × 実Dailyシード24本 × 6打ち筋）', () => {
++    const t0 = Date.now()
+     for (const [enemyId, days] of byEnemy) {
+       for (const godId of GOD_ORDER) {
+-        const cell: Cell = { best: [], wins: 0, n: 0, rounds: [], bursts: [], allScores: [] }
++        const cell: Cell = { best: [], wins: 0, n: 0, bestMetrics: [], bestLine: [], allScores: [] }
+         for (const dateKey of days) {
+           let dayBest = -1
+           let dayWon = false
+-          let bestRound = 0
+-          let bestBursts = 0
++          let bestM: DailyMetrics | null = null
++          let bestL: LineId = MATRIX_LINES[0]
+           for (const line of MATRIX_LINES) {
+             const m = run({ dateKey, godId, deckKind: 'recommended', growthPath: 'guardian', line })
+             cell.allScores.push(m.finalScore)
+             if (m.status === 'won') dayWon = true
+-            if (m.finalScore > dayBest) {
+-              dayBest = m.finalScore
+-              bestRound = m.round
+-              bestBursts = m.bursts
+-            }
++            if (m.finalScore > dayBest) { dayBest = m.finalScore; bestM = m; bestL = line }
+           }
+           cell.best.push(dayBest)
+-          cell.rounds.push(bestRound)
+-          cell.bursts.push(bestBursts)
++          cell.bestMetrics.push(bestM!)
++          cell.bestLine.push(bestL)
+           cell.n++
+           if (dayWon) cell.wins++
+         }
+@@ -286,7 +227,6 @@ describe('Phase 4.0 Daily Ranking Competitive Gate', () => {
+       }
+     }
+ 
+-    // ---- 集計 ----
+     const perEnemy: Record<string, unknown> = {}
+     const g1rows: (string | number)[][] = []
+     const g2rows: (string | number)[][] = []
+@@ -303,8 +243,8 @@ describe('Phase 4.0 Daily Ranking Competitive Gate', () => {
+       spreads.push(spread)
+       const top = [...bestByGod].sort((a, b) => b.mean - a.mean)[0]
+       const bot = [...bestByGod].sort((a, b) => a.mean - b.mean)[0]
+-
+       perEnemy[ENEMY_NAME[enemyId]] = {
++        enemyId,
+         seeds: days.length,
+         spreadPct: r2(spread),
+         bestGod: GOD_NAME[top.g],
+@@ -312,15 +252,10 @@ describe('Phase 4.0 Daily Ranking Competitive Gate', () => {
+         worstGod: GOD_NAME[bot.g],
+         worstGodScore: Math.round(bot.mean),
+         byGod: Object.fromEntries(bestByGod.map((b) => [GOD_NAME[b.g], Math.round(b.mean)])),
++        byGodExact: Object.fromEntries(bestByGod.map((b) => [GOD_NAME[b.g], r2(b.mean)])),
+         winRateByGod: Object.fromEntries(bestByGod.map((b) => [GOD_NAME[b.g], r1(b.wr * 100)])),
+       }
+-      g1rows.push([
+-        ENEMY_NAME[enemyId],
+-        days.length,
+-        ...bestByGod.map((b) => Math.round(b.mean)),
+-        r2(spread),
+-        GOD_NAME[top.g],
+-      ])
++      g1rows.push([ENEMY_NAME[enemyId], days.length, ...bestByGod.map((b) => Math.round(b.mean)), r2(spread), GOD_NAME[top.g]])
+       for (const b of bestByGod) {
+         const c = cells.get(key(enemyId, b.g))!
+         const gw = godWins.get(b.g) ?? { w: 0, n: 0 }
+@@ -336,17 +271,7 @@ describe('Phase 4.0 Daily Ranking Competitive Gate', () => {
+       const ci = wilson95(gw.w, gw.n)
+       const bests = godBest.get(g)!
+       const sorted = [...bests].sort((a, b) => a - b)
+-      g2rows.push([
+-        GOD_NAME[g],
+-        gw.n,
+-        r1((gw.w / gw.n) * 100),
+-        `${r1(ci.lo * 100)}–${r1(ci.hi * 100)}`,
+-        Math.round(avg(bests)),
+-        Math.round(median(bests)),
+-        Math.round(quantile(sorted, 0.9)),
+-        Math.round(quantile(sorted, 0.95)),
+-        Math.max(...bests),
+-      ])
++      g2rows.push([GOD_NAME[g], gw.n, r1((gw.w / gw.n) * 100), `${r1(ci.lo * 100)}–${r1(ci.hi * 100)}`, Math.round(avg(bests)), Math.round(median(bests)), Math.round(quantile(sorted, 0.9)), Math.round(quantile(sorted, 0.95)), Math.max(...bests)])
+     }
+ 
+     const overallBestByGod = GOD_ORDER.map((g) => avg(godBest.get(g)!))
+@@ -362,14 +287,27 @@ describe('Phase 4.0 Daily Ranking Competitive Gate', () => {
+       }
+       return worst
+     })()
++    // [D256] 寿楽を除いた 6 神 spread（決定131 の「残り6神は4.76%」との比較用）
++    const spreadWithout = Object.fromEntries(GOD_ORDER.map((ex) => [GOD_NAME[ex], r2(spreadPct(GOD_ORDER.filter((g) => g !== ex).map((g) => avg(godBest.get(g)!))))]))
+ 
+-    report.step3 = { days: MATRIX_DAYS.length, seedsPerEnemy: MATRIX_DAYS.length / 7, lines: MATRIX_LINES, perEnemy }
++    report.step3 = {
++      days: MATRIX_DAYS.length, seedsPerEnemy: MATRIX_DAYS.length / 7, lines: MATRIX_LINES, engineRuns, elapsedSec: r1((Date.now() - t0) / 1000), perEnemy,
++      perGod: Object.fromEntries(GOD_ORDER.map((g) => {
++        const bests = godBest.get(g)!
++        const sorted = [...bests].sort((a, b) => a - b)
++        const gw = godWins.get(g)!
++        return [GOD_NAME[g], { n: gw.n, winRatePct: r1((gw.w / gw.n) * 100), ci95: { lo: r1(wilson95(gw.w, gw.n).lo * 100), hi: r1(wilson95(gw.w, gw.n).hi * 100) }, bestMean: r2(avg(bests)), bestMedian: Math.round(median(bests)), p90: Math.round(quantile(sorted, 0.9)), p95: Math.round(quantile(sorted, 0.95)), max: Math.max(...bests), min: Math.min(...bests) }]
++      })),
++    }
+     report.g1 = {
+       overallSpreadPct: r2(g1Overall),
+       worstEnemySpreadPct: r2(g1WorstEnemy),
+-      perEnemySpreadPct: Object.fromEntries(
+-        [...byEnemy.keys()].map((e, i) => [ENEMY_NAME[e], r2(spreads[i])]),
+-      ),
++      worstEnemy: ENEMY_NAME[[...byEnemy.keys()][spreads.indexOf(g1WorstEnemy)]],
++      perEnemySpreadPct: Object.fromEntries([...byEnemy.keys()].map((e, i) => [ENEMY_NAME[e], r2(spreads[i])])),
++      overallBestByGod: Object.fromEntries(GOD_ORDER.map((g, i) => [GOD_NAME[g], r2(overallBestByGod[i])])),
++      bestGod: GOD_NAME[GOD_ORDER[overallBestByGod.indexOf(Math.max(...overallBestByGod))]],
++      worstGod: GOD_NAME[GOD_ORDER[overallBestByGod.indexOf(Math.min(...overallBestByGod))]],
++      spreadExcludingGod: spreadWithout,
+       target: 5,
+       passOverall: g1Overall <= 5,
+       passAllEnemies: g1WorstEnemy <= 5,
+@@ -382,53 +320,126 @@ describe('Phase 4.0 Daily Ranking Competitive Gate', () => {
+       pass: minWrCi.lo >= 0.9,
+       perGod: Object.fromEntries(GOD_ORDER.map((g) => {
+         const gw = godWins.get(g)!
+-        return [GOD_NAME[g], { n: gw.n, winRate: r1((gw.w / gw.n) * 100), ci95: wilson95(gw.w, gw.n) }]
++        return [GOD_NAME[g], { n: gw.n, wins: gw.w, winRate: r1((gw.w / gw.n) * 100), ci95: wilson95(gw.w, gw.n) }]
+       })),
+     }
+ 
+     md.push('## Step 3 — Simulation Matrix')
+     md.push('')
+-    md.push(`- 日数 **${MATRIX_DAYS.length}日**（${MATRIX_WEEKS}週）＝ 敵ごとに実Dailyシード **${MATRIX_DAYS.length / 7}本**`)
+-    md.push(`- 打ち筋 **${MATRIX_LINES.length}種**（heuristic 3 + 探索AI 3）／デッキは推奨デッキ固定／bonusCopies 無効`)
++    md.push(`- 日数 **${MATRIX_DAYS.length}日**（${MATRIX_WEEKS}週・${START_DAY} 起点＝決定131 と同一 seed 群）＝ 敵ごとに実Dailyシード **${MATRIX_DAYS.length / 7}本**`)
++    md.push(`- 打ち筋 **${MATRIX_LINES.length}種**（heuristic 3 + 探索AI 3）／デッキは推奨デッキ固定／bonusCopies 無効／神階 0／難易度 normal／託宣 ${RULES.divination.count} 回`)
+     md.push(`- エンジン実行 **${engineRuns.toLocaleString()}試合**（所要 ${((Date.now() - t0) / 1000).toFixed(1)}s）`)
+     md.push('')
+     md.push('### 敵別 × 神別 best score（各日の6打ち筋の最良を、その敵の全シードで平均）')
+     md.push('')
+-    md.push(mdTable(
+-      ['敵', 'seed数', ...GOD_ORDER.map((g) => GOD_NAME[g]), 'spread%', '最良神'],
+-      g1rows,
+-    ))
++    md.push(mdTable(['敵', 'seed数', ...GOD_ORDER.map((g) => GOD_NAME[g]), 'spread%', '最良神'], g1rows))
+     md.push('')
+     md.push('### 神別サマリ（全敵・全シード）')
+     md.push('')
+-    md.push(mdTable(
+-      ['神', 'n', '勝率%', '95%CI', 'best平均', 'best中央', 'P90', 'P95', 'max'],
+-      g2rows,
+-    ))
++    md.push(mdTable(['神', 'n', '勝率%', '95%CI', 'best平均', 'best中央', 'P90', 'P95', 'max'], g2rows))
+     md.push('')
+-
+     expect(cells.size).toBe(49)
+   })
+ 
+   it('Step 4 — Primary Gates（G1 / G2）', () => {
+-    const g1 = report.g1 as { overallSpreadPct: number; worstEnemySpreadPct: number; passOverall: boolean; passAllEnemies: boolean }
++    const g1 = report.g1 as { overallSpreadPct: number; worstEnemySpreadPct: number; worstEnemy: string; passOverall: boolean; passAllEnemies: boolean }
+     const g2 = report.g2 as { minWinRatePct: number; worstGod: string; worstGodCiLoPct: number; pass: boolean }
+-
+     md.push('## Step 4 — Primary Gates')
+     md.push('')
+-    md.push(mdTable(
+-      ['ゲート', '基準', '実測', '判定'],
+-      [
+-        ['G1 全敵込みの神間 best-score spread', '≤ 5%', `${g1.overallSpreadPct}%`, g1.passOverall ? 'PASS' : 'FAIL'],
+-        ['G1b 敵ごとに見た最悪 spread', '≤ 5%', `${g1.worstEnemySpreadPct}%`, g1.passAllEnemies ? 'PASS' : 'FAIL'],
+-        ['G2 最小勝率（Wilson 95%CI 下限）', '≥ 90%', `${g2.minWinRatePct}%（下限 ${g2.worstGodCiLoPct}%・${g2.worstGod}）`, g2.pass ? 'PASS' : 'FAIL'],
+-      ],
+-    ))
++    md.push(mdTable(['ゲート', '基準', '実測', '判定'], [
++      ['G1 全敵込みの神間 best-score spread', '≤ 5%', `${g1.overallSpreadPct}%`, g1.passOverall ? 'PASS' : 'FAIL'],
++      ['G1b 敵ごとに見た最悪 spread', '≤ 5%', `${g1.worstEnemySpreadPct}%（${g1.worstEnemy}）`, g1.passAllEnemies ? 'PASS' : 'FAIL'],
++      ['G2 最小勝率（Wilson 95%CI 下限）', '≥ 90%', `${g2.minWinRatePct}%（下限 ${g2.worstGodCiLoPct}%・${g2.worstGod}）`, g2.pass ? 'PASS' : 'FAIL'],
++    ]))
+     md.push('')
+     expect(typeof g1.overallSpreadPct).toBe('number')
+   })
+ 
+-  it('Step 5/6/7 — Tie Density・God Dominance・Three Attempts', () => {
++  it('Step 4b — [D256] best-of-N：1試行／best-of-3／best-of-6 の分布と G1 spread', () => {
++    // 試行モデル：single-<line>（1回だけ・その打ち筋）／bo3-average（h-* 3本の最良）／bo3-advanced（s-balanced,s-rush,s-score の最良）／bo6（全6本）
++    type Model = { id: string; label: string; lines: LineId[] }
++    const MODELS: Model[] = [
++      ...MATRIX_LINES.map((l) => ({ id: `single-${l}`, label: `1試行 ${l}`, lines: [l] })),
++      { id: 'bo3-average', label: 'best-of-3（平均：h-balanced/h-aggressive/h-defensive）', lines: ['h-balanced', 'h-aggressive', 'h-defensive'] },
++      { id: 'bo3-advanced', label: 'best-of-3（上級：s-balanced/s-rush/s-score）', lines: ['s-balanced', 's-rush', 's-score'] },
++      { id: 'bo6', label: 'best-of-6（G1 の定義＝6打ち筋の最良）', lines: MATRIX_LINES },
++    ]
++    const out: Record<string, unknown> = {}
++    const rows: (string | number)[][] = []
++    for (const m of MODELS) {
++      const perGodVals = new Map<GodId, number[]>()
++      const perEnemySpread: number[] = []
++      const winByGod = new Map<GodId, number>()
++      for (const [enemyId, days] of byEnemy) {
++        const means: number[] = []
++        for (const g of GOD_ORDER) {
++          const vals: number[] = []
++          for (const dateKey of days) {
++            let best = -1
++            let won = false
++            for (const line of m.lines) {
++              const r = run({ dateKey, godId: g, deckKind: 'recommended', growthPath: 'guardian', line })
++              if (r.finalScore > best) best = r.finalScore
++              if (r.status === 'won') won = true
++            }
++            vals.push(best)
++            if (won) winByGod.set(g, (winByGod.get(g) ?? 0) + 1)
++          }
++          perGodVals.set(g, [...(perGodVals.get(g) ?? []), ...vals])
++          means.push(avg(vals))
++        }
++        void enemyId
++        perEnemySpread.push(spreadPct(means))
++      }
++      const godMeans = GOD_ORDER.map((g) => avg(perGodVals.get(g)!))
++      const overall = spreadPct(godMeans)
++      const worst = Math.max(...perEnemySpread)
++      const minWr = Math.min(...GOD_ORDER.map((g) => (winByGod.get(g) ?? 0) / MATRIX_DAYS.length))
++      out[m.id] = {
++        label: m.label,
++        lines: m.lines,
++        overallSpreadPct: r2(overall),
++        worstEnemySpreadPct: r2(worst),
++        g1Pass: overall <= 5 && worst <= 5,
++        minWinRatePct: r1(minWr * 100),
++        perGod: Object.fromEntries(GOD_ORDER.map((g) => {
++          const v = [...perGodVals.get(g)!].sort((a, b) => a - b)
++          return [GOD_NAME[g], { mean: r2(avg(v)), p10: Math.round(quantile(v, 0.1)), p50: Math.round(quantile(v, 0.5)), p90: Math.round(quantile(v, 0.9)), min: v[0], max: v[v.length - 1], winRatePct: r1(((winByGod.get(g) ?? 0) / MATRIX_DAYS.length) * 100) }]
++        })),
++      }
++      rows.push([m.label, ...godMeans.map((x) => Math.round(x)), r2(overall), r2(worst), r1(minWr * 100)])
++    }
++    // 1試行 → best-of-3 の伸び（paired：同じ日・同じ神）
++    const gain = (first: LineId, lines: LineId[]) => {
++      const xs: number[] = []
++      for (const dateKey of MATRIX_DAYS) for (const g of GOD_ORDER) {
++        const f = run({ dateKey, godId: g, deckKind: 'recommended', growthPath: 'guardian', line: first }).finalScore
++        const b = Math.max(...lines.map((l) => run({ dateKey, godId: g, deckKind: 'recommended', growthPath: 'guardian', line: l }).finalScore))
++        xs.push(f === 0 ? 0 : ((b - f) / f) * 100)
++      }
++      return { meanPct: r2(avg(xs)), medianPct: r2(median(xs)), maxPct: r2(Math.max(...xs)), zeroShare: r2(xs.filter((x) => x === 0).length / xs.length) }
++    }
++    report.step4b = {
++      models: out,
++      gainFirstToBo3: { average: gain('h-balanced', ['h-balanced', 'h-aggressive', 'h-defensive']), advanced: gain('s-balanced', ['s-balanced', 's-rush', 's-score']) },
++      gainBo3ToBo6: (() => {
++        const xs: number[] = []
++        for (const dateKey of MATRIX_DAYS) for (const g of GOD_ORDER) {
++          const b3 = Math.max(...(['s-balanced', 's-rush', 's-score'] as LineId[]).map((l) => run({ dateKey, godId: g, deckKind: 'recommended', growthPath: 'guardian', line: l }).finalScore))
++          const b6 = Math.max(...MATRIX_LINES.map((l) => run({ dateKey, godId: g, deckKind: 'recommended', growthPath: 'guardian', line: l }).finalScore))
++          xs.push(b3 === 0 ? 0 : ((b6 - b3) / b3) * 100)
++        }
++        return { meanPct: r2(avg(xs)), maxPct: r2(Math.max(...xs)) }
++      })(),
++    }
++    md.push('## Step 4b — best-of-N（1試行／best-of-3／best-of-6）')
++    md.push('')
++    md.push(mdTable(['試行モデル', ...GOD_ORDER.map((g) => GOD_NAME[g]), 'spread%', '最悪敵spread%', '最小勝率%'], rows))
++    md.push('')
++    expect(Object.keys(out).length).toBe(MODELS.length)
++  })
++
++  it('Step 5/6/7 — Tie Density・God Dominance・Three Attempts（決定131 と同一モデル）', () => {
+     const t0 = Date.now()
+     const perDay: Record<string, unknown> = {}
+     const tie1: ReturnType<typeof tieStats>[] = []
+@@ -440,210 +451,196 @@ describe('Phase 4.0 Daily Ranking Competitive Gate', () => {
+     const share10: ReturnType<typeof godShare>[] = []
+     const archRank: Record<string, number[]> = {}
+     const attemptGain: number[] = []
++    const runsBefore = engineRuns
+ 
+     for (const dateKey of FIELD_DAYS) {
+       const field = buildField(dateKey)
+       const scores = field.map((p) => p.best)
+-      const t1 = tieStats(scores, 0.01)
+-      const t5 = tieStats(scores, 0.05)
+-      const t10 = tieStats(scores, 0.10)
+-      const tA = tieStats(scores, 1)
++      const t1 = tieStats(scores, 0.01), t5 = tieStats(scores, 0.05), t10 = tieStats(scores, 0.10), tA = tieStats(scores, 1)
+       tie1.push(t1); tie5.push(t5); tie10.push(t10); tieAll.push(tA)
+-      const s1 = godShare(field, 0.01)
+-      const s5 = godShare(field, 0.05)
+-      const s10 = godShare(field, 0.10)
++      const s1 = godShare(field, 0.01), s5 = godShare(field, 0.05), s10 = godShare(field, 0.10)
+       share1.push(s1); share5.push(s5); share10.push(s10)
+-
+-      // 技量アーキタイプ別の順位（パーセンタイル）
+       const sorted = [...field].sort((a, b) => b.best - a.best)
+-      sorted.forEach((p, i) => {
+-        const pctile = (i + 1) / sorted.length
+-        archRank[p.archetype] = [...(archRank[p.archetype] ?? []), pctile]
+-      })
+-
+-      perDay[dateKey] = {
+-        enemy: ENEMY_NAME[dailyBossFor(dateKey).enemyId],
+-        players: field.length,
+-        uniqueScoresAll: tA.uniqueScores,
+-        top1: t1, top5: t5, top10: t10,
+-        godShareTop10: s10.shares,
+-      }
++      sorted.forEach((p, i) => { archRank[p.archetype] = [...(archRank[p.archetype] ?? []), (i + 1) / sorted.length] })
++      perDay[dateKey] = { enemy: ENEMY_NAME[dailyBossFor(dateKey).enemyId], players: field.length, uniqueScoresAll: tA.uniqueScores, top1: t1, top5: t5, top10: t10, godShareTop10: s10.shares, winShare: r2(field.filter((p) => p.won).length / field.length) }
+     }
+-
+-    // 3回の挑戦がどれだけスコアを伸ばすか（＝運ではなく学習であることの確認）
+-    for (const dateKey of FIELD_DAYS) {
+-      for (const godId of GOD_ORDER) {
+-        const first = run({ dateKey, godId, deckKind: 'recommended', growthPath: 'guardian', line: 'h-balanced' })
+-        const bestOf3 = Math.max(
+-          first.finalScore,
+-          run({ dateKey, godId, deckKind: 'recommended', growthPath: 'guardian', line: 'h-aggressive' }).finalScore,
+-          run({ dateKey, godId, deckKind: 'recommended', growthPath: 'guardian', line: 'h-defensive' }).finalScore,
+-        )
+-        attemptGain.push(first.finalScore === 0 ? 0 : ((bestOf3 - first.finalScore) / first.finalScore) * 100)
+-      }
+-    }
+-
+-    const meanOf = (rows: ReturnType<typeof tieStats>[], k: keyof ReturnType<typeof tieStats>) =>
+-      r2(avg(rows.map((r) => r[k] as number)))
+-
+-    report.step5 = {
+-      players: FIELD_PLAYERS,
+-      days: FIELD_DAYS.length,
+-      top1: { uniqueRatio: meanOf(tie1, 'uniqueRatio'), tiedShare: meanOf(tie1, 'tiedShare'), avgPlayersPerRank: meanOf(tie1, 'avgPlayersPerRank'), within1pt: meanOf(tie1, 'within1ptShare'), maxTie: Math.max(...tie1.map((t) => t.maxTie)) },
+-      top5: { uniqueRatio: meanOf(tie5, 'uniqueRatio'), tiedShare: meanOf(tie5, 'tiedShare'), avgPlayersPerRank: meanOf(tie5, 'avgPlayersPerRank'), within1pt: meanOf(tie5, 'within1ptShare'), maxTie: Math.max(...tie5.map((t) => t.maxTie)) },
+-      top10: { uniqueRatio: meanOf(tie10, 'uniqueRatio'), tiedShare: meanOf(tie10, 'tiedShare'), avgPlayersPerRank: meanOf(tie10, 'avgPlayersPerRank'), within1pt: meanOf(tie10, 'within1ptShare'), maxTie: Math.max(...tie10.map((t) => t.maxTie)) },
+-      all: { uniqueRatio: meanOf(tieAll, 'uniqueRatio'), tiedShare: meanOf(tieAll, 'tiedShare'), avgPlayersPerRank: meanOf(tieAll, 'avgPlayersPerRank') },
++    for (const dateKey of FIELD_DAYS) for (const godId of GOD_ORDER) {
++      const first = run({ dateKey, godId, deckKind: 'recommended', growthPath: 'guardian', line: 'h-balanced' })
++      const bestOf3 = Math.max(first.finalScore, run({ dateKey, godId, deckKind: 'recommended', growthPath: 'guardian', line: 'h-aggressive' }).finalScore, run({ dateKey, godId, deckKind: 'recommended', growthPath: 'guardian', line: 'h-defensive' }).finalScore)
++      attemptGain.push(first.finalScore === 0 ? 0 : ((bestOf3 - first.finalScore) / first.finalScore) * 100)
+     }
++    const meanOf = (rows: ReturnType<typeof tieStats>[], k: keyof ReturnType<typeof tieStats>) => r2(avg(rows.map((r) => r[k] as number)))
++    const band = (rows: ReturnType<typeof tieStats>[]) => ({ uniqueRatio: meanOf(rows, 'uniqueRatio'), tiedShare: meanOf(rows, 'tiedShare'), avgPlayersPerRank: meanOf(rows, 'avgPlayersPerRank'), within1pt: meanOf(rows, 'within1ptShare'), maxTie: Math.max(...rows.map((t) => t.maxTie)) })
++    report.step5 = { players: FIELD_PLAYERS, days: FIELD_DAYS.length, engineRunsForField: engineRuns - runsBefore, top1: band(tie1), top5: band(tie5), top10: band(tie10), all: band(tieAll), uniqueScoresAllMean: r1(avg(tieAll.map((t) => t.uniqueScores))) }
+     report.step6 = {
+       top1: { avgTopGodShare: r2(avg(share1.map((s) => s.topGodShare))), maxTopGodShare: r2(Math.max(...share1.map((s) => s.topGodShare))) },
+       top5: { avgTopGodShare: r2(avg(share5.map((s) => s.topGodShare))), maxTopGodShare: r2(Math.max(...share5.map((s) => s.topGodShare))) },
+-      top10: { avgTopGodShare: r2(avg(share10.map((s) => s.topGodShare))), maxTopGodShare: r2(Math.max(...share10.map((s) => s.topGodShare))) },
++      top10: { avgTopGodShare: r2(avg(share10.map((s) => s.topGodShare))), maxTopGodShare: r2(Math.max(...share10.map((s) => s.topGodShare))), failThreshold: 0.5 },
+       perGodTop10: Object.fromEntries(GOD_ORDER.map((g) => [GOD_NAME[g], r2(avg(share10.map((s) => s.shares[GOD_NAME[g]])))])),
++      top10MostFrequentGod: (() => { const c = new Map<string, number>(); for (const s of share10) c.set(s.topGod, (c.get(s.topGod) ?? 0) + 1); return [...c.entries()].sort((a, b) => b[1] - a[1]).map(([g, n]) => `${g}×${n}`).join(', ') })(),
+     }
+     report.step7 = {
+-      archetypeMeanPercentile: Object.fromEntries(
+-        ARCHETYPES.map((a) => [a.label, r2(avg(archRank[a.id] ?? [0]))]),
+-      ),
++      archetypeMeanPercentile: Object.fromEntries(ARCHETYPES.map((a) => [a.label, r2(avg(archRank[a.id] ?? [0]))])),
+       attemptGainPct: { mean: r2(avg(attemptGain)), max: r2(Math.max(...attemptGain)) },
+-      note: 'Dailyは決定論のため、同じ打ち筋を繰り返す限り3回挑戦しても結果は1回目と完全に同一（parity.audit.ts で実証）',
++      note: 'Dailyは決定論のため、同じ打ち筋を繰り返す限り3回挑戦しても結果は1回目と完全に同一（parity.d256.audit.ts で実証）',
+     }
+     report.step5PerDay = perDay
+-
+     const s5 = report.step5 as Record<string, { uniqueRatio: number; tiedShare: number; avgPlayersPerRank: number; within1pt?: number; maxTie?: number }>
+     md.push('## Step 5 — Tie Density')
+     md.push('')
+-    md.push(`プレイヤー場：**1日 ${FIELD_PLAYERS}人 × ${FIELD_DAYS.length}日**（神・デッキ・OTOMO路線・技量を分布から抽選し、各自が1日3回だけ挑戦した best を採用）`)
++    md.push(`プレイヤー場：**1日 ${FIELD_PLAYERS}人 × ${FIELD_DAYS.length}日**`)
+     md.push('')
+-    md.push(mdTable(
+-      ['帯', 'ユニークスコア率', '同点者の割合', '1順位あたり平均人数', '隣接1点差以内', '最大同点人数'],
+-      [
+-        ['Top 1%', s5.top1.uniqueRatio, s5.top1.tiedShare, s5.top1.avgPlayersPerRank, s5.top1.within1pt ?? '—', s5.top1.maxTie ?? '—'],
+-        ['Top 5%', s5.top5.uniqueRatio, s5.top5.tiedShare, s5.top5.avgPlayersPerRank, s5.top5.within1pt ?? '—', s5.top5.maxTie ?? '—'],
+-        ['Top 10%', s5.top10.uniqueRatio, s5.top10.tiedShare, s5.top10.avgPlayersPerRank, s5.top10.within1pt ?? '—', s5.top10.maxTie ?? '—'],
+-        ['全体', s5.all.uniqueRatio, s5.all.tiedShare, s5.all.avgPlayersPerRank, '—', '—'],
+-      ],
+-    ))
++    md.push(mdTable(['帯', 'ユニークスコア率', '同点者の割合', '1順位あたり平均人数', '隣接1点差以内', '最大同点人数'], [
++      ['Top 1%', s5.top1.uniqueRatio, s5.top1.tiedShare, s5.top1.avgPlayersPerRank, s5.top1.within1pt ?? '—', s5.top1.maxTie ?? '—'],
++      ['Top 5%', s5.top5.uniqueRatio, s5.top5.tiedShare, s5.top5.avgPlayersPerRank, s5.top5.within1pt ?? '—', s5.top5.maxTie ?? '—'],
++      ['Top 10%', s5.top10.uniqueRatio, s5.top10.tiedShare, s5.top10.avgPlayersPerRank, s5.top10.within1pt ?? '—', s5.top10.maxTie ?? '—'],
++      ['全体', s5.all.uniqueRatio, s5.all.tiedShare, s5.all.avgPlayersPerRank, '—', '—'],
++    ]))
+     md.push('')
+     const s6 = report.step6 as { top1: { avgTopGodShare: number; maxTopGodShare: number }; top5: { avgTopGodShare: number; maxTopGodShare: number }; top10: { avgTopGodShare: number; maxTopGodShare: number }; perGodTop10: Record<string, number> }
+     md.push('## Step 6 — God Dominance')
+     md.push('')
+-    md.push(mdTable(
+-      ['帯', '最多神の平均構成比', '最悪日の構成比'],
+-      [
+-        ['Top 1%', s6.top1.avgTopGodShare, s6.top1.maxTopGodShare],
+-        ['Top 5%', s6.top5.avgTopGodShare, s6.top5.maxTopGodShare],
+-        ['Top 10%', s6.top10.avgTopGodShare, s6.top10.maxTopGodShare],
+-      ],
+-    ))
+-    md.push('')
+-    md.push('Top 10% の神別平均構成比（均等なら 0.14）')
++    md.push(mdTable(['帯', '最多神の平均構成比', '最悪日の構成比'], [['Top 1%', s6.top1.avgTopGodShare, s6.top1.maxTopGodShare], ['Top 5%', s6.top5.avgTopGodShare, s6.top5.maxTopGodShare], ['Top 10%', s6.top10.avgTopGodShare, s6.top10.maxTopGodShare]]))
+     md.push('')
+     md.push(mdTable(GOD_ORDER.map((g) => GOD_NAME[g]), [GOD_ORDER.map((g) => s6.perGodTop10[GOD_NAME[g]])]))
+     md.push('')
+     const s7 = report.step7 as { archetypeMeanPercentile: Record<string, number>; attemptGainPct: { mean: number; max: number } }
+     md.push('## Step 7 — Three Attempts Reality')
+     md.push('')
+-    md.push(mdTable(
+-      ['技量アーキタイプ', '平均到達パーセンタイル（0に近いほど上位）'],
+-      Object.entries(s7.archetypeMeanPercentile),
+-    ))
++    md.push(mdTable(['技量アーキタイプ', '平均到達パーセンタイル（0に近いほど上位）'], Object.entries(s7.archetypeMeanPercentile)))
+     md.push('')
+     md.push(`3回で打ち筋を変えた場合のスコア改善：平均 **+${s7.attemptGainPct.mean}%**（最大 +${s7.attemptGainPct.max}%）`)
+-    md.push('')
+     md.push(`（所要 ${((Date.now() - t0) / 1000).toFixed(1)}s／累計エンジン実行 ${engineRuns.toLocaleString()}試合）`)
+     md.push('')
+-
+     expect(Object.keys(perDay).length).toBe(FIELD_DAYS.length)
+   })
+ 
+-  it('Step 8 — bonusCopies Impact（paired 比較）', () => {
+-    const rows: (string | number)[][] = []
+-    const diffs: number[] = []
+-    const diffPcts: number[] = []
++  it('Step 9 — [D256] Cause Breakdown（神別・敵別の内訳：damage/combo/tempo/survival・撃破R・託宣・必殺被弾）', () => {
+     const perGod: Record<string, unknown> = {}
+-
+-    for (const godId of GOD_ORDER) {
+-      const bonus3 = veteranBonus(godId, 3)
+-      const bonus6 = veteranBonus(godId, 6)
+-      const deck3 = veteranDeck(godId, bonus3)
+-      const deck6 = veteranDeck(godId, bonus6)
+-      // 公平版で legal であってはならない（＝ボーナス無しでは組めないデッキであることの確認）
+-      const illegalWithoutBonus = !validateDeck(deck3, godId).valid && !validateDeck(deck6, godId).valid
+-
+-      const fair: number[] = []
+-      const vet3: number[] = []
+-      const vet6: number[] = []
+-      for (const dateKey of FIELD_DAYS) {
+-        const f = Math.max(
+-          ...DECK_KINDS.map((dk) => run({ dateKey, godId, deckKind: dk, growthPath: 'guardian', line: 's-score' }).finalScore),
+-        )
+-        const v3 = Math.max(
+-          f,
+-          run({ dateKey, godId, deckKind: 'vet3', deck: deck3, bonusKey: 'b3', bonusCopies: bonus3, growthPath: 'guardian', line: 's-score' }).finalScore,
+-        )
+-        const v6 = Math.max(
+-          f,
+-          run({ dateKey, godId, deckKind: 'vet6', deck: deck6, bonusKey: 'b6', bonusCopies: bonus6, growthPath: 'guardian', line: 's-score' }).finalScore,
+-        )
+-        fair.push(f); vet3.push(v3); vet6.push(v6)
++    const rows: (string | number)[][] = []
++    for (const g of GOD_ORDER) {
++      const ms: DailyMetrics[] = []
++      const lines: Record<string, number> = {}
++      for (const [enemyId] of byEnemy) {
++        const c = cells.get(key(enemyId, g))!
++        ms.push(...c.bestMetrics)
++        for (const l of c.bestLine) lines[l] = (lines[l] ?? 0) + 1
++      }
++      const killRounds: Record<string, number> = {}
++      for (const m of ms) if (m.status === 'won') killRounds[`R${m.round}`] = (killRounds[`R${m.round}`] ?? 0) + 1
++      const divChoices = [0, 0, 0]
++      let specialHpLost = 0, specialRounds = 0, hpLostTotal = 0
++      for (const m of ms) for (const t of m.trace) {
++        if (t.divination >= 0) divChoices[t.divination]++
++        hpLostTotal += t.hpLost
++        if (t.special) { specialRounds++; specialHpLost += t.hpLost }
++      }
++      const bd = {
++        damage: r1(avg(ms.map((m) => m.breakdown.damage))),
++        combo: r1(avg(ms.map((m) => m.breakdown.combo))),
++        victory: r1(avg(ms.map((m) => m.breakdown.victory))),
++        tempo: r1(avg(ms.map((m) => m.breakdown.tempo))),
++        survival: r1(avg(ms.map((m) => m.breakdown.survival))),
++        total: r1(avg(ms.map((m) => m.breakdown.total))),
+       }
+-      const mf = avg(fair)
+-      const m3 = avg(vet3)
+-      const m6 = avg(vet6)
+-      diffs.push(m6 - mf)
+-      diffPcts.push(((m6 - mf) / mf) * 100)
+-      rows.push([
+-        GOD_NAME[godId],
+-        Math.round(mf),
+-        Math.round(m3),
+-        `+${r2(((m3 - mf) / mf) * 100)}%`,
+-        Math.round(m6),
+-        `+${r2(((m6 - mf) / mf) * 100)}%`,
+-        illegalWithoutBonus ? '○' : '×',
+-      ])
+-      perGod[GOD_NAME[godId]] = { fair: Math.round(mf), vet3: Math.round(m3), vet6: Math.round(m6), gain6Pct: r2(((m6 - mf) / mf) * 100) }
++      perGod[GOD_NAME[g]] = {
++        n: ms.length,
++        finalScoreMean: r2(avg(ms.map((m) => m.finalScore))),
++        breakdown: bd,
++        killRoundMean: r2(avg(ms.filter((m) => m.status === 'won').map((m) => m.round))),
++        killRounds,
++        bursts: r2(avg(ms.map((m) => m.bursts))),
++        actions: r2(avg(ms.map((m) => m.actions))),
++        hpRemainRatio: r2(avg(ms.map((m) => m.playerHp / m.playerMaxHp))),
++        divinationUsed: r2(avg(ms.map((m) => m.divinationUsed))),
++        divinationChoices: { guard: divChoices[0], guide: divChoices[1], strike: divChoices[2] },
++        specialRoundsFaced: specialRounds,
++        specialHpLostPerRound: r2(specialRounds ? specialHpLost / specialRounds : 0),
++        hpLostPerGame: r2(hpLostTotal / ms.length),
++        bestLineShare: Object.fromEntries(Object.entries(lines).map(([l, n]) => [l, r2(n / ms.length)])),
++      }
++      rows.push([GOD_NAME[g], bd.damage, bd.combo, bd.victory, bd.tempo, bd.survival, bd.total, r2(avg(ms.filter((m) => m.status === 'won').map((m) => m.round))), r2(avg(ms.map((m) => m.bursts))), r2(avg(ms.map((m) => m.divinationUsed))), r2(specialRounds ? specialHpLost / specialRounds : 0)])
+     }
+-
+-    // 「熟練者だけが上位を占める」度合い＝ボーナス有無での順位差
+-    report.step8 = {
+-      pairedSeeds: FIELD_DAYS.length,
+-      meanScoreGain: r2(avg(diffs)),
+-      meanScoreGainPct: r2(avg(diffPcts)),
+-      maxScoreGainPct: r2(Math.max(...diffPcts)),
+-      perGod,
++    // 敵別 × 神別：最良神との差（点・%）と、差の内訳（component diff）
++    const perEnemyGap: Record<string, unknown> = {}
++    for (const [enemyId] of byEnemy) {
++      const means = GOD_ORDER.map((g) => ({ g, c: cells.get(key(enemyId, g))!, mean: avg(cells.get(key(enemyId, g))!.best) }))
++      const top = [...means].sort((a, b) => b.mean - a.mean)[0]
++      const comp = (c: Cell, k: keyof DailyMetrics['breakdown']) => avg(c.bestMetrics.map((m) => m.breakdown[k]))
++      perEnemyGap[ENEMY_NAME[enemyId]] = {
++        bestGod: GOD_NAME[top.g],
++        byGod: Object.fromEntries(means.map((x) => [GOD_NAME[x.g], {
++          mean: r2(x.mean),
++          gapPct: r2(((top.mean - x.mean) / top.mean) * 100),
++          killRoundMean: r2(avg(x.c.bestMetrics.filter((m) => m.status === 'won').map((m) => m.round))),
++          winRatePct: r1((x.c.wins / x.c.n) * 100),
++          dDamage: r1(comp(x.c, 'damage') - comp(top.c, 'damage')),
++          dCombo: r1(comp(x.c, 'combo') - comp(top.c, 'combo')),
++          dTempo: r1(comp(x.c, 'tempo') - comp(top.c, 'tempo')),
++          dSurvival: r1(comp(x.c, 'survival') - comp(top.c, 'survival')),
++          dVictory: r1(comp(x.c, 'victory') - comp(top.c, 'victory')),
++        }])),
++      }
+     }
+-
+-    md.push('## Step 8 — bonusCopies Impact（paired 比較）')
++    report.step9 = { perGod, perEnemyGap, scoreRules: { note: '素点内訳は state.score（perDamage/combo/victoryBase/tempo/survival）。表示スコア＝getFinalScore(score, stake=undefined)' } }
++    md.push('## Step 9 — Cause Breakdown（best 打ち筋の素点内訳・平均）')
+     md.push('')
+-    md.push(`同一の実Dailyシード **${FIELD_DAYS.length}本**・同一の神・同一の探索AI（score profile）で、`)
+-    md.push('「公平版＝1種2枚上限の最良デッキ」と「現行＝報酬ボーナスで上位カードを3枚積んだデッキ」を比較した。')
++    md.push(mdTable(['神', 'damage', 'combo', 'victory', 'tempo', 'survival', 'total(素点)', '撃破R平均', 'BURST', '託宣使用', '必殺被弾/R'], rows))
+     md.push('')
+-    md.push(mdTable(
+-      ['神', '公平版', '熟練(上位3枚+1)', '差', '熟練(上位6枚+1)', '差', 'ボーナス無しでは非合法'],
+-      rows,
+-    ))
++    expect(Object.keys(perGod).length).toBe(7)
++  })
++
++  it('Step 10 — [D256] 直近 7 日（2026-09-28〜10-04）の 7 敵巡回', () => {
++    const t0 = Date.now()
++    const perDay: Record<string, unknown> = {}
++    const rows: (string | number)[][] = []
++    const godVals = new Map<GodId, number[]>()
++    for (const dateKey of RECENT_DAYS) {
++      const boss = dailyBossFor(dateKey)
++      const bestByGod = GOD_ORDER.map((g) => {
++        let best = -1, bestLine: LineId = MATRIX_LINES[0], won = false, round = 0
++        for (const line of MATRIX_LINES) {
++          const m = run({ dateKey, godId: g, deckKind: 'recommended', growthPath: 'guardian', line })
++          if (m.status === 'won') won = true
++          if (m.finalScore > best) { best = m.finalScore; bestLine = line; round = m.round }
++        }
++        godVals.set(g, [...(godVals.get(g) ?? []), best])
++        return { g, best, bestLine, won, round }
++      })
++      const spread = spreadPct(bestByGod.map((b) => b.best))
++      const top = [...bestByGod].sort((a, b) => b.best - a.best)[0]
++      const bot = [...bestByGod].sort((a, b) => a.best - b.best)[0]
++      perDay[dateKey] = { enemy: ENEMY_NAME[boss.enemyId], seedId: boss.seedId, spreadPct: r2(spread), bestGod: GOD_NAME[top.g], worstGod: GOD_NAME[bot.g], byGod: Object.fromEntries(bestByGod.map((b) => [GOD_NAME[b.g], { best: b.best, line: b.bestLine, won: b.won, round: b.round }])) }
++      rows.push([dateKey, ENEMY_NAME[boss.enemyId], ...bestByGod.map((b) => b.best), r2(spread), GOD_NAME[top.g], GOD_NAME[bot.g]])
++    }
++    const means = GOD_ORDER.map((g) => avg(godVals.get(g)!))
++    report.step10 = { days: RECENT_DAYS, perDay, weekSpreadPct: r2(spreadPct(means)), worstDaySpreadPct: r2(Math.max(...Object.values(perDay).map((d) => (d as { spreadPct: number }).spreadPct))), perGodMean: Object.fromEntries(GOD_ORDER.map((g, i) => [GOD_NAME[g], r2(means[i])])), elapsedSec: r1((Date.now() - t0) / 1000) }
++    md.push('## Step 10 — 直近 7 日（2026-09-28〜10-04）')
+     md.push('')
+-    const s8 = report.step8 as { meanScoreGainPct: number; maxScoreGainPct: number }
+-    md.push(`報酬ボーナスによる平均スコア優位：**+${s8.meanScoreGainPct}%**（最大 +${s8.maxScoreGainPct}%）`)
++    md.push(mdTable(['日付', '敵', ...GOD_ORDER.map((g) => GOD_NAME[g]), 'spread%', '最良神', '最下位神'], rows))
+     md.push('')
+-
+-    expect(rows.length).toBe(7)
++    expect(Object.keys(perDay).length).toBe(7)
+   })
+ 
+   it('レポート出力', () => {
+     report.meta = {
+-      generatedFor: 'Phase 4.0 Daily Ranking Competitive Gate',
++      generatedFor: '決定256 Daily Competitive Gate 再判定',
++      engine: 'master e2add7a (runtime a611270 = 決定254 LIVE)',
++      baseline: '決定131（旧枝 762168f・2026-09-07）',
+       startDay: START_DAY,
+       matrixDays: MATRIX_DAYS.length,
+       fieldDays: FIELD_DAYS.length,
+       fieldPlayers: FIELD_PLAYERS,
+-      engineRuns,
+-      dailyModifier: RULES.daily.modifier,
+-      attemptsPerDay: RULES.daily.attemptsPerDay,
+-      bonusCopies: 'disabled (公平版Daily)',
++      recentDays: RECENT_DAYS,
++      lines: MATRIX_LINES,
++      engineRunsTotal: engineRuns,
++      engineSecTotal: r1(engineMs / 1000),
++      wallSecTotal: r1((Date.now() - tStart) / 1000),
++      rules: { divinationCount: RULES.divination.count, dailyModifier: RULES.daily.modifier, attemptsPerDay: RULES.daily.attemptsPerDay, totalRounds: RULES.totalRounds, specialMul: RULES.stakes.specialMul, specialMulCap: RULES.stakes.specialMulCap },
++      generatedAt: new Date().toISOString(),
+     }
+     writeOut('gate_report.json', report)
+     writeOut('gate_report.md', md.join('\n'))
+-    expect(engineRuns).toBeGreaterThan(1000)
++    expect(engineRuns).toBeLessThanOrEqual(100000)
+   })
+ })

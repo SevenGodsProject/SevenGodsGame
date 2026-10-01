@@ -1,0 +1,1071 @@
+{
+  "resolveDailyStart": {
+    "days": 28,
+    "pass": true
+  },
+  "modifier": {
+    "enemyHpMul": 1.25,
+    "enemyAtkMul": 1.15,
+    "divinationCount": 3,
+    "stake": "undefined",
+    "pass": true
+  },
+  "recentWeek": [
+    {
+      "dateKey": "2026-09-28",
+      "enemyId": "enemy_03",
+      "enemy": "藍花の怨霊",
+      "seed": "daily-2026-09-28-enemy_03",
+      "seedId": "O418R5"
+    },
+    {
+      "dateKey": "2026-09-29",
+      "enemyId": "enemy_07",
+      "enemy": "乱舞の道化",
+      "seed": "daily-2026-09-29-enemy_07",
+      "seedId": "FES78O"
+    },
+    {
+      "dateKey": "2026-09-30",
+      "enemyId": "enemy_01",
+      "enemy": "試練の影",
+      "seed": "daily-2026-09-30-enemy_01",
+      "seedId": "0UOWR8"
+    },
+    {
+      "dateKey": "2026-10-01",
+      "enemyId": "enemy_02",
+      "enemy": "業斧の鬼将",
+      "seed": "daily-2026-10-01-enemy_02",
+      "seedId": "RTC81R"
+    },
+    {
+      "dateKey": "2026-10-02",
+      "enemyId": "enemy_05",
+      "enemy": "双牙の魔獣",
+      "seed": "daily-2026-10-02-enemy_05",
+      "seedId": "KPYXSD"
+    },
+    {
+      "dateKey": "2026-10-03",
+      "enemyId": "enemy_06",
+      "enemy": "蒼海の龍神",
+      "seed": "daily-2026-10-03-enemy_06",
+      "seedId": "86R3PH"
+    },
+    {
+      "dateKey": "2026-10-04",
+      "enemyId": "enemy_04",
+      "enemy": "銀甲の機工師",
+      "seed": "daily-2026-10-04-enemy_04",
+      "seedId": "SN0KMW"
+    }
+  ],
+  "determinism": {
+    "pass": true
+  },
+  "sameSeedFairness": {
+    "days": 14,
+    "startGamesCompared": 196,
+    "gods": 7,
+    "growthPaths": 2,
+    "pass": true,
+    "perDay": {
+      "2026-09-28": {
+        "enemy": "藍花の怨霊",
+        "seed": "daily-2026-09-28-enemy_03",
+        "enemyMaxHp": 119,
+        "expectedIntents": [
+          {
+            "round": 1,
+            "kind": "attack",
+            "total": 3,
+            "special": false
+          },
+          {
+            "round": 2,
+            "kind": "attack",
+            "total": 7,
+            "special": false
+          },
+          {
+            "round": 3,
+            "kind": "attack",
+            "total": 15,
+            "special": false
+          },
+          {
+            "round": 4,
+            "kind": "special",
+            "total": 26,
+            "special": true
+          },
+          {
+            "round": 5,
+            "kind": "attack",
+            "total": 21,
+            "special": false
+          },
+          {
+            "round": 6,
+            "kind": "attack",
+            "total": 10,
+            "special": false
+          },
+          {
+            "round": 7,
+            "kind": "attack",
+            "total": 5,
+            "special": false
+          }
+        ],
+        "observedRoundsByGod": {
+          "恵比寿": 4,
+          "大耀": 4,
+          "蒼毘": 4,
+          "才華": 4,
+          "寿楽": 4,
+          "福永": 4,
+          "笑蓮": 4
+        },
+        "observedRoundsByGodDefensivePlay": {
+          "恵比寿": 7,
+          "大耀": 5,
+          "蒼毘": 5,
+          "才華": 6,
+          "寿楽": 5,
+          "福永": 7,
+          "笑蓮": 6
+        },
+        "maxRoundReachedDefensivePlay": 7,
+        "specialRounds": [
+          4
+        ]
+      },
+      "2026-09-29": {
+        "enemy": "乱舞の道化",
+        "seed": "daily-2026-09-29-enemy_07",
+        "enemyMaxHp": 115,
+        "expectedIntents": [
+          {
+            "round": 1,
+            "kind": "attack",
+            "total": 5,
+            "special": false
+          },
+          {
+            "round": 2,
+            "kind": "charge",
+            "total": 0,
+            "special": false
+          },
+          {
+            "round": 3,
+            "kind": "special",
+            "total": 28,
+            "special": true
+          },
+          {
+            "round": 4,
+            "kind": "attack",
+            "total": 10,
+            "special": false
+          },
+          {
+            "round": 5,
+            "kind": "charge",
+            "total": 0,
+            "special": false
+          },
+          {
+            "round": 6,
+            "kind": "attack",
+            "total": 22,
+            "special": false
+          },
+          {
+            "round": 7,
+            "kind": "attack",
+            "total": 10,
+            "special": false
+          }
+        ],
+        "observedRoundsByGod": {
+          "恵比寿": 3,
+          "大耀": 3,
+          "蒼毘": 3,
+          "才華": 3,
+          "寿楽": 3,
+          "福永": 3,
+          "笑蓮": 3
+        },
+        "observedRoundsByGodDefensivePlay": {
+          "恵比寿": 6,
+          "大耀": 6,
+          "蒼毘": 7,
+          "才華": 6,
+          "寿楽": 6,
+          "福永": 6,
+          "笑蓮": 6
+        },
+        "maxRoundReachedDefensivePlay": 7,
+        "specialRounds": [
+          3
+        ]
+      },
+      "2026-09-30": {
+        "enemy": "試練の影",
+        "seed": "daily-2026-09-30-enemy_01",
+        "enemyMaxHp": 129,
+        "expectedIntents": [
+          {
+            "round": 1,
+            "kind": "attack",
+            "total": 6,
+            "special": false
+          },
+          {
+            "round": 2,
+            "kind": "attack",
+            "total": 9,
+            "special": false
+          },
+          {
+            "round": 3,
+            "kind": "attack",
+            "total": 13,
+            "special": false
+          },
+          {
+            "round": 4,
+            "kind": "attack",
+            "total": 17,
+            "special": false
+          },
+          {
+            "round": 5,
+            "kind": "attack",
+            "total": 15,
+            "special": false
+          },
+          {
+            "round": 6,
+            "kind": "attack",
+            "total": 10,
+            "special": false
+          },
+          {
+            "round": 7,
+            "kind": "attack",
+            "total": 7,
+            "special": false
+          }
+        ],
+        "observedRoundsByGod": {
+          "恵比寿": 4,
+          "大耀": 4,
+          "蒼毘": 4,
+          "才華": 4,
+          "寿楽": 4,
+          "福永": 4,
+          "笑蓮": 4
+        },
+        "observedRoundsByGodDefensivePlay": {
+          "恵比寿": 6,
+          "大耀": 5,
+          "蒼毘": 6,
+          "才華": 6,
+          "寿楽": 7,
+          "福永": 7,
+          "笑蓮": 6
+        },
+        "maxRoundReachedDefensivePlay": 7,
+        "specialRounds": []
+      },
+      "2026-10-01": {
+        "enemy": "業斧の鬼将",
+        "seed": "daily-2026-10-01-enemy_02",
+        "enemyMaxHp": 118,
+        "expectedIntents": [
+          {
+            "round": 1,
+            "kind": "attack",
+            "total": 6,
+            "special": false
+          },
+          {
+            "round": 2,
+            "kind": "attack",
+            "total": 10,
+            "special": false
+          },
+          {
+            "round": 3,
+            "kind": "charge",
+            "total": 0,
+            "special": false
+          },
+          {
+            "round": 4,
+            "kind": "special",
+            "total": 30,
+            "special": true
+          },
+          {
+            "round": 5,
+            "kind": "attack",
+            "total": 17,
+            "special": false
+          },
+          {
+            "round": 6,
+            "kind": "attack",
+            "total": 13,
+            "special": false
+          },
+          {
+            "round": 7,
+            "kind": "attack",
+            "total": 8,
+            "special": false
+          }
+        ],
+        "observedRoundsByGod": {
+          "恵比寿": 4,
+          "大耀": 4,
+          "蒼毘": 4,
+          "才華": 4,
+          "寿楽": 4,
+          "福永": 4,
+          "笑蓮": 4
+        },
+        "observedRoundsByGodDefensivePlay": {
+          "恵比寿": 6,
+          "大耀": 5,
+          "蒼毘": 5,
+          "才華": 5,
+          "寿楽": 7,
+          "福永": 5,
+          "笑蓮": 5
+        },
+        "maxRoundReachedDefensivePlay": 7,
+        "specialRounds": [
+          4
+        ]
+      },
+      "2026-10-02": {
+        "enemy": "双牙の魔獣",
+        "seed": "daily-2026-10-02-enemy_05",
+        "enemyMaxHp": 106,
+        "expectedIntents": [
+          {
+            "round": 1,
+            "kind": "multiAttack",
+            "total": 10,
+            "special": false
+          },
+          {
+            "round": 2,
+            "kind": "multiAttack",
+            "total": 12,
+            "special": false
+          },
+          {
+            "round": 3,
+            "kind": "multiAttack",
+            "total": 14,
+            "special": true
+          },
+          {
+            "round": 4,
+            "kind": "multiAttack",
+            "total": 18,
+            "special": false
+          },
+          {
+            "round": 5,
+            "kind": "multiAttack",
+            "total": 17,
+            "special": false
+          },
+          {
+            "round": 6,
+            "kind": "multiAttack",
+            "total": 16,
+            "special": false
+          },
+          {
+            "round": 7,
+            "kind": "multiAttack",
+            "total": 15,
+            "special": false
+          }
+        ],
+        "observedRoundsByGod": {
+          "恵比寿": 3,
+          "大耀": 3,
+          "蒼毘": 3,
+          "才華": 3,
+          "寿楽": 3,
+          "福永": 3,
+          "笑蓮": 3
+        },
+        "observedRoundsByGodDefensivePlay": {
+          "恵比寿": 6,
+          "大耀": 6,
+          "蒼毘": 6,
+          "才華": 6,
+          "寿楽": 6,
+          "福永": 7,
+          "笑蓮": 7
+        },
+        "maxRoundReachedDefensivePlay": 7,
+        "specialRounds": [
+          3
+        ]
+      },
+      "2026-10-03": {
+        "enemy": "蒼海の龍神",
+        "seed": "daily-2026-10-03-enemy_06",
+        "enemyMaxHp": 129,
+        "expectedIntents": [
+          {
+            "round": 1,
+            "kind": "attack",
+            "total": 5,
+            "special": false
+          },
+          {
+            "round": 2,
+            "kind": "attack",
+            "total": 8,
+            "special": false
+          },
+          {
+            "round": 3,
+            "kind": "attack",
+            "total": 14,
+            "special": false
+          },
+          {
+            "round": 4,
+            "kind": "special",
+            "total": 23,
+            "special": true
+          },
+          {
+            "round": 5,
+            "kind": "attack",
+            "total": 18,
+            "special": false
+          },
+          {
+            "round": 6,
+            "kind": "attack",
+            "total": 10,
+            "special": false
+          },
+          {
+            "round": 7,
+            "kind": "attack",
+            "total": 6,
+            "special": false
+          }
+        ],
+        "observedRoundsByGod": {
+          "恵比寿": 4,
+          "大耀": 4,
+          "蒼毘": 4,
+          "才華": 4,
+          "寿楽": 4,
+          "福永": 4,
+          "笑蓮": 4
+        },
+        "observedRoundsByGodDefensivePlay": {
+          "恵比寿": 7,
+          "大耀": 5,
+          "蒼毘": 7,
+          "才華": 5,
+          "寿楽": 7,
+          "福永": 5,
+          "笑蓮": 7
+        },
+        "maxRoundReachedDefensivePlay": 7,
+        "specialRounds": [
+          4
+        ]
+      },
+      "2026-10-04": {
+        "enemy": "銀甲の機工師",
+        "seed": "daily-2026-10-04-enemy_04",
+        "enemyMaxHp": 125,
+        "expectedIntents": [
+          {
+            "round": 1,
+            "kind": "attack",
+            "total": 7,
+            "special": false
+          },
+          {
+            "round": 2,
+            "kind": "charge",
+            "total": 0,
+            "special": false
+          },
+          {
+            "round": 3,
+            "kind": "attack",
+            "total": 25,
+            "special": false
+          },
+          {
+            "round": 4,
+            "kind": "charge",
+            "total": 0,
+            "special": false
+          },
+          {
+            "round": 5,
+            "kind": "special",
+            "total": 28,
+            "special": true
+          },
+          {
+            "round": 6,
+            "kind": "attack",
+            "total": 8,
+            "special": false
+          },
+          {
+            "round": 7,
+            "kind": "attack",
+            "total": 10,
+            "special": false
+          }
+        ],
+        "observedRoundsByGod": {
+          "恵比寿": 3,
+          "大耀": 3,
+          "蒼毘": 3,
+          "才華": 3,
+          "寿楽": 3,
+          "福永": 3,
+          "笑蓮": 3
+        },
+        "observedRoundsByGodDefensivePlay": {
+          "恵比寿": 6,
+          "大耀": 6,
+          "蒼毘": 7,
+          "才華": 7,
+          "寿楽": 7,
+          "福永": 7,
+          "笑蓮": 7
+        },
+        "maxRoundReachedDefensivePlay": 7,
+        "specialRounds": [
+          5
+        ]
+      },
+      "2026-09-07": {
+        "enemy": "乱舞の道化",
+        "seed": "daily-2026-09-07-enemy_07",
+        "enemyMaxHp": 115,
+        "expectedIntents": [
+          {
+            "round": 1,
+            "kind": "attack",
+            "total": 5,
+            "special": false
+          },
+          {
+            "round": 2,
+            "kind": "charge",
+            "total": 0,
+            "special": false
+          },
+          {
+            "round": 3,
+            "kind": "special",
+            "total": 28,
+            "special": true
+          },
+          {
+            "round": 4,
+            "kind": "attack",
+            "total": 10,
+            "special": false
+          },
+          {
+            "round": 5,
+            "kind": "charge",
+            "total": 0,
+            "special": false
+          },
+          {
+            "round": 6,
+            "kind": "attack",
+            "total": 22,
+            "special": false
+          },
+          {
+            "round": 7,
+            "kind": "attack",
+            "total": 10,
+            "special": false
+          }
+        ],
+        "observedRoundsByGod": {
+          "恵比寿": 3,
+          "大耀": 3,
+          "蒼毘": 3,
+          "才華": 3,
+          "寿楽": 3,
+          "福永": 3,
+          "笑蓮": 3
+        },
+        "observedRoundsByGodDefensivePlay": {
+          "恵比寿": 6,
+          "大耀": 6,
+          "蒼毘": 6,
+          "才華": 6,
+          "寿楽": 7,
+          "福永": 7,
+          "笑蓮": 6
+        },
+        "maxRoundReachedDefensivePlay": 7,
+        "specialRounds": [
+          3
+        ]
+      },
+      "2026-09-08": {
+        "enemy": "藍花の怨霊",
+        "seed": "daily-2026-09-08-enemy_03",
+        "enemyMaxHp": 119,
+        "expectedIntents": [
+          {
+            "round": 1,
+            "kind": "attack",
+            "total": 3,
+            "special": false
+          },
+          {
+            "round": 2,
+            "kind": "attack",
+            "total": 7,
+            "special": false
+          },
+          {
+            "round": 3,
+            "kind": "attack",
+            "total": 15,
+            "special": false
+          },
+          {
+            "round": 4,
+            "kind": "special",
+            "total": 26,
+            "special": true
+          },
+          {
+            "round": 5,
+            "kind": "attack",
+            "total": 21,
+            "special": false
+          },
+          {
+            "round": 6,
+            "kind": "attack",
+            "total": 10,
+            "special": false
+          },
+          {
+            "round": 7,
+            "kind": "attack",
+            "total": 5,
+            "special": false
+          }
+        ],
+        "observedRoundsByGod": {
+          "恵比寿": 4,
+          "大耀": 4,
+          "蒼毘": 4,
+          "才華": 4,
+          "寿楽": 4,
+          "福永": 4,
+          "笑蓮": 4
+        },
+        "observedRoundsByGodDefensivePlay": {
+          "恵比寿": 6,
+          "大耀": 4,
+          "蒼毘": 5,
+          "才華": 5,
+          "寿楽": 7,
+          "福永": 7,
+          "笑蓮": 4
+        },
+        "maxRoundReachedDefensivePlay": 7,
+        "specialRounds": [
+          4
+        ]
+      },
+      "2026-09-09": {
+        "enemy": "蒼海の龍神",
+        "seed": "daily-2026-09-09-enemy_06",
+        "enemyMaxHp": 129,
+        "expectedIntents": [
+          {
+            "round": 1,
+            "kind": "attack",
+            "total": 5,
+            "special": false
+          },
+          {
+            "round": 2,
+            "kind": "attack",
+            "total": 8,
+            "special": false
+          },
+          {
+            "round": 3,
+            "kind": "attack",
+            "total": 14,
+            "special": false
+          },
+          {
+            "round": 4,
+            "kind": "special",
+            "total": 23,
+            "special": true
+          },
+          {
+            "round": 5,
+            "kind": "attack",
+            "total": 18,
+            "special": false
+          },
+          {
+            "round": 6,
+            "kind": "attack",
+            "total": 10,
+            "special": false
+          },
+          {
+            "round": 7,
+            "kind": "attack",
+            "total": 6,
+            "special": false
+          }
+        ],
+        "observedRoundsByGod": {
+          "恵比寿": 4,
+          "大耀": 4,
+          "蒼毘": 4,
+          "才華": 4,
+          "寿楽": 4,
+          "福永": 4,
+          "笑蓮": 4
+        },
+        "observedRoundsByGodDefensivePlay": {
+          "恵比寿": 7,
+          "大耀": 6,
+          "蒼毘": 7,
+          "才華": 6,
+          "寿楽": 7,
+          "福永": 7,
+          "笑蓮": 6
+        },
+        "maxRoundReachedDefensivePlay": 7,
+        "specialRounds": [
+          4
+        ]
+      },
+      "2026-09-10": {
+        "enemy": "試練の影",
+        "seed": "daily-2026-09-10-enemy_01",
+        "enemyMaxHp": 129,
+        "expectedIntents": [
+          {
+            "round": 1,
+            "kind": "attack",
+            "total": 6,
+            "special": false
+          },
+          {
+            "round": 2,
+            "kind": "attack",
+            "total": 9,
+            "special": false
+          },
+          {
+            "round": 3,
+            "kind": "attack",
+            "total": 13,
+            "special": false
+          },
+          {
+            "round": 4,
+            "kind": "attack",
+            "total": 17,
+            "special": false
+          },
+          {
+            "round": 5,
+            "kind": "attack",
+            "total": 15,
+            "special": false
+          },
+          {
+            "round": 6,
+            "kind": "attack",
+            "total": 10,
+            "special": false
+          },
+          {
+            "round": 7,
+            "kind": "attack",
+            "total": 7,
+            "special": false
+          }
+        ],
+        "observedRoundsByGod": {
+          "恵比寿": 4,
+          "大耀": 4,
+          "蒼毘": 4,
+          "才華": 4,
+          "寿楽": 4,
+          "福永": 4,
+          "笑蓮": 4
+        },
+        "observedRoundsByGodDefensivePlay": {
+          "恵比寿": 6,
+          "大耀": 7,
+          "蒼毘": 7,
+          "才華": 6,
+          "寿楽": 7,
+          "福永": 7,
+          "笑蓮": 7
+        },
+        "maxRoundReachedDefensivePlay": 7,
+        "specialRounds": []
+      },
+      "2026-09-11": {
+        "enemy": "業斧の鬼将",
+        "seed": "daily-2026-09-11-enemy_02",
+        "enemyMaxHp": 118,
+        "expectedIntents": [
+          {
+            "round": 1,
+            "kind": "attack",
+            "total": 6,
+            "special": false
+          },
+          {
+            "round": 2,
+            "kind": "attack",
+            "total": 10,
+            "special": false
+          },
+          {
+            "round": 3,
+            "kind": "charge",
+            "total": 0,
+            "special": false
+          },
+          {
+            "round": 4,
+            "kind": "special",
+            "total": 30,
+            "special": true
+          },
+          {
+            "round": 5,
+            "kind": "attack",
+            "total": 17,
+            "special": false
+          },
+          {
+            "round": 6,
+            "kind": "attack",
+            "total": 13,
+            "special": false
+          },
+          {
+            "round": 7,
+            "kind": "attack",
+            "total": 8,
+            "special": false
+          }
+        ],
+        "observedRoundsByGod": {
+          "恵比寿": 4,
+          "大耀": 4,
+          "蒼毘": 4,
+          "才華": 4,
+          "寿楽": 4,
+          "福永": 4,
+          "笑蓮": 4
+        },
+        "observedRoundsByGodDefensivePlay": {
+          "恵比寿": 6,
+          "大耀": 6,
+          "蒼毘": 5,
+          "才華": 5,
+          "寿楽": 6,
+          "福永": 7,
+          "笑蓮": 7
+        },
+        "maxRoundReachedDefensivePlay": 7,
+        "specialRounds": [
+          4
+        ]
+      },
+      "2026-09-12": {
+        "enemy": "銀甲の機工師",
+        "seed": "daily-2026-09-12-enemy_04",
+        "enemyMaxHp": 125,
+        "expectedIntents": [
+          {
+            "round": 1,
+            "kind": "attack",
+            "total": 7,
+            "special": false
+          },
+          {
+            "round": 2,
+            "kind": "charge",
+            "total": 0,
+            "special": false
+          },
+          {
+            "round": 3,
+            "kind": "attack",
+            "total": 25,
+            "special": false
+          },
+          {
+            "round": 4,
+            "kind": "charge",
+            "total": 0,
+            "special": false
+          },
+          {
+            "round": 5,
+            "kind": "special",
+            "total": 28,
+            "special": true
+          },
+          {
+            "round": 6,
+            "kind": "attack",
+            "total": 8,
+            "special": false
+          },
+          {
+            "round": 7,
+            "kind": "attack",
+            "total": 10,
+            "special": false
+          }
+        ],
+        "observedRoundsByGod": {
+          "恵比寿": 3,
+          "大耀": 3,
+          "蒼毘": 3,
+          "才華": 3,
+          "寿楽": 3,
+          "福永": 3,
+          "笑蓮": 3
+        },
+        "observedRoundsByGodDefensivePlay": {
+          "恵比寿": 7,
+          "大耀": 6,
+          "蒼毘": 6,
+          "才華": 6,
+          "寿楽": 7,
+          "福永": 5,
+          "笑蓮": 7
+        },
+        "maxRoundReachedDefensivePlay": 7,
+        "specialRounds": [
+          5
+        ]
+      },
+      "2026-09-13": {
+        "enemy": "双牙の魔獣",
+        "seed": "daily-2026-09-13-enemy_05",
+        "enemyMaxHp": 106,
+        "expectedIntents": [
+          {
+            "round": 1,
+            "kind": "multiAttack",
+            "total": 10,
+            "special": false
+          },
+          {
+            "round": 2,
+            "kind": "multiAttack",
+            "total": 12,
+            "special": false
+          },
+          {
+            "round": 3,
+            "kind": "multiAttack",
+            "total": 14,
+            "special": true
+          },
+          {
+            "round": 4,
+            "kind": "multiAttack",
+            "total": 18,
+            "special": false
+          },
+          {
+            "round": 5,
+            "kind": "multiAttack",
+            "total": 17,
+            "special": false
+          },
+          {
+            "round": 6,
+            "kind": "multiAttack",
+            "total": 16,
+            "special": false
+          },
+          {
+            "round": 7,
+            "kind": "multiAttack",
+            "total": 15,
+            "special": false
+          }
+        ],
+        "observedRoundsByGod": {
+          "恵比寿": 3,
+          "大耀": 3,
+          "蒼毘": 3,
+          "才華": 3,
+          "寿楽": 3,
+          "福永": 3,
+          "笑蓮": 3
+        },
+        "observedRoundsByGodDefensivePlay": {
+          "恵比寿": 6,
+          "大耀": 5,
+          "蒼毘": 5,
+          "才華": 6,
+          "寿楽": 7,
+          "福永": 6,
+          "笑蓮": 5
+        },
+        "maxRoundReachedDefensivePlay": 7,
+        "specialRounds": [
+          3
+        ]
+      }
+    }
+  },
+  "meta": {
+    "generatedFor": "決定256 parity / same-seed fairness",
+    "engine": "master e2add7a (runtime a611270)",
+    "generatedAt": "2026-10-01T20:44:46.381Z"
+  }
+}

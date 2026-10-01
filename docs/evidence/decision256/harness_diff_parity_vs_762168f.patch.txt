@@ -1,0 +1,233 @@
+diff --git a/C:/Users/kimi1/SevenGodsGame-d256/docs/evidence/decision256/old_762168f_parity.audit.ts.txt b/C:/Users/kimi1/SevenGodsGame-d256/scripts/d256-daily-gate/parity.d256.audit.ts
+index 31e00cf..5ef7787 100644
+--- a/C:/Users/kimi1/SevenGodsGame-d256/docs/evidence/decision256/old_762168f_parity.audit.ts.txt
++++ b/C:/Users/kimi1/SevenGodsGame-d256/scripts/d256-daily-gate/parity.d256.audit.ts
+@@ -1,28 +1,72 @@
+ /**
+- * Step 2 — Production Daily Condition Reconstruction の検証。
++ * 決定256 — Step 2 Production Daily Condition Reconstruction の検証（same-seed fairness）。
+  *
+- * CEO撤退基準「simulationがproduction engineと一致しない」を機械的に潰すための監査。
+- * ハーネスが本番Dailyと同じ条件で回っていることを、`resolveDailyStart` の戻り値と
+- * 生成された GameState の実測値の両方で確認する。
++ * 旧枝 parity.audit.ts（7件）を file-level で複写し、現行エンジン a611270 向けに次を追加：
++ *  - 託宣は 3 回（決定246）で開始すること・神階 0（stake undefined）であること
++ *  - 同日同 seed で **7 神すべて**が「同じ敵・同じ敵HP・同じ補正・同じ 7R 予告表（必殺フラグ含む）」に
++ *    向かうことを、GameState の enemy／intent 列で機械確認（静的な EnemyDef × 倍率の期待値とも照合）
++ *  - 直近 7 日（2026-09-28〜10-04：本日 2026-10-02 を含む週）で 7 敵が 1 回ずつ出ること
++ * 結果は docs/evidence/decision256/parity.json に出す。
+  */
+ import { describe, expect, it } from 'vitest'
+ import { applyAction } from '../../src/core/engine/reducer'
++import { enemyActionTotal } from '../../src/core/engine/intent'
+ import { getEnemyDef } from '../../src/core/data/enemies'
+ import { getRecommendedDeck } from '../../src/core/data/deckBuilder'
+ import { dailyBossFor, dailyKeyOf } from '../../src/core/data/dailyBoss'
+ import { resolveDailyStart } from '../../src/hooks/startDaily'
+ import { RULES } from '../../src/core/data/rules'
++import type { EnemyActionDef, GameState } from '../../src/core/types'
+ import {
+   dateKeysByEnemy,
+   dateKeysFrom,
++  ENEMY_NAME,
++  GOD_NAME,
+   GOD_ORDER,
++  GROWTH_PATHS,
+   heuristicAgent,
++  incomingOf,
+   runDailyGame,
++  writeOut,
+ } from './dailyHarness'
+ 
+ const SAMPLE_DAYS = dateKeysFrom('2026-09-07', 28)
++/** 直近 7 日（本日 2026-10-02 を含む JST 週：月曜 2026-09-28 起点） */
++const RECENT_WEEK = dateKeysFrom('2026-09-28', 7)
+ 
+-describe('Daily条件の再現（production parity）', () => {
++const report: Record<string, unknown> = {}
++
++type IntentRow = { round: number; kind: string; total: number; special: boolean; hits?: number[] }
++const rowOf = (round: number, a: EnemyActionDef | null): IntentRow =>
++  a
++    ? { round, kind: a.kind, total: enemyActionTotal(a), special: a.kind === 'special' || (a.kind === 'multiAttack' && !!a.special), ...(a.kind === 'multiAttack' ? { hits: a.hits } : {}) }
++    : { round, kind: 'none', total: 0, special: false }
++
++/** 静的期待値：EnemyDef の行動表 × 難易度 normal × Daily 補正（神階 0・必殺倍率 1）で合計保存丸め */
++function expectedIntentTable(enemyId: ReturnType<typeof dailyBossFor>['enemyId']): IntentRow[] {
++  const def = getEnemyDef(enemyId)
++  const mul = RULES.difficulty.normal.enemyAtkMultiplier * RULES.daily.modifier.enemyAtkMul
++  return Array.from({ length: RULES.totalRounds }, (_, i) => {
++    const raw = def.actions[i] ?? def.actions[def.actions.length - 1]
++    const total = raw.kind === 'charge' ? 0 : Math.round(enemyActionTotal(raw) * mul)
++    return { round: i + 1, kind: raw.kind, total, special: raw.kind === 'special' || (raw.kind === 'multiAttack' && !!raw.special) }
++  })
++}
++
++/** 盤面を「カードを使わず END_ROUND だけ」で進め、観測できた予告列を返す（敗北で途中終了することがある） */
++function observeIntents(state: GameState): IntentRow[] {
++  const rows: IntentRow[] = []
++  let s = state
++  let guard = 0
++  while (s.status === 'playing' && guard < 20) {
++    guard++
++    rows.push(rowOf(s.round, s.enemy.intent))
++    s = applyAction(s, { type: 'END_ROUND' }).state
++  }
++  return rows
++}
++
++describe('決定256 Daily条件の再現（production parity・same-seed fairness）', () => {
+   it('開始条件は本番と同じ resolveDailyStart が決めている', () => {
+     for (const dateKey of SAMPLE_DAYS) {
+       const daily = resolveDailyStart(dateKey)
+@@ -36,11 +80,13 @@ describe('Daily条件の再現（production parity）', () => {
+       expect(daily.difficulty).toBe('normal')
+       expect(daily.modifier).toEqual(RULES.daily.modifier)
+     }
++    report.resolveDailyStart = { days: SAMPLE_DAYS.length, pass: true }
+   })
+ 
+-  it('神域強化は 敵HP×1.25 / 攻撃×1.15 として実際に効いている', () => {
++  it('神域強化は 敵HP×1.25 / 攻撃×1.15 として実際に効いている・託宣 3 回・神階 0', () => {
+     expect(RULES.daily.modifier.enemyHpMul).toBe(1.25)
+     expect(RULES.daily.modifier.enemyAtkMul).toBe(1.15)
++    expect(RULES.divination.count).toBe(3)
+ 
+     for (const dateKey of SAMPLE_DAYS.slice(0, 7)) {
+       const daily = resolveDailyStart(dateKey)
+@@ -63,22 +109,25 @@ describe('Daily条件の再現（production parity）', () => {
+       expect(state.mode).toBe('daily')
+       expect(state.dailyKey).toBe(dateKey)
+       expect(state.modifier).toEqual(RULES.daily.modifier)
++      expect(state.divination.remaining).toBe(RULES.divination.count)
+     }
++    report.modifier = { enemyHpMul: 1.25, enemyAtkMul: 1.15, divinationCount: RULES.divination.count, stake: 'undefined', pass: true }
+   })
+ 
+   it('JSTリセット：日付キーはUTC+9で切り替わる', () => {
+-    // 2026-09-07 14:59:59Z = JST 23:59:59 → まだ 9/7
+     expect(dailyKeyOf(new Date('2026-09-07T14:59:59Z'))).toBe('2026-09-07')
+-    // 2026-09-07 15:00:00Z = JST 翌0:00 → 9/8
+     expect(dailyKeyOf(new Date('2026-09-07T15:00:00Z'))).toBe('2026-09-08')
+   })
+ 
+-  it('週次巡回：連続7日で7体が必ず1回ずつ出る', () => {
++  it('週次巡回：連続7日で7体が必ず1回ずつ出る（Matrix 4 週＋直近 7 日）', () => {
+     for (let w = 0; w < 4; w++) {
+       const week = SAMPLE_DAYS.slice(w * 7, w * 7 + 7)
+       const enemies = week.map((k) => dailyBossFor(k).enemyId)
+       expect(new Set(enemies).size).toBe(7)
+     }
++    const recent = RECENT_WEEK.map((k) => ({ dateKey: k, enemyId: dailyBossFor(k).enemyId, enemy: ENEMY_NAME[dailyBossFor(k).enemyId], seed: dailyBossFor(k).seed, seedId: dailyBossFor(k).seedId }))
++    expect(new Set(recent.map((r) => r.enemyId)).size).toBe(7)
++    report.recentWeek = recent
+   })
+ 
+   it('28日ぶんで、7体それぞれに同数の実Dailyシードが割り当たる', () => {
+@@ -88,7 +137,6 @@ describe('Daily条件の再現（production parity）', () => {
+   })
+ 
+   it('決定論：同じ日・同じ神・同じデッキ・同じ操作なら結果は完全に一致する', () => {
+-    // これは「3回の挑戦に乱数の引き直しが無い」ことの根拠でもある（Step 7）
+     const dateKey = SAMPLE_DAYS[0]
+     for (const godId of GOD_ORDER) {
+       const deck = getRecommendedDeck(godId)
+@@ -96,16 +144,97 @@ describe('Daily条件の再現（production parity）', () => {
+       const b = runDailyGame({ dateKey, godId, deck, growthPath: 'guardian' }, heuristicAgent('balanced'))
+       expect(b).toEqual(a)
+     }
++    report.determinism = { pass: true }
+   })
+ 
+   it('公平版Daily：bonusCopies無しでも推奨デッキは全神で legal', () => {
+     for (const godId of GOD_ORDER) {
+       const deck = getRecommendedDeck(godId)
+       expect(deck.length).toBe(RULES.deck.size)
+-      // bonusCopies を渡さない＝1種2枚上限。例外なく通ることを確認
+       expect(() =>
+         runDailyGame({ dateKey: SAMPLE_DAYS[0], godId, deck, growthPath: 'guardian' }, heuristicAgent('balanced')),
+       ).not.toThrow()
+     }
+   })
++
++  it('[D256] same-seed fairness：同日同 seed で 7 神 × 2 路線が同じ敵・同じ敵HP・同じ補正・同じ 7R 予告表に向かう', () => {
++    const days = [...RECENT_WEEK, ...SAMPLE_DAYS.slice(0, 7)]
++    const perDay: Record<string, unknown> = {}
++    let compared = 0
++    for (const dateKey of days) {
++      const daily = resolveDailyStart(dateKey)
++      const expected = expectedIntentTable(daily.enemyId)
++      const observedByGod: Record<string, IntentRow[]> = {}
++      let ref: { enemyId: string; maxHp: number; modifier: unknown; seed: string } | null = null
++      for (const godId of GOD_ORDER) {
++        for (const growthPath of GROWTH_PATHS) {
++          const { state } = applyAction(null, {
++            type: 'START_GAME',
++            seed: daily.seed,
++            godId,
++            enemyId: daily.enemyId,
++            deck: getRecommendedDeck(godId),
++            difficulty: daily.difficulty,
++            otomoGrowthPath: growthPath,
++            mode: daily.mode,
++            dailyKey: daily.dailyKey,
++            modifier: daily.modifier,
++          })
++          const me = { enemyId: state.enemy.defId, maxHp: state.enemy.maxHp, modifier: state.modifier, seed: state.seed }
++          if (!ref) ref = me
++          expect(me).toEqual(ref)
++          expect(state.stake).toBeUndefined()
++          expect(state.difficulty).toBe('normal')
++          expect(state.divination.remaining).toBe(RULES.divination.count)
++          // 観測した予告列は、静的期待表の先頭と完全一致（倍率・必殺フラグ・連撃 hits 配分を含む）
++          const obs = observeIntents(state)
++          expect(obs.length).toBeGreaterThan(0)
++          obs.forEach((row, i) => {
++            expect({ round: row.round, kind: row.kind, total: row.total, special: row.special }).toEqual(expected[i])
++            // 現行 enemyActionTotal とハーネスの incomingOf が同定義であること
++            expect(row.total).toBe(incomingOf({ enemy: { intent: row.kind === 'none' ? null : ({ kind: row.kind, ...(row.hits ? { hits: row.hits } : { amount: row.total }) } as EnemyActionDef) } } as GameState))
++          })
++          // 同日の神間で予告列は一致（短い方の長さまで）
++          if (growthPath === 'guardian') observedByGod[GOD_NAME[godId]] = obs
++          compared++
++        }
++      }
++      const seqs = Object.values(observedByGod)
++      const minLen = Math.min(...seqs.map((s) => s.length))
++      for (let i = 0; i < minLen; i++) for (const s of seqs) expect(s[i]).toEqual(seqs[0][i])
++      // 実際にカードを使う打ち筋（h-defensive：最も長く生き残る）のトレースでも、到達した全ラウンドの予告が
++      // 静的期待表と一致し、神間で一致することを確認（END_ROUND のみの観測は 3〜4R で敗北するため）
++      const playedByGod: Record<string, number> = {}
++      let maxReached = 0
++      for (const godId of GOD_ORDER) {
++        const m = runDailyGame({ dateKey, godId, deck: getRecommendedDeck(godId), growthPath: 'guardian' }, heuristicAgent('defensive'))
++        expect(m.enemyId).toBe(daily.enemyId)
++        expect(m.seed).toBe(daily.seed)
++        expect(m.enemyMaxHp).toBe(ref!.maxHp)
++        for (const t of m.trace) {
++          const e = expected[t.round - 1]
++          expect({ round: t.round, kind: t.intentKind, total: t.intentTotal, special: t.special }).toEqual(e)
++        }
++        playedByGod[GOD_NAME[godId]] = m.trace.length
++        maxReached = Math.max(maxReached, m.trace.length)
++      }
++      perDay[dateKey] = {
++        enemy: ENEMY_NAME[daily.enemyId],
++        seed: daily.seed,
++        enemyMaxHp: ref!.maxHp,
++        expectedIntents: expected,
++        observedRoundsByGod: Object.fromEntries(Object.entries(observedByGod).map(([g, s]) => [g, s.length])),
++        observedRoundsByGodDefensivePlay: playedByGod,
++        maxRoundReachedDefensivePlay: maxReached,
++        specialRounds: expected.filter((r) => r.special).map((r) => r.round),
++      }
++    }
++    report.sameSeedFairness = { days: days.length, startGamesCompared: compared, gods: 7, growthPaths: 2, pass: true, perDay }
++  })
++
++  it('レポート出力', () => {
++    report.meta = { generatedFor: '決定256 parity / same-seed fairness', engine: 'master e2add7a (runtime a611270)', generatedAt: new Date().toISOString() }
++    writeOut('parity.json', report)
++    expect(report.sameSeedFairness).toBeDefined()
++  })
+ })

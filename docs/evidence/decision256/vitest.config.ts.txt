@@ -1,0 +1,14 @@
+import { defineConfig } from 'vitest/config'
+import path from 'node:path'
+
+// 決定256 Daily Competitive Gate 再判定 専用config。`npm test`（既定config）には `.audit.ts` は含まれない。
+// RAM 6GB 制約：単一プロセス（fileParallelism 無効）。1ファイルずつ `npx vitest run --config <this> <file>` で実行する。
+export default defineConfig({
+  root: path.resolve(__dirname, '../..'),
+  test: {
+    include: ['scripts/d256-daily-gate/**/*.audit.ts'],
+    fileParallelism: false,
+    testTimeout: 60 * 60 * 1000,
+    hookTimeout: 60 * 60 * 1000,
+  },
+})

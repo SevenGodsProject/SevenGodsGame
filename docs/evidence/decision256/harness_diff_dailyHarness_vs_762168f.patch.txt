@@ -1,0 +1,145 @@
+diff --git a/C:/Users/kimi1/SevenGodsGame-d256/docs/evidence/decision256/old_762168f_dailyHarness.ts.txt b/C:/Users/kimi1/SevenGodsGame-d256/scripts/d256-daily-gate/dailyHarness.ts
+index 7fcc409..62ea7eb 100644
+--- a/C:/Users/kimi1/SevenGodsGame-d256/docs/evidence/decision256/old_762168f_dailyHarness.ts.txt
++++ b/C:/Users/kimi1/SevenGodsGame-d256/scripts/d256-daily-gate/dailyHarness.ts
+@@ -1,13 +1,23 @@
+ /**
+  * Phase 4.0 Daily Ranking Competitive Gate — 共通ハーネス（分析専用。src/ は import のみ）
+  *
++ * [D256] 決定256：旧枝 feat/daily-ranking-phase4（HEAD 762168f）の
++ *        scripts/phase4-daily-gate/dailyHarness.ts を file-level で複写し、
++ *        現行エンジン a611270（master e2add7a 時点の runtime）で動かすための最小修正を加えたもの。
++ *        修正箇所はすべて `[D256]` コメントで示す。G1／G2／spread／best-of-3 の定義・しきい値は変えない。
++ *        - 託宣は 3 回（決定246）：ハーネスは `state.divination.remaining` を読むだけなので定義変更なし
++ *        - 必殺（決定252）：`incomingOf` は kind 'special' と multiAttack(special:true) の合計を既に扱う
++ *          （現行 `enemyActionTotal` と同じ定義。parity.d256.audit.ts で機械確認）
++ *        - 追加：1試合のトレース（ラウンド別の敵予告・託宣選択・必殺ラウンドの被弾）を DailyMetrics に載せる
++ *          （same-seed fairness と原因切り分けのため。既存フィールドは無変更）
++ *
+  * ★production parity の作り方★
+  * 本ハーネスは Daily の開始条件を自前で組み立てない。**本番UIが呼ぶのと同じ
+- * `resolveDailyStart(dateKey)`（src/hooks/startDaily.ts）をそのまま import** し、
++ * `resolveDailyStart(dateKey)`（src/hooks/startDaily.ts → core/data/dailyStart.ts）をそのまま import** し、
+  * その戻り値（mode / dailyKey / enemyId / seed / difficulty / modifier）を
+  * `START_GAME` へ渡す。したがって「Daily条件の再現」は模倣ではなく同一実行であり、
+  * 敵の週次巡回・共有seed・神域強化倍率がズレることは構造的に起こらない。
+- * この不変条件は `parity.audit.ts` が機械的に検証する。
++ * この不変条件は `parity.d256.audit.ts` が機械的に検証する。
+  *
+  * 通常モードの神階0の結果を Daily の代用にはしない（CEO指示 Step 2）。
+  *
+@@ -28,13 +38,15 @@ import { ENEMIES } from '../../src/core/data/enemies'
+ import type {
+   CardDefId,
+   CardInstance,
++  EnemyActionDef,
+   EnemyId,
+   GameState,
+   GodId,
+   GrowthPath,
+ } from '../../src/core/types'
+ 
+-export const OUT_DIR = path.resolve(__dirname, 'out')
++// [D256] 出力先を docs/evidence/decision256 へ（旧：scripts/phase4-daily-gate/out）
++export const OUT_DIR = path.resolve(__dirname, '../../docs/evidence/decision256')
+ export function writeOut(name: string, content: string | object): void {
+   fs.mkdirSync(OUT_DIR, { recursive: true })
+   const body = typeof content === 'string' ? content : JSON.stringify(content, null, 2)
+@@ -88,6 +100,20 @@ export type DailyRunOptions = {
+   bonusCopies?: Partial<Record<CardDefId, number>>
+ }
+ 
++/** [D256] ラウンド別トレース（same-seed fairness・原因切り分け用） */
++export type RoundTrace = {
++  round: number
++  /** ラウンド開始時の敵予告（倍率適用済み）。kind と合計値 */
++  intentKind: EnemyActionDef['kind'] | 'none'
++  intentTotal: number
++  special: boolean
++  /** そのラウンドに使った託宣（-1＝未使用、0=加護 1=天啓 2=一撃） */
++  divination: number
++  /** ラウンド終了（敵行動）で失った自HP */
++  hpLost: number
++  cardsPlayed: number
++}
++
+ export type DailyMetrics = {
+   status: 'won' | 'lost' | 'finished'
+   round: number
+@@ -99,6 +125,12 @@ export type DailyMetrics = {
+   actions: number
+   /** スコア内訳（素点）。tie break 候補・原因分析用 */
+   breakdown: { damage: number; combo: number; victory: number; tempo: number; survival: number; total: number }
++  /** [D256] 追加（既存フィールドは無変更） */
++  enemyId: EnemyId
++  seed: string
++  enemyMaxHp: number
++  divinationUsed: number
++  trace: RoundTrace[]
+ }
+ 
+ export type Agent = (
+@@ -127,15 +159,43 @@ export function runDailyGame(opts: DailyRunOptions, agent: Agent): DailyMetrics
+   let bursts = events.filter((e) => e.t === 'RESONANCE_BURST').length
+   let actions = 0
+   let guard = 0
++  const enemyMaxHp = state.enemy.maxHp
++  const divinationStart = state.divination.remaining
++
++  // [D256] トレース
++  const trace: RoundTrace[] = []
++  const traceFor = (s: GameState): RoundTrace => {
++    const cur = trace[trace.length - 1]
++    if (cur && cur.round === s.round) return cur
++    const i = s.enemy.intent
++    const t: RoundTrace = {
++      round: s.round,
++      intentKind: i ? i.kind : 'none',
++      intentTotal: incomingOf(s),
++      special: !!i && (i.kind === 'special' || (i.kind === 'multiAttack' && !!i.special)),
++      divination: -1,
++      hpLost: 0,
++      cardsPlayed: 0,
++    }
++    trace.push(t)
++    return t
++  }
++  traceFor(state)
+ 
+   while (state.status === 'playing' && guard < 600) {
+     guard++
+     if (state.phase !== 'playerTurn') break
++    const tr = traceFor(state)
+     const act = agent(state)
++    const hpBefore = state.player.hp
+     const r = applyAction(state, act ?? { type: 'END_ROUND' })
+     bursts += r.events.filter((e) => e.t === 'RESONANCE_BURST').length
+     actions++
++    if (act?.type === 'USE_DIVINATION') tr.divination = act.choiceIndex
++    if (act?.type === 'PLAY_CARD') tr.cardsPlayed++
++    if (!act) tr.hpLost = Math.max(0, hpBefore - r.state.player.hp)
+     state = r.state
++    if (state.status === 'playing') traceFor(state)
+   }
+ 
+   return {
+@@ -155,6 +215,11 @@ export function runDailyGame(opts: DailyRunOptions, agent: Agent): DailyMetrics
+       survival: state.score.survival,
+       total: state.score.total,
+     },
++    enemyId: daily.enemyId,
++    seed: daily.seed,
++    enemyMaxHp,
++    divinationUsed: divinationStart - state.divination.remaining,
++    trace,
+   }
+ }
+ 
+@@ -182,6 +247,7 @@ function utilityOf(c: CardInstance): number {
+     }
+   }, 0)
+ }
++/** 予告合計。'special'（決定252 必殺）と multiAttack(special) を含む＝現行 enemyActionTotal と同定義 */
+ export function incomingOf(state: GameState): number {
+   const i = state.enemy.intent
+   if (!i) return 0

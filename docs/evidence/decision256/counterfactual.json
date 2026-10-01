@@ -1,0 +1,651 @@
+{
+  "sanity": {
+    "dateKey": "2026-09-07",
+    "enemy": "乱舞の道化",
+    "currentMaxHp": 115,
+    "oldMaxHp": 115,
+    "currentDivination": 3,
+    "v5Divination": 7,
+    "currentIntentR1": {
+      "kind": "attack",
+      "amount": 5
+    },
+    "oldIntentR1": {
+      "kind": "attack",
+      "amount": 5
+    }
+  },
+  "variants": {
+    "V0": {
+      "label": "現行 a611270",
+      "flags": {
+        "divination7": false,
+        "oldEnemies": false,
+        "bonusOff": false,
+        "oldGuard": false
+      },
+      "overallSpreadPct": 13.38,
+      "worstEnemySpreadPct": 14.92,
+      "perEnemySpreadPct": {
+        "乱舞の道化": 14.92,
+        "藍花の怨霊": 14.46,
+        "蒼海の龍神": 14.11,
+        "試練の影": 14.42,
+        "業斧の鬼将": 14.78,
+        "銀甲の機工師": 9.95,
+        "双牙の魔獣": 10.86
+      },
+      "spreadExcludingSaika": 7.58,
+      "spreadExcludingJuraku": 10.49,
+      "bestGod": "才華",
+      "worstGod": "寿楽",
+      "perGod": {
+        "恵比寿": {
+          "mean": 958.89,
+          "gapPct": 8.36,
+          "winRatePct": 100,
+          "combo": 83.6,
+          "tempo": 187.9,
+          "survival": 22,
+          "killRound": 4.73,
+          "bursts": 1.23,
+          "divinationUsed": 3
+        },
+        "大耀": {
+          "mean": 967.32,
+          "gapPct": 7.55,
+          "winRatePct": 100,
+          "combo": 81.5,
+          "tempo": 206.4,
+          "survival": 12,
+          "killRound": 4.45,
+          "bursts": 0.91,
+          "divinationUsed": 3
+        },
+        "蒼毘": {
+          "mean": 956.02,
+          "gapPct": 8.63,
+          "winRatePct": 100,
+          "combo": 74.3,
+          "tempo": 194.1,
+          "survival": 22.9,
+          "killRound": 4.64,
+          "bursts": 0.75,
+          "divinationUsed": 3
+        },
+        "才華": {
+          "mean": 1046.34,
+          "gapPct": 0,
+          "winRatePct": 100,
+          "combo": 122.4,
+          "tempo": 223.8,
+          "survival": 14.5,
+          "killRound": 4.23,
+          "bursts": 2.27,
+          "divinationUsed": 3
+        },
+        "寿楽": {
+          "mean": 906.36,
+          "gapPct": 13.38,
+          "winRatePct": 100,
+          "combo": 72.4,
+          "tempo": 157,
+          "survival": 23.7,
+          "killRound": 5.16,
+          "bursts": 0.95,
+          "divinationUsed": 3
+        },
+        "福永": {
+          "mean": 936.55,
+          "gapPct": 10.49,
+          "winRatePct": 100,
+          "combo": 109.4,
+          "tempo": 150,
+          "survival": 16.8,
+          "killRound": 5.23,
+          "bursts": 1,
+          "divinationUsed": 3
+        },
+        "笑蓮": {
+          "mean": 980.71,
+          "gapPct": 6.27,
+          "winRatePct": 100,
+          "combo": 80.2,
+          "tempo": 202.7,
+          "survival": 27.4,
+          "killRound": 4.52,
+          "bursts": 0.86,
+          "divinationUsed": 3
+        }
+      }
+    },
+    "V1": {
+      "label": "託宣 7 回（決定246 を戻す）",
+      "flags": {
+        "divination7": true,
+        "oldEnemies": false,
+        "bonusOff": false,
+        "oldGuard": false
+      },
+      "overallSpreadPct": 9.65,
+      "worstEnemySpreadPct": 11.71,
+      "perEnemySpreadPct": {
+        "乱舞の道化": 11.71,
+        "藍花の怨霊": 11.3,
+        "蒼海の龍神": 9.28,
+        "試練の影": 9.93,
+        "業斧の鬼将": 8.1,
+        "銀甲の機工師": 9.11,
+        "双牙の魔獣": 8.43
+      },
+      "spreadExcludingSaika": 6.32,
+      "spreadExcludingJuraku": 5.66,
+      "bestGod": "才華",
+      "worstGod": "寿楽",
+      "perGod": {
+        "恵比寿": {
+          "mean": 986.5,
+          "gapPct": 4.49,
+          "winRatePct": 100,
+          "combo": 80.5,
+          "tempo": 210,
+          "survival": 24.2,
+          "killRound": 4.43,
+          "bursts": 1.23,
+          "divinationUsed": 4.39
+        },
+        "大耀": {
+          "mean": 996.23,
+          "gapPct": 3.55,
+          "winRatePct": 100,
+          "combo": 77.9,
+          "tempo": 230.7,
+          "survival": 13.5,
+          "killRound": 4.11,
+          "bursts": 0.89,
+          "divinationUsed": 4.05
+        },
+        "蒼毘": {
+          "mean": 982.5,
+          "gapPct": 4.88,
+          "winRatePct": 100,
+          "combo": 71.9,
+          "tempo": 214.6,
+          "survival": 25.1,
+          "killRound": 4.36,
+          "bursts": 0.8,
+          "divinationUsed": 4.27
+        },
+        "才華": {
+          "mean": 1032.89,
+          "gapPct": 0,
+          "winRatePct": 100,
+          "combo": 121.8,
+          "tempo": 215,
+          "survival": 13.5,
+          "killRound": 4.36,
+          "bursts": 1.91,
+          "divinationUsed": 4.36
+        },
+        "寿楽": {
+          "mean": 933.25,
+          "gapPct": 9.65,
+          "winRatePct": 100,
+          "combo": 70.5,
+          "tempo": 177.1,
+          "survival": 26,
+          "killRound": 4.89,
+          "bursts": 0.95,
+          "divinationUsed": 4.82
+        },
+        "福永": {
+          "mean": 974.48,
+          "gapPct": 5.66,
+          "winRatePct": 100,
+          "combo": 107.6,
+          "tempo": 177.9,
+          "survival": 20.1,
+          "killRound": 4.88,
+          "bursts": 0.98,
+          "divinationUsed": 4.82
+        },
+        "笑蓮": {
+          "mean": 995.95,
+          "gapPct": 3.58,
+          "winRatePct": 100,
+          "combo": 81.4,
+          "tempo": 211.6,
+          "survival": 29,
+          "killRound": 4.39,
+          "bursts": 0.8,
+          "divinationUsed": 4.36
+        }
+      }
+    },
+    "V2": {
+      "label": "敵表 旧 762168f（決定246 E1／252 を戻す）",
+      "flags": {
+        "divination7": false,
+        "oldEnemies": true,
+        "bonusOff": false,
+        "oldGuard": false
+      },
+      "overallSpreadPct": 13.15,
+      "worstEnemySpreadPct": 15.43,
+      "perEnemySpreadPct": {
+        "乱舞の道化": 13.83,
+        "藍花の怨霊": 15.43,
+        "蒼海の龍神": 15.28,
+        "試練の影": 14.98,
+        "業斧の鬼将": 14.21,
+        "銀甲の機工師": 9.95,
+        "双牙の魔獣": 10.78
+      },
+      "spreadExcludingSaika": 6.88,
+      "spreadExcludingJuraku": 11.69,
+      "bestGod": "才華",
+      "worstGod": "寿楽",
+      "perGod": {
+        "恵比寿": {
+          "mean": 964.8,
+          "gapPct": 8.38,
+          "winRatePct": 100,
+          "combo": 83.2,
+          "tempo": 188.2,
+          "survival": 25.4,
+          "killRound": 4.73,
+          "bursts": 1.21,
+          "divinationUsed": 3
+        },
+        "大耀": {
+          "mean": 975.14,
+          "gapPct": 7.4,
+          "winRatePct": 100,
+          "combo": 80.8,
+          "tempo": 208.4,
+          "survival": 15.5,
+          "killRound": 4.43,
+          "bursts": 0.89,
+          "divinationUsed": 3
+        },
+        "蒼毘": {
+          "mean": 973.77,
+          "gapPct": 7.53,
+          "winRatePct": 100,
+          "combo": 72.2,
+          "tempo": 206.4,
+          "survival": 25,
+          "killRound": 4.46,
+          "bursts": 0.7,
+          "divinationUsed": 3
+        },
+        "才華": {
+          "mean": 1053.05,
+          "gapPct": 0,
+          "winRatePct": 100,
+          "combo": 120.5,
+          "tempo": 225,
+          "survival": 19.1,
+          "killRound": 4.21,
+          "bursts": 2.25,
+          "divinationUsed": 3
+        },
+        "寿楽": {
+          "mean": 914.54,
+          "gapPct": 13.15,
+          "winRatePct": 100,
+          "combo": 70.9,
+          "tempo": 159.8,
+          "survival": 27.4,
+          "killRound": 5.13,
+          "bursts": 0.95,
+          "divinationUsed": 3
+        },
+        "福永": {
+          "mean": 929.95,
+          "gapPct": 11.69,
+          "winRatePct": 100,
+          "combo": 112.7,
+          "tempo": 135.7,
+          "survival": 21.5,
+          "killRound": 5.41,
+          "bursts": 1.02,
+          "divinationUsed": 3
+        },
+        "笑蓮": {
+          "mean": 982.09,
+          "gapPct": 6.74,
+          "winRatePct": 100,
+          "combo": 80.3,
+          "tempo": 201.4,
+          "survival": 28.4,
+          "killRound": 4.54,
+          "bursts": 0.88,
+          "divinationUsed": 3
+        }
+      }
+    },
+    "V3": {
+      "label": "カード bonus OFF（Phase 5-A/5-C を戻す）",
+      "flags": {
+        "divination7": false,
+        "oldEnemies": false,
+        "bonusOff": true,
+        "oldGuard": false
+      },
+      "overallSpreadPct": 10.71,
+      "worstEnemySpreadPct": 16.79,
+      "perEnemySpreadPct": {
+        "乱舞の道化": 12.79,
+        "藍花の怨霊": 13.52,
+        "蒼海の龍神": 12.19,
+        "試練の影": 13.07,
+        "業斧の鬼将": 12.19,
+        "銀甲の機工師": 13.34,
+        "双牙の魔獣": 16.79
+      },
+      "spreadExcludingSaika": 5.61,
+      "spreadExcludingJuraku": 10.53,
+      "bestGod": "才華",
+      "worstGod": "寿楽",
+      "perGod": {
+        "恵比寿": {
+          "mean": 910.04,
+          "gapPct": 6.19,
+          "winRatePct": 100,
+          "combo": 91.9,
+          "tempo": 146.3,
+          "survival": 17.7,
+          "killRound": 5.29,
+          "bursts": 1.13,
+          "divinationUsed": 3
+        },
+        "大耀": {
+          "mean": 867.95,
+          "gapPct": 10.53,
+          "winRatePct": 94.6,
+          "combo": 97.2,
+          "tempo": 134.8,
+          "survival": 8.6,
+          "killRound": 5.32,
+          "bursts": 0.96,
+          "divinationUsed": 3
+        },
+        "蒼毘": {
+          "mean": 884.46,
+          "gapPct": 8.83,
+          "winRatePct": 100,
+          "combo": 92.4,
+          "tempo": 126.8,
+          "survival": 16.9,
+          "killRound": 5.54,
+          "bursts": 0.96,
+          "divinationUsed": 3
+        },
+        "才華": {
+          "mean": 970.11,
+          "gapPct": 0,
+          "winRatePct": 98.2,
+          "combo": 129,
+          "tempo": 173,
+          "survival": 6.2,
+          "killRound": 4.91,
+          "bursts": 1.95,
+          "divinationUsed": 3
+        },
+        "寿楽": {
+          "mean": 866.25,
+          "gapPct": 10.71,
+          "winRatePct": 100,
+          "combo": 79.7,
+          "tempo": 120.9,
+          "survival": 21.6,
+          "killRound": 5.61,
+          "bursts": 0.95,
+          "divinationUsed": 3
+        },
+        "福永": {
+          "mean": 893.95,
+          "gapPct": 7.85,
+          "winRatePct": 100,
+          "combo": 114.8,
+          "tempo": 112.3,
+          "survival": 16.3,
+          "killRound": 5.71,
+          "bursts": 1,
+          "divinationUsed": 3
+        },
+        "笑蓮": {
+          "mean": 917.71,
+          "gapPct": 5.4,
+          "winRatePct": 100,
+          "combo": 94.9,
+          "tempo": 142.9,
+          "survival": 24.1,
+          "killRound": 5.32,
+          "bursts": 0.84,
+          "divinationUsed": 3
+        }
+      }
+    },
+    "V4": {
+      "label": "加護 旧式 HP+3/ブロック+2（Phase 5-D/5-E を戻す）",
+      "flags": {
+        "divination7": false,
+        "oldEnemies": false,
+        "bonusOff": false,
+        "oldGuard": true
+      },
+      "overallSpreadPct": 13.33,
+      "worstEnemySpreadPct": 14.84,
+      "perEnemySpreadPct": {
+        "乱舞の道化": 14.84,
+        "藍花の怨霊": 14.46,
+        "蒼海の龍神": 14.07,
+        "試練の影": 14.37,
+        "業斧の鬼将": 14.78,
+        "銀甲の機工師": 9.74,
+        "双牙の魔獣": 10.86
+      },
+      "spreadExcludingSaika": 7.49,
+      "spreadExcludingJuraku": 10.35,
+      "bestGod": "才華",
+      "worstGod": "寿楽",
+      "perGod": {
+        "恵比寿": {
+          "mean": 960.71,
+          "gapPct": 8.15,
+          "winRatePct": 100,
+          "combo": 83.1,
+          "tempo": 189.3,
+          "survival": 22.5,
+          "killRound": 4.71,
+          "bursts": 1.2,
+          "divinationUsed": 3
+        },
+        "大耀": {
+          "mean": 968.25,
+          "gapPct": 7.43,
+          "winRatePct": 100,
+          "combo": 80.7,
+          "tempo": 209.1,
+          "survival": 10.8,
+          "killRound": 4.41,
+          "bursts": 0.91,
+          "divinationUsed": 3
+        },
+        "蒼毘": {
+          "mean": 957.3,
+          "gapPct": 8.47,
+          "winRatePct": 100,
+          "combo": 74.7,
+          "tempo": 195.4,
+          "survival": 22.1,
+          "killRound": 4.63,
+          "bursts": 0.71,
+          "divinationUsed": 3
+        },
+        "才華": {
+          "mean": 1045.91,
+          "gapPct": 0,
+          "winRatePct": 100,
+          "combo": 122.3,
+          "tempo": 223.8,
+          "survival": 14.3,
+          "killRound": 4.23,
+          "bursts": 2.27,
+          "divinationUsed": 3
+        },
+        "寿楽": {
+          "mean": 906.54,
+          "gapPct": 13.33,
+          "winRatePct": 100,
+          "combo": 72.5,
+          "tempo": 157,
+          "survival": 23.7,
+          "killRound": 5.16,
+          "bursts": 0.95,
+          "divinationUsed": 3
+        },
+        "福永": {
+          "mean": 937.61,
+          "gapPct": 10.35,
+          "winRatePct": 100,
+          "combo": 109.3,
+          "tempo": 150,
+          "survival": 17.8,
+          "killRound": 5.23,
+          "bursts": 1,
+          "divinationUsed": 3
+        },
+        "笑蓮": {
+          "mean": 979.95,
+          "gapPct": 6.31,
+          "winRatePct": 100,
+          "combo": 80.8,
+          "tempo": 201.4,
+          "survival": 27.4,
+          "killRound": 4.54,
+          "bursts": 0.86,
+          "divinationUsed": 3
+        }
+      }
+    },
+    "V5": {
+      "label": "V1+V2+V3+V4（≒決定131 時点 7ef714a）",
+      "flags": {
+        "divination7": true,
+        "oldEnemies": true,
+        "bonusOff": true,
+        "oldGuard": true
+      },
+      "overallSpreadPct": 7.44,
+      "worstEnemySpreadPct": 8.78,
+      "perEnemySpreadPct": {
+        "乱舞の道化": 7.83,
+        "藍花の怨霊": 7.6,
+        "蒼海の龍神": 7.58,
+        "試練の影": 8.32,
+        "業斧の鬼将": 7.84,
+        "銀甲の機工師": 8.78,
+        "双牙の魔獣": 5.79
+      },
+      "spreadExcludingSaika": 5.76,
+      "spreadExcludingJuraku": 4.9,
+      "bestGod": "才華",
+      "worstGod": "寿楽",
+      "perGod": {
+        "恵比寿": {
+          "mean": 962.36,
+          "gapPct": 2.55,
+          "winRatePct": 100,
+          "combo": 85.7,
+          "tempo": 182.3,
+          "survival": 26.8,
+          "killRound": 4.82,
+          "bursts": 1.05,
+          "divinationUsed": 4.79
+        },
+        "大耀": {
+          "mean": 959.25,
+          "gapPct": 2.87,
+          "winRatePct": 100,
+          "combo": 90.2,
+          "tempo": 188.2,
+          "survival": 14.1,
+          "killRound": 4.73,
+          "bursts": 0.98,
+          "divinationUsed": 4.73
+        },
+        "蒼毘": {
+          "mean": 950.8,
+          "gapPct": 3.72,
+          "winRatePct": 100,
+          "combo": 82.9,
+          "tempo": 180,
+          "survival": 23.1,
+          "killRound": 4.86,
+          "bursts": 1,
+          "divinationUsed": 4.86
+        },
+        "才華": {
+          "mean": 987.57,
+          "gapPct": 0,
+          "winRatePct": 100,
+          "combo": 131.5,
+          "tempo": 169.3,
+          "survival": 13.5,
+          "killRound": 5,
+          "bursts": 1.54,
+          "divinationUsed": 5
+        },
+        "寿楽": {
+          "mean": 914.07,
+          "gapPct": 7.44,
+          "winRatePct": 100,
+          "combo": 73.1,
+          "tempo": 158.2,
+          "survival": 26.4,
+          "killRound": 5.14,
+          "bursts": 0.93,
+          "divinationUsed": 5.13
+        },
+        "福永": {
+          "mean": 939.18,
+          "gapPct": 4.9,
+          "winRatePct": 100,
+          "combo": 114.9,
+          "tempo": 138.9,
+          "survival": 23.3,
+          "killRound": 5.38,
+          "bursts": 1,
+          "divinationUsed": 5.32
+        },
+        "笑蓮": {
+          "mean": 969.95,
+          "gapPct": 1.78,
+          "winRatePct": 100,
+          "combo": 86.7,
+          "tempo": 185.7,
+          "survival": 28.3,
+          "killRound": 4.77,
+          "bursts": 0.73,
+          "divinationUsed": 4.71
+        }
+      }
+    }
+  },
+  "meta": {
+    "days": 56,
+    "seedsPerEnemy": 8,
+    "lines": [
+      "s-balanced",
+      "s-rush",
+      "s-score"
+    ],
+    "engineRuns": 7056,
+    "elapsedSec": 138.5,
+    "restoredToProduction": true,
+    "generatedAt": "2026-10-01T21:01:48.279Z"
+  }
+}
