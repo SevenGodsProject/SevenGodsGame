@@ -1,0 +1,1199 @@
+{
+ "at": "2026-10-01T14:16:19.056Z",
+ "before": "http://127.0.0.1:4273",
+ "after": "https://seven-gods-game.vercel.app",
+ "note": "headless Chromium（GPU なし）。PC のフレーム値は参考値。relMarks＝入口 root animation の startTime（＝JS start()）基準",
+ "runs": {
+  "t3-skip/pc/card@300": {
+   "how": "card",
+   "vp": "pc",
+   "tInputRel": 472,
+   "inputEvent": {
+    "t": 799,
+    "kind": "in.pointerdown",
+    "ent": true,
+    "target": "battle-entrance-bg",
+    "rel": 476
+   },
+   "validDuringEntrance": true,
+   "skipToGone": 224,
+   "skipToControl": 224,
+   "stateUnchanged": true,
+   "uiBefore": {
+    "hand": 5,
+    "text": "神力 2 / 2",
+    "round": "1",
+    "remaining": "3"
+   },
+   "uiAfter": {
+    "hand": 5,
+    "text": "神力 2 / 2",
+    "round": "1",
+    "remaining": "3"
+   },
+   "uiUnchanged": true,
+   "endEnabled": true,
+   "seAll": [],
+   "seAfterInput": [],
+   "bossSePlayedAfterSkip": false,
+   "inputLog": [
+    {
+     "t": 0,
+     "kind": "in.click",
+     "ent": false,
+     "target": "",
+     "rel": -323
+    },
+    {
+     "t": 799,
+     "kind": "in.pointerdown",
+     "ent": true,
+     "target": "battle-entrance-bg",
+     "rel": 476
+    },
+    {
+     "t": 803,
+     "kind": "in.pointerup",
+     "ent": false,
+     "target": "battle-entrance-bg",
+     "rel": 480
+    },
+    {
+     "t": 803,
+     "kind": "in.click",
+     "ent": false,
+     "target": "battle-entrance-bg",
+     "rel": 480
+    }
+   ],
+   "marks": {
+    "hudMounted": 266,
+    "entranceMounted": 266,
+    "sigilVisible": 720,
+    "skipped": 804,
+    "endRoundHittable": 1023,
+    "cardHittable": 1023,
+    "oracleHittable": 1023,
+    "entranceGone": 1023
+   },
+   "relMarks": {
+    "hudMounted": -57,
+    "entranceMounted": -57,
+    "sigilVisible": 397,
+    "skipped": 481,
+    "endRoundHittable": 700,
+    "cardHittable": 700,
+    "oracleHittable": 700,
+    "entranceGone": 700
+   },
+   "leftover": {
+    "entrance": false,
+    "anyEntranceClass": 0
+   },
+   "errors": []
+  },
+  "t3-skip/pc/end@300": {
+   "how": "end",
+   "vp": "pc",
+   "tInputRel": 336,
+   "inputEvent": {
+    "t": 660,
+    "kind": "in.pointerdown",
+    "ent": true,
+    "target": "battle-entrance-bg",
+    "rel": 363
+   },
+   "validDuringEntrance": true,
+   "skipToGone": 216,
+   "skipToControl": 216,
+   "stateUnchanged": true,
+   "uiBefore": {
+    "hand": 5,
+    "text": "神力 2 / 2",
+    "round": "1",
+    "remaining": "3"
+   },
+   "uiAfter": {
+    "hand": 5,
+    "text": "神力 2 / 2",
+    "round": "1",
+    "remaining": "3"
+   },
+   "uiUnchanged": true,
+   "endEnabled": true,
+   "seAll": [
+    [
+     260,
+     -37,
+     0.11,
+     1
+    ]
+   ],
+   "seAfterInput": [],
+   "bossSePlayedAfterSkip": false,
+   "inputLog": [
+    {
+     "t": 0,
+     "kind": "in.click",
+     "ent": false,
+     "target": "",
+     "rel": -297
+    },
+    {
+     "t": 660,
+     "kind": "in.pointerdown",
+     "ent": true,
+     "target": "battle-entrance-bg",
+     "rel": 363
+    },
+    {
+     "t": 661,
+     "kind": "in.pointerup",
+     "ent": false,
+     "target": "battle-entrance-bg",
+     "rel": 364
+    },
+    {
+     "t": 662,
+     "kind": "in.click",
+     "ent": false,
+     "target": "battle-entrance-bg",
+     "rel": 365
+    }
+   ],
+   "marks": {
+    "hudMounted": 221,
+    "entranceMounted": 221,
+    "skipped": 673,
+    "sigilVisible": 687,
+    "endRoundHittable": 876,
+    "cardHittable": 876,
+    "oracleHittable": 876,
+    "entranceGone": 876
+   },
+   "relMarks": {
+    "hudMounted": -76,
+    "entranceMounted": -76,
+    "skipped": 376,
+    "sigilVisible": 390,
+    "endRoundHittable": 579,
+    "cardHittable": 579,
+    "oracleHittable": 579,
+    "entranceGone": 579
+   },
+   "leftover": {
+    "entrance": false,
+    "anyEntranceClass": 0
+   },
+   "errors": []
+  },
+  "t3-skip/pc/oracle@300": {
+   "how": "oracle",
+   "vp": "pc",
+   "tInputRel": 306,
+   "inputEvent": {
+    "t": 748,
+    "kind": "in.pointerdown",
+    "ent": true,
+    "target": "battle-entrance-god",
+    "rel": 309
+   },
+   "validDuringEntrance": true,
+   "skipToGone": 237,
+   "skipToControl": 237,
+   "stateUnchanged": true,
+   "uiBefore": {
+    "hand": 5,
+    "text": "神力 2 / 2",
+    "round": "1",
+    "remaining": "3"
+   },
+   "uiAfter": {
+    "hand": 5,
+    "text": "神力 2 / 2",
+    "round": "1",
+    "remaining": "3"
+   },
+   "uiUnchanged": true,
+   "endEnabled": true,
+   "seAll": [
+    [
+     222,
+     -217,
+     0.11,
+     1
+    ],
+    [
+     709,
+     270,
+     0.15,
+     0.8
+    ]
+   ],
+   "seAfterInput": [],
+   "bossSePlayedAfterSkip": false,
+   "inputLog": [
+    {
+     "t": 0,
+     "kind": "in.click",
+     "ent": false,
+     "target": "",
+     "rel": -439
+    },
+    {
+     "t": 748,
+     "kind": "in.pointerdown",
+     "ent": true,
+     "target": "battle-entrance-god",
+     "rel": 309
+    },
+    {
+     "t": 750,
+     "kind": "in.pointerup",
+     "ent": false,
+     "target": "battle-entrance-god",
+     "rel": 311
+    },
+    {
+     "t": 751,
+     "kind": "in.click",
+     "ent": false,
+     "target": "battle-entrance-god",
+     "rel": 312
+    }
+   ],
+   "marks": {
+    "hudMounted": 180,
+    "entranceMounted": 180,
+    "skipped": 757,
+    "sigilVisible": 870,
+    "endRoundHittable": 985,
+    "cardHittable": 985,
+    "oracleHittable": 985,
+    "entranceGone": 985
+   },
+   "relMarks": {
+    "hudMounted": -259,
+    "entranceMounted": -259,
+    "skipped": 318,
+    "sigilVisible": 431,
+    "endRoundHittable": 546,
+    "cardHittable": 546,
+    "oracleHittable": 546,
+    "entranceGone": 546
+   },
+   "leftover": {
+    "entrance": false,
+    "anyEntranceClass": 0
+   },
+   "errors": []
+  },
+  "t3-skip/pc/Enter@300": {
+   "how": "Enter",
+   "vp": "pc",
+   "tInputRel": 304,
+   "inputEvent": {
+    "t": 740,
+    "kind": "in.keydown",
+    "key": "Enter",
+    "ent": true,
+    "target": "card-view card-view-has-art",
+    "rel": 314
+   },
+   "validDuringEntrance": true,
+   "skipToGone": 240,
+   "skipToControl": 240,
+   "stateUnchanged": true,
+   "uiBefore": {
+    "hand": 5,
+    "text": "神力 2 / 2",
+    "round": "1",
+    "remaining": "3"
+   },
+   "uiAfter": {
+    "hand": 5,
+    "text": "神力 2 / 2",
+    "round": "1",
+    "remaining": "3"
+   },
+   "uiUnchanged": true,
+   "endEnabled": true,
+   "seAll": [
+    [
+     184,
+     -242,
+     0.11,
+     1
+    ],
+    [
+     697,
+     271,
+     0.15,
+     0.8
+    ]
+   ],
+   "seAfterInput": [],
+   "bossSePlayedAfterSkip": false,
+   "inputLog": [
+    {
+     "t": 0,
+     "kind": "in.click",
+     "ent": false,
+     "target": "",
+     "rel": -426
+    },
+    {
+     "t": 740,
+     "kind": "in.keydown",
+     "key": "Enter",
+     "ent": true,
+     "target": "card-view card-view-has-art",
+     "rel": 314
+    },
+    {
+     "t": 749,
+     "kind": "in.keyup",
+     "key": "Enter",
+     "ent": false,
+     "target": "card-view card-view-has-art",
+     "rel": 323
+    }
+   ],
+   "marks": {
+    "hudMounted": 46,
+    "entranceMounted": 46,
+    "skipped": 747,
+    "sigilVisible": 811,
+    "endRoundHittable": 980,
+    "cardHittable": 980,
+    "oracleHittable": 980,
+    "entranceGone": 980
+   },
+   "relMarks": {
+    "hudMounted": -380,
+    "entranceMounted": -380,
+    "skipped": 321,
+    "sigilVisible": 385,
+    "endRoundHittable": 554,
+    "cardHittable": 554,
+    "oracleHittable": 554,
+    "entranceGone": 554
+   },
+   "leftover": {
+    "entrance": false,
+    "anyEntranceClass": 0
+   },
+   "errors": []
+  },
+  "t3-skip/pc/Space@300": {
+   "how": "Space",
+   "vp": "pc",
+   "tInputRel": 304,
+   "inputEvent": {
+    "t": 753,
+    "kind": "in.keydown",
+    "key": " ",
+    "ent": true,
+    "target": "card-view card-view-has-art",
+    "rel": 308
+   },
+   "validDuringEntrance": true,
+   "skipToGone": 251,
+   "skipToControl": 251,
+   "stateUnchanged": true,
+   "uiBefore": {
+    "hand": 5,
+    "text": "神力 2 / 2",
+    "round": "1",
+    "remaining": "3"
+   },
+   "uiAfter": {
+    "hand": 5,
+    "text": "神力 2 / 2",
+    "round": "1",
+    "remaining": "3"
+   },
+   "uiUnchanged": true,
+   "endEnabled": true,
+   "seAll": [
+    [
+     206,
+     -239,
+     0.11,
+     1
+    ],
+    [
+     715,
+     270,
+     0.15,
+     0.8
+    ]
+   ],
+   "seAfterInput": [],
+   "bossSePlayedAfterSkip": false,
+   "inputLog": [
+    {
+     "t": 0,
+     "kind": "in.click",
+     "ent": false,
+     "target": "",
+     "rel": -445
+    },
+    {
+     "t": 753,
+     "kind": "in.keydown",
+     "key": " ",
+     "ent": true,
+     "target": "card-view card-view-has-art",
+     "rel": 308
+    },
+    {
+     "t": 756,
+     "kind": "in.keyup",
+     "key": " ",
+     "ent": false,
+     "target": "card-view card-view-has-art",
+     "rel": 311
+    }
+   ],
+   "marks": {
+    "hudMounted": 56,
+    "entranceMounted": 56,
+    "skipped": 763,
+    "sigilVisible": 833,
+    "endRoundHittable": 1004,
+    "cardHittable": 1004,
+    "oracleHittable": 1004,
+    "entranceGone": 1004
+   },
+   "relMarks": {
+    "hudMounted": -389,
+    "entranceMounted": -389,
+    "skipped": 318,
+    "sigilVisible": 388,
+    "endRoundHittable": 559,
+    "cardHittable": 559,
+    "oracleHittable": 559,
+    "entranceGone": 559
+   },
+   "leftover": {
+    "entrance": false,
+    "anyEntranceClass": 0
+   },
+   "errors": []
+  },
+  "t3-skip/pc/EscapeOracle@300": {
+   "how": "EscapeOracle",
+   "vp": "pc",
+   "tInputRel": 306,
+   "inputEvent": {
+    "t": 709,
+    "kind": "in.keydown",
+    "key": "Escape",
+    "ent": true,
+    "target": "divination-choice",
+    "rel": 308
+   },
+   "validDuringEntrance": true,
+   "skipToGone": 224,
+   "skipToControl": 224,
+   "stateUnchanged": true,
+   "uiBefore": {
+    "hand": 5,
+    "text": "神力 2 / 2",
+    "round": "1",
+    "remaining": "3"
+   },
+   "uiAfter": {
+    "hand": 5,
+    "text": "神力 2 / 2",
+    "round": "1",
+    "remaining": "3"
+   },
+   "uiUnchanged": true,
+   "endEnabled": true,
+   "seAll": [
+    [
+     204,
+     -197,
+     0.11,
+     1
+    ],
+    [
+     667,
+     266,
+     0.15,
+     0.8
+    ]
+   ],
+   "seAfterInput": [],
+   "bossSePlayedAfterSkip": false,
+   "inputLog": [
+    {
+     "t": 0,
+     "kind": "in.click",
+     "ent": false,
+     "target": "",
+     "rel": -401
+    },
+    {
+     "t": 709,
+     "kind": "in.keydown",
+     "key": "Escape",
+     "ent": true,
+     "target": "divination-choice",
+     "rel": 308
+    },
+    {
+     "t": 713,
+     "kind": "in.keyup",
+     "key": "Escape",
+     "ent": false,
+     "target": "divination-choice",
+     "rel": 312
+    }
+   ],
+   "marks": {
+    "hudMounted": 48,
+    "entranceMounted": 48,
+    "skipped": 719,
+    "sigilVisible": 821,
+    "endRoundHittable": 933,
+    "cardHittable": 933,
+    "oracleHittable": 933,
+    "entranceGone": 933
+   },
+   "relMarks": {
+    "hudMounted": -353,
+    "entranceMounted": -353,
+    "skipped": 318,
+    "sigilVisible": 420,
+    "endRoundHittable": 532,
+    "cardHittable": 532,
+    "oracleHittable": 532,
+    "entranceGone": 532
+   },
+   "leftover": {
+    "entrance": false,
+    "anyEntranceClass": 0
+   },
+   "errors": []
+  },
+  "t3-skip/pc/card@60": {
+   "how": "card",
+   "vp": "pc",
+   "tInputRel": 114,
+   "inputEvent": {
+    "t": 470,
+    "kind": "in.pointerdown",
+    "ent": true,
+    "target": "battle-entrance-bg",
+    "rel": 120
+   },
+   "validDuringEntrance": true,
+   "skipToGone": 219,
+   "skipToControl": 219,
+   "stateUnchanged": true,
+   "uiBefore": {
+    "hand": 5,
+    "text": "神力 2 / 2",
+    "round": "1",
+    "remaining": "3"
+   },
+   "uiAfter": {
+    "hand": 5,
+    "text": "神力 2 / 2",
+    "round": "1",
+    "remaining": "3"
+   },
+   "uiUnchanged": true,
+   "endEnabled": true,
+   "seAll": [
+    [
+     204,
+     -146,
+     0.11,
+     1
+    ]
+   ],
+   "seAfterInput": [],
+   "bossSePlayedAfterSkip": false,
+   "inputLog": [
+    {
+     "t": 0,
+     "kind": "in.click",
+     "ent": false,
+     "target": "",
+     "rel": -350
+    },
+    {
+     "t": 470,
+     "kind": "in.pointerdown",
+     "ent": true,
+     "target": "battle-entrance-bg",
+     "rel": 120
+    },
+    {
+     "t": 471,
+     "kind": "in.pointerup",
+     "ent": false,
+     "target": "battle-entrance-bg",
+     "rel": 121
+    },
+    {
+     "t": 471,
+     "kind": "in.click",
+     "ent": false,
+     "target": "battle-entrance-bg",
+     "rel": 121
+    }
+   ],
+   "marks": {
+    "hudMounted": 154,
+    "entranceMounted": 154,
+    "skipped": 477,
+    "endRoundHittable": 689,
+    "cardHittable": 689,
+    "oracleHittable": 689,
+    "entranceGone": 689
+   },
+   "relMarks": {
+    "hudMounted": -196,
+    "entranceMounted": -196,
+    "skipped": 127,
+    "endRoundHittable": 339,
+    "cardHittable": 339,
+    "oracleHittable": 339,
+    "entranceGone": 339
+   },
+   "leftover": {
+    "entrance": false,
+    "anyEntranceClass": 0
+   },
+   "errors": []
+  },
+  "t3-skip/pc/card@1800": {
+   "how": "card",
+   "vp": "pc",
+   "tInputRel": 1806,
+   "inputEvent": {
+    "t": 2161,
+    "kind": "in.pointerdown",
+    "ent": true,
+    "target": "battle-entrance-bg",
+    "rel": 1808
+   },
+   "validDuringEntrance": true,
+   "skipToGone": 231,
+   "skipToControl": 231,
+   "stateUnchanged": true,
+   "uiBefore": {
+    "hand": 5,
+    "text": "神力 2 / 2",
+    "round": "1",
+    "remaining": "3"
+   },
+   "uiAfter": {
+    "hand": 5,
+    "text": "神力 2 / 2",
+    "round": "1",
+    "remaining": "3"
+   },
+   "uiUnchanged": true,
+   "endEnabled": true,
+   "seAll": [
+    [
+     176,
+     -177,
+     0.11,
+     1
+    ],
+    [
+     616,
+     263,
+     0.15,
+     0.8
+    ],
+    [
+     1862,
+     1509,
+     0.96,
+     1
+    ]
+   ],
+   "seAfterInput": [],
+   "bossSePlayedAfterSkip": false,
+   "inputLog": [
+    {
+     "t": 0,
+     "kind": "in.click",
+     "ent": false,
+     "target": "",
+     "rel": -353
+    },
+    {
+     "t": 2161,
+     "kind": "in.pointerdown",
+     "ent": true,
+     "target": "battle-entrance-bg",
+     "rel": 1808
+    },
+    {
+     "t": 2162,
+     "kind": "in.pointerup",
+     "ent": false,
+     "target": "battle-entrance-bg",
+     "rel": 1809
+    },
+    {
+     "t": 2162,
+     "kind": "in.click",
+     "ent": false,
+     "target": "battle-entrance-bg",
+     "rel": 1809
+    }
+   ],
+   "marks": {
+    "hudMounted": 142,
+    "entranceMounted": 142,
+    "sigilVisible": 737,
+    "godVisible": 1187,
+    "enemyArtVisible": 2007,
+    "stageVisible": 2007,
+    "skipped": 2179,
+    "endRoundHittable": 2392,
+    "cardHittable": 2392,
+    "oracleHittable": 2392,
+    "entranceGone": 2392
+   },
+   "relMarks": {
+    "hudMounted": -211,
+    "entranceMounted": -211,
+    "sigilVisible": 384,
+    "godVisible": 834,
+    "enemyArtVisible": 1654,
+    "stageVisible": 1654,
+    "skipped": 1826,
+    "endRoundHittable": 2039,
+    "cardHittable": 2039,
+    "oracleHittable": 2039,
+    "entranceGone": 2039
+   },
+   "leftover": {
+    "entrance": false,
+    "anyEntranceClass": 0
+   },
+   "errors": []
+  },
+  "t3-skip/sp/card@300": {
+   "how": "card",
+   "vp": "sp",
+   "tInputRel": 303,
+   "inputEvent": {
+    "t": 577,
+    "kind": "in.pointerdown",
+    "ent": true,
+    "target": "battle-entrance-bg",
+    "rel": 344
+   },
+   "validDuringEntrance": true,
+   "skipToGone": 210,
+   "skipToControl": 210,
+   "stateUnchanged": true,
+   "uiBefore": {
+    "hand": 5,
+    "text": "神力 2 / 2",
+    "round": "1",
+    "remaining": "3"
+   },
+   "uiAfter": {
+    "hand": 5,
+    "text": "神力 2 / 2",
+    "round": "1",
+    "remaining": "3"
+   },
+   "uiUnchanged": true,
+   "endEnabled": true,
+   "seAll": [
+    [
+     241,
+     8,
+     0.11,
+     1
+    ],
+    [
+     485,
+     252,
+     0.15,
+     0.8
+    ]
+   ],
+   "seAfterInput": [],
+   "bossSePlayedAfterSkip": false,
+   "inputLog": [
+    {
+     "t": 0,
+     "kind": "in.click",
+     "ent": false,
+     "target": "",
+     "rel": -233
+    },
+    {
+     "t": 577,
+     "kind": "in.pointerdown",
+     "ent": true,
+     "target": "battle-entrance-bg",
+     "rel": 344
+    },
+    {
+     "t": 579,
+     "kind": "in.pointerup",
+     "ent": false,
+     "target": "battle-entrance-bg",
+     "rel": 346
+    },
+    {
+     "t": 582,
+     "kind": "in.click",
+     "ent": false,
+     "target": "battle-entrance-bg",
+     "rel": 349
+    }
+   ],
+   "marks": {
+    "hudMounted": 47,
+    "entranceMounted": 47,
+    "skipped": 584,
+    "sigilVisible": 619,
+    "endRoundHittable": 787,
+    "cardHittable": 787,
+    "oracleHittable": 787,
+    "entranceGone": 787
+   },
+   "relMarks": {
+    "hudMounted": -186,
+    "entranceMounted": -186,
+    "skipped": 351,
+    "sigilVisible": 386,
+    "endRoundHittable": 554,
+    "cardHittable": 554,
+    "oracleHittable": 554,
+    "entranceGone": 554
+   },
+   "leftover": {
+    "entrance": false,
+    "anyEntranceClass": 0
+   },
+   "errors": []
+  },
+  "t3-skip/sp/end@300": {
+   "how": "end",
+   "vp": "sp",
+   "tInputRel": 304,
+   "inputEvent": {
+    "t": 587,
+    "kind": "in.pointerdown",
+    "ent": true,
+    "target": "battle-entrance-bg",
+    "rel": 321
+   },
+   "validDuringEntrance": true,
+   "skipToGone": 214,
+   "skipToControl": 214,
+   "stateUnchanged": true,
+   "uiBefore": {
+    "hand": 5,
+    "text": "神力 2 / 2",
+    "round": "1",
+    "remaining": "3"
+   },
+   "uiAfter": {
+    "hand": 5,
+    "text": "神力 2 / 2",
+    "round": "1",
+    "remaining": "3"
+   },
+   "uiUnchanged": true,
+   "endEnabled": true,
+   "seAll": [
+    [
+     519,
+     253,
+     0.15,
+     0.8
+    ]
+   ],
+   "seAfterInput": [],
+   "bossSePlayedAfterSkip": false,
+   "inputLog": [
+    {
+     "t": 0,
+     "kind": "in.click",
+     "ent": false,
+     "target": "",
+     "rel": -266
+    },
+    {
+     "t": 587,
+     "kind": "in.pointerdown",
+     "ent": true,
+     "target": "battle-entrance-bg",
+     "rel": 321
+    },
+    {
+     "t": 589,
+     "kind": "in.pointerup",
+     "ent": false,
+     "target": "battle-entrance-bg",
+     "rel": 323
+    },
+    {
+     "t": 591,
+     "kind": "in.click",
+     "ent": false,
+     "target": "battle-entrance-bg",
+     "rel": 325
+    }
+   ],
+   "marks": {
+    "hudMounted": 155,
+    "entranceMounted": 155,
+    "skipped": 600,
+    "sigilVisible": 650,
+    "endRoundHittable": 801,
+    "cardHittable": 801,
+    "oracleHittable": 801,
+    "entranceGone": 801
+   },
+   "relMarks": {
+    "hudMounted": -111,
+    "entranceMounted": -111,
+    "skipped": 334,
+    "sigilVisible": 384,
+    "endRoundHittable": 535,
+    "cardHittable": 535,
+    "oracleHittable": 535,
+    "entranceGone": 535
+   },
+   "leftover": {
+    "entrance": false,
+    "anyEntranceClass": 0
+   },
+   "errors": []
+  },
+  "t3-skip/sp/oracle@300": {
+   "how": "oracle",
+   "vp": "sp",
+   "tInputRel": 305,
+   "inputEvent": {
+    "t": 548,
+    "kind": "in.pointerdown",
+    "ent": true,
+    "target": "battle-entrance-bg",
+    "rel": 326
+   },
+   "validDuringEntrance": true,
+   "skipToGone": 209,
+   "skipToControl": 209,
+   "stateUnchanged": true,
+   "uiBefore": {
+    "hand": 5,
+    "text": "神力 2 / 2",
+    "round": "1",
+    "remaining": "3"
+   },
+   "uiAfter": {
+    "hand": 5,
+    "text": "神力 2 / 2",
+    "round": "1",
+    "remaining": "3"
+   },
+   "uiUnchanged": true,
+   "endEnabled": true,
+   "seAll": [
+    [
+     260,
+     38,
+     0.11,
+     1
+    ],
+    [
+     492,
+     270,
+     0.15,
+     0.8
+    ]
+   ],
+   "seAfterInput": [],
+   "bossSePlayedAfterSkip": false,
+   "inputLog": [
+    {
+     "t": 0,
+     "kind": "in.click",
+     "ent": false,
+     "target": "",
+     "rel": -222
+    },
+    {
+     "t": 548,
+     "kind": "in.pointerdown",
+     "ent": true,
+     "target": "battle-entrance-bg",
+     "rel": 326
+    },
+    {
+     "t": 550,
+     "kind": "in.pointerup",
+     "ent": false,
+     "target": "battle-entrance-bg",
+     "rel": 328
+    },
+    {
+     "t": 551,
+     "kind": "in.click",
+     "ent": false,
+     "target": "battle-entrance-bg",
+     "rel": 329
+    }
+   ],
+   "marks": {
+    "hudMounted": 49,
+    "entranceMounted": 49,
+    "skipped": 557,
+    "sigilVisible": 606,
+    "endRoundHittable": 757,
+    "cardHittable": 757,
+    "oracleHittable": 757,
+    "entranceGone": 757
+   },
+   "relMarks": {
+    "hudMounted": -173,
+    "entranceMounted": -173,
+    "skipped": 335,
+    "sigilVisible": 384,
+    "endRoundHittable": 535,
+    "cardHittable": 535,
+    "oracleHittable": 535,
+    "entranceGone": 535
+   },
+   "leftover": {
+    "entrance": false,
+    "anyEntranceClass": 0
+   },
+   "errors": []
+  },
+  "t3-skip/sp/card@1800": {
+   "how": "card",
+   "vp": "sp",
+   "tInputRel": 1804,
+   "inputEvent": {
+    "t": 2026,
+    "kind": "in.pointerdown",
+    "ent": true,
+    "target": "battle-entrance-bg",
+    "rel": 1819
+   },
+   "validDuringEntrance": true,
+   "skipToGone": 216,
+   "skipToControl": 216,
+   "stateUnchanged": true,
+   "uiBefore": {
+    "hand": 5,
+    "text": "神力 2 / 2",
+    "round": "1",
+    "remaining": "3"
+   },
+   "uiAfter": {
+    "hand": 5,
+    "text": "神力 2 / 2",
+    "round": "1",
+    "remaining": "3"
+   },
+   "uiUnchanged": true,
+   "endEnabled": true,
+   "seAll": [
+    [
+     394,
+     187,
+     0.11,
+     1
+    ],
+    [
+     469,
+     262,
+     0.15,
+     0.8
+    ],
+    [
+     1726,
+     1519,
+     0.96,
+     1
+    ]
+   ],
+   "seAfterInput": [],
+   "bossSePlayedAfterSkip": false,
+   "inputLog": [
+    {
+     "t": 0,
+     "kind": "in.click",
+     "ent": false,
+     "target": "",
+     "rel": -207
+    },
+    {
+     "t": 2026,
+     "kind": "in.pointerdown",
+     "ent": true,
+     "target": "battle-entrance-bg",
+     "rel": 1819
+    },
+    {
+     "t": 2028,
+     "kind": "in.pointerup",
+     "ent": false,
+     "target": "battle-entrance-bg",
+     "rel": 1821
+    },
+    {
+     "t": 2030,
+     "kind": "in.click",
+     "ent": false,
+     "target": "battle-entrance-bg",
+     "rel": 1823
+    }
+   ],
+   "marks": {
+    "hudMounted": 139,
+    "entranceMounted": 139,
+    "sigilVisible": 592,
+    "godVisible": 1042,
+    "enemyArtVisible": 1841,
+    "stageVisible": 1858,
+    "skipped": 2041,
+    "endRoundHittable": 2242,
+    "cardHittable": 2242,
+    "oracleHittable": 2242,
+    "entranceGone": 2242
+   },
+   "relMarks": {
+    "hudMounted": -68,
+    "entranceMounted": -68,
+    "sigilVisible": 385,
+    "godVisible": 835,
+    "enemyArtVisible": 1634,
+    "stageVisible": 1651,
+    "skipped": 1834,
+    "endRoundHittable": 2035,
+    "cardHittable": 2035,
+    "oracleHittable": 2035,
+    "entranceGone": 2035
+   },
+   "leftover": {
+    "entrance": false,
+    "anyEntranceClass": 0
+   },
+   "errors": []
+  }
+ }
+}

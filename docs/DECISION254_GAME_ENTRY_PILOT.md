@@ -297,3 +297,63 @@ summary: {"headless":{"before":{"runs":8,"over33":[1,2,2,2,3,3,4,4],"over33Media
 - 新規画像／動画／音声：0（生成 0・H3 0・fal.ai 0・追加費用 0）。`public/assets/**` 変更 0
 - save／storage key／gameVersion：0。BGM 仕様（`bgm.ts`）：0
 - master merge／push／Production deploy：0。Human QA 結果待ちで STOP
+
+## 8. Production Release（2026-10-01・PRODUCTION LIVE / CLOSED）
+
+Human QA：**Q1〜Q5 5/5 YES**（CEO・2026-10-01）→ CEO 承認 → Release Gate → 統合 → deploy → Smoke。表はすべて `docs/evidence/decision254/release/`・`production-smoke/` の JSON から `gen254.mjs.txt` で生成（`release/tables.md`・`production-smoke/tables.md`）。
+
+| 項目 | 結果 |
+|---|---|
+| RC | `release/d254-game-entry-rc` = **`a611270`**（clean worktree `SevenGodsGame-d254-rc`・`git status` 0） |
+| lineage | `98067ec`（master）→ `4a887f7`（Preflight docs）→ `a611270`。merge-base＝`98067ec`・fast-forward。feat/d224 の runtime（CardView／EnemyPanel／combatTimeline／enemyVfxTiming／useBattleSound／sound.test）混入 0・決定213 runtime 混入 0 |
+| git diff scope | src 8 ファイル・+707／−21（`BossEntrance.tsx`／`battleEntrance.ts` 新規／`battleEntrance.test.ts` 新規／`BattleScreen.tsx`／`battle.css`／`sound.ts` +2／`DeckBuilderScreen.tsx`／`FirstBattleBrief.tsx`）。`src/core`・`enemyVfxTiming.ts`・`godStrikeVideo.ts`・`bgm.ts`・`hooks`・`public/assets` 差分 0。新規 asset 0・追加費用 0 |
+| tsc／lint／tests／build（RC） | 0／0／**1,289 PASS**（＋9 skip＝env ゲート監査）／`index-ePtASz7H.js` md5 `2a5bd4fc…`＝**Pilot Human QA dist と一致**・`index-DDJDc11N.css` md5 `1ac53796…` |
+| metric lock（RC） | Production dist :4271 vs RC dist :4273・PC／SP／SP660 × 3 組＝14 対局・154 行：**不一致 0**（hand／AP／HP／block／敵 HP・block／託宣残／共鳴／intent／rngCursor／score／status）。1 回目・2 回目の走では God Strike cut-in 中にクリックが落ちて操作列が揺れる計測側の揺らぎで R5 以降に 4／8 行の差が出たため、cut-in の消滅を待ってから次のクリックを打つよう**計測スクリプトだけ**を修正して確定（runtime 変更 0・R5 開始時の state は 3 走とも完全一致。`release/gate-lock.json`・`gate-lock-flaky-run2.log.txt`）。決定249 反応集合 同一／決定250 God Strike 14/14 発火・cut-in 中に入口要素なし／決定252 予告・立ち絵 同一／決定253 託宣表示 同一 |
+| Entry 回帰（RC） | T1 Full：神紋 385〜390／神 835〜839／敵 1634〜1643／操作可 2418〜2505／消滅 2822〜2867／SE 261〜288・1507〜1547（PC／SP／SP660）・入口中 hit 0／T2 もう一度・ホーム経由＝Short（操作可 1,189〜1,204）・reload→続きから 入口なし・reload→新規 Full／T3 12 経路 skip→消滅 204〜251ms・手札 5→5・保存 state 不変・顕現 SE 取消／T4 reduced 静止・transform animation 0／T5 HUD 9 要素 箱差 0／T6 続きから 入口なし／T7 初陣・Daily Full・先読み 0 取得／7 柱 正／横スクロール 0・console error 0（`release/gate2-all.json`） |
+| performance（RC・SP 390×844 >33ms frame） | **実 Chrome（GPU）After [1,1,4,6]（最大 6 ＜ 8）**／Before [3,3,5,5]。headless After [3,3,3,16]＋[4,2,11]／Before [3,4,5,12]＋[4,2,3]＝software raster の既知外れ値（Pilot known #9）で Before にも出る＝新しい悪化なし。click 後の入口素材取得 0（追加転送 0B） |
+| master → origin/master | **`a611270`**（ff・push 2026-10-01 23:07 JST） |
+| Vercel Production deployment | **`6786399725`**（sha `a611270`・Production・success・2026-10-01T14:07:46Z） |
+| Production URL | `https://seven-gods-game.vercel.app/`（配信 `index-ePtASz7H.js` md5 `2a5bd4fc…`＝RC build・`index-DDJDc11N.css` 200） |
+| rollback target | GitHub/Vercel deployment **`6770019105`**（sha `98067ec`・runtime `4d7b940`＝決定253） |
+
+### 8-1. Production Smoke（`production-smoke/`・RC dist :4273 vs 本番・PC 1508×660／SP 390×844／SP 390×660）
+実行：本番 `https://seven-gods-game.vercel.app`（配信 `index-ePtASz7H.js` md5 `2a5bd4fc…`）vs RC dist :4273。1 回目の走が T1／T4／anims 完了直後にメモリ逼迫（物理 6GB・空き 0.7GB）で停止したため、CEO 承認（Smoke Resume）後に **項目単位で直列再開**（headless 1 ブラウザ・headed は perf 2 本のみ）。各項目の JSON：`gate2-t3.json`／`gate2-t2.json`／`gate2-t6.json`／`gate2-t7.json`／`gate2-gods.json`／`gate2-t1-t4-anims.json`（中断で JSON 未保存だった T1／T4／anims を 1 ブラウザで取り直し。1 回目の数値は `gate2.log.txt`）／`gate-lock.json`／`perf2.json`。統合 `gate2-all.json`・表 `tables.md`。
+
+| # | 項目 | 結果 |
+|---|---|---|
+| 1 | Full Entry 発火 | ✔ PC／SP／SP660 とも variant full・神紋 384〜391／神 834〜836／敵 1634〜1651 ms（1 回目・取り直しとも） |
+| 2 | selected God 正しい | ✔ 7 柱すべて `front_640.webp`＝HUD アバターと同一 |
+| 3 | 「{神名} 降臨」 | ✔ 恵比寿／大耀／蒼毘／才華／寿楽／福永／笑蓮 降臨・神色 `--god-accent` 一致 |
+| 4 | God／Enemy 対峙 | ✔ PC 神左・敵右（敵名・★・型 表示）／SP 神中央上→沈み・敵上中央。overflow 0 |
+| 5 | stage reveal | ✔ 舞台 1651〜1672 ms・`boss-entrance-bg` |
+| 6 | HUD reveal | ✔ 1 回目：操作可 2418〜2442／消滅 2811〜2849。取り直し：sp660 2418／2821、PC・SP は 2653〜2665／3027〜3052（JS 側のみ +230ms＝known #5・映像は時刻どおり・入口中の hit 0） |
+| 7 | Short Entry | ✔ もう一度：操作可 1199〜1237／消滅 1527〜1756（PC は長い frame 1 本）・SE 115〜141／476〜492 |
+| 8 | Retry Short | ✔ ホーム経由の新規開始も Short（1517〜1530）。reload→新規は Full に戻る（2819〜2870） |
+| 9 | Skip | ✔ 12 経路 skip→消滅 209〜251 ms |
+| 10 | Skip penetration 0 | ✔ 手札 5→5・保存 GameState・AP・R・託宣残 不変・未再生 SE 取消（12/12） |
+| 11 | Reduced Motion | ✔ 静止表示・transform animation 0・消滅 937〜943／操作可 752〜800（取り直し。1 回目の SP は停止直前の負荷で 1418） |
+| 12 | Continue／Resume 入口なし | ✔ mount 11〜35 ms・SE 0（T6・T2 reload） |
+| 13 | 決定252 Intent／Ultimate | ✔ 予告文・立ち絵 class・必殺が RC と全ラウンド一致（Lock 154 行） |
+| 14 | 決定253 Oracle Readability | ✔ 役割語 守る／整える／攻める・名前・状況表示 visible・overflow 0・託宣残 一致 |
+| 15 | 決定250 God Strike | ✔ 14/14 対局で発火・`resonance-cutin` z 4・`god-strike-v2.mp4`＋`keyvisual.webp`・cut-in 中に入口要素なし |
+| 追加 | console error | ✔ 0（全 context） |
+| 追加 | 横スクロール | ✔ 0 |
+| 追加 | HUD 位置差 | ✔ 9 要素 0（消滅直後 vs +2s・RC vs 本番）。`.enemy-avatar` は呼吸 transform の位相差のみ |
+| 追加 | 決定247 | ✔ `.enemy-avatar` scale `-1 1`（PC／SP） |
+| 追加 | 決定249 | ✔ 反応クラス集合 7 種 同一 |
+| parity | 同 seed GameState（RC vs 本番） | ✔ **154 行 不一致 0**（hand／AP／HP／block／敵 HP・block／託宣残／共鳴／intent／rngCursor／score／status） |
+| perf | SP 390×844 >33ms frame | ✔ **実 Chrome（GPU）本番 [2,4]（最大 4 ＜ 8。Pilot 7・Release Gate 6 から悪化なし）**・headless 本番 4 |
+| preload | click 後の入口素材取得 | ✔ 0（追加転送 0B） |
+
+### 8-2. cleanup
+- QA サーバー :4271（Production dist）／:4272（Pilot dist）／:4273（RC dist）停止（listen 0）。Claude 側の node／headless プロセス 0。CEO の Google Chrome（12 プロセス）には触れていない
+- 一時ファイアウォール規則：作成していない（0 件を確認）
+- RC worktree `SevenGodsGame-d254-rc`・branch `release/d254-game-entry-rc` は保持。計測スクリプト `scripts/decision254/*.mjs` は commit せず、写しを evidence に `.mjs.txt` で保存
+- 最終メモリ状態：物理 6,020MB・空き約 1,440MB（Smoke 完了・プロセス停止後）
+
+### 8-3. Known Issues（CLOSED 時点）
+1. headless（GPU なし）の SP 計測で >33ms frame の外れ値（11〜16 本）が Before／After とも出る。GPU 付き実 Chrome と iPhone 実機（Human QA Q5 YES）では再現しない。
+2. SP DPR3 では `front_640` を 1.17 倍拡大（Q5 YES で許容）。
+3. SP 高さ ≤700px は「START」文字を省略。
+4. 入口の敵は原画の向き（PC の対峙では神の方を向く。HUD の決定247 反転とは別要素）。
+5. mount 直後に main thread が重い環境では、JS 予約の基準 `document.timeline.currentTime` が frame 開始時刻で止まっているため、SE・操作開放・消滅が最大 ≈230ms 遅れることがある（絵は compositor で時刻どおり。入力ロックは維持される＝安全側）。Production Smoke の取り直し（空きメモリ 1.4GB の環境）で PC／SP に +230ms を観測、1 回目の走と sp660 は設計値どおり。改善候補＝`performance.now()` 基準（1 行・NEXT NOW 提案）。
