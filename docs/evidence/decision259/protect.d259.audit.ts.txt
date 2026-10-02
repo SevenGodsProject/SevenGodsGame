@@ -1,0 +1,258 @@
+/**
+ * 決定259 Step 2b — 保護面の回帰（paired-seed）。
+ *
+ * 方策 reader／naive／greedy と託宣ロジックは決定252／253／255（Lane 1）の harness と同一（`docs/evidence/decision255/harness.d255.test.ts.txt` から
+ * class 禁止と planner を除いて複写。seed 文字列 `p254-${i}` も同じ＝決定255 の prod 値と照合できる）。
+ * 面：通常（normal・神階 0）／むずかしい（hard）／Daily（normal × Daily 補正）＝ reader／naive／greedy、神階Ⅳ＝3 方策、神階Ⅶ（猛威／巨躯／静寂）＝ reader。
+ * 指標：勝率（面 × 方策・神別・敵別）、読む価値（reader−naive）、God Strike 率（BURST ≥1 の試合率）、49 セル reader<50% の数、
+ *       神別「≥50% 方策」（決定58／DAILY-01／STAKE-01：その神で最良方策の勝率が 50% 以上か）、先頭 variant との paired Δ（同一 seed）。
+ * スコア式だけの候補（C3*／C7*）は方策が score を参照しないため Δ=0 が構造的に期待される（その証明としても実行する）。
+ */
+import { describe, expect, it } from 'vitest'
+import { GODS } from '../../src/core/data/gods'
+import { ENEMIES } from '../../src/core/data/enemies'
+import { getCardDef } from '../../src/core/data/cards'
+import { RULES } from '../../src/core/data/rules'
+import { DIVINATION_CHOICES } from '../../src/core/data/divination'
+import { applyAction } from '../../src/core/engine/reducer'
+import { enemyActionTotal } from '../../src/core/engine/intent'
+import { sumBuff } from '../../src/core/engine/buffs'
+import type { CardInstance, Difficulty, Effect, EnemyActionDef, EnemyId, GameState, GodId } from '../../src/core/types'
+import { avg, r1, r2, writeOut } from './dailyHarness'
+import { applyVariant, assertRestored, deckOverride, restore, VARIANTS, variantIdsFromEnv } from './variants'
+
+const SEEDS = Number(process.env.D259_SEEDS ?? 60)
+const OUT_NAME = process.env.D259_OUT ?? 'protect.json'
+
+// ---------------- helpers（決定255 harness と同一） ----------------
+type Policy = 'reader' | 'naive' | 'greedy'
+const isUlt = (x: EnemyActionDef | null | undefined) => !!x && (x.kind === 'special' || (x.kind === 'multiAttack' && !!x.special))
+const isEnemyDebuff = (e: Effect): e is Extract<Effect, { kind: 'debuff' }> => e.kind === 'debuff' && e.target === 'enemy'
+const eff = (def: { effects: Effect[] }, kind: string, target?: string) => def.effects.filter((e) => e.kind === kind && (target ? (e as { target?: string }).target === target : true)).reduce((s, e) => s + ((e as { amount?: number }).amount ?? 0), 0)
+const dmgOf = (x: CardInstance) => eff(getCardDef(x.defId), 'damage', 'enemy')
+const blockOf = (x: CardInstance) => eff(getCardDef(x.defId), 'block')
+const healOf = (x: CardInstance) => eff(getCardDef(x.defId), 'heal')
+const selfDmgOf = (x: CardInstance) => eff(getCardDef(x.defId), 'damage', 'self')
+const debuffOf = (x: CardInstance) => getCardDef(x.defId).effects.filter(isEnemyDebuff).reduce((s, e) => s + e.amount, 0)
+const debuffRoundsOf = (x: CardInstance) => getCardDef(x.defId).effects.filter(isEnemyDebuff).reduce((s, e) => Math.max(s, e.rounds), 0)
+const costOf = (x: CardInstance) => getCardDef(x.defId).cost + (x.costModifier ?? 0)
+const utilOf = (x: CardInstance) => getCardDef(x.defId).effects.reduce((s, e) => {
+  const a = e as { kind: string; amount?: number; rounds?: number; target?: string }
+  if (a.kind === 'draw' || a.kind === 'gainAp') return s + (a.amount ?? 0) * 4
+  if (a.kind === 'resonance') return s + (a.amount ?? 0) * 2.5
+  if ((a.kind === 'buff' && a.target === 'self') || (a.kind === 'debuff' && a.target === 'enemy')) return s + (a.amount ?? 0) * (a.rounds ?? 1)
+  return s
+}, 0)
+const incomingOf = (s: GameState) => (s.enemy.intent ? enemyActionTotal(s.enemy.intent) : 0)
+const effIncoming = (s: GameState) => Math.max(0, incomingOf(s) + sumBuff(s.enemy.buffs, 'atk'))
+const projectedHp = (s: GameState) => s.player.hp - Math.max(0, effIncoming(s) - s.player.block)
+function bonusDmgIf(state: GameState, x: CardInstance): number {
+  const def = getCardDef(x.defId)
+  if (!def.bonus) return 0
+  const extra = def.bonus.effects.filter((e) => e.kind === 'damage' && (e as { target?: string }).target === 'enemy').reduce((s, e) => s + (e as { amount: number }).amount, 0)
+  if (extra === 0) return 0
+  const inc = incomingOf(state)
+  switch (def.bonus.when) {
+    case 'combo': return state.cardsPlayedThisRound >= 1 ? extra : 0
+    case 'charged': return state.resonance.value >= RULES.cardBonus.chargedThreshold ? extra : 0
+    case 'enemyBig': return inc >= RULES.cardBonus.enemyBigThreshold ? extra : 0
+    case 'lowHp': return state.player.hp <= Math.floor(state.player.maxHp * 0.5) ? extra : 0
+    case 'blocked': return inc > 0 && state.player.block + blockOf(x) >= inc ? extra : 0
+  }
+  return 0
+}
+const totalDmg = (s: GameState, x: CardInstance) => dmgOf(x) + bonusDmgIf(s, x) + (dmgOf(x) > 0 ? Math.max(0, sumBuff(s.player.buffs, 'atk')) : 0)
+function maxDmgNow(state: GameState, affordable: CardInstance[]): number {
+  const dmgCards = affordable.filter((x) => dmgOf(x) > 0).sort((p, q) => totalDmg(state, q) / costOf(q) - totalDmg(state, p) / costOf(p))
+  let ap = state.ap.current, sum = 0
+  for (const x of dmgCards) if (costOf(x) <= ap) { ap -= costOf(x); sum += totalDmg(state, x) }
+  return sum
+}
+const canKillNow = (state: GameState, affordable: CardInstance[]) => maxDmgNow(state, affordable) >= state.enemy.hp + state.enemy.block
+function cardValue(state: GameState, x: CardInstance): number {
+  const inc = effIncoming(state)
+  const d = totalDmg(state, x)
+  const b = Math.min(blockOf(x), Math.max(0, inc - state.player.block))
+  const h = Math.min(healOf(x), state.player.maxHp - state.player.hp)
+  const u = utilOf(x) * 0.5
+  return d + b + h * 0.8 + u
+}
+void cardValue
+
+// ---------------- reader / naive / greedy（Lane 1・決定252 と同一） ----------------
+function pickCard(state: GameState, policy: Policy): CardInstance | null {
+  const affordable = state.hand.filter((x) => costOf(x) <= state.ap.current)
+  if (affordable.length === 0) return null
+  if (policy === 'naive') return affordable[0]
+  const inc = effIncoming(state)
+  const hpAfter = projectedHp(state)
+  const lethal = hpAfter <= 0
+  const dangerous = hpAfter < state.player.maxHp * 0.35
+  const guarded = state.player.block >= inc
+  const byDmg = (arr: CardInstance[]) => arr.filter((x) => dmgOf(x) > 0).sort((p, q) => totalDmg(state, q) / costOf(q) - totalDmg(state, p) / costOf(p))
+  const bestBlock = () => affordable.filter((x) => blockOf(x) > 0).sort((p, q) => blockOf(q) - blockOf(p))[0]
+  const bestDebuff = () => affordable.filter((x) => debuffOf(x) > 0).sort((p, q) => debuffOf(q) * debuffRoundsOf(q) - debuffOf(p) * debuffRoundsOf(p))[0]
+  const bestHeal = () => affordable.filter((x) => healOf(x) > 0).sort((p, q) => healOf(q) - healOf(p))[0]
+  const bestUtil = () => affordable.filter((x) => utilOf(x) > 0 && dmgOf(x) === 0 && blockOf(x) === 0 && healOf(x) === 0).sort((p, q) => utilOf(q) / costOf(q) - utilOf(p) / costOf(p))[0]
+  if (policy === 'greedy') { const d = byDmg(affordable)[0]; if (d) return d; return bestUtil() ?? bestBlock() ?? bestHeal() ?? affordable.sort((p, q) => costOf(q) - costOf(p))[0] }
+  const free = affordable.find((x) => { const def = getCardDef(x.defId); return def.effects.some((e) => e.kind === 'gainAp' && e.amount >= def.cost) })
+  if (free) return free
+  if (canKillNow(state, affordable)) { const d = byDmg(affordable)[0]; if (d) return d }
+  if ((lethal || dangerous) && !guarded) { const b = bestBlock(); if (b) return b; const db = bestDebuff(); if (db) return db; const h = bestHeal(); if (h) return h }
+  if (lethal) { const h = bestHeal(); if (h) return h }
+  const safe = affordable.filter((x) => selfDmgOf(x) === 0 || state.player.hp - selfDmgOf(x) - Math.max(0, inc - state.player.block) > 0)
+  const d = byDmg(safe)[0]; if (d) return d
+  const u = bestUtil(); if (u) return u
+  const h = bestHeal(); if (h && state.player.hp < state.player.maxHp * 0.7) return h
+  const b = bestBlock(); if (b && !guarded && inc > 0) return b
+  return null
+}
+function pickOracle(state: GameState, policy: Policy): number {
+  if (state.divination.remaining <= 0 || state.divination.usedThisRound) return -1
+  if (policy === 'naive' || policy === 'greedy') return 2
+  const inc = effIncoming(state), hpAfter = projectedHp(state)
+  const lethal = hpAfter <= 0, dangerous = hpAfter < state.player.maxHp * 0.35
+  const roundsLeft = RULES.totalRounds - state.round + 1
+  if (state.enemy.hp + state.enemy.block <= 4) return 2
+  if (lethal && inc > 0) return 0
+  if (state.divination.remaining >= roundsLeft) return dangerous && inc > 0 ? 0 : 2
+  if (dangerous && inc > 0) return 0
+  if (roundsLeft <= state.divination.remaining) return inc >= 10 && state.player.block < inc ? 0 : 2
+  return -1
+}
+void DIVINATION_CHOICES
+
+// ---------------- game ----------------
+type Stake = { level: number; choice?: 'race' | 'pressure' | 'tempo' }
+type Rec = { won: boolean; round: number; bursts: number; score: number }
+function play(godId: GodId, enemyId: EnemyId, diff: Difficulty, policy: Policy, seed: number, stake: Stake, daily: boolean): Rec {
+  const deck = deckOverride(godId)
+  let { state } = applyAction(null, {
+    type: 'START_GAME', seed: `p254-${seed}`, godId, enemyId, deck, difficulty: diff,
+    ...(daily ? { mode: 'daily' as const, dailyKey: '2026-10-02', modifier: RULES.daily.modifier } : {}),
+    ...(stake.level ? { stake: stake.level, ...(stake.choice ? { stakeChoice: stake.choice } : {}) } : {}),
+  })
+  let bursts = 0, guard = 0, score = 0
+  const note = (events: { t: string; totalScore?: number }[]) => { for (const e of events) { if (e.t === 'RESONANCE_BURST') bursts++; else if (e.t === 'GAME_ENDED') score = e.totalScore ?? 0 } }
+  while (state.status === 'playing' && guard < 600) {
+    guard++
+    let inner = 0
+    while (state.status === 'playing' && inner < 60) {
+      inner++
+      const card = pickCard(state, policy)
+      if (card) { const res = applyAction(state, { type: 'PLAY_CARD', uid: card.uid }); note(res.events as never); state = res.state; continue }
+      const o = pickOracle(state, policy)
+      if (o >= 0) { const res = applyAction(state, { type: 'USE_DIVINATION', choiceIndex: o }); note(res.events as never); state = res.state; continue }
+      break
+    }
+    if (state.status !== 'playing') break
+    const res = applyAction(state, { type: 'END_ROUND' })
+    note(res.events as never)
+    state = res.state
+  }
+  return { won: state.status === 'won', round: state.round, bursts, score }
+}
+
+// ---------------- faces ----------------
+type Face = { key: string; label: string; diff: Difficulty; daily: boolean; stake: Stake; policies: Policy[] }
+const FACES: Face[] = [
+  { key: 'normal', label: '通常（神階 0）', diff: 'normal', daily: false, stake: { level: 0 }, policies: ['reader', 'naive', 'greedy'] },
+  { key: 'hard', label: 'むずかしい', diff: 'hard', daily: false, stake: { level: 0 }, policies: ['reader', 'naive', 'greedy'] },
+  { key: 'daily', label: 'Daily（normal × 補正）', diff: 'normal', daily: true, stake: { level: 0 }, policies: ['reader', 'naive', 'greedy'] },
+  { key: 'rank4', label: '神階Ⅳ', diff: 'normal', daily: false, stake: { level: 4 }, policies: ['reader', 'naive', 'greedy'] },
+  { key: 'rank7p', label: '神階Ⅶ 猛威', diff: 'normal', daily: false, stake: { level: 7, choice: 'pressure' }, policies: ['reader'] },
+  { key: 'rank7r', label: '神階Ⅶ 巨躯', diff: 'normal', daily: false, stake: { level: 7, choice: 'race' }, policies: ['reader'] },
+  { key: 'rank7t', label: '神階Ⅶ 静寂', diff: 'normal', daily: false, stake: { level: 7, choice: 'tempo' }, policies: ['reader'] },
+]
+const FACE_FILTER = process.env.D259_FACES?.split(',').map((s) => s.trim())
+
+describe('決定259 保護面の回帰（reader／naive／greedy・paired-seed）', () => {
+  it('variants', () => {
+    const t0 = Date.now()
+    const ids = variantIdsFromEnv(['C0'])
+    if (!VARIANTS.C0) VARIANTS.C0 = { ...VARIANTS.D0, id: 'C0' }
+    const faces = FACE_FILTER ? FACES.filter((f) => FACE_FILTER.includes(f.key)) : FACES
+    const out: Record<string, Record<string, unknown>> = {}
+    const cellWins: Record<string, Record<string, Record<string, number[]>>> = {} // variant → face|policy → cell → per-seed 0/1
+    let games = 0
+    for (const vid of ids) {
+      const v = applyVariant(vid)
+      const tv = Date.now()
+      out[vid] = { label: v.label, group: v.group }
+      cellWins[vid] = {}
+      for (const face of faces) {
+        const faceOut: Record<string, unknown> = { label: face.label }
+        const byPolicy: Record<string, { win: number; byGod: Record<string, number>; byEnemy: Record<string, number>; godStrike: number; cellsBelow50: number; winRound: number; scoreWonMean: number }> = {}
+        for (const policy of face.policies) {
+          const fk = `${face.key}|${policy}`
+          cellWins[vid][fk] = {}
+          const recs: Rec[] = []
+          const byGod: Record<string, Rec[]> = {}, byEnemy: Record<string, Rec[]> = {}
+          let below = 0
+          for (const god of GODS) for (const enemy of ENEMIES) {
+            const cr: Rec[] = []
+            for (let i = 0; i < SEEDS; i++) { const r = play(god.id, enemy.id, face.diff, policy, i, face.stake, face.daily); cr.push(r); games++ }
+            recs.push(...cr)
+            ;(byGod[god.nameJa] ??= []).push(...cr)
+            ;(byEnemy[enemy.name] ??= []).push(...cr)
+            cellWins[vid][fk][`${god.nameJa}×${enemy.name}`] = cr.map((r) => (r.won ? 1 : 0))
+            if (avg(cr.map((r) => +r.won)) < 0.5) below++
+          }
+          const won = recs.filter((r) => r.won)
+          byPolicy[policy] = {
+            win: r1(avg(recs.map((r) => +r.won)) * 100),
+            byGod: Object.fromEntries(Object.entries(byGod).map(([k, rs]) => [k, r1(avg(rs.map((r) => +r.won)) * 100)])),
+            byEnemy: Object.fromEntries(Object.entries(byEnemy).map(([k, rs]) => [k, r1(avg(rs.map((r) => +r.won)) * 100)])),
+            godStrike: r1(avg(recs.map((r) => +(r.bursts > 0))) * 100),
+            cellsBelow50: below,
+            winRound: r2(avg(won.map((r) => r.round))),
+            scoreWonMean: r1(avg(won.map((r) => r.score))),
+          }
+        }
+        // 神別「≥50% 方策」：その神で最良方策の勝率
+        const godBest: Record<string, number> = {}
+        for (const god of GODS) godBest[god.nameJa] = Math.max(...face.policies.map((p) => byPolicy[p].byGod[god.nameJa]))
+        faceOut.policies = byPolicy
+        faceOut.godBestPolicyWin = godBest
+        faceOut.allGodsBestGe50 = Object.values(godBest).every((x) => x >= 50)
+        if (byPolicy.reader && byPolicy.naive) faceOut.readValue = r1(byPolicy.reader.win - byPolicy.naive.win)
+        if (byPolicy.naive) faceOut.naiveLossPct = r1(100 - byPolicy.naive.win)
+        out[vid][face.key] = faceOut
+      }
+      restore()
+      out[vid].elapsedSec = r1((Date.now() - tv) / 1000)
+      const n = out[vid].normal as { policies?: Record<string, { win: number }> } | undefined
+      console.log(`D259 protect ${vid}: normal reader/naive/greedy=${n?.policies?.reader?.win}/${n?.policies?.naive?.win}/${n?.policies?.greedy?.win} games=${games} elapsed=${((Date.now() - t0) / 1000).toFixed(0)}s`)
+    }
+    restore()
+    assertRestored()
+    // paired Δ vs base（同一 seed・同一セル）
+    const base = ids[0]
+    const paired: Record<string, Record<string, { deltaPt: number; cellsChanged: number; maxCellDeltaPt: number; byGodDeltaPt: Record<string, number> }>> = {}
+    for (const vid of ids) {
+      paired[vid] = {}
+      for (const fk of Object.keys(cellWins[base])) {
+        let diff = 0, total = 0, changed = 0, maxCell = 0
+        const byGod: Record<string, { d: number; n: number }> = {}
+        for (const cell of Object.keys(cellWins[base][fk])) {
+          const a = cellWins[vid][fk]?.[cell], b = cellWins[base][fk][cell]
+          if (!a) continue
+          let cd = 0
+          for (let i = 0; i < b.length; i++) { cd += a[i] - b[i]; total++ }
+          diff += cd
+          if (cd !== 0) changed++
+          maxCell = Math.max(maxCell, Math.abs(cd / b.length) * 100)
+          const gn = cell.split('×')[0]
+          byGod[gn] ??= { d: 0, n: 0 }
+          byGod[gn].d += cd; byGod[gn].n += b.length
+        }
+        paired[vid][fk] = { deltaPt: r2((diff / Math.max(1, total)) * 100), cellsChanged: changed, maxCellDeltaPt: r1(maxCell), byGodDeltaPt: Object.fromEntries(Object.entries(byGod).map(([k, x]) => [k, r2((x.d / x.n) * 100)])) }
+      }
+    }
+    writeOut(OUT_NAME, {
+      meta: { runtime: 'a611270', seeds: SEEDS, faces: faces.map((f) => f.key), baseVariant: base, variants: Object.fromEntries(ids.map((i) => [i, VARIANTS[i].label])), games, elapsedSec: r1((Date.now() - t0) / 1000), restoredToProduction: true, generatedAt: new Date().toISOString() },
+      variants: out, pairedVsBase: paired,
+    })
+    expect(Object.keys(out).length).toBe(ids.length)
+  })
+})

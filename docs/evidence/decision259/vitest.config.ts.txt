@@ -1,0 +1,14 @@
+import { defineConfig } from 'vitest/config'
+import path from 'node:path'
+
+// 決定259 Daily 神間 spread 是正 Preflight 専用config。`npm test`（既定config）には `.audit.ts` は含まれない。
+// RAM 6GB 制約：単一プロセス（fileParallelism 無効）。1ファイルずつ `npx vitest run --config <this> <file>` で実行する。
+export default defineConfig({
+  root: path.resolve(__dirname, '../..'),
+  test: {
+    include: ['scripts/d259-daily-spread/**/*.audit.ts'],
+    fileParallelism: false,
+    testTimeout: 2 * 60 * 60 * 1000,
+    hookTimeout: 2 * 60 * 60 * 1000,
+  },
+})

@@ -1,0 +1,115 @@
+// 決定259 — evidence JSON → Markdown 表（docs/DAILY_GOD_SPREAD_PREFLIGHT.md §2〜§5 に貼付。手入力 0）
+// usage: node scripts/d259-daily-spread/gen-tables.mjs > docs/evidence/decision259/tables.generated.md
+import { readFileSync, existsSync } from 'node:fs'
+import path from 'node:path'
+
+const EV = path.resolve('docs/evidence/decision259')
+const load = (n) => (existsSync(path.join(EV, n)) ? JSON.parse(readFileSync(path.join(EV, n), 'utf8')) : null)
+const GODS = ['恵比寿', '大耀', '蒼毘', '才華', '寿楽', '福永', '笑蓮']
+const CLUSTER = ['恵比寿', '大耀', '蒼毘', '笑蓮']
+const fmt = (x, d = 2) => (typeof x === 'number' ? (Number.isInteger(x) ? String(x) : x.toFixed(d)) : String(x ?? '—'))
+const sgn = (x, d = 2) => (x > 0 ? '+' : '') + fmt(x, d)
+const table = (headers, rows) => ['| ' + headers.join(' | ') + ' |', '| ' + headers.map(() => '---').join(' | ') + ' |', ...rows.map((r) => '| ' + r.join(' | ') + ' |')].join('\n')
+const out = []
+const H = (s) => out.push('', s, '')
+
+// ---------------------------------------------------------------------------
+const decomp = load('decomp.json')
+if (decomp) {
+  const V = decomp.variants
+  const ids = Object.keys(V)
+  H(`### T1. 原因分解：対照ごとの神別 best 平均と spread（Daily・${decomp.meta.days} 日 × 探索 3 本・同一 seed）【実測】`)
+  out.push(table(['対照', ...GODS, 'spread%', '最悪敵%', '才華除外%', '寿楽除外%', '塊平均', '最良／最下位'], ids.map((id) => {
+    const v = V[id]
+    return [`${id} ${v.label}`, ...GODS.map((g) => fmt(v.perGod[g].mean, 0)), fmt(v.overallSpreadPct), `${fmt(v.worstEnemySpreadPct)}（${v.worstEnemy}）`, fmt(v.spreadExcludingSaika), fmt(v.spreadExcludingJuraku), fmt(v.clusterMean, 0), `${v.bestGod}／${v.worstGod}`]
+  })))
+  H('### T2. 原因分解：D0 からの paired Δ（表示スコア・同一日付）と「塊との差」の変化【実測】')
+  out.push(table(['対照', ...GODS.map((g) => `Δ${g}`), 'Δ(才華−塊)', 'Δ(寿楽−塊)', 'Δ(福永−塊)', 'Δspread pt'], ids.map((id) => {
+    const v = V[id], b = V[ids[0]], p = decomp.pairedVsBase[id]
+    const vc = (g) => v.perGod[g].vsCluster - b.perGod[g].vsCluster
+    return [id, ...GODS.map((g) => sgn(p[g].meanDelta, 1)), sgn(vc('才華'), 1), sgn(vc('寿楽'), 1), sgn(vc('福永'), 1), sgn(v.overallSpreadPct - b.overallSpreadPct)]
+  })))
+  H('### T3. 原因分解：D0（現行）の素点内訳（表示換算 ×1.3）と塊との差【実測】')
+  const b = V[ids[0]]
+  const clusterOf = (k) => CLUSTER.reduce((s, g) => s + b.perGod[g].breakdownDisplay[k], 0) / CLUSTER.length
+  out.push(table(['神', 'damage', 'combo', 'victory', 'tempo', 'survival', '表示 score', 'Δdamage', 'Δcombo', 'Δtempo', 'Δsurvival', '撃破R', 'R4撃破率', 'BURST', '札/R', '託宣 加護/導き/天啓'], GODS.map((g) => {
+    const x = b.perGod[g], d = x.breakdownDisplay
+    return [g, fmt(d.damage, 1), fmt(d.combo, 1), fmt(d.victory, 0), fmt(d.tempo, 1), fmt(d.survival, 1), fmt(x.mean, 1), sgn(d.damage - clusterOf('damage'), 1), sgn(d.combo - clusterOf('combo'), 1), sgn(d.tempo - clusterOf('tempo'), 1), sgn(d.survival - clusterOf('survival'), 1), fmt(x.killRoundMean), fmt(x.r4KillShare), fmt(x.bursts), fmt(x.cardsPerRound), `${x.divination.guard}/${x.divination.guide}/${x.divination.strike}`]
+  })))
+  H('### T4. 原因分解：対照ごとの 才華／寿楽／福永 の内訳の動き（combo／tempo／撃破R／BURST／札/R）【実測】')
+  out.push(table(['対照', ...['才華', '寿楽', '福永'].map((g) => `${g} combo/tempo/撃破R/BURST/札R`), ...CLUSTER.map((g) => `${g} combo/tempo/撃破R`)], ids.map((id) => {
+    const v = V[id]
+    const f = (g) => `${fmt(v.perGod[g].breakdown.combo, 0)}/${fmt(v.perGod[g].breakdown.tempo, 0)}/${fmt(v.perGod[g].killRoundMean)}/${fmt(v.perGod[g].bursts)}/${fmt(v.perGod[g].cardsPerRound)}`
+    const c = (g) => `${fmt(v.perGod[g].breakdown.combo, 0)}/${fmt(v.perGod[g].breakdown.tempo, 0)}/${fmt(v.perGod[g].killRoundMean)}`
+    return [id, f('才華'), f('寿楽'), f('福永'), ...CLUSTER.map(c)]
+  })))
+  H('### T5. 原因分解：敵別 spread（対照 × 敵）【実測】')
+  const enemies = Object.keys(V[ids[0]].perEnemy)
+  out.push(table(['対照', ...enemies], ids.map((id) => [id, ...enemies.map((e) => fmt(V[id].perEnemy[e].spreadPct))])))
+}
+
+// ---------------------------------------------------------------------------
+// gate_*.json を結合（paired Δ は rawBest から C0 基準で再計算）
+import { readdirSync } from 'node:fs'
+function mergeGates(prefix) {
+  const files = readdirSync(EV).filter((f) => f.startsWith(prefix) && f.endsWith('.json') && !f.includes('smoke')).sort()
+  if (!files.length) return null
+  const parts = files.map(load)
+  const variants = Object.assign({}, ...parts.map((p) => p.variants))
+  const rawBest = Object.assign({}, ...parts.map((p) => p.rawBest ?? {}))
+  const base = rawBest.C0 ? 'C0' : Object.keys(rawBest)[0]
+  const pairedVsBase = {}
+  for (const vid of Object.keys(variants)) {
+    pairedVsBase[vid] = {}
+    for (const gn of Object.keys(rawBest[base] ?? {})) {
+      const ds = Object.keys(rawBest[base][gn]).map((d) => (rawBest[vid]?.[gn]?.[d] ?? NaN) - rawBest[base][gn][d])
+      pairedVsBase[vid][gn] = { meanDelta: ds.reduce((a, b) => a + b, 0) / ds.length, shareUp: ds.filter((x) => x > 0).length / ds.length, shareDown: ds.filter((x) => x < 0).length / ds.length }
+    }
+  }
+  const meta = { ...parts[0].meta, files, engineRuns: parts.reduce((s, p) => s + p.meta.engineRuns, 0), elapsedSec: parts.reduce((s, p) => s + p.meta.elapsedSec, 0), generatedAt: parts.map((p) => p.meta.generatedAt).join(' / ') }
+  return { meta, variants: Object.fromEntries([base, ...Object.keys(variants).filter((k) => k !== base)].map((k) => [k, variants[k]])), pairedVsBase }
+}
+const gates = [mergeGates('gate_')].filter(Boolean)
+for (const gate of gates) {
+  const V = gate.variants
+  const ids = Object.keys(V)
+  H(`### T6. 候補比較：G1／G1b／G2／best-of-3（6 打ち筋・${gate.meta.days} 日・決定131 定義・同一 seed）— ${gate.meta.generatedAt}【実測】`)
+  out.push(table(['候補', '種別', ...GODS, 'G1%', 'G1b%（最悪敵）', 'bo3 上級%', 'G2 下限%', '才華除外%', '寿楽除外%', '判定'], ids.map((id) => {
+    const v = V[id]
+    return [`${id} ${v.label}`, v.group, ...GODS.map((g) => fmt(v.perGod[g].bestMean, 0)), fmt(v.g1.overallSpreadPct), `${fmt(v.g1.worstEnemySpreadPct)}（${v.g1.worstEnemy}）`, fmt(v.bo3Advanced.overallSpreadPct), fmt(v.g2.minCiLoPct, 1), fmt(v.spreadExcludingSaika), fmt(v.spreadExcludingJuraku), v.g1.passOverall && v.g1.passAllEnemies ? 'PASS' : 'FAIL']
+  })))
+  H('### T7. 候補比較：先頭（現行）からの paired Δ（表示スコア）と内訳【実測】')
+  out.push(table(['候補', ...GODS.map((g) => `Δ${g}`), 'ΔG1 pt', 'ΔG1b pt', '才華 combo/tempo/撃破R/BURST', '寿楽 combo/tempo/撃破R/BURST', '福永 combo/tempo/撃破R/BURST'], ids.map((id) => {
+    const v = V[id], b = V[ids[0]], p = gate.pairedVsBase[id]
+    const f = (g) => `${fmt(v.perGod[g].breakdown.combo, 0)}/${fmt(v.perGod[g].breakdown.tempo, 0)}/${fmt(v.perGod[g].killRoundMean)}/${fmt(v.perGod[g].bursts)}`
+    return [id, ...GODS.map((g) => sgn(p[g].meanDelta, 1)), sgn(v.g1.overallSpreadPct - b.g1.overallSpreadPct), sgn(v.g1.worstEnemySpreadPct - b.g1.worstEnemySpreadPct), f('才華'), f('寿楽'), f('福永')]
+  })))
+  H('### T8. 候補比較：敵別 spread【実測】')
+  const enemies = Object.keys(V[ids[0]].perEnemy)
+  out.push(table(['候補', ...enemies], ids.map((id) => [id, ...enemies.map((e) => fmt(V[id].perEnemy[e].spreadPct))])))
+}
+
+// ---------------------------------------------------------------------------
+const prots = ['protect.json', 'protect_a.json', 'protect_b.json', 'protect_final.json'].map(load).filter(Boolean)
+for (const prot of prots) {
+  const V = prot.variants
+  const ids = Object.keys(V)
+  const faces = prot.meta.faces
+  H(`### T9. 保護面の回帰：勝率（面 × 方策）と paired Δ vs 現行（seed ${prot.meta.seeds}／セル）— ${prot.meta.generatedAt}【実測】`)
+  const cols = []
+  for (const f of faces) for (const p of Object.keys(V[ids[0]][f].policies)) cols.push(`${f}|${p}`)
+  out.push(table(['候補', ...cols.map((c) => c.replace('|', ' '))], ids.map((id) => [id, ...cols.map((c) => { const [f, p] = c.split('|'); const w = V[id][f].policies[p].win; const d = prot.pairedVsBase[id][c]?.deltaPt ?? 0; return id === ids[0] ? fmt(w, 1) : `${fmt(w, 1)}（${sgn(d, 1)}）` })])))
+  H('### T10. 保護面：読む価値（reader−naive）・naive 敗北率・God Strike 率（reader）・49 セル reader<50%・神別「≥50% 方策」【実測】')
+  out.push(table(['候補', ...faces.flatMap((f) => (V[ids[0]][f].readValue !== undefined ? [`${f} 読む価値`, `${f} naive敗北%`] : [])), ...faces.map((f) => `${f} GodStrike%`), ...faces.map((f) => `${f} <50%セル`), ...faces.map((f) => `${f} 全神≥50%`)], ids.map((id) => [
+    id,
+    ...faces.flatMap((f) => (V[id][f].readValue !== undefined ? [fmt(V[id][f].readValue, 1), fmt(V[id][f].naiveLossPct, 1)] : [])),
+    ...faces.map((f) => fmt(V[id][f].policies.reader.godStrike, 1)),
+    ...faces.map((f) => fmt(V[id][f].policies.reader.cellsBelow50, 0)),
+    ...faces.map((f) => (V[id][f].allGodsBestGe50 ? 'PASS' : `FAIL（${Object.entries(V[id][f].godBestPolicyWin).filter(([, x]) => x < 50).map(([g, x]) => `${g} ${x}`).join('・')}）`)),
+  ])))
+  H('### T11. 保護面：神別 reader 勝率（通常／むずかしい／Daily／神階Ⅳ／Ⅶ猛威）【実測】')
+  const fcs = faces
+  out.push(table(['候補', '面', ...GODS], ids.flatMap((id) => fcs.map((f) => [id, f, ...GODS.map((g) => { const w = V[id][f].policies.reader.byGod[g]; const d = prot.pairedVsBase[id][`${f}|reader`]?.byGodDeltaPt?.[g] ?? 0; return id === ids[0] ? fmt(w, 1) : `${fmt(w, 1)}（${sgn(d, 1)}）` })]))))
+}
+
+console.log(out.join('\n'))

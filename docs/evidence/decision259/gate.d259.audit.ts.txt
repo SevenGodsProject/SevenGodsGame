@@ -1,0 +1,145 @@
+/**
+ * 決定259 Step 2 — 是正候補の G1 判定（決定131／256 と同一定義：7神 × 7敵 × 実 Daily seed 24 本 × 6 打ち筋の best）。
+ *
+ * variant は D259_VARIANTS（カンマ区切り・既定 C0 のみ）。各 variant は variants.ts のプロセス内差し替えで表現し、終了後に復元を assert する。
+ * 出力 gate.json：variant ごとに G1（全敵込み）／G1b（敵別最悪）／G2（Wilson 下限）／best-of-3（上級）／神別内訳／敵別 byGod と、
+ * 先頭 variant（既定 C0＝現行）との paired Δ（同一日付＝同一 seed）。
+ */
+import { describe, expect, it } from 'vitest'
+import type { EnemyId, GodId } from '../../src/core/types'
+import { avg, dateKeysByEnemy, dateKeysFrom, ENEMY_NAME, GOD_NAME, GOD_ORDER, heuristicAgent, PROFILES, r1, r2, runDailyGame, searchAgent, spreadPct, wilson95, writeOut, type Agent, type DailyMetrics } from './dailyHarness'
+import { applyVariant, assertRestored, deckOverride, restore, VARIANTS, variantIdsFromEnv } from './variants'
+
+const WEEKS = Number(process.env.D259_WEEKS ?? 24)
+const DAYS = dateKeysFrom('2026-09-07', WEEKS * 7)
+type LineId = 'h-balanced' | 'h-aggressive' | 'h-defensive' | 's-balanced' | 's-rush' | 's-score'
+const LINES: LineId[] = ['h-balanced', 'h-aggressive', 'h-defensive', 's-balanced', 's-rush', 's-score']
+const ADVANCED: LineId[] = ['s-balanced', 's-rush', 's-score']
+function agentOf(line: LineId): Agent {
+  switch (line) {
+    case 'h-balanced': return heuristicAgent('balanced')
+    case 'h-aggressive': return heuristicAgent('aggressive')
+    case 'h-defensive': return heuristicAgent('defensive')
+    case 's-balanced': return searchAgent(PROFILES.balanced, 800)
+    case 's-rush': return searchAgent(PROFILES.rush, 800)
+    case 's-score': return searchAgent(PROFILES.score, 800)
+  }
+}
+const OUT_NAME = process.env.D259_OUT ?? 'gate.json'
+
+describe('決定259 候補の G1 判定（6 打ち筋・168 日・決定131 定義）', () => {
+  it('variants', () => {
+    const t0 = Date.now()
+    const ids = variantIdsFromEnv(['C0'])
+    if (!VARIANTS.C0) VARIANTS.C0 = { ...VARIANTS.D0, id: 'C0' }
+    const byEnemy = dateKeysByEnemy(DAYS)
+    const out: Record<string, unknown> = {}
+    const rawBest: Record<string, Record<string, Record<string, number>>> = {}
+    let runs = 0
+    for (const vid of ids) {
+      const v = applyVariant(vid)
+      const tv = Date.now()
+      rawBest[vid] = {}
+      const godBest = new Map<GodId, DailyMetrics[]>()
+      const godBo3 = new Map<GodId, number[]>()
+      const godWins = new Map<GodId, number>()
+      const perEnemy: Record<string, Record<string, unknown>> = {}
+      const spreads: number[] = []
+      const spreadsBo3: number[] = []
+      for (const [enemyId, days] of byEnemy) {
+        const means: number[] = []
+        const meansBo3: number[] = []
+        const wr: number[] = []
+        for (const g of GOD_ORDER) {
+          const deck = deckOverride(g)
+          const bests: DailyMetrics[] = []
+          const bo3: number[] = []
+          let wins = 0
+          for (const dateKey of days) {
+            let best: DailyMetrics | null = null
+            let bestAdv = -1
+            let won = false
+            for (const line of LINES) {
+              const m = runDailyGame({ dateKey, godId: g, deck, growthPath: 'guardian' }, agentOf(line))
+              runs++
+              if (m.status === 'won') won = true
+              if (!best || m.finalScore > best.finalScore) best = m
+              if (ADVANCED.includes(line) && m.finalScore > bestAdv) bestAdv = m.finalScore
+            }
+            bests.push(best!)
+            bo3.push(bestAdv)
+            if (won) wins++
+            ;(rawBest[vid][GOD_NAME[g]] ??= {})[dateKey] = best!.finalScore
+          }
+          godBest.set(g, [...(godBest.get(g) ?? []), ...bests])
+          godBo3.set(g, [...(godBo3.get(g) ?? []), ...bo3])
+          godWins.set(g, (godWins.get(g) ?? 0) + wins)
+          means.push(avg(bests.map((b) => b.finalScore)))
+          meansBo3.push(avg(bo3))
+          wr.push(wins / days.length)
+        }
+        const sp = spreadPct(means)
+        spreads.push(sp)
+        spreadsBo3.push(spreadPct(meansBo3))
+        perEnemy[ENEMY_NAME[enemyId as EnemyId]] = {
+          seeds: days.length, spreadPct: r2(sp), spreadBo3Pct: r2(spreadPct(meansBo3)),
+          byGod: Object.fromEntries(GOD_ORDER.map((g, i) => [GOD_NAME[g], r2(means[i])])),
+          winRateByGod: Object.fromEntries(GOD_ORDER.map((g, i) => [GOD_NAME[g], r1(wr[i] * 100)])),
+          bestGod: GOD_NAME[GOD_ORDER[means.indexOf(Math.max(...means))]], worstGod: GOD_NAME[GOD_ORDER[means.indexOf(Math.min(...means))]],
+        }
+      }
+      restore()
+      const godMeans = GOD_ORDER.map((g) => avg(godBest.get(g)!.map((m) => m.finalScore)))
+      const godMeansBo3 = GOD_ORDER.map((g) => avg(godBo3.get(g)!))
+      const top = Math.max(...godMeans)
+      const n = DAYS.length
+      let minLo = 1, minLoGod = ''
+      const perGod = Object.fromEntries(GOD_ORDER.map((g, i) => {
+        const ms = godBest.get(g)!
+        const won = ms.filter((m) => m.status === 'won')
+        const kill: Record<string, number> = {}
+        for (const m of won) kill[`R${m.round}`] = (kill[`R${m.round}`] ?? 0) + 1
+        const ci = wilson95(godWins.get(g)!, n)
+        if (ci.lo < minLo) { minLo = ci.lo; minLoGod = GOD_NAME[g] }
+        const bd = (k: keyof DailyMetrics['breakdown']) => r2(avg(ms.map((m) => m.breakdown[k])))
+        let cards = 0, rounds = 0
+        for (const m of ms) for (const t of m.trace) { cards += t.cardsPlayed; rounds++ }
+        const sorted = ms.map((m) => m.finalScore).sort((a, b) => a - b)
+        return [GOD_NAME[g], {
+          n, bestMean: r2(godMeans[i]), bo3Mean: r2(godMeansBo3[i]), gapPct: r2(((top - godMeans[i]) / top) * 100),
+          winRatePct: r1((godWins.get(g)! / n) * 100), ci95Lo: r1(ci.lo * 100), median: sorted[Math.floor(sorted.length / 2)], min: sorted[0], max: sorted[sorted.length - 1],
+          breakdown: { damage: bd('damage'), combo: bd('combo'), victory: bd('victory'), tempo: bd('tempo'), survival: bd('survival'), total: bd('total') },
+          killRoundMean: r2(avg(won.map((m) => m.round))), killRounds: kill, bursts: r2(avg(ms.map((m) => m.bursts))), cardsPerRound: r2(cards / Math.max(1, rounds)),
+        }]
+      }))
+      const g1 = spreadPct(godMeans)
+      const g1b = Math.max(...spreads)
+      out[vid] = {
+        label: v.label, group: v.group,
+        g1: { overallSpreadPct: r2(g1), worstEnemySpreadPct: r2(g1b), worstEnemy: ENEMY_NAME[[...byEnemy.keys()][spreads.indexOf(g1b)] as EnemyId], passOverall: g1 <= 5, passAllEnemies: g1b <= 5, bestGod: GOD_NAME[GOD_ORDER[godMeans.indexOf(top)]], worstGod: GOD_NAME[GOD_ORDER[godMeans.indexOf(Math.min(...godMeans))]] },
+        bo3Advanced: { overallSpreadPct: r2(spreadPct(godMeansBo3)), worstEnemySpreadPct: r2(Math.max(...spreadsBo3)) },
+        g2: { minCiLoPct: r1(minLo * 100), worstGod: minLoGod, pass: minLo >= 0.9 },
+        spreadExcludingSaika: r2(spreadPct(GOD_ORDER.filter((g) => GOD_NAME[g] !== '才華').map((g) => godMeans[GOD_ORDER.indexOf(g)]))),
+        spreadExcludingJuraku: r2(spreadPct(GOD_ORDER.filter((g) => GOD_NAME[g] !== '寿楽').map((g) => godMeans[GOD_ORDER.indexOf(g)]))),
+        perGod, perEnemy, elapsedSec: r1((Date.now() - tv) / 1000),
+      }
+      console.log(`D259 gate ${vid}: G1=${r2(g1)}% G1b=${r2(g1b)}% G2lo=${r1(minLo * 100)} runs=${runs} elapsed=${((Date.now() - t0) / 1000).toFixed(0)}s`)
+    }
+    restore()
+    assertRestored()
+    const base = ids[0]
+    const paired: Record<string, Record<string, { meanDelta: number; shareUp: number; shareDown: number }>> = {}
+    for (const vid of ids) {
+      paired[vid] = {}
+      for (const gn of Object.keys(rawBest[base])) {
+        const ds = Object.keys(rawBest[base][gn]).map((d) => rawBest[vid][gn][d] - rawBest[base][gn][d])
+        paired[vid][gn] = { meanDelta: r2(avg(ds)), shareUp: r2(ds.filter((x) => x > 0).length / ds.length), shareDown: r2(ds.filter((x) => x < 0).length / ds.length) }
+      }
+    }
+    writeOut(OUT_NAME, {
+      meta: { runtime: 'a611270', days: DAYS.length, seedsPerEnemy: DAYS.length / 7, lines: LINES, baseVariant: base, variants: Object.fromEntries(ids.map((i) => [i, VARIANTS[i].label])), engineRuns: runs, elapsedSec: r1((Date.now() - t0) / 1000), restoredToProduction: true, generatedAt: new Date().toISOString() },
+      variants: out, pairedVsBase: paired, rawBest,
+    })
+    expect(Object.keys(out).length).toBe(ids.length)
+  })
+})

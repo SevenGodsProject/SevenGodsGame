@@ -1,0 +1,118 @@
+/**
+ * 決定259 Step 1 — 原因分解（Daily 条件：normal・神階 0・Daily 補正・託宣 3・推奨デッキ・OTOMO guardian）。
+ *
+ * 7 神 × 7 敵 × 実 Daily seed 24 本（168 日・決定131／256 と同一 seed 群）× 探索 3 本（s-balanced／s-rush／s-score）。
+ * 各日の best を神別に平均し、対照 D0〜D10（variants.ts）ごとに
+ *   - 神別 best 平均・spread（全敵／敵別）・塊（恵比寿／大耀／蒼毘／笑蓮）との差
+ *   - 素点内訳（damage／combo／victory／tempo／survival）・撃破 R 分布・BURST 回数・札数／R・託宣選択
+ * を出し、D0 との paired Δ（同一日付＝同一 seed）で各要素の寄与を測る。
+ * 本番ファイル無変更（プロセス内差し替え・各 variant 後に復元を assert）。
+ */
+import { describe, expect, it } from 'vitest'
+import type { EnemyId, GodId } from '../../src/core/types'
+import { avg, dateKeysByEnemy, dateKeysFrom, ENEMY_NAME, GOD_NAME, GOD_ORDER, PROFILES, r1, r2, runDailyGame, searchAgent, spreadPct, writeOut, type Agent, type DailyMetrics } from './dailyHarness'
+import { applyVariant, assertRestored, deckOverride, restore, VARIANTS, variantIdsFromEnv } from './variants'
+
+const WEEKS = Number(process.env.D259_WEEKS ?? 24)
+const DAYS = dateKeysFrom('2026-09-07', WEEKS * 7)
+const LINES: { id: string; make: () => Agent }[] = [
+  { id: 's-balanced', make: () => searchAgent(PROFILES.balanced, 800) },
+  { id: 's-rush', make: () => searchAgent(PROFILES.rush, 800) },
+  { id: 's-score', make: () => searchAgent(PROFILES.score, 800) },
+]
+const CLUSTER: GodId[] = GOD_ORDER.filter((g) => ['恵比寿', '大耀', '蒼毘', '笑蓮'].includes(GOD_NAME[g]))
+const SCALE = 1.3
+
+type Best = DailyMetrics & { line: string }
+
+describe('決定259 原因分解（Daily・7神×168日×探索3本・対照 D0〜D10）', () => {
+  it('variants', () => {
+    const t0 = Date.now()
+    const ids = variantIdsFromEnv(['D0', 'D1', 'D2', 'D3', 'D4', 'D5', 'D6', 'D7', 'D8', 'D9', 'D10'])
+    const byEnemy = dateKeysByEnemy(DAYS)
+    const out: Record<string, unknown> = {}
+    const rawBest: Record<string, Record<string, Record<string, number>>> = {} // variant → god → dateKey → best score
+    let runs = 0
+    for (const vid of ids) {
+      const v = applyVariant(vid)
+      const tv = Date.now()
+      const godBest = new Map<GodId, Best[]>()
+      const perEnemy: Record<string, Record<string, number>> = {}
+      rawBest[vid] = {}
+      for (const [enemyId, days] of byEnemy) {
+        const means: number[] = []
+        for (const g of GOD_ORDER) {
+          const deck = deckOverride(g)
+          const bests: Best[] = []
+          for (const dateKey of days) {
+            let best: Best | null = null
+            for (const line of LINES) {
+              const m = runDailyGame({ dateKey, godId: g, deck, growthPath: 'guardian' }, line.make())
+              runs++
+              if (!best || m.finalScore > best.finalScore) best = { ...m, line: line.id }
+            }
+            bests.push(best!)
+            ;(rawBest[vid][GOD_NAME[g]] ??= {})[dateKey] = best!.finalScore
+          }
+          godBest.set(g, [...(godBest.get(g) ?? []), ...bests])
+          means.push(avg(bests.map((b) => b.finalScore)))
+        }
+        perEnemy[ENEMY_NAME[enemyId as EnemyId]] = { spreadPct: r2(spreadPct(means)), ...Object.fromEntries(GOD_ORDER.map((g, i) => [GOD_NAME[g], r2(means[i])])) }
+      }
+      restore()
+      const godMeans = GOD_ORDER.map((g) => avg(godBest.get(g)!.map((b) => b.finalScore)))
+      const top = Math.max(...godMeans)
+      const cluster = avg(CLUSTER.map((g) => godMeans[GOD_ORDER.indexOf(g)]))
+      const perGod = Object.fromEntries(GOD_ORDER.map((g, i) => {
+        const ms = godBest.get(g)!
+        const won = ms.filter((m) => m.status === 'won')
+        const kill: Record<string, number> = {}
+        for (const m of won) kill[`R${m.round}`] = (kill[`R${m.round}`] ?? 0) + 1
+        const div = { guard: 0, guide: 0, strike: 0 }
+        let cards = 0, rounds = 0, r4kills = 0
+        for (const m of ms) { for (const t of m.trace) { if (t.divination === 0) div.guard++; if (t.divination === 1) div.guide++; if (t.divination === 2) div.strike++; cards += t.cardsPlayed; rounds++ } if (m.status === 'won' && m.round <= 4) r4kills++ }
+        const bd = (k: keyof DailyMetrics['breakdown']) => avg(ms.map((m) => m.breakdown[k]))
+        const lines: Record<string, number> = {}
+        for (const m of ms) lines[m.line] = (lines[m.line] ?? 0) + 1
+        return [GOD_NAME[g], {
+          n: ms.length, mean: r2(godMeans[i]), gapPct: r2(((top - godMeans[i]) / top) * 100), vsCluster: r2(godMeans[i] - cluster), winRatePct: r1((won.length / ms.length) * 100),
+          breakdown: { damage: r2(bd('damage')), combo: r2(bd('combo')), victory: r2(bd('victory')), tempo: r2(bd('tempo')), survival: r2(bd('survival')), total: r2(bd('total')) },
+          breakdownDisplay: { damage: r2(bd('damage') * SCALE), combo: r2(bd('combo') * SCALE), victory: r2(bd('victory') * SCALE), tempo: r2(bd('tempo') * SCALE), survival: r2(bd('survival') * SCALE) },
+          killRoundMean: r2(avg(won.map((m) => m.round))), killRounds: kill, r4KillShare: r2(r4kills / ms.length),
+          bursts: r2(avg(ms.map((m) => m.bursts))), cardsPerRound: r2(cards / Math.max(1, rounds)), cardsPerGame: r2(cards / ms.length), actions: r2(avg(ms.map((m) => m.actions))),
+          divination: div, hpLostPerGame: r2(avg(ms.map((m) => m.trace.reduce((s, t) => s + t.hpLost, 0)))), hpRemainRatio: r2(avg(ms.map((m) => m.playerHp / m.playerMaxHp))),
+          bestLineShare: Object.fromEntries(Object.entries(lines).map(([k, n]) => [k, r2(n / ms.length)])),
+        }]
+      }))
+      out[vid] = {
+        label: v.label, group: v.group,
+        overallSpreadPct: r2(spreadPct(godMeans)), worstEnemySpreadPct: r2(Math.max(...Object.values(perEnemy).map((e) => e.spreadPct))),
+        worstEnemy: Object.entries(perEnemy).sort((a, b) => b[1].spreadPct - a[1].spreadPct)[0][0],
+        bestGod: GOD_NAME[GOD_ORDER[godMeans.indexOf(top)]], worstGod: GOD_NAME[GOD_ORDER[godMeans.indexOf(Math.min(...godMeans))]],
+        clusterMean: r2(cluster),
+        spreadExcludingSaika: r2(spreadPct(GOD_ORDER.filter((g) => GOD_NAME[g] !== '才華').map((g) => godMeans[GOD_ORDER.indexOf(g)]))),
+        spreadExcludingJuraku: r2(spreadPct(GOD_ORDER.filter((g) => GOD_NAME[g] !== '寿楽').map((g) => godMeans[GOD_ORDER.indexOf(g)]))),
+        perGod, perEnemy, elapsedSec: r1((Date.now() - tv) / 1000),
+      }
+      console.log(`D259 decomp ${vid} done: spread=${(out[vid] as { overallSpreadPct: number }).overallSpreadPct}% worst=${(out[vid] as { worstEnemySpreadPct: number }).worstEnemySpreadPct}% runs=${runs} elapsed=${((Date.now() - t0) / 1000).toFixed(0)}s`)
+    }
+    restore()
+    assertRestored()
+    // paired Δ vs D0（同一日付）
+    const base = ids[0]
+    const paired: Record<string, Record<string, { meanDelta: number; medianDelta: number; shareUp: number }>> = {}
+    for (const vid of ids) {
+      paired[vid] = {}
+      for (const gn of Object.keys(rawBest[base])) {
+        const ds = Object.keys(rawBest[base][gn]).map((d) => rawBest[vid][gn][d] - rawBest[base][gn][d])
+        const sorted = [...ds].sort((a, b) => a - b)
+        paired[vid][gn] = { meanDelta: r2(avg(ds)), medianDelta: r2(sorted[Math.floor(sorted.length / 2)]), shareUp: r2(ds.filter((x) => x > 0).length / ds.length) }
+      }
+    }
+    writeOut('decomp.json', {
+      meta: { runtime: 'a611270', days: DAYS.length, seedsPerEnemy: DAYS.length / 7, lines: LINES.map((l) => l.id), variants: Object.fromEntries(ids.map((i) => [i, VARIANTS[i].label])), engineRuns: runs, elapsedSec: r1((Date.now() - t0) / 1000), restoredToProduction: true, generatedAt: new Date().toISOString() },
+      variants: out, pairedVsBase: paired,
+    })
+    expect(Object.keys(out).length).toBe(ids.length)
+  })
+})

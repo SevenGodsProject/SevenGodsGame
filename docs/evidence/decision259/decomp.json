@@ -1,0 +1,4915 @@
+{
+  "meta": {
+    "runtime": "a611270",
+    "days": 168,
+    "seedsPerEnemy": 24,
+    "lines": [
+      "s-balanced",
+      "s-rush",
+      "s-score"
+    ],
+    "variants": {
+      "D0": "現行 a611270（変更なし）",
+      "D1": "全神 共通 20 枚の同一デッキ（専用カード 0）",
+      "D2": "推奨デッキの専用カードを同種別の共通カードへ置換（全神）",
+      "D3": "神の一撃を全神 中立値（damage 25 のみ）へ",
+      "D4": "BURST なし（共鳴ゲージ最大 99・OTOMO 進化も無し）",
+      "D5": "OTOMO（守りの絆）の BURST 効果を全形態 空に",
+      "D6": "得意技 OFF（passivesEnabled=false）",
+      "D7": "カード条件効果 OFF（cardBonusEnabled=false）",
+      "D8": "託宣 0 回（Oracle interaction を除く）",
+      "D9": "tempoByRound を R4〜R7 一律 200（撃破 R の得点差を除く）",
+      "D10": "combo 加点 0（comboSteps 0/0/0・overflow 0）"
+    },
+    "engineRuns": 38808,
+    "elapsedSec": 627.1,
+    "restoredToProduction": true,
+    "generatedAt": "2026-10-01T21:30:10.048Z"
+  },
+  "variants": {
+    "D0": {
+      "label": "現行 a611270（変更なし）",
+      "group": "decomp",
+      "overallSpreadPct": 13.82,
+      "worstEnemySpreadPct": 15.42,
+      "worstEnemy": "業斧の鬼将",
+      "bestGod": "才華",
+      "worstGod": "寿楽",
+      "clusterMean": 963.63,
+      "spreadExcludingSaika": 7.2,
+      "spreadExcludingJuraku": 9.89,
+      "perGod": {
+        "恵比寿": {
+          "n": 168,
+          "mean": 958.63,
+          "gapPct": 8.13,
+          "vsCluster": -5,
+          "winRatePct": 100,
+          "breakdown": {
+            "damage": 144.17,
+            "combo": 84.06,
+            "victory": 300,
+            "tempo": 188.75,
+            "survival": 20.4,
+            "total": 737.39
+          },
+          "breakdownDisplay": {
+            "damage": 187.42,
+            "combo": 109.28,
+            "victory": 390,
+            "tempo": 245.38,
+            "survival": 26.53
+          },
+          "killRoundMean": 4.73,
+          "killRounds": {
+            "R5": 108,
+            "R4": 53,
+            "R6": 7
+          },
+          "r4KillShare": 0.32,
+          "bursts": 1.21,
+          "cardsPerRound": 2.94,
+          "cardsPerGame": 13.9,
+          "actions": 20.63,
+          "divination": {
+            "guard": 20,
+            "guide": 464,
+            "strike": 20
+          },
+          "hpLostPerGame": 29.38,
+          "hpRemainRatio": 0.72,
+          "bestLineShare": {
+            "s-balanced": 0.38,
+            "s-score": 0.54,
+            "s-rush": 0.08
+          }
+        },
+        "大耀": {
+          "n": 168,
+          "mean": 966.8,
+          "gapPct": 7.35,
+          "vsCluster": 3.17,
+          "winRatePct": 100,
+          "breakdown": {
+            "damage": 144.17,
+            "combo": 81.48,
+            "victory": 300,
+            "tempo": 205.95,
+            "survival": 12.08,
+            "total": 743.68
+          },
+          "breakdownDisplay": {
+            "damage": 187.42,
+            "combo": 105.92,
+            "victory": 390,
+            "tempo": 267.74,
+            "survival": 15.71
+          },
+          "killRoundMean": 4.45,
+          "killRounds": {
+            "R5": 71,
+            "R4": 72,
+            "R3": 15,
+            "R6": 10
+          },
+          "r4KillShare": 0.52,
+          "bursts": 0.94,
+          "cardsPerRound": 2.96,
+          "cardsPerGame": 13.16,
+          "actions": 19.61,
+          "divination": {
+            "guard": 25,
+            "guide": 420,
+            "strike": 59
+          },
+          "hpLostPerGame": 20.96,
+          "hpRemainRatio": 0.4,
+          "bestLineShare": {
+            "s-balanced": 0.41,
+            "s-score": 0.46,
+            "s-rush": 0.13
+          }
+        },
+        "蒼毘": {
+          "n": 168,
+          "mean": 959.98,
+          "gapPct": 8,
+          "vsCluster": -3.65,
+          "winRatePct": 100,
+          "breakdown": {
+            "damage": 144.17,
+            "combo": 76.29,
+            "victory": 300,
+            "tempo": 195.54,
+            "survival": 22.43,
+            "total": 738.43
+          },
+          "breakdownDisplay": {
+            "damage": 187.42,
+            "combo": 99.18,
+            "victory": 390,
+            "tempo": 254.2,
+            "survival": 29.16
+          },
+          "killRoundMean": 4.62,
+          "killRounds": {
+            "R4": 67,
+            "R5": 86,
+            "R3": 4,
+            "R6": 11
+          },
+          "r4KillShare": 0.42,
+          "bursts": 0.76,
+          "cardsPerRound": 2.7,
+          "cardsPerGame": 12.47,
+          "actions": 19.54,
+          "divination": {
+            "guard": 32,
+            "guide": 455,
+            "strike": 17
+          },
+          "hpLostPerGame": 11.38,
+          "hpRemainRatio": 0.75,
+          "bestLineShare": {
+            "s-score": 0.55,
+            "s-rush": 0.1,
+            "s-balanced": 0.35
+          }
+        },
+        "才華": {
+          "n": 168,
+          "mean": 1043.5,
+          "gapPct": 0,
+          "vsCluster": 79.87,
+          "winRatePct": 100,
+          "breakdown": {
+            "damage": 144.17,
+            "combo": 121.18,
+            "victory": 300,
+            "tempo": 223.21,
+            "survival": 14.1,
+            "total": 802.66
+          },
+          "breakdownDisplay": {
+            "damage": 187.42,
+            "combo": 157.53,
+            "victory": 390,
+            "tempo": 290.18,
+            "survival": 18.32
+          },
+          "killRoundMean": 4.24,
+          "killRounds": {
+            "R4": 126,
+            "R5": 41,
+            "R3": 1
+          },
+          "r4KillShare": 0.76,
+          "bursts": 2.23,
+          "cardsPerRound": 5.79,
+          "cardsPerGame": 24.52,
+          "actions": 30.76,
+          "divination": {
+            "guard": 6,
+            "guide": 455,
+            "strike": 43
+          },
+          "hpLostPerGame": 20.37,
+          "hpRemainRatio": 0.47,
+          "bestLineShare": {
+            "s-balanced": 0.21,
+            "s-score": 0.76,
+            "s-rush": 0.02
+          }
+        },
+        "寿楽": {
+          "n": 168,
+          "mean": 899.33,
+          "gapPct": 13.82,
+          "vsCluster": -64.3,
+          "winRatePct": 100,
+          "breakdown": {
+            "damage": 144.17,
+            "combo": 75.5,
+            "victory": 300,
+            "tempo": 148.39,
+            "survival": 23.75,
+            "total": 691.81
+          },
+          "breakdownDisplay": {
+            "damage": 187.42,
+            "combo": 98.15,
+            "victory": 390,
+            "tempo": 192.91,
+            "survival": 30.88
+          },
+          "killRoundMean": 5.27,
+          "killRounds": {
+            "R5": 120,
+            "R6": 45,
+            "R7": 1,
+            "R4": 2
+          },
+          "r4KillShare": 0.01,
+          "bursts": 0.95,
+          "cardsPerRound": 2.43,
+          "cardsPerGame": 12.82,
+          "actions": 20.09,
+          "divination": {
+            "guard": 7,
+            "guide": 466,
+            "strike": 31
+          },
+          "hpLostPerGame": 16.87,
+          "hpRemainRatio": 0.8,
+          "bestLineShare": {
+            "s-score": 0.59,
+            "s-balanced": 0.29,
+            "s-rush": 0.13
+          }
+        },
+        "福永": {
+          "n": 168,
+          "mean": 940.25,
+          "gapPct": 9.89,
+          "vsCluster": -23.38,
+          "winRatePct": 100,
+          "breakdown": {
+            "damage": 144.17,
+            "combo": 108.98,
+            "victory": 300,
+            "tempo": 152.8,
+            "survival": 17.32,
+            "total": 723.26
+          },
+          "breakdownDisplay": {
+            "damage": 187.42,
+            "combo": 141.67,
+            "victory": 390,
+            "tempo": 198.64,
+            "survival": 22.51
+          },
+          "killRoundMean": 5.2,
+          "killRounds": {
+            "R5": 109,
+            "R4": 14,
+            "R6": 42,
+            "R7": 3
+          },
+          "r4KillShare": 0.08,
+          "bursts": 0.99,
+          "cardsPerRound": 3.49,
+          "cardsPerGame": 18.16,
+          "actions": 25.36,
+          "divination": {
+            "guard": 6,
+            "guide": 442,
+            "strike": 56
+          },
+          "hpLostPerGame": 34.87,
+          "hpRemainRatio": 0.61,
+          "bestLineShare": {
+            "s-score": 0.71,
+            "s-rush": 0.17,
+            "s-balanced": 0.11
+          }
+        },
+        "笑蓮": {
+          "n": 168,
+          "mean": 969.12,
+          "gapPct": 7.13,
+          "vsCluster": 5.49,
+          "winRatePct": 100,
+          "breakdown": {
+            "damage": 144.17,
+            "combo": 83.49,
+            "victory": 300,
+            "tempo": 190.54,
+            "survival": 27.26,
+            "total": 745.46
+          },
+          "breakdownDisplay": {
+            "damage": 187.42,
+            "combo": 108.53,
+            "victory": 390,
+            "tempo": 247.7,
+            "survival": 35.44
+          },
+          "killRoundMean": 4.68,
+          "killRounds": {
+            "R4": 63,
+            "R3": 4,
+            "R5": 83,
+            "R6": 18
+          },
+          "r4KillShare": 0.4,
+          "bursts": 0.85,
+          "cardsPerRound": 2.91,
+          "cardsPerGame": 13.65,
+          "actions": 20.34,
+          "divination": {
+            "guard": 7,
+            "guide": 448,
+            "strike": 49
+          },
+          "hpLostPerGame": 22.48,
+          "hpRemainRatio": 0.96,
+          "bestLineShare": {
+            "s-score": 0.64,
+            "s-balanced": 0.27,
+            "s-rush": 0.09
+          }
+        }
+      },
+      "perEnemy": {
+        "乱舞の道化": {
+          "spreadPct": 14.03,
+          "恵比寿": 952.17,
+          "大耀": 963.75,
+          "蒼毘": 967.33,
+          "才華": 1041,
+          "寿楽": 894.96,
+          "福永": 950.79,
+          "笑蓮": 974.33
+        },
+        "藍花の怨霊": {
+          "spreadPct": 13.83,
+          "恵比寿": 968.92,
+          "大耀": 959.92,
+          "蒼毘": 954.21,
+          "才華": 1042.58,
+          "寿楽": 898.42,
+          "福永": 943.71,
+          "笑蓮": 972.46
+        },
+        "蒼海の龍神": {
+          "spreadPct": 14.78,
+          "恵比寿": 951.88,
+          "大耀": 966.38,
+          "蒼毘": 945.75,
+          "才華": 1046.83,
+          "寿楽": 892.08,
+          "福永": 917.46,
+          "笑蓮": 963.54
+        },
+        "試練の影": {
+          "spreadPct": 14.6,
+          "恵比寿": 958.04,
+          "大耀": 959.5,
+          "蒼毘": 977.25,
+          "才華": 1044,
+          "寿楽": 891.58,
+          "福永": 930.08,
+          "笑蓮": 976.17
+        },
+        "業斧の鬼将": {
+          "spreadPct": 15.42,
+          "恵比寿": 955.83,
+          "大耀": 982.75,
+          "蒼毘": 957.25,
+          "才華": 1064.33,
+          "寿楽": 900.25,
+          "福永": 938.71,
+          "笑蓮": 969.75
+        },
+        "銀甲の機工師": {
+          "spreadPct": 13.01,
+          "恵比寿": 955.25,
+          "大耀": 971.08,
+          "蒼毘": 958.63,
+          "才華": 1043.71,
+          "寿楽": 907.88,
+          "福永": 948.63,
+          "笑蓮": 960.63
+        },
+        "双牙の魔獣": {
+          "spreadPct": 10.95,
+          "恵比寿": 968.29,
+          "大耀": 964.21,
+          "蒼毘": 959.42,
+          "才華": 1022.04,
+          "寿楽": 910.17,
+          "福永": 952.38,
+          "笑蓮": 966.96
+        }
+      },
+      "elapsedSec": 60.1
+    },
+    "D1": {
+      "label": "全神 共通 20 枚の同一デッキ（専用カード 0）",
+      "group": "decomp",
+      "overallSpreadPct": 5.52,
+      "worstEnemySpreadPct": 6.8,
+      "worstEnemy": "蒼海の龍神",
+      "bestGod": "笑蓮",
+      "worstGod": "寿楽",
+      "clusterMean": 999.22,
+      "spreadExcludingSaika": 5.52,
+      "spreadExcludingJuraku": 4.33,
+      "perGod": {
+        "恵比寿": {
+          "n": 168,
+          "mean": 981.01,
+          "gapPct": 3.72,
+          "vsCluster": -18.22,
+          "winRatePct": 100,
+          "breakdown": {
+            "damage": 144.17,
+            "combo": 90.15,
+            "victory": 300,
+            "tempo": 199.58,
+            "survival": 20.7,
+            "total": 754.6
+          },
+          "breakdownDisplay": {
+            "damage": 187.42,
+            "combo": 117.19,
+            "victory": 390,
+            "tempo": 259.46,
+            "survival": 26.91
+          },
+          "killRoundMean": 4.57,
+          "killRounds": {
+            "R4": 71,
+            "R5": 92,
+            "R6": 3,
+            "R3": 2
+          },
+          "r4KillShare": 0.43,
+          "bursts": 0.98,
+          "cardsPerRound": 3.32,
+          "cardsPerGame": 15.18,
+          "actions": 21.76,
+          "divination": {
+            "guard": 13,
+            "guide": 461,
+            "strike": 30
+          },
+          "hpLostPerGame": 23.23,
+          "hpRemainRatio": 0.71,
+          "bestLineShare": {
+            "s-rush": 0.13,
+            "s-score": 0.57,
+            "s-balanced": 0.31
+          }
+        },
+        "大耀": {
+          "n": 168,
+          "mean": 993.38,
+          "gapPct": 2.5,
+          "vsCluster": -5.84,
+          "winRatePct": 100,
+          "breakdown": {
+            "damage": 144.17,
+            "combo": 80.6,
+            "victory": 300,
+            "tempo": 221.25,
+            "survival": 18.13,
+            "total": 764.14
+          },
+          "breakdownDisplay": {
+            "damage": 187.42,
+            "combo": 104.77,
+            "victory": 390,
+            "tempo": 287.63,
+            "survival": 23.56
+          },
+          "killRoundMean": 4.26,
+          "killRounds": {
+            "R4": 115,
+            "R3": 6,
+            "R5": 45,
+            "R6": 2
+          },
+          "r4KillShare": 0.72,
+          "bursts": 0.98,
+          "cardsPerRound": 3.12,
+          "cardsPerGame": 13.27,
+          "actions": 19.53,
+          "divination": {
+            "guard": 12,
+            "guide": 456,
+            "strike": 36
+          },
+          "hpLostPerGame": 21.66,
+          "hpRemainRatio": 0.61,
+          "bestLineShare": {
+            "s-rush": 0.13,
+            "s-score": 0.57,
+            "s-balanced": 0.3
+          }
+        },
+        "蒼毘": {
+          "n": 168,
+          "mean": 1003.65,
+          "gapPct": 1.49,
+          "vsCluster": 4.42,
+          "winRatePct": 100,
+          "breakdown": {
+            "damage": 144.17,
+            "combo": 81.11,
+            "victory": 300,
+            "tempo": 225,
+            "survival": 21.78,
+            "total": 772.06
+          },
+          "breakdownDisplay": {
+            "damage": 187.42,
+            "combo": 105.45,
+            "victory": 390,
+            "tempo": 292.5,
+            "survival": 28.31
+          },
+          "killRoundMean": 4.19,
+          "killRounds": {
+            "R4": 108,
+            "R3": 14,
+            "R5": 46
+          },
+          "r4KillShare": 0.73,
+          "bursts": 0.95,
+          "cardsPerRound": 3.18,
+          "cardsPerGame": 13.33,
+          "actions": 19.92,
+          "divination": {
+            "guard": 15,
+            "guide": 468,
+            "strike": 21
+          },
+          "hpLostPerGame": 15.88,
+          "hpRemainRatio": 0.73,
+          "bestLineShare": {
+            "s-score": 0.66,
+            "s-balanced": 0.24,
+            "s-rush": 0.1
+          }
+        },
+        "才華": {
+          "n": 168,
+          "mean": 981.89,
+          "gapPct": 3.63,
+          "vsCluster": -17.33,
+          "winRatePct": 100,
+          "breakdown": {
+            "damage": 144.17,
+            "combo": 93.98,
+            "victory": 300,
+            "tempo": 200.3,
+            "survival": 16.83,
+            "total": 755.28
+          },
+          "breakdownDisplay": {
+            "damage": 187.42,
+            "combo": 122.18,
+            "victory": 390,
+            "tempo": 260.39,
+            "survival": 21.88
+          },
+          "killRoundMean": 4.57,
+          "killRounds": {
+            "R4": 75,
+            "R5": 91,
+            "R6": 2
+          },
+          "r4KillShare": 0.45,
+          "bursts": 1.01,
+          "cardsPerRound": 3.59,
+          "cardsPerGame": 16.4,
+          "actions": 22.96,
+          "divination": {
+            "guard": 9,
+            "guide": 466,
+            "strike": 29
+          },
+          "hpLostPerGame": 24.42,
+          "hpRemainRatio": 0.56,
+          "bestLineShare": {
+            "s-rush": 0.13,
+            "s-balanced": 0.26,
+            "s-score": 0.61
+          }
+        },
+        "寿楽": {
+          "n": 168,
+          "mean": 962.65,
+          "gapPct": 5.52,
+          "vsCluster": -36.58,
+          "winRatePct": 100,
+          "breakdown": {
+            "damage": 144.17,
+            "combo": 92.96,
+            "victory": 300,
+            "tempo": 181.13,
+            "survival": 22.23,
+            "total": 740.49
+          },
+          "breakdownDisplay": {
+            "damage": 187.42,
+            "combo": 120.85,
+            "victory": 390,
+            "tempo": 235.47,
+            "survival": 28.89
+          },
+          "killRoundMean": 4.83,
+          "killRounds": {
+            "R4": 37,
+            "R5": 122,
+            "R6": 9
+          },
+          "r4KillShare": 0.22,
+          "bursts": 0.98,
+          "cardsPerRound": 3.17,
+          "cardsPerGame": 15.3,
+          "actions": 22.14,
+          "divination": {
+            "guard": 10,
+            "guide": 461,
+            "strike": 33
+          },
+          "hpLostPerGame": 21.81,
+          "hpRemainRatio": 0.75,
+          "bestLineShare": {
+            "s-rush": 0.12,
+            "s-balanced": 0.23,
+            "s-score": 0.65
+          }
+        },
+        "福永": {
+          "n": 168,
+          "mean": 974.76,
+          "gapPct": 4.33,
+          "vsCluster": -24.46,
+          "winRatePct": 100,
+          "breakdown": {
+            "damage": 144.17,
+            "combo": 88.77,
+            "victory": 300,
+            "tempo": 197.08,
+            "survival": 19.76,
+            "total": 749.79
+          },
+          "breakdownDisplay": {
+            "damage": 187.42,
+            "combo": 115.41,
+            "victory": 390,
+            "tempo": 256.21,
+            "survival": 25.69
+          },
+          "killRoundMean": 4.61,
+          "killRounds": {
+            "R4": 69,
+            "R5": 93,
+            "R6": 5,
+            "R3": 1
+          },
+          "r4KillShare": 0.42,
+          "bursts": 0.92,
+          "cardsPerRound": 3.2,
+          "cardsPerGame": 14.76,
+          "actions": 21.36,
+          "divination": {
+            "guard": 6,
+            "guide": 458,
+            "strike": 40
+          },
+          "hpLostPerGame": 25.79,
+          "hpRemainRatio": 0.7,
+          "bestLineShare": {
+            "s-rush": 0.16,
+            "s-balanced": 0.23,
+            "s-score": 0.61
+          }
+        },
+        "笑蓮": {
+          "n": 168,
+          "mean": 1018.86,
+          "gapPct": 0,
+          "vsCluster": 19.64,
+          "winRatePct": 100,
+          "breakdown": {
+            "damage": 144.17,
+            "combo": 72.24,
+            "victory": 300,
+            "tempo": 241.37,
+            "survival": 25.96,
+            "total": 783.74
+          },
+          "breakdownDisplay": {
+            "damage": 187.42,
+            "combo": 93.91,
+            "victory": 390,
+            "tempo": 313.78,
+            "survival": 33.75
+          },
+          "killRoundMean": 3.93,
+          "killRounds": {
+            "R3": 27,
+            "R4": 125,
+            "R5": 16
+          },
+          "r4KillShare": 0.9,
+          "bursts": 0.7,
+          "cardsPerRound": 3.05,
+          "cardsPerGame": 11.98,
+          "actions": 17.92,
+          "divination": {
+            "guard": 11,
+            "guide": 470,
+            "strike": 23
+          },
+          "hpLostPerGame": 14.67,
+          "hpRemainRatio": 0.92,
+          "bestLineShare": {
+            "s-balanced": 0.29,
+            "s-score": 0.67,
+            "s-rush": 0.04
+          }
+        }
+      },
+      "perEnemy": {
+        "乱舞の道化": {
+          "spreadPct": 5.92,
+          "恵比寿": 978.33,
+          "大耀": 985.54,
+          "蒼毘": 1003.25,
+          "才華": 977.96,
+          "寿楽": 965.38,
+          "福永": 978.21,
+          "笑蓮": 1026.13
+        },
+        "藍花の怨霊": {
+          "spreadPct": 6,
+          "恵比寿": 993.58,
+          "大耀": 1007,
+          "蒼毘": 1006.71,
+          "才華": 989.38,
+          "寿楽": 964.54,
+          "福永": 977.54,
+          "笑蓮": 1026.13
+        },
+        "蒼海の龍神": {
+          "spreadPct": 6.8,
+          "恵比寿": 968.92,
+          "大耀": 977.75,
+          "蒼毘": 986.21,
+          "才華": 969.92,
+          "寿楽": 951.63,
+          "福永": 958.92,
+          "笑蓮": 1021.04
+        },
+        "試練の影": {
+          "spreadPct": 5.94,
+          "恵比寿": 981.58,
+          "大耀": 1002.75,
+          "蒼毘": 1014.38,
+          "才華": 986.54,
+          "寿楽": 964.88,
+          "福永": 982,
+          "笑蓮": 1025.83
+        },
+        "業斧の鬼将": {
+          "spreadPct": 5.32,
+          "恵比寿": 983.67,
+          "大耀": 996.46,
+          "蒼毘": 1010.96,
+          "才華": 980.42,
+          "寿楽": 964,
+          "福永": 969.5,
+          "笑蓮": 1018.17
+        },
+        "銀甲の機工師": {
+          "spreadPct": 4.93,
+          "恵比寿": 981.63,
+          "大耀": 995.67,
+          "蒼毘": 1011.67,
+          "才華": 984.17,
+          "寿楽": 961.79,
+          "福永": 977.67,
+          "笑蓮": 1008.92
+        },
+        "双牙の魔獣": {
+          "spreadPct": 3.93,
+          "恵比寿": 979.33,
+          "大耀": 988.5,
+          "蒼毘": 992.38,
+          "才華": 984.88,
+          "寿楽": 966.33,
+          "福永": 979.5,
+          "笑蓮": 1005.83
+        }
+      },
+      "elapsedSec": 61.1
+    },
+    "D2": {
+      "label": "推奨デッキの専用カードを同種別の共通カードへ置換（全神）",
+      "group": "decomp",
+      "overallSpreadPct": 10.42,
+      "worstEnemySpreadPct": 12.9,
+      "worstEnemy": "試練の影",
+      "bestGod": "才華",
+      "worstGod": "寿楽",
+      "clusterMean": 963.53,
+      "spreadExcludingSaika": 8.57,
+      "spreadExcludingJuraku": 10.03,
+      "perGod": {
+        "恵比寿": {
+          "n": 168,
+          "mean": 966.17,
+          "gapPct": 3.66,
+          "vsCluster": 2.64,
+          "winRatePct": 100,
+          "breakdown": {
+            "damage": 144.17,
+            "combo": 91.6,
+            "victory": 300,
+            "tempo": 190.48,
+            "survival": 16.99,
+            "total": 743.24
+          },
+          "breakdownDisplay": {
+            "damage": 187.42,
+            "combo": 119.08,
+            "victory": 390,
+            "tempo": 247.62,
+            "survival": 22.09
+          },
+          "killRoundMean": 4.7,
+          "killRounds": {
+            "R5": 96,
+            "R4": 60,
+            "R6": 11,
+            "R3": 1
+          },
+          "r4KillShare": 0.36,
+          "bursts": 0.93,
+          "cardsPerRound": 3.27,
+          "cardsPerGame": 15.35,
+          "actions": 22.04,
+          "divination": {
+            "guard": 15,
+            "guide": 454,
+            "strike": 35
+          },
+          "hpLostPerGame": 24.28,
+          "hpRemainRatio": 0.59,
+          "bestLineShare": {
+            "s-balanced": 0.29,
+            "s-score": 0.57,
+            "s-rush": 0.15
+          }
+        },
+        "大耀": {
+          "n": 168,
+          "mean": 949.59,
+          "gapPct": 5.31,
+          "vsCluster": -13.94,
+          "winRatePct": 99.4,
+          "breakdown": {
+            "damage": 144.13,
+            "combo": 90.89,
+            "victory": 298.21,
+            "tempo": 181.73,
+            "survival": 15.49,
+            "total": 730.46
+          },
+          "breakdownDisplay": {
+            "damage": 187.37,
+            "combo": 118.16,
+            "victory": 387.68,
+            "tempo": 236.24,
+            "survival": 20.14
+          },
+          "killRoundMean": 4.78,
+          "killRounds": {
+            "R5": 88,
+            "R4": 49,
+            "R3": 6,
+            "R6": 23,
+            "R7": 1
+          },
+          "r4KillShare": 0.33,
+          "bursts": 1.01,
+          "cardsPerRound": 3.15,
+          "cardsPerGame": 15.08,
+          "actions": 21.88,
+          "divination": {
+            "guard": 11,
+            "guide": 443,
+            "strike": 50
+          },
+          "hpLostPerGame": 25.37,
+          "hpRemainRatio": 0.52,
+          "bestLineShare": {
+            "s-rush": 0.1,
+            "s-score": 0.59,
+            "s-balanced": 0.32
+          }
+        },
+        "蒼毘": {
+          "n": 168,
+          "mean": 955.85,
+          "gapPct": 4.69,
+          "vsCluster": -7.69,
+          "winRatePct": 100,
+          "breakdown": {
+            "damage": 144.17,
+            "combo": 88.43,
+            "victory": 300,
+            "tempo": 185.06,
+            "survival": 17.6,
+            "total": 735.27
+          },
+          "breakdownDisplay": {
+            "damage": 187.42,
+            "combo": 114.96,
+            "victory": 390,
+            "tempo": 240.58,
+            "survival": 22.88
+          },
+          "killRoundMean": 4.77,
+          "killRounds": {
+            "R4": 47,
+            "R5": 104,
+            "R3": 3,
+            "R6": 14
+          },
+          "r4KillShare": 0.3,
+          "bursts": 0.99,
+          "cardsPerRound": 3.01,
+          "cardsPerGame": 14.37,
+          "actions": 21.65,
+          "divination": {
+            "guard": 23,
+            "guide": 457,
+            "strike": 24
+          },
+          "hpLostPerGame": 16.08,
+          "hpRemainRatio": 0.59,
+          "bestLineShare": {
+            "s-rush": 0.1,
+            "s-score": 0.64,
+            "s-balanced": 0.26
+          }
+        },
+        "才華": {
+          "n": 168,
+          "mean": 1002.86,
+          "gapPct": 0,
+          "vsCluster": 39.33,
+          "winRatePct": 100,
+          "breakdown": {
+            "damage": 144.17,
+            "combo": 108.32,
+            "victory": 300,
+            "tempo": 196.96,
+            "survival": 21.98,
+            "total": 771.43
+          },
+          "breakdownDisplay": {
+            "damage": 187.42,
+            "combo": 140.81,
+            "victory": 390,
+            "tempo": 256.05,
+            "survival": 28.57
+          },
+          "killRoundMean": 4.61,
+          "killRounds": {
+            "R5": 94,
+            "R4": 67,
+            "R6": 5,
+            "R3": 2
+          },
+          "r4KillShare": 0.41,
+          "bursts": 2.18,
+          "cardsPerRound": 4.35,
+          "cardsPerGame": 20.02,
+          "actions": 26.63,
+          "divination": {
+            "guard": 13,
+            "guide": 443,
+            "strike": 48
+          },
+          "hpLostPerGame": 22.89,
+          "hpRemainRatio": 0.73,
+          "bestLineShare": {
+            "s-score": 0.54,
+            "s-rush": 0.19,
+            "s-balanced": 0.27
+          }
+        },
+        "寿楽": {
+          "n": 168,
+          "mean": 898.35,
+          "gapPct": 10.42,
+          "vsCluster": -65.18,
+          "winRatePct": 100,
+          "breakdown": {
+            "damage": 144.17,
+            "combo": 68.59,
+            "victory": 300,
+            "tempo": 158.81,
+            "survival": 19.46,
+            "total": 691.03
+          },
+          "breakdownDisplay": {
+            "damage": 187.42,
+            "combo": 89.17,
+            "victory": 390,
+            "tempo": 206.45,
+            "survival": 25.3
+          },
+          "killRoundMean": 5.14,
+          "killRounds": {
+            "R5": 137,
+            "R6": 27,
+            "R4": 4
+          },
+          "r4KillShare": 0.02,
+          "bursts": 0.95,
+          "cardsPerRound": 2.26,
+          "cardsPerGame": 11.63,
+          "actions": 18.77,
+          "divination": {
+            "guard": 14,
+            "guide": 458,
+            "strike": 32
+          },
+          "hpLostPerGame": 17.63,
+          "hpRemainRatio": 0.66,
+          "bestLineShare": {
+            "s-score": 0.62,
+            "s-balanced": 0.33,
+            "s-rush": 0.05
+          }
+        },
+        "福永": {
+          "n": 168,
+          "mean": 902.3,
+          "gapPct": 10.03,
+          "vsCluster": -61.23,
+          "winRatePct": 98.2,
+          "breakdown": {
+            "damage": 143.94,
+            "combo": 104.14,
+            "victory": 294.64,
+            "tempo": 133.69,
+            "survival": 17.67,
+            "total": 694.08
+          },
+          "breakdownDisplay": {
+            "damage": 187.12,
+            "combo": 135.38,
+            "victory": 383.04,
+            "tempo": 173.8,
+            "survival": 22.97
+          },
+          "killRoundMean": 5.39,
+          "killRounds": {
+            "R6": 48,
+            "R5": 81,
+            "R7": 18,
+            "R4": 17,
+            "R3": 1
+          },
+          "r4KillShare": 0.11,
+          "bursts": 1.04,
+          "cardsPerRound": 3.21,
+          "cardsPerGame": 17.37,
+          "actions": 24.8,
+          "divination": {
+            "guard": 7,
+            "guide": 421,
+            "strike": 76
+          },
+          "hpLostPerGame": 30.45,
+          "hpRemainRatio": 0.64,
+          "bestLineShare": {
+            "s-score": 0.52,
+            "s-balanced": 0.21,
+            "s-rush": 0.27
+          }
+        },
+        "笑蓮": {
+          "n": 168,
+          "mean": 982.52,
+          "gapPct": 2.03,
+          "vsCluster": 18.99,
+          "winRatePct": 100,
+          "breakdown": {
+            "damage": 144.17,
+            "combo": 85.11,
+            "victory": 300,
+            "tempo": 200.89,
+            "survival": 25.6,
+            "total": 755.77
+          },
+          "breakdownDisplay": {
+            "damage": 187.42,
+            "combo": 110.64,
+            "victory": 390,
+            "tempo": 261.16,
+            "survival": 33.28
+          },
+          "killRoundMean": 4.53,
+          "killRounds": {
+            "R3": 9,
+            "R4": 77,
+            "R5": 66,
+            "R6": 16
+          },
+          "r4KillShare": 0.51,
+          "bursts": 0.9,
+          "cardsPerRound": 3.1,
+          "cardsPerGame": 14.05,
+          "actions": 20.58,
+          "divination": {
+            "guard": 12,
+            "guide": 443,
+            "strike": 49
+          },
+          "hpLostPerGame": 20.47,
+          "hpRemainRatio": 0.93,
+          "bestLineShare": {
+            "s-balanced": 0.28,
+            "s-rush": 0.1,
+            "s-score": 0.63
+          }
+        }
+      },
+      "perEnemy": {
+        "乱舞の道化": {
+          "spreadPct": 9.75,
+          "恵比寿": 964.21,
+          "大耀": 958.79,
+          "蒼毘": 969.46,
+          "才華": 998.42,
+          "寿楽": 901.04,
+          "福永": 918.29,
+          "笑蓮": 994.71
+        },
+        "藍花の怨霊": {
+          "spreadPct": 11.72,
+          "恵比寿": 973.54,
+          "大耀": 915.17,
+          "蒼毘": 947.58,
+          "才華": 1018.13,
+          "寿楽": 902.79,
+          "福永": 898.75,
+          "笑蓮": 986.21
+        },
+        "蒼海の龍神": {
+          "spreadPct": 12.11,
+          "恵比寿": 950.08,
+          "大耀": 946.92,
+          "蒼毘": 947.67,
+          "才華": 997.96,
+          "寿楽": 896.71,
+          "福永": 877.08,
+          "笑蓮": 972.88
+        },
+        "試練の影": {
+          "spreadPct": 12.9,
+          "恵比寿": 959.71,
+          "大耀": 955.63,
+          "蒼毘": 959.58,
+          "才華": 1002.25,
+          "寿楽": 893.42,
+          "福永": 872.92,
+          "笑蓮": 989
+        },
+        "業斧の鬼将": {
+          "spreadPct": 11.96,
+          "恵比寿": 987.42,
+          "大耀": 957.08,
+          "蒼毘": 962.67,
+          "才華": 1015.42,
+          "寿楽": 894,
+          "福永": 905.42,
+          "笑蓮": 974.38
+        },
+        "銀甲の機工師": {
+          "spreadPct": 10.98,
+          "恵比寿": 961.63,
+          "大耀": 938.79,
+          "蒼毘": 953.33,
+          "才華": 1003.58,
+          "寿楽": 898.63,
+          "福永": 893.42,
+          "笑蓮": 978.88
+        },
+        "双牙の魔獣": {
+          "spreadPct": 8.37,
+          "恵比寿": 966.63,
+          "大耀": 974.75,
+          "蒼毘": 950.63,
+          "才華": 984.25,
+          "寿楽": 901.88,
+          "福永": 950.25,
+          "笑蓮": 981.58
+        }
+      },
+      "elapsedSec": 61
+    },
+    "D3": {
+      "label": "神の一撃を全神 中立値（damage 25 のみ）へ",
+      "group": "decomp",
+      "overallSpreadPct": 10.77,
+      "worstEnemySpreadPct": 13.41,
+      "worstEnemy": "業斧の鬼将",
+      "bestGod": "才華",
+      "worstGod": "寿楽",
+      "clusterMean": 947.51,
+      "spreadExcludingSaika": 7.26,
+      "spreadExcludingJuraku": 7.06,
+      "perGod": {
+        "恵比寿": {
+          "n": 168,
+          "mean": 935.36,
+          "gapPct": 7.04,
+          "vsCluster": -12.14,
+          "winRatePct": 100,
+          "breakdown": {
+            "damage": 144.17,
+            "combo": 84.77,
+            "victory": 300,
+            "tempo": 173.63,
+            "survival": 16.93,
+            "total": 719.5
+          },
+          "breakdownDisplay": {
+            "damage": 187.42,
+            "combo": 110.21,
+            "victory": 390,
+            "tempo": 225.72,
+            "survival": 22.01
+          },
+          "killRoundMean": 4.93,
+          "killRounds": {
+            "R5": 125,
+            "R4": 27,
+            "R6": 16
+          },
+          "r4KillShare": 0.16,
+          "bursts": 1.26,
+          "cardsPerRound": 2.78,
+          "cardsPerGame": 13.73,
+          "actions": 20.66,
+          "divination": {
+            "guard": 13,
+            "guide": 469,
+            "strike": 22
+          },
+          "hpLostPerGame": 34.08,
+          "hpRemainRatio": 0.61,
+          "bestLineShare": {
+            "s-balanced": 0.27,
+            "s-score": 0.6,
+            "s-rush": 0.14
+          }
+        },
+        "大耀": {
+          "n": 168,
+          "mean": 947.26,
+          "gapPct": 5.86,
+          "vsCluster": -0.25,
+          "winRatePct": 100,
+          "breakdown": {
+            "damage": 144.17,
+            "combo": 87.77,
+            "victory": 300,
+            "tempo": 186.9,
+            "survival": 9.81,
+            "total": 728.66
+          },
+          "breakdownDisplay": {
+            "damage": 187.42,
+            "combo": 114.11,
+            "victory": 390,
+            "tempo": 242.98,
+            "survival": 12.75
+          },
+          "killRoundMean": 4.73,
+          "killRounds": {
+            "R5": 86,
+            "R4": 56,
+            "R3": 5,
+            "R6": 21
+          },
+          "r4KillShare": 0.36,
+          "bursts": 0.93,
+          "cardsPerRound": 2.99,
+          "cardsPerGame": 14.16,
+          "actions": 20.89,
+          "divination": {
+            "guard": 28,
+            "guide": 428,
+            "strike": 48
+          },
+          "hpLostPerGame": 23.15,
+          "hpRemainRatio": 0.32,
+          "bestLineShare": {
+            "s-balanced": 0.38,
+            "s-score": 0.51,
+            "s-rush": 0.11
+          }
+        },
+        "蒼毘": {
+          "n": 168,
+          "mean": 939.3,
+          "gapPct": 6.65,
+          "vsCluster": -8.2,
+          "winRatePct": 100,
+          "breakdown": {
+            "damage": 144.17,
+            "combo": 80.58,
+            "victory": 300,
+            "tempo": 176.61,
+            "survival": 21.15,
+            "total": 722.52
+          },
+          "breakdownDisplay": {
+            "damage": 187.42,
+            "combo": 104.76,
+            "victory": 390,
+            "tempo": 229.59,
+            "survival": 27.5
+          },
+          "killRoundMean": 4.89,
+          "killRounds": {
+            "R5": 120,
+            "R4": 33,
+            "R6": 15
+          },
+          "r4KillShare": 0.2,
+          "bursts": 0.75,
+          "cardsPerRound": 2.7,
+          "cardsPerGame": 13.19,
+          "actions": 20.43,
+          "divination": {
+            "guard": 40,
+            "guide": 444,
+            "strike": 20
+          },
+          "hpLostPerGame": 13.2,
+          "hpRemainRatio": 0.71,
+          "bestLineShare": {
+            "s-balanced": 0.45,
+            "s-score": 0.45,
+            "s-rush": 0.1
+          }
+        },
+        "才華": {
+          "n": 168,
+          "mean": 1006.18,
+          "gapPct": 0,
+          "vsCluster": 58.67,
+          "winRatePct": 99.4,
+          "breakdown": {
+            "damage": 144.12,
+            "combo": 106.11,
+            "victory": 298.21,
+            "tempo": 214.35,
+            "survival": 11.18,
+            "total": 773.97
+          },
+          "breakdownDisplay": {
+            "damage": 187.36,
+            "combo": 137.95,
+            "victory": 387.68,
+            "tempo": 278.65,
+            "survival": 14.53
+          },
+          "killRoundMean": 4.35,
+          "killRounds": {
+            "R4": 110,
+            "R5": 56,
+            "R6": 1
+          },
+          "r4KillShare": 0.65,
+          "bursts": 1.95,
+          "cardsPerRound": 4.42,
+          "cardsPerGame": 19.21,
+          "actions": 25.56,
+          "divination": {
+            "guard": 19,
+            "guide": 442,
+            "strike": 43
+          },
+          "hpLostPerGame": 22.1,
+          "hpRemainRatio": 0.37,
+          "bestLineShare": {
+            "s-score": 0.76,
+            "s-balanced": 0.21,
+            "s-rush": 0.03
+          }
+        },
+        "寿楽": {
+          "n": 168,
+          "mean": 897.79,
+          "gapPct": 10.77,
+          "vsCluster": -49.72,
+          "winRatePct": 100,
+          "breakdown": {
+            "damage": 144.17,
+            "combo": 74.52,
+            "victory": 300,
+            "tempo": 152.14,
+            "survival": 19.76,
+            "total": 690.59
+          },
+          "breakdownDisplay": {
+            "damage": 187.42,
+            "combo": 96.88,
+            "victory": 390,
+            "tempo": 197.79,
+            "survival": 25.68
+          },
+          "killRoundMean": 5.22,
+          "killRounds": {
+            "R5": 126,
+            "R6": 38,
+            "R7": 1,
+            "R4": 3
+          },
+          "r4KillShare": 0.02,
+          "bursts": 0.96,
+          "cardsPerRound": 2.43,
+          "cardsPerGame": 12.66,
+          "actions": 19.88,
+          "divination": {
+            "guard": 6,
+            "guide": 468,
+            "strike": 30
+          },
+          "hpLostPerGame": 22.68,
+          "hpRemainRatio": 0.67,
+          "bestLineShare": {
+            "s-score": 0.5,
+            "s-rush": 0.17,
+            "s-balanced": 0.33
+          }
+        },
+        "福永": {
+          "n": 168,
+          "mean": 935.19,
+          "gapPct": 7.06,
+          "vsCluster": -12.32,
+          "winRatePct": 100,
+          "breakdown": {
+            "damage": 144.17,
+            "combo": 105.77,
+            "victory": 300,
+            "tempo": 155.24,
+            "survival": 14.2,
+            "total": 719.37
+          },
+          "breakdownDisplay": {
+            "damage": 187.42,
+            "combo": 137.5,
+            "victory": 390,
+            "tempo": 201.81,
+            "survival": 18.46
+          },
+          "killRoundMean": 5.17,
+          "killRounds": {
+            "R5": 107,
+            "R4": 16,
+            "R6": 45
+          },
+          "r4KillShare": 0.1,
+          "bursts": 0.97,
+          "cardsPerRound": 3.38,
+          "cardsPerGame": 17.46,
+          "actions": 24.63,
+          "divination": {
+            "guard": 14,
+            "guide": 445,
+            "strike": 45
+          },
+          "hpLostPerGame": 33.69,
+          "hpRemainRatio": 0.51,
+          "bestLineShare": {
+            "s-balanced": 0.23,
+            "s-score": 0.63,
+            "s-rush": 0.14
+          }
+        },
+        "笑蓮": {
+          "n": 168,
+          "mean": 968.1,
+          "gapPct": 3.78,
+          "vsCluster": 20.6,
+          "winRatePct": 100,
+          "breakdown": {
+            "damage": 144.17,
+            "combo": 82.36,
+            "victory": 300,
+            "tempo": 192.68,
+            "survival": 25.46,
+            "total": 744.67
+          },
+          "breakdownDisplay": {
+            "damage": 187.42,
+            "combo": 107.06,
+            "victory": 390,
+            "tempo": 250.48,
+            "survival": 33.1
+          },
+          "killRoundMean": 4.65,
+          "killRounds": {
+            "R4": 63,
+            "R3": 5,
+            "R5": 85,
+            "R6": 15
+          },
+          "r4KillShare": 0.4,
+          "bursts": 0.85,
+          "cardsPerRound": 2.9,
+          "cardsPerGame": 13.48,
+          "actions": 20.13,
+          "divination": {
+            "guard": 11,
+            "guide": 446,
+            "strike": 47
+          },
+          "hpLostPerGame": 24.92,
+          "hpRemainRatio": 0.9,
+          "bestLineShare": {
+            "s-score": 0.49,
+            "s-balanced": 0.33,
+            "s-rush": 0.18
+          }
+        }
+      },
+      "perEnemy": {
+        "乱舞の道化": {
+          "spreadPct": 11.63,
+          "恵比寿": 934.71,
+          "大耀": 946.21,
+          "蒼毘": 939.79,
+          "才華": 1006.63,
+          "寿楽": 889.58,
+          "福永": 942.88,
+          "笑蓮": 974.54
+        },
+        "藍花の怨霊": {
+          "spreadPct": 12.39,
+          "恵比寿": 940.5,
+          "大耀": 950.71,
+          "蒼毘": 939.71,
+          "才華": 1019.83,
+          "寿楽": 893.5,
+          "福永": 931.54,
+          "笑蓮": 968.63
+        },
+        "蒼海の龍神": {
+          "spreadPct": 10.69,
+          "恵比寿": 924,
+          "大耀": 949.79,
+          "蒼毘": 923.92,
+          "才華": 1002,
+          "寿楽": 894.88,
+          "福永": 921.63,
+          "笑蓮": 961.08
+        },
+        "試練の影": {
+          "spreadPct": 8.37,
+          "恵比寿": 937.92,
+          "大耀": 943.83,
+          "蒼毘": 946.42,
+          "才華": 975.71,
+          "寿楽": 894,
+          "福永": 935.17,
+          "笑蓮": 972.67
+        },
+        "業斧の鬼将": {
+          "spreadPct": 13.41,
+          "恵比寿": 928.75,
+          "大耀": 948.13,
+          "蒼毘": 943.17,
+          "才華": 1032.83,
+          "寿楽": 894.38,
+          "福永": 915.92,
+          "笑蓮": 967.54
+        },
+        "銀甲の機工師": {
+          "spreadPct": 9.37,
+          "恵比寿": 939.67,
+          "大耀": 942.38,
+          "蒼毘": 944.33,
+          "才華": 1004.38,
+          "寿楽": 910.25,
+          "福永": 948.96,
+          "笑蓮": 965.96
+        },
+        "双牙の魔獣": {
+          "spreadPct": 9.38,
+          "恵比寿": 942,
+          "大耀": 949.75,
+          "蒼毘": 937.79,
+          "才華": 1001.88,
+          "寿楽": 907.92,
+          "福永": 950.25,
+          "笑蓮": 966.29
+        }
+      },
+      "elapsedSec": 60.4
+    },
+    "D4": {
+      "label": "BURST なし（共鳴ゲージ最大 99・OTOMO 進化も無し）",
+      "group": "decomp",
+      "overallSpreadPct": 17.02,
+      "worstEnemySpreadPct": 52.87,
+      "worstEnemy": "藍花の怨霊",
+      "bestGod": "笑蓮",
+      "worstGod": "才華",
+      "clusterMean": 877.71,
+      "spreadExcludingSaika": 8.03,
+      "spreadExcludingJuraku": 17.02,
+      "perGod": {
+        "恵比寿": {
+          "n": 168,
+          "mean": 841.55,
+          "gapPct": 8.03,
+          "vsCluster": -36.16,
+          "winRatePct": 98.2,
+          "breakdown": {
+            "damage": 143.9,
+            "combo": 108.91,
+            "victory": 294.64,
+            "tempo": 87.68,
+            "survival": 12.21,
+            "total": 647.34
+          },
+          "breakdownDisplay": {
+            "damage": 187.07,
+            "combo": 141.58,
+            "victory": 383.04,
+            "tempo": 113.98,
+            "survival": 15.87
+          },
+          "killRoundMean": 5.99,
+          "killRounds": {
+            "R6": 124,
+            "R5": 21,
+            "R7": 20
+          },
+          "r4KillShare": 0,
+          "bursts": 0,
+          "cardsPerRound": 3,
+          "cardsPerGame": 17.94,
+          "actions": 25.93,
+          "divination": {
+            "guard": 20,
+            "guide": 458,
+            "strike": 26
+          },
+          "hpLostPerGame": 41.98,
+          "hpRemainRatio": 0.42,
+          "bestLineShare": {
+            "s-score": 0.62,
+            "s-rush": 0.14,
+            "s-balanced": 0.24
+          }
+        },
+        "大耀": {
+          "n": 168,
+          "mean": 850.89,
+          "gapPct": 7.01,
+          "vsCluster": -26.82,
+          "winRatePct": 94.6,
+          "breakdown": {
+            "damage": 143.51,
+            "combo": 106.63,
+            "victory": 283.93,
+            "tempo": 112.74,
+            "survival": 7.73,
+            "total": 654.54
+          },
+          "breakdownDisplay": {
+            "damage": 186.57,
+            "combo": 138.61,
+            "victory": 369.11,
+            "tempo": 146.56,
+            "survival": 10.05
+          },
+          "killRoundMean": 5.6,
+          "killRounds": {
+            "R6": 71,
+            "R5": 56,
+            "R7": 20,
+            "R4": 9,
+            "R3": 3
+          },
+          "r4KillShare": 0.07,
+          "bursts": 0,
+          "cardsPerRound": 3.12,
+          "cardsPerGame": 17.41,
+          "actions": 25.04,
+          "divination": {
+            "guard": 24,
+            "guide": 421,
+            "strike": 59
+          },
+          "hpLostPerGame": 27.55,
+          "hpRemainRatio": 0.26,
+          "bestLineShare": {
+            "s-score": 0.53,
+            "s-rush": 0.15,
+            "s-balanced": 0.32
+          }
+        },
+        "蒼毘": {
+          "n": 168,
+          "mean": 903.34,
+          "gapPct": 1.28,
+          "vsCluster": 25.63,
+          "winRatePct": 100,
+          "breakdown": {
+            "damage": 144.17,
+            "combo": 89.07,
+            "victory": 300,
+            "tempo": 141.49,
+            "survival": 20.11,
+            "total": 694.84
+          },
+          "breakdownDisplay": {
+            "damage": 187.42,
+            "combo": 115.79,
+            "victory": 390,
+            "tempo": 183.93,
+            "survival": 26.14
+          },
+          "killRoundMean": 5.35,
+          "killRounds": {
+            "R5": 95,
+            "R6": 66,
+            "R4": 7
+          },
+          "r4KillShare": 0.04,
+          "bursts": 0,
+          "cardsPerRound": 2.75,
+          "cardsPerGame": 14.69,
+          "actions": 22.52,
+          "divination": {
+            "guard": 44,
+            "guide": 434,
+            "strike": 26
+          },
+          "hpLostPerGame": 15.05,
+          "hpRemainRatio": 0.67,
+          "bestLineShare": {
+            "s-score": 0.4,
+            "s-balanced": 0.48,
+            "s-rush": 0.13
+          }
+        },
+        "才華": {
+          "n": 168,
+          "mean": 759.34,
+          "gapPct": 17.02,
+          "vsCluster": -118.37,
+          "winRatePct": 76.8,
+          "breakdown": {
+            "damage": 140.56,
+            "combo": 130.38,
+            "victory": 230.36,
+            "tempo": 78.04,
+            "survival": 4.77,
+            "total": 584.11
+          },
+          "breakdownDisplay": {
+            "damage": 182.73,
+            "combo": 169.49,
+            "victory": 299.46,
+            "tempo": 101.45,
+            "survival": 6.21
+          },
+          "killRoundMean": 5.84,
+          "killRounds": {
+            "R6": 72,
+            "R5": 39,
+            "R7": 18
+          },
+          "r4KillShare": 0,
+          "bursts": 0,
+          "cardsPerRound": 4.08,
+          "cardsPerGame": 23.13,
+          "actions": 31.03,
+          "divination": {
+            "guard": 35,
+            "guide": 408,
+            "strike": 61
+          },
+          "hpLostPerGame": 29.36,
+          "hpRemainRatio": 0.16,
+          "bestLineShare": {
+            "s-rush": 0.16,
+            "s-balanced": 0.33,
+            "s-score": 0.51
+          }
+        },
+        "寿楽": {
+          "n": 168,
+          "mean": 848.21,
+          "gapPct": 7.31,
+          "vsCluster": -29.5,
+          "winRatePct": 100,
+          "breakdown": {
+            "damage": 144.17,
+            "combo": 83.88,
+            "victory": 300,
+            "tempo": 106.67,
+            "survival": 17.74,
+            "total": 652.46
+          },
+          "breakdownDisplay": {
+            "damage": 187.42,
+            "combo": 109.05,
+            "victory": 390,
+            "tempo": 138.67,
+            "survival": 23.06
+          },
+          "killRoundMean": 5.78,
+          "killRounds": {
+            "R6": 99,
+            "R5": 53,
+            "R7": 16
+          },
+          "r4KillShare": 0,
+          "bursts": 0,
+          "cardsPerRound": 2.45,
+          "cardsPerGame": 14.14,
+          "actions": 21.92,
+          "divination": {
+            "guard": 9,
+            "guide": 458,
+            "strike": 37
+          },
+          "hpLostPerGame": 24.9,
+          "hpRemainRatio": 0.59,
+          "bestLineShare": {
+            "s-score": 0.51,
+            "s-balanced": 0.36,
+            "s-rush": 0.13
+          }
+        },
+        "福永": {
+          "n": 168,
+          "mean": 860.89,
+          "gapPct": 5.92,
+          "vsCluster": -16.82,
+          "winRatePct": 98.8,
+          "breakdown": {
+            "damage": 143.91,
+            "combo": 123.56,
+            "victory": 296.43,
+            "tempo": 86.37,
+            "survival": 11.96,
+            "total": 662.22
+          },
+          "breakdownDisplay": {
+            "damage": 187.08,
+            "combo": 160.63,
+            "victory": 385.36,
+            "tempo": 112.28,
+            "survival": 15.55
+          },
+          "killRoundMean": 6,
+          "killRounds": {
+            "R6": 98,
+            "R7": 37,
+            "R5": 25,
+            "R4": 6
+          },
+          "r4KillShare": 0.04,
+          "bursts": 0,
+          "cardsPerRound": 3.44,
+          "cardsPerGame": 20.64,
+          "actions": 28.65,
+          "divination": {
+            "guard": 8,
+            "guide": 420,
+            "strike": 76
+          },
+          "hpLostPerGame": 37.82,
+          "hpRemainRatio": 0.4,
+          "bestLineShare": {
+            "s-score": 0.55,
+            "s-balanced": 0.17,
+            "s-rush": 0.27
+          }
+        },
+        "笑蓮": {
+          "n": 168,
+          "mean": 915.07,
+          "gapPct": 0,
+          "vsCluster": 37.36,
+          "winRatePct": 100,
+          "breakdown": {
+            "damage": 144.17,
+            "combo": 98.29,
+            "victory": 300,
+            "tempo": 135.95,
+            "survival": 25.49,
+            "total": 703.9
+          },
+          "breakdownDisplay": {
+            "damage": 187.42,
+            "combo": 127.78,
+            "victory": 390,
+            "tempo": 176.74,
+            "survival": 33.13
+          },
+          "killRoundMean": 5.4,
+          "killRounds": {
+            "R5": 65,
+            "R3": 3,
+            "R4": 17,
+            "R6": 76,
+            "R7": 7
+          },
+          "r4KillShare": 0.12,
+          "bursts": 0,
+          "cardsPerRound": 3.01,
+          "cardsPerGame": 16.26,
+          "actions": 23.66,
+          "divination": {
+            "guard": 26,
+            "guide": 429,
+            "strike": 49
+          },
+          "hpLostPerGame": 28.86,
+          "hpRemainRatio": 0.85,
+          "bestLineShare": {
+            "s-score": 0.42,
+            "s-balanced": 0.44,
+            "s-rush": 0.14
+          }
+        }
+      },
+      "perEnemy": {
+        "乱舞の道化": {
+          "spreadPct": 11.03,
+          "恵比寿": 879.67,
+          "大耀": 883.08,
+          "蒼毘": 923.54,
+          "才華": 902.25,
+          "寿楽": 841.92,
+          "福永": 876.33,
+          "笑蓮": 946.29
+        },
+        "藍花の怨霊": {
+          "spreadPct": 52.87,
+          "恵比寿": 766.29,
+          "大耀": 752.96,
+          "蒼毘": 906.63,
+          "才華": 437.13,
+          "寿楽": 854.83,
+          "福永": 827.17,
+          "笑蓮": 927.54
+        },
+        "蒼海の龍神": {
+          "spreadPct": 25.41,
+          "恵比寿": 814.96,
+          "大耀": 806.75,
+          "蒼毘": 884.67,
+          "才華": 659.88,
+          "寿楽": 837.29,
+          "福永": 822.13,
+          "笑蓮": 881.88
+        },
+        "試練の影": {
+          "spreadPct": 7.48,
+          "恵比寿": 860.54,
+          "大耀": 865.5,
+          "蒼毘": 911.38,
+          "才華": 889.25,
+          "寿楽": 843.21,
+          "福永": 862.5,
+          "笑蓮": 903.38
+        },
+        "業斧の鬼将": {
+          "spreadPct": 14.32,
+          "恵比寿": 854.33,
+          "大耀": 892.46,
+          "蒼毘": 906.5,
+          "才華": 794.38,
+          "寿楽": 857.58,
+          "福永": 861.08,
+          "笑蓮": 927.13
+        },
+        "銀甲の機工師": {
+          "spreadPct": 8.63,
+          "恵比寿": 853.5,
+          "大耀": 855.13,
+          "蒼毘": 881.5,
+          "才華": 850,
+          "寿楽": 832.33,
+          "福永": 849.88,
+          "笑蓮": 910.92
+        },
+        "双牙の魔獣": {
+          "spreadPct": 15.6,
+          "恵比寿": 861.54,
+          "大耀": 900.33,
+          "蒼毘": 909.17,
+          "才華": 782.5,
+          "寿楽": 870.33,
+          "福永": 927.17,
+          "笑蓮": 908.38
+        }
+      },
+      "elapsedSec": 69.9
+    },
+    "D5": {
+      "label": "OTOMO（守りの絆）の BURST 効果を全形態 空に",
+      "group": "decomp",
+      "overallSpreadPct": 10.29,
+      "worstEnemySpreadPct": 12.09,
+      "worstEnemy": "業斧の鬼将",
+      "bestGod": "才華",
+      "worstGod": "寿楽",
+      "clusterMean": 956.95,
+      "spreadExcludingSaika": 7.41,
+      "spreadExcludingJuraku": 5.99,
+      "perGod": {
+        "恵比寿": {
+          "n": 168,
+          "mean": 955.68,
+          "gapPct": 4.42,
+          "vsCluster": -1.26,
+          "winRatePct": 100,
+          "breakdown": {
+            "damage": 144.17,
+            "combo": 84.35,
+            "victory": 300,
+            "tempo": 188.33,
+            "survival": 18.27,
+            "total": 735.12
+          },
+          "breakdownDisplay": {
+            "damage": 187.42,
+            "combo": 109.65,
+            "victory": 390,
+            "tempo": 244.83,
+            "survival": 23.76
+          },
+          "killRoundMean": 4.73,
+          "killRounds": {
+            "R5": 109,
+            "R4": 52,
+            "R6": 7
+          },
+          "r4KillShare": 0.31,
+          "bursts": 1.2,
+          "cardsPerRound": 2.95,
+          "cardsPerGame": 13.97,
+          "actions": 20.7,
+          "divination": {
+            "guard": 22,
+            "guide": 463,
+            "strike": 19
+          },
+          "hpLostPerGame": 29.16,
+          "hpRemainRatio": 0.63,
+          "bestLineShare": {
+            "s-balanced": 0.38,
+            "s-score": 0.52,
+            "s-rush": 0.1
+          }
+        },
+        "大耀": {
+          "n": 168,
+          "mean": 957.09,
+          "gapPct": 4.28,
+          "vsCluster": 0.14,
+          "winRatePct": 100,
+          "breakdown": {
+            "damage": 144.17,
+            "combo": 85.21,
+            "victory": 300,
+            "tempo": 195.42,
+            "survival": 11.41,
+            "total": 736.21
+          },
+          "breakdownDisplay": {
+            "damage": 187.42,
+            "combo": 110.78,
+            "victory": 390,
+            "tempo": 254.04,
+            "survival": 14.83
+          },
+          "killRoundMean": 4.62,
+          "killRounds": {
+            "R5": 87,
+            "R4": 65,
+            "R3": 5,
+            "R6": 11
+          },
+          "r4KillShare": 0.42,
+          "bursts": 0.94,
+          "cardsPerRound": 2.98,
+          "cardsPerGame": 13.77,
+          "actions": 20.39,
+          "divination": {
+            "guard": 33,
+            "guide": 425,
+            "strike": 46
+          },
+          "hpLostPerGame": 21.55,
+          "hpRemainRatio": 0.38,
+          "bestLineShare": {
+            "s-balanced": 0.38,
+            "s-score": 0.48,
+            "s-rush": 0.14
+          }
+        },
+        "蒼毘": {
+          "n": 168,
+          "mean": 946.24,
+          "gapPct": 5.37,
+          "vsCluster": -10.7,
+          "winRatePct": 100,
+          "breakdown": {
+            "damage": 144.17,
+            "combo": 78.89,
+            "victory": 300,
+            "tempo": 182.62,
+            "survival": 22.2,
+            "total": 727.87
+          },
+          "breakdownDisplay": {
+            "damage": 187.42,
+            "combo": 102.55,
+            "victory": 390,
+            "tempo": 237.4,
+            "survival": 28.86
+          },
+          "killRoundMean": 4.81,
+          "killRounds": {
+            "R5": 112,
+            "R4": 44,
+            "R6": 12
+          },
+          "r4KillShare": 0.26,
+          "bursts": 0.74,
+          "cardsPerRound": 2.69,
+          "cardsPerGame": 12.93,
+          "actions": 20.13,
+          "divination": {
+            "guard": 42,
+            "guide": 443,
+            "strike": 19
+          },
+          "hpLostPerGame": 11.9,
+          "hpRemainRatio": 0.74,
+          "bestLineShare": {
+            "s-balanced": 0.4,
+            "s-score": 0.47,
+            "s-rush": 0.13
+          }
+        },
+        "才華": {
+          "n": 168,
+          "mean": 999.89,
+          "gapPct": 0,
+          "vsCluster": 42.94,
+          "winRatePct": 99.4,
+          "breakdown": {
+            "damage": 144.13,
+            "combo": 124.52,
+            "victory": 298.21,
+            "tempo": 192.32,
+            "survival": 9.95,
+            "total": 769.14
+          },
+          "breakdownDisplay": {
+            "damage": 187.37,
+            "combo": 161.88,
+            "victory": 387.68,
+            "tempo": 250.02,
+            "survival": 12.94
+          },
+          "killRoundMean": 4.66,
+          "killRounds": {
+            "R4": 56,
+            "R5": 111
+          },
+          "r4KillShare": 0.33,
+          "bursts": 2.29,
+          "cardsPerRound": 5.14,
+          "cardsPerGame": 23.97,
+          "actions": 30.64,
+          "divination": {
+            "guard": 9,
+            "guide": 445,
+            "strike": 50
+          },
+          "hpLostPerGame": 24.39,
+          "hpRemainRatio": 0.33,
+          "bestLineShare": {
+            "s-rush": 0.05,
+            "s-score": 0.72,
+            "s-balanced": 0.23
+          }
+        },
+        "寿楽": {
+          "n": 168,
+          "mean": 897.01,
+          "gapPct": 10.29,
+          "vsCluster": -59.94,
+          "winRatePct": 100,
+          "breakdown": {
+            "damage": 144.17,
+            "combo": 75.35,
+            "victory": 300,
+            "tempo": 148.39,
+            "survival": 22.1,
+            "total": 690.01
+          },
+          "breakdownDisplay": {
+            "damage": 187.42,
+            "combo": 97.96,
+            "victory": 390,
+            "tempo": 192.91,
+            "survival": 28.72
+          },
+          "killRoundMean": 5.27,
+          "killRounds": {
+            "R5": 120,
+            "R6": 45,
+            "R7": 1,
+            "R4": 2
+          },
+          "r4KillShare": 0.01,
+          "bursts": 0.95,
+          "cardsPerRound": 2.43,
+          "cardsPerGame": 12.82,
+          "actions": 20.08,
+          "divination": {
+            "guard": 8,
+            "guide": 471,
+            "strike": 25
+          },
+          "hpLostPerGame": 17.65,
+          "hpRemainRatio": 0.74,
+          "bestLineShare": {
+            "s-score": 0.53,
+            "s-rush": 0.13,
+            "s-balanced": 0.35
+          }
+        },
+        "福永": {
+          "n": 168,
+          "mean": 939.98,
+          "gapPct": 5.99,
+          "vsCluster": -16.97,
+          "winRatePct": 100,
+          "breakdown": {
+            "damage": 144.17,
+            "combo": 108.09,
+            "victory": 300,
+            "tempo": 155.54,
+            "survival": 15.27,
+            "total": 723.06
+          },
+          "breakdownDisplay": {
+            "damage": 187.42,
+            "combo": 140.52,
+            "victory": 390,
+            "tempo": 202.2,
+            "survival": 19.85
+          },
+          "killRoundMean": 5.17,
+          "killRounds": {
+            "R5": 108,
+            "R4": 17,
+            "R6": 41,
+            "R7": 2
+          },
+          "r4KillShare": 0.1,
+          "bursts": 0.99,
+          "cardsPerRound": 3.49,
+          "cardsPerGame": 18.02,
+          "actions": 25.19,
+          "divination": {
+            "guard": 8,
+            "guide": 445,
+            "strike": 51
+          },
+          "hpLostPerGame": 34.05,
+          "hpRemainRatio": 0.53,
+          "bestLineShare": {
+            "s-score": 0.69,
+            "s-rush": 0.15,
+            "s-balanced": 0.15
+          }
+        },
+        "笑蓮": {
+          "n": 168,
+          "mean": 968.77,
+          "gapPct": 3.11,
+          "vsCluster": 11.83,
+          "winRatePct": 100,
+          "breakdown": {
+            "damage": 144.17,
+            "combo": 83.36,
+            "victory": 300,
+            "tempo": 190.54,
+            "survival": 27.12,
+            "total": 745.18
+          },
+          "breakdownDisplay": {
+            "damage": 187.42,
+            "combo": 108.36,
+            "victory": 390,
+            "tempo": 247.7,
+            "survival": 35.25
+          },
+          "killRoundMean": 4.68,
+          "killRounds": {
+            "R4": 63,
+            "R3": 4,
+            "R5": 83,
+            "R6": 18
+          },
+          "r4KillShare": 0.4,
+          "bursts": 0.85,
+          "cardsPerRound": 2.91,
+          "cardsPerGame": 13.63,
+          "actions": 20.31,
+          "divination": {
+            "guard": 7,
+            "guide": 447,
+            "strike": 50
+          },
+          "hpLostPerGame": 22.44,
+          "hpRemainRatio": 0.95,
+          "bestLineShare": {
+            "s-score": 0.62,
+            "s-balanced": 0.27,
+            "s-rush": 0.11
+          }
+        }
+      },
+      "perEnemy": {
+        "乱舞の道化": {
+          "spreadPct": 11.53,
+          "恵比寿": 948.88,
+          "大耀": 951.75,
+          "蒼毘": 946.42,
+          "才華": 1008.33,
+          "寿楽": 892.04,
+          "福永": 947.5,
+          "笑蓮": 974.29
+        },
+        "藍花の怨霊": {
+          "spreadPct": 7.86,
+          "恵比寿": 966.63,
+          "大耀": 955.38,
+          "蒼毘": 944.33,
+          "才華": 973.5,
+          "寿楽": 896.96,
+          "福永": 944.42,
+          "笑蓮": 972.25
+        },
+        "蒼海の龍神": {
+          "spreadPct": 10.61,
+          "恵比寿": 947.92,
+          "大耀": 956.21,
+          "蒼毘": 929.33,
+          "才華": 995.5,
+          "寿楽": 889.83,
+          "福永": 918.46,
+          "笑蓮": 961.88
+        },
+        "試練の影": {
+          "spreadPct": 11.13,
+          "恵比寿": 956.25,
+          "大耀": 952.5,
+          "蒼毘": 957.92,
+          "才華": 1000.25,
+          "寿楽": 888.92,
+          "福永": 932.5,
+          "笑蓮": 975.96
+        },
+        "業斧の鬼将": {
+          "spreadPct": 12.09,
+          "恵比寿": 954.13,
+          "大耀": 975.79,
+          "蒼毘": 946.75,
+          "才華": 1021.92,
+          "寿楽": 898.33,
+          "福永": 935.54,
+          "笑蓮": 969.58
+        },
+        "銀甲の機工師": {
+          "spreadPct": 9.62,
+          "恵比寿": 952.96,
+          "大耀": 954.71,
+          "蒼毘": 947.88,
+          "才華": 1001.17,
+          "寿楽": 904.83,
+          "福永": 947.04,
+          "笑蓮": 960.83
+        },
+        "双牙の魔獣": {
+          "spreadPct": 9.06,
+          "恵比寿": 963.04,
+          "大耀": 953.29,
+          "蒼毘": 951.08,
+          "才華": 998.58,
+          "寿楽": 908.13,
+          "福永": 954.42,
+          "笑蓮": 966.63
+        }
+      },
+      "elapsedSec": 59.6
+    },
+    "D6": {
+      "label": "得意技 OFF（passivesEnabled=false）",
+      "group": "decomp",
+      "overallSpreadPct": 18.22,
+      "worstEnemySpreadPct": 22.81,
+      "worstEnemy": "蒼海の龍神",
+      "bestGod": "才華",
+      "worstGod": "笑蓮",
+      "clusterMean": 916.25,
+      "spreadExcludingSaika": 11.73,
+      "spreadExcludingJuraku": 18.22,
+      "perGod": {
+        "恵比寿": {
+          "n": 168,
+          "mean": 958.63,
+          "gapPct": 8.13,
+          "vsCluster": 42.38,
+          "winRatePct": 100,
+          "breakdown": {
+            "damage": 144.17,
+            "combo": 84.06,
+            "victory": 300,
+            "tempo": 188.75,
+            "survival": 20.4,
+            "total": 737.39
+          },
+          "breakdownDisplay": {
+            "damage": 187.42,
+            "combo": 109.28,
+            "victory": 390,
+            "tempo": 245.38,
+            "survival": 26.53
+          },
+          "killRoundMean": 4.73,
+          "killRounds": {
+            "R5": 108,
+            "R4": 53,
+            "R6": 7
+          },
+          "r4KillShare": 0.32,
+          "bursts": 1.21,
+          "cardsPerRound": 2.94,
+          "cardsPerGame": 13.9,
+          "actions": 20.63,
+          "divination": {
+            "guard": 20,
+            "guide": 464,
+            "strike": 20
+          },
+          "hpLostPerGame": 29.38,
+          "hpRemainRatio": 0.72,
+          "bestLineShare": {
+            "s-balanced": 0.38,
+            "s-score": 0.54,
+            "s-rush": 0.08
+          }
+        },
+        "大耀": {
+          "n": 168,
+          "mean": 966.8,
+          "gapPct": 7.35,
+          "vsCluster": 50.55,
+          "winRatePct": 100,
+          "breakdown": {
+            "damage": 144.17,
+            "combo": 81.48,
+            "victory": 300,
+            "tempo": 205.95,
+            "survival": 12.08,
+            "total": 743.68
+          },
+          "breakdownDisplay": {
+            "damage": 187.42,
+            "combo": 105.92,
+            "victory": 390,
+            "tempo": 267.74,
+            "survival": 15.71
+          },
+          "killRoundMean": 4.45,
+          "killRounds": {
+            "R5": 71,
+            "R4": 72,
+            "R3": 15,
+            "R6": 10
+          },
+          "r4KillShare": 0.52,
+          "bursts": 0.94,
+          "cardsPerRound": 2.96,
+          "cardsPerGame": 13.16,
+          "actions": 19.61,
+          "divination": {
+            "guard": 25,
+            "guide": 420,
+            "strike": 59
+          },
+          "hpLostPerGame": 20.96,
+          "hpRemainRatio": 0.4,
+          "bestLineShare": {
+            "s-balanced": 0.41,
+            "s-score": 0.46,
+            "s-rush": 0.13
+          }
+        },
+        "蒼毘": {
+          "n": 168,
+          "mean": 886.19,
+          "gapPct": 15.08,
+          "vsCluster": -30.06,
+          "winRatePct": 100,
+          "breakdown": {
+            "damage": 144.17,
+            "combo": 95.99,
+            "victory": 300,
+            "tempo": 119.76,
+            "survival": 21.77,
+            "total": 681.7
+          },
+          "breakdownDisplay": {
+            "damage": 187.42,
+            "combo": 124.78,
+            "victory": 390,
+            "tempo": 155.69,
+            "survival": 28.31
+          },
+          "killRoundMean": 5.63,
+          "killRounds": {
+            "R5": 61,
+            "R6": 103,
+            "R7": 2,
+            "R4": 2
+          },
+          "r4KillShare": 0.01,
+          "bursts": 0.95,
+          "cardsPerRound": 2.81,
+          "cardsPerGame": 15.82,
+          "actions": 23.45,
+          "divination": {
+            "guard": 20,
+            "guide": 442,
+            "strike": 42
+          },
+          "hpLostPerGame": 13.89,
+          "hpRemainRatio": 0.73,
+          "bestLineShare": {
+            "s-score": 0.55,
+            "s-balanced": 0.36,
+            "s-rush": 0.09
+          }
+        },
+        "才華": {
+          "n": 168,
+          "mean": 1043.5,
+          "gapPct": 0,
+          "vsCluster": 127.25,
+          "winRatePct": 100,
+          "breakdown": {
+            "damage": 144.17,
+            "combo": 121.18,
+            "victory": 300,
+            "tempo": 223.21,
+            "survival": 14.1,
+            "total": 802.66
+          },
+          "breakdownDisplay": {
+            "damage": 187.42,
+            "combo": 157.53,
+            "victory": 390,
+            "tempo": 290.18,
+            "survival": 18.32
+          },
+          "killRoundMean": 4.24,
+          "killRounds": {
+            "R4": 126,
+            "R5": 41,
+            "R3": 1
+          },
+          "r4KillShare": 0.76,
+          "bursts": 2.23,
+          "cardsPerRound": 5.79,
+          "cardsPerGame": 24.52,
+          "actions": 30.76,
+          "divination": {
+            "guard": 6,
+            "guide": 455,
+            "strike": 43
+          },
+          "hpLostPerGame": 20.37,
+          "hpRemainRatio": 0.47,
+          "bestLineShare": {
+            "s-balanced": 0.21,
+            "s-score": 0.76,
+            "s-rush": 0.02
+          }
+        },
+        "寿楽": {
+          "n": 168,
+          "mean": 899.33,
+          "gapPct": 13.82,
+          "vsCluster": -16.91,
+          "winRatePct": 100,
+          "breakdown": {
+            "damage": 144.17,
+            "combo": 75.5,
+            "victory": 300,
+            "tempo": 148.39,
+            "survival": 23.75,
+            "total": 691.81
+          },
+          "breakdownDisplay": {
+            "damage": 187.42,
+            "combo": 98.15,
+            "victory": 390,
+            "tempo": 192.91,
+            "survival": 30.88
+          },
+          "killRoundMean": 5.27,
+          "killRounds": {
+            "R5": 120,
+            "R6": 45,
+            "R7": 1,
+            "R4": 2
+          },
+          "r4KillShare": 0.01,
+          "bursts": 0.95,
+          "cardsPerRound": 2.43,
+          "cardsPerGame": 12.82,
+          "actions": 20.09,
+          "divination": {
+            "guard": 7,
+            "guide": 466,
+            "strike": 31
+          },
+          "hpLostPerGame": 16.87,
+          "hpRemainRatio": 0.8,
+          "bestLineShare": {
+            "s-score": 0.59,
+            "s-balanced": 0.29,
+            "s-rush": 0.13
+          }
+        },
+        "福永": {
+          "n": 168,
+          "mean": 900.16,
+          "gapPct": 13.74,
+          "vsCluster": -16.09,
+          "winRatePct": 99.4,
+          "breakdown": {
+            "damage": 144.14,
+            "combo": 119.6,
+            "victory": 298.21,
+            "tempo": 111.13,
+            "survival": 19.27,
+            "total": 692.36
+          },
+          "breakdownDisplay": {
+            "damage": 187.39,
+            "combo": 155.48,
+            "victory": 387.68,
+            "tempo": 144.47,
+            "survival": 25.05
+          },
+          "killRoundMean": 5.72,
+          "killRounds": {
+            "R6": 102,
+            "R5": 53,
+            "R7": 10,
+            "R4": 2
+          },
+          "r4KillShare": 0.01,
+          "bursts": 1.04,
+          "cardsPerRound": 3.52,
+          "cardsPerGame": 20.17,
+          "actions": 27.9,
+          "divination": {
+            "guard": 23,
+            "guide": 418,
+            "strike": 63
+          },
+          "hpLostPerGame": 37.27,
+          "hpRemainRatio": 0.67,
+          "bestLineShare": {
+            "s-score": 0.46,
+            "s-rush": 0.2,
+            "s-balanced": 0.33
+          }
+        },
+        "笑蓮": {
+          "n": 168,
+          "mean": 853.38,
+          "gapPct": 18.22,
+          "vsCluster": -62.87,
+          "winRatePct": 97.6,
+          "breakdown": {
+            "damage": 143.99,
+            "combo": 117.32,
+            "victory": 292.86,
+            "tempo": 74.58,
+            "survival": 27.67,
+            "total": 656.43
+          },
+          "breakdownDisplay": {
+            "damage": 187.19,
+            "combo": 152.52,
+            "victory": 380.71,
+            "tempo": 96.96,
+            "survival": 35.97
+          },
+          "killRoundMean": 6.13,
+          "killRounds": {
+            "R5": 25,
+            "R6": 92,
+            "R7": 47
+          },
+          "r4KillShare": 0,
+          "bursts": 1.04,
+          "cardsPerRound": 3.13,
+          "cardsPerGame": 19.26,
+          "actions": 27.44,
+          "divination": {
+            "guard": 3,
+            "guide": 439,
+            "strike": 62
+          },
+          "hpLostPerGame": 30.45,
+          "hpRemainRatio": 0.95,
+          "bestLineShare": {
+            "s-rush": 0.18,
+            "s-score": 0.66,
+            "s-balanced": 0.15
+          }
+        }
+      },
+      "perEnemy": {
+        "乱舞の道化": {
+          "spreadPct": 15.42,
+          "恵比寿": 952.17,
+          "大耀": 963.75,
+          "蒼毘": 880.5,
+          "才華": 1041,
+          "寿楽": 894.96,
+          "福永": 917.5,
+          "笑蓮": 881.42
+        },
+        "藍花の怨霊": {
+          "spreadPct": 16.88,
+          "恵比寿": 968.92,
+          "大耀": 959.92,
+          "蒼毘": 893,
+          "才華": 1042.58,
+          "寿楽": 898.42,
+          "福永": 896.42,
+          "笑蓮": 866.63
+        },
+        "蒼海の龍神": {
+          "spreadPct": 22.81,
+          "恵比寿": 951.88,
+          "大耀": 966.38,
+          "蒼毘": 877.17,
+          "才華": 1046.83,
+          "寿楽": 892.08,
+          "福永": 863.46,
+          "笑蓮": 808.08
+        },
+        "試練の影": {
+          "spreadPct": 22.35,
+          "恵比寿": 958.04,
+          "大耀": 959.5,
+          "蒼毘": 891.88,
+          "才華": 1044,
+          "寿楽": 891.58,
+          "福永": 890.5,
+          "笑蓮": 810.67
+        },
+        "業斧の鬼将": {
+          "spreadPct": 18.37,
+          "恵比寿": 955.83,
+          "大耀": 982.75,
+          "蒼毘": 893.38,
+          "才華": 1064.33,
+          "寿楽": 900.25,
+          "福永": 895.79,
+          "笑蓮": 868.83
+        },
+        "銀甲の機工師": {
+          "spreadPct": 21.57,
+          "恵比寿": 955.25,
+          "大耀": 971.08,
+          "蒼毘": 856.58,
+          "才華": 1043.71,
+          "寿楽": 907.88,
+          "福永": 901.13,
+          "笑蓮": 818.63
+        },
+        "双牙の魔獣": {
+          "spreadPct": 10.95,
+          "恵比寿": 968.29,
+          "大耀": 964.21,
+          "蒼毘": 910.83,
+          "才華": 1022.04,
+          "寿楽": 910.17,
+          "福永": 936.33,
+          "笑蓮": 919.38
+        }
+      },
+      "elapsedSec": 58.2
+    },
+    "D7": {
+      "label": "カード条件効果 OFF（cardBonusEnabled=false）",
+      "group": "decomp",
+      "overallSpreadPct": 10.88,
+      "worstEnemySpreadPct": 17.98,
+      "worstEnemy": "藍花の怨霊",
+      "bestGod": "才華",
+      "worstGod": "寿楽",
+      "clusterMean": 893.08,
+      "spreadExcludingSaika": 6.38,
+      "spreadExcludingJuraku": 10.72,
+      "perGod": {
+        "恵比寿": {
+          "n": 168,
+          "mean": 912.35,
+          "gapPct": 5.21,
+          "vsCluster": 19.27,
+          "winRatePct": 100,
+          "breakdown": {
+            "damage": 144.17,
+            "combo": 91.71,
+            "victory": 300,
+            "tempo": 148.99,
+            "survival": 16.94,
+            "total": 701.81
+          },
+          "breakdownDisplay": {
+            "damage": 187.42,
+            "combo": 119.22,
+            "victory": 390,
+            "tempo": 193.68,
+            "survival": 22.02
+          },
+          "killRoundMean": 5.25,
+          "killRounds": {
+            "R5": 92,
+            "R6": 59,
+            "R4": 17
+          },
+          "r4KillShare": 0.1,
+          "bursts": 1.11,
+          "cardsPerRound": 2.9,
+          "cardsPerGame": 15.24,
+          "actions": 22.49,
+          "divination": {
+            "guard": 16,
+            "guide": 464,
+            "strike": 24
+          },
+          "hpLostPerGame": 37.37,
+          "hpRemainRatio": 0.6,
+          "bestLineShare": {
+            "s-balanced": 0.27,
+            "s-score": 0.55,
+            "s-rush": 0.18
+          }
+        },
+        "大耀": {
+          "n": 168,
+          "mean": 859.3,
+          "gapPct": 10.72,
+          "vsCluster": -33.78,
+          "winRatePct": 93.5,
+          "breakdown": {
+            "damage": 142.81,
+            "combo": 97.1,
+            "victory": 280.36,
+            "tempo": 132.98,
+            "survival": 7.77,
+            "total": 661.02
+          },
+          "breakdownDisplay": {
+            "damage": 185.66,
+            "combo": 126.23,
+            "victory": 364.46,
+            "tempo": 172.87,
+            "survival": 10.1
+          },
+          "killRoundMean": 5.33,
+          "killRounds": {
+            "R5": 73,
+            "R4": 17,
+            "R6": 65,
+            "R7": 2
+          },
+          "r4KillShare": 0.1,
+          "bursts": 0.96,
+          "cardsPerRound": 2.97,
+          "cardsPerGame": 15.71,
+          "actions": 23.06,
+          "divination": {
+            "guard": 34,
+            "guide": 406,
+            "strike": 64
+          },
+          "hpLostPerGame": 26.9,
+          "hpRemainRatio": 0.25,
+          "bestLineShare": {
+            "s-balanced": 0.34,
+            "s-score": 0.6,
+            "s-rush": 0.07
+          }
+        },
+        "蒼毘": {
+          "n": 168,
+          "mean": 884.38,
+          "gapPct": 8.12,
+          "vsCluster": -8.71,
+          "winRatePct": 100,
+          "breakdown": {
+            "damage": 144.17,
+            "combo": 93.34,
+            "victory": 300,
+            "tempo": 125.65,
+            "survival": 17.1,
+            "total": 680.27
+          },
+          "breakdownDisplay": {
+            "damage": 187.42,
+            "combo": 121.34,
+            "victory": 390,
+            "tempo": 163.35,
+            "survival": 22.23
+          },
+          "killRoundMean": 5.55,
+          "killRounds": {
+            "R5": 61,
+            "R6": 98,
+            "R4": 8,
+            "R7": 1
+          },
+          "r4KillShare": 0.05,
+          "bursts": 0.95,
+          "cardsPerRound": 2.8,
+          "cardsPerGame": 15.52,
+          "actions": 23.71,
+          "divination": {
+            "guard": 45,
+            "guide": 445,
+            "strike": 14
+          },
+          "hpLostPerGame": 19.54,
+          "hpRemainRatio": 0.57,
+          "bestLineShare": {
+            "s-balanced": 0.34,
+            "s-score": 0.56,
+            "s-rush": 0.1
+          }
+        },
+        "才華": {
+          "n": 168,
+          "mean": 962.53,
+          "gapPct": 0,
+          "vsCluster": 69.44,
+          "winRatePct": 97.6,
+          "breakdown": {
+            "damage": 143.69,
+            "combo": 129.95,
+            "victory": 292.86,
+            "tempo": 167.38,
+            "survival": 6.53,
+            "total": 740.41
+          },
+          "breakdownDisplay": {
+            "damage": 186.8,
+            "combo": 168.93,
+            "victory": 380.71,
+            "tempo": 217.6,
+            "survival": 8.49
+          },
+          "killRoundMean": 4.97,
+          "killRounds": {
+            "R5": 137,
+            "R4": 16,
+            "R6": 11
+          },
+          "r4KillShare": 0.1,
+          "bursts": 1.96,
+          "cardsPerRound": 5.08,
+          "cardsPerGame": 25.26,
+          "actions": 32.26,
+          "divination": {
+            "guard": 10,
+            "guide": 435,
+            "strike": 59
+          },
+          "hpLostPerGame": 28.26,
+          "hpRemainRatio": 0.22,
+          "bestLineShare": {
+            "s-balanced": 0.15,
+            "s-score": 0.79,
+            "s-rush": 0.07
+          }
+        },
+        "寿楽": {
+          "n": 168,
+          "mean": 857.84,
+          "gapPct": 10.88,
+          "vsCluster": -35.25,
+          "winRatePct": 100,
+          "breakdown": {
+            "damage": 144.17,
+            "combo": 83.13,
+            "victory": 300,
+            "tempo": 111.13,
+            "survival": 21.41,
+            "total": 659.84
+          },
+          "breakdownDisplay": {
+            "damage": 187.42,
+            "combo": 108.06,
+            "victory": 390,
+            "tempo": 144.47,
+            "survival": 27.83
+          },
+          "killRoundMean": 5.73,
+          "killRounds": {
+            "R5": 59,
+            "R6": 96,
+            "R7": 13
+          },
+          "r4KillShare": 0,
+          "bursts": 0.96,
+          "cardsPerRound": 2.48,
+          "cardsPerGame": 14.2,
+          "actions": 21.92,
+          "divination": {
+            "guard": 13,
+            "guide": 447,
+            "strike": 44
+          },
+          "hpLostPerGame": 22.7,
+          "hpRemainRatio": 0.73,
+          "bestLineShare": {
+            "s-score": 0.62,
+            "s-balanced": 0.31,
+            "s-rush": 0.07
+          }
+        },
+        "福永": {
+          "n": 168,
+          "mean": 885.49,
+          "gapPct": 8,
+          "vsCluster": -7.6,
+          "winRatePct": 98.2,
+          "breakdown": {
+            "damage": 143.89,
+            "combo": 115.39,
+            "victory": 294.64,
+            "tempo": 111.31,
+            "survival": 15.88,
+            "total": 681.11
+          },
+          "breakdownDisplay": {
+            "damage": 187.05,
+            "combo": 150.01,
+            "victory": 383.04,
+            "tempo": 144.7,
+            "survival": 20.64
+          },
+          "killRoundMean": 5.7,
+          "killRounds": {
+            "R5": 53,
+            "R7": 6,
+            "R6": 105,
+            "R4": 1
+          },
+          "r4KillShare": 0.01,
+          "bursts": 0.99,
+          "cardsPerRound": 3.4,
+          "cardsPerGame": 19.41,
+          "actions": 27.14,
+          "divination": {
+            "guard": 26,
+            "guide": 391,
+            "strike": 87
+          },
+          "hpLostPerGame": 39.93,
+          "hpRemainRatio": 0.59,
+          "bestLineShare": {
+            "s-score": 0.54,
+            "s-balanced": 0.27,
+            "s-rush": 0.19
+          }
+        },
+        "笑蓮": {
+          "n": 168,
+          "mean": 916.31,
+          "gapPct": 4.8,
+          "vsCluster": 23.22,
+          "winRatePct": 100,
+          "breakdown": {
+            "damage": 144.17,
+            "combo": 95.04,
+            "victory": 300,
+            "tempo": 141.13,
+            "survival": 24.52,
+            "total": 704.86
+          },
+          "breakdownDisplay": {
+            "damage": 187.42,
+            "combo": 123.55,
+            "victory": 390,
+            "tempo": 183.47,
+            "survival": 31.88
+          },
+          "killRoundMean": 5.35,
+          "killRounds": {
+            "R5": 81,
+            "R3": 2,
+            "R6": 72,
+            "R4": 12,
+            "R7": 1
+          },
+          "r4KillShare": 0.08,
+          "bursts": 0.84,
+          "cardsPerRound": 2.95,
+          "cardsPerGame": 15.77,
+          "actions": 23.11,
+          "divination": {
+            "guard": 15,
+            "guide": 444,
+            "strike": 45
+          },
+          "hpLostPerGame": 32.04,
+          "hpRemainRatio": 0.95,
+          "bestLineShare": {
+            "s-score": 0.64,
+            "s-balanced": 0.27,
+            "s-rush": 0.09
+          }
+        }
+      },
+      "perEnemy": {
+        "乱舞の道化": {
+          "spreadPct": 11.44,
+          "恵比寿": 921.29,
+          "大耀": 911.5,
+          "蒼毘": 906.13,
+          "才華": 980.21,
+          "寿楽": 868.04,
+          "福永": 914.33,
+          "笑蓮": 929.21
+        },
+        "藍花の怨霊": {
+          "spreadPct": 17.98,
+          "恵比寿": 919.58,
+          "大耀": 777.46,
+          "蒼毘": 862.29,
+          "才華": 947.88,
+          "寿楽": 855.96,
+          "福永": 863.25,
+          "笑蓮": 901.75
+        },
+        "蒼海の龍神": {
+          "spreadPct": 14.3,
+          "恵比寿": 883,
+          "大耀": 773.54,
+          "蒼毘": 869.63,
+          "才華": 895.54,
+          "寿楽": 863,
+          "福永": 857.5,
+          "笑蓮": 902.58
+        },
+        "試練の影": {
+          "spreadPct": 13.3,
+          "恵比寿": 905.29,
+          "大耀": 899.58,
+          "蒼毘": 885.96,
+          "才華": 980.17,
+          "寿楽": 849.79,
+          "福永": 860.13,
+          "笑蓮": 919.04
+        },
+        "業斧の鬼将": {
+          "spreadPct": 11.61,
+          "恵比寿": 914.63,
+          "大耀": 905.5,
+          "蒼毘": 893.46,
+          "才華": 976.83,
+          "寿楽": 863.38,
+          "福永": 895.75,
+          "笑蓮": 936.04
+        },
+        "銀甲の機工師": {
+          "spreadPct": 15.83,
+          "恵比寿": 908.29,
+          "大耀": 909.83,
+          "蒼毘": 895.54,
+          "才華": 988.38,
+          "寿楽": 831.92,
+          "福永": 906.17,
+          "笑蓮": 916.83
+        },
+        "双牙の魔獣": {
+          "spreadPct": 13.52,
+          "恵比寿": 934.38,
+          "大耀": 837.71,
+          "蒼毘": 877.63,
+          "才華": 968.71,
+          "寿楽": 872.79,
+          "福永": 901.29,
+          "笑蓮": 908.71
+        }
+      },
+      "elapsedSec": 61.8
+    },
+    "D8": {
+      "label": "託宣 0 回（Oracle interaction を除く）",
+      "group": "decomp",
+      "overallSpreadPct": 24.51,
+      "worstEnemySpreadPct": 35.79,
+      "worstEnemy": "双牙の魔獣",
+      "bestGod": "才華",
+      "worstGod": "大耀",
+      "clusterMean": 816.04,
+      "spreadExcludingSaika": 17.02,
+      "spreadExcludingJuraku": 24.51,
+      "perGod": {
+        "恵比寿": {
+          "n": 168,
+          "mean": 831.45,
+          "gapPct": 12.26,
+          "vsCluster": 15.41,
+          "winRatePct": 95.2,
+          "breakdown": {
+            "damage": 143.29,
+            "combo": 88.18,
+            "victory": 285.71,
+            "tempo": 108.33,
+            "survival": 14.05,
+            "total": 639.57
+          },
+          "breakdownDisplay": {
+            "damage": 186.27,
+            "combo": 114.64,
+            "victory": 371.43,
+            "tempo": 140.83,
+            "survival": 18.27
+          },
+          "killRoundMean": 5.69,
+          "killRounds": {
+            "R6": 93,
+            "R5": 55,
+            "R7": 10,
+            "R4": 2
+          },
+          "r4KillShare": 0.01,
+          "bursts": 1.25,
+          "cardsPerRound": 2.74,
+          "cardsPerGame": 15.42,
+          "actions": 20.11,
+          "divination": {
+            "guard": 0,
+            "guide": 0,
+            "strike": 0
+          },
+          "hpLostPerGame": 41.29,
+          "hpRemainRatio": 0.51,
+          "bestLineShare": {
+            "s-balanced": 0.39,
+            "s-score": 0.51,
+            "s-rush": 0.1
+          }
+        },
+        "大耀": {
+          "n": 168,
+          "mean": 715.38,
+          "gapPct": 24.51,
+          "vsCluster": -100.67,
+          "winRatePct": 76.8,
+          "breakdown": {
+            "damage": 138.95,
+            "combo": 85.95,
+            "victory": 230.36,
+            "tempo": 89.82,
+            "survival": 5.23,
+            "total": 550.31
+          },
+          "breakdownDisplay": {
+            "damage": 180.63,
+            "combo": 111.74,
+            "victory": 299.46,
+            "tempo": 116.77,
+            "survival": 6.79
+          },
+          "killRoundMean": 5.64,
+          "killRounds": {
+            "R6": 55,
+            "R5": 54,
+            "R4": 4,
+            "R7": 16
+          },
+          "r4KillShare": 0.02,
+          "bursts": 0.84,
+          "cardsPerRound": 2.68,
+          "cardsPerGame": 14.56,
+          "actions": 19.23,
+          "divination": {
+            "guard": 0,
+            "guide": 0,
+            "strike": 0
+          },
+          "hpLostPerGame": 29.74,
+          "hpRemainRatio": 0.17,
+          "bestLineShare": {
+            "s-rush": 0.1,
+            "s-balanced": 0.42,
+            "s-score": 0.49
+          }
+        },
+        "蒼毘": {
+          "n": 168,
+          "mean": 862.1,
+          "gapPct": 9.03,
+          "vsCluster": 46.06,
+          "winRatePct": 100,
+          "breakdown": {
+            "damage": 144.17,
+            "combo": 79.7,
+            "victory": 300,
+            "tempo": 120.54,
+            "survival": 18.72,
+            "total": 663.12
+          },
+          "breakdownDisplay": {
+            "damage": 187.42,
+            "combo": 103.61,
+            "victory": 390,
+            "tempo": 156.7,
+            "survival": 24.34
+          },
+          "killRoundMean": 5.61,
+          "killRounds": {
+            "R6": 92,
+            "R5": 69,
+            "R7": 6,
+            "R4": 1
+          },
+          "r4KillShare": 0.01,
+          "bursts": 0.68,
+          "cardsPerRound": 2.51,
+          "cardsPerGame": 14.11,
+          "actions": 19.3,
+          "divination": {
+            "guard": 0,
+            "guide": 0,
+            "strike": 0
+          },
+          "hpLostPerGame": 16.18,
+          "hpRemainRatio": 0.62,
+          "bestLineShare": {
+            "s-score": 0.27,
+            "s-rush": 0.08,
+            "s-balanced": 0.64
+          }
+        },
+        "才華": {
+          "n": 168,
+          "mean": 947.64,
+          "gapPct": 0,
+          "vsCluster": 131.6,
+          "winRatePct": 95.8,
+          "breakdown": {
+            "damage": 143.6,
+            "combo": 126.1,
+            "victory": 287.5,
+            "tempo": 164.29,
+            "survival": 7.49,
+            "total": 728.98
+          },
+          "breakdownDisplay": {
+            "damage": 186.68,
+            "combo": 163.93,
+            "victory": 373.75,
+            "tempo": 213.57,
+            "survival": 9.73
+          },
+          "killRoundMean": 4.97,
+          "killRounds": {
+            "R5": 132,
+            "R4": 17,
+            "R6": 12
+          },
+          "r4KillShare": 0.1,
+          "bursts": 2.36,
+          "cardsPerRound": 5.12,
+          "cardsPerGame": 25.39,
+          "actions": 29.39,
+          "divination": {
+            "guard": 0,
+            "guide": 0,
+            "strike": 0
+          },
+          "hpLostPerGame": 27.27,
+          "hpRemainRatio": 0.25,
+          "bestLineShare": {
+            "s-balanced": 0.18,
+            "s-score": 0.81,
+            "s-rush": 0.01
+          }
+        },
+        "寿楽": {
+          "n": 168,
+          "mean": 779.77,
+          "gapPct": 17.72,
+          "vsCluster": -36.27,
+          "winRatePct": 95.2,
+          "breakdown": {
+            "damage": 143.76,
+            "combo": 81.46,
+            "victory": 285.71,
+            "tempo": 69.4,
+            "survival": 19.5,
+            "total": 599.84
+          },
+          "breakdownDisplay": {
+            "damage": 186.88,
+            "combo": 105.9,
+            "victory": 371.43,
+            "tempo": 90.23,
+            "survival": 25.35
+          },
+          "killRoundMean": 6.18,
+          "killRounds": {
+            "R7": 50,
+            "R6": 88,
+            "R5": 22
+          },
+          "r4KillShare": 0,
+          "bursts": 0.94,
+          "cardsPerRound": 2.33,
+          "cardsPerGame": 14.46,
+          "actions": 19.71,
+          "divination": {
+            "guard": 0,
+            "guide": 0,
+            "strike": 0
+          },
+          "hpLostPerGame": 22.88,
+          "hpRemainRatio": 0.7,
+          "bestLineShare": {
+            "s-balanced": 0.45,
+            "s-score": 0.48,
+            "s-rush": 0.07
+          }
+        },
+        "福永": {
+          "n": 168,
+          "mean": 802.97,
+          "gapPct": 15.27,
+          "vsCluster": -13.07,
+          "winRatePct": 92.3,
+          "breakdown": {
+            "damage": 142.39,
+            "combo": 107.15,
+            "victory": 276.79,
+            "tempo": 76.61,
+            "survival": 14.71,
+            "total": 617.64
+          },
+          "breakdownDisplay": {
+            "damage": 185.11,
+            "combo": 139.29,
+            "victory": 359.82,
+            "tempo": 99.59,
+            "survival": 19.12
+          },
+          "killRoundMean": 6.06,
+          "killRounds": {
+            "R6": 92,
+            "R5": 27,
+            "R7": 36
+          },
+          "r4KillShare": 0,
+          "bursts": 0.93,
+          "cardsPerRound": 3.04,
+          "cardsPerGame": 18.3,
+          "actions": 23.39,
+          "divination": {
+            "guard": 0,
+            "guide": 0,
+            "strike": 0
+          },
+          "hpLostPerGame": 40.82,
+          "hpRemainRatio": 0.56,
+          "bestLineShare": {
+            "s-score": 0.48,
+            "s-balanced": 0.35,
+            "s-rush": 0.18
+          }
+        },
+        "笑蓮": {
+          "n": 168,
+          "mean": 855.24,
+          "gapPct": 9.75,
+          "vsCluster": 39.2,
+          "winRatePct": 99.4,
+          "breakdown": {
+            "damage": 144.14,
+            "combo": 93.79,
+            "victory": 298.21,
+            "tempo": 94.4,
+            "survival": 27.32,
+            "total": 657.88
+          },
+          "breakdownDisplay": {
+            "damage": 187.39,
+            "combo": 121.93,
+            "victory": 387.68,
+            "tempo": 122.73,
+            "survival": 35.52
+          },
+          "killRoundMean": 5.91,
+          "killRounds": {
+            "R6": 87,
+            "R5": 43,
+            "R4": 3,
+            "R7": 34
+          },
+          "r4KillShare": 0.02,
+          "bursts": 0.96,
+          "cardsPerRound": 2.68,
+          "cardsPerGame": 15.88,
+          "actions": 20.8,
+          "divination": {
+            "guard": 0,
+            "guide": 0,
+            "strike": 0
+          },
+          "hpLostPerGame": 32.29,
+          "hpRemainRatio": 0.97,
+          "bestLineShare": {
+            "s-score": 0.58,
+            "s-balanced": 0.3,
+            "s-rush": 0.13
+          }
+        }
+      },
+      "perEnemy": {
+        "乱舞の道化": {
+          "spreadPct": 20.4,
+          "恵比寿": 868.46,
+          "大耀": 809.67,
+          "蒼毘": 876.04,
+          "才華": 971.92,
+          "寿楽": 773.63,
+          "福永": 860.63,
+          "笑蓮": 854.46
+        },
+        "藍花の怨霊": {
+          "spreadPct": 35.36,
+          "恵比寿": 822.58,
+          "大耀": 622.83,
+          "蒼毘": 849.04,
+          "才華": 963.5,
+          "寿楽": 765.42,
+          "福永": 790.75,
+          "笑蓮": 863.75
+        },
+        "蒼海の龍神": {
+          "spreadPct": 29.49,
+          "恵比寿": 773.08,
+          "大耀": 647,
+          "蒼毘": 857.75,
+          "才華": 917.54,
+          "寿楽": 760.46,
+          "福永": 759.88,
+          "笑蓮": 836.63
+        },
+        "試練の影": {
+          "spreadPct": 24.74,
+          "恵比寿": 841.08,
+          "大耀": 810.75,
+          "蒼毘": 885.29,
+          "才華": 987.83,
+          "寿楽": 743.42,
+          "福永": 780.04,
+          "笑蓮": 845.58
+        },
+        "業斧の鬼将": {
+          "spreadPct": 20.21,
+          "恵比寿": 804.75,
+          "大耀": 767.04,
+          "蒼毘": 859.13,
+          "才華": 961.38,
+          "寿楽": 813.54,
+          "福永": 788.92,
+          "笑蓮": 857.29
+        },
+        "銀甲の機工師": {
+          "spreadPct": 16.93,
+          "恵比寿": 863.79,
+          "大耀": 768.08,
+          "蒼毘": 855.13,
+          "才華": 924.58,
+          "寿楽": 774.92,
+          "福永": 809.54,
+          "笑蓮": 863.13
+        },
+        "双牙の魔獣": {
+          "spreadPct": 35.79,
+          "恵比寿": 846.38,
+          "大耀": 582.25,
+          "蒼毘": 852.29,
+          "才華": 906.75,
+          "寿楽": 827,
+          "福永": 831.04,
+          "笑蓮": 865.88
+        }
+      },
+      "elapsedSec": 20.8
+    },
+    "D9": {
+      "label": "tempoByRound を R4〜R7 一律 200（撃破 R の得点差を除く）",
+      "group": "decomp",
+      "overallSpreadPct": 4.74,
+      "worstEnemySpreadPct": 6.29,
+      "worstEnemy": "試練の影",
+      "bestGod": "福永",
+      "worstGod": "寿楽",
+      "clusterMean": 981.58,
+      "spreadExcludingSaika": 4.74,
+      "spreadExcludingJuraku": 4.41,
+      "perGod": {
+        "恵比寿": {
+          "n": 168,
+          "mean": 982.64,
+          "gapPct": 3.83,
+          "vsCluster": 1.05,
+          "winRatePct": 100,
+          "breakdown": {
+            "damage": 144.17,
+            "combo": 90.13,
+            "victory": 300,
+            "tempo": 200,
+            "survival": 21.55,
+            "total": 755.86
+          },
+          "breakdownDisplay": {
+            "damage": 187.42,
+            "combo": 117.17,
+            "victory": 390,
+            "tempo": 260,
+            "survival": 28.02
+          },
+          "killRoundMean": 5.07,
+          "killRounds": {
+            "R5": 113,
+            "R6": 30,
+            "R4": 23,
+            "R7": 2
+          },
+          "r4KillShare": 0.14,
+          "bursts": 1.27,
+          "cardsPerRound": 2.95,
+          "cardsPerGame": 14.96,
+          "actions": 22.03,
+          "divination": {
+            "guard": 44,
+            "guide": 422,
+            "strike": 38
+          },
+          "hpLostPerGame": 31.13,
+          "hpRemainRatio": 0.77,
+          "bestLineShare": {
+            "s-balanced": 0.5,
+            "s-score": 0.42,
+            "s-rush": 0.08
+          }
+        },
+        "大耀": {
+          "n": 168,
+          "mean": 976.89,
+          "gapPct": 4.4,
+          "vsCluster": -4.69,
+          "winRatePct": 100,
+          "breakdown": {
+            "damage": 144.17,
+            "combo": 85.87,
+            "victory": 300,
+            "tempo": 208.04,
+            "survival": 13.37,
+            "total": 751.45
+          },
+          "breakdownDisplay": {
+            "damage": 187.42,
+            "combo": 111.63,
+            "victory": 390,
+            "tempo": 270.45,
+            "survival": 17.38
+          },
+          "killRoundMean": 4.74,
+          "killRounds": {
+            "R5": 83,
+            "R4": 42,
+            "R3": 15,
+            "R6": 28
+          },
+          "r4KillShare": 0.34,
+          "bursts": 0.96,
+          "cardsPerRound": 2.95,
+          "cardsPerGame": 13.97,
+          "actions": 20.71,
+          "divination": {
+            "guard": 43,
+            "guide": 394,
+            "strike": 67
+          },
+          "hpLostPerGame": 20.92,
+          "hpRemainRatio": 0.45,
+          "bestLineShare": {
+            "s-balanced": 0.59,
+            "s-score": 0.33,
+            "s-rush": 0.08
+          }
+        },
+        "蒼毘": {
+          "n": 168,
+          "mean": 976.77,
+          "gapPct": 4.41,
+          "vsCluster": -4.81,
+          "winRatePct": 100,
+          "breakdown": {
+            "damage": 144.17,
+            "combo": 80.45,
+            "victory": 300,
+            "tempo": 202.14,
+            "survival": 24.58,
+            "total": 751.34
+          },
+          "breakdownDisplay": {
+            "damage": 187.42,
+            "combo": 104.59,
+            "victory": 390,
+            "tempo": 262.79,
+            "survival": 31.95
+          },
+          "killRoundMean": 4.9,
+          "killRounds": {
+            "R5": 97,
+            "R4": 38,
+            "R6": 29,
+            "R3": 4
+          },
+          "r4KillShare": 0.25,
+          "bursts": 0.72,
+          "cardsPerRound": 2.71,
+          "cardsPerGame": 13.26,
+          "actions": 20.52,
+          "divination": {
+            "guard": 63,
+            "guide": 411,
+            "strike": 30
+          },
+          "hpLostPerGame": 9.8,
+          "hpRemainRatio": 0.82,
+          "bestLineShare": {
+            "s-balanced": 0.48,
+            "s-score": 0.43,
+            "s-rush": 0.1
+          }
+        },
+        "才華": {
+          "n": 168,
+          "mean": 1018.2,
+          "gapPct": 0.35,
+          "vsCluster": 36.61,
+          "winRatePct": 100,
+          "breakdown": {
+            "damage": 144.17,
+            "combo": 124.8,
+            "victory": 300,
+            "tempo": 200.54,
+            "survival": 13.68,
+            "total": 783.2
+          },
+          "breakdownDisplay": {
+            "damage": 187.42,
+            "combo": 162.24,
+            "victory": 390,
+            "tempo": 260.7,
+            "survival": 17.79
+          },
+          "killRoundMean": 4.41,
+          "killRounds": {
+            "R4": 98,
+            "R5": 68,
+            "R6": 1,
+            "R3": 1
+          },
+          "r4KillShare": 0.59,
+          "bursts": 2.18,
+          "cardsPerRound": 5.69,
+          "cardsPerGame": 25.11,
+          "actions": 31.52,
+          "divination": {
+            "guard": 14,
+            "guide": 442,
+            "strike": 48
+          },
+          "hpLostPerGame": 21.29,
+          "hpRemainRatio": 0.46,
+          "bestLineShare": {
+            "s-balanced": 0.26,
+            "s-score": 0.69,
+            "s-rush": 0.05
+          }
+        },
+        "寿楽": {
+          "n": 168,
+          "mean": 973.36,
+          "gapPct": 4.74,
+          "vsCluster": -8.23,
+          "winRatePct": 100,
+          "breakdown": {
+            "damage": 144.17,
+            "combo": 79.53,
+            "victory": 300,
+            "tempo": 200,
+            "survival": 25.04,
+            "total": 748.74
+          },
+          "breakdownDisplay": {
+            "damage": 187.42,
+            "combo": 103.39,
+            "victory": 390,
+            "tempo": 260,
+            "survival": 32.55
+          },
+          "killRoundMean": 5.51,
+          "killRounds": {
+            "R6": 77,
+            "R5": 87,
+            "R7": 4
+          },
+          "r4KillShare": 0,
+          "bursts": 0.96,
+          "cardsPerRound": 2.46,
+          "cardsPerGame": 13.53,
+          "actions": 21.04,
+          "divination": {
+            "guard": 20,
+            "guide": 439,
+            "strike": 45
+          },
+          "hpLostPerGame": 16.74,
+          "hpRemainRatio": 0.85,
+          "bestLineShare": {
+            "s-balanced": 0.42,
+            "s-score": 0.52,
+            "s-rush": 0.06
+          }
+        },
+        "福永": {
+          "n": 168,
+          "mean": 1021.82,
+          "gapPct": 0,
+          "vsCluster": 40.24,
+          "winRatePct": 100,
+          "breakdown": {
+            "damage": 144.17,
+            "combo": 119.69,
+            "victory": 300,
+            "tempo": 200,
+            "survival": 22.13,
+            "total": 785.99
+          },
+          "breakdownDisplay": {
+            "damage": 187.42,
+            "combo": 155.6,
+            "victory": 390,
+            "tempo": 260,
+            "survival": 28.77
+          },
+          "killRoundMean": 5.82,
+          "killRounds": {
+            "R5": 49,
+            "R6": 95,
+            "R7": 22,
+            "R4": 2
+          },
+          "r4KillShare": 0.01,
+          "bursts": 1.04,
+          "cardsPerRound": 3.47,
+          "cardsPerGame": 20.2,
+          "actions": 28.02,
+          "divination": {
+            "guard": 49,
+            "guide": 389,
+            "strike": 66
+          },
+          "hpLostPerGame": 34.67,
+          "hpRemainRatio": 0.77,
+          "bestLineShare": {
+            "s-score": 0.39,
+            "s-rush": 0.14,
+            "s-balanced": 0.46
+          }
+        },
+        "笑蓮": {
+          "n": 168,
+          "mean": 990.03,
+          "gapPct": 3.11,
+          "vsCluster": 8.45,
+          "winRatePct": 100,
+          "breakdown": {
+            "damage": 144.17,
+            "combo": 87.74,
+            "victory": 300,
+            "tempo": 202.14,
+            "survival": 27.49,
+            "total": 761.55
+          },
+          "breakdownDisplay": {
+            "damage": 187.42,
+            "combo": 114.07,
+            "victory": 390,
+            "tempo": 262.79,
+            "survival": 35.73
+          },
+          "killRoundMean": 4.95,
+          "killRounds": {
+            "R4": 41,
+            "R3": 4,
+            "R5": 83,
+            "R6": 39,
+            "R7": 1
+          },
+          "r4KillShare": 0.27,
+          "bursts": 0.87,
+          "cardsPerRound": 2.91,
+          "cardsPerGame": 14.39,
+          "actions": 21.35,
+          "divination": {
+            "guard": 18,
+            "guide": 422,
+            "strike": 64
+          },
+          "hpLostPerGame": 22.88,
+          "hpRemainRatio": 0.98,
+          "bestLineShare": {
+            "s-score": 0.51,
+            "s-balanced": 0.37,
+            "s-rush": 0.12
+          }
+        }
+      },
+      "perEnemy": {
+        "乱舞の道化": {
+          "spreadPct": 4.32,
+          "恵比寿": 969.58,
+          "大耀": 980.83,
+          "蒼毘": 964.42,
+          "才華": 1002.04,
+          "寿楽": 964.96,
+          "福永": 1008,
+          "笑蓮": 982.21
+        },
+        "藍花の怨霊": {
+          "spreadPct": 5.33,
+          "恵比寿": 970.67,
+          "大耀": 967.71,
+          "蒼毘": 973.21,
+          "才華": 1019.75,
+          "寿楽": 965.38,
+          "福永": 1005.71,
+          "笑蓮": 985.67
+        },
+        "蒼海の龍神": {
+          "spreadPct": 5.8,
+          "恵比寿": 1002.63,
+          "大耀": 989.17,
+          "蒼毘": 994.96,
+          "才華": 1035.75,
+          "寿楽": 996.79,
+          "福永": 1050.13,
+          "笑蓮": 1010.38
+        },
+        "試練の影": {
+          "spreadPct": 6.29,
+          "恵比寿": 1006.17,
+          "大耀": 985,
+          "蒼毘": 992.63,
+          "才華": 1042.71,
+          "寿楽": 1002.25,
+          "福永": 1051.13,
+          "笑蓮": 1003.33
+        },
+        "業斧の鬼将": {
+          "spreadPct": 5.97,
+          "恵比寿": 977.33,
+          "大耀": 977.79,
+          "蒼毘": 975.42,
+          "才華": 1018.17,
+          "寿楽": 957.38,
+          "福永": 1015.75,
+          "笑蓮": 984.71
+        },
+        "銀甲の機工師": {
+          "spreadPct": 5.69,
+          "恵比寿": 1005.08,
+          "大耀": 977.17,
+          "蒼毘": 983.33,
+          "才華": 1026.29,
+          "寿楽": 981.58,
+          "福永": 1036.17,
+          "笑蓮": 999.67
+        },
+        "双牙の魔獣": {
+          "spreadPct": 4.13,
+          "恵比寿": 947,
+          "大耀": 960.58,
+          "蒼毘": 953.46,
+          "才華": 982.67,
+          "寿楽": 945.17,
+          "福永": 985.88,
+          "笑蓮": 964.25
+        }
+      },
+      "elapsedSec": 55.6
+    },
+    "D10": {
+      "label": "combo 加点 0（comboSteps 0/0/0・overflow 0）",
+      "group": "decomp",
+      "overallSpreadPct": 10.71,
+      "worstEnemySpreadPct": 16.64,
+      "worstEnemy": "蒼海の龍神",
+      "bestGod": "才華",
+      "worstGod": "福永",
+      "clusterMean": 850.55,
+      "spreadExcludingSaika": 9.01,
+      "spreadExcludingJuraku": 10.71,
+      "perGod": {
+        "恵比寿": {
+          "n": 168,
+          "mean": 844.07,
+          "gapPct": 3.01,
+          "vsCluster": -6.48,
+          "winRatePct": 100,
+          "breakdown": {
+            "damage": 144.17,
+            "combo": 0,
+            "victory": 300,
+            "tempo": 183.57,
+            "survival": 21.57,
+            "total": 649.31
+          },
+          "breakdownDisplay": {
+            "damage": 187.42,
+            "combo": 0,
+            "victory": 390,
+            "tempo": 238.64,
+            "survival": 28.04
+          },
+          "killRoundMean": 4.8,
+          "killRounds": {
+            "R5": 114,
+            "R4": 44,
+            "R6": 10
+          },
+          "r4KillShare": 0.26,
+          "bursts": 1.2,
+          "cardsPerRound": 2.81,
+          "cardsPerGame": 13.49,
+          "actions": 20.29,
+          "divination": {
+            "guard": 48,
+            "guide": 397,
+            "strike": 59
+          },
+          "hpLostPerGame": 28.31,
+          "hpRemainRatio": 0.76,
+          "bestLineShare": {
+            "s-balanced": 0.66,
+            "s-rush": 0.3,
+            "s-score": 0.04
+          }
+        },
+        "大耀": {
+          "n": 168,
+          "mean": 850.65,
+          "gapPct": 2.25,
+          "vsCluster": 0.11,
+          "winRatePct": 100,
+          "breakdown": {
+            "damage": 144.17,
+            "combo": 0,
+            "victory": 300,
+            "tempo": 196.73,
+            "survival": 13.45,
+            "total": 654.35
+          },
+          "breakdownDisplay": {
+            "damage": 187.42,
+            "combo": 0,
+            "victory": 390,
+            "tempo": 255.74,
+            "survival": 17.49
+          },
+          "killRoundMean": 4.58,
+          "killRounds": {
+            "R5": 76,
+            "R4": 59,
+            "R3": 15,
+            "R6": 18
+          },
+          "r4KillShare": 0.44,
+          "bursts": 0.95,
+          "cardsPerRound": 2.86,
+          "cardsPerGame": 13.1,
+          "actions": 19.67,
+          "divination": {
+            "guard": 51,
+            "guide": 373,
+            "strike": 80
+          },
+          "hpLostPerGame": 19.98,
+          "hpRemainRatio": 0.45,
+          "bestLineShare": {
+            "s-balanced": 0.76,
+            "s-score": 0.04,
+            "s-rush": 0.2
+          }
+        },
+        "蒼毘": {
+          "n": 168,
+          "mean": 853.44,
+          "gapPct": 1.93,
+          "vsCluster": 2.89,
+          "winRatePct": 100,
+          "breakdown": {
+            "damage": 144.17,
+            "combo": 0,
+            "victory": 300,
+            "tempo": 187.2,
+            "survival": 25.15,
+            "total": 656.53
+          },
+          "breakdownDisplay": {
+            "damage": 187.42,
+            "combo": 0,
+            "victory": 390,
+            "tempo": 243.36,
+            "survival": 32.7
+          },
+          "killRoundMean": 4.74,
+          "killRounds": {
+            "R5": 101,
+            "R4": 51,
+            "R3": 3,
+            "R6": 13
+          },
+          "r4KillShare": 0.32,
+          "bursts": 0.67,
+          "cardsPerRound": 2.51,
+          "cardsPerGame": 11.88,
+          "actions": 19.04,
+          "divination": {
+            "guard": 77,
+            "guide": 386,
+            "strike": 41
+          },
+          "hpLostPerGame": 8.58,
+          "hpRemainRatio": 0.84,
+          "bestLineShare": {
+            "s-balanced": 0.85,
+            "s-rush": 0.14,
+            "s-score": 0.01
+          }
+        },
+        "才華": {
+          "n": 168,
+          "mean": 870.24,
+          "gapPct": 0,
+          "vsCluster": 19.69,
+          "winRatePct": 99.4,
+          "breakdown": {
+            "damage": 144.13,
+            "combo": 0,
+            "victory": 298.21,
+            "tempo": 211.37,
+            "survival": 15.65,
+            "total": 669.37
+          },
+          "breakdownDisplay": {
+            "damage": 187.37,
+            "combo": 0,
+            "victory": 387.68,
+            "tempo": 274.78,
+            "survival": 20.35
+          },
+          "killRoundMean": 4.39,
+          "killRounds": {
+            "R4": 100,
+            "R5": 66,
+            "R3": 1
+          },
+          "r4KillShare": 0.6,
+          "bursts": 1.95,
+          "cardsPerRound": 4.88,
+          "cardsPerGame": 21.39,
+          "actions": 27.78,
+          "divination": {
+            "guard": 39,
+            "guide": 407,
+            "strike": 58
+          },
+          "hpLostPerGame": 19.24,
+          "hpRemainRatio": 0.52,
+          "bestLineShare": {
+            "s-balanced": 0.86,
+            "s-rush": 0.11,
+            "s-score": 0.02
+          }
+        },
+        "寿楽": {
+          "n": 168,
+          "mean": 794.14,
+          "gapPct": 8.74,
+          "vsCluster": -56.41,
+          "winRatePct": 100,
+          "breakdown": {
+            "damage": 144.17,
+            "combo": 0,
+            "victory": 300,
+            "tempo": 142.62,
+            "survival": 24.13,
+            "total": 610.92
+          },
+          "breakdownDisplay": {
+            "damage": 187.42,
+            "combo": 0,
+            "victory": 390,
+            "tempo": 185.4,
+            "survival": 31.37
+          },
+          "killRoundMean": 5.34,
+          "killRounds": {
+            "R6": 52,
+            "R5": 112,
+            "R7": 3,
+            "R4": 1
+          },
+          "r4KillShare": 0.01,
+          "bursts": 0.93,
+          "cardsPerRound": 2.27,
+          "cardsPerGame": 12.12,
+          "actions": 19.46,
+          "divination": {
+            "guard": 30,
+            "guide": 389,
+            "strike": 85
+          },
+          "hpLostPerGame": 15.93,
+          "hpRemainRatio": 0.82,
+          "bestLineShare": {
+            "s-balanced": 0.76,
+            "s-rush": 0.2,
+            "s-score": 0.04
+          }
+        },
+        "福永": {
+          "n": 168,
+          "mean": 777.07,
+          "gapPct": 10.71,
+          "vsCluster": -73.48,
+          "winRatePct": 99.4,
+          "breakdown": {
+            "damage": 144.12,
+            "combo": 0,
+            "victory": 298.21,
+            "tempo": 136.25,
+            "survival": 19.18,
+            "total": 597.76
+          },
+          "breakdownDisplay": {
+            "damage": 187.36,
+            "combo": 0,
+            "victory": 387.68,
+            "tempo": 177.13,
+            "survival": 24.93
+          },
+          "killRoundMean": 5.4,
+          "killRounds": {
+            "R5": 90,
+            "R6": 63,
+            "R4": 8,
+            "R7": 6
+          },
+          "r4KillShare": 0.05,
+          "bursts": 0.98,
+          "cardsPerRound": 3.32,
+          "cardsPerGame": 17.96,
+          "actions": 25.38,
+          "divination": {
+            "guard": 34,
+            "guide": 360,
+            "strike": 110
+          },
+          "hpLostPerGame": 34.52,
+          "hpRemainRatio": 0.68,
+          "bestLineShare": {
+            "s-balanced": 0.4,
+            "s-rush": 0.43,
+            "s-score": 0.17
+          }
+        },
+        "笑蓮": {
+          "n": 168,
+          "mean": 854.03,
+          "gapPct": 1.86,
+          "vsCluster": 3.48,
+          "winRatePct": 100,
+          "breakdown": {
+            "damage": 144.17,
+            "combo": 0,
+            "victory": 300,
+            "tempo": 185,
+            "survival": 27.85,
+            "total": 657.02
+          },
+          "breakdownDisplay": {
+            "damage": 187.42,
+            "combo": 0,
+            "victory": 390,
+            "tempo": 240.5,
+            "survival": 36.2
+          },
+          "killRoundMean": 4.76,
+          "killRounds": {
+            "R4": 59,
+            "R3": 4,
+            "R5": 80,
+            "R6": 24,
+            "R7": 1
+          },
+          "r4KillShare": 0.38,
+          "bursts": 0.8,
+          "cardsPerRound": 2.7,
+          "cardsPerGame": 12.86,
+          "actions": 19.61,
+          "divination": {
+            "guard": 41,
+            "guide": 384,
+            "strike": 79
+          },
+          "hpLostPerGame": 19.83,
+          "hpRemainRatio": 0.97,
+          "bestLineShare": {
+            "s-balanced": 0.68,
+            "s-score": 0.14,
+            "s-rush": 0.18
+          }
+        }
+      },
+      "perEnemy": {
+        "乱舞の道化": {
+          "spreadPct": 9.99,
+          "恵比寿": 845.79,
+          "大耀": 852.71,
+          "蒼毘": 865.75,
+          "才華": 874.13,
+          "寿楽": 786.79,
+          "福永": 802.88,
+          "笑蓮": 866.33
+        },
+        "藍花の怨霊": {
+          "spreadPct": 8.43,
+          "恵比寿": 865.83,
+          "大耀": 838.21,
+          "蒼毘": 856.71,
+          "才華": 848.17,
+          "寿楽": 792.88,
+          "福永": 796,
+          "笑蓮": 863.33
+        },
+        "蒼海の龍神": {
+          "spreadPct": 16.64,
+          "恵比寿": 836.13,
+          "大耀": 841.88,
+          "蒼毘": 830.5,
+          "才華": 872.25,
+          "寿楽": 784,
+          "福永": 727.13,
+          "笑蓮": 832.29
+        },
+        "試練の影": {
+          "spreadPct": 12.62,
+          "恵比寿": 837.08,
+          "大耀": 840.33,
+          "蒼毘": 863.46,
+          "才華": 857.54,
+          "寿楽": 775.04,
+          "福永": 754.5,
+          "笑蓮": 858.5
+        },
+        "業斧の鬼将": {
+          "spreadPct": 12.74,
+          "恵比寿": 833.38,
+          "大耀": 865.42,
+          "蒼毘": 854,
+          "才華": 890.71,
+          "寿楽": 795.21,
+          "福永": 777.25,
+          "笑蓮": 856.13
+        },
+        "銀甲の機工師": {
+          "spreadPct": 12.78,
+          "恵比寿": 836.46,
+          "大耀": 857.21,
+          "蒼毘": 846.21,
+          "才華": 876.88,
+          "寿楽": 812.04,
+          "福永": 764.83,
+          "笑蓮": 841.96
+        },
+        "双牙の魔獣": {
+          "spreadPct": 6.77,
+          "恵比寿": 853.83,
+          "大耀": 858.83,
+          "蒼毘": 857.46,
+          "才華": 872.04,
+          "寿楽": 813.04,
+          "福永": 816.92,
+          "笑蓮": 859.67
+        }
+      },
+      "elapsedSec": 58.7
+    }
+  },
+  "pairedVsBase": {
+    "D0": {
+      "恵比寿": {
+        "meanDelta": 0,
+        "medianDelta": 0,
+        "shareUp": 0
+      },
+      "大耀": {
+        "meanDelta": 0,
+        "medianDelta": 0,
+        "shareUp": 0
+      },
+      "蒼毘": {
+        "meanDelta": 0,
+        "medianDelta": 0,
+        "shareUp": 0
+      },
+      "才華": {
+        "meanDelta": 0,
+        "medianDelta": 0,
+        "shareUp": 0
+      },
+      "寿楽": {
+        "meanDelta": 0,
+        "medianDelta": 0,
+        "shareUp": 0
+      },
+      "福永": {
+        "meanDelta": 0,
+        "medianDelta": 0,
+        "shareUp": 0
+      },
+      "笑蓮": {
+        "meanDelta": 0,
+        "medianDelta": 0,
+        "shareUp": 0
+      }
+    },
+    "D1": {
+      "恵比寿": {
+        "meanDelta": 22.38,
+        "medianDelta": 18,
+        "shareUp": 0.72
+      },
+      "大耀": {
+        "meanDelta": 26.58,
+        "medianDelta": 21,
+        "shareUp": 0.71
+      },
+      "蒼毘": {
+        "meanDelta": 43.67,
+        "medianDelta": 37,
+        "shareUp": 0.8
+      },
+      "才華": {
+        "meanDelta": -61.61,
+        "medianDelta": -57,
+        "shareUp": 0.1
+      },
+      "寿楽": {
+        "meanDelta": 63.32,
+        "medianDelta": 54,
+        "shareUp": 0.97
+      },
+      "福永": {
+        "meanDelta": 34.51,
+        "medianDelta": 32,
+        "shareUp": 0.81
+      },
+      "笑蓮": {
+        "meanDelta": 49.74,
+        "medianDelta": 49,
+        "shareUp": 0.88
+      }
+    },
+    "D2": {
+      "恵比寿": {
+        "meanDelta": 7.55,
+        "medianDelta": 6,
+        "shareUp": 0.55
+      },
+      "大耀": {
+        "meanDelta": -17.21,
+        "medianDelta": -4,
+        "shareUp": 0.41
+      },
+      "蒼毘": {
+        "meanDelta": -4.13,
+        "medianDelta": 0,
+        "shareUp": 0.48
+      },
+      "才華": {
+        "meanDelta": -40.64,
+        "medianDelta": -39,
+        "shareUp": 0.18
+      },
+      "寿楽": {
+        "meanDelta": -0.98,
+        "medianDelta": -6,
+        "shareUp": 0.32
+      },
+      "福永": {
+        "meanDelta": -37.95,
+        "medianDelta": -20,
+        "shareUp": 0.29
+      },
+      "笑蓮": {
+        "meanDelta": 13.4,
+        "medianDelta": 6,
+        "shareUp": 0.65
+      }
+    },
+    "D3": {
+      "恵比寿": {
+        "meanDelta": -23.26,
+        "medianDelta": -15,
+        "shareUp": 0.11
+      },
+      "大耀": {
+        "meanDelta": -19.54,
+        "medianDelta": -5,
+        "shareUp": 0.04
+      },
+      "蒼毘": {
+        "meanDelta": -20.67,
+        "medianDelta": 0,
+        "shareUp": 0.03
+      },
+      "才華": {
+        "meanDelta": -37.32,
+        "medianDelta": -27,
+        "shareUp": 0.12
+      },
+      "寿楽": {
+        "meanDelta": -1.55,
+        "medianDelta": -4,
+        "shareUp": 0.17
+      },
+      "福永": {
+        "meanDelta": -5.06,
+        "medianDelta": -6,
+        "shareUp": 0.28
+      },
+      "笑蓮": {
+        "meanDelta": -1.02,
+        "medianDelta": 0,
+        "shareUp": 0.13
+      }
+    },
+    "D4": {
+      "恵比寿": {
+        "meanDelta": -117.08,
+        "medianDelta": -97,
+        "shareUp": 0.01
+      },
+      "大耀": {
+        "meanDelta": -115.91,
+        "medianDelta": -81,
+        "shareUp": 0.02
+      },
+      "蒼毘": {
+        "meanDelta": -56.64,
+        "medianDelta": -62,
+        "shareUp": 0.01
+      },
+      "才華": {
+        "meanDelta": -284.16,
+        "medianDelta": -171,
+        "shareUp": 0
+      },
+      "寿楽": {
+        "meanDelta": -51.12,
+        "medianDelta": -45,
+        "shareUp": 0
+      },
+      "福永": {
+        "meanDelta": -79.36,
+        "medianDelta": -78,
+        "shareUp": 0.02
+      },
+      "笑蓮": {
+        "meanDelta": -54.05,
+        "medianDelta": -61,
+        "shareUp": 0.04
+      }
+    },
+    "D5": {
+      "恵比寿": {
+        "meanDelta": -2.94,
+        "medianDelta": -2,
+        "shareUp": 0.06
+      },
+      "大耀": {
+        "meanDelta": -9.71,
+        "medianDelta": 0,
+        "shareUp": 0.03
+      },
+      "蒼毘": {
+        "meanDelta": -13.73,
+        "medianDelta": 0,
+        "shareUp": 0.04
+      },
+      "才華": {
+        "meanDelta": -43.61,
+        "medianDelta": -35,
+        "shareUp": 0.11
+      },
+      "寿楽": {
+        "meanDelta": -2.33,
+        "medianDelta": -1,
+        "shareUp": 0.03
+      },
+      "福永": {
+        "meanDelta": -0.27,
+        "medianDelta": -1,
+        "shareUp": 0.13
+      },
+      "笑蓮": {
+        "meanDelta": -0.35,
+        "medianDelta": 0,
+        "shareUp": 0.01
+      }
+    },
+    "D6": {
+      "恵比寿": {
+        "meanDelta": 0,
+        "medianDelta": 0,
+        "shareUp": 0
+      },
+      "大耀": {
+        "meanDelta": 0,
+        "medianDelta": 0,
+        "shareUp": 0
+      },
+      "蒼毘": {
+        "meanDelta": -73.79,
+        "medianDelta": -72,
+        "shareUp": 0.05
+      },
+      "才華": {
+        "meanDelta": 0,
+        "medianDelta": 0,
+        "shareUp": 0
+      },
+      "寿楽": {
+        "meanDelta": 0,
+        "medianDelta": 0,
+        "shareUp": 0
+      },
+      "福永": {
+        "meanDelta": -40.09,
+        "medianDelta": -29,
+        "shareUp": 0.07
+      },
+      "笑蓮": {
+        "meanDelta": -115.74,
+        "medianDelta": -100,
+        "shareUp": 0.05
+      }
+    },
+    "D7": {
+      "恵比寿": {
+        "meanDelta": -46.27,
+        "medianDelta": -38,
+        "shareUp": 0.07
+      },
+      "大耀": {
+        "meanDelta": -107.49,
+        "medianDelta": -75,
+        "shareUp": 0.01
+      },
+      "蒼毘": {
+        "meanDelta": -75.6,
+        "medianDelta": -78,
+        "shareUp": 0.02
+      },
+      "才華": {
+        "meanDelta": -80.97,
+        "medianDelta": -71,
+        "shareUp": 0.06
+      },
+      "寿楽": {
+        "meanDelta": -41.49,
+        "medianDelta": -25,
+        "shareUp": 0.06
+      },
+      "福永": {
+        "meanDelta": -54.76,
+        "medianDelta": -47,
+        "shareUp": 0.11
+      },
+      "笑蓮": {
+        "meanDelta": -52.81,
+        "medianDelta": -61,
+        "shareUp": 0.09
+      }
+    },
+    "D8": {
+      "恵比寿": {
+        "meanDelta": -127.18,
+        "medianDelta": -100,
+        "shareUp": 0
+      },
+      "大耀": {
+        "meanDelta": -251.42,
+        "medianDelta": -116,
+        "shareUp": 0
+      },
+      "蒼毘": {
+        "meanDelta": -97.88,
+        "medianDelta": -97,
+        "shareUp": 0
+      },
+      "才華": {
+        "meanDelta": -95.86,
+        "medianDelta": -78,
+        "shareUp": 0.05
+      },
+      "寿楽": {
+        "meanDelta": -119.57,
+        "medianDelta": -97,
+        "shareUp": 0
+      },
+      "福永": {
+        "meanDelta": -137.28,
+        "medianDelta": -100,
+        "shareUp": 0.02
+      },
+      "笑蓮": {
+        "meanDelta": -113.87,
+        "medianDelta": -104,
+        "shareUp": 0
+      }
+    },
+    "D9": {
+      "恵比寿": {
+        "meanDelta": 24.01,
+        "medianDelta": 39,
+        "shareUp": 0.71
+      },
+      "大耀": {
+        "meanDelta": 10.1,
+        "medianDelta": 7,
+        "shareUp": 0.51
+      },
+      "蒼毘": {
+        "meanDelta": 16.8,
+        "medianDelta": 39,
+        "shareUp": 0.59
+      },
+      "才華": {
+        "meanDelta": -25.3,
+        "medianDelta": -52,
+        "shareUp": 0.25
+      },
+      "寿楽": {
+        "meanDelta": 74.02,
+        "medianDelta": 39,
+        "shareUp": 0.99
+      },
+      "福永": {
+        "meanDelta": 81.57,
+        "medianDelta": 69,
+        "shareUp": 0.96
+      },
+      "笑蓮": {
+        "meanDelta": 20.91,
+        "medianDelta": 39,
+        "shareUp": 0.61
+      }
+    },
+    "D10": {
+      "恵比寿": {
+        "meanDelta": -114.55,
+        "medianDelta": -112,
+        "shareUp": 0
+      },
+      "大耀": {
+        "meanDelta": -116.14,
+        "medianDelta": -112,
+        "shareUp": 0
+      },
+      "蒼毘": {
+        "meanDelta": -106.54,
+        "medianDelta": -99,
+        "shareUp": 0
+      },
+      "才華": {
+        "meanDelta": -173.26,
+        "medianDelta": -160,
+        "shareUp": 0
+      },
+      "寿楽": {
+        "meanDelta": -105.19,
+        "medianDelta": -94,
+        "shareUp": 0
+      },
+      "福永": {
+        "meanDelta": -163.18,
+        "medianDelta": -145,
+        "shareUp": 0
+      },
+      "笑蓮": {
+        "meanDelta": -115.09,
+        "medianDelta": -110,
+        "shareUp": 0
+      }
+    }
+  }
+}

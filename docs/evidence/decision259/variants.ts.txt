@@ -1,0 +1,252 @@
+/**
+ * 決定259 — 原因分解の対照（D*）と是正候補（C*）を **プロセス内のデータ差し替え** で表現する共通モジュール。
+ * 本番ファイル（src/）は変更しない。各 variant の前後で `restore()` を呼び、`assertRestored()` で現行値へ戻ったことを確認する。
+ *
+ * 差し替え対象（すべて runtime が参照する exported オブジェクトの in-place 書き換え）：
+ *   GODS[].resonanceEffects / GODS[].passive, GOD_PASSIVE_HOOKS（得意技の追加）
+ *   OTOMOS[].effectsByForm（守りの絆）
+ *   ALL_CARDS[].effects / .bonus
+ *   RULES.score.tempoByRound / comboSteps / comboOverflow, RULES.resonance.max, RULES.godIdentity.*, RULES.godPassive.*
+ *   NO_STAKE_RULES.divinationCount
+ *   デッキ（変数差し替え：`deckOverride(godId)` が undefined なら推奨デッキ）
+ */
+import { expect } from 'vitest'
+import { GODS, GOD_IDS } from '../../src/core/data/gods'
+import { OTOMOS } from '../../src/core/data/otomo'
+import { ALL_CARDS, CARD_IDS, getCardDef, SAIKA_CARD_IDS, JURAKU_CARD_IDS, FUKUEI_CARD_IDS } from '../../src/core/data/cards'
+import { getRecommendedDeck, getCardPoolForGod } from '../../src/core/data/deckBuilder'
+import { RULES } from '../../src/core/data/rules'
+import { NO_STAKE_RULES } from '../../src/core/data/stakes'
+import { GOD_PASSIVE_HOOKS } from '../../src/core/engine/godPassive'
+import type { CardDef, CardDefId, CardType, Effect, GameState, GodId, OtomoForm } from '../../src/core/types'
+
+type Mutable<T> = { -readonly [K in keyof T]: T[K] }
+const rulesM = RULES as unknown as {
+  score: Mutable<typeof RULES.score> & { tempoByRound: number[]; comboSteps: number[] }
+  resonance: Mutable<typeof RULES.resonance>
+  godIdentity: Mutable<typeof RULES.godIdentity>
+  godPassive: { sobi: Mutable<typeof RULES.godPassive.sobi>; shouren: Mutable<typeof RULES.godPassive.shouren>; fukuei: Mutable<typeof RULES.godPassive.fukuei> }
+  cardBonus: Mutable<typeof RULES.cardBonus>
+}
+const hooksM = GOD_PASSIVE_HOOKS as unknown as Record<string, { afterPlay?: (b: GameState, a: GameState, c: CardDef) => Effect[]; afterEnemyTurn?: (s: GameState) => Effect[] }>
+
+// ---------------------------------------------------------------------------
+// snapshot / restore
+// ---------------------------------------------------------------------------
+const deepCopy = <T,>(x: T): T => JSON.parse(JSON.stringify(x)) as T
+const PROD = {
+  resonanceEffects: new Map(GODS.map((g) => [g.id, deepCopy(g.resonanceEffects)])),
+  passive: new Map(GODS.map((g) => [g.id, g.passive ? deepCopy(g.passive) : undefined])),
+  otomoEffects: new Map(OTOMOS.map((o) => [o.id, deepCopy(o.effectsByForm)])),
+  cardEffects: new Map(ALL_CARDS.map((c) => [c.id, deepCopy(c.effects)])),
+  cardBonus: new Map(ALL_CARDS.map((c) => [c.id, c.bonus ? deepCopy(c.bonus) : undefined])),
+  tempoByRound: [...RULES.score.tempoByRound],
+  comboSteps: [...RULES.score.comboSteps],
+  comboOverflow: RULES.score.comboOverflow,
+  resonanceMax: RULES.resonance.max,
+  passivesEnabled: RULES.godIdentity.passivesEnabled,
+  cardBonusEnabled: RULES.godIdentity.cardBonusEnabled,
+  fukueiHpRatio: RULES.godPassive.fukuei.hpRatio,
+  divinationCount: NO_STAKE_RULES.divinationCount,
+  hookKeys: Object.keys(GOD_PASSIVE_HOOKS),
+}
+
+let deckOverrideFn: ((godId: GodId) => CardDefId[] | undefined) | null = null
+export function deckOverride(godId: GodId): CardDefId[] {
+  return (deckOverrideFn && deckOverrideFn(godId)) ?? getRecommendedDeck(godId)
+}
+
+export function restore(): void {
+  for (const g of GODS) {
+    ;(g as { resonanceEffects: Effect[] }).resonanceEffects = deepCopy(PROD.resonanceEffects.get(g.id)!)
+    const p = PROD.passive.get(g.id)
+    if (p) (g as { passive?: unknown }).passive = deepCopy(p)
+    else delete (g as { passive?: unknown }).passive
+  }
+  for (const o of OTOMOS) (o as { effectsByForm: Record<OtomoForm, Effect[]> }).effectsByForm = deepCopy(PROD.otomoEffects.get(o.id)!)
+  for (const c of ALL_CARDS) {
+    ;(c as { effects: Effect[] }).effects = deepCopy(PROD.cardEffects.get(c.id)!)
+    const b = PROD.cardBonus.get(c.id)
+    if (b) (c as { bonus?: unknown }).bonus = deepCopy(b)
+    else delete (c as { bonus?: unknown }).bonus
+  }
+  rulesM.score.tempoByRound = [...PROD.tempoByRound]
+  rulesM.score.comboSteps = [...PROD.comboSteps]
+  rulesM.score.comboOverflow = PROD.comboOverflow
+  rulesM.resonance.max = PROD.resonanceMax
+  rulesM.godIdentity.passivesEnabled = PROD.passivesEnabled
+  rulesM.godIdentity.cardBonusEnabled = PROD.cardBonusEnabled
+  rulesM.godPassive.fukuei.hpRatio = PROD.fukueiHpRatio
+  ;(NO_STAKE_RULES as { divinationCount: number }).divinationCount = PROD.divinationCount
+  for (const k of Object.keys(hooksM)) if (!PROD.hookKeys.includes(k)) delete hooksM[k]
+  deckOverrideFn = null
+}
+
+export function assertRestored(): void {
+  for (const g of GODS) {
+    expect(g.resonanceEffects).toEqual(PROD.resonanceEffects.get(g.id))
+    expect(g.passive).toEqual(PROD.passive.get(g.id))
+  }
+  for (const o of OTOMOS) expect(o.effectsByForm).toEqual(PROD.otomoEffects.get(o.id))
+  for (const c of ALL_CARDS) {
+    expect(c.effects).toEqual(PROD.cardEffects.get(c.id))
+    expect(c.bonus).toEqual(PROD.cardBonus.get(c.id))
+  }
+  expect([...RULES.score.tempoByRound]).toEqual(PROD.tempoByRound)
+  expect([...RULES.score.comboSteps]).toEqual(PROD.comboSteps)
+  expect(RULES.score.comboOverflow).toBe(PROD.comboOverflow)
+  expect(RULES.resonance.max).toBe(PROD.resonanceMax)
+  expect(RULES.godIdentity.passivesEnabled).toBe(PROD.passivesEnabled)
+  expect(RULES.godIdentity.cardBonusEnabled).toBe(PROD.cardBonusEnabled)
+  expect(RULES.godPassive.fukuei.hpRatio).toBe(PROD.fukueiHpRatio)
+  expect(NO_STAKE_RULES.divinationCount).toBe(PROD.divinationCount)
+  expect(Object.keys(GOD_PASSIVE_HOOKS).sort()).toEqual([...PROD.hookKeys].sort())
+  expect(deckOverrideFn).toBeNull()
+  expect(deckOverride(GOD_IDS.saika)).toEqual(getRecommendedDeck(GOD_IDS.saika))
+}
+
+// ---------------------------------------------------------------------------
+// helpers
+// ---------------------------------------------------------------------------
+const god = (id: GodId) => GODS.find((g) => g.id === id)!
+const card = (id: CardDefId) => getCardDef(id)
+const setBurst = (id: GodId, effects: Effect[]) => { (god(id) as { resonanceEffects: Effect[] }).resonanceEffects = effects }
+const patchBurst = (id: GodId, f: (e: Effect) => Effect | null) => {
+  const g = god(id) as { resonanceEffects: Effect[] }
+  g.resonanceEffects = g.resonanceEffects.map(f).filter((e): e is Effect => e !== null)
+}
+const patchCard = (id: CardDefId, f: (e: Effect) => Effect) => { (card(id) as { effects: Effect[] }).effects = card(id).effects.map(f) }
+const setBonusWhen = (id: CardDefId, when: NonNullable<CardDef['bonus']>['when']) => { const c = card(id) as { bonus?: CardDef['bonus'] }; if (c.bonus) c.bonus = { ...c.bonus, when } }
+const isEnemyDebuff = (e: Effect): e is Extract<Effect, { kind: 'debuff' }> => e.kind === 'debuff' && e.target === 'enemy'
+
+/**
+ * 共通 20 枚の標準デッキ（TARGET_TYPE_COUNT と同比率：攻撃 7・守護 3・共鳴 3・支援 4・妨害 1・神託 2）。
+ * 全神が同じデッキを使う対照（D1）に使う。専用カードは 0 枚。
+ */
+export const UNIFORM_COMMON_DECK: CardDefId[] = [
+  CARD_IDS.strike, CARD_IDS.heavyBlow, CARD_IDS.quickStrike, CARD_IDS.allOutStrike, CARD_IDS.renGeki, CARD_IDS.warCry, CARD_IDS.flurry,
+  CARD_IDS.guard, CARD_IDS.ironStance, CARD_IDS.parry,
+  CARD_IDS.resonate, CARD_IDS.kaguraDance, CARD_IDS.mikoDance,
+  CARD_IDS.wellspring, CARD_IDS.foresight, CARD_IDS.catchBreath, CARD_IDS.breathOfLife,
+  CARD_IDS.curse,
+  CARD_IDS.oracle, CARD_IDS.prophecy,
+]
+
+/**
+ * 推奨デッキの専用カードを、同じ種別の共通カードへ置換したデッキ（D2）。
+ * 置換先は「その種別の共通カードのうち、デッキ内の枚数が最少のもの（同数なら定義順）」。1 種 2 枚上限を守る。
+ */
+export function commonizedDeck(godId: GodId): CardDefId[] {
+  const deck = [...getRecommendedDeck(godId)]
+  const commons = getCardPoolForGod(godId).filter((c) => !c.godId)
+  const count = new Map<CardDefId, number>()
+  for (const id of deck) if (!card(id).godId) count.set(id, (count.get(id) ?? 0) + 1)
+  return deck.map((id) => {
+    const def = card(id)
+    if (!def.godId) return id
+    const cands = commons.filter((c) => c.type === (def.type as CardType) && (count.get(c.id) ?? 0) < RULES.deckBuilding.maxCopiesPerCard)
+    const pick = cands.sort((a, b) => (count.get(a.id) ?? 0) - (count.get(b.id) ?? 0))[0] ?? commons.find((c) => (count.get(c.id) ?? 0) < RULES.deckBuilding.maxCopiesPerCard)!
+    count.set(pick.id, (count.get(pick.id) ?? 0) + 1)
+    return pick.id
+  })
+}
+
+/** デッキの 1 枚入れ替え（from の最初の 1 枚を to に）。1 種 2 枚上限は呼び出し側で担保 */
+export function swapDeck(deck: CardDefId[], swaps: [CardDefId, CardDefId][]): CardDefId[] {
+  const d = [...deck]
+  for (const [from, to] of swaps) { const i = d.indexOf(from); if (i < 0) throw new Error(); d[i] = to }
+  return d
+}
+
+// ---------------------------------------------------------------------------
+// variants
+// ---------------------------------------------------------------------------
+export type Variant = { id: string; label: string; group: 'decomp' | 'score' | 'burst' | 'card' | 'passive' | 'otomo' | 'combo'; apply: () => void }
+
+const NEUTRAL_BURST: Effect[] = [{ kind: 'damage', target: 'enemy', amount: 25 }]
+
+export const VARIANTS: Record<string, Variant> = {
+  // ---- 原因分解（対照） ----
+  D0: { id: 'D0', label: '現行 a611270（変更なし）', group: 'decomp', apply: () => {} },
+  D1: { id: 'D1', label: '全神 共通 20 枚の同一デッキ（専用カード 0）', group: 'decomp', apply: () => { deckOverrideFn = () => UNIFORM_COMMON_DECK } },
+  D2: { id: 'D2', label: '推奨デッキの専用カードを同種別の共通カードへ置換（全神）', group: 'decomp', apply: () => { deckOverrideFn = (g) => commonizedDeck(g) } },
+  D3: { id: 'D3', label: '神の一撃を全神 中立値（damage 25 のみ）へ', group: 'decomp', apply: () => { for (const g of GODS) setBurst(g.id, deepCopy(NEUTRAL_BURST)) } },
+  D4: { id: 'D4', label: 'BURST なし（共鳴ゲージ最大 99・OTOMO 進化も無し）', group: 'decomp', apply: () => { rulesM.resonance.max = 99 } },
+  D5: { id: 'D5', label: 'OTOMO（守りの絆）の BURST 効果を全形態 空に', group: 'decomp', apply: () => { for (const o of OTOMOS) (o as { effectsByForm: Record<OtomoForm, Effect[]> }).effectsByForm = { spirit: [], incarnate: [], doji: [] } } },
+  D6: { id: 'D6', label: '得意技 OFF（passivesEnabled=false）', group: 'decomp', apply: () => { rulesM.godIdentity.passivesEnabled = false } },
+  D7: { id: 'D7', label: 'カード条件効果 OFF（cardBonusEnabled=false）', group: 'decomp', apply: () => { rulesM.godIdentity.cardBonusEnabled = false } },
+  D8: { id: 'D8', label: '託宣 0 回（Oracle interaction を除く）', group: 'decomp', apply: () => { (NO_STAKE_RULES as { divinationCount: number }).divinationCount = 0 } },
+  D9: { id: 'D9', label: 'tempoByRound を R4〜R7 一律 200（撃破 R の得点差を除く）', group: 'decomp', apply: () => { rulesM.score.tempoByRound = [290, 290, 290, 200, 200, 200, 200] } },
+  D10: { id: 'D10', label: 'combo 加点 0（comboSteps 0/0/0・overflow 0）', group: 'decomp', apply: () => { rulesM.score.comboSteps = [0, 0, 0]; rulesM.score.comboOverflow = 0 } },
+
+  // ---- 是正候補：神の一撃だけ ----
+  C1a: { id: 'C1a', label: '才華 BURST gainAp 2→1', group: 'burst', apply: () => patchBurst(GOD_IDS.saika, (e) => (e.kind === 'gainAp' ? { ...e, amount: 1 } : e)) },
+  C1b: { id: 'C1b', label: '才華 BURST draw 2→1', group: 'burst', apply: () => patchBurst(GOD_IDS.saika, (e) => (e.kind === 'draw' ? { ...e, amount: 1 } : e)) },
+  C1c: { id: 'C1c', label: '才華 BURST gainAp 2→1 ＋ damage 12→16（手数を火力へ振替）', group: 'burst', apply: () => patchBurst(GOD_IDS.saika, (e) => (e.kind === 'gainAp' ? { ...e, amount: 1 } : e.kind === 'damage' ? { ...e, amount: 16 } : e)) },
+  C2a: { id: 'C2a', label: '寿楽 BURST に gainAp 1 を追加（デバフは維持）', group: 'burst', apply: () => setBurst(GOD_IDS.juraku, [...deepCopy(PROD.resonanceEffects.get(GOD_IDS.juraku)!), { kind: 'gainAp', amount: 1 }]) },
+  C2b: { id: 'C2b', label: '寿楽 BURST に draw 1 を追加（デバフは維持）', group: 'burst', apply: () => setBurst(GOD_IDS.juraku, [...deepCopy(PROD.resonanceEffects.get(GOD_IDS.juraku)!), { kind: 'draw', amount: 1 }]) },
+  C2c: { id: 'C2c', label: '寿楽 BURST damage 23→29・debuff 6→4/3R（デバフの一部を火力へ）', group: 'burst', apply: () => patchBurst(GOD_IDS.juraku, (e) => (e.kind === 'damage' ? { ...e, amount: 29 } : isEnemyDebuff(e) ? { ...e, amount: 4 } : e)) },
+  C5a: { id: 'C5a', label: '福永 BURST heal 6→9', group: 'burst', apply: () => patchBurst(GOD_IDS.fukuei, (e) => (e.kind === 'heal' ? { ...e, amount: 9 } : e)) },
+  C5b: { id: 'C5b', label: '福永 BURST gainAp 1→2', group: 'burst', apply: () => patchBurst(GOD_IDS.fukuei, (e) => (e.kind === 'gainAp' ? { ...e, amount: 2 } : e)) },
+
+  // ---- 是正候補：得意技（決定131 の「デバフを攻撃機会へ変換」方向） ----
+  C2p: {
+    id: 'C2p', label: '寿楽 新得意技「からかい上手」：敵の攻撃力を下げる札を使うたび、下げた量×1 のダメージ（afterPlay）', group: 'passive',
+    apply: () => {
+      ;(god(GOD_IDS.juraku) as { passive?: unknown }).passive = { id: 'juraku_tease', nameJa: 'からかい上手', textJa: '敵の攻撃力を下げるたび、下げた量ぶん敵にダメージ' }
+      hooksM.juraku_tease = {
+        afterPlay: (_before, _after, cardDef) => {
+          const amt = cardDef.effects.filter(isEnemyDebuff).reduce((s, e) => s + e.amount, 0)
+          return amt > 0 ? [{ kind: 'damage', target: 'enemy', amount: amt }] : []
+        },
+      }
+    },
+  },
+
+  // ---- 是正候補：スコア式だけ ----
+  C3a: { id: 'C3a', label: 'tempoByRound R4 240→220・R5 170→190', group: 'score', apply: () => { rulesM.score.tempoByRound = [290, 290, 290, 220, 190, 90, 0] } },
+  C3b: { id: 'C3b', label: 'tempoByRound R4 240→210・R5 170→200・R6 90→110', group: 'score', apply: () => { rulesM.score.tempoByRound = [290, 290, 290, 210, 200, 110, 0] } },
+  C3c: { id: 'C3c', label: 'tempoByRound R4 240→230・R5 170→180', group: 'score', apply: () => { rulesM.score.tempoByRound = [290, 290, 290, 230, 180, 90, 0] } },
+  C7a: { id: 'C7a', label: 'comboOverflow 3→0（5 枚目以降の連携加点を無くす）', group: 'score', apply: () => { rulesM.score.comboOverflow = 0 } },
+  C7b: { id: 'C7b', label: 'comboSteps 12/8/4→12/6/0・overflow 0（連携を 3 枚目まで）', group: 'score', apply: () => { rulesM.score.comboSteps = [12, 6, 0]; rulesM.score.comboOverflow = 0 } },
+
+  // ---- 是正候補：カード条件の付け替え ----
+  C4a: { id: 'C4a', label: '速攻・連撃の combo 条件を charged へ', group: 'card', apply: () => { setBonusWhen(CARD_IDS.quickStrike, 'charged'); setBonusWhen(CARD_IDS.renGeki, 'charged') } },
+  C4b: { id: 'C4b', label: '全 combo 条件（一撃・共振・速攻・見切り・大喝・連撃）を charged へ', group: 'card', apply: () => { for (const id of [CARD_IDS.strike, CARD_IDS.resonate, CARD_IDS.quickStrike, CARD_IDS.readTheAttack, CARD_IDS.warCry, CARD_IDS.renGeki]) setBonusWhen(id, 'charged') } },
+  C5c: { id: 'C5c', label: '福永 専用札 不屈の一歩 heal 2→3・幸運の女神 heal 4→5', group: 'card', apply: () => { patchCard(FUKUEI_CARD_IDS.unbreakableStep, (e) => (e.kind === 'heal' ? { ...e, amount: 3 } : e)); patchCard(FUKUEI_CARD_IDS.goddessOfLuck, (e) => (e.kind === 'heal' ? { ...e, amount: 5 } : e)) } },
+  C8a: { id: 'C8a', label: '才華 専用札 独奏 gainAp 1→0（4 ダメ 1AP のまま）', group: 'card', apply: () => { patchCard(SAIKA_CARD_IDS.soloPerformance, (e) => (e.kind === 'gainAp' ? { ...e, amount: 0 } : e)) } },
+  C8b: { id: 'C8b', label: '寿楽 専用札 からかい半分 damage 7→9・悪戯に damage 2 を追加', group: 'card', apply: () => { patchCard(JURAKU_CARD_IDS.halfJoking, (e) => (e.kind === 'damage' ? { ...e, amount: 9 } : e)); (card(JURAKU_CARD_IDS.mischief) as { effects: Effect[] }).effects = [{ kind: 'damage', target: 'enemy', amount: 2 }, ...card(JURAKU_CARD_IDS.mischief).effects] } },
+
+
+  // ---- 是正候補：おすすめデッキ（deckBuilder.ts の固定リスト）の 1〜2 枚入れ替え ----
+  C9a: { id: 'C9a', label: '寿楽 おすすめデッキ：呪縛 2→1＋速攻、浄めの光 2→1＋剛撃（攻撃 6→8 枚・1AP 札 +1）', group: 'card', apply: () => { deckOverrideFn = (g) => (g === GOD_IDS.juraku ? swapDeck(getRecommendedDeck(g), [[CARD_IDS.curse, CARD_IDS.quickStrike], [CARD_IDS.purifyingLight, CARD_IDS.heavyBlow]]) : undefined) } },
+  C9b: { id: 'C9b', label: '才華 おすすめデッキ：アンコール 2→1＋一撃', group: 'card', apply: () => { deckOverrideFn = (g) => (g === GOD_IDS.saika ? swapDeck(getRecommendedDeck(g), [[SAIKA_CARD_IDS.encore, CARD_IDS.strike]]) : undefined) } },
+  C9c: { id: 'C9c', label: '才華 おすすめデッキ：独奏 2→1＋一撃', group: 'card', apply: () => { deckOverrideFn = (g) => (g === GOD_IDS.saika ? swapDeck(getRecommendedDeck(g), [[SAIKA_CARD_IDS.soloPerformance, CARD_IDS.strike]]) : undefined) } },
+
+  // ---- OTOMO ----
+  C6: { id: 'C6', label: '琴音（守りの絆）童子 gainAp 2→1', group: 'otomo', apply: () => { const o = OTOMOS.find((x) => x.godId === GOD_IDS.saika)! as { effectsByForm: Record<OtomoForm, Effect[]> }; o.effectsByForm.doji = o.effectsByForm.doji.map((e) => (e.kind === 'gainAp' ? { ...e, amount: 1 } : e)) } },
+}
+
+/** 複合候補（単独結果を見てから追加する。id は "X+Y" の形で登録） */
+export function registerCombo(ids: string[], label?: string): Variant {
+  const id = ids.join('+')
+  const v: Variant = { id, label: label ?? ids.map((x) => VARIANTS[x].label).join(' ＋ '), group: 'combo', apply: () => { for (const x of ids) VARIANTS[x].apply() } }
+  VARIANTS[id] = v
+  return v
+}
+
+export function applyVariant(id: string): Variant {
+  restore()
+  const v = VARIANTS[id]
+  if (!v) throw new Error(`unknown variant ${id}`)
+  v.apply()
+  return v
+}
+
+/** 環境変数 D259_VARIANTS（カンマ区切り）。"A+B" は複合として自動登録 */
+export function variantIdsFromEnv(defaults: string[]): string[] {
+  const raw = process.env.D259_VARIANTS
+  const ids = raw ? raw.split(',').map((s) => s.trim()).filter(Boolean) : defaults
+  for (const id of ids) if (!VARIANTS[id] && id.includes('+')) registerCombo(id.split('+'))
+  return ids
+}
