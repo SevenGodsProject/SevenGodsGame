@@ -216,11 +216,12 @@ node -e "const c=require('crypto'),f=require('fs');console.log(c.createHash('sha
 | FX-05 | `fx/cast-resonance.png`（320,747B） | 共鳴 | `13376136d604bcc3` | ✗ |
 | FX-06 | `fx/cast-support.png`（301,894B） | 支援 | `1eb6e347abf05bbf` | ✗ |
 
-### 3-H. SE（1 行・20 ファイル）
+### 3-H. SE（2 行・22 ファイル）
 
 | ID | Path（配信） | Source | Category | Creator | Model-Service | Generation date | Prompt reference | Reference inputs | Terms | Commercial | Modification | Attribution | Canonical | Evidence（sha256） | Status |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
 | SE-01 | `se/*.wav` ×20（16-bit mono 22.05kHz・計 337KB） | `scripts/gen-se.mjs`（決定論的に再生成可） | se | 自作（数式合成。サンプル・録音・第三者素材 0） | — | 決定128（`docs/SE_ASSETS.md`） | — | — | プロジェクト所有 | 可 | — | 不要 | `scripts/gen-se.mjs` | block `9299399a8be8236b`・boss_entrance `376668d2b9a27e64`・burst_ready `ce60a29f46086bda`・card_draw `d9e83fcaa644ccaa`・card_play `d9efb827b66db183`・defeat_sting `8d80352ddf24c6e7`・divination `becc37cce673516e`・enemy_charge `3b0abdd2ebca060d`・enemy_turn `c1fabaeca7747e55`・evolve `a46a5a7dbc122979`・heal `cf93e1d018887abf`・hit_l1 `678524a5775e3158`・hit_l2 `43a423c2ee5613d6`・hit_l3 `c9048d12a58a23cb`・hit_l4 `7ee4b80b1935eef5`・resonance_gain `69221957596390b7`・reward `e3a9aa4435614517`・self_hit `a214d6c648ec1274`・self_hit_heavy `840153a5af76c0e6`・victory_sting `5d6e919689dab946` | ◎ |
+| SE-02 | `se/burst_rise.wav`（900ms・39,734B）・`se/enemy_rise.wav`（1,000ms・44,144B）（16-bit mono 22.05kHz） | `scripts/gen-se.mjs`（決定257 で `--only`／`SE_OUT` を追加・決定論的に再生成可） | se | 自作（数式合成。サンプル・録音・第三者素材・AI 音声生成・Voice 0） | — | 決定257（2026-10-02・`docs/DECISION257_SOUND_LAYER_V1_PILOT.md` §1〜§2・`docs/evidence/decision257/se-new-analysis.txt`） | — | — | プロジェクト所有 | 可 | — | 不要 | `scripts/gen-se.mjs` | burst_rise `a2e4b5f2111e8593`・enemy_rise `d45969301a336db5`（sha256 先頭 16 桁・配信 `538a3ef`） | ◎ |
 
 ### 3-I. BGM（4 行）
 
