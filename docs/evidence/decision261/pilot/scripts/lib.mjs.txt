@@ -1,0 +1,252 @@
+// 決定261 対峙構図 v2 — 計測共通部（計測専用・commit しない。写しは docs/evidence/decision261/pilot/*.mjs.txt）
+// RAM 6GB 運用：1 browser／1 context／1 run 直列。run ごとに browser.close()。各 run 前に空きメモリを記録し、
+// <300MB なら 60 秒待機（最大 20 分）。ブラウザ中は browser.lock を作成、sim.lock があれば待つ。
+import { chromium } from 'playwright'
+import { execSync } from 'node:child_process'
+import { existsSync, writeFileSync, rmSync, mkdirSync, appendFileSync } from 'node:fs'
+
+export const LOCKDIR = 'C:/Users/kimi1/AppData/Local/Temp/sevengods-locks'
+export const BASES = { before: 'http://127.0.0.1:4301', after: 'http://127.0.0.1:4302' }
+export const VPS = {
+  pc660: { viewport: { width: 1508, height: 660 }, isMobile: false, hasTouch: false, deviceScaleFactor: 1 },
+  pc800: { viewport: { width: 1280, height: 800 }, isMobile: false, hasTouch: false, deviceScaleFactor: 1 },
+  sp844: { viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true, deviceScaleFactor: 1 },
+  sp660: { viewport: { width: 390, height: 660 }, isMobile: true, hasTouch: true, deviceScaleFactor: 1 },
+}
+export const GODS = { ebisu: '恵比寿', taiyo: '大耀', sobi: '蒼毘', saika: '才華', juraku: '寿楽', fukuei: '福永', shouren: '笑蓮' }
+export const ENEMIES = { trial: '試練の影', oni: '業斧の鬼将', onryo: '藍花の怨霊', karakuri: '銀甲の機工師', juuma: '双牙の魔獣', ryujin: '蒼海の龍神', doukeshi: '乱舞の道化' }
+
+const sleep = (ms) => new Promise((r) => setTimeout(r, ms))
+export function freeMB() {
+  try {
+    return Number(execSync(`powershell -NoProfile -Command "[int](Get-Counter '\\Memory\\Available MBytes').CounterSamples.CookedValue"`, { encoding: 'utf8' }).trim())
+  } catch {
+    return -1
+  }
+}
+export async function waitMemory(log) {
+  const t0 = Date.now()
+  let mb = freeMB()
+  while (mb >= 0 && mb < 300 && Date.now() - t0 < 20 * 60_000) {
+    log?.(`mem ${mb}MB <300 → wait 60s`)
+    await sleep(60_000)
+    mb = freeMB()
+  }
+  return mb
+}
+export async function withBrowser(fn, log) {
+  mkdirSync(LOCKDIR, { recursive: true })
+  while (existsSync(`${LOCKDIR}/sim.lock`)) {
+    log?.('sim.lock present → wait 30s')
+    await sleep(30_000)
+  }
+  const mem = await waitMemory(log)
+  writeFileSync(`${LOCKDIR}/browser.lock`, `d261 pid=${process.pid} ${new Date().toISOString()}\n`)
+  let browser
+  try {
+    browser = await chromium.launch()
+    return { mem, result: await fn(browser) }
+  } finally {
+    try { await browser?.close() } catch {}
+    rmSync(`${LOCKDIR}/browser.lock`, { force: true })
+  }
+}
+export function logger(file) {
+  return (s) => {
+    const line = `${new Date().toISOString().slice(11, 19)} ${s}`
+    console.log(line)
+    if (file) appendFileSync(file, line + '\n')
+  }
+}
+
+const clickText = (page, text) =>
+  page.evaluate((t) => {
+    const el = [...document.querySelectorAll('button')].find((x) => x.textContent.replace(/\s+/g, '').includes(t) && !x.disabled)
+    if (!el) return false
+    el.click()
+    return true
+  }, text)
+const clickSel = (page, sel) =>
+  page.evaluate((s) => {
+    const el = document.querySelector(s)
+    if (!el || el.disabled) return false
+    el.click()
+    return true
+  }, sel)
+
+/** 新しい context でホーム → 神 → 敵 → 戦闘開始。入口の T5（消滅直後／+2s の HUD 箱）と操作開放の時刻も測る */
+export async function startBattle(browser, base, vpName, { god, enemy, seed, stake }) {
+  const ctx = await browser.newContext(VPS[vpName])
+  const page = await ctx.newPage()
+  const errors = []
+  page.on('console', (m) => { if (m.type() === 'error') errors.push(m.text().slice(0, 200)) })
+  page.on('pageerror', (e) => errors.push('pageerror ' + String(e).slice(0, 200)))
+  const url = `${base}/?seed=${seed}&enemy=${enemy}${stake ? `&stake=${stake}` : ''}`
+  await page.goto(url, { waitUntil: 'networkidle' })
+  await page.evaluate(() => { try { localStorage.clear() } catch {} })
+  await page.goto(url, { waitUntil: 'networkidle' })
+  await page.waitForSelector('[data-testid="home-start"]', { timeout: 30000 })
+  if (await clickText(page, 'わかった')) await page.waitForTimeout(200)
+  await clickSel(page, '[data-testid="home-start"]')
+  await page.waitForTimeout(300)
+  if (await clickText(page, '新しく始める')) await page.waitForTimeout(300)
+  await clickText(page, GODS[god])
+  await page.waitForTimeout(250)
+  await clickText(page, 'この構成で始める')
+  await page.waitForTimeout(300)
+  await clickText(page, ENEMIES[enemy])
+  await page.waitForTimeout(300)
+  // 入口：開始 click → 入口の animation 開始 → 操作開放（pe none）→ 消滅。T5＝消滅直後と +2s の HUD 箱
+  const entrance = await page.evaluate(async () => {
+    const HUD = ['.battle-topbar', '.enemy-plate', '.player-plate', '.god-otomo-plate', '.hand', '.battle-dock', '.divination-panel', '.end-round-button', '.intent']
+    const boxes = () => Object.fromEntries(HUD.map((s) => { const e = document.querySelector(s); if (!e) return [s, null]; const r = e.getBoundingClientRect(); return [s, [Math.round(r.x), Math.round(r.y), Math.round(r.width), Math.round(r.height)]] }))
+    const btn = [...document.querySelectorAll('button')].find((b) => b.textContent.replace(/\s+/g, '').includes('この構成でバトル開始') && !b.disabled)
+    if (!btn) return { error: 'start button not found' }
+    const t0 = performance.now()
+    btn.click()
+    let animStart = null, released = null, gone = null, mounted = null, cardHittable = null, hudAtGone = null
+    await new Promise((resolve) => {
+      const tick = (now) => {
+        const be = document.querySelector('[data-testid="boss-entrance"]')
+        if (be && mounted === null) mounted = now
+        if (be && animStart === null) { const an = be.getAnimations()[0]; if (an && an.startTime != null) animStart = an.startTime }
+        if (be && released === null && getComputedStyle(be).pointerEvents === 'none') released = now
+        if (mounted !== null && cardHittable === null && (!be || getComputedStyle(be).pointerEvents === 'none')) {
+          const c = document.querySelector('.hand .card-view')
+          if (c) { const r = c.getBoundingClientRect(); const h = document.elementFromPoint(r.x + r.width / 2, r.y + r.height / 2); if (h && c.contains(h)) cardHittable = now }
+        }
+        if (mounted !== null && !be && gone === null) { gone = now; hudAtGone = boxes() }
+        if (gone !== null || now - t0 > 9000) resolve()
+        else requestAnimationFrame(tick)
+      }
+      requestAnimationFrame(tick)
+    })
+    await new Promise((r) => setTimeout(r, 2000))
+    const hudAfter = boxes()
+    const rel = (v) => (v === null || animStart === null ? null : Math.round(v - animStart))
+    return { releasedRel: rel(released), cardHittableRel: rel(cardHittable), goneRel: rel(gone), hudAtGone, hudAfter }
+  })
+  await page.waitForFunction(() => { const b = document.querySelector('.end-round-button'); return b && !b.disabled }, null, { timeout: 20000 }).catch(() => {})
+  await page.waitForTimeout(600)
+  return { ctx, page, errors, entrance }
+}
+
+/** ページ内：立ち絵・OTOMO の ink bbox（alpha>32・決定229 方式）と HUD・カードの箱 */
+export const MEASURE = async () => {
+  const cache = (window.__inkCache ??= {})
+  async function inkFrac(src) {
+    if (cache[src]) return cache[src]
+    const img = new Image()
+    img.src = src
+    await img.decode()
+    const c = document.createElement('canvas')
+    c.width = img.naturalWidth; c.height = img.naturalHeight
+    const g = c.getContext('2d', { willReadFrequently: true })
+    g.drawImage(img, 0, 0)
+    const d = g.getImageData(0, 0, c.width, c.height).data
+    let l = c.width, t = c.height, r = -1, b = -1
+    for (let y = 0; y < c.height; y++) for (let x = 0; x < c.width; x++) if (d[(y * c.width + x) * 4 + 3] > 32) { if (x < l) l = x; if (x > r) r = x; if (y < t) t = y; if (y > b) b = y }
+    return (cache[src] = { d, iw: c.width, ih: c.height, l: l / c.width, t: t / c.height, r: (r + 1) / c.width, b: (b + 1) / c.height })
+  }
+  const rect = (e) => { if (!e) return null; const r = e.getBoundingClientRect(); return { x: r.x, y: r.y, w: r.width, h: r.height } }
+  const R = (o) => (o ? Object.fromEntries(Object.entries(o).map(([k, v]) => [k, typeof v === 'number' ? Math.round(v * 10) / 10 : v])) : o)
+  // contain＋位置（x 0.5・y 1＝center bottom）で描いた絵の ink bbox。flip＝要素中心で左右反転
+  async function ink(el, src, flip) {
+    if (!el) return null
+    const f = await inkFrac(src)
+    const b = el.getBoundingClientRect()
+    const s = Math.min(b.width / f.iw, b.height / f.ih)
+    const w = f.iw * s, h = f.ih * s
+    const x0 = b.x + (b.width - w) / 2, y0 = b.y + b.height - h
+    let l = x0 + f.l * w, r = x0 + f.r * w
+    if (flip) { const cx = b.x + b.width / 2; [l, r] = [2 * cx - r, 2 * cx - l] }
+    return { x: l, y: y0 + f.t * h, w: r - l, h: (f.b - f.t) * h, drawn: Math.round(w), box: [Math.round(b.width), Math.round(b.height)] }
+  }
+  const ea = document.querySelector('.enemy-avatar')
+  const eSrc = ea ? getComputedStyle(ea).backgroundImage.replace(/^url\("?|"?\)$/g, '') : null
+  const scale = ea ? getComputedStyle(ea).scale : null
+  const enemyInk = ea ? await ink(ea, eSrc, scale === '-1 1') : null
+  const pa = document.querySelector('.player-avatar')
+  const godInk = pa ? await ink(pa, pa.currentSrc || pa.src, false) : null
+  const oa = document.querySelector('.portrait-otomo img')
+  const otomoInk = oa ? await ink(oa, oa.currentSrc || oa.src, false) : null
+  // 実画素の重なり：OTOMO の札（figure）の矩形の中にある神の絵の不透明画素（alpha>32）の数
+  async function pixelsIn(el, src, flip, rr) {
+    if (!el || !rr) return null
+    const f = await inkFrac(src)
+    const b = el.getBoundingClientRect()
+    const s = Math.min(b.width / f.iw, b.height / f.ih)
+    const w = f.iw * s, h = f.ih * s
+    const x0 = b.x + (b.width - w) / 2, y0 = b.y + b.height - h
+    let n = 0
+    for (let y = Math.floor(rr.y); y < rr.y + rr.h; y++) for (let x = Math.floor(rr.x); x < rr.x + rr.w; x++) {
+      let u = (x + 0.5 - x0) / w
+      if (flip) u = 1 - u
+      const v = (y + 0.5 - y0) / h
+      if (u < 0 || u >= 1 || v < 0 || v >= 1) continue
+      const px = Math.floor(u * f.iw), py = Math.floor(v * f.ih)
+      if (f.d[(py * f.iw + px) * 4 + 3] > 32) n++
+    }
+    return n
+  }
+  const otomoFig = rect(document.querySelector('.portrait-otomo'))
+  const godPixelsUnderOtomo = pa ? await pixelsIn(pa, pa.currentSrc || pa.src, false, otomoFig) : null
+  const vw = innerWidth, vh = innerHeight
+  const area = (i) => (i ? Math.round((i.w * i.h) / (vw * vh) * 10000) / 100 : null)
+  const card = rect(document.querySelector('.hand .card-view'))
+  const cards = [...document.querySelectorAll('.hand .card-view')].map(rect)
+  const hits = { enemy: rect(document.querySelector('.enemy-hit-layer')), god: rect(document.querySelector('.player-hit-layer')) }
+  const inside = (p, i) => !!i && p.x >= i.x && p.x <= i.x + i.w && p.y >= i.y && p.y <= i.y + i.h
+  const hitCenters = Object.fromEntries(Object.entries(hits).map(([k, h]) => [k, h ? { slash: { x: h.x + h.w / 2, y: h.y + h.h / 2 }, number: { x: h.x + h.w / 2, y: h.y + h.h * 0.34 } } : null]))
+  const inter = (a, b) => (a && b ? Math.max(0, Math.min(a.x + a.w, b.x + b.w) - Math.max(a.x, b.x)) * Math.max(0, Math.min(a.y + a.h, b.y + b.h) - Math.max(a.y, b.y)) : 0)
+  const plates = { enemyPlate: rect(document.querySelector('.enemy-plate')), playerPlate: rect(document.querySelector('.player-plate')), otomoPlate: rect(document.querySelector('.god-otomo-plate')), bubble: (() => { const b = document.querySelector('.enemy-speech-bubble'); return b && getComputedStyle(b).display !== 'none' ? rect(b) : null })() }
+  const dock = rect(document.querySelector('.battle-dock'))
+  const hand = rect(document.querySelector('.hand'))
+  // 文字の切れ：名札・カード内で overflow を隠している要素の scrollWidth／scrollHeight 超過、および札の外へのはみ出し
+  const clipped = []
+  for (const root of document.querySelectorAll('.enemy-plate, .player-plate, .god-otomo-plate, .hand .card-view, .battle-topbar, .divination-panel')) {
+    const rb = root.getBoundingClientRect()
+    for (const e of [root, ...root.querySelectorAll('*')]) {
+      const cs = getComputedStyle(e)
+      if (cs.display === 'none' || cs.visibility === 'hidden') continue
+      if (!e.childNodes.length || ![...e.childNodes].some((n) => n.nodeType === 3 && n.textContent.trim())) continue
+      const over = (cs.overflowX !== 'visible' || cs.textOverflow === 'ellipsis') && e.scrollWidth > e.clientWidth + 1
+      const overY = cs.overflowY !== 'visible' && e.scrollHeight > e.clientHeight + 2
+      const r = e.getBoundingClientRect()
+      const out = r.width > 0 && (r.right > rb.right + 1 || r.left < rb.left - 1) && root !== e
+      if (over || overY || out) clipped.push({ root: root.className.split(' ')[0], el: (e.className || e.tagName).toString().slice(0, 40), text: e.textContent.trim().slice(0, 24), over, overY, out })
+    }
+  }
+  const lines = (sel) => { const e = document.querySelector(sel); if (!e) return null; const lh = parseFloat(getComputedStyle(e).lineHeight) || parseFloat(getComputedStyle(e).fontSize) * 1.3; return Math.round(e.getBoundingClientRect().height / lh) }
+  return {
+    vw, vh, scale,
+    cutinScaleRule: (() => { const i = document.createElement('img'); i.className = 'enemy-cutin-image'; document.body.appendChild(i); const s = getComputedStyle(i).scale; i.remove(); return s })(),
+    enemyInk: R(enemyInk), godInk: R(godInk), otomoInk: R(otomoInk),
+    area: { enemy: area(enemyInk), god: area(godInk), otomo: area(otomoInk), card: card ? Math.round((card.w * card.h) / (vw * vh) * 10000) / 100 : null },
+    cardH: card ? Math.round(card.h) : null,
+    ratio: { enemyPerCard: enemyInk && card ? Math.round((enemyInk.h / card.h) * 100) / 100 : null, godPerCard: godInk && card ? Math.round((godInk.h / card.h) * 100) / 100 : null, godPerEnemy: enemyInk && godInk ? Math.round((godInk.h / enemyInk.h) * 100) / 100 : null, otomoPerEnemy: enemyInk && otomoInk ? Math.round((otomoInk.h / enemyInk.h) * 100) / 100 : null },
+    gapEnemyGod: enemyInk && godInk ? Math.round(godInk.x - (enemyInk.x + enemyInk.w)) : null,
+    hit: {
+      enemySlashIn: inside(hitCenters.enemy?.slash ?? {}, enemyInk), enemyNumberIn: inside(hitCenters.enemy?.number ?? {}, enemyInk),
+      godSlashIn: inside(hitCenters.god?.slash ?? {}, godInk), godNumberIn: inside(hitCenters.god?.number ?? {}, godInk),
+      enemyLayer: R(hits.enemy), godLayer: R(hits.god),
+    },
+    overlap: {
+      enemyGod: Math.round(inter(enemyInk, godInk)),
+      enemyDock: Math.round(inter(enemyInk, dock)), godDock: Math.round(inter(godInk, dock)), otomoDock: Math.round(inter(otomoInk, dock)),
+      enemyHand: Math.round(inter(enemyInk, hand)), godHand: Math.round(inter(godInk, hand)),
+      enemyPlates: Math.round(inter(enemyInk, plates.enemyPlate) + inter(enemyInk, plates.playerPlate) + inter(enemyInk, plates.otomoPlate)),
+      godPlates: Math.round(inter(godInk, plates.enemyPlate) + inter(godInk, plates.playerPlate) + inter(godInk, plates.otomoPlate)),
+      otomoPlates: Math.round(inter(otomoInk, plates.enemyPlate) + inter(otomoInk, plates.playerPlate) + inter(otomoInk, plates.otomoPlate)),
+      godOtomo: Math.round(inter(godInk, otomoInk)), godPixelsUnderOtomo, enemyOtomo: Math.round(inter(enemyInk, otomoInk)),
+      enemyBubble: Math.round(inter(enemyInk, plates.bubble)),
+      dockTopMinusInkBottom: dock && enemyInk && godInk ? Math.round(dock.y - Math.max(enemyInk.y + enemyInk.h, godInk.y + godInk.h)) : null,
+    },
+    plates: Object.fromEntries(Object.entries(plates).map(([k, v]) => [k, R(v)])),
+    lines: { enemyName: lines('.enemy-plate .panel-title'), godName: lines('.player-plate .panel-title'), intent: lines('.enemy-plate .intent') },
+    dock: R(dock), cards: cards.length,
+    clipped,
+    hScroll: document.documentElement.scrollWidth > document.documentElement.clientWidth,
+    bodyHScroll: document.body.scrollWidth > document.body.clientWidth,
+  }
+}

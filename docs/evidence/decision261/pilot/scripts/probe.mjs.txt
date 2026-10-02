@@ -1,0 +1,17 @@
+// 1 run の目視・数値プローブ：node scripts/d261/probe.mjs <before|after> <vp> <god> <enemy> [outPrefix]
+import { withBrowser, startBattle, MEASURE, BASES, logger } from './lib.mjs'
+import { writeFileSync, mkdirSync } from 'node:fs'
+const [side = 'after', vp = 'pc660', god = 'taiyo', enemy = 'oni', out = 'C:/Users/kimi1/AppData/Local/Temp/claude/C--Users-kimi1-SevenGodsGame/1141c1d1-9eb9-4c4a-a511-66373648126e/scratchpad/probe'] = process.argv.slice(2)
+mkdirSync(out, { recursive: true })
+const log = logger()
+const { mem, result } = await withBrowser(async (browser) => {
+  const { page, errors, entrance } = await startBattle(browser, BASES[side], vp, { god, enemy, seed: 'd261-probe' })
+  const m = await page.evaluate(MEASURE)
+  const geo = await page.evaluate(() => Object.fromEntries(['.battle-main', '.enemy-panel', '.player-panel', '.god-otomo-panel', '.enemy-stage', '.player-stage', '.enemy-avatar', '.player-avatar', '.portrait-otomo img', '.god-otomo-portraits', '.battle-dock'].map((s) => { const e = document.querySelector(s); if (!e) return [s, null]; const r = e.getBoundingClientRect(); return [s, [Math.round(r.x), Math.round(r.y), Math.round(r.width), Math.round(r.height)]] })))
+  const f = `${out}/${side}-${vp}-${god}-${enemy}`
+  await page.screenshot({ path: `${f}.png` })
+  writeFileSync(`${f}.json`, JSON.stringify({ m, geo, entrance, errors }, null, 1))
+  return { m, geo, errors, entrance }
+}, log)
+log(`mem ${mem}MB`)
+console.log(JSON.stringify({ geo: result.geo, area: result.m.area, ratio: result.m.ratio, gap: result.m.gapEnemyGod, hit: { ...result.m.hit, enemyLayer: undefined, godLayer: undefined }, overlap: result.m.overlap, enemyInk: result.m.enemyInk, godInk: result.m.godInk, otomoInk: result.m.otomoInk, lines: result.m.lines, clipped: result.m.clipped.length, hScroll: result.m.hScroll, errors: result.errors, entrance: { r: result.entrance.releasedRel, c: result.entrance.cardHittableRel, g: result.entrance.goneRel } }, null, 0))
