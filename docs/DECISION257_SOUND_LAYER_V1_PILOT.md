@@ -153,3 +153,12 @@
 - METRIC LOCK 242 行 不一致 0（GameState・スコア・Intent・結果が Before と同一）
 - 既存 SE 20 本の wav md5 不変（`se-md5-before.txt`／`se-md5-after.txt`）
 - push／deploy／merge 0・`docs/DECISIONS.md` 編集 0
+
+## §9 CEO Human QA
+
+- 判定：**PASS（4/4 YES）**・2026-10-02・CEO・PC＋iPhone（Before :4281＝Production dist／After :4282）
+- Q1 神の一撃が以前より気持ちいいか：**はい**
+- Q2 敵の必殺が以前より怖く感じるか：**はい**
+- Q3 両者を音だけで区別できるか：**はい**
+- Q4 BGM の duck や SE がうるさくないか：**はい**
+- 次：Production Release Gate（CEO 承認）
