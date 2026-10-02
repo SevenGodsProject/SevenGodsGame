@@ -111,7 +111,20 @@ async function playRounds(page, c) {
     const plan = c.oracle[r]
     let chose = null
     if (plan !== undefined) { const btn = page.locator('.divination-choice').nth(plan); if (await btn.isEnabled()) { await btn.click(); chose = plan; await page.waitForTimeout(700) } }
-    for (let i = 0; i < 3; i++) { await page.waitForFunction(() => !document.querySelector('.resonance-cutin, .enemy-cutin'), null, { timeout: 8000 }).catch(() => {}); await page.waitForTimeout(150); const cards = page.locator('.card-view:not(:disabled)'); const n = await cards.count(); if (!n) break; const cnt0 = n; await cards.first().click().catch(() => {}); await page.waitForTimeout(750); const n2 = await page.locator('.card-view').count(); if (n2 === cnt0) break }
+    for (let i = 0; i < 3; i++) {
+      let played = false
+      for (let attempt = 0; attempt < 3 && !played; attempt++) {
+        await page.waitForFunction(() => !document.querySelector('.resonance-cutin, .enemy-cutin, .burst-banner'), null, { timeout: 8000 }).catch(() => {})
+        await page.waitForTimeout(attempt === 0 ? 150 : 700)
+        const cards = page.locator('.card-view:not(:disabled)')
+        if (!(await cards.count())) break
+        const total0 = await page.locator('.card-view').count()
+        await cards.first().click().catch(() => {})
+        played = await page.waitForFunction((t0) => document.querySelectorAll('.card-view').length < t0, total0, { timeout: 2500 }).then(() => true).catch(() => false)
+      }
+      if (!played) break
+      await page.waitForTimeout(400)
+    }
     const afterPlay = await snap(page)
     await page.waitForFunction(() => !document.querySelector('.resonance-cutin, .enemy-cutin'), null, { timeout: 8000 }).catch(() => {}); await page.getByRole('button', { name: 'ラウンドを終える' }).click({ timeout: 8000 }).catch(() => {})
     await page.waitForTimeout(2600)
@@ -144,16 +157,39 @@ async function run(browser, base, vp, c, opts = {}) {
   await page.waitForTimeout(1200)
   const fin = await finalState(page)
   let retry = null
+  let fs_debug = null
   if (opts.retry) {
-    const again = page.getByRole('button', { name: /もう一度/ })
-    for (let i = 0; i < 40 && !(await again.count()); i++) { const next = page.getByRole('button', { name: /結果|次へ|閉じる|続ける/ }); if (await next.count()) await next.first().click().catch(() => {}); await page.waitForTimeout(500) }
-    const buttons = await page.evaluate(() => [...document.querySelectorAll('button')].map((b) => b.textContent.trim()).filter(Boolean).slice(0, 20))
+    // 決着後の結果画面で「もう一度」系のボタンを探す（勝利の舞台→結果ハブの順に出る）。見つかるまで最大 30 秒、ボタン文言を記録
+    const seen = []
+    let target = null
+    for (let i = 0; i < 90 && !target; i++) {
+      const texts = await page.evaluate(() => [...document.querySelectorAll('button')].filter((b) => b.offsetWidth > 0).map((b) => b.textContent.trim()))
+      seen.push(texts.join(' | ').slice(0, 300))
+      target = texts.find((t) => /もう一度/.test(t)) ?? null
+      if (!target) {
+        // まだ決着していなければラウンドを進め、勝利の舞台（role=button「結果へ進む」）なら進める
+        const endBtn = page.getByRole('button', { name: 'ラウンドを終える' })
+        const stage = page.getByRole('button', { name: '結果へ進む' })
+        const rewardOpen = page.getByRole('button', { name: /報酬カードを選ぶ/ })
+        if (await page.locator('.reward-skip').count()) await page.locator('.reward-skip').first().click({ timeout: 1000 }).catch(() => {}) // 報酬はスキップ（ゲーム結果に影響しない導線）
+        else if (await rewardOpen.count()) await rewardOpen.first().click({ timeout: 1000 }).catch(() => {})
+        else if (await stage.count()) await stage.first().click({ timeout: 1000 }).catch(() => {})
+        else if (await endBtn.isVisible().catch(() => false) && await endBtn.isEnabled().catch(() => false)) await endBtn.click({ timeout: 1000 }).catch(() => {})
+        await page.waitForTimeout(500)
+      }
+    }
+    if (!target) { await page.screenshot({ path: `${OUT}/runs/retry-debug.png` }).catch(() => {}); fs_debug = await page.evaluate(() => ({ text: document.body.innerText.replace(/s+/g, ' ').slice(0, 600), endBtn: [...document.querySelectorAll('button')].filter((b) => /ラウンド/.test(b.textContent)).map((b) => ({ t: b.textContent, d: b.disabled, w: b.offsetWidth })) })) }
     const t0 = await page.evaluate(() => performance.now())
-    await again.first().click({ timeout: 5000 }).catch(() => {})
-    await again.first().click({ timeout: 300 }).catch(() => {}) // 連打
-    await page.waitForTimeout(3000)
-    retry = await page.evaluate((t0) => ({ t0, gainNow: window.__probe.bgmGainNode ? window.__probe.bgmGainNode.gain.value : null, samplesAfter: window.__probe.gain.filter((g) => g.perf > t0), round: (document.body.innerText.match(/ラウンド\s*(\d)/) || [])[1] ?? null }), t0)
-    retry.buttons = buttons
+    if (target) {
+      const btn = page.locator('button', { hasText: target }).first()
+      await btn.click({ timeout: 5000 }).catch(() => {})
+      await btn.click({ timeout: 300 }).catch(() => {}) // 連打（2 回目は画面遷移で消えていれば無視）
+    }
+    await page.waitForTimeout(4000)
+    retry = await page.evaluate((t0) => ({ t0, gainNow: window.__probe.bgmGainNode ? window.__probe.bgmGainNode.gain.value : null, samplesAfter: window.__probe.gain.filter((g) => g.perf > t0), round: (document.body.innerText.match(/ラウンド\s*(\d)/) || [])[1] ?? null, battleVisible: !!document.querySelector('.divination-panel') }), t0)
+    retry.clicked = target
+    retry.debug = fs_debug
+    retry.seenButtons = seen.slice(-3)
   }
   let volumeProbe = null
   if (opts.volumeProbe) {
@@ -177,43 +213,40 @@ async function run(browser, base, vp, c, opts = {}) {
   return { rounds, ended, errors, finalScore: fin.save?.score ?? null, finalStatus: fin.save?.status ?? null, finalText: fin.text, probe: fin.probe, retry, volumeProbe }
 }
 
-const browser = await chromium.launch()
-const out = {}
-const want = (k) => !ONLY || ONLY.some((o) => k.startsWith(o))
-for (const vp of VIEWPORTS) for (const c of CASES) {
-  if (vp.only && !vp.only.includes(c.id)) continue
-  for (const base of BASES) {
-    const k = `lock/${c.id}/${vp.name}/${isBefore(base) ? 'before' : 'after'}`
-    if (!want(k)) continue
-    try { out[k] = await run(browser, base, vp, c, { retry: vp.name === 'pc' && c.id === 'taiyo-oni-normal', volumeProbe: vp.name === 'pc' && c.id === 'taiyo-oni-normal' && !isBefore(base) }); console.log('done', k, 'errors', out[k].errors.length, out[k].finalStatus, out[k].finalScore) } catch (e) { out[k] = { error: String(e).slice(0, 300) }; console.log('FAIL', k, String(e).slice(0, 200)) }
+
+// ---- 1 run ＝ 1 プロセス（決定257 再開：メモリ不足の再発防止）。`--run <name>` で 1 ケースだけ実行し、runs/<name>.json に書く ----
+// name: lock~<case>~<vp>~<before|after> ／ lockrep~<i>~<before|after> ／ reduced|noaudio|mute|retry~<before|after>
+const RUN = process.argv[process.argv.indexOf('--run') + 1]
+if (!RUN || process.argv.indexOf('--run') < 0) {
+  const names = []
+  for (const vp of VIEWPORTS) for (const c of CASES) { if (vp.only && !vp.only.includes(c.id)) continue; for (const side of ['before', 'after']) names.push(`lock~${c.id}~${vp.name}~${side}`) }
+  for (let i = 0; i < 3; i++) for (const side of ['before', 'after']) names.push(`lockrep~${i}~${side}`)
+  for (const s of ['reduced', 'noaudio', 'mute', 'retry']) for (const side of ['before', 'after']) names.push(`${s}~${side}`)
+  console.log(names.join('\n'))
+  process.exit(0)
+}
+const parts = RUN.split('~')
+const side = parts[parts.length - 1]
+const base = side === 'before' ? BASES[0] : BASES[1]
+mkdirSync(`${OUT}/runs`, { recursive: true })
+const browser = await chromium.launch({ headless: true })
+let result
+try {
+  if (parts[0] === 'lock') {
+    const c = CASES.find((x) => x.id === parts[1])
+    const vp = VIEWPORTS.find((x) => x.name === parts[2])
+    result = await run(browser, base, vp, c, { volumeProbe: vp.name === 'pc' && c.id === 'taiyo-oni-normal' && side === 'after' })
+  } else if (parts[0] === 'lockrep') {
+    result = await run(browser, base, VIEWPORTS[0], CASES[0], {})
+  } else if (parts[0] === 'retry') {
+    result = await run(browser, base, VIEWPORTS[0], CASES[0], { retry: true })
+  } else {
+    result = await run(browser, base, VIEWPORTS[0], CASES[0], { [{ reduced: 'reduced', noaudio: 'noAudio', mute: 'mute' }[parts[0]]]: true })
   }
+} catch (e) {
+  result = { error: String(e).slice(0, 400) }
+} finally {
+  await browser.close()
 }
-// ---- 入力ロック時間の反復計測（神の一撃 1 回目まで・Before/After 交互に 5 回） ----
-async function lockOnce(base) {
-  const { ctx, page, errors } = await newCtx(browser, VIEWPORTS[0])
-  const c = CASES[0]
-  await startBattle(page, c, `${base}/?seed=${c.seed}&enemy=${c.enemy}`)
-  const r = await playRounds(page, { ...c, rounds: 5 })
-  const P = await page.evaluate(() => ({ se: window.__probe.se.map((s) => ({ name: s.name, perf: s.perf })), lock: window.__probe.lock }))
-  await ctx.close()
-  const b = P.se.find((s) => s.name === 'burst_ready')
-  const rel = b ? P.lock.find((l) => l.perf > b.perf + 50 && l.n > 0) : null
-  return { lockReleaseMs: rel ? Math.round(rel.perf - b.perf) : null, errors: errors.length, rounds: r.rounds.length }
-}
-if (want('lockrep')) {
-  out['lockrep'] = { before: [], after: [] }
-  for (let i = 0; i < 5; i++) for (const base of BASES) { const v = await lockOnce(base); out['lockrep'][isBefore(base) ? 'before' : 'after'].push(v); console.log('lockrep', i, isBefore(base) ? 'before' : 'after', v.lockReleaseMs) }
-}
-// ---- fallback scenarios（PC・大耀×鬼将） ----
-const pc = VIEWPORTS[0]
-const oni = CASES[0]
-for (const [name, opts] of [['reduced', { reduced: true }], ['noaudio', { noAudio: true }], ['mute', { mute: true }]]) {
-  for (const base of BASES) {
-    const k = `${name}/${isBefore(base) ? 'before' : 'after'}`
-    if (!want(k)) continue
-    try { out[k] = await run(browser, base, pc, oni, opts); console.log('done', k, 'errors', out[k].errors.length, out[k].finalStatus, out[k].finalScore) } catch (e) { out[k] = { error: String(e).slice(0, 300) }; console.log('FAIL', k, String(e).slice(0, 200)) }
-  }
-}
-await browser.close()
-writeFileSync(`${OUT}/gate-raw.json`, JSON.stringify(out, null, 1))
-console.log('written raw')
+writeFileSync(`${OUT}/runs/${RUN}.json`, JSON.stringify(result))
+console.log('done', RUN, result.error ? 'ERROR ' + result.error : `errors ${result.errors.length}`)

@@ -1,7 +1,22 @@
 // 決定257 FAST GATE の集計（gate-raw.json → gate.json／gate.md）。計測専用・runtime に含めない
-import { readFileSync, writeFileSync } from 'node:fs'
+import { readFileSync, writeFileSync, readdirSync } from 'node:fs'
 const OUT = process.env.D257_OUT ?? 'docs/evidence/decision257'
-const raw = JSON.parse(readFileSync(`${OUT}/gate-raw.json`, 'utf8'))
+// 決定257 再開：runs/<name>.json（1 run ＝ 1 プロセス）を読み、旧形式のキーへ並べ直す
+const raw = {}
+const lockrepRuns = { before: [], after: [] }
+for (const f of readdirSync(`${OUT}/runs`).filter((f) => f.endsWith('.json'))) {
+  const name = f.replace(/\.json$/, '')
+  const r = JSON.parse(readFileSync(`${OUT}/runs/${f}`, 'utf8'))
+  const p = name.split('~')
+  if (p[0] === 'lock') raw[`lock/${p[1]}/${p[2]}/${p[3]}`] = r
+  else if (p[0] === 'lockrep') {
+    const P = r.probe
+    const b = P?.se.find((s) => s.name === 'burst_ready')
+    const rel = b ? P.lock.find((l) => l.perf > b.perf + 50 && l.n > 0) : null
+    lockrepRuns[p[2]].push({ i: Number(p[1]), lockReleaseMs: rel ? Math.round(rel.perf - b.perf) : null, errors: r.errors?.length ?? null, error: r.error ?? null })
+  } else raw[`${p[0]}/${p[1]}`] = r
+}
+raw.lockrep = lockrepRuns
 const NEW = new Set(['burst_rise', 'enemy_rise'])
 const ms = (s) => Math.round(s * 1000)
 
@@ -54,7 +69,8 @@ function analyze(r) {
   return {
     seTotal: se.length,
     newSe: { burst_rise: se.filter((s) => s.name === 'burst_rise').length, enemy_rise: se.filter((s) => s.name === 'enemy_rise').length },
-    existingSeq: se.filter((s) => !NEW.has(s.name)).map((s) => `${s.name}@${s.rate}+${s.delayMs}`),
+    // 戦闘 mount 時の開幕 card_draw は wav のロード待ち（>400ms で鳴らさない＝決定233 以前からの既存ロジック）で有無が揺れるため比較から外す
+    existingSeq: se.filter((s, i) => !NEW.has(s.name) && !(s.name === 'card_draw' && se.findIndex((x) => x.name === 'resonance_gain' && Math.abs(x.rate - 0.8) < 1e-6) > i)).map((s) => `${s.name}@${s.rate}+${s.delayMs}`),
     bursts, ultimates, duckDips: dips, jingleFades,
     finalBgmGain: P.bgmGainNow, hasBgmGain: P.hasBgmGain, ctxState: P.ctxState,
     duplicates: dup,
@@ -64,7 +80,7 @@ function analyze(r) {
 }
 
 const res = {}
-for (const [k, r] of Object.entries(raw)) if (k !== 'lockrep') res[k] = { error: r.error ?? null, errors: r.errors ?? [], finalStatus: r.finalStatus, finalScore: r.finalScore, hScroll: (r.rounds ?? []).some((x) => x.before?.hScroll || x.afterPlay?.hScroll || x.afterEnemy?.hScroll), a: analyze(r), retry: r.retry ? { gainNow: r.retry.gainNow, minAfter: r.retry.samplesAfter.length ? Math.min(...r.retry.samplesAfter.map((g) => g.v)) : null, round: r.retry.round } : null, volumeProbe: r.volumeProbe ?? null }
+for (const [k, r] of Object.entries(raw)) if (k !== 'lockrep') res[k] = { intents: (r.rounds ?? []).map((x) => x.before?.intentText ?? null), error: r.error ?? null, errors: r.errors ?? [], finalStatus: r.finalStatus, finalScore: r.finalScore, hScroll: (r.rounds ?? []).some((x) => x.before?.hScroll || x.afterPlay?.hScroll || x.afterEnemy?.hScroll), a: analyze(r), retry: r.retry ? { gainNow: r.retry.gainNow, minAfter: r.retry.samplesAfter.length ? Math.min(...r.retry.samplesAfter.map((g) => g.v)) : null, round: r.retry.round } : null, volumeProbe: r.volumeProbe ?? null }
 
 // ---- METRIC LOCK・SE 列・Entry・ロック時間・箱の Before/After 比較 ----
 const lock = []

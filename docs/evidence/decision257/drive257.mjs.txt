@@ -1,0 +1,35 @@
+// 決定257 Fast Gate ドライバ：1 run ＝ 1 プロセス。各 run の直前に sim.lock 不在・空きメモリ ≥1,200MB を確認し、
+// browser.lock を作ってから gate257.mjs --run <name> を起動、終了後に browser.lock を削除する。済みの run（runs/<name>.json）は飛ばす
+import { spawnSync } from 'node:child_process'
+import { existsSync, writeFileSync, rmSync, appendFileSync } from 'node:fs'
+import { freemem } from 'node:os'
+const OUT = 'docs/evidence/decision257'
+const LOCKS = 'C:/Users/kimi1/AppData/Local/Temp/sevengods-locks'
+const LOG = `${OUT}/drive.log.txt`
+const log = (m) => { const line = `${new Date().toISOString()} ${m}`; console.log(line); appendFileSync(LOG, line + '\n') }
+const sleep = (ms) => new Promise((r) => setTimeout(r, ms))
+const only = process.argv.slice(2)
+const all = spawnSync(process.execPath, [`${OUT}/gate257.mjs`], { encoding: 'utf8' }).stdout.trim().split('\n')
+const names = only.length ? all.filter((n) => only.some((o) => n.startsWith(o))) : all
+const failed = []
+async function runOne(name) {
+  if (existsSync(`${OUT}/runs/${name}.json`)) return
+  let waited = 0
+  for (;;) {
+    const sim = existsSync(`${LOCKS}/sim.lock`)
+    const free = Math.round(freemem() / 1048576)
+    if (!sim) break // 決定257 再開（CEO 指示）：メモリ待機は撤廃・直列 1 run のみ
+    if (waited >= 5) { log(`sim.lock still present after 5 min for ${name} - treat as stale only if older than 10 min`); const st = (await import('node:fs')).statSync(`${LOCKS}/sim.lock`, { throwIfNoEntry: false }); if (st && Date.now() - st.mtimeMs > 600000) break; return }
+    log(`wait ${name} sim=${sim} free=${free}MB`)
+    await sleep(60000)
+    waited++
+  }
+  writeFileSync(`${LOCKS}/browser.lock`, `start=${new Date().toISOString()} purpose=d257 fast gate run ${name} (playwright 1 context)\n`)
+  const t = Date.now()
+  const r = spawnSync(process.execPath, [`${OUT}/gate257.mjs`, '--run', name], { encoding: 'utf8', timeout: 8 * 60000 })
+  rmSync(`${LOCKS}/browser.lock`, { force: true })
+  log(`${name} rc=${r.status} ${Math.round((Date.now() - t) / 1000)}s free=${Math.round(freemem() / 1048576)}MB ${(r.stdout || '').trim().split('\n').pop()} ${(r.stderr || '').slice(0, 200)}`)
+}
+for (const name of names) { await runOne(name); if (!existsSync(`${OUT}/runs/${name}.json`)) { failed.push(name); log(`UNMEASURED ${name}`) } }
+for (const name of failed) { log(`RETRY ${name}`); await runOne(name); if (!existsSync(`${OUT}/runs/${name}.json`)) log(`UNMEASURED-FINAL ${name}`) }
+log('ALL DONE')
