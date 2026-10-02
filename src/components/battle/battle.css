@@ -7225,6 +7225,201 @@ body.battle-viewport .battle-main > .battle-callout {
 }
 
 /* ============================================================
+   決定261（候補）対峙構図 v2 Narrow Pilot（docs/BATTLE_CHARACTER_COMPOSITION_V2_PREFLIGHT.md §6・
+   docs/DECISION261_COMPOSITION_V2_PILOT.md）
+   ------------------------------------------------------------
+   「神 vs 敵」を戦場の視覚的主役にする（Enemy ≈ God ＞ OTOMO）。CSS のみ・DOM／文言／数値／画像は不変。
+   ・P-1 PC（≥900px かつ ≤720px 高）：名札を立ち絵の「横」へ（panel を 2 列 grid）。敵は［名札｜舞台］、
+     神は［舞台｜名札］＝2 体の舞台がアリーナの中央で隣り合う
+   ・P-2 PC：舞台の箱そのもの（着弾レイヤーの基準）を列の内側の端へ寄せる＝着弾中心は絵と一緒に動く
+     （絵だけを箱の中で寄せると、着弾中心＝箱の中央が絵から外れるため。決定229 の不変条件）
+   ・S-1 SP：決定229 v2 の床幅の式の「形」はそのまま、OTOMO を床から外して共鳴札の直下へ。床を敵と神の 2 体で使う
+   ・O-1 OTOMO を小さく（PC ×0.6・SP は basis ×0.52＝面積 ≤0.3%。相棒＝補助役）
+   ・F-1 敵の必殺カットイン（決定252）の絵を HUD（決定229 v2／247）と同じ規則で左右反転＝神の方を向く
+   触れないもの：`.enemy-avatar` の scale／--atk-x（決定247）・filter／translate／足元環（決定240）、
+   `.player-avatar-wrap`／`.enemy-reaction-idle` の transform（決定249）、カットインの位置・timing（決定250／252）、
+   入口（決定254）、名札・カードの文字の大きさ。reduce の @media はここに書かない（決定232 の「末尾の reduce」前提）
+   ============================================================ */
+
+/* F-1：独立した scale プロパティ＝Ken Burns の transform（scale 1→1.06＋pan 2%）と合成され、pan が鏡像になるだけ。
+   値は -1 1 と同値の百分率表記（computed は「-1 1」）。決定249 の順序 test（useReactionLanguage.test.ts）が
+   「最後の『scale: -1 1;』＝決定247 の反転ブロック」を目印にしているため、目印を増やさない */
+.enemy-cutin-image {
+  scale: -100% 100%;
+}
+
+/* ---- PC 共通（≥900px）：P-2 近接＋O-1 ---- */
+@media (min-width: 900px) {
+  body.battle-viewport .battle-main {
+    /* 神の箱＝敵の箱 × 0.9（旧 0.82）。名札が上にある PC（>720px 高）の箱の上限 */
+    --comp-god-ratio: 0.9;
+    --comp-enemy-max: 340px;
+    --comp-god-max: 306px;
+  }
+
+  /* 舞台の箱を「絵の大きさ」に縮め、敵は列の右端・神は列の左端へ（中央で向かい合う） */
+  body.battle-viewport .enemy-stage {
+    align-self: flex-end;
+    width: min(100%, var(--comp-enemy-max));
+  }
+
+  body.battle-viewport .player-stage {
+    align-self: flex-start;
+    width: min(100%, var(--comp-god-max));
+  }
+
+  /* 吹き出しは寄せた敵の頭上に付いていく（名札が上にある PC。P-1 では下で grid の位置に置き直す） */
+  body.battle-viewport .enemy-speech-bubble {
+    align-self: flex-end;
+  }
+
+  body.battle-viewport .enemy-avatar {
+    max-width: none;
+  }
+
+  body.battle-viewport .player-avatar {
+    max-width: none;
+    max-height: none;
+  }
+
+  /* O-1：OTOMO は 0.6 倍（旧 clamp(56px, 14vh, 128px)） */
+  body.battle-viewport .portrait img {
+    height: min(100%, clamp(36px, 8.5vh, 76px));
+  }
+}
+
+/* ---- P-1 PC 低い画面（≥900px かつ ≤720px 高）：名札を立ち絵の横へ ---- */
+@media (min-width: 900px) and (max-height: 720px) {
+  body.battle-viewport .enemy-panel,
+  body.battle-viewport .player-panel {
+    /* 名札列の最小幅（名前・HP・予告が入る幅） */
+    --comp-plate-min: 162px;
+    display: grid;
+    grid-template-rows: auto minmax(0, 1fr);
+    column-gap: 8px;
+    row-gap: 5px;
+    align-items: start;
+  }
+
+  /* 敵の舞台＝敵列の内幅 − 名札列 − 間隔（上限 300px） */
+  body.battle-viewport .enemy-panel {
+    --comp-stage: min(calc(100% - var(--comp-plate-min) - 8px), 300px);
+    grid-template-columns: minmax(0, 1fr) var(--comp-stage);
+  }
+
+  /* 神の舞台＝敵の舞台 × 0.9。神列の 100% から敵列の内幅を逆算する
+     （列比 1.18fr : 1fr・両列の padding＋border＝22px：敵の内幅 ＝ 1.18 ×（神の内幅＋22px）− 22px） */
+  body.battle-viewport .player-panel {
+    --comp-stage: calc(min(calc(118% + 3.96px - var(--comp-plate-min) - 8px), 300px) * var(--comp-god-ratio));
+    grid-template-columns: var(--comp-stage) minmax(0, 1fr);
+  }
+
+  body.battle-viewport .enemy-plate {
+    grid-column: 1;
+    grid-row: 1;
+  }
+
+  body.battle-viewport .enemy-speech-bubble {
+    grid-column: 1;
+    grid-row: 2;
+    align-self: start;
+    justify-self: start;
+    margin-bottom: 0;
+    max-width: 100%;
+  }
+
+  body.battle-viewport .enemy-stage {
+    grid-column: 2;
+    grid-row: 1 / span 2;
+    align-self: stretch;
+    width: auto;
+  }
+
+  body.battle-viewport .player-stage {
+    grid-column: 1;
+    grid-row: 1 / span 2;
+    align-self: stretch;
+    width: auto;
+  }
+
+  body.battle-viewport .player-plate {
+    grid-column: 2;
+    grid-row: 1;
+  }
+}
+
+/* ---- S-1 SP（<900px かつ ≥761px 高）：OTOMO を床から外し、床を敵と神の 2 体で使う ----
+   共鳴札は得意技を持つ神（蒼毘・福永・笑蓮）で 3 段になり、下端がアリーナ上端から ≈157px まで下がる。
+   その直下に OTOMO（basis×0.52）を置いても神の頭（床から 184px）と重ならないのは画面高 ≈757px 以上
+   （実測・決定261 §4）。それより低い SP は下の「S-1 lite」 */
+@media (max-width: 899px) and (min-height: 761px) {
+  /* 決定229 v2 の式の形（後方余白 0.02・前方余白 0.12・間隔 6px・神＝敵×比）は不変。
+     床幅から OTOMO 分（basis × 0.9）を引かなくなった分だけ箱が大きくなる。basis は据え置き */
+  body.battle-viewport .battle-main {
+    --comp-god-ratio: 0.9;
+    --comp-otomo-ratio: 0.52;
+    --d229-otomo: calc(var(--d229-otomo-basis) * var(--comp-otomo-ratio));
+    --d229-floor: calc(100% - 8px);
+    --d229-enemy: min(calc((var(--d229-floor) - 6px) / (0.88 + var(--comp-god-ratio))), 300px);
+    --d229-god: min(calc(var(--d229-enemy) * var(--comp-god-ratio)), 270px);
+    --d229-gap: 6px;
+  }
+
+  body.battle-viewport .enemy-stage {
+    left: calc(4px - var(--d229-enemy) * 0.02);
+  }
+
+  body.battle-viewport .player-stage {
+    left: calc(4px + var(--d229-enemy) * 0.88 + var(--d229-gap));
+  }
+
+  /* OTOMO は共鳴札の直下（神の右上・空き帯の中）に浮かぶ相棒 */
+  body.battle-viewport .god-otomo-portraits {
+    flex: 0 0 auto;
+    align-items: flex-start;
+    margin-top: 6px;
+    margin-right: -8px;
+  }
+
+  body.battle-viewport .portrait {
+    justify-content: flex-start;
+  }
+
+  /* 空き帯の背景（楼閣・灯籠）に小さな相棒が溶けないよう、共鳴札に付く丸い「相棒の札」にする
+     （暗い円＋細い金の縁。床の接地影の代わり）。大きさは絵と同じ（箱は増やさない） */
+  body.battle-viewport .portrait-otomo {
+    border-radius: 50%;
+    background: radial-gradient(circle, #241a3ef0 0%, #0b0d17eb 72%);
+    box-shadow:
+      0 0 0 1px #ffd16680,
+      0 0 10px 1px #c39bff55;
+  }
+}
+
+/* ---- S-1 lite SP（<900px かつ ≤760px 高＝iPhone の Safari 表示域など）----
+   縦が束縛：神の頭は共鳴札（得意技の神で 3 段）の下端までしか上げられず、決定229 v2 の神の箱（390×660 で 147px）が
+   すでにその上限（実測：笑蓮の札の下端と神の頭の差 0px）。神の箱は据え置き、OTOMO は床のまま小さく、
+   空いた床幅（basis × 0.38）と間隔の増分を敵の箱へ回す。式：神の右端＝8 + 0.88×敵 + 6 + 神 ≦ 100% − 8 − OTOMO − 6 */
+@media (max-width: 899px) and (max-height: 760px) {
+  body.battle-viewport .battle-main {
+    --comp-otomo-ratio: 0.52;
+    --d229-otomo: calc(var(--d229-otomo-basis) * var(--comp-otomo-ratio));
+    /* 決定229 v2 の神の箱そのもの（＝据え置き。敵の式から切り離して明示する） */
+    --d229-god: min(calc((100% - 16px - var(--d229-otomo-basis) * 0.9 - 6px) / 1.68 * 0.8), 240px);
+    --d229-enemy: min(calc((100% - 28px - var(--d229-otomo-basis) * var(--comp-otomo-ratio) - var(--d229-god)) / 0.88), 300px);
+    --d229-gap: 6px;
+  }
+}
+
+/* SP の低い画面：吹き出しは非表示（≤700px 高）なので、敵の頭の上限は名札の下（124px → 84px）。
+   神の上限（124px）は据え置き（共鳴札の下端が神の列の上にあるため） */
+@media (max-width: 899px) and (max-height: 700px) {
+  body.battle-viewport .enemy-stage {
+    max-height: calc(100% - 84px);
+  }
+}
+
+/* ============================================================
    決定254 Game Entry「降臨の間」Pilot（docs/GAME_ENTRY_IMMERSION_PREFLIGHT.md §4〜§7・C3）
    暗転 → 神紋 → 選んだ神の降臨 → 舞台と敵の顕現（対峙）→ HUD 開示。時刻は BossEntrance.tsx の
    BATTLE_ENTRANCE_TIMING と一致させる（Full 2.8s／操作 2.4s・Short 1.5s／1.15s・reduced 0.9s／0.72s・skip 0.2s）。
