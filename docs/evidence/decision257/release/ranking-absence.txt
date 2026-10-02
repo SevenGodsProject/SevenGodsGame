@@ -1,0 +1,23 @@
+PASS  ranking backend files (api/, src/server/, tsconfig.api.json): 0
+PASS  ranking client/ticket/leaderboard/identity files: 0
+PASS  Phase 4 ranking scripts/docs: 0
+PASS  DB schema / migration files (*.sql, migrations/): 0
+PASS  Neon / postgres / pglite dependencies: 0
+PASS  lockfile neon/pglite entries: 0
+PASS  src: network calls other than same-origin asset loads (non-test): 0
+info  src: same-origin asset fetch (SE .wav; identical on master): src/components/battle/sound.ts:104
+PASS  src: /api/ URL literals: 0
+PASS  src: ranking env vars (RANKING_*, DATABASE_URL, NEON_, VITE_RANKING) in non-test source: 0
+info  src: same words inside test token lists: src/core/replay/replayBoundary.test.ts:146
+PASS  src: imports of removed ranking modules: 0
+PASS  RULES.ranking.submissionEnabled === false: 1 (expect 1)
+PASS  submissionEnabled: true anywhere in tracked text files: 0
+PASS  dist: "/api/" occurrences: 0
+PASS  dist: neon / postgres / pglite: 0
+PASS  dist: DATABASE_URL / RANKING_ / NEON_: 0
+PASS  dist: fetch( calls other than Vite modulepreload polyfill / SE .wav: 0
+info  dist: benign fetch( = 2 (Vite modulepreload polyfill, SE .wav)
+PASS  dist: api/ranking or /ranking/ paths: 0
+PASS  dist: submissionEnabled:!0 (=true): 0
+info  dist: submissionEnabled:!1 (=false) = 1; word ランキング = 1 (RecordScreen の「ランキングやオンライン通信はありません」文言のみ想定)
+RESULT: PASS (ranking absence)
