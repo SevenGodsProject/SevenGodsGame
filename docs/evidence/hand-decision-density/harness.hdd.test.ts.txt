@@ -1,0 +1,254 @@
+/* Hand Decision Density Audit harness — scratch only (a .txt copy goes to docs/evidence/hand-decision-density/).
+ * Production runtime 538a3ef (src/core unchanged since 9316ce1). src/ never touched. Policies reader/naive/planner = D255 harness
+ * (unchanged). NEW: random (uniform among affordable cards, oracle = naive 天啓 every round) and randomRO (random cards, reader oracle).
+ * Per-decision metrics: hand size, affordable count, effective options (planner value/AP >= 0.7 x best), distinct semantics,
+ * best-vs-naive value gap; per-round draw supply by source; deck coverage. Small & serial (RAM 6GB). */
+import { describe, it } from 'vitest'
+import { mkdirSync, writeFileSync } from 'node:fs'
+import { GODS } from '../../src/core/data/gods'
+import { ENEMIES } from '../../src/core/data/enemies'
+import { getCardDef } from '../../src/core/data/cards'
+import { getRecommendedDeck } from '../../src/core/data/deckBuilder'
+import { RULES } from '../../src/core/data/rules'
+import { DIVINATION_CHOICES } from '../../src/core/data/divination'
+import { applyAction } from '../../src/core/engine/reducer'
+import { enemyActionTotal } from '../../src/core/engine/intent'
+import { sumBuff } from '../../src/core/engine/buffs'
+import { primarySemantic, type CardSemantic } from '../../src/components/battle/cardSemantic'
+import type { CardDef, CardInstance, Difficulty, Effect, EnemyActionDef, EnemyId, GameState, GodId } from '../../src/core/types'
+
+const OUT = process.env.HDD_OUT ?? 'C:/Users/kimi1/SevenGodsGame-d254-rc/docs/evidence/hand-decision-density'
+mkdirSync(OUT, { recursive: true })
+const SEEDS_N = Number(process.env.HDD_SEEDS ?? 40), SEEDS_H = Number(process.env.HDD_SEEDS_H ?? 20)
+
+type Policy = 'reader' | 'naive' | 'planner' | 'random' | 'randomRO'
+const isUlt = (x: EnemyActionDef | null | undefined) => !!x && (x.kind === 'special' || (x.kind === 'multiAttack' && !!x.special))
+const isEnemyDebuff = (e: Effect): e is Extract<Effect, { kind: 'debuff' }> => e.kind === 'debuff' && e.target === 'enemy'
+const eff = (def: CardDef, kind: string, target?: string) => def.effects.filter((e: any) => e.kind === kind && (target ? e.target === target : true)).reduce((s, e: any) => s + (e.amount ?? 0), 0)
+const semOf = (x: CardInstance): CardSemantic => primarySemantic(getCardDef(x.defId).effects) ?? 'STRIKE'
+const dmgOf = (x: CardInstance) => eff(getCardDef(x.defId), 'damage', 'enemy')
+const blockOf = (x: CardInstance) => eff(getCardDef(x.defId), 'block')
+const healOf = (x: CardInstance) => eff(getCardDef(x.defId), 'heal')
+const selfDmgOf = (x: CardInstance) => eff(getCardDef(x.defId), 'damage', 'self')
+const debuffOf = (x: CardInstance) => getCardDef(x.defId).effects.filter(isEnemyDebuff).reduce((s, e) => s + e.amount, 0)
+const debuffRoundsOf = (x: CardInstance) => getCardDef(x.defId).effects.filter(isEnemyDebuff).reduce((s, e) => Math.max(s, e.rounds), 0)
+const costOf = (x: CardInstance) => getCardDef(x.defId).cost + (x.costModifier ?? 0)
+const utilOf = (x: CardInstance) => getCardDef(x.defId).effects.reduce((s, e: any) => {
+  if (e.kind === 'draw' || e.kind === 'gainAp') return s + e.amount * 4
+  if (e.kind === 'resonance') return s + e.amount * 2.5
+  if ((e.kind === 'buff' && e.target === 'self') || (e.kind === 'debuff' && e.target === 'enemy')) return s + e.amount * e.rounds
+  return s
+}, 0)
+const incomingOf = (s: GameState) => (s.enemy.intent ? enemyActionTotal(s.enemy.intent) : 0)
+const effIncoming = (s: GameState) => Math.max(0, incomingOf(s) + sumBuff(s.enemy.buffs, 'atk'))
+const projectedHp = (s: GameState) => s.player.hp - Math.max(0, effIncoming(s) - s.player.block)
+function bonusDmgIf(state: GameState, x: CardInstance): number {
+  const def = getCardDef(x.defId); if (!def.bonus) return 0
+  const extra = def.bonus.effects.filter((e: any) => e.kind === 'damage' && e.target === 'enemy').reduce((s, e: any) => s + e.amount, 0)
+  if (extra === 0) return 0
+  const inc = incomingOf(state)
+  switch (def.bonus.when) {
+    case 'combo': return state.cardsPlayedThisRound >= 1 ? extra : 0
+    case 'charged': return state.resonance.value >= RULES.cardBonus.chargedThreshold ? extra : 0
+    case 'enemyBig': return inc >= RULES.cardBonus.enemyBigThreshold ? extra : 0
+    case 'lowHp': return state.player.hp <= Math.floor(state.player.maxHp * 0.5) ? extra : 0
+    case 'blocked': return inc > 0 && state.player.block + blockOf(x) >= inc ? extra : 0
+  }
+  return 0
+}
+const totalDmg = (s: GameState, x: CardInstance) => dmgOf(x) + bonusDmgIf(s, x) + (dmgOf(x) > 0 ? Math.max(0, sumBuff(s.player.buffs, 'atk')) : 0)
+function maxDmgNow(state: GameState, affordable: CardInstance[]): number {
+  const dmgCards = affordable.filter((x) => dmgOf(x) > 0).sort((p, q) => totalDmg(state, q) / costOf(q) - totalDmg(state, p) / costOf(p))
+  let ap = state.ap.current, sum = 0
+  for (const x of dmgCards) if (costOf(x) <= ap) { ap -= costOf(x); sum += totalDmg(state, x) }
+  return sum
+}
+const canKillNow = (state: GameState, affordable: CardInstance[]) => maxDmgNow(state, affordable) >= state.enemy.hp + state.enemy.block
+function upcomingUltimates(state: GameState): number { const def = ENEMIES.find((e) => e.id === state.enemy.defId)!; let n = 0; for (let r = state.round + 1; r <= RULES.totalRounds; r++) if (isUlt(def.actions[r - 1])) n++; return n }
+function futureIncoming(state: GameState, r: number): number {
+  const def = ENEMIES.find((e) => e.id === state.enemy.defId)!
+  const raw = enemyActionTotal(def.actions[r - 1]), rawNow = enemyActionTotal(def.actions[state.round - 1])
+  const ratio = rawNow > 0 && state.enemy.intent ? incomingOf(state) / rawNow : 1
+  const k = r - state.round
+  const debuff = state.enemy.buffs.filter((b: any) => b.stat === 'atk' && b.amount < 0 && ((b.remainingRounds ?? b.rounds ?? 1) > k)).reduce((s: number, b: any) => s + b.amount, 0)
+  return Math.max(0, Math.round(raw * ratio) + debuff)
+}
+function cardValue(state: GameState, x: CardInstance): number {
+  const inc = effIncoming(state); const d = totalDmg(state, x)
+  const b = Math.min(blockOf(x), Math.max(0, inc - state.player.block)); const h = Math.min(healOf(x), state.player.maxHp - state.player.hp)
+  return d + b + h * 0.8 + utilOf(x) * 0.5
+}
+type Ctx = { unblockedNow: number; pressure: number; hpAfterNow: number }
+function plannerCtx(state: GameState): Ctx {
+  const inc = effIncoming(state); const unblockedNow = Math.max(0, inc - state.player.block); const hpAfterNow = state.player.hp - unblockedNow
+  let future = 0; for (let r = state.round + 1; r <= Math.min(RULES.totalRounds, state.round + 2); r++) future += futureIncoming(state, r)
+  const hpHorizon = hpAfterNow - future
+  const pressure = hpAfterNow <= 0 ? 3 : hpHorizon <= 0 ? 1.6 : hpHorizon < state.player.maxHp * 0.35 ? 1.2 : 0.6
+  return { unblockedNow, pressure, hpAfterNow }
+}
+function plannerValue(state: GameState, x: CardInstance, ctx: Ctx): { v: number; def: number } {
+  const dmg = totalDmg(state, x); const killable = state.enemy.hp + state.enemy.block
+  let v = Math.min(dmg, killable) + (dmg >= killable && dmg > 0 ? 15 : 0)
+  let def = Math.min(blockOf(x), ctx.unblockedNow)
+  const db = debuffOf(x), dr = debuffRoundsOf(x)
+  if (db > 0) for (let k = 0; k < dr; k++) { const r = state.round + k; if (r > RULES.totalRounds) break; const target = k === 0 ? ctx.unblockedNow : futureIncoming(state, r); def += Math.min(db, Math.max(0, target)) * (k === 0 ? 1 : 0.9) }
+  const h = Math.min(healOf(x), state.player.maxHp - state.player.hp); def += h * (ctx.hpAfterNow < state.player.maxHp * 0.5 ? 1.0 : 0.6)
+  v += utilOf(x) * 0.5 - selfDmgOf(x) * ctx.pressure
+  return { v: v + def * ctx.pressure, def }
+}
+// seeded PRNG for random policy (deterministic per game)
+function mulberry32(a: number) { return () => { a |= 0; a = (a + 0x6d2b79f5) | 0; let t = Math.imul(a ^ (a >>> 15), 1 | a); t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t; return ((t ^ (t >>> 14)) >>> 0) / 4294967296 } }
+
+function pickReader(state: GameState, policy: Policy, affordable: CardInstance[]): CardInstance | null {
+  if (policy === 'naive') return affordable[0]
+  const inc = effIncoming(state), hpAfter = projectedHp(state), lethal = hpAfter <= 0, dangerous = hpAfter < state.player.maxHp * 0.35, guarded = state.player.block >= inc
+  const byDmg = (arr: CardInstance[]) => arr.filter((x) => dmgOf(x) > 0).sort((p, q) => totalDmg(state, q) / costOf(q) - totalDmg(state, p) / costOf(p))
+  const bestBlock = () => affordable.filter((x) => blockOf(x) > 0).sort((p, q) => blockOf(q) - blockOf(p))[0]
+  const bestDebuff = () => affordable.filter((x) => debuffOf(x) > 0).sort((p, q) => debuffOf(q) * debuffRoundsOf(q) - debuffOf(p) * debuffRoundsOf(p))[0]
+  const bestHeal = () => affordable.filter((x) => healOf(x) > 0).sort((p, q) => healOf(q) - healOf(p))[0]
+  const bestUtil = () => affordable.filter((x) => utilOf(x) > 0 && dmgOf(x) === 0 && blockOf(x) === 0 && healOf(x) === 0).sort((p, q) => utilOf(q) / costOf(q) - utilOf(p) / costOf(p))[0]
+  const free = affordable.find((x) => { const def = getCardDef(x.defId); return def.effects.some((e: any) => e.kind === 'gainAp' && e.amount >= def.cost) }); if (free) return free
+  if (canKillNow(state, affordable)) { const d = byDmg(affordable)[0]; if (d) return d }
+  if ((lethal || dangerous) && !guarded) { const b = bestBlock(); if (b) return b; const db = bestDebuff(); if (db) return db; const h = bestHeal(); if (h) return h }
+  if (lethal) { const h = bestHeal(); if (h) return h }
+  const safe = affordable.filter((x) => selfDmgOf(x) === 0 || state.player.hp - selfDmgOf(x) - Math.max(0, inc - state.player.block) > 0)
+  const d = byDmg(safe)[0]; if (d) return d
+  const u = bestUtil(); if (u) return u
+  const h = bestHeal(); if (h && state.player.hp < state.player.maxHp * 0.7) return h
+  const b = bestBlock(); if (b && !guarded && inc > 0) return b
+  return null
+}
+function pickPlanner(state: GameState, affordable: CardInstance[]): CardInstance | null {
+  const free = affordable.find((x) => { const def = getCardDef(x.defId); return def.effects.some((e: any) => e.kind === 'gainAp' && e.amount >= def.cost) }); if (free) return free
+  if (canKillNow(state, affordable)) { const d = affordable.filter((x) => dmgOf(x) > 0).sort((p, q) => totalDmg(state, q) / costOf(q) - totalDmg(state, p) / costOf(p))[0]; if (d) return d }
+  const ctx = plannerCtx(state)
+  const scored = affordable.map((x) => ({ x, ...plannerValue(state, x, ctx), c: costOf(x) }))
+  if (ctx.hpAfterNow <= 0) { const saving = scored.filter((s) => s.def > 0).sort((p, q) => q.def - p.def || q.v / q.c - p.v / p.c); if (saving.length) return saving[0].x }
+  scored.sort((p, q) => q.v / q.c - p.v / p.c)
+  return scored[0].v <= 0 ? null : scored[0].x
+}
+const guideAp = () => DIVINATION_CHOICES[1].effects.filter((e): e is Extract<Effect, { kind: 'gainAp' }> => e.kind === 'gainAp').reduce((s, e) => s + e.amount, 0)
+const guideDraw = () => DIVINATION_CHOICES[1].effects.filter((e): e is Extract<Effect, { kind: 'draw' }> => e.kind === 'draw').reduce((s, e) => s + e.amount, 0)
+function oracleEv(state: GameState) {
+  const inc = effIncoming(state), rawInc = incomingOf(state)
+  const guardGain = Math.max(RULES.divination.guardMin, Math.floor(rawInc * RULES.divination.guardRatio))
+  const hpAfter = projectedHp(state), unblocked = Math.max(0, inc - state.player.block), saved = Math.min(guardGain, unblocked), lowHp = state.player.hp <= state.player.maxHp * 0.35
+  const guard = hpAfter <= 0 && saved > 0 && hpAfter + saved > 0 ? 1000 : saved * (lowHp ? 2 : 1)
+  const strike = state.enemy.hp + state.enemy.block <= 4 ? 1000 : 4 + (state.round >= 5 ? 1 : 0)
+  const ap = state.ap.current + guideAp(); const newly = state.hand.filter((x) => costOf(x) > state.ap.current && costOf(x) <= ap)
+  let best = 0; for (const x of newly) { const v = cardValue(state, x); if (v > best) best = v }
+  const drawEv = guideDraw() * (ap - (newly.length ? Math.min(...newly.map(costOf)) : 0) >= 1 ? 2.5 : 1.0)
+  return { guard, guide: best + drawEv, strike }
+}
+function pickOracle(state: GameState, policy: Policy): number {
+  if (state.divination.remaining <= 0 || state.divination.usedThisRound) return -1
+  if (policy === 'naive' || policy === 'random') return 2
+  const inc = effIncoming(state), hpAfter = projectedHp(state), lethal = hpAfter <= 0, dangerous = hpAfter < state.player.maxHp * 0.35, roundsLeft = RULES.totalRounds - state.round + 1
+  if (state.enemy.hp + state.enemy.block <= 4) return 2
+  if (policy === 'planner') {
+    const ev = oracleEv(state); const ult = upcomingUltimates(state)
+    const mustHold = state.divination.remaining <= ult && !lethal && !dangerous && roundsLeft > state.divination.remaining
+    const dump = roundsLeft <= state.divination.remaining
+    const best = Math.max(ev.guard, ev.guide, ev.strike); const choice = best === ev.guard ? 0 : best === ev.guide ? 1 : 2
+    if (best >= 1000) return choice; if (mustHold) return -1; if (dump) return choice; if (best >= 8) return choice
+    if ((lethal || dangerous) && inc > 0 && ev.guard > 0) return 0
+    return -1
+  }
+  if (lethal && inc > 0) return 0
+  if (state.divination.remaining >= roundsLeft) return dangerous && inc > 0 ? 0 : 2
+  if (dangerous && inc > 0) return 0
+  if (roundsLeft <= state.divination.remaining) return inc >= 10 && state.player.block < inc ? 0 : 2
+  return -1
+}
+
+type RoundStat = { r: number; handStart: number; ap: number; affordableFirst: number; effectiveFirst: number; semsFirst: number; gapFirst: number; decisions: number; forced: number; wide: number; drawRound: number; drawCard: number; drawGuide: number; drawBurst: number; seenCum: number; ult: boolean; dmgTaken: number; blockEnd: number }
+type Rec = { status: string; round: number; rounds: RoundStat[]; ultSurvived: boolean | null; ultDmg: number | null; deckDistinct: number }
+
+function play(godId: GodId, enemyId: EnemyId, diff: Difficulty, policy: Policy, seed: number): Rec {
+  const deck = getRecommendedDeck(godId)
+  let { state } = applyAction(null, { type: 'START_GAME', seed: `p254-${seed}`, godId, enemyId, deck, difficulty: diff } as any)
+  const rnd = mulberry32(seed * 7919 + godId.length * 131 + enemyId.length * 17 + 1)
+  const seen = new Set<string>(); for (const c of state.hand) seen.add(c.defId)
+  const deckDistinct = new Set(deck).size
+  const rounds: RoundStat[] = []
+  let ultSurvived: boolean | null = null, ultDmg: number | null = null
+  let guard = 0
+  while (state.status === 'playing' && guard < 600) {
+    guard++
+    const r = state.round; const ult = isUlt(state.enemy.intent)
+    const rs: RoundStat = { r, handStart: state.hand.length, ap: state.ap.current, affordableFirst: 0, effectiveFirst: 0, semsFirst: 0, gapFirst: 0, decisions: 0, forced: 0, wide: 0, drawRound: 0, drawCard: 0, drawGuide: 0, drawBurst: 0, seenCum: 0, ult, dmgTaken: 0, blockEnd: 0 }
+    let first = true, inner = 0
+    while (state.status === 'playing' && inner < 60) {
+      inner++
+      const affordable = state.hand.filter((x) => costOf(x) <= state.ap.current)
+      if (affordable.length > 0) {
+        // decision metrics (planner valuation as the yardstick, independent of the acting policy)
+        const ctx = plannerCtx(state)
+        const scored = affordable.map((x) => ({ x, s: plannerValue(state, x, ctx).v / costOf(x) }))
+        const best = Math.max(...scored.map((s) => s.s)); const effective = best > 0 ? scored.filter((s) => s.s >= 0.7 * best).length : affordable.length
+        const naiveScore = scored[0].s
+        rs.decisions++; if (effective <= 1) rs.forced++; if (effective >= 3) rs.wide++
+        if (first) { rs.affordableFirst = affordable.length; rs.effectiveFirst = effective; rs.semsFirst = new Set(affordable.map(semOf)).size; rs.gapFirst = Math.max(0, best - naiveScore); first = false }
+        let card: CardInstance | null
+        if (policy === 'random' || policy === 'randomRO') card = affordable[Math.floor(rnd() * affordable.length)]
+        else if (policy === 'planner') card = pickPlanner(state, affordable)
+        else card = pickReader(state, policy, affordable)
+        if (card) {
+          const res = applyAction(state, { type: 'PLAY_CARD', uid: card.uid })
+          let burst = false
+          for (const e of res.events) { if (e.t === 'RESONANCE_BURST') burst = true; else if (e.t === 'CARD_DRAWN') { seen.add(e.defId); if (burst) rs.drawBurst++; else rs.drawCard++ } }
+          state = res.state; continue
+        }
+      } else if (first) { rs.affordableFirst = 0; rs.effectiveFirst = 0; first = false }
+      const o = pickOracle(state, policy === 'randomRO' ? 'reader' : policy)
+      if (o >= 0) { const res = applyAction(state, { type: 'USE_DIVINATION', choiceIndex: o }); for (const e of res.events) if (e.t === 'CARD_DRAWN') { seen.add(e.defId); rs.drawGuide++ }; state = res.state; continue }
+      break
+    }
+    rs.seenCum = seen.size
+    rs.blockEnd = state.player.block
+    if (state.status !== 'playing') { rounds.push(rs); break }
+    const hpBefore = state.player.hp
+    const res = applyAction(state, { type: 'END_ROUND' })
+    for (const e of res.events) if (e.t === 'CARD_DRAWN') { seen.add(e.defId); rs.drawRound++ }
+    state = res.state
+    rs.dmgTaken = Math.max(0, hpBefore - state.player.hp)
+    if (ult && ultSurvived === null) { ultSurvived = state.status !== 'lost'; ultDmg = rs.dmgTaken }
+    rounds.push(rs)
+  }
+  return { status: state.status, round: state.round, rounds, ultSurvived, ultDmg, deckDistinct }
+}
+
+const mean = (xs: number[]) => (xs.length ? xs.reduce((p, q) => p + q, 0) / xs.length : 0)
+function aggregate(recs: Rec[]) {
+  const n = recs.length
+  const byR: any[] = []
+  for (let r = 1; r <= 7; r++) {
+    const rs = recs.flatMap((x) => x.rounds.filter((y) => y.r === r))
+    if (!rs.length) { byR.push(null); continue }
+    byR.push({ games: rs.length, handStart: mean(rs.map((y) => y.handStart)), ap: mean(rs.map((y) => y.ap)), affordableFirst: mean(rs.map((y) => y.affordableFirst)), effectiveFirst: mean(rs.map((y) => y.effectiveFirst)), semsFirst: mean(rs.map((y) => y.semsFirst)), gapFirst: mean(rs.map((y) => y.gapFirst)), decisions: mean(rs.map((y) => y.decisions)), forcedShare: mean(rs.map((y) => (y.decisions ? y.forced / y.decisions : 0))), wideShare: mean(rs.map((y) => (y.decisions ? y.wide / y.decisions : 0))), drawRound: mean(rs.map((y) => y.drawRound)), drawCard: mean(rs.map((y) => y.drawCard)), drawGuide: mean(rs.map((y) => y.drawGuide)), drawBurst: mean(rs.map((y) => y.drawBurst)), seenCum: mean(rs.map((y) => y.seenCum)), dmgTaken: mean(rs.map((y) => y.dmgTaken)) })
+  }
+  const all = recs.flatMap((x) => x.rounds)
+  return {
+    n, win: mean(recs.map((x) => +(x.status === 'won'))), lost: mean(recs.map((x) => +(x.status === 'lost'))), killR: mean(recs.filter((x) => x.status === 'won').map((x) => x.round)),
+    ultReach: mean(recs.map((x) => +(x.ultSurvived !== null))), ultSurvive: mean(recs.filter((x) => x.ultSurvived !== null).map((x) => +x.ultSurvived!)), ultDmg: mean(recs.filter((x) => x.ultDmg !== null).map((x) => x.ultDmg!)),
+    decisionsPerGame: mean(recs.map((x) => x.rounds.reduce((s, y) => s + y.decisions, 0))), forcedShareAll: mean(all.filter((y) => y.decisions).map((y) => y.forced / y.decisions)), wideShareAll: mean(all.filter((y) => y.decisions).map((y) => y.wide / y.decisions)),
+    deckSeenEnd: mean(recs.map((x) => x.rounds[x.rounds.length - 1].seenCum / x.deckDistinct)), drawsPerGame: { round: mean(recs.map((x) => x.rounds.reduce((s, y) => s + y.drawRound, 0))), card: mean(recs.map((x) => x.rounds.reduce((s, y) => s + y.drawCard, 0))), guide: mean(recs.map((x) => x.rounds.reduce((s, y) => s + y.drawGuide, 0))), burst: mean(recs.map((x) => x.rounds.reduce((s, y) => s + y.drawBurst, 0))) },
+    byR,
+  }
+}
+describe('Hand Decision Density Audit', () => {
+  it('matrix', () => {
+    const t0 = Date.now(); const out: any = {}; let games = 0
+    for (const [face, diff, seeds] of [['normal', 'normal', SEEDS_N], ['hard', 'hard', SEEDS_H]] as [string, Difficulty, number][]) {
+      out[face] = {}
+      for (const policy of ['reader', 'naive', 'planner', 'random', 'randomRO'] as Policy[]) {
+        const recs: Rec[] = []; const byEnemy: Record<string, Rec[]> = {}; const byGod: Record<string, Rec[]> = {}
+        for (const god of GODS) for (const enemy of ENEMIES) for (let i = 0; i < seeds; i++) { const r = play(god.id, enemy.id, diff, policy, i); recs.push(r); (byEnemy[enemy.name] ??= []).push(r); (byGod[god.nameJa] ??= []).push(r); games++ }
+        out[face][policy] = { agg: aggregate(recs), byEnemy: Object.fromEntries(Object.entries(byEnemy).map(([k, v]) => { const a = aggregate(v); return [k, { win: a.win, killR: a.killR, ultSurvive: a.ultSurvive, ultDmg: a.ultDmg, effectiveFirstR4: a.byR[3]?.effectiveFirst, forcedShareAll: a.forcedShareAll }] })), byGod: Object.fromEntries(Object.entries(byGod).map(([k, v]) => { const a = aggregate(v); return [k, { win: a.win, killR: a.killR, decisionsPerGame: a.decisionsPerGame, drawsCard: a.drawsPerGame.card, drawsBurst: a.drawsPerGame.burst, deckSeenEnd: a.deckSeenEnd }] })) }
+      }
+    }
+    const elapsed = (Date.now() - t0) / 1000
+    writeFileSync(`${OUT}/hdd.json`, JSON.stringify({ runtime: '538a3ef', date: new Date().toISOString(), games, elapsed, seeds: { normal: SEEDS_N, hard: SEEDS_H }, rules: { deck: RULES.deck, ap: RULES.ap.perRound, divination: RULES.divination.count }, out }))
+    console.log(`HDD games=${games} elapsed=${elapsed.toFixed(0)}s`)
+  }, 3_600_000)
+})

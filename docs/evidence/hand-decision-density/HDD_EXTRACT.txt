@@ -1,0 +1,45 @@
+games 14700 elapsed 9 rules {"deck":{"size":20,"initialHand":5,"drawPerRound":2,"handLimit":10,"onEmpty":"reshuffle"},"ap":[2,3,4,5,6,7,8],"divination":3}
+=== normal
+reader    win 99.6 lost 0.0 killR 5.72 ultReach 80.9 ultSurv 100.0 ultDmg 7.17 dec/game 14.94 forced 41.3 wide 27.5 deckSeen 88.5 draws r/c/g/b 9.45 2.42 0.00 0.58
+naive     win 83.0 lost 17.0 killR 5.53 ultReach 77.9 ultSurv 88.2 ultDmg 12.47 dec/game 13.32 forced 40.1 wide 28.3 deckSeen 85.4 draws r/c/g/b 8.65 2.68 0.00 0.66
+planner   win 99.9 lost 0.1 killR 5.51 ultReach 78.4 ultSurv 100.0 ultDmg 4.15 dec/game 14.45 forced 45.2 wide 22.7 deckSeen 87.7 draws r/c/g/b 9.02 2.04 0.50 0.58
+random    win 85.4 lost 14.6 killR 5.55 ultReach 77.7 ultSurv 90.0 ultDmg 12.60 dec/game 13.83 forced 41.0 wide 27.7 deckSeen 85.6 draws r/c/g/b 8.74 2.79 0.00 0.73
+randomRO  win 99.6 lost 0.4 killR 5.80 ultReach 81.5 ultSurv 99.7 ultDmg 8.33 dec/game 15.62 forced 41.4 wide 27.8 deckSeen 89.8 draws r/c/g/b 9.59 3.20 0.00 0.91
+=== hard
+reader    win 96.7 lost 0.2 killR 6.17 ultReach 84.7 ultSurv 99.9 ultDmg 6.84 dec/game 17.13 forced 44.4 wide 24.0 deckSeen 92.3 draws r/c/g/b 10.38 2.93 0.00 0.74
+naive     win 44.9 lost 54.8 killR 6.08 ultReach 80.7 ultSurv 60.4 ultDmg 13.54 dec/game 12.52 forced 43.1 wide 24.9 deckSeen 81.7 draws r/c/g/b 7.98 2.51 0.00 0.54
+planner   win 99.2 lost 0.4 killR 5.98 ultReach 83.8 ultSurv 99.8 ultDmg 4.66 dec/game 16.50 forced 47.5 wide 20.0 deckSeen 91.4 draws r/c/g/b 9.95 2.53 0.50 0.74
+random    win 48.0 lost 51.7 killR 6.08 ultReach 81.7 ultSurv 64.4 ultDmg 13.81 dec/game 13.00 forced 43.7 wide 25.0 deckSeen 82.7 draws r/c/g/b 8.17 2.60 0.00 0.56
+randomRO  win 96.6 lost 2.9 killR 6.24 ultReach 84.8 ultSurv 98.1 ultDmg 7.39 dec/game 17.29 forced 44.7 wide 24.5 deckSeen 93.1 draws r/c/g/b 10.39 3.58 0.00 1.08
+--- normal reader by round: R hand AP afford effective sems gap decisions forced wide drawRound drawCard drawGuide drawBurst seenCum dmg
+R1 1960 5.00 2.00 4.54 2.04 3.16 3.00 1.60 42.8 25.3 2.00 0.25 0.00 0.00 4.91 3.66
+R2 1960 5.72 3.00 5.72 2.33 3.68 4.07 1.80 35.8 31.6 2.00 0.29 0.00 0.02 6.87 3.90
+R3 1960 6.31 4.00 6.31 2.31 4.05 5.05 2.76 40.5 29.3 2.00 0.39 0.00 0.11 8.88 5.48
+R4 1960 6.16 5.00 6.16 2.38 3.94 5.82 3.35 35.8 33.4 1.93 0.48 0.00 0.23 10.96 4.73
+R5 1894 5.65 6.00 5.65 2.09 3.76 6.20 3.62 44.7 24.6 1.29 0.72 0.00 0.16 12.84 2.75
+R6 1225 5.00 7.00 5.00 2.11 3.44 4.55 2.76 46.6 21.2 0.42 0.46 0.00 0.09 14.15 0.23
+R7 260 5.06 8.00 5.06 1.51 3.39 5.72 1.49 67.4 7.5 0.00 0.27 0.00 0.03 15.17 0.00
+--- normal random by round
+R1 1960 5.00 2.00 4.54 2.04 3.16 3.00 1.48 43.6 24.3 dmg 2.93
+R2 1960 5.82 3.00 5.82 2.52 3.54 4.04 2.22 39.9 32.0 dmg 2.97
+R3 1960 6.11 4.00 6.11 2.34 3.66 4.68 2.78 40.0 31.3 dmg 7.88
+R4 1947 6.15 5.00 6.15 2.33 3.52 5.94 3.21 36.0 30.6 dmg 7.94
+R5 1650 5.73 6.00 5.73 2.10 3.47 5.99 3.45 44.1 23.5 dmg 3.08
+R6 898 4.81 7.00 4.81 2.12 3.02 4.40 2.50 45.1 21.5 dmg 0.15
+R7 151 4.01 8.00 4.01 1.75 2.74 3.01 1.47 37.9 13.6 dmg 0.00
+--- normal random/randomRO/naive win by enemy
+試練の影 94.6 100.0 93.6 ultSurv rnd 0.0 ultDmg rnd 0.00 | reader ultDmg 0.00
+業斧の鬼将 80.0 100.0 80.7 ultSurv rnd 84.7 ultDmg rnd 16.90 | reader ultDmg 7.37
+藍花の怨霊 75.0 98.9 70.0 ultSurv rnd 83.0 ultDmg rnd 13.59 | reader ultDmg 7.49
+銀甲の機工師 88.6 100.0 85.0 ultSurv rnd 83.2 ultDmg rnd 10.78 | reader ultDmg 6.74
+双牙の魔獣 86.4 99.3 81.1 ultSurv rnd 97.5 ultDmg rnd 5.78 | reader ultDmg 3.17
+蒼海の龍神 82.1 99.3 79.6 ultSurv rnd 88.6 ultDmg rnd 11.26 | reader ultDmg 6.69
+乱舞の道化 91.1 100.0 91.1 ultSurv rnd 99.3 ultDmg rnd 16.94 | reader ultDmg 11.41
+--- normal by god (reader): win killR dec drawsCard drawsBurst deckSeen | random win
+恵比寿 100.0 5.27 12.61 1.41 0.00 79.6 | 86.4
+大耀 99.3 5.74 15.09 1.80 0.00 85.5 | 73.6
+蒼毘 98.2 6.16 14.60 1.97 0.00 90.4 | 98.2
+才華 100.0 5.20 18.17 6.04 3.60 99.6 | 73.9
+寿楽 99.6 5.98 12.81 0.88 0.00 89.6 | 98.9
+福永 100.0 5.91 16.80 3.04 0.46 92.9 | 78.9
+笑蓮 100.0 5.78 14.47 1.83 0.00 81.9 | 87.9
