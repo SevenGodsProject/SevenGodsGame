@@ -162,3 +162,28 @@
 - Q3 両者を音だけで区別できるか：**はい**
 - Q4 BGM の duck や SE がうるさくないか：**はい**
 - 次：Production Release Gate（CEO 承認）
+
+## §10 PRODUCTION LIVE / CLOSED
+
+- Release は **CEO 承認**（Human QA 4/4 PASS 後）。Release Gate／Smoke の判定は **AI 判断**
+- Release Gate PASS（`docs/evidence/decision257/release/RELEASE_GATE.md`）：RC `release/d257-sound-layer-rc`・lineage fast-forward・runtime 9 ファイルのみ・`src/core` 0・tsc 0／oxlint 0／1,303 PASS・JS/CSS md5＝Human QA After・ranking-absence／secret-audit PASS・既存 wav md5 不変
+- push：統合担当が実施（AI の push は権限判定で拒否されたため）。master＝origin/master **`538a3ef`**（`fbc06c9..538a3ef`）
+- Vercel Production deployment **`6809771068`**（sha `538a3ef`・success・2026-10-02T13:42:12Z）
+- 配信：`index-BD0q8Mf-.js` md5 `e6c26c81152c542c1e48711db95c0958`／`index-DDJDc11N.css` md5 `1ac5379697d98f763428d58e668306df`＝RC build／`burst_rise.wav` 200・39,734B・md5 `2c632746…`／`enemy_rise.wav` 200・44,144B・md5 `16b4f1d0…`（RC と一致）
+- **rollback target**：deployment **`6795279150`**（sha `fbc06c9`・runtime `a611270`）
+
+### Production Smoke（`https://seven-gods-game.vercel.app`・Playwright 1 browser／1 run 直列・5 run・対照＝RC dist :4283）— PASS
+
+| 項目 | 結果 |
+|---|---|
+| metric lock（大耀×鬼将 `d257-qa1`・PC・RC dist vs Production） | 22 行 不一致 0・SE 列同一（予約差 ≤11ms）・Entry 間隔 1,252／1,242 |
+| God Strike（4 回：鬼将 PC／SP・道化 PC・Retry run） | `burst_rise` T+450（0.595）・`hit_l4` **1,600**・duck 開始 11〜64ms・最低 0.3429（実効 **0.12**）・復帰完了 2,208〜2,219・復帰後 **1.0** |
+| Enemy Ultimate（4 回） | 鬼将 R4 業斧・断岩：`enemy_rise` +189〜200・道化 R3 乱舞・狂宴：+200／着弾 1,260・duck 最低 0.3429・復帰完了 **1,867**・その後 1.0（道化 PC は +2,691 に次の神の一撃の duck が始まるため window 末の値が 0.343＝別イベント） |
+| 通常カード | duck の谷の数＝一撃＋必殺の数（2＝1＋1）・新 SE の数も一致 |
+| 既存演出 | 決定254 入口・決定252 予告（溜め→必殺の Intent 文言）／敵カットイン・決定249 反応（rl-）・決定250 カットイン動画／バナー：全 run で出現 |
+| Retry | 勝利→報酬スキップ→「同じ構成でもう一度」で R1・BGM gain 1.0・残留 0 |
+| duplicate／orphan | 0／BufferSource 生成＝ended・disconnect＝2×ended |
+| console error／横スクロール | 0／0（5 run） |
+
+### Known（継続）
+§7 の 1〜6 のとおり（iOS で割り込まれた後の resume・経路作成時の切替・iPhone の element volume 無視・ジングル前の pause は即時）。

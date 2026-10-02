@@ -1,0 +1,1189 @@
+{
+ "summary": {
+  "lockRows": 22,
+  "lockMismatches": 0,
+  "consoleErrors": {
+   "lock/taiyo-doukeshi-normal/pc/after": 0,
+   "lock/taiyo-oni-normal/pc/after": 0,
+   "lock/taiyo-oni-normal/pc/before": 0,
+   "lock/taiyo-oni-normal/sp/after": 0,
+   "retry/after": 0
+  },
+  "runErrors": [],
+  "hScroll": [],
+  "afterBursts": [
+   {
+    "k": "lock/taiyo-doukeshi-normal/pc/after",
+    "riseMs": 450,
+    "riseGain": 0.595,
+    "hitL4Ms": 1600,
+    "lockReleaseMs": 1267,
+    "duck": true,
+    "startMs": 64,
+    "minV": 0.3429,
+    "minEffective": 0.12,
+    "minReachedMs": 64,
+    "returnStartMs": 1941,
+    "returnDoneMs": 2208,
+    "valueAfter": 1
+   },
+   {
+    "k": "lock/taiyo-oni-normal/pc/after",
+    "riseMs": 450,
+    "riseGain": 0.595,
+    "hitL4Ms": 1600,
+    "lockReleaseMs": 1331,
+    "duck": true,
+    "startMs": 11,
+    "minV": 0.3429,
+    "minEffective": 0.12,
+    "minReachedMs": 96,
+    "returnStartMs": 1920,
+    "returnDoneMs": 2219,
+    "valueAfter": 1
+   },
+   {
+    "k": "lock/taiyo-oni-normal/sp/after",
+    "riseMs": 450,
+    "riseGain": 0.595,
+    "hitL4Ms": 1600,
+    "lockReleaseMs": 1232,
+    "duck": true,
+    "startMs": 21,
+    "minV": 0.3429,
+    "minEffective": 0.12,
+    "minReachedMs": 64,
+    "returnStartMs": 1909,
+    "returnDoneMs": 2208,
+    "valueAfter": 1
+   },
+   {
+    "k": "retry/after",
+    "riseMs": 450,
+    "riseGain": 0.595,
+    "hitL4Ms": 1600,
+    "lockReleaseMs": 1363,
+    "duck": true,
+    "startMs": 11,
+    "minV": 0.3429,
+    "minEffective": 0.12,
+    "minReachedMs": 192,
+    "returnStartMs": 1909,
+    "returnDoneMs": 2208,
+    "valueAfter": 1
+   }
+  ],
+  "afterUltimates": [
+   {
+    "k": "lock/taiyo-doukeshi-normal/pc/after",
+    "riseMs": 200,
+    "riseGain": 0.6375,
+    "impactsMs": [
+     1260
+    ],
+    "duck": true,
+    "startMs": 11,
+    "minV": 0.3429,
+    "minEffective": 0.12,
+    "minReachedMs": 64,
+    "returnStartMs": 1568,
+    "returnDoneMs": 1867,
+    "valueAfter": 0.3429
+   },
+   {
+    "k": "lock/taiyo-oni-normal/pc/after",
+    "riseMs": 189,
+    "riseGain": 0.6375,
+    "impactsMs": [],
+    "duck": true,
+    "startMs": 11,
+    "minV": 0.3429,
+    "minEffective": 0.12,
+    "minReachedMs": 64,
+    "returnStartMs": 1568,
+    "returnDoneMs": 1867,
+    "valueAfter": 1
+   },
+   {
+    "k": "lock/taiyo-oni-normal/sp/after",
+    "riseMs": 200,
+    "riseGain": 0.6375,
+    "impactsMs": [],
+    "duck": true,
+    "startMs": 11,
+    "minV": 0.3429,
+    "minEffective": 0.12,
+    "minReachedMs": 363,
+    "returnStartMs": 1568,
+    "returnDoneMs": 1867,
+    "valueAfter": 1
+   },
+   {
+    "k": "retry/after",
+    "riseMs": 200,
+    "riseGain": 0.6375,
+    "impactsMs": [],
+    "duck": true,
+    "startMs": 11,
+    "minV": 0.3429,
+    "minEffective": 0.12,
+    "minReachedMs": 64,
+    "returnStartMs": 1568,
+    "returnDoneMs": 1867,
+    "valueAfter": 1
+   }
+  ],
+  "beforeDuckDips": 2,
+  "afterDuckDips": [
+   {
+    "k": "lock/taiyo-doukeshi-normal/pc/after",
+    "dips": 2,
+    "bursts": 1,
+    "ultimates": 1,
+    "newSe": {
+     "burst_rise": 1,
+     "enemy_rise": 1
+    },
+    "jingleFades": 1,
+    "finalBgmGain": 1,
+    "duplicates": 0,
+    "nodes": {
+     "gain": 58,
+     "src": 57,
+     "srcEnded": 57,
+     "disconnect": 114,
+     "mediaSource": 1
+    }
+   },
+   {
+    "k": "lock/taiyo-oni-normal/pc/after",
+    "dips": 2,
+    "bursts": 1,
+    "ultimates": 1,
+    "newSe": {
+     "burst_rise": 1,
+     "enemy_rise": 1
+    },
+    "jingleFades": 1,
+    "finalBgmGain": 1,
+    "duplicates": 0,
+    "nodes": {
+     "gain": 76,
+     "src": 75,
+     "srcEnded": 75,
+     "disconnect": 150,
+     "mediaSource": 1
+    }
+   },
+   {
+    "k": "lock/taiyo-oni-normal/sp/after",
+    "dips": 2,
+    "bursts": 1,
+    "ultimates": 1,
+    "newSe": {
+     "burst_rise": 1,
+     "enemy_rise": 1
+    },
+    "jingleFades": 1,
+    "finalBgmGain": 1,
+    "duplicates": 0,
+    "nodes": {
+     "gain": 76,
+     "src": 75,
+     "srcEnded": 75,
+     "disconnect": 150,
+     "mediaSource": 1
+    }
+   },
+   {
+    "k": "retry/after",
+    "dips": 2,
+    "bursts": 1,
+    "ultimates": 1,
+    "newSe": {
+     "burst_rise": 1,
+     "enemy_rise": 1
+    },
+    "jingleFades": 1,
+    "finalBgmGain": 1,
+    "duplicates": 0,
+    "nodes": {
+     "gain": 76,
+     "src": 75,
+     "srcEnded": 75,
+     "disconnect": 150,
+     "mediaSource": 1
+    }
+   }
+  ],
+  "pairs": [
+   {
+    "id": "lock/taiyo-oni-normal/pc",
+    "existingSeSame": true,
+    "existingSeMaxDelayDiffMs": 11,
+    "existingSeCount": [
+     73,
+     73
+    ],
+    "lockReleaseMs": [
+     [
+      1280
+     ],
+     [
+      1331
+     ]
+    ],
+    "lockReleaseMaxDiff": 51,
+    "hitL4Ms": [
+     [
+      1600
+     ],
+     [
+      1600
+     ]
+    ],
+    "entry": [
+     {
+      "descendMs": 1152,
+      "bossMs": 2404,
+      "descendDelay": 0,
+      "bossDelay": 0,
+      "duckDuringEntry": false
+     },
+     {
+      "descendMs": 1508,
+      "bossMs": 2750,
+      "descendDelay": 0,
+      "bossDelay": 0,
+      "duckDuringEntry": false
+     }
+    ],
+    "entryIntervalMs": [
+     1252,
+     1242
+    ],
+    "entryIntervalDiffMs": 10,
+    "boxDiff": 0,
+    "boxCount": [
+     147,
+     147
+    ]
+   }
+  ],
+  "retry": [
+   {
+    "k": "retry/after",
+    "gainNow": 1,
+    "minAfter": null,
+    "round": "1"
+   }
+  ],
+  "volumeProbe": [
+   {
+    "k": "lock/taiyo-oni-normal/pc/after",
+    "paused": false,
+    "rmsVol1": 0.11872084987514203,
+    "rmsVol035": 0.038985551222845014,
+    "ratio": 0.32837998770936927,
+    "rmsMuted": 0,
+    "ctxState": "running"
+   }
+  ],
+  "lockrep": {
+   "before": [],
+   "after": [],
+   "medianBefore": null,
+   "medianAfter": null,
+   "medianDiff": 0
+  },
+  "fallback": {}
+ },
+ "lock": [
+  {
+   "k": "lock/taiyo-oni-normal/pc",
+   "round": 1,
+   "phase": "before",
+   "same": true
+  },
+  {
+   "k": "lock/taiyo-oni-normal/pc",
+   "round": 1,
+   "phase": "afterPlay",
+   "same": true
+  },
+  {
+   "k": "lock/taiyo-oni-normal/pc",
+   "round": 1,
+   "phase": "afterEnemy",
+   "same": true
+  },
+  {
+   "k": "lock/taiyo-oni-normal/pc",
+   "round": 2,
+   "phase": "before",
+   "same": true
+  },
+  {
+   "k": "lock/taiyo-oni-normal/pc",
+   "round": 2,
+   "phase": "afterPlay",
+   "same": true
+  },
+  {
+   "k": "lock/taiyo-oni-normal/pc",
+   "round": 2,
+   "phase": "afterEnemy",
+   "same": true
+  },
+  {
+   "k": "lock/taiyo-oni-normal/pc",
+   "round": 3,
+   "phase": "before",
+   "same": true
+  },
+  {
+   "k": "lock/taiyo-oni-normal/pc",
+   "round": 3,
+   "phase": "afterPlay",
+   "same": true
+  },
+  {
+   "k": "lock/taiyo-oni-normal/pc",
+   "round": 3,
+   "phase": "afterEnemy",
+   "same": true
+  },
+  {
+   "k": "lock/taiyo-oni-normal/pc",
+   "round": 4,
+   "phase": "before",
+   "same": true
+  },
+  {
+   "k": "lock/taiyo-oni-normal/pc",
+   "round": 4,
+   "phase": "afterPlay",
+   "same": true
+  },
+  {
+   "k": "lock/taiyo-oni-normal/pc",
+   "round": 4,
+   "phase": "afterEnemy",
+   "same": true
+  },
+  {
+   "k": "lock/taiyo-oni-normal/pc",
+   "round": 5,
+   "phase": "before",
+   "same": true
+  },
+  {
+   "k": "lock/taiyo-oni-normal/pc",
+   "round": 5,
+   "phase": "afterPlay",
+   "same": true
+  },
+  {
+   "k": "lock/taiyo-oni-normal/pc",
+   "round": 5,
+   "phase": "afterEnemy",
+   "same": true
+  },
+  {
+   "k": "lock/taiyo-oni-normal/pc",
+   "round": 6,
+   "phase": "before",
+   "same": true
+  },
+  {
+   "k": "lock/taiyo-oni-normal/pc",
+   "round": 6,
+   "phase": "afterPlay",
+   "same": true
+  },
+  {
+   "k": "lock/taiyo-oni-normal/pc",
+   "round": 6,
+   "phase": "afterEnemy",
+   "same": true
+  },
+  {
+   "k": "lock/taiyo-oni-normal/pc",
+   "round": 7,
+   "phase": "before",
+   "same": true
+  },
+  {
+   "k": "lock/taiyo-oni-normal/pc",
+   "round": 7,
+   "phase": "afterPlay",
+   "same": true
+  },
+  {
+   "k": "lock/taiyo-oni-normal/pc",
+   "round": 7,
+   "phase": "afterEnemy",
+   "same": true
+  },
+  {
+   "k": "lock/taiyo-oni-normal/pc",
+   "round": "final",
+   "phase": "final",
+   "same": true,
+   "a": "null null",
+   "b": "null null"
+  }
+ ],
+ "res": {
+  "lock/taiyo-doukeshi-normal/pc/after": {
+   "intents": [
+    "40",
+    "⚠ 手品を仕込んでいる…",
+    "乱舞・狂宴 240",
+    "90",
+    "また何か仕込んでいる…",
+    "また何か仕込んでいる…",
+    "また何か仕込んでいる…"
+   ],
+   "error": null,
+   "errors": [],
+   "finalStatus": null,
+   "finalScore": null,
+   "hScroll": false,
+   "a": {
+    "seTotal": 57,
+    "newSe": {
+     "burst_rise": 1,
+     "enemy_rise": 1
+    },
+    "existingSeq": [
+     "resonance_gain@0.800000011920929+-11",
+     "boss_entrance@1+0",
+     "card_play@1+0",
+     "hit_l1@1+90",
+     "card_draw@1+0",
+     "card_play@1+0",
+     "resonance_gain@1+0",
+     "card_play@0.8500000238418579+0",
+     "self_hit@1+158",
+     "enemy_turn@1+0",
+     "card_draw@1+0",
+     "card_play@1+0",
+     "hit_l2@1+90",
+     "self_hit@1+90",
+     "card_play@1+0",
+     "block@1+0",
+     "resonance_gain@1+0",
+     "card_play@0.8500000238418579+0",
+     "enemy_charge@1+0",
+     "card_draw@1+0",
+     "divination@1+0",
+     "block@1+0",
+     "card_play@1+0",
+     "card_draw@1+0",
+     "card_play@1+0",
+     "block@1+0",
+     "heal@1+0",
+     "card_play@0.8500000238418579+0",
+     "self_hit_heavy@1+1260",
+     "enemy_turn@1+0",
+     "card_draw@1+0",
+     "card_play@1+0",
+     "hit_l4@1+1600",
+     "hit_l4@1+1710",
+     "resonance_gain@1+0",
+     "burst_ready@1+0",
+     "evolve@1+2500",
+     "block@1+0",
+     "card_play@1+0",
+     "hit_l1@1+90",
+     "reward@1.5+240",
+     "card_play@1+0",
+     "resonance_gain@1+0",
+     "heal@1+0",
+     "card_play@0.8500000238418579+0",
+     "self_hit@1+158",
+     "enemy_turn@1+0",
+     "card_draw@1+0",
+     "hit_l1@1+90",
+     "divination@1+0",
+     "card_play@1+0",
+     "card_play@1+0",
+     "hit_l4@1+150",
+     "self_hit@1+150",
+     "victory_sting@1+0"
+    ],
+    "bursts": [
+     {
+      "riseMs": 450,
+      "riseGain": 0.595,
+      "hitL4Ms": 1600,
+      "lockReleaseMs": 1267,
+      "duck": true,
+      "startMs": 64,
+      "minV": 0.3429,
+      "minEffective": 0.12,
+      "minReachedMs": 64,
+      "returnStartMs": 1941,
+      "returnDoneMs": 2208,
+      "valueAfter": 1
+     }
+    ],
+    "ultimates": [
+     {
+      "riseMs": 200,
+      "riseGain": 0.6375,
+      "impactsMs": [
+       1260
+      ],
+      "duck": true,
+      "startMs": 11,
+      "minV": 0.3429,
+      "minEffective": 0.12,
+      "minReachedMs": 64,
+      "returnStartMs": 1568,
+      "returnDoneMs": 1867,
+      "valueAfter": 0.3429
+     }
+    ],
+    "duckDips": 2,
+    "jingleFades": 1,
+    "finalBgmGain": 1,
+    "hasBgmGain": true,
+    "ctxState": "running",
+    "duplicates": 0,
+    "entry": {
+     "descendMs": 1235,
+     "bossMs": 2474,
+     "descendDelay": -11,
+     "bossDelay": 0,
+     "duckDuringEntry": false
+    },
+    "nodes": {
+     "gain": 58,
+     "src": 57,
+     "srcEnded": 57,
+     "disconnect": 114,
+     "mediaSource": 1
+    }
+   },
+   "retry": null,
+   "volumeProbe": null
+  },
+  "lock/taiyo-oni-normal/pc/after": {
+   "intents": [
+    "50",
+    "90",
+    "斧を振りかぶっている…",
+    "業斧・断岩 260",
+    "特大 150",
+    "強打 110",
+    "強打 110"
+   ],
+   "error": null,
+   "errors": [],
+   "finalStatus": null,
+   "finalScore": null,
+   "hScroll": false,
+   "a": {
+    "seTotal": 75,
+    "newSe": {
+     "burst_rise": 1,
+     "enemy_rise": 1
+    },
+    "existingSeq": [
+     "resonance_gain@0.800000011920929+0",
+     "boss_entrance@1+0",
+     "divination@1+0",
+     "card_draw@1+0",
+     "card_play@1+0",
+     "hit_l2@1+90",
+     "card_play@1+0",
+     "hit_l1@1+90",
+     "card_draw@1+0",
+     "card_play@1+0",
+     "resonance_gain@1+0",
+     "card_play@0.8500000238418579+0",
+     "self_hit@1+158",
+     "enemy_turn@1+0",
+     "card_draw@1+0",
+     "card_play@1+0",
+     "card_play@1+0",
+     "card_play@0.8500000238418579+0",
+     "self_hit@1+158",
+     "enemy_turn@1+0",
+     "card_draw@1+0",
+     "card_play@1+0",
+     "block@1+0",
+     "heal@1+0",
+     "card_play@1+0",
+     "resonance_gain@1+0",
+     "block@1+0",
+     "card_play@0.8500000238418579+0",
+     "enemy_charge@1+0",
+     "card_draw@1+0",
+     "divination@1+0",
+     "block@1+0",
+     "card_play@1+0",
+     "block@1+0",
+     "heal@1+0",
+     "card_play@1+0",
+     "hit_l1@1+90",
+     "resonance_gain@1+0",
+     "card_play@1+0",
+     "block@1+-11",
+     "resonance_gain@1+0",
+     "card_play@0.8500000238418579+0",
+     "enemy_turn@1+0",
+     "card_draw@1+0",
+     "card_play@1+0",
+     "hit_l2@1+90",
+     "self_hit@1+90",
+     "reward@1.5+240",
+     "card_play@1+0",
+     "hit_l1@1+90",
+     "reward@1.5+240",
+     "card_play@1+0",
+     "block@1+0",
+     "card_play@0.8500000238418579+0",
+     "self_hit@1+158",
+     "enemy_turn@1+0",
+     "card_draw@1+0",
+     "hit_l1@1+90",
+     "divination@1+0",
+     "card_play@1+0",
+     "hit_l4@1+1600",
+     "resonance_gain@1+0",
+     "burst_ready@1+0",
+     "evolve@1+2500",
+     "card_play@1+0",
+     "hit_l1@1+90",
+     "resonance_gain@1+0",
+     "card_play@1+0",
+     "card_draw@1+0",
+     "card_play@1+0",
+     "hit_l4@1+150",
+     "self_hit@1+150",
+     "victory_sting@1+0"
+    ],
+    "bursts": [
+     {
+      "riseMs": 450,
+      "riseGain": 0.595,
+      "hitL4Ms": 1600,
+      "lockReleaseMs": 1331,
+      "duck": true,
+      "startMs": 11,
+      "minV": 0.3429,
+      "minEffective": 0.12,
+      "minReachedMs": 96,
+      "returnStartMs": 1920,
+      "returnDoneMs": 2219,
+      "valueAfter": 1
+     }
+    ],
+    "ultimates": [
+     {
+      "riseMs": 189,
+      "riseGain": 0.6375,
+      "impactsMs": [],
+      "duck": true,
+      "startMs": 11,
+      "minV": 0.3429,
+      "minEffective": 0.12,
+      "minReachedMs": 64,
+      "returnStartMs": 1568,
+      "returnDoneMs": 1867,
+      "valueAfter": 1
+     }
+    ],
+    "duckDips": 2,
+    "jingleFades": 1,
+    "finalBgmGain": 1,
+    "hasBgmGain": true,
+    "ctxState": "running",
+    "duplicates": 0,
+    "entry": {
+     "descendMs": 1508,
+     "bossMs": 2750,
+     "descendDelay": 0,
+     "bossDelay": 0,
+     "duckDuringEntry": false
+    },
+    "nodes": {
+     "gain": 76,
+     "src": 75,
+     "srcEnded": 75,
+     "disconnect": 150,
+     "mediaSource": 1
+    }
+   },
+   "retry": null,
+   "volumeProbe": {
+    "paused": false,
+    "rmsVol1": 0.11872084987514203,
+    "rmsVol035": 0.038985551222845014,
+    "ratio": 0.32837998770936927,
+    "rmsMuted": 0,
+    "ctxState": "running"
+   }
+  },
+  "lock/taiyo-oni-normal/pc/before": {
+   "intents": [
+    "50",
+    "90",
+    "斧を振りかぶっている…",
+    "業斧・断岩 260",
+    "特大 150",
+    "強打 110",
+    "強打 110"
+   ],
+   "error": null,
+   "errors": [],
+   "finalStatus": null,
+   "finalScore": null,
+   "hScroll": false,
+   "a": {
+    "seTotal": 76,
+    "newSe": {
+     "burst_rise": 1,
+     "enemy_rise": 1
+    },
+    "existingSeq": [
+     "resonance_gain@0.800000011920929+0",
+     "boss_entrance@1+0",
+     "divination@1+0",
+     "card_draw@1+0",
+     "card_play@1+0",
+     "hit_l2@1+90",
+     "card_play@1+0",
+     "hit_l1@1+90",
+     "card_draw@1+0",
+     "card_play@1+0",
+     "resonance_gain@1+0",
+     "card_play@0.8500000238418579+0",
+     "self_hit@1+158",
+     "enemy_turn@1+0",
+     "card_draw@1+0",
+     "card_play@1+0",
+     "card_play@1+0",
+     "card_play@0.8500000238418579+0",
+     "self_hit@1+158",
+     "enemy_turn@1+0",
+     "card_draw@1+0",
+     "card_play@1+0",
+     "block@1+0",
+     "heal@1+0",
+     "card_play@1+0",
+     "resonance_gain@1+0",
+     "block@1+0",
+     "card_play@0.8500000238418579+0",
+     "enemy_charge@1+0",
+     "card_draw@1+0",
+     "divination@1+0",
+     "block@1+0",
+     "card_play@1+0",
+     "block@1+0",
+     "heal@1+0",
+     "card_play@1+0",
+     "hit_l1@1+90",
+     "resonance_gain@1+0",
+     "card_play@1+0",
+     "block@1+0",
+     "resonance_gain@1+0",
+     "card_play@0.8500000238418579+0",
+     "enemy_turn@1+0",
+     "card_draw@1+0",
+     "card_play@1+0",
+     "hit_l2@1+90",
+     "self_hit@1+90",
+     "reward@1.5+240",
+     "card_play@1+0",
+     "hit_l1@1+90",
+     "reward@1.5+240",
+     "card_play@1+0",
+     "block@1+0",
+     "card_play@0.8500000238418579+0",
+     "self_hit@1+158",
+     "enemy_turn@1+0",
+     "card_draw@1+0",
+     "hit_l1@1+90",
+     "divination@1+0",
+     "card_play@1+0",
+     "hit_l4@1+1600",
+     "resonance_gain@1+0",
+     "burst_ready@1+0",
+     "evolve@1+2500",
+     "card_play@1+0",
+     "hit_l1@1+90",
+     "resonance_gain@1+0",
+     "card_play@1+0",
+     "card_draw@1+0",
+     "card_play@1+0",
+     "hit_l4@1+150",
+     "self_hit@1+150",
+     "victory_sting@1+0"
+    ],
+    "bursts": [
+     {
+      "riseMs": 450,
+      "riseGain": 0.595,
+      "hitL4Ms": 1600,
+      "lockReleaseMs": 1280,
+      "duck": true,
+      "startMs": 11,
+      "minV": 0.3429,
+      "minEffective": 0.12,
+      "minReachedMs": 75,
+      "returnStartMs": 1909,
+      "returnDoneMs": 2208,
+      "valueAfter": 1
+     }
+    ],
+    "ultimates": [
+     {
+      "riseMs": 189,
+      "riseGain": 0.6375,
+      "impactsMs": [],
+      "duck": true,
+      "startMs": 235,
+      "minV": 0.3429,
+      "minEffective": 0.12,
+      "minReachedMs": 235,
+      "returnStartMs": 1579,
+      "returnDoneMs": 1867,
+      "valueAfter": 1
+     }
+    ],
+    "duckDips": 2,
+    "jingleFades": 1,
+    "finalBgmGain": 1,
+    "hasBgmGain": true,
+    "ctxState": "running",
+    "duplicates": 0,
+    "entry": {
+     "descendMs": 1152,
+     "bossMs": 2404,
+     "descendDelay": 0,
+     "bossDelay": 0,
+     "duckDuringEntry": false
+    },
+    "nodes": {
+     "gain": 77,
+     "src": 76,
+     "srcEnded": 76,
+     "disconnect": 152,
+     "mediaSource": 1
+    }
+   },
+   "retry": null,
+   "volumeProbe": null
+  },
+  "lock/taiyo-oni-normal/sp/after": {
+   "intents": [
+    "50",
+    "90",
+    "斧を振りかぶっている…",
+    "業斧・断岩 260",
+    "特大 150",
+    "強打 110",
+    "強打 110"
+   ],
+   "error": null,
+   "errors": [],
+   "finalStatus": null,
+   "finalScore": null,
+   "hScroll": false,
+   "a": {
+    "seTotal": 75,
+    "newSe": {
+     "burst_rise": 1,
+     "enemy_rise": 1
+    },
+    "existingSeq": [
+     "resonance_gain@0.800000011920929+-11",
+     "boss_entrance@1+0",
+     "divination@1+0",
+     "card_draw@1+0",
+     "card_play@1+0",
+     "hit_l2@1+90",
+     "card_play@1+0",
+     "hit_l1@1+90",
+     "card_draw@1+0",
+     "card_play@1+0",
+     "resonance_gain@1+0",
+     "card_play@0.8500000238418579+0",
+     "self_hit@1+158",
+     "enemy_turn@1+0",
+     "card_draw@1+0",
+     "card_play@1+0",
+     "card_play@1+0",
+     "card_play@0.8500000238418579+0",
+     "self_hit@1+158",
+     "enemy_turn@1+0",
+     "card_draw@1+0",
+     "card_play@1+0",
+     "block@1+0",
+     "heal@1+0",
+     "card_play@1+0",
+     "resonance_gain@1+0",
+     "block@1+0",
+     "card_play@0.8500000238418579+0",
+     "enemy_charge@1+0",
+     "card_draw@1+0",
+     "divination@1+0",
+     "block@1+0",
+     "card_play@1+0",
+     "block@1+0",
+     "heal@1+0",
+     "card_play@1+0",
+     "hit_l1@1+90",
+     "resonance_gain@1+0",
+     "card_play@1+0",
+     "block@1+0",
+     "resonance_gain@1+0",
+     "card_play@0.8500000238418579+0",
+     "enemy_turn@1+0",
+     "card_draw@1+0",
+     "card_play@1+0",
+     "hit_l2@1+90",
+     "self_hit@1+90",
+     "reward@1.5+240",
+     "card_play@1+0",
+     "hit_l1@1+90",
+     "reward@1.5+240",
+     "card_play@1+0",
+     "block@1+0",
+     "card_play@0.8500000238418579+0",
+     "self_hit@1+158",
+     "enemy_turn@1+0",
+     "card_draw@1+0",
+     "hit_l1@1+90",
+     "divination@1+0",
+     "card_play@1+0",
+     "hit_l4@1+1600",
+     "resonance_gain@1+0",
+     "burst_ready@1+0",
+     "evolve@1+2500",
+     "card_play@1+0",
+     "hit_l1@1+90",
+     "resonance_gain@1+0",
+     "card_play@1+0",
+     "card_draw@1+0",
+     "card_play@1+0",
+     "hit_l4@1+150",
+     "self_hit@1+150",
+     "victory_sting@1+0"
+    ],
+    "bursts": [
+     {
+      "riseMs": 450,
+      "riseGain": 0.595,
+      "hitL4Ms": 1600,
+      "lockReleaseMs": 1232,
+      "duck": true,
+      "startMs": 21,
+      "minV": 0.3429,
+      "minEffective": 0.12,
+      "minReachedMs": 64,
+      "returnStartMs": 1909,
+      "returnDoneMs": 2208,
+      "valueAfter": 1
+     }
+    ],
+    "ultimates": [
+     {
+      "riseMs": 200,
+      "riseGain": 0.6375,
+      "impactsMs": [],
+      "duck": true,
+      "startMs": 11,
+      "minV": 0.3429,
+      "minEffective": 0.12,
+      "minReachedMs": 363,
+      "returnStartMs": 1568,
+      "returnDoneMs": 1867,
+      "valueAfter": 1
+     }
+    ],
+    "duckDips": 2,
+    "jingleFades": 1,
+    "finalBgmGain": 1,
+    "hasBgmGain": true,
+    "ctxState": "running",
+    "duplicates": 0,
+    "entry": {
+     "descendMs": 720,
+     "bossMs": 1959,
+     "descendDelay": -11,
+     "bossDelay": 0,
+     "duckDuringEntry": false
+    },
+    "nodes": {
+     "gain": 76,
+     "src": 75,
+     "srcEnded": 75,
+     "disconnect": 150,
+     "mediaSource": 1
+    }
+   },
+   "retry": null,
+   "volumeProbe": null
+  },
+  "retry/after": {
+   "intents": [
+    "50",
+    "90",
+    "斧を振りかぶっている…",
+    "業斧・断岩 260",
+    "特大 150",
+    "強打 110",
+    "強打 110"
+   ],
+   "error": null,
+   "errors": [],
+   "finalStatus": null,
+   "finalScore": null,
+   "hScroll": false,
+   "a": {
+    "seTotal": 75,
+    "newSe": {
+     "burst_rise": 1,
+     "enemy_rise": 1
+    },
+    "existingSeq": [
+     "resonance_gain@0.800000011920929+-11",
+     "boss_entrance@1+0",
+     "divination@1+0",
+     "card_draw@1+0",
+     "card_play@1+0",
+     "hit_l2@1+90",
+     "card_play@1+0",
+     "hit_l1@1+90",
+     "card_draw@1+0",
+     "card_play@1+0",
+     "resonance_gain@1+0",
+     "card_play@0.8500000238418579+0",
+     "self_hit@1+158",
+     "enemy_turn@1+0",
+     "card_draw@1+0",
+     "card_play@1+0",
+     "card_play@1+0",
+     "card_play@0.8500000238418579+0",
+     "self_hit@1+158",
+     "enemy_turn@1+0",
+     "card_draw@1+0",
+     "card_play@1+0",
+     "block@1+0",
+     "heal@1+0",
+     "card_play@1+0",
+     "resonance_gain@1+0",
+     "block@1+0",
+     "card_play@0.8500000238418579+0",
+     "enemy_charge@1+0",
+     "card_draw@1+0",
+     "divination@1+0",
+     "block@1+0",
+     "card_play@1+0",
+     "block@1+0",
+     "heal@1+0",
+     "card_play@1+0",
+     "hit_l1@1+90",
+     "resonance_gain@1+0",
+     "card_play@1+0",
+     "block@1+0",
+     "resonance_gain@1+0",
+     "card_play@0.8500000238418579+0",
+     "enemy_turn@1+0",
+     "card_draw@1+0",
+     "card_play@1+0",
+     "hit_l2@1+90",
+     "self_hit@1+90",
+     "reward@1.5+240",
+     "card_play@1+0",
+     "hit_l1@1+90",
+     "reward@1.5+240",
+     "card_play@1+0",
+     "block@1+0",
+     "card_play@0.8500000238418579+0",
+     "self_hit@1+158",
+     "enemy_turn@1+0",
+     "card_draw@1+0",
+     "hit_l1@1+90",
+     "divination@1+0",
+     "card_play@1+0",
+     "hit_l4@1+1600",
+     "resonance_gain@1+0",
+     "burst_ready@1+0",
+     "evolve@1+2500",
+     "card_play@1+0",
+     "hit_l1@1+90",
+     "resonance_gain@1+0",
+     "card_play@1+0",
+     "card_draw@1+0",
+     "card_play@1+0",
+     "hit_l4@1+150",
+     "self_hit@1+150",
+     "victory_sting@1+0"
+    ],
+    "bursts": [
+     {
+      "riseMs": 450,
+      "riseGain": 0.595,
+      "hitL4Ms": 1600,
+      "lockReleaseMs": 1363,
+      "duck": true,
+      "startMs": 11,
+      "minV": 0.3429,
+      "minEffective": 0.12,
+      "minReachedMs": 192,
+      "returnStartMs": 1909,
+      "returnDoneMs": 2208,
+      "valueAfter": 1
+     }
+    ],
+    "ultimates": [
+     {
+      "riseMs": 200,
+      "riseGain": 0.6375,
+      "impactsMs": [],
+      "duck": true,
+      "startMs": 11,
+      "minV": 0.3429,
+      "minEffective": 0.12,
+      "minReachedMs": 64,
+      "returnStartMs": 1568,
+      "returnDoneMs": 1867,
+      "valueAfter": 1
+     }
+    ],
+    "duckDips": 2,
+    "jingleFades": 1,
+    "finalBgmGain": 1,
+    "hasBgmGain": true,
+    "ctxState": "running",
+    "duplicates": 0,
+    "entry": {
+     "descendMs": 1356,
+     "bossMs": 2363,
+     "descendDelay": -11,
+     "bossDelay": 0,
+     "duckDuringEntry": false
+    },
+    "nodes": {
+     "gain": 76,
+     "src": 75,
+     "srcEnded": 75,
+     "disconnect": 150,
+     "mediaSource": 1
+    }
+   },
+   "retry": {
+    "gainNow": 1,
+    "minAfter": null,
+    "round": "1"
+   },
+   "volumeProbe": null
+  }
+ }
+}

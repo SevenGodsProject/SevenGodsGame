@@ -1,0 +1,260 @@
+// 決定257 Sound Layer v1 — FAST GATE（計測専用・runtime に含めない。commit は .mjs.txt として証跡のみ）
+// 決定254 gate-lock.mjs を流用：同 seed・同 action 列で保存 GameState（localStorage sevengods.battleSave）を各ラウンド比較する METRIC LOCK に、
+// WebAudio の計測 probe（addInitScript：fetch→decode で SE 名を付け、AudioBufferSourceNode.start の予約・BGM GainNode の値を記録）を足した。
+// 本番 bundle には計測用コードを一切入れない（Before＝Production dist でも同じ probe で測れる）。
+import { chromium } from 'playwright'
+import { writeFileSync, mkdirSync } from 'node:fs'
+const OUT = process.env.D257_OUT ?? 'docs/evidence/decision257/production-smoke'
+const BASES = (process.env.D257_BASES ?? 'http://127.0.0.1:4283,https://seven-gods-game.vercel.app').split(',')
+const ONLY = process.env.D257_ONLY ? process.env.D257_ONLY.split(',') : null
+const isBefore = (base) => base === BASES[0]
+mkdirSync(OUT, { recursive: true })
+const GOD_INDEX = { ebisu: 0, taiyo: 1 }
+const ENEMY_INDEX = { trial: 0, oni: 1, onryo: 2, karakuri: 3, juuma: 4, ryujin: 5, doukeshi: 6 }
+const CASES = [
+  { id: 'taiyo-oni-normal', god: 'taiyo', enemy: 'oni', stake: 0, seed: 'd257-qa1', rounds: 7, oracle: { 1: 1, 4: 0, 6: 2 } },
+  { id: 'taiyo-doukeshi-normal', god: 'taiyo', enemy: 'doukeshi', stake: 0, seed: 'd257-qa2', rounds: 7, oracle: { 3: 0, 5: 2, 6: 1 } },
+  { id: 'ebisu-juuma-stake5', god: 'ebisu', enemy: 'juuma', stake: 5, seed: 'd257-qa3', rounds: 7, oracle: { 2: 1, 3: 0 } },
+]
+const VIEWPORTS = [
+  { name: 'pc', width: 1508, height: 660 },
+  { name: 'sp', width: 390, height: 844, mobile: true },
+  { name: 'sp660', width: 390, height: 660, mobile: true, only: ['taiyo-oni-normal'] },
+]
+
+// ---- WebAudio probe（ページ内で最初に実行） ----
+const PROBE = () => {
+  const P = (window.__probe = { se: [], gain: [], nodes: { gain: 0, src: 0, srcEnded: 0, disconnect: 0, mediaSource: 0 }, bgmGainNode: null, bgmEl: null, ctx: null, lock: [], marks: {} })
+  const urlOf = new WeakMap()
+  const origFetch = window.fetch
+  window.fetch = function (...a) {
+    return origFetch.apply(this, a).then((r) => {
+      const u = typeof a[0] === 'string' ? a[0] : a[0].url
+      const ab = r.arrayBuffer.bind(r)
+      r.arrayBuffer = () => ab().then((buf) => { urlOf.set(buf, u); return buf })
+      return r
+    })
+  }
+  if (window.__noAudio) { delete window.AudioContext; delete window.webkitAudioContext; return }
+  const BAC = window.BaseAudioContext || window.AudioContext
+  if (!BAC) return
+  const dec = BAC.prototype.decodeAudioData
+  BAC.prototype.decodeAudioData = function (ab, ...rest) {
+    P.ctx = this
+    const u = urlOf.get(ab)
+    return dec.call(this, ab, ...rest).then((b) => { if (u) b.__name = u.split('/').pop().replace('.wav', ''); return b })
+  }
+  const cg = BAC.prototype.createGain
+  BAC.prototype.createGain = function () { P.ctx = this; P.nodes.gain++; return cg.call(this) }
+  const cb = BAC.prototype.createBufferSource
+  BAC.prototype.createBufferSource = function () { P.ctx = this; P.nodes.src++; const n = cb.call(this); n.addEventListener('ended', () => P.nodes.srcEnded++); return n }
+  const cm = AudioContext.prototype.createMediaElementSource
+  AudioContext.prototype.createMediaElementSource = function (el) { const s = cm.call(this, el); s.__bgm = true; P.bgmEl = el; P.nodes.mediaSource++; return s }
+  const conn = AudioNode.prototype.connect
+  AudioNode.prototype.connect = function (dest, ...r) { if (this.__bgm && dest instanceof GainNode) P.bgmGainNode = dest; this.__dest = dest; return conn.call(this, dest, ...r) }
+  const disc = AudioNode.prototype.disconnect
+  AudioNode.prototype.disconnect = function (...a) { P.nodes.disconnect++; return disc.apply(this, a) }
+  const st = AudioBufferSourceNode.prototype.start
+  AudioBufferSourceNode.prototype.start = function (when = 0, ...r) {
+    const c = this.context
+    P.se.push({ name: (this.buffer && this.buffer.__name) || null, delayMs: Math.round((when - c.currentTime) * 1000), at: when, now: c.currentTime, perf: performance.now(), rate: this.playbackRate.value, gain: this.__dest && this.__dest.gain ? +this.__dest.gain.value.toFixed(4) : null })
+    return st.call(this, when, ...r)
+  }
+  setInterval(() => {
+    if (!P.bgmGainNode || !P.ctx) return
+    const v = +P.bgmGainNode.gain.value.toFixed(4)
+    const last = P.gain[P.gain.length - 1]
+    if (!last || Math.abs(last.v - v) > 0.0005) P.gain.push({ t: P.ctx.currentTime, v, perf: performance.now() })
+  }, 4)
+  // 入力ロック：カードが disabled→enabled に戻った時刻（MutationObserver＝フレーム粒度より細かい）
+  const mo = new MutationObserver(() => {
+    // Production Smoke：既存演出の出現（決定254 入口・決定252 予告／敵カットイン・決定249 反応・決定250 カットイン動画）
+    const S = (P.seen = P.seen || { entrance: false, enemyCutin: false, resonanceCutin: false, cutinVideo: false, rl: false, burstBanner: false })
+    if (!S.entrance && document.querySelector('[data-testid="boss-entrance"]')) S.entrance = true
+    if (!S.enemyCutin && document.querySelector('.enemy-cutin')) S.enemyCutin = true
+    if (!S.resonanceCutin && document.querySelector('.resonance-cutin')) S.resonanceCutin = true
+    if (!S.cutinVideo && document.querySelector('.resonance-cutin video')) S.cutinVideo = true
+    if (!S.burstBanner && document.querySelector('.burst-banner')) S.burstBanner = true
+    if (!S.rl && document.querySelector('[class*="rl-"]')) S.rl = true
+    const n = document.querySelectorAll('.card-view:not(:disabled)').length
+    const last = P.lock[P.lock.length - 1]
+    if (!last || last.n !== n) P.lock.push({ perf: performance.now(), t: P.ctx ? P.ctx.currentTime : null, n })
+  })
+  document.addEventListener('DOMContentLoaded', () => mo.observe(document.body, { attributes: true, attributeFilter: ['disabled', 'class'], subtree: true, childList: true }))
+}
+
+const CUTIN = () => !!document.querySelector('.resonance-cutin')
+
+async function snap(page, withBoxes = false) {
+  return page.evaluate((withBoxes) => {
+    const box = (el) => { let x = 0, y = 0, n = el; while (n) { x += n.offsetLeft || 0; y += n.offsetTop || 0; n = n.offsetParent } return [x, y, el.offsetWidth, el.offsetHeight] }
+    const boxes = withBoxes ? [...document.querySelectorAll('#root *')].filter((e) => e instanceof HTMLElement && e.offsetWidth > 0).map((e) => `${e.tagName}.${(typeof e.className === 'string' ? e.className : '').split(' ').filter((c) => c && !c.startsWith('rl-')).sort().join('.')}:${box(e).join(',')}`) : null
+    return {
+      round: (document.body.innerText.match(/ラウンド\s*(\d)\s*\/\s*7/) || [])[1] ?? null,
+      intentText: document.querySelector('.intent')?.textContent?.trim() ?? null,
+      hScroll: document.documentElement.scrollWidth > document.documentElement.clientWidth,
+      boxes,
+      save: (() => { try { const s = JSON.parse(localStorage.getItem('sevengods.battleSave') || 'null'); const st = s?.state ?? s; if (!st) return null; return { round: st.round, ap: st.ap, hp: st.player?.hp, block: st.player?.block, enemyHp: st.enemy?.hp, enemyBlock: st.enemy?.block, oracle: st.divination, resonance: st.resonance?.value, hand: st.hand?.map((c) => c.defId), deck: st.deck?.length, discard: st.discard?.length, score: st.score?.total, status: st.status, rngCursor: st.rngCursor, intent: st.enemy?.intent } } catch { return 'ERR' } })(),
+    }
+  }, withBoxes)
+}
+
+async function startBattle(page, c, url, opts = {}) {
+  await page.goto(url, { waitUntil: 'networkidle' }); await page.evaluate(() => { try { localStorage.clear() } catch {} }); await page.goto(url, { waitUntil: 'networkidle' })
+  if (opts.mute) await page.getByRole('button', { name: 'ミュート', exact: true }).click() // App のミュート（SE と BGM の両方）
+  await page.click('[data-testid="home-start"]'); await page.locator('.god-select-card').nth(GOD_INDEX[c.god]).click(); await page.locator('.difficulty-select button').nth(1).click(); await page.click('.god-select-confirm')
+  if (await page.locator('.enemy-select-card').count()) await page.locator('.enemy-select-card').nth(ENEMY_INDEX[c.enemy]).click()
+  await page.evaluate(() => { if (window.__probe) window.__probe.marks.battleClick = performance.now() })
+  await page.getByRole('button', { name: 'この構成でバトル開始' }).click(); await page.waitForSelector('.divination-panel', { timeout: 15000 }); await page.waitForSelector('[data-testid="boss-entrance"]', { state: 'detached', timeout: 8000 }).catch(() => {}); await page.waitForTimeout(400)
+}
+
+async function playRounds(page, c) {
+  const rounds = []
+  let ended = null
+  for (let r = 1; r <= c.rounds; r++) {
+    await page.waitForFunction((rr) => { const m = document.body.innerText.match(/ラウンド\s*(\d)/); return m && m[1] === String(rr) && !document.querySelector('.enemy-cutin') }, r, { timeout: 8000 }).catch(() => {})
+    await page.waitForTimeout(400)
+    if (!(await page.getByRole('button', { name: 'ラウンドを終える' }).isVisible().catch(() => false))) { ended = true; break }
+    const before = await snap(page, r === 1)
+    const plan = c.oracle[r]
+    let chose = null
+    if (plan !== undefined) { const btn = page.locator('.divination-choice').nth(plan); if (await btn.isEnabled()) { await btn.click(); chose = plan; await page.waitForTimeout(700) } }
+    for (let i = 0; i < 3; i++) {
+      let played = false
+      for (let attempt = 0; attempt < 3 && !played; attempt++) {
+        await page.waitForFunction(() => !document.querySelector('.resonance-cutin, .enemy-cutin, .burst-banner'), null, { timeout: 8000 }).catch(() => {})
+        await page.waitForTimeout(attempt === 0 ? 150 : 700)
+        const cards = page.locator('.card-view:not(:disabled)')
+        if (!(await cards.count())) break
+        const total0 = await page.locator('.card-view').count()
+        await cards.first().click().catch(() => {})
+        played = await page.waitForFunction((t0) => document.querySelectorAll('.card-view').length < t0, total0, { timeout: 2500 }).then(() => true).catch(() => false)
+      }
+      if (!played) break
+      await page.waitForTimeout(400)
+    }
+    const afterPlay = await snap(page)
+    await page.waitForFunction(() => !document.querySelector('.resonance-cutin, .enemy-cutin'), null, { timeout: 8000 }).catch(() => {}); await page.getByRole('button', { name: 'ラウンドを終える' }).click({ timeout: 8000 }).catch(() => {})
+    await page.waitForTimeout(2600)
+    const afterEnemy = await snap(page)
+    rounds.push({ round: r, chose, before, afterPlay, afterEnemy })
+  }
+  return { rounds, ended }
+}
+
+async function newCtx(browser, vp, opts = {}) {
+  const ctx = await browser.newContext({ viewport: { width: vp.width, height: vp.height }, isMobile: !!vp.mobile, hasTouch: !!vp.mobile, deviceScaleFactor: 1, reducedMotion: opts.reduced ? 'reduce' : 'no-preference' })
+  if (opts.noAudio) await ctx.addInitScript(() => { window.__noAudio = true })
+  await ctx.addInitScript(PROBE)
+  const page = await ctx.newPage()
+  const errors = []
+  page.on('console', (m) => { if (m.type() === 'error') errors.push(m.text().slice(0, 200)) })
+  page.on('pageerror', (e) => errors.push('pageerror ' + String(e).slice(0, 200)))
+  return { ctx, page, errors }
+}
+
+async function finalState(page) {
+  return page.evaluate(() => ({ save: (() => { try { const s = JSON.parse(localStorage.getItem('sevengods.battleSave') || 'null'); return { score: s?.state?.score?.total ?? s?.score?.total ?? null, status: s?.state?.status ?? s?.status ?? null } } catch { return null } })(), probe: window.__probe ? { se: window.__probe.se, gain: window.__probe.gain, nodes: window.__probe.nodes, lock: window.__probe.lock, marks: window.__probe.marks, hasBgmGain: !!window.__probe.bgmGainNode, seen: window.__probe.seen, bgmGainNow: window.__probe.bgmGainNode ? window.__probe.bgmGainNode.gain.value : null, ctxState: window.__probe.ctx ? window.__probe.ctx.state : null } : null, text: document.body.innerText.replace(/\s+/g, ' ').slice(0, 300) }))
+}
+
+async function run(browser, base, vp, c, opts = {}) {
+  const { ctx, page, errors } = await newCtx(browser, vp, opts)
+  const url = `${base}/?seed=${c.seed}&enemy=${c.enemy}${c.stake ? `&stake=${c.stake}` : ''}`
+  await startBattle(page, c, url, opts)
+  const { rounds, ended } = await playRounds(page, c)
+  await page.waitForTimeout(1200)
+  const fin = await finalState(page)
+  let retry = null
+  let fs_debug = null
+  if (opts.retry) {
+    // 決着後の結果画面で「もう一度」系のボタンを探す（勝利の舞台→結果ハブの順に出る）。見つかるまで最大 30 秒、ボタン文言を記録
+    const seen = []
+    let target = null
+    for (let i = 0; i < 90 && !target; i++) {
+      const texts = await page.evaluate(() => [...document.querySelectorAll('button')].filter((b) => b.offsetWidth > 0).map((b) => b.textContent.trim()))
+      seen.push(texts.join(' | ').slice(0, 300))
+      target = texts.find((t) => /もう一度/.test(t)) ?? null
+      if (!target) {
+        // まだ決着していなければラウンドを進め、勝利の舞台（role=button「結果へ進む」）なら進める
+        const endBtn = page.getByRole('button', { name: 'ラウンドを終える' })
+        const stage = page.getByRole('button', { name: '結果へ進む' })
+        const rewardOpen = page.getByRole('button', { name: /報酬カードを選ぶ/ })
+        if (await page.locator('.reward-skip').count()) await page.locator('.reward-skip').first().click({ timeout: 1000 }).catch(() => {}) // 報酬はスキップ（ゲーム結果に影響しない導線）
+        else if (await rewardOpen.count()) await rewardOpen.first().click({ timeout: 1000 }).catch(() => {})
+        else if (await stage.count()) await stage.first().click({ timeout: 1000 }).catch(() => {})
+        else if (await endBtn.isVisible().catch(() => false) && await endBtn.isEnabled().catch(() => false)) await endBtn.click({ timeout: 1000 }).catch(() => {})
+        await page.waitForTimeout(500)
+      }
+    }
+    if (!target) { await page.screenshot({ path: `${OUT}/runs/retry-debug.png` }).catch(() => {}); fs_debug = await page.evaluate(() => ({ text: document.body.innerText.replace(/s+/g, ' ').slice(0, 600), endBtn: [...document.querySelectorAll('button')].filter((b) => /ラウンド/.test(b.textContent)).map((b) => ({ t: b.textContent, d: b.disabled, w: b.offsetWidth })) })) }
+    const t0 = await page.evaluate(() => performance.now())
+    if (target) {
+      const btn = page.locator('button', { hasText: target }).first()
+      await btn.click({ timeout: 5000 }).catch(() => {})
+      await btn.click({ timeout: 300 }).catch(() => {}) // 連打（2 回目は画面遷移で消えていれば無視）
+    }
+    await page.waitForTimeout(4000)
+    retry = await page.evaluate((t0) => ({ t0, gainNow: window.__probe.bgmGainNode ? window.__probe.bgmGainNode.gain.value : null, samplesAfter: window.__probe.gain.filter((g) => g.perf > t0), round: (document.body.innerText.match(/ラウンド\s*(\d)/) || [])[1] ?? null, battleVisible: !!document.querySelector('.divination-panel') }), t0)
+    retry.clicked = target
+    retry.debug = fs_debug
+    retry.seenButtons = seen.slice(-3)
+  }
+  let volumeProbe = null
+  if (opts.volumeProbe) {
+    volumeProbe = await page.evaluate(async () => {
+      const P = window.__probe
+      if (!P.bgmGainNode || !P.bgmEl) return { skipped: 'no graph' }
+      const a = P.ctx.createAnalyser(); a.fftSize = 2048; P.bgmGainNode.connect(a)
+      const buf = new Float32Array(a.fftSize)
+      const rms = async () => { let s = 0; let k = 0; for (let i = 0; i < 20; i++) { await new Promise((r) => setTimeout(r, 25)); a.getFloatTimeDomainData(buf); for (const v of buf) { s += v * v; k++ } } return Math.sqrt(s / k) }
+      const el = P.bgmEl; const v0 = el.volume; const m0 = el.muted
+      if (el.paused) await el.play().catch(() => {})
+      const settle = () => new Promise((r) => setTimeout(r, 200))
+      el.volume = 1; await settle(); const r1 = await rms()
+      el.volume = 0.35; await settle(); const r035 = await rms()
+      el.muted = true; await settle(); const rMuted = await rms(); el.muted = m0
+      el.volume = v0
+      return { paused: el.paused, rmsVol1: r1, rmsVol035: r035, ratio: r035 / r1, rmsMuted: rMuted, ctxState: P.ctx.state }
+    })
+  }
+  await ctx.close()
+  return { rounds, ended, errors, finalScore: fin.save?.score ?? null, finalStatus: fin.save?.status ?? null, finalText: fin.text, probe: fin.probe, retry, volumeProbe }
+}
+
+
+// ---- 1 run ＝ 1 プロセス（決定257 再開：メモリ不足の再発防止）。`--run <name>` で 1 ケースだけ実行し、runs/<name>.json に書く ----
+// name: lock~<case>~<vp>~<before|after> ／ lockrep~<i>~<before|after> ／ reduced|noaudio|mute|retry~<before|after>
+const RUN = process.argv[process.argv.indexOf('--run') + 1]
+if (!RUN || process.argv.indexOf('--run') < 0) {
+  const names = []
+  for (const vp of VIEWPORTS) for (const c of CASES) { if (vp.only && !vp.only.includes(c.id)) continue; for (const side of ['before', 'after']) names.push(`lock~${c.id}~${vp.name}~${side}`) }
+  for (let i = 0; i < 3; i++) for (const side of ['before', 'after']) names.push(`lockrep~${i}~${side}`)
+  for (const s of ['reduced', 'noaudio', 'mute', 'retry']) for (const side of ['before', 'after']) names.push(`${s}~${side}`)
+  console.log(names.join('\n'))
+  process.exit(0)
+}
+const parts = RUN.split('~')
+const side = parts[parts.length - 1]
+const base = side === 'before' ? BASES[0] : BASES[1]
+mkdirSync(`${OUT}/runs`, { recursive: true })
+const browser = await chromium.launch({ headless: true })
+let result
+try {
+  if (parts[0] === 'lock') {
+    const c = CASES.find((x) => x.id === parts[1])
+    const vp = VIEWPORTS.find((x) => x.name === parts[2])
+    result = await run(browser, base, vp, c, { volumeProbe: vp.name === 'pc' && c.id === 'taiyo-oni-normal' && side === 'after' })
+  } else if (parts[0] === 'lockrep') {
+    result = await run(browser, base, VIEWPORTS[0], CASES[0], {})
+  } else if (parts[0] === 'retry') {
+    result = await run(browser, base, VIEWPORTS[0], CASES[0], { retry: true })
+  } else {
+    result = await run(browser, base, VIEWPORTS[0], CASES[0], { [{ reduced: 'reduced', noaudio: 'noAudio', mute: 'mute' }[parts[0]]]: true })
+  }
+} catch (e) {
+  result = { error: String(e).slice(0, 400) }
+} finally {
+  await browser.close()
+}
+writeFileSync(`${OUT}/runs/${RUN}.json`, JSON.stringify(result))
+console.log('done', RUN, result.error ? 'ERROR ' + result.error : `errors ${result.errors.length}`)
