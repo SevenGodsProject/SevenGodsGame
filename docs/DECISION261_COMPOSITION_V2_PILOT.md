@@ -95,3 +95,58 @@ SP は既存の `--d229-*` の**式の形を保ったまま値だけ**上書き�
 | G8 文字の切れ 0・横スクロール 0 | **PASS**（clipped 0・hScroll 0・名札 1 行） | P-1 の名札列 162px で名前・【型】・HP・予告が 1 行に収まる |
 | G9 console error 0 | **PASS** | — |
 | 入口の操作開放時刻 | 中央値 PC 2,633→2,667／2,683ms・SP 2,433→2,433ms | PC +34〜50ms＝決定254 Known #5（JS 予約の遅れ）の範囲。G10 のロック計測で確定 |
+
+## §5. Fast Gate 結果（2）— G6 反応主体・G10 決定論／入力ロック・G11 静的【実測】
+
+| G | 項目 | 結果 | 証拠 |
+|---|---|---|---|
+| G6 | 決定249 Reaction Language（決定249 Fast Gate のスクリプトをポートだけ差し替え・PC／SP × 大耀×龍神・寿楽×道化 × Before／After／After-reduced＝10 context・75 play） | **PASS**：Before／After の同一 play 30 組で body／tone／OTOMO／deal／AP／strikeAnim／anim／scale／intent／hScroll **すべて一致（30/30）**。7 semantic（STRIKE／GUARD／MEND／WEAKEN／ATTUNE／TEMPO／EMPOWER）網羅。reduced は `rl-rim-only`／`rl-stagger-dim`／`rl-otomo-rim` のみ（動きなし）。console error 0（10/10） | `g6-reaction/summary.tsv`・`gate.json`・`gate249.log.txt` |
+| G10 | metric lock（決定254 `gate-lock.mjs` を env でポート差し替え・3 ケース × PC／SP／SP660 × Before／After＝14 run） | **PASS**：同 seed・同 action 列で保存 GameState **154 行 不一致 0**、最終スコア・結果・決定249 反応集合（7/7 組）一致、神の一撃 発火 14/14、決定253 託宣 3 択の表示・残数 同一、console error 0 | `g10-lock/gate-lock.json`・`gate-lock.log.txt` |
+| G10 | 入力ロック時間（決定250 法：共鳴 7→一撃→`end-round-button` の disabled 解除まで・Before／After × PC／SP） | **PASS（5 回の中央値）**：unlock PC Before {1,308／1,272／1,305／1,251／1,317}＝**1,305** → After {1,312／1,314／1,316／1,306／1,311}＝**1,312（+7ms）**、SP Before {999／1,007／1,036／1,268／1,028}＝**1,028** → After {1,023／1,036／1,084／998／1,171}＝**1,036（+8ms）**。着弾 1,600／stop 80・結果・敵 HP・errors 0 は 20/20 で一致。**経緯**：最初の 3 回は SP が +24／+29／+48ms と揃って遅く（基準 ±10ms 超過）、S-1 で OTOMO に付けた「相棒の札」（radial-gradient＋box-shadow＝新規 paint 層）を Root Cause 候補として外し再 build（CSS ・幾何は不変）→ 4・5 回目は SP −270／+143ms と **Before 自体が 999〜1,268ms で揺れ**、headless の計測ノイズが支配的と判断。装飾は外したまま（paint 層が 1 つ減る・OTOMO の見え方は Human QA Q3 で判定）。run1〜3＝装飾あり・run4〜5＝装飾なし（） | `g10-godstrike-lock/summary-noshot.tsv`・`gate-noshot.json` |
+| G11 | 静的 | **PASS**：`tsc -b --noEmit` 0／`oxlint` src 0（警告は既存 `scripts/` のみ）／`vitest run` **1,303 PASS**（9 skip・`battleEntrance.test.ts` の CSS 契約・`combatTimeline.test.ts` の reduce 前提・`useReactionLanguage.test.ts` の反転目印 含む）／build：JS **md5 Production と同一**（`e6c26c81…`＝CSS のみの変更）・CSS 180,301→183,234B（+2,933B） | `tsc.txt`・`oxlint.txt`・`vitest.txt`・`build.txt` |
+| — | 決定250 カットインの snapshot | After の `taiyo-oni/pc` で `resonance-cutin` の採取が 1 回多い（video 属性なし→あり）。採取タイミングの揺らぎ（poster→video の切替を 2 回捉えた）で、video／poster／img／z は同一。回帰ではない | `g10-lock/gate-lock.json` cutins |
+
+- per-play のロック（G6 の `lock=`）は Before 中央値 299ms／After 349ms、同一 play の差は中央値 +13ms（PC +32・SP +8）だがばらつき −242〜+278ms＝計測側の揺らぎ（決定257 でも同種）。判定は上記の決定250 法で行う
+
+### 5-1. 保護決定への回帰（まとめ）
+
+| 決定 | 確認 | 結果 |
+|---|---|---|
+| 229 | 着弾中心 ∈ 絵・SP 3 列固定・敵–神 重なり 0 | 104/104・0 |
+| 240 | 名札の予告・構え（`.enemy-avatar` の filter／translate 不変） | 予告 1 行・class 不変（G10 の 決定240 intent 判定 同一） |
+| 241 | トーストの位置 | 不変（CSS 未変更）。近づいた神・敵との重なり時間は Known（§7） |
+| 247 | `scale: -1 1`・`--atk-x` | HUD 全 run `-1 1`・突進方向不変 |
+| 249 | 反応主体・transform | 30/30 一致 |
+| 250 | カットイン動画の位置・timing | 発火 14/14・着弾 1,600／stop 80 は CSS 外（timing 定数 diff 0） |
+| 252 | 必殺の環・カットイン | 環は `.enemy-avatar::after`（不変）・カットインは F-1 で鏡像のみ |
+| 254 | 入口 T5 HUD 箱差・操作開放 | 箱差 0（104/104）・操作開放 中央値 PC +34〜50ms（Known #5 の範囲）・SP ±0 |
+| 257 | 音・timing 定数 | diff 0 |
+| `src/core`・数値・画像 | diff 0 | `git diff --stat 694dd0b -- src/core` 0 |
+
+## §6. Human QA（CEO）— HUMAN QA READY
+
+- Before（Production `694dd0b` の clean build）：`http://192.168.11.6:4301/`／After（本 Pilot）：`http://192.168.11.6:4302/`（`0.0.0.0` で起動中・PC は `127.0.0.1` でも可・一時ファイアウォールは未変更。iPhone から届かない場合は PC だけで実施し、iPhone は次回）
+- 推奨 seed（決定257 で両イベントの発生を機械確認済み・engine は不変）：
+  - `?seed=d257-qa1&enemy=oni`（大耀 × 業斧の鬼将・ふつう：R3 溜め → R4 業斧・断岩＋神の一撃）
+  - `?seed=d257-qa2&enemy=doukeshi`（大耀 × 乱舞の道化・ふつう：R3 乱舞・狂宴＋神の一撃）
+  - 任意：OTOMO の見え方は 蒼毘／福永／笑蓮（得意技で共鳴札が 3 段）で SP を確認
+- 質問（4 問・4/4 YES で PASS）：
+  - **Q1** 敵は神の方を向いているか（立ち絵＋必殺のカットイン）
+  - **Q2** 敵と神はカードより大きく、戦って見えるか（PC／iPhone）
+  - **Q3** OTOMO は相棒として邪魔にならない大きさ・位置か
+  - **Q4** 名札・手札は読みにくくなっていないか
+- Production deploy・push・merge は **CEO Human QA の後**（Release Gate は別途）
+
+## §7. Known（Pilot 後も残る）
+
+1. OTOMO の面積は PC 1280×800 で 0.35％・SP 844 で 0.39％（Preflight の ≤0.3％ を +0.05〜0.09 超過）。相棒の絵の判別限界（≈40px）で据え置き
+2. SP 390×660 の神÷カード高 0.89〜0.98（<1.0）：神の頭の上限が共鳴札の下端（得意技の神は 3 段）。解くには共鳴札の縦（決定230 保護）か重なり（決定229 で CEO 却下の案 D）
+3. PC の敵–神 ink 間隔 74〜128px（Preflight 机上 60〜75px は箱基準。ink 基準では原画の余白ぶん広がる）
+4. 決定241 `.result-toast`・mini-result が近づいた神・敵に 0.7〜1.4s 重なり得る（pointer-events なし・既知）
+5. 入口の操作開放 PC +34〜50ms（決定254 Known #5 の範囲）
+6. 魔獣の HUD 向き（一律反転で「やや左」）・笑蓮／才華 keyvisual・入口の神の向きは本 Pilot の対象外（Brief v1.1 と同時）
+
+## §8. runtime 保護の証明
+- `git diff --stat 694dd0b -- src/core`：0 行／`combatTimeline.ts`・`enemyVfxTiming.ts`・`battleEntrance.ts`：0 行／画像・数値・TSX：0 行。変更は `battle.css` 1 ブロック（+195 行）のみ
+- build JS md5＝Production `e6c26c81…`（同一）
+- commit：`5191c3d`（CSS）→ 以降 docs のみ。push／merge／deploy 0。一時 FW 0。ロックディレクトリ空

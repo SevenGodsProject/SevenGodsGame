@@ -7385,15 +7385,8 @@ body.battle-viewport .battle-main > .battle-callout {
     justify-content: flex-start;
   }
 
-  /* 空き帯の背景（楼閣・灯籠）に小さな相棒が溶けないよう、共鳴札に付く丸い「相棒の札」にする
-     （暗い円＋細い金の縁。床の接地影の代わり）。大きさは絵と同じ（箱は増やさない） */
-  body.battle-viewport .portrait-otomo {
-    border-radius: 50%;
-    background: radial-gradient(circle, #241a3ef0 0%, #0b0d17eb 72%);
-    box-shadow:
-      0 0 0 1px #ffd16680,
-      0 0 10px 1px #c39bff55;
-  }
+  /* （Fast Gate G10 で SP の入力ロックが +29ms 遅れたため、相棒の札（radial-gradient＋box-shadow の新規 paint 層）は見送り。
+     OTOMO は素のまま共鳴札の直下に置く） */
 }
 
 /* ---- S-1 lite SP（<900px かつ ≤760px 高＝iPhone の Safari 表示域など）----
