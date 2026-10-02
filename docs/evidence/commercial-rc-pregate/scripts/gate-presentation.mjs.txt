@@ -1,0 +1,108 @@
+// 決定252 Pilot — Presentation regression gate (決定240 / 決定249 / cutin / layout). Before :4271 vs After :4272.
+// Drives the real UI: Home → 神を選ぶ → god → difficulty → confirm → enemy → deck confirm → battle, ends rounds and records DOM state.
+import { chromium } from 'playwright'
+import { writeFileSync, mkdirSync } from 'node:fs'
+const OUT = 'C:/Users/kimi1/SevenGodsGame-rcgate/docs/evidence/commercial-rc-pregate/g8'
+mkdirSync(OUT, { recursive: true })
+const GOD_INDEX = { ebisu: 0, taiyo: 1, sobi: 2, saika: 3, juraku: 4, fukuei: 5, shouren: 6 }
+const ENEMY_INDEX = { trial: 0, oni: 1, onryo: 2, karakuri: 3, juuma: 4, ryujin: 5, doukeshi: 6 }
+const CASES = [
+  { id: 'taiyo-oni-normal', god: 'taiyo', enemy: 'oni', difficulty: 'normal', stake: 0, seed: 'd252-qa1', rounds: 5 },
+  { id: 'taiyo-doukeshi-hard', god: 'taiyo', enemy: 'doukeshi', difficulty: 'hard', stake: 0, seed: 'd252-qa2', rounds: 6 },
+  { id: 'ebisu-juuma-stake6', god: 'ebisu', enemy: 'juuma', difficulty: 'normal', stake: 6, seed: 'd252-qa3', rounds: 4 },
+  { id: 'taiyo-karakuri-normal', god: 'taiyo', enemy: 'karakuri', difficulty: 'normal', stake: 0, seed: 'd252-qa4', rounds: 5 },
+  { id: 'taiyo-onryo-normal', god: 'taiyo', enemy: 'onryo', difficulty: 'normal', stake: 0, seed: 'd252-qa5', rounds: 4 },
+  { id: 'taiyo-ryujin-normal', god: 'taiyo', enemy: 'ryujin', difficulty: 'normal', stake: 0, seed: 'd252-qa6', rounds: 4 },
+]
+const VIEWPORTS = [{ name: 'pc', width: 1508, height: 660 }, { name: 'sp', width: 390, height: 844, mobile: true }]
+const DIFF_INDEX = { easy: 0, normal: 1, hard: 2 }
+
+async function snapshot(page) {
+  return page.evaluate(() => {
+    const q = (s) => document.querySelector(s)
+    const cs = (el, pseudo) => (el ? getComputedStyle(el, pseudo) : null)
+    const avatar = q('.enemy-avatar')
+    const after = cs(avatar, '::after')
+    const intent = q('.intent')
+    const box = (el) => { if (!el) return null; const r = el.getBoundingClientRect(); return [Math.round(r.x), Math.round(r.y), Math.round(r.width), Math.round(r.height)] }
+    const round = (document.body.innerText.match(/ラウンド\s*(\d)\s*\/\s*7/) || [])[1] ?? null
+    return {
+      round,
+      intentText: intent ? intent.textContent.trim() : null,
+      intentClass: intent ? intent.className : null,
+      intentGlyph: intent ? intent.querySelectorAll('svg.intent-glyph').length : 0,
+      intentBox: box(intent),
+      avatarClass: avatar ? avatar.className : null,
+      avatarBox: box(avatar),
+      avatarFilter: avatar ? cs(avatar).filter.slice(0, 120) : null,
+      avatarScale: avatar ? cs(avatar).scale : null,
+      footRing: after ? { content: after.content, height: after.height, opacity: after.opacity, borderTopWidth: after.borderTopWidth } : null,
+      cutin: !!q('.enemy-cutin'),
+      cutinText: q('.enemy-cutin-text')?.textContent ?? null,
+      hpText: q('.enemy-plate-status')?.textContent?.trim().slice(0, 60) ?? null,
+      hScroll: document.documentElement.scrollWidth > document.documentElement.clientWidth,
+      rlClasses: [...document.querySelectorAll('[class*="rl-"]')].map((e) => [...e.classList].filter((c) => c.startsWith('rl-')).join(' ')).filter(Boolean),
+      handCount: document.querySelectorAll('.card-view').length,
+    }
+  })
+}
+
+async function runCase(browser, base, vp, c) {
+  const ctx = await browser.newContext({ viewport: { width: vp.width, height: vp.height }, isMobile: !!vp.mobile, hasTouch: !!vp.mobile, deviceScaleFactor: 1 })
+  const page = await ctx.newPage()
+  const errors = []
+  page.on('console', (m) => { if (m.type() === 'error') errors.push(m.text().slice(0, 200)) })
+  page.on('pageerror', (e) => errors.push('pageerror ' + String(e).slice(0, 200)))
+  const url = `${base}/?seed=${c.seed}&enemy=${c.enemy}${c.stake ? `&stake=${c.stake}` : ''}`
+  await page.goto(url, { waitUntil: 'networkidle' })
+  await page.evaluate(() => { try { localStorage.clear() } catch {} })
+  await page.goto(url, { waitUntil: 'networkidle' })
+  await page.click('[data-testid="home-start"]')
+  await page.locator('.god-select-card').nth(GOD_INDEX[c.god]).click()
+  await page.locator('.difficulty-select button').nth(DIFF_INDEX[c.difficulty]).click()
+  await page.click('.god-select-confirm')
+  if (await page.locator('.enemy-select-card').count()) await page.locator('.enemy-select-card').nth(ENEMY_INDEX[c.enemy]).click()
+  await page.getByRole('button', { name: 'この構成でバトル開始' }).click()
+  await page.waitForSelector('.enemy-avatar', { timeout: 15000 })
+  await page.waitForTimeout(2500) // entrance
+  const rounds = []
+  for (let r = 1; r <= c.rounds; r++) {
+    await page.waitForFunction((rr) => /ラウンド\s*(\d)/.test(document.body.innerText) && document.body.innerText.match(/ラウンド\s*(\d)/)[1] === String(rr) && !document.querySelector('.enemy-cutin'), r, { timeout: 20000 }).catch(() => {})
+    await page.waitForTimeout(400)
+    const before = await snapshot(page)
+    // 決定249 check: play the first affordable card once at R1 (same seed → same hand in Before/After)
+    let reaction = null
+    if (r === 1) {
+      const card = page.locator('.card-view').first()
+      if (await card.count()) {
+        await card.click().catch(() => {})
+        const samples = []
+        for (let i = 0; i < 12; i++) { await page.waitForTimeout(50); samples.push(await page.evaluate(() => [...document.querySelectorAll('[class*="rl-"], .card-play, .god-strike, [class*="hit-shake"]')].map((e) => e.className.split(' ').filter((x) => x.startsWith('rl-') || x.startsWith('card-play') || x.startsWith('god-strike') || x.includes('hit-shake')).join(' ')).filter(Boolean))) }
+        reaction = [...new Set(samples.flat())]
+        await page.waitForTimeout(600)
+      }
+    }
+    // end round → capture cutin / lunge during the enemy turn
+    const endBtn = page.getByRole('button', { name: 'ラウンドを終える' })
+    await endBtn.click({ timeout: 10000 }).catch(() => {})
+    const during = []
+    for (let i = 0; i < 40; i++) { await page.waitForTimeout(60); during.push(await page.evaluate(() => ({ cutin: !!document.querySelector('.enemy-cutin'), cutinText: document.querySelector('.enemy-cutin-text')?.textContent ?? null, lunge: [...(document.querySelector('.enemy-avatar-wrap, .enemy-stage, .enemy-avatar')?.parentElement?.classList ?? [])].filter((x) => x.includes('lunge')).join(' '), shake: !!document.querySelector('[class*="hit-shake"]') }))) }
+    const cutinSeen = during.some((d) => d.cutin)
+    const cutinText = during.find((d) => d.cutinText)?.cutinText ?? null
+    rounds.push({ round: r, before, reaction, cutinSeen, cutinText })
+    await page.waitForTimeout(1500)
+  }
+  await page.screenshot({ path: `${OUT}/${c.id}-${vp.name}-${base.includes('4291') ? 'before' : 'after'}.png` }).catch(() => {})
+  await ctx.close()
+  return { rounds, errors }
+}
+
+const browser = await chromium.launch()
+const result = {}
+for (const vp of VIEWPORTS) for (const c of CASES) for (const base of ['http://127.0.0.1:4291', 'https://seven-gods-game.vercel.app']) {
+  const key = `${c.id}/${vp.name}/${base.includes('4291') ? 'before' : 'after'}`
+  try { result[key] = await runCase(browser, base, vp, c); console.log('done', key, 'errors', result[key].errors.length) } catch (e) { result[key] = { error: String(e).slice(0, 300) }; console.log('FAIL', key, String(e).slice(0, 200)) }
+}
+await browser.close()
+writeFileSync(`${OUT}/gate-presentation.json`, JSON.stringify(result, null, 1))
+console.log('written')

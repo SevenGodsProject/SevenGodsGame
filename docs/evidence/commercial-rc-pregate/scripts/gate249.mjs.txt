@@ -1,0 +1,140 @@
+// Decision249 Reaction Language v1 — Fast Gate (Before = Production bcfd530 dist :4251, After = pilot :4252)
+import { createRequire } from 'node:module'
+import { readFileSync, writeFileSync, mkdirSync } from 'node:fs'
+const require = createRequire('C:/Users/kimi1/SevenGodsGame/package.json')
+const { chromium } = require('playwright')
+const SP = 'C:/Users/kimi1/SevenGodsGame-rcgate/.rcgate-scratch'
+const OUT = process.argv[2] ?? `${SP}/d249/out`
+mkdirSync(OUT, { recursive: true })
+const SEMMAP = JSON.parse(readFileSync(`${SP}/d249-seeds.txt`, 'utf8').split('\n').find((l) => l.startsWith('SEMMAP=')).slice(7))
+const BASES = { before: 'http://127.0.0.1:4291', after: 'https://seven-gods-game.vercel.app' }
+const VPS = { pc: { width: 1508, height: 660 }, sp: { width: 390, height: 844 } }
+const SCENARIOS = [
+  { name: 'taiyo-ryujin', god: '大耀', enemy: '蒼海の龍神', seed: 'rl-qa-7', divination: { 2: '加護の託宣', 3: '導きの託宣' } },
+  { name: 'juraku-doukeshi', god: '寿楽', enemy: '乱舞の道化', seed: 'rl-qa-32', divination: { 2: '加護の託宣' } },
+]
+const PRIMITIVE = { STRIKE: 'strike', GUARD: 'brace', MEND: 'breathe', WEAKEN: 'stagger', ATTUNE: 'rise', EMPOWER: 'rise', TEMPO: 'deal' }
+const clickText = (page, text) => page.evaluate((t) => { const el = [...document.querySelectorAll('button')].find((x) => x.textContent.replace(/\s+/g, '').includes(t) && !x.disabled); if (!el) return false; el.click(); return true }, text)
+const clickSel = (page, sel) => page.evaluate((s) => { const el = document.querySelector(s); if (!el || el.disabled) return false; el.click(); return true }, sel)
+
+async function start(page, base, sc) {
+  await page.goto(`${base}/?seed=${sc.seed}`)
+  await page.waitForSelector('.home-screen .home-cta-primary', { timeout: 30000 })
+  await page.waitForTimeout(300)
+  if (await clickText(page, 'わかった')) await page.waitForTimeout(300)
+  if (!(await clickSel(page, '[data-testid="home-start"]'))) await clickText(page, '神を選ぶ')
+  await page.waitForTimeout(400)
+  if (await clickText(page, '新しく始める')) await page.waitForTimeout(300)
+  await clickText(page, sc.god); await page.waitForTimeout(300)
+  await clickText(page, 'この構成で始める'); await page.waitForTimeout(300)
+  await clickText(page, sc.enemy); await page.waitForTimeout(500)
+  await clickText(page, 'この構成でバトル開始')
+  await page.waitForFunction(() => { const b = document.querySelector('.end-round-button'); return b && !b.disabled }, null, { timeout: 20000 })
+  await page.waitForTimeout(2200)
+}
+const BOX_SELS = ['.player-avatar-wrap', '.player-windup', '.enemy-avatar-wrap', '.enemy-stage', '.god-otomo-portraits', '.enemy-plate', '.player-plate', '.god-otomo-plate', '.intent', '.hand', '.battle-dock-actions', '.battle-topbar']
+const snapshot = (page) => page.evaluate((sels) => {
+  const r = (s) => { const e = document.querySelector(s); if (!e) return null; const b = e.getBoundingClientRect(); return [Math.round(b.x), Math.round(b.y), Math.round(b.width), Math.round(b.height)] }
+  return {
+    boxes: Object.fromEntries(sels.map((s) => [s, r(s)])),
+    enemyScale: getComputedStyle(document.querySelector('.enemy-avatar')).scale,
+    intent: document.querySelector('.intent')?.textContent.replace(/\s+/g, ' ').trim() ?? null,
+    hScroll: document.documentElement.scrollWidth > window.innerWidth + 1,
+    hand: [...document.querySelectorAll('.hand .card-view')].map((c) => ({ name: (c.querySelector('.card-view-name')?.textContent.trim() ?? '').replace(/^[^\p{L}\p{N}]+\s*/u, ''), disabled: c.disabled })),
+  }
+}, BOX_SELS)
+const observe = (page) => page.evaluate(() => {
+  const cls = (s) => [...(document.querySelector(s)?.classList ?? [])].filter((c) => /^rl-|god-strike|god-burst|enemy-reaction$|react-l|card-view-dealt/.test(c))
+  const anims = (s) => (document.querySelector(s)?.getAnimations?.() ?? []).map((a) => a.animationName).filter((n) => /^rl-|god-strike|hit-shake|juice/.test(n))
+  return {
+    god: cls('.player-avatar-wrap'), godAnim: [...anims('.player-avatar-wrap'), ...anims('.player-avatar-wrap img')],
+    enemyIdle: cls('.enemy-reaction-idle'), enemyReact: !!document.querySelector('.enemy-reaction'), enemyAnim: anims('.enemy-reaction-idle'),
+    otomo: cls('.portrait-otomo img'), otomoAnim: anims('.portrait-otomo img'),
+    dealt: document.querySelectorAll('.card-view-dealt').length, ap: cls('.ap-gauge'),
+    endDisabled: document.querySelector('.end-round-button')?.disabled ?? null,
+  }
+})
+
+async function playOne(page, cardName) {
+  const t0 = Date.now()
+  const ok = await page.evaluate((n) => { const el = [...document.querySelectorAll('.hand .card-view')].find((c) => (c.querySelector('.card-view-name')?.textContent.trim() ?? '').replace(/^[^\p{L}\p{N}]+\s*/u, '') === n && !c.disabled); if (!el) return false; window.__lock = null; window.__t0 = performance.now(); const b = document.querySelector('.end-round-button'); const mo = new MutationObserver(() => { if (!b.disabled && window.__lock === null) { window.__lock = performance.now() - window.__t0; mo.disconnect() } }); mo.observe(b, { attributes: true }); el.click(); return true }, cardName)
+  if (!ok) return null
+  const samples = []
+  let lockMs = null
+  for (let i = 0; i < 24; i++) {
+    const o = await observe(page)
+    o.t = Date.now() - t0
+    samples.push(o)
+    if (lockMs === null && o.endDisabled === false && o.t > 50) lockMs = o.t
+    await page.waitForTimeout(25)
+  }
+  // 入力ロック：end-round が再び有効になるまで（cast 280ms ＋ 描画）
+  while (lockMs === null && Date.now() - t0 < 3000) { const o = await observe(page); if (o.endDisabled === false) lockMs = Date.now() - t0; await page.waitForTimeout(10) }
+  await page.waitForTimeout(400)
+  const lockInPage = await page.evaluate(() => window.__lock)
+  const union = (k) => [...new Set(samples.flatMap((s) => s[k]))]
+  return { lockMs: lockInPage ?? lockMs, god: union('god'), godAnim: union('godAnim'), enemyIdle: union('enemyIdle'), enemyAnim: union('enemyAnim'), enemyReact: samples.some((s) => s.enemyReact), otomo: union('otomo'), otomoAnim: union('otomoAnim'), dealtMax: Math.max(...samples.map((s) => s.dealt)), ap: union('ap') }
+}
+
+const results = []
+const browser = await chromium.launch()
+for (const [vpName, vp] of Object.entries(VPS)) for (const sc of SCENARIOS) for (const [side, base] of Object.entries(BASES)) for (const reduced of side === 'after' && vpName === 'pc' ? [false, true] : [false]) {
+  const ctx = await browser.newContext({ viewport: vp, reducedMotion: reduced ? 'reduce' : 'no-preference' })
+  const page = await ctx.newPage()
+  const errors = []
+  page.on('console', (m) => { if (m.type() === 'error') errors.push(m.text()) })
+  page.on('pageerror', (e) => errors.push(String(e)))
+  const rec = { vp: vpName, scenario: sc.name, side, reduced, errors, plays: [] }
+  try {
+    await start(page, base, sc)
+    const covered = new Set()
+    for (let round = 1; round <= 4; round++) {
+      for (let k = 0; k < 3; k++) {
+        const pre = await snapshot(page)
+        const affordable = pre.hand.filter((h) => !h.disabled)
+        if (affordable.length === 0) break
+        const pick = affordable.find((h) => !covered.has(SEMMAP[h.name]) && SEMMAP[h.name] !== 'STRIKE') ?? affordable.find((h) => !covered.has(SEMMAP[h.name])) ?? (round <= 2 ? affordable[0] : null)
+        if (!pick) break
+        const sem = SEMMAP[pick.name]
+        const obs = await playOne(page, pick.name)
+        if (!obs) break
+        if (side === 'after' && !reduced) await page.screenshot({ path: `${OUT}/${vpName}-${sc.name}-R${round}-${sem}.png` }).catch(() => {})
+        const post = await snapshot(page)
+        const disp = Object.fromEntries(BOX_SELS.map((s) => [s, pre.boxes[s] && post.boxes[s] ? Math.max(...pre.boxes[s].map((v, i) => Math.abs(v - post.boxes[s][i]))) : null]))
+        rec.plays.push({ round, card: pick.name, sem, expect: PRIMITIVE[sem], ...obs, disp, post: post.boxes, enemyScale: post.enemyScale, intentSame: pre.intent === post.intent, hScroll: post.hScroll })
+        covered.add(sem)
+      }
+      const div = sc.divination[round]
+      if (div) {
+        const pre = await snapshot(page)
+        const t0 = Date.now()
+        if (await clickText(page, div)) {
+          const samples = []
+          for (let i = 0; i < 16; i++) { const o = await observe(page); samples.push(o); await page.waitForTimeout(25) }
+          await page.waitForTimeout(400)
+          const post = await snapshot(page)
+          const union = (k) => [...new Set(samples.flatMap((s) => s[k]))]
+          rec.plays.push({ round, card: div, sem: div === '加護の託宣' ? 'GUARD' : div === '導きの託宣' ? 'TEMPO' : 'STRIKE', expect: div === '加護の託宣' ? 'brace' : div === '導きの託宣' ? 'deal' : 'strike', lockMs: Date.now() - t0, god: union('god'), godAnim: union('godAnim'), enemyIdle: union('enemyIdle'), enemyAnim: union('enemyAnim'), enemyReact: samples.some((s) => s.enemyReact), otomo: union('otomo'), otomoAnim: union('otomoAnim'), dealtMax: Math.max(...samples.map((s) => s.dealt)), ap: union('ap'), post: post.boxes, disp: Object.fromEntries(BOX_SELS.map((s) => [s, pre.boxes[s] && post.boxes[s] ? Math.max(...pre.boxes[s].map((v, i) => Math.abs(v - post.boxes[s][i]))) : null])), enemyScale: post.enemyScale, intentSame: pre.intent === post.intent, hScroll: post.hScroll })
+        }
+      }
+      await clickSel(page, '.end-round-button')
+      await page.waitForTimeout(3200)
+      await page.waitForFunction(() => { const b = document.querySelector('.end-round-button'); return (b && !b.disabled) || document.querySelector('.game-over-overlay, .victory-stage') }, null, { timeout: 15000 }).catch(() => {})
+      await page.waitForTimeout(300)
+      if (await page.evaluate(() => !!document.querySelector('.game-over-overlay, .victory-stage'))) break
+    }
+  } catch (e) { rec.failure = String(e) }
+  results.push(rec)
+  await ctx.close()
+}
+await browser.close()
+writeFileSync(`${OUT}/gate.json`, JSON.stringify(results, null, 1))
+const rows = []
+const pairBox = (r, p) => { if (r.side !== 'after' || r.reduced) return '-'; const b = results.find((x) => x.vp === r.vp && x.scenario === r.scenario && x.side === 'before'); const bp = b?.plays.find((q) => q.round === p.round && q.card === p.card); if (!bp || !bp.post || !p.post) return 'n/a'; return Math.max(...Object.keys(p.post).map((k) => (p.post[k] && bp.post[k]) ? Math.max(...p.post[k].map((v, i) => Math.abs(v - bp.post[k][i]))) : 0)) }
+for (const r of results) for (const p of r.plays) {
+  const body = [...p.godAnim.filter((c) => /^rl-(brace|breathe|rise|rim-only)$/.test(c)), ...p.enemyAnim.filter((c) => /^rl-stagger/.test(c))]
+  rows.push([r.vp, r.scenario, r.side + (r.reduced ? '/reduced' : ''), `R${p.round}`, p.card, p.sem, p.expect, `body=${body.join('+') || '-'}`, `tone=${p.god.filter((c) => c.startsWith('rl-tone')).join('') || '-'}`, `otomo=${p.otomoAnim.join('') || '-'}`, `deal=${p.dealtMax}`, `ap=${p.ap.join('') || '-'}`, `strikeAnim=${p.godAnim.some((c) => /god-strike|god-burst/.test(c))}`, `anim=${[...p.godAnim, ...p.enemyAnim, ...p.otomoAnim].join(',') || '-'}`, `lock=${p.lockMs}`, `disp=${Math.max(...Object.values(p.disp).filter((v) => v !== null))}`, `pair=${pairBox(r, p)}`, `scale=${p.enemyScale}`, `intent=${p.intentSame}`, `hs=${p.hScroll}`].join('\t'))
+}
+writeFileSync(`${OUT}/summary.tsv`, rows.join('\n'))
+console.log(rows.join('\n'))
+console.log('errors:', results.map((r) => `${r.vp}/${r.scenario}/${r.side}${r.reduced ? '/reduced' : ''}=${r.errors.length}${r.failure ? ' FAIL ' + r.failure.slice(0, 80) : ''}`).join(' | '))

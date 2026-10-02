@@ -1,0 +1,112 @@
+// Commercial RC Pre-Gate M3：各 G の evidence JSON を読み、判定値を 1 つの summary.json と Markdown 表にまとめる（手入力なし）
+// node aggregate.mjs <evidenceDir>
+import { readFileSync, writeFileSync, existsSync } from 'node:fs'
+const E = process.argv[2]
+const J = (p) => JSON.parse(readFileSync(`${E}/${p}`, 'utf8').replace(/^﻿/, ''))
+const T = (p) => readFileSync(`${E}/${p}`, 'utf8').replace(/^﻿/, '')
+const S = {}
+// G1
+const v = J('vitest-extract/g1-vitest.json')
+const build = T('build.txt'), served = T('served.txt'), ox = T('oxlint.txt')
+const jsMd5 = (s) => (s.match(/([0-9a-f]{32})\s+\S*index-BD0q8Mf-\.js|index-BD0q8Mf-\.js\s+\d+\s+\d+ bytes\s+md5 ([0-9a-f]{32})/) || []).filter(Boolean)[1]
+S.G1 = { tsc: 'exit 0（出力 0 行）', oxlintErrors: String(ox.split(/\r?\n/).filter((l) => /: error /.test(l)).length), oxlintWarnings: ox.split(/\r?\n/).filter((l) => /: warning /.test(l)).length, oxlintWarningInSrc: ox.split(/\r?\n/).filter((l) => /: warning /.test(l) && l.startsWith('src/')).length, vitest: { passed: v.numPassedTests, failed: v.numFailedTests, skipped: v.numPendingTests, total: v.numTotalTests, suitesPassed: v.numPassedTestSuites, suitesSkipped: v.numPendingTestSuites, expected: v.expected }, buildJsMd5: jsMd5(build), servedJsMd5: jsMd5(served), cssMd5Same: /1ac5379697d98f763428d58e668306df\s+dist/.test(build) && /md5 1ac5379697d98f763428d58e668306df/.test(served) }
+S.G1.pass = S.G1.oxlintErrors === '0' && v.numFailedTests === 0 && v.numPassedTests === v.expected && S.G1.buildJsMd5 === S.G1.servedJsMd5 && S.G1.cssMd5Same
+// G2
+const id = J('g2/enemy-identity-gate.json'), base = JSON.parse(readFileSync(`${E}/../decision252/pilot/enemy-identity-gate.json`, 'utf8'))
+const idDiff = id.filter((r, i) => JSON.stringify(r) !== JSON.stringify(base[i])).length
+const g8 = J('g8/g8-analysis.json')
+S.G2 = { identityRows: id.length, ctx: [...new Set(id.map((r) => r.ctx))], diffVsD252Pilot: idDiff, chargeToSuper: id.filter((r) => r.chargingSuper).length, assertions: /Tests\s+1 passed/.test(T('g2/identity.vitest.txt')) ? '1/1 PASS' : 'FAIL', nameplateDiffVsD252: g8.diffCount }
+S.G2.pass = idDiff === 0 && S.G2.assertions === '1/1 PASS' && g8.diffCount === 0
+// G3
+const g3 = J('vitest-extract/g3-vitest.json'); S.G3 = { files: g3.files, passed: g3.passed, failed: g3.failed, suites: g3.suites.map((s) => `${s.file} ${s.passed}`) }; S.G3.pass = g3.failed === 0 && g3.passed > 0
+// G4
+const lock = J('g4/gate-lock.json')
+const errs4 = Object.values(lock.out).reduce((s, r) => s + (r.errors?.length ?? 1), 0)
+S.G4 = { rows: lock.lock.length, mismatches: lock.lock.filter((l) => l.same === false || l.error).length, runs: Object.keys(lock.out).length, consoleErrors: errs4, hScroll: Object.values(lock.out).filter((r) => (r.rounds ?? []).some((x) => x.before?.hScroll || x.afterPlay?.hScroll || x.afterEnemy?.hScroll)).length, godStrikeRuns: Object.values(lock.out).filter((r) => r.godStrike).length }
+S.G4.pass = S.G4.rows === 154 && S.G4.mismatches === 0 && errs4 === 0
+// G5
+const g5 = J('g5/g5-oracle-14.json'); S.G5 = { checks: `${g5.pass}/${g5.total}`, parityWithD253Smoke: g5.parityWithD253Smoke.filter((p) => p.same).length + '/' + g5.parityWithD253Smoke.length, lockRows: g5.lockRows, lockMismatches: g5.lockMismatches }; S.G5.pass = g5.pass === 14 && g5.lockMismatches === 0
+// G6（共鳴 7→BURST→カットイン→一撃）：G4／G5 の God Strike 発火・G7 の着弾・G18 の burst
+const g7 = J('g7/g7-analysis.json'), g18 = J('g18/gate.json').summary
+S.G6 = { godStrikeFiredG4: `${S.G4.godStrikeRuns}/${S.G4.runs}`, burstsG7: g7.headless.filter((r) => r.checks.burst).length + '/' + g7.headless.length, impact1600G7: g7.headless.concat(g7.headed).filter((r) => r.checks.impact1600).length + '/' + (g7.headless.length + g7.headed.length), stop80: g7.headless.concat(g7.headed).filter((r) => r.checks.stop).length, burstG18: g18.afterBursts.map((b) => `${b.k} rise ${b.riseMs} hitL4 ${b.hitL4Ms} unlock ${b.lockReleaseMs}`) }
+S.G6.pass = S.G4.godStrikeRuns === S.G4.runs && g7.headless.every((r) => r.checks.burst && r.checks.impact1600 && r.checks.stop) && g18.afterBursts.every((b) => b.hitL4Ms === 1600)
+// G7
+S.G7 = { headless: `${g7.headlessPass}/${g7.headlessTotal}`, headed: `${g7.headedPass}/${g7.headedTotal}`, droppedHeaded: g7.droppedHeaded, playingHeaded: g7.headed.map((r) => `${r.label} ${r.isVideo}ms`), fallback: g7.headless.filter((r) => /reduced|404|stall/.test(r.label)).map((r) => `${r.label} static=${r.checks.staticFallback} unlock ${r.unlock}`) }
+S.G7.structurePass = g7.headlessPass === g7.headlessTotal && g7.headedPass === g7.headedTotal
+S.G7.droppedPass = g7.droppedHeaded.every((d) => d.ok)
+// G8
+S.G8 = { runs: g8.runs, consoleErrors: Object.values(g8.consoleErrors).filter((x) => x !== 0).length, hScroll: g8.hScroll, cutins: g8.cutins.length, ringsPx: g8.ringsPx, diffVsPreviewAndD252: g8.diffCount }; S.G8.pass = g8.runs === 24 && g8.diffCount === 0 && S.G8.consoleErrors === 0
+// G9
+const g9 = J('g9/g9-analysis.json'), g9raw = J('g9/gate.json')
+S.G9 = { plays: g9.plays, subjectMatch: g9.subjectMatch, refDiffRows: g9.refDiffRows, pairBoxNonZero: g9.pairNonZero, hScroll: g9.hScroll, reducedTransform: g9.reducedTransform, consoleErrors: g9raw.reduce((s, r) => s + r.errors.length, 0), failures: g9raw.filter((r) => r.failure).length }
+S.G9.pass = g9.subjectMatch === g9.plays && g9.refDiffRows === 0 && g9.pairNonZero === 0 && g9.reducedTransform === 0 && S.G9.consoleErrors === 0
+// G10
+const g10 = J('vitest-extract/g10-vitest.json'), dr = ['pc', 'sp'].map((x) => J(`g-extra/daily-resume-${x}.json`))
+S.G10 = { vitestFiles: g10.files, vitestPassed: g10.passed, vitestFailed: g10.failed, tamperTests: g10.tamper?.map((t) => `${t.status} ${t.title}`), migrationTests: g10.migration?.length, browserResume: dr.map((d) => ({ mode: d.mode, saveVersion: d.saveBefore?.version, resumeClicked: d.resumeClicked, entranceOnResume: d.entranceOnResume, round: d.resumed?.round, gameStateSame: d.resumeSame, errors: d.errors.length })), t6: 'G19 t6-resume/pc（入口なし）' }
+S.G10.pass = g10.failed === 0 && dr.every((d) => d.resumeSame && d.resumeClicked && !d.entranceOnResume && d.errors.length === 0)
+// G11
+const g11 = J('vitest-extract/g11-vitest.json')
+S.G11 = { vitestFiles: g11.files, vitestPassed: g11.passed, vitestFailed: g11.failed, daily01: g11.daily01?.map((t) => t.status), browser: dr.map((d) => ({ mode: d.mode, before: d.home0?.attempts, after: d.home1?.attempts, ctaAfter: d.home1?.cta, enemySelect: d.enemySelectShown, topbar: d.battle?.topbar, seed: (d.dailyScreen?.match(/SEED ID (\S+)/) || [])[1] ?? null })) }
+const ac10 = J('g14/ac10/measure-ac10.json').results['1508x660']
+S.G11.dailySecondResult = ac10?.r1?.dailyDiff
+S.G11.pass = g11.failed === 0 && dr.every((d) => d.home0?.attempts === '残り 3/3' && d.home1?.attempts === '残り 2/3' && d.enemySelectShown === 0)
+// G12
+const g12 = J('vitest-extract/g12-vitest.json'); S.G12 = { tests: g12.tests.map((t) => `${t.status} ${t.title.slice(0, 48)}… ${t.ms}ms`) }; S.G12.pass = g12.tests.length === 3 && g12.tests.every((t) => t.status === 'passed')
+// G13
+const g13 = J('vitest-extract/g13-vitest.json'), rec = ['pc', 'sp'].map((x) => J(`g-extra/records-${x}.json`))
+S.G13 = { vitestFiles: g13.files, vitestPassed: g13.passed, vitestFailed: g13.failed, records: rec.map((r) => ({ mode: r.mode, rows: r.record.rows, chips: r.record.chips, total: r.record.total, hScroll: r.recordLayout.hScroll, otomoOpened: r.otomoOpened, otomoHScroll: r.otomoLayout.hScroll, errors: r.errors.length })) }
+S.G13.pass = g13.failed === 0 && rec.every((r) => r.record.rows === 7 && r.record.chips === 49 && !r.recordLayout.hScroll && r.otomoOpened && r.errors.length === 0)
+// G14
+const d241 = ['pc1508', 'pc1280', 'sp390', 'sp360', 'pc1508-rm', 'sp390-rm'].map((k) => ({ k, ...J(`g14/d241/prod-${k}-log.json`) }))
+const ovKeys = ['enemyPlate', 'playerPlate', 'godOtomoPlate', 'enemyTitle', 'playerTitle', 'godOtomoTitle', 'intent', 'resonanceGauge']
+S.G14 = { d241: d241.map((l) => ({ k: l.k, samples: l.samples.length, toastVisible: l.samples.every((s) => s.toastVisible), maxOverlapPx2: Math.max(0, ...l.samples.flatMap((s) => ovKeys.map((o) => s.overlaps?.[o]?.area ?? 0)), ...l.samples.map((s) => s.overlaps?.cardsAny ?? 0)), insideViewport: l.samples.every((s) => s.overlaps?.insideViewport), errors: l.errors.length })), ac10: { r1: { status: ac10.r1.status, overflowPx: ac10.r1.overflowPx, secondaryInViewport: ac10.r1.secondaryInViewport }, r2: { status: ac10.r2.status, overflowPx: ac10.r2.overflowPx, secondaryInViewport: ac10.r2.secondaryInViewport, secondaryInCardVisible: ac10.r2.secondaryInCardVisible, recapLines: ac10.r2.recap?.lines?.length }, errors: ac10.errors.length } }
+S.G14.pass = S.G14.d241.every((x) => x.maxOverlapPx2 === 0 && x.toastVisible && x.insideViewport && x.errors === 0) && ac10.r2.secondaryInViewport.every(Boolean) && ac10.r2.overflowPx <= 0
+// G15
+const p1 = J('g15/perf2-run1-from-log.json').summary, p2 = J('g15/perf2.json').summary
+const g2 = J('g19/gate2.json')
+const spHs = [...Object.values(lock.out).filter((_, i) => /sp/.test(Object.keys(lock.out)[i]))].filter((r) => (r.rounds ?? []).some((x) => x.before?.hScroll || x.afterPlay?.hScroll || x.afterEnemy?.hScroll)).length
+const spOracle = J('g5/g5-oracle-14.json').checks.find((c) => c.id === 8)
+S.G15 = { hScrollSpRunsG4: spHs, oracleSpBoxes: spOracle.detail, oracleOverflow: J('g5/g5-oracle-14.json').checks.find((c) => c.id === 9).n, endRoundSp: 'G19 T5 sp .end-round-button [272,582,58,44]（高さ 44px）', perfHeadedRun1: p1.headed.after, perfHeadedRetry: p2.headed.after, perfHeadlessRetry: p2.headless.after, t7SpHScroll: g2.runs['t7-first/sp/after']?.probe?.hScroll ?? g2.runs['t7-first/sp/after']?.hScroll ?? null }
+S.G15.passRun1 = p1.headed.after.over33Max < 8
+S.G15.passRetry = p2.headed.after.over33Max < 8
+S.G15.pass = spHs === 0 && S.G15.passRetry && spOracle.pass
+// G16
+const g16 = J('g16/gate.json')
+const t5 = T('g19/tables.md').split('### T5')[1].split('###')[0].split('\n').filter((l) => /^\| pc \|/.test(l))
+S.G16 = { flip21: g16.filter((r) => r.side === 'after' && r.rest?.scale === '-1 1').length + '/' + g16.filter((r) => r.side === 'after').length, hitLayerSame: (() => { let n = 0, t = 0; for (const a of g16.filter((r) => r.side === 'after')) { const b = g16.find((r) => r.side === 'before' && r.vp === a.vp && r.enemy === a.enemy); t++; if (JSON.stringify(a.rest?.hitLayer) === JSON.stringify(b?.rest?.hitLayer)) n++ } return `${n}/${t}` })(), lungeTowardPlayer: g16.filter((r) => r.side === 'after' && r.lunge?.avatarDx > 0).length, errors: g16.reduce((s, r) => s + r.errors.length, 0), hScroll: g16.filter((r) => r.rest?.hScroll).length, pc1508HudBoxDiff: t5.map((l) => l.split('|')[2].trim() + '=' + l.split('|')[7].trim()) }
+S.G16.pass = S.G16.flip21 === '21/21' && S.G16.errors === 0 && S.G16.hScroll === 0 && S.G16.hitLayerSame === '21/21'
+// G17
+const t4 = Object.entries(g2.runs).filter(([k]) => k.startsWith('anims-reduced'))
+S.G17 = { g9Reduced: `${g9.rows.filter((r) => r.row.includes('reduced')).length} plays・transform 0（${g9.reducedTransform}）`, g7Reduced: g7.headless.find((r) => r.label === 'pc-after-reduced'), g19ReducedAnims: t4.map(([k, r]) => `${k}: ${JSON.stringify(r.anims ?? r.an ?? r).slice(0, 160)}`), g18Reduced: g18.fallback?.['reduced/after'] }
+S.G17.pass = g9.reducedTransform === 0 && g7.headless.find((r) => r.label === 'pc-after-reduced')?.pass && (g18.consoleErrors['reduced/after'] === 0)
+// G18
+const pr = ['pc', 'sp'].map((x) => J(`g-extra/press-${x}.json`))
+S.G18 = { press: pr.map((p) => ({ mode: p.mode, taps: p.taps.length, clickToStartMaxMs: Math.max(...p.taps.map((t) => t.clickToStartMs ?? 999)), startDelayMs: [...new Set(p.taps.map((t) => t.startDelayMs))], soundsPerTap: [...new Set(p.taps.map((t) => t.cardPlayCountWithin1100ms))], duplicates30ms: p.duplicates30ms, errors: p.errors.length })), d257: { lockRows: g18.lockRows, lockMismatches: g18.lockMismatches, bursts: g18.afterBursts.map((b) => ({ k: b.k, riseMs: b.riseMs, hitL4Ms: b.hitL4Ms, duck: b.duck, minEffective: b.minEffective, returnDoneMs: b.returnDoneMs })), ultimates: g18.afterUltimates.map((u) => ({ k: u.k, riseMs: u.riseMs, duck: u.duck, minEffective: u.minEffective, returnDoneMs: u.returnDoneMs })), duplicates: g18.afterDuckDips.map((d) => `${d.k}=${d.duplicates}`), newSe: g18.afterDuckDips.map((d) => `${d.k}=${JSON.stringify(d.newSe)}`), existingSeSame: g18.pairs.map((p) => `${p.id} ${p.existingSeSame}（最大差 ${p.existingSeMaxDelayDiffMs}ms）`), consoleErrors: g18.consoleErrors } }
+S.G18.pass = pr.every((p) => p.errors.length === 0 && p.duplicates30ms === 0 && p.taps.every((t) => t.clickToStartMs !== null && t.clickToStartMs <= 2 && t.cardPlayCountWithin1100ms === 1)) && g18.lockMismatches === 0 && g18.afterBursts.every((b) => b.riseMs === 450 && b.duck) && g18.afterUltimates.every((u) => u.duck) && g18.afterDuckDips.every((d) => d.duplicates === 0) && Object.values(g18.consoleErrors).every((x) => x === 0)
+// G19
+const g2b = J('g19/gate2-t1-t4.json')
+const ref = JSON.parse(readFileSync(`${E}/../decision254/release/gate2-all.json`, 'utf8')).runs
+const mk = ['sigilVisible', 'godVisible', 'enemyArtVisible', 'stageVisible', 'released', 'entranceGone']
+const dev = (runs, k) => { const r = runs[k]?.probe, f = ref[k.replace('/before', '/after')]?.probe; if (!r || !f) return null; const d = Object.fromEntries(mk.map((m) => [m, r.relMarks[m] - f.relMarks[m]])); d.se = (r.se ?? []).map((s) => s.rel); d.seRef = f.se.map((s) => s.rel); return d }
+const t3 = Object.entries(g2.runs).filter(([k]) => k.startsWith('t3-skip'))
+S.G19 = {
+  t1DeviationVsD254Release: Object.fromEntries(['t1/pc/before', 't1/pc/after', 't1/sp/before', 't1/sp/after', 't1/sp660/before', 't1/sp660/after'].map((k) => [k, { run1: dev(g2.runs, k), run2: dev(g2b.runs, k) }])),
+  t3: { runs: t3.length, penetration: t3.filter(([, r]) => !(r.stateUnchanged && r.uiUnchanged)).length, hand55: t3.filter(([, r]) => r.uiBefore?.hand === 5 && r.uiAfter?.hand === 5).length, validDuringEntrance: t3.filter(([, r]) => r.validDuringEntrance).length, bossSeAfterSkip: t3.filter(([, r]) => r.bossSePlayedAfterSkip).length, leftover: t3.filter(([, r]) => r.leftover?.entrance).length, errors: t3.reduce((s, [, r]) => s + (Array.isArray(r.errors) ? r.errors.length : (r.errors ?? 0)), 0) },
+  t2: ['pc', 'sp'].map((v) => { const r = g2.runs[`t2-revisit/${v}`]; return `${v}: first ${r.first?.variant} / rematch ${r.rematch?.variant} / viaHome ${r.viaHome?.variant} / resume entrance ${r.resume?.entranceEverShown} / reload new ${r.afterReloadNewStart?.variant} / errors ${r.errors?.length}` }),
+  t6: ['before', 'after'].map((s) => `pc/${s}: entrance ${g2.runs[`t6-resume/pc/${s}`]?.entranceEverShown}`),
+  t7: ['t7-first/pc/after', 't7-first/sp/after', 't7-daily/pc/after'].map((k) => `${k}: ${g2.runs[k]?.variant} gone ${g2.runs[k]?.relMarks?.entranceGone} hScroll ${g2.runs[k]?.hScroll} errors ${(g2.runs[k]?.errors ?? []).length}`),
+  gods: (g2.runs['gods/pc'] ?? []).map((g) => `${g.shown?.title} ${g.variant} ${g.errors.length}`),
+}
+const within = (d, keys, tol) => d && keys.every((m) => Math.abs(d[m]) <= tol)
+const sp = ['t1/sp/after', 't1/sp660/after'].flatMap((k) => [S.G19.t1DeviationVsD254Release[k].run1, S.G19.t1DeviationVsD254Release[k].run2])
+const pcA = [S.G19.t1DeviationVsD254Release['t1/pc/after'].run1, S.G19.t1DeviationVsD254Release['t1/pc/after'].run2]
+S.G19.timingSpWithin50 = sp.every((d) => within(d, mk, 50))
+S.G19.timingPcProdWithin50 = pcA.every((d) => within(d, mk, 50))
+S.G19.structurePass = S.G19.t3.penetration === 0 && S.G19.t3.hand55 === S.G19.t3.runs && S.G19.t3.errors === 0
+// 共通：console error・HTTP
+const xs = ['records-pc', 'records-sp', 'daily-resume-pc', 'daily-resume-sp', 'press-pc', 'press-sp'].map((m) => J(`g-extra/${m}.json`))
+S.common = { consoleErrors: { G4: errs4, G5: Object.values(J('g5/gate-d253.json').out).reduce((s, r) => s + r.errors.length, 0), G7: g7.headless.concat(g7.headed).filter((r) => !r.checks.errors0).length, G8: S.G8.consoleErrors, G9: S.G9.consoleErrors, G14: S.G14.d241.reduce((s, x) => s + x.errors, 0) + ac10.errors.length, G16: S.G16.errors, G18: Object.values(g18.consoleErrors).reduce((s, x) => s + x, 0), G19: S.G19.t3.errors, extras: xs.reduce((s, x) => s + x.errors.length, 0) }, httpNon200InExtras: xs.flatMap((x) => x.http), g7ResourceErrors: 'pc-after-404 の 1 件のみ（route で意図的に 404 を返すケース）' }
+writeFileSync(`${E}/summary.json`, JSON.stringify(S, null, 1))
+const st = (g) => g.pass === true ? 'PASS' : g.pass === false ? 'FAIL' : '—'
+console.log(Object.entries(S).filter(([k]) => k.startsWith('G')).map(([k, g]) => `${k}=${st(g)}${g.structurePass !== undefined ? ' struct=' + g.structurePass : ''}${g.droppedPass !== undefined ? ' dropped=' + g.droppedPass : ''}${g.timingSpWithin50 !== undefined ? ' sp50=' + g.timingSpWithin50 + ' pcProd50=' + g.timingPcProdWithin50 : ''}${g.passRun1 !== undefined ? ' run1=' + g.passRun1 + ' retry=' + g.passRetry : ''}`).join('\n'))
+console.log(JSON.stringify(S.common))

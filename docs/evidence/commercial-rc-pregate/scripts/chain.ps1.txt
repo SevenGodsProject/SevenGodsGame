@@ -1,0 +1,24 @@
+$R = 'C:\Users\kimi1\AppData\Local\Temp\claude\C--Users-kimi1-SevenGodsGame\1141c1d1-9eb9-4c4a-a511-66373648126e\scratchpad\run.ps1'
+$E = 'C:\Users\kimi1\SevenGodsGame-rcgate\docs\evidence\commercial-rc-pregate'
+$P = 'https://seven-gods-game.vercel.app'; $L = 'http://127.0.0.1:4291'
+function Step($label, $script, $rest) { Write-Output "=== $label $(Get-Date -Format s)"; & $R $label $script "$E\logs\$label.log.txt" $rest | Select-Object -Last 4 }
+New-Item -ItemType Directory -Force "$E\logs" | Out-Null
+$env:D253_OUT = 'docs/evidence/commercial-rc-pregate/g5'; $env:D253_BASES = "$L,$P"
+Step 'G5-oracle' '.rcgate-scratch/gate-d253.mjs' @()
+$env:D254_OUT = 'docs/evidence/commercial-rc-pregate/g19'; $env:D254_BEFORE = $L; $env:D254_AFTER = $P
+Step 'G19-entry' '.rcgate-scratch/gate2.mjs' @()
+$env:D254_OUT = 'docs/evidence/commercial-rc-pregate/g15'
+Step 'G15-perf2' '.rcgate-scratch/perf2.mjs' @('4','4')
+Step 'G8-presentation' '.rcgate-scratch/gate-presentation.mjs' @()
+Step 'G9-reaction' '.rcgate-scratch/gate249.mjs' @("$E\g9")
+Step 'G7-godstrike' '.rcgate-scratch/gate250.mjs' @("$E\g7")
+$env:HEADED = '1'; $env:CHANNEL = 'chrome'
+Step 'G7-godstrike-headed' '.rcgate-scratch/gate250.mjs' @("$E\g7-headed", 'noshot')
+Remove-Item Env:HEADED; Remove-Item Env:CHANNEL
+Step 'G16-flip' '.rcgate-scratch/gate247.mjs' @("$E\g16")
+$env:D257_OUT = 'docs/evidence/commercial-rc-pregate/g18'; $env:D257_BASES = "$L,$P"
+foreach ($n in @('lock~taiyo-oni-normal~pc~before','lock~taiyo-oni-normal~pc~after','lock~taiyo-doukeshi-normal~pc~after','lock~taiyo-oni-normal~sp~after','retry~after','reduced~after')) { Step "G18-$($n -replace '~','_')" '.rcgate-scratch/smoke257.mjs' @('--run', $n) }
+Step 'G14-d241' '.rcgate-scratch/measure241.mjs' @($P, "$E\g14\d241", 'prod')
+Step 'G14-ac10' '.rcgate-scratch/measure-ac10.mjs' @("$E\g14\ac10\measure-ac10.json", $P, '1508x660')
+foreach ($m in @('records-pc','records-sp','daily-resume-pc','daily-resume-sp','press-pc','press-sp')) { Step "X-$m" '.rcgate-scratch/extras.mjs' @($m, $P, "$E\g-extra") }
+Write-Output "=== CHAIN DONE $(Get-Date -Format s)"

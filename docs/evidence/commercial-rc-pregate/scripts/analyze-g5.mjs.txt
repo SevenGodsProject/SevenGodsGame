@@ -1,0 +1,39 @@
+// G5 Oracle：gate-d253 の JSON（before=preview 538a3ef dist / after=Production）から 決定253 Smoke の 14 項目を判定する。
+// さらに 決定253 Production Smoke（同 seed）の after 表示と文字列比較（parity）。node analyze-g5.mjs <gate-d253.json> <d253-smoke.json> <out.json>
+import { readFileSync, writeFileSync } from 'node:fs'
+const [f, ref, outF] = process.argv.slice(2)
+const J = JSON.parse(readFileSync(f, 'utf8'))
+const R = JSON.parse(readFileSync(ref, 'utf8'))
+const after = Object.entries(J.out).filter(([k]) => k.endsWith('/after'))
+const all = (pred) => after.flatMap(([k, v]) => (v.rounds ?? []).flatMap((r) => ['before', 'afterPlay'].flatMap((ph) => (r[ph]?.choices ?? []).map((c) => ({ k, round: r.round, ph, c, snap: r[ph] }))))).filter(pred)
+const ch = all(() => true)
+const texts = (re) => ch.filter((x) => re.test(x.c.nameText ?? '')).map((x) => x.c)
+const kago = texts(/加護/), michi = texts(/導き/), tenkei = texts(/天啓/)
+const spBoxes = ch.filter((x) => x.k.includes('/sp/') || x.k.includes('/sp660/')).map((x) => x.c.box.slice(2).join('x'))
+const remaining = (id) => [...new Set(after.filter(([k]) => k.startsWith(id + '/')).flatMap(([, v]) => (v.rounds ?? []).map((r) => r.before?.remaining)).filter(Boolean))]
+const firstRemaining = (id) => after.filter(([k]) => k.startsWith(id + '/')).map(([k, v]) => [k, v.rounds?.[0]?.before?.remaining ?? null])
+const pairs = after.map(([k, a]) => { const b = J.out[k.replace('/after', '/before')]; return { k, intentSame: JSON.stringify((a.rounds ?? []).map((r) => r.afterEnemy?.intentText)) === JSON.stringify((b?.rounds ?? []).map((r) => r.afterEnemy?.intentText)), reactionsSame: JSON.stringify(a.reactions) === JSON.stringify(b?.reactions), godStrike: [b?.godStrike, a.godStrike] } })
+const checks = [
+  { id: 1, name: '加護「守る」＋ブロック preview', n: kago.length, pass: kago.length > 0 && kago.every((c) => c.role === '守る' && /ブロック\d+/.test(c.preview ?? '')) },
+  { id: 2, name: '導き「整える」＋「今なら『…』が出せる」', n: michi.filter((c) => /今なら『.+』が出せる/.test(c.preview ?? '')).length, pass: michi.length > 0 && michi.every((c) => c.role === '整える') && michi.some((c) => /今なら『.+』が出せる/.test(c.preview ?? '')) },
+  { id: 3, name: '導き 候補なし fallback', n: michi.filter((c) => /出せる札は増えない/.test(c.preview ?? '')).length, pass: michi.some((c) => /出せる札は増えない/.test(c.preview ?? '')) },
+  { id: 4, name: '天啓「攻める」40ダメージ', n: tenkei.filter((c) => /40ダメージ/.test(c.preview ?? '')).length, pass: tenkei.length > 0 && tenkei.every((c) => c.role === '攻める') && tenkei.some((c) => /40ダメージ/.test(c.preview ?? '')) },
+  { id: 5, name: '天啓「今なら 撃破」', n: tenkei.filter((c) => /今なら 撃破/.test(c.preview ?? '')).length, pass: tenkei.some((c) => /今なら 撃破/.test(c.preview ?? '')) },
+  { id: 6, name: '通常 残 3（R1）', detail: firstRemaining('taiyo-oni-normal').concat(firstRemaining('taiyo-doukeshi-normal')), pass: [...firstRemaining('taiyo-oni-normal'), ...firstRemaining('taiyo-doukeshi-normal')].every(([, v]) => v === '3') },
+  { id: 7, name: '神階 残 2（R1・stake5）', detail: firstRemaining('ebisu-juuma-stake5'), pass: firstRemaining('ebisu-juuma-stake5').every(([, v]) => v === '2') },
+  { id: 8, name: 'SP 3 択 visible（79×39 不変）', detail: [...new Set(spBoxes)], pass: spBoxes.length > 0 && spBoxes.every((b) => b === '79x39') && ch.filter((x) => x.k.includes('/sp')).every((x) => x.c.nameVisible && x.c.roleVisible && x.c.previewVisible) },
+  { id: 9, name: 'overflow 0', n: ch.filter((x) => x.c.overflowX || x.c.overflowY).length, pass: ch.every((x) => !x.c.overflowX && !x.c.overflowY) },
+  { id: 10, name: '横スクロール 0', n: after.flatMap(([, v]) => (v.rounds ?? []).flatMap((r) => [r.before, r.afterPlay, r.afterEnemy])).filter((s) => s?.hScroll).length, pass: after.every(([, v]) => (v.rounds ?? []).every((r) => !r.before?.hScroll && !r.afterPlay?.hScroll && !r.afterEnemy?.hScroll)) },
+  { id: 11, name: '決定252 予告・必殺 同一（preview vs Production）', detail: pairs.map((p) => [p.k, p.intentSame]), pass: pairs.every((p) => p.intentSame) },
+  { id: 12, name: '決定249 反応 同一（preview vs Production）', detail: pairs.map((p) => [p.k, p.reactionsSame]), pass: pairs.every((p) => p.reactionsSame) },
+  { id: 13, name: 'God Strike 発火', detail: pairs.map((p) => [p.k, p.godStrike]), pass: pairs.some((p) => p.godStrike[1]) && pairs.every((p) => p.godStrike[0] === p.godStrike[1]) },
+  { id: 14, name: 'console error 0', detail: Object.entries(J.out).map(([k, v]) => [k, v.errors?.length ?? 'ERR']), pass: Object.values(J.out).every((v) => Array.isArray(v.errors) && v.errors.length === 0) },
+]
+// parity：決定253 Production Smoke（2026-10-01 時点の本番）と同じ seed・同じ操作で、after の託宣表示が同一か
+const sig = (o) => Object.fromEntries(Object.entries(o).filter(([k]) => k.endsWith('/after')).map(([k, v]) => [k, (v.rounds ?? []).map((r) => (r.before?.choices ?? []).map((c) => `${c.nameText}|${c.role}|${c.preview}|${c.disabled}`).join('/') + '#' + r.before?.remaining)]))
+const sa = sig(J.out), sb = sig(R.out)
+const parity = Object.keys(sa).map((k) => ({ k, same: JSON.stringify(sa[k]) === JSON.stringify(sb[k]), rounds: [sa[k]?.length ?? null, sb[k]?.length ?? null] }))
+const lock = J.lock ?? []
+const out = { pass: checks.filter((c) => c.pass).length, total: checks.length, checks, parityWithD253Smoke: parity, lockRows: lock.length, lockMismatches: lock.filter((l) => l.same === false || l.error).length }
+writeFileSync(outF, JSON.stringify(out, null, 1))
+console.log(JSON.stringify({ pass: out.pass, total: out.total, failed: checks.filter((c) => !c.pass).map((c) => c.name), parity: parity.map((p) => `${p.k}=${p.same}`), lockRows: out.lockRows, lockMismatches: out.lockMismatches }))

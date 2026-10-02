@@ -1,0 +1,347 @@
+{
+ "pass": 14,
+ "total": 14,
+ "checks": [
+  {
+   "id": 1,
+   "name": "加護「守る」＋ブロック preview",
+   "n": 98,
+   "pass": true
+  },
+  {
+   "id": 2,
+   "name": "導き「整える」＋「今なら『…』が出せる」",
+   "n": 29,
+   "pass": true
+  },
+  {
+   "id": 3,
+   "name": "導き 候補なし fallback",
+   "n": 69,
+   "pass": true
+  },
+  {
+   "id": 4,
+   "name": "天啓「攻める」40ダメージ",
+   "n": 89,
+   "pass": true
+  },
+  {
+   "id": 5,
+   "name": "天啓「今なら 撃破」",
+   "n": 9,
+   "pass": true
+  },
+  {
+   "id": 6,
+   "name": "通常 残 3（R1）",
+   "detail": [
+    [
+     "taiyo-oni-normal/pc/after",
+     "3"
+    ],
+    [
+     "taiyo-oni-normal/sp/after",
+     "3"
+    ],
+    [
+     "taiyo-oni-normal/sp660/after",
+     "3"
+    ],
+    [
+     "taiyo-doukeshi-normal/pc/after",
+     "3"
+    ],
+    [
+     "taiyo-doukeshi-normal/sp/after",
+     "3"
+    ]
+   ],
+   "pass": true
+  },
+  {
+   "id": 7,
+   "name": "神階 残 2（R1・stake5）",
+   "detail": [
+    [
+     "ebisu-juuma-stake5/pc/after",
+     "2"
+    ],
+    [
+     "ebisu-juuma-stake5/sp/after",
+     "2"
+    ]
+   ],
+   "pass": true
+  },
+  {
+   "id": 8,
+   "name": "SP 3 択 visible（79×39 不変）",
+   "detail": [
+    "79x39"
+   ],
+   "pass": true
+  },
+  {
+   "id": 9,
+   "name": "overflow 0",
+   "n": 0,
+   "pass": true
+  },
+  {
+   "id": 10,
+   "name": "横スクロール 0",
+   "n": 0,
+   "pass": true
+  },
+  {
+   "id": 11,
+   "name": "決定252 予告・必殺 同一（preview vs Production）",
+   "detail": [
+    [
+     "taiyo-oni-normal/pc/after",
+     true
+    ],
+    [
+     "ebisu-juuma-stake5/pc/after",
+     true
+    ],
+    [
+     "taiyo-doukeshi-normal/pc/after",
+     true
+    ],
+    [
+     "taiyo-oni-normal/sp/after",
+     true
+    ],
+    [
+     "ebisu-juuma-stake5/sp/after",
+     true
+    ],
+    [
+     "taiyo-doukeshi-normal/sp/after",
+     true
+    ],
+    [
+     "taiyo-oni-normal/sp660/after",
+     true
+    ]
+   ],
+   "pass": true
+  },
+  {
+   "id": 12,
+   "name": "決定249 反応 同一（preview vs Production）",
+   "detail": [
+    [
+     "taiyo-oni-normal/pc/after",
+     true
+    ],
+    [
+     "ebisu-juuma-stake5/pc/after",
+     true
+    ],
+    [
+     "taiyo-doukeshi-normal/pc/after",
+     true
+    ],
+    [
+     "taiyo-oni-normal/sp/after",
+     true
+    ],
+    [
+     "ebisu-juuma-stake5/sp/after",
+     true
+    ],
+    [
+     "taiyo-doukeshi-normal/sp/after",
+     true
+    ],
+    [
+     "taiyo-oni-normal/sp660/after",
+     true
+    ]
+   ],
+   "pass": true
+  },
+  {
+   "id": 13,
+   "name": "God Strike 発火",
+   "detail": [
+    [
+     "taiyo-oni-normal/pc/after",
+     [
+      true,
+      true
+     ]
+    ],
+    [
+     "ebisu-juuma-stake5/pc/after",
+     [
+      true,
+      true
+     ]
+    ],
+    [
+     "taiyo-doukeshi-normal/pc/after",
+     [
+      true,
+      true
+     ]
+    ],
+    [
+     "taiyo-oni-normal/sp/after",
+     [
+      true,
+      true
+     ]
+    ],
+    [
+     "ebisu-juuma-stake5/sp/after",
+     [
+      true,
+      true
+     ]
+    ],
+    [
+     "taiyo-doukeshi-normal/sp/after",
+     [
+      true,
+      true
+     ]
+    ],
+    [
+     "taiyo-oni-normal/sp660/after",
+     [
+      true,
+      true
+     ]
+    ]
+   ],
+   "pass": true
+  },
+  {
+   "id": 14,
+   "name": "console error 0",
+   "detail": [
+    [
+     "taiyo-oni-normal/pc/before",
+     0
+    ],
+    [
+     "taiyo-oni-normal/pc/after",
+     0
+    ],
+    [
+     "ebisu-juuma-stake5/pc/before",
+     0
+    ],
+    [
+     "ebisu-juuma-stake5/pc/after",
+     0
+    ],
+    [
+     "taiyo-doukeshi-normal/pc/before",
+     0
+    ],
+    [
+     "taiyo-doukeshi-normal/pc/after",
+     0
+    ],
+    [
+     "taiyo-oni-normal/sp/before",
+     0
+    ],
+    [
+     "taiyo-oni-normal/sp/after",
+     0
+    ],
+    [
+     "ebisu-juuma-stake5/sp/before",
+     0
+    ],
+    [
+     "ebisu-juuma-stake5/sp/after",
+     0
+    ],
+    [
+     "taiyo-doukeshi-normal/sp/before",
+     0
+    ],
+    [
+     "taiyo-doukeshi-normal/sp/after",
+     0
+    ],
+    [
+     "taiyo-oni-normal/sp660/before",
+     0
+    ],
+    [
+     "taiyo-oni-normal/sp660/after",
+     0
+    ]
+   ],
+   "pass": true
+  }
+ ],
+ "parityWithD253Smoke": [
+  {
+   "k": "taiyo-oni-normal/pc/after",
+   "same": true,
+   "rounds": [
+    7,
+    7
+   ]
+  },
+  {
+   "k": "ebisu-juuma-stake5/pc/after",
+   "same": true,
+   "rounds": [
+    7,
+    7
+   ]
+  },
+  {
+   "k": "taiyo-doukeshi-normal/pc/after",
+   "same": true,
+   "rounds": [
+    7,
+    7
+   ]
+  },
+  {
+   "k": "taiyo-oni-normal/sp/after",
+   "same": true,
+   "rounds": [
+    7,
+    7
+   ]
+  },
+  {
+   "k": "ebisu-juuma-stake5/sp/after",
+   "same": true,
+   "rounds": [
+    7,
+    7
+   ]
+  },
+  {
+   "k": "taiyo-doukeshi-normal/sp/after",
+   "same": true,
+   "rounds": [
+    7,
+    7
+   ]
+  },
+  {
+   "k": "taiyo-oni-normal/sp660/after",
+   "same": true,
+   "rounds": [
+    7,
+    7
+   ]
+  }
+ ],
+ "lockRows": 154,
+ "lockMismatches": 0
+}

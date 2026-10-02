@@ -1,0 +1,881 @@
+{
+ "G1": {
+  "tsc": "exit 0（出力 0 行）",
+  "oxlintErrors": "0",
+  "oxlintWarnings": 10,
+  "oxlintWarningInSrc": 0,
+  "vitest": {
+   "passed": 1303,
+   "failed": 0,
+   "skipped": 9,
+   "total": 1312,
+   "suitesPassed": 384,
+   "suitesSkipped": 0,
+   "expected": 1303
+  },
+  "buildJsMd5": "e6c26c81152c542c1e48711db95c0958",
+  "servedJsMd5": "e6c26c81152c542c1e48711db95c0958",
+  "cssMd5Same": true,
+  "pass": true
+ },
+ "G2": {
+  "identityRows": 147,
+  "ctx": [
+   "normal",
+   "hard",
+   "Ⅵ"
+  ],
+  "diffVsD252Pilot": 0,
+  "chargeToSuper": 9,
+  "assertions": "1/1 PASS",
+  "nameplateDiffVsD252": 0,
+  "pass": true
+ },
+ "G3": {
+  "files": 8,
+  "passed": 102,
+  "failed": 0,
+  "suites": [
+   "src/core/data/enemies.test.ts 12",
+   "src/core/data/stakes.test.ts 11",
+   "src/core/engine/balanceSim.test.ts 11",
+   "src/core/engine/enemyActions.test.ts 24",
+   "src/core/engine/reducer.test.ts 17",
+   "src/core/engine/stakeRules.test.ts 10",
+   "src/core/replay/determinism.test.ts 7",
+   "src/core/replay/gameVersion.test.ts 10"
+  ],
+  "pass": true
+ },
+ "G4": {
+  "rows": 154,
+  "mismatches": 0,
+  "runs": 14,
+  "consoleErrors": 0,
+  "hScroll": 0,
+  "godStrikeRuns": 14,
+  "pass": true
+ },
+ "G5": {
+  "checks": "14/14",
+  "parityWithD253Smoke": "7/7",
+  "lockRows": 154,
+  "lockMismatches": 0,
+  "pass": true
+ },
+ "G6": {
+  "godStrikeFiredG4": "14/14",
+  "burstsG7": "15/15",
+  "impact1600G7": "19/19",
+  "stop80": 19,
+  "burstG18": [
+   "lock/taiyo-doukeshi-normal/pc/after rise 450 hitL4 1600 unlock 1288",
+   "lock/taiyo-oni-normal/pc/after rise 450 hitL4 1600 unlock 1423",
+   "lock/taiyo-oni-normal/sp/after rise 450 hitL4 1600 unlock 1201",
+   "reduced/after rise 450 hitL4 1600 unlock 1266",
+   "retry/after rise 450 hitL4 1600 unlock 1278"
+  ],
+  "pass": true
+ },
+ "G7": {
+  "headless": "15/15",
+  "headed": "4/4",
+  "droppedHeaded": [
+   {
+    "label": "pc-after-noshot",
+    "dropped": "4/33",
+    "pct": 12.1,
+    "limit": 2,
+    "ok": false
+   },
+   {
+    "label": "sp-after-noshot",
+    "dropped": "5/33",
+    "pct": 15.2,
+    "limit": 5,
+    "ok": false
+   }
+  ],
+  "playingHeaded": [
+   "pc-before-noshot 153ms",
+   "pc-after-noshot 188ms",
+   "sp-before-noshot 133ms",
+   "sp-after-noshot 273ms"
+  ],
+  "fallback": [
+   "pc-after-reduced static=true unlock 1226",
+   "pc-after-404 static=true unlock 1311",
+   "pc-after-stall static=true unlock 1319"
+  ],
+  "structurePass": true,
+  "droppedPass": false
+ },
+ "G8": {
+  "runs": 24,
+  "consoleErrors": 0,
+  "hScroll": 0,
+  "cutins": 12,
+  "ringsPx": [
+   "pc:9.35938px",
+   "pc:17.4062px",
+   "sp:15.0938px"
+  ],
+  "diffVsPreviewAndD252": 0,
+  "pass": true
+ },
+ "G9": {
+  "plays": 75,
+  "subjectMatch": 75,
+  "refDiffRows": 0,
+  "pairBoxNonZero": 0,
+  "hScroll": 0,
+  "reducedTransform": 0,
+  "consoleErrors": 0,
+  "failures": 0,
+  "pass": true
+ },
+ "G10": {
+  "vitestFiles": 12,
+  "vitestPassed": 161,
+  "vitestFailed": 0,
+  "tamperTests": [
+   "passed 日付・神・OTOMOの絆が食い違うログは引き継がない",
+   "passed 盤面と食い違うログ（改ざん・欠落）は引き継がず捨てる"
+  ],
+  "migrationTests": 10,
+  "browserResume": [
+   {
+    "mode": "daily-resume-pc",
+    "saveVersion": 9,
+    "resumeClicked": true,
+    "entranceOnResume": false,
+    "round": "2",
+    "gameStateSame": true,
+    "errors": 0
+   },
+   {
+    "mode": "daily-resume-sp",
+    "saveVersion": 9,
+    "resumeClicked": true,
+    "entranceOnResume": false,
+    "round": "2",
+    "gameStateSame": true,
+    "errors": 0
+   }
+  ],
+  "t6": "G19 t6-resume/pc（入口なし）",
+  "pass": true
+ },
+ "G11": {
+  "vitestFiles": 8,
+  "vitestPassed": 91,
+  "vitestFailed": 0,
+  "daily01": [
+   "passed"
+  ],
+  "browser": [
+   {
+    "mode": "daily-resume-pc",
+    "before": "残り 3/3",
+    "after": "残り 2/3",
+    "ctaAfter": "挑戦する（残り2回）",
+    "enemySelect": 0,
+    "topbar": "ラウンド 1 / 7 DAILY ★★★★★ 神域強化神力 2 / 2スコア 0",
+    "seed": "86R3PH"
+   },
+   {
+    "mode": "daily-resume-sp",
+    "before": "残り 3/3",
+    "after": "残り 2/3",
+    "ctaAfter": "挑戦する（残り2回）",
+    "enemySelect": 0,
+    "topbar": "ラウンド 1 / 7 DAILY ★★★★★ 神域強化神力 2 / 2スコア 0",
+    "seed": "86R3PH"
+   }
+  ],
+  "dailySecondResult": [
+   "今日のベストはまだありません",
+   "残り 2 回"
+  ],
+  "pass": true
+ },
+ "G12": {
+  "tests": [
+   "passed 決定58：hard×全神×全敵で、少なくとも1戦略が50%以上の勝率を保つことを保証する（再現防… 1537ms",
+   "passed DAILY-01：神域強化×全神×全敵で、少なくとも1戦略が50%以上の勝率を保つ（Daily詰… 918ms",
+   "passed 決定126 STAKE-01：神階Ⅰ〜Ⅶ×7神×7敵で、各神に少なくとも1戦略が段別の下限勝率を… 2768ms"
+  ],
+  "pass": true
+ },
+ "G13": {
+  "vitestFiles": 10,
+  "vitestPassed": 143,
+  "vitestFailed": 0,
+  "records": [
+   {
+    "mode": "records-pc",
+    "rows": 7,
+    "chips": 49,
+    "total": "0 / 49",
+    "hScroll": false,
+    "otomoOpened": true,
+    "otomoHScroll": false,
+    "errors": 0
+   },
+   {
+    "mode": "records-sp",
+    "rows": 7,
+    "chips": 49,
+    "total": "0 / 49",
+    "hScroll": false,
+    "otomoOpened": true,
+    "otomoHScroll": false,
+    "errors": 0
+   }
+  ],
+  "pass": true
+ },
+ "G14": {
+  "d241": [
+   {
+    "k": "pc1508",
+    "samples": 1,
+    "toastVisible": true,
+    "maxOverlapPx2": 0,
+    "insideViewport": true,
+    "errors": 0
+   },
+   {
+    "k": "pc1280",
+    "samples": 1,
+    "toastVisible": true,
+    "maxOverlapPx2": 0,
+    "insideViewport": true,
+    "errors": 0
+   },
+   {
+    "k": "sp390",
+    "samples": 1,
+    "toastVisible": true,
+    "maxOverlapPx2": 0,
+    "insideViewport": true,
+    "errors": 0
+   },
+   {
+    "k": "sp360",
+    "samples": 1,
+    "toastVisible": true,
+    "maxOverlapPx2": 0,
+    "insideViewport": true,
+    "errors": 0
+   },
+   {
+    "k": "pc1508-rm",
+    "samples": 1,
+    "toastVisible": true,
+    "maxOverlapPx2": 0,
+    "insideViewport": true,
+    "errors": 0
+   },
+   {
+    "k": "sp390-rm",
+    "samples": 1,
+    "toastVisible": true,
+    "maxOverlapPx2": 0,
+    "insideViewport": true,
+    "errors": 0
+   }
+  ],
+  "ac10": {
+   "r1": {
+    "status": "敗北",
+    "overflowPx": -40.2,
+    "secondaryInViewport": [
+     true,
+     true
+    ]
+   },
+   "r2": {
+    "status": "勝利",
+    "overflowPx": -22.4,
+    "secondaryInViewport": [
+     true,
+     true
+    ],
+    "secondaryInCardVisible": [
+     true,
+     true
+    ],
+    "recapLines": 3
+   },
+   "errors": 0
+  },
+  "pass": true
+ },
+ "G15": {
+  "hScrollSpRunsG4": 0,
+  "oracleSpBoxes": [
+   "79x39"
+  ],
+  "oracleOverflow": 0,
+  "endRoundSp": "G19 T5 sp .end-round-button [272,582,58,44]（高さ 44px）",
+  "perfHeadedRun1": {
+   "runs": 4,
+   "over33": [
+    2,
+    3,
+    8,
+    13
+   ],
+   "over33Median": 8,
+   "over33Max": 13,
+   "medianFrame": [
+    16.8,
+    16.7,
+    16.7,
+    16.8
+   ],
+   "max": [
+    730.1,
+    178,
+    186.3,
+    148.8
+   ]
+  },
+  "perfHeadedRetry": {
+   "runs": 4,
+   "over33": [
+    3,
+    3,
+    4,
+    5
+   ],
+   "over33Median": 4,
+   "over33Max": 5,
+   "medianFrame": [
+    17.4,
+    17.5,
+    17.3,
+    17.5
+   ],
+   "max": [
+    171.7,
+    171.2,
+    224,
+    164.8
+   ]
+  },
+  "perfHeadlessRetry": {
+   "runs": 4,
+   "over33": [
+    1,
+    5,
+    14,
+    14
+   ],
+   "over33Median": 14,
+   "over33Max": 14,
+   "medianFrame": [
+    17.1,
+    16.6,
+    16.9,
+    17.1
+   ],
+   "max": [
+    135.9,
+    82.8,
+    135.6,
+    110.1
+   ]
+  },
+  "t7SpHScroll": false,
+  "passRun1": false,
+  "passRetry": true,
+  "pass": true
+ },
+ "G16": {
+  "flip21": "21/21",
+  "hitLayerSame": "21/21",
+  "lungeTowardPlayer": 21,
+  "errors": 0,
+  "hScroll": 0,
+  "pc1508HudBoxDiff": [
+   ".battle-topbar=0",
+   ".enemy-plate=0",
+   ".player-plate=0",
+   ".hand=0",
+   ".battle-dock=0",
+   ".divination-panel=0",
+   ".end-round-button=0",
+   ".god-otomo-plate=0",
+   ".intent=0",
+   ".enemy-avatar=0（enemy-idle の呼吸 transform・layout ではない）"
+  ],
+  "pass": true
+ },
+ "G17": {
+  "g9Reduced": "15 plays・transform 0（0）",
+  "g7Reduced": {
+   "label": "pc-after-reduced",
+   "checks": {
+    "burst": true,
+    "cutinAt0": true,
+    "impact1600": true,
+    "stop": true,
+    "hScroll0": true,
+    "errors0": true,
+    "staticFallback": true
+   },
+   "pass": true,
+   "isVideo": null,
+   "dropped": "-",
+   "droppedPct": null,
+   "unlock": 1226,
+   "enemyHpPost": "蒼海の龍神【耐久型】R4の大海嘯。長い波を受け続けろ。190 / 1,030特大 160",
+   "result": "敗北敵の残りHP 120 / 1,030予告された攻撃5回のうち、無傷で受け切った攻撃はありませんでした（盾で防いだ量 "
+  },
+  "g19ReducedAnims": [
+   "anims-reduced/pc: [{\"name\":\"battle-entrance-out\",\"target\":\"battle-entrance battle-entrance-reduced\",\"props\":[\"opacity\"]}]",
+   "anims-reduced/sp: [{\"name\":\"battle-entrance-out\",\"target\":\"battle-entrance battle-entrance-reduced\",\"props\":[\"opacity\"]}]"
+  ],
+  "g18Reduced": {
+   "status": null,
+   "score": null,
+   "errors": 0,
+   "seTotal": 76,
+   "newSe": {
+    "burst_rise": 1,
+    "enemy_rise": 1
+   },
+   "hasBgmGain": true,
+   "bursts": [
+    {
+     "riseMs": 450,
+     "hitL4Ms": 1600,
+     "lockReleaseMs": 1266
+    }
+   ]
+  },
+  "pass": true
+ },
+ "G18": {
+  "press": [
+   {
+    "mode": "press-pc",
+    "taps": 9,
+    "clickToStartMaxMs": 0.5,
+    "startDelayMs": [
+     0
+    ],
+    "soundsPerTap": [
+     1
+    ],
+    "duplicates30ms": 0,
+    "errors": 0
+   },
+   {
+    "mode": "press-sp",
+    "taps": 9,
+    "clickToStartMaxMs": 0.3,
+    "startDelayMs": [
+     0
+    ],
+    "soundsPerTap": [
+     1
+    ],
+    "duplicates30ms": 0,
+    "errors": 0
+   }
+  ],
+  "d257": {
+   "lockRows": 22,
+   "lockMismatches": 0,
+   "bursts": [
+    {
+     "k": "lock/taiyo-doukeshi-normal/pc/after",
+     "riseMs": 450,
+     "hitL4Ms": 1600,
+     "duck": true,
+     "minEffective": 0.12,
+     "returnDoneMs": 2208
+    },
+    {
+     "k": "lock/taiyo-oni-normal/pc/after",
+     "riseMs": 450,
+     "hitL4Ms": 1600,
+     "duck": true,
+     "minEffective": 0.12,
+     "returnDoneMs": 2208
+    },
+    {
+     "k": "lock/taiyo-oni-normal/sp/after",
+     "riseMs": 450,
+     "hitL4Ms": 1600,
+     "duck": true,
+     "minEffective": 0.12,
+     "returnDoneMs": 2293
+    },
+    {
+     "k": "reduced/after",
+     "riseMs": 450,
+     "hitL4Ms": 1600,
+     "duck": true,
+     "minEffective": 0.12,
+     "returnDoneMs": 2219
+    },
+    {
+     "k": "retry/after",
+     "riseMs": 450,
+     "hitL4Ms": 1600,
+     "duck": true,
+     "minEffective": 0.12,
+     "returnDoneMs": 2208
+    }
+   ],
+   "ultimates": [
+    {
+     "k": "lock/taiyo-doukeshi-normal/pc/after",
+     "riseMs": 200,
+     "duck": true,
+     "minEffective": 0.12,
+     "returnDoneMs": 1867
+    },
+    {
+     "k": "lock/taiyo-oni-normal/pc/after",
+     "riseMs": 200,
+     "duck": true,
+     "minEffective": 0.12,
+     "returnDoneMs": 1867
+    },
+    {
+     "k": "lock/taiyo-oni-normal/sp/after",
+     "riseMs": 200,
+     "duck": true,
+     "minEffective": 0.12,
+     "returnDoneMs": 1867
+    },
+    {
+     "k": "reduced/after",
+     "riseMs": 200,
+     "duck": true,
+     "minEffective": 0.12,
+     "returnDoneMs": 1867
+    },
+    {
+     "k": "retry/after",
+     "riseMs": 200,
+     "duck": true,
+     "minEffective": 0.12,
+     "returnDoneMs": 1867
+    }
+   ],
+   "duplicates": [
+    "lock/taiyo-doukeshi-normal/pc/after=0",
+    "lock/taiyo-oni-normal/pc/after=0",
+    "lock/taiyo-oni-normal/sp/after=0",
+    "reduced/after=0",
+    "retry/after=0"
+   ],
+   "newSe": [
+    "lock/taiyo-doukeshi-normal/pc/after={\"burst_rise\":1,\"enemy_rise\":1}",
+    "lock/taiyo-oni-normal/pc/after={\"burst_rise\":1,\"enemy_rise\":1}",
+    "lock/taiyo-oni-normal/sp/after={\"burst_rise\":1,\"enemy_rise\":1}",
+    "reduced/after={\"burst_rise\":1,\"enemy_rise\":1}",
+    "retry/after={\"burst_rise\":1,\"enemy_rise\":1}"
+   ],
+   "existingSeSame": [
+    "lock/taiyo-oni-normal/pc true（最大差 11ms）"
+   ],
+   "consoleErrors": {
+    "lock/taiyo-doukeshi-normal/pc/after": 0,
+    "lock/taiyo-oni-normal/pc/after": 0,
+    "lock/taiyo-oni-normal/pc/before": 0,
+    "lock/taiyo-oni-normal/sp/after": 0,
+    "reduced/after": 0,
+    "retry/after": 0
+   }
+  },
+  "pass": true
+ },
+ "G19": {
+  "t1DeviationVsD254Release": {
+   "t1/pc/before": {
+    "run1": {
+     "sigilVisible": -7,
+     "godVisible": 5,
+     "enemyArtVisible": 100,
+     "stageVisible": 72,
+     "released": 101,
+     "entranceGone": 38,
+     "se": [
+      -260,
+      284,
+      1532
+     ],
+     "seRef": [
+      -199,
+      288,
+      1547
+     ]
+    },
+    "run2": {
+     "sigilVisible": 3,
+     "godVisible": -5,
+     "enemyArtVisible": 1,
+     "stageVisible": 5,
+     "released": -47,
+     "entranceGone": -22,
+     "se": [
+      -255,
+      287,
+      1536
+     ],
+     "seRef": [
+      -199,
+      288,
+      1547
+     ]
+    }
+   },
+   "t1/pc/after": {
+    "run1": {
+     "sigilVisible": 37,
+     "godVisible": -2,
+     "enemyArtVisible": 4,
+     "stageVisible": 8,
+     "released": 266,
+     "entranceGone": 251,
+     "se": [
+      -48,
+      538,
+      1787
+     ],
+     "seRef": [
+      -199,
+      288,
+      1547
+     ]
+    },
+    "run2": {
+     "sigilVisible": -1,
+     "godVisible": 133,
+     "enemyArtVisible": 1,
+     "stageVisible": 352,
+     "released": 159,
+     "entranceGone": 199,
+     "se": [
+      487,
+      1748
+     ],
+     "seRef": [
+      -199,
+      288,
+      1547
+     ]
+    }
+   },
+   "t1/sp/before": {
+    "run1": {
+     "sigilVisible": 1,
+     "godVisible": 0,
+     "enemyArtVisible": -1,
+     "stageVisible": 0,
+     "released": 0,
+     "entranceGone": -1,
+     "se": [
+      16,
+      271,
+      1517
+     ],
+     "seRef": [
+      11,
+      271,
+      1521
+     ]
+    },
+    "run2": {
+     "sigilVisible": 0,
+     "godVisible": 0,
+     "enemyArtVisible": -1,
+     "stageVisible": 0,
+     "released": -18,
+     "entranceGone": 1,
+     "se": [
+      14,
+      260,
+      1520
+     ],
+     "seRef": [
+      11,
+      271,
+      1521
+     ]
+    }
+   },
+   "t1/sp/after": {
+    "run1": {
+     "sigilVisible": -1,
+     "godVisible": -1,
+     "enemyArtVisible": -1,
+     "stageVisible": -1,
+     "released": -1,
+     "entranceGone": -18,
+     "se": [
+      14,
+      257,
+      1518
+     ],
+     "seRef": [
+      11,
+      271,
+      1521
+     ]
+    },
+    "run2": {
+     "sigilVisible": 0,
+     "godVisible": 0,
+     "enemyArtVisible": -1,
+     "stageVisible": 1,
+     "released": -18,
+     "entranceGone": -11,
+     "se": [
+      9,
+      267,
+      1517
+     ],
+     "seRef": [
+      11,
+      271,
+      1521
+     ]
+    }
+   },
+   "t1/sp660/before": {
+    "run1": {
+     "sigilVisible": -1,
+     "godVisible": -1,
+     "enemyArtVisible": 1,
+     "stageVisible": 0,
+     "released": 0,
+     "entranceGone": 3,
+     "se": [
+      19,
+      264,
+      1511
+     ],
+     "seRef": [
+      37,
+      261,
+      1507
+     ]
+    },
+    "run2": {
+     "sigilVisible": -1,
+     "godVisible": 0,
+     "enemyArtVisible": 1,
+     "stageVisible": 0,
+     "released": -1,
+     "entranceGone": -2,
+     "se": [
+      11,
+      261,
+      1517
+     ],
+     "seRef": [
+      37,
+      261,
+      1507
+     ]
+    }
+   },
+   "t1/sp660/after": {
+    "run1": {
+     "sigilVisible": -1,
+     "godVisible": -1,
+     "enemyArtVisible": 0,
+     "stageVisible": 0,
+     "released": 0,
+     "entranceGone": 2,
+     "se": [
+      10,
+      254,
+      1518
+     ],
+     "seRef": [
+      37,
+      261,
+      1507
+     ]
+    },
+    "run2": {
+     "sigilVisible": 0,
+     "godVisible": 0,
+     "enemyArtVisible": 1,
+     "stageVisible": 1,
+     "released": 17,
+     "entranceGone": 13,
+     "se": [
+      25,
+      270,
+      1521
+     ],
+     "seRef": [
+      37,
+      261,
+      1507
+     ]
+    }
+   }
+  },
+  "t3": {
+   "runs": 12,
+   "penetration": 0,
+   "hand55": 12,
+   "validDuringEntrance": 12,
+   "bossSeAfterSkip": 0,
+   "leftover": 0,
+   "errors": 0
+  },
+  "t2": [
+   "pc: first full / rematch short / viaHome short / resume entrance false / reload new full / errors 0",
+   "sp: first full / rematch short / viaHome short / resume entrance false / reload new full / errors 0"
+  ],
+  "t6": [
+   "pc/before: entrance false",
+   "pc/after: entrance false"
+  ],
+  "t7": [
+   "t7-first/pc/after: full gone 3128 hScroll false errors 0",
+   "t7-first/sp/after: full gone 2847 hScroll false errors 0",
+   "t7-daily/pc/after: full gone 2826 hScroll false errors 0"
+  ],
+  "gods": [
+   "恵比寿 降臨 full 0",
+   "大耀 降臨 full 0",
+   "蒼毘 降臨 full 0",
+   "才華 降臨 full 0",
+   "寿楽 降臨 full 0",
+   "福永 降臨 full 0",
+   "笑蓮 降臨 full 0"
+  ],
+  "timingSpWithin50": true,
+  "timingPcProdWithin50": false,
+  "structurePass": true
+ },
+ "common": {
+  "consoleErrors": {
+   "G4": 0,
+   "G5": 0,
+   "G7": 0,
+   "G8": 0,
+   "G9": 0,
+   "G14": 0,
+   "G16": 0,
+   "G18": 0,
+   "G19": 0,
+   "extras": 0
+  },
+  "httpNon200InExtras": [],
+  "g7ResourceErrors": "pc-after-404 の 1 件のみ（route で意図的に 404 を返すケース）"
+ }
+}

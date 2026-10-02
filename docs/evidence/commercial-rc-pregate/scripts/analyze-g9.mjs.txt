@@ -1,0 +1,15 @@
+// G9 Reaction Language：summary.tsv（before=preview / after=Production）を 決定249 Fast Gate の After 行（合格時）と列比較。lock・disp（時間・呼吸由来）は除外
+import { readFileSync, writeFileSync } from 'node:fs'
+const [now, ref, outF] = process.argv.slice(2)
+const parse = (f) => readFileSync(f, 'utf8').trim().split(/\r?\n/).map((l) => l.split('\t'))
+const N = parse(now), D = parse(ref)
+const COLS = [7, 8, 9, 10, 11, 12, 13, 16, 17, 18, 19] // body tone otomo deal ap strikeAnim anim pair scale intent hs
+const key = (r, side) => [r[0], r[1], side, r[3], r[4]].join('|')
+const dAfter = new Map(D.filter((r) => r[2].startsWith('after')).map((r) => [key(r, r[2]), r]))
+const res = N.map((r) => { const side = r[2] === 'before' ? 'after' : r[2]; const d = dAfter.get(key(r, side)); const diff = d ? COLS.filter((c) => !(c === 16 && r[2] === 'before') && r[c] !== d[c]).map((c) => `${r[c]} != ${d[c]}`) : ['NO-REF']; return { row: r.slice(0, 7).join(' '), expect: r[6], subject: r[7], strikeAnim: r[12], deal: r[10], pair: r[16], hs: r[19], diff } })
+// reduced：変形（brace／breathe／rise／stagger／god-strike）を出さず rim／dim のみ（決定249 の reduced 規約）
+const reducedOk = (r) => !/body=.*rl-(brace|breathe|rise|stagger)(?![-\w])/.test(r.subject) && r.strikeAnim === 'strikeAnim=false'
+const subjectOk = (r) => r.row.includes('reduced') ? reducedOk(r) : r.expect === 'strike' ? r.strikeAnim === 'strikeAnim=true' : r.expect === 'deal' ? r.deal !== 'deal=0' : r.expect === 'stagger' ? /stagger/.test(r.subject) : r.subject.includes('rl-' + r.expect)
+const out = { plays: res.length, subjectMatch: res.filter(subjectOk).length, refDiffRows: res.filter((r) => r.diff.length).length, pairNonZero: res.filter((r) => /pair=\d/.test(r.pair) && r.pair !== 'pair=0').length, hScroll: res.filter((r) => r.hs !== 'hs=false').length, reducedTransform: res.filter((r) => r.row.includes('reduced') && !reducedOk(r)).length, mismatches: res.filter((r) => r.diff.length || !subjectOk(r)), rows: res }
+writeFileSync(outF, JSON.stringify(out, null, 1))
+console.log(JSON.stringify({ plays: out.plays, subjectMatch: out.subjectMatch, refDiffRows: out.refDiffRows, pairNonZero: out.pairNonZero, hScroll: out.hScroll, reducedTransform: out.reducedTransform, mm: out.mismatches.slice(0, 8).map((m) => m.row + ' :: ' + m.diff.join(';')) }))

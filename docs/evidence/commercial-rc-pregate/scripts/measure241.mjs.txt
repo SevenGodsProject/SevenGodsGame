@@ -1,0 +1,190 @@
+// 決定241 結果トースト重なり Hotfix — Fast Gate 計測（runtime は一切変更しない）
+// 目的：`.result-toast` が可視の瞬間に、名札（決定235）・予告・手札・ドック・立ち絵・勝利の舞台との
+//       重なり（px）と各要素の box を採取し、Before／After で比較する。
+//   node measure.mjs <base> <outDir> <tag> [--victory]
+//   例：node measure.mjs http://127.0.0.1:4371 out before
+import { createRequire } from 'node:module'
+import { writeFileSync, mkdirSync } from 'node:fs'
+const require = createRequire('C:/Users/kimi1/SevenGodsGame/package.json')
+const { chromium } = require('playwright')
+const [baseArg, outDir, tag, ...flags] = process.argv.slice(2)
+const base = baseArg.replace(/\/$/, '')
+const victoryMode = flags.includes('--victory')
+mkdirSync(outDir, { recursive: true })
+const SEED = 'd241-toast-01'
+const M = { god: '大耀', enemy: '蒼海の龍神' }
+const VPS = {
+  pc1508: { width: 1508, height: 660, mobile: false },
+  pc1280: { width: 1280, height: 720, mobile: false },
+  sp390: { width: 390, height: 844, mobile: true },
+  sp360: { width: 360, height: 780, mobile: true },
+}
+const RUNS = victoryMode
+  ? [['pc1508', false], ['sp390', false]]
+  : [['pc1508', false], ['pc1280', false], ['sp390', false], ['sp360', false], ['pc1508', true], ['sp390', true]]
+
+const clickText = (page, text) => page.evaluate((t) => { const el = [...document.querySelectorAll('button')].find((x) => x.textContent.replace(/\s+/g, '').includes(t) && !x.disabled); if (!el) return false; el.click(); return true }, text)
+const clickSel = (page, sel) => page.evaluate((s) => { const el = document.querySelector(s); if (!el || el.disabled) return false; el.click(); return true }, sel)
+
+async function enter(page) {
+  await page.goto(`${base}/?seed=${SEED}`)
+  await page.waitForSelector('.home-screen .home-cta-primary', { timeout: 30000 })
+  await page.waitForTimeout(400)
+  if (await clickText(page, 'わかった')) await page.waitForTimeout(300)
+  if (!(await clickSel(page, '[data-testid="home-start"]'))) await clickText(page, '神を選ぶ')
+  await page.waitForTimeout(400)
+  if (await clickText(page, '新しく始める')) await page.waitForTimeout(300)
+  await clickText(page, M.god); await page.waitForTimeout(300)
+  await clickText(page, 'この構成で始める'); await page.waitForTimeout(300)
+  await clickText(page, M.enemy); await page.waitForTimeout(500)
+  await clickText(page, 'この構成でバトル開始')
+  await page.waitForFunction(() => { const b = document.querySelector('.end-round-button'); return b && !b.disabled }, null, { timeout: 20000 })
+  await page.waitForTimeout(2500)
+}
+
+// 全 box を採取し、トーストとの重なり（px）を計算する
+async function measure(page) {
+  return page.evaluate(() => {
+    const R = (el) => { if (!el) return null; const r = el.getBoundingClientRect(); return { x: +r.x.toFixed(1), y: +r.y.toFixed(1), w: +r.width.toFixed(1), h: +r.height.toFixed(1) } }
+    const Q = (s) => R(document.querySelector(s))
+    const QA = (s) => [...document.querySelectorAll(s)].map(R)
+    const toastEl = document.querySelector('.result-toast')
+    const cs = toastEl ? getComputedStyle(toastEl) : null
+    const toast = toastEl ? {
+      rect: R(toastEl), text: toastEl.textContent, opacity: cs.opacity, position: cs.position, top: cs.top, bottom: cs.bottom, left: cs.left,
+      fontSize: cs.fontSize, padding: cs.padding, borderRadius: cs.borderRadius, zIndex: cs.zIndex, animationName: cs.animationName, animationDuration: cs.animationDuration,
+    } : null
+    const boxes = {
+      vp: { x: 0, y: 0, w: innerWidth, h: innerHeight },
+      topbar: Q('.battle-topbar'), main: Q('.battle-main'), dock: Q('.battle-dock'), hand: Q('.hand'),
+      enemyPlate: Q('.enemy-plate'), playerPlate: Q('.player-plate'), godOtomoPlate: Q('.god-otomo-plate'),
+      enemyTitle: Q('.enemy-plate-head .panel-title'), playerTitle: Q('.player-plate-head .panel-title'), godOtomoTitle: Q('.god-otomo-plate-head .panel-title'),
+      playerHead: Q('.player-plate-head'), enemyHead: Q('.enemy-plate-head'),
+      intent: Q('.intent'), enemyHp: Q('.enemy-plate .hp-bar'), playerHp: Q('.player-plate .hp-bar'), resonanceGauge: Q('.resonance-gauge'),
+      enemyAvatar: Q('.enemy-avatar'), playerAvatar: Q('.player-avatar'), otomo: Q('.otomo-avatar, .god-otomo-avatar, [class*="otomo"] img'),
+      speech: Q('.enemy-speech-bubble'), miniResult: Q('.battle-mini-result'), callout: Q('.battle-callout'),
+      endRound: Q('.end-round-button'), cards: QA('.hand .card-view'), floating: QA('.floating-number, [class*="floating-number"]'),
+      victoryGroup: Q('.victory-stage-group'), victoryCaption: Q('.victory-stage-caption'), victoryTitle: Q('.victory-stage-title'), victoryPortrait: Q('.victory-stage-portrait'),
+    }
+    const ov = (a, b) => {
+      if (!a || !b) return null
+      const w = Math.min(a.x + a.w, b.x + b.w) - Math.max(a.x, b.x)
+      const h = Math.min(a.y + a.h, b.y + b.h) - Math.max(a.y, b.y)
+      return w > 0 && h > 0 ? { w: +w.toFixed(1), h: +h.toFixed(1), area: +(w * h).toFixed(0) } : { w: 0, h: 0, area: 0 }
+    }
+    const overlaps = {}
+    if (toast) for (const k of Object.keys(boxes)) { if (k === 'vp' || Array.isArray(boxes[k])) continue; overlaps[k] = ov(toast.rect, boxes[k]) }
+    if (toast) {
+      // 描画順の証明：トースト中心で最前面にある要素（勝利の舞台 z:7 が上なら舞台側の要素になる）
+      const c = toast.rect; const topEl = document.elementFromPoint(c.x + c.w / 2, c.y + c.h / 2)
+      overlaps.topElementAtToastCenter = topEl ? `${topEl.tagName.toLowerCase()}.${String(topEl.className).split(' ').slice(0, 2).join('.')}` : null
+      overlaps.cardsAny = boxes.cards.reduce((m, c) => Math.max(m, ov(toast.rect, c)?.area ?? 0), 0)
+      const t = toast.rect
+      overlaps.insideViewport = t.x >= 0 && t.y >= 0 && t.x + t.w <= innerWidth && t.y + t.h <= innerHeight
+      overlaps.insideMain = boxes.main ? t.x >= boxes.main.x && t.y >= boxes.main.y && t.x + t.w <= boxes.main.x + boxes.main.w && t.y + t.h <= boxes.main.y + boxes.main.h : null
+      overlaps.gapBelowPlates = +(t.y - Math.max(...['enemyPlate', 'playerPlate', 'godOtomoPlate'].map((k) => boxes[k] ? boxes[k].y + boxes[k].h : 0))).toFixed(1)
+    }
+    return { toast, boxes, overlaps }
+  })
+}
+
+const waitToastVisible = (page, timeout = 4000) => page.waitForFunction(() => {
+  const t = document.querySelector('.result-toast'); if (!t) return false
+  return parseFloat(getComputedStyle(t).opacity) >= 0.98
+}, null, { polling: 16, timeout }).then(() => true).catch(() => false)
+
+async function playOne(page) {
+  return page.evaluate(() => {
+    const cards = [...document.querySelectorAll('.hand .card-view')].filter((c) => !c.disabled)
+    if (cards.length === 0) return { played: null }
+    const intentN = ((document.querySelector('.intent')?.textContent ?? '').match(/\d+/g) ?? []).reduce((a, x) => a + Number(x), 0)
+    const big = intentN >= 100
+    const score = (c) => {
+      const t = c.querySelector('.card-view-name')?.textContent ?? ''
+      const guard = /🛡|🌿/.test(t); const atk = /⚔|🌟|💀/.test(t); const res = /✨/.test(t)
+      const bonus = c.querySelector('.card-view-bonus-ready') || c.classList.contains('card-view-ready') ? 1 : 0
+      return (big ? (guard ? 3 : 0) : atk ? 3 : 0) + bonus + (res ? 1.5 : 0) + Number(c.querySelector('.card-view-cost')?.textContent ?? 0) * 0.1
+    }
+    cards.sort((x, y) => score(y) - score(x))
+    const name = cards[0].querySelector('.card-view-name')?.textContent.trim()
+    cards[0].click()
+    return { played: name }
+  })
+}
+const overlayUp = (page) => page.evaluate(() => !!document.querySelector('.reward-overlay, .game-over-overlay, .victory-stage, .enemy-defeat'))
+
+async function run(vpName, reduced) {
+  const vp = VPS[vpName]
+  const label = `${tag}-${vpName}${reduced ? '-rm' : ''}`
+  const browser = await chromium.launch()
+  const ctx = await browser.newContext({ viewport: { width: vp.width, height: vp.height }, deviceScaleFactor: 1, hasTouch: vp.mobile, isMobile: vp.mobile, reducedMotion: reduced ? 'reduce' : 'no-preference' })
+  const page = await ctx.newPage()
+  const errors = []
+  page.on('console', (m) => { if (m.type() === 'error') errors.push(m.text()) })
+  page.on('pageerror', (e) => errors.push(String(e)))
+  await enter(page)
+  const log = { label, vp, reduced, seed: SEED, samples: [], errors }
+  log.calm = await measure(page)
+  await page.screenshot({ path: `${outDir}/${label}-00-calm.png` })
+
+  if (!victoryMode) {
+    // 3 手ぶん、トーストが完全可視（opacity ≥ 0.98）の瞬間を採取
+    for (let i = 1; i <= 3; i++) {
+      const p = await playOne(page)
+      if (!p.played) break
+      const vis = await waitToastVisible(page)
+      const m = await measure(page)
+      await page.screenshot({ path: `${outDir}/${label}-0${i}-toast.png` })
+      log.samples.push({ i, played: p.played, toastVisible: vis, ...m })
+      await page.waitForFunction(() => { const b = document.querySelector('.end-round-button'); return b && !b.disabled }, null, { timeout: 15000 }).catch(() => {})
+      await page.waitForTimeout(1600)
+    }
+  } else {
+    // 1 戦通して撃破 → 勝利の舞台の瞬間にトーストと舞台の重なりを採取
+    const t0 = Date.now()
+    outer: for (let r = 0; r < 8; r++) {
+      for (let k = 0; k < 8; k++) {
+        if (Date.now() - t0 > 170000) break outer
+        const p = await playOne(page)
+        if (!p.played) break
+        const stage = await page.waitForFunction(() => document.querySelector('.victory-stage'), null, { timeout: 1500 }).then(() => true).catch(() => false)
+        if (stage) {
+          await page.waitForTimeout(250)
+          const m = await measure(page)
+          await page.screenshot({ path: `${outDir}/${label}-12-victory-toast.png` })
+          log.victory = { round: r + 1, played: p.played, ...m }
+          break outer
+        }
+        const cut = await page.evaluate(() => !!document.querySelector('.resonance-cutin'))
+        if (cut) await page.waitForTimeout(3500)
+        await page.waitForFunction(() => { const b = document.querySelector('.end-round-button'); return (b && !b.disabled) || document.querySelector('.game-over-overlay, .victory-stage, .enemy-defeat') }, null, { timeout: 15000 }).catch(() => {})
+        if (await overlayUp(page)) {
+          await page.waitForFunction(() => document.querySelector('.victory-stage'), null, { timeout: 6000 }).catch(() => {})
+          const m = await measure(page)
+          await page.screenshot({ path: `${outDir}/${label}-12-victory-toast.png` })
+          log.victory = { round: r + 1, played: p.played, late: true, ...m }
+          break outer
+        }
+        await page.waitForTimeout(150)
+      }
+      if (await overlayUp(page)) break
+      // ラウンド末の名札の高さ（バフで伸びた状態）を記録：トーストの top がそれより下かの根拠
+      const mr = await measure(page)
+      log.rounds = log.rounds ?? []
+      log.rounds.push({ round: r + 1, enemyPlate: mr.boxes.enemyPlate, playerPlate: mr.boxes.playerPlate, godOtomoPlate: mr.boxes.godOtomoPlate, main: mr.boxes.main })
+      await clickSel(page, '.end-round-button')
+      await page.waitForTimeout(3600)
+    }
+  }
+  writeFileSync(`${outDir}/${label}-log.json`, JSON.stringify(log, null, 1))
+  await browser.close()
+  return log
+}
+
+for (const [v, rm] of RUNS) {
+  const l = await run(v, rm)
+  const line = victoryMode
+    ? `${l.label} victory=${l.victory ? 'yes' : 'no'} toast=${l.victory?.toast ? JSON.stringify(l.victory.toast.rect) : '-'} ov(playerPlate)=${l.victory?.overlaps?.playerPlate?.area ?? '-'} ov(victoryGroup)=${l.victory?.overlaps?.victoryGroup?.area ?? '-'}`
+    : `${l.label} samples=${l.samples.length} ` + l.samples.map((s) => `[${s.i} vis=${s.toastVisible} toast=${s.toast ? `${s.toast.rect.x},${s.toast.rect.y},${s.toast.rect.w}x${s.toast.rect.h}` : '-'} ovPlayer=${s.overlaps.playerPlate?.area} ovPlayerTitle=${s.overlaps.playerTitle?.area} ovEnemy=${s.overlaps.enemyPlate?.area} ovRes=${s.overlaps.godOtomoPlate?.area} ovIntent=${s.overlaps.intent?.area} ovHand=${s.overlaps.hand?.area} inVp=${s.overlaps.insideViewport} gap=${s.overlaps.gapBelowPlates}]`).join(' ')
+  console.log(line, 'errors', l.errors.length)
+}

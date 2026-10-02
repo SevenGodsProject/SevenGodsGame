@@ -1,0 +1,21 @@
+// G1／G3／G10／G11／G12／G13：vitest 全件 1 回（ブラウザ無し・単独）の JSON reporter から該当スイートを抜き出す（手入力なし）
+// node extract-vitest.mjs <vitest.json> <outDir>
+import { readFileSync, writeFileSync } from 'node:fs'
+const [vf, outDir] = process.argv.slice(2)
+const j = JSON.parse(readFileSync(vf, 'utf8'))
+const files = j.testResults.map((f) => ({ file: f.name.replace(/\\/g, '/').replace(/.*SevenGodsGame-rcgate\//, ''), status: f.status, tests: f.assertionResults.map((a) => ({ title: a.title, status: a.status, ms: Math.round(a.duration ?? 0) })) }))
+const pick = (re, titleRe) => files.filter((f) => re.test(f.file)).map((f) => ({ file: f.file, passed: f.tests.filter((t) => t.status === 'passed' && (!titleRe || titleRe.test(t.title))).length, failed: f.tests.filter((t) => t.status === 'failed').length, skipped: f.tests.filter((t) => t.status !== 'passed' && t.status !== 'failed').length, tests: titleRe ? f.tests.filter((t) => titleRe.test(t.title)) : undefined }))
+const sum = (arr) => ({ files: arr.length, passed: arr.reduce((s, x) => s + x.passed, 0), failed: arr.reduce((s, x) => s + x.failed, 0) })
+const G = {}
+G.G1 = { numTotalTests: j.numTotalTests, numPassedTests: j.numPassedTests, numFailedTests: j.numFailedTests, numPendingTests: j.numPendingTests, numTodoTests: j.numTodoTests, numPassedTestSuites: j.numPassedTestSuites, numFailedTestSuites: j.numFailedTestSuites, numPendingTestSuites: j.numPendingTestSuites, success: j.success, expected: 1303 }
+const g3 = pick(/core\/engine\/(balanceSim|enemyActions|reducer|stakeRules)\.test|core\/data\/(enemies|stakes)\.test|replay\/(gameVersion|determinism)\.test/)
+G.G3 = { suites: g3, ...sum(g3) }
+const g10 = pick(/replay\/(resume|replay|replayBoundary|actionLog|determinism|gameVersion)\.test|hooks\/(battleSaveStorage|godIdentitySave|dailyRunStorage)\.test|enemyId(HardeningWiring|Resilience)\.test|scoreLegacyIntegrity\.test/)
+G.G10 = { suites: g10, ...sum(g10), tamper: pick(/replay\/resume\.test/, /改ざん|食い違う/)[0]?.tests, migration: pick(/hooks\/battleSaveStorage\.test/, /移行|未知のバージョン|v9/)[0]?.tests }
+const g11 = pick(/hooks\/(dailyClock|dailyFairness|dailyRunStorage|dailyStorage|startDaily)\.test|core\/data\/dailyBoss\.test|engine\/dailyModifier\.test|battle\/dailyDiff\.test/)
+G.G11 = { suites: g11, ...sum(g11), daily01: pick(/engine\/balanceSim\.test/, /DAILY-01/)[0]?.tests }
+G.G12 = { tests: pick(/engine\/balanceSim\.test/, /決定58|DAILY-01|STAKE-01/)[0]?.tests }
+const g13 = pick(/setup\/otomoGrowthDisplay\.test|matchupWiring\.test|solveLoopWiring\.test|hooks\/(matchupStorage|otomoBondStorage|stakeStorage|recordStorage|rewardStorage)\.test|core\/engine\/mastery\.test|battle\/masteryDisplay\.test/)
+G.G13 = { suites: g13, ...sum(g13) }
+for (const [k, v] of Object.entries(G)) writeFileSync(`${outDir}/${k.toLowerCase()}-vitest.json`, JSON.stringify(v, null, 1))
+console.log(JSON.stringify(Object.fromEntries(Object.entries(G).map(([k, v]) => [k, k === 'G1' ? { passed: v.numPassedTests, failed: v.numFailedTests, pending: v.numPendingTests, total: v.numTotalTests } : k === 'G12' ? v.tests?.map((t) => t.status + ' ' + t.title.slice(0, 40)) : { files: v.files, passed: v.passed, failed: v.failed }]))))

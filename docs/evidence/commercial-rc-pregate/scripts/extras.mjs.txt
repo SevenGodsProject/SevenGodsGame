@@ -1,0 +1,141 @@
+// Commercial RC Pre-Gate M3 — 追加計測（G10 続きから／G11 Daily 開始〜残り回数／G13 戦績・OTOMO 画面／G18 決定233 押下→音・重複）
+// 計測専用・runtime 不変。1 run ＝ 1 プロセス ＝ 1 browser ＝ 1 context。 node extras.mjs <mode> <base> <outDir>
+// mode: records-pc | records-sp | daily-resume-pc | daily-resume-sp | press-pc | press-sp
+import { chromium } from 'playwright'
+import { writeFileSync, mkdirSync } from 'node:fs'
+const [mode, baseArg, outDir] = process.argv.slice(2)
+const base = baseArg.replace(/\/$/, '')
+mkdirSync(outDir, { recursive: true })
+const isSp = mode.endsWith('-sp')
+const VP = isSp ? { viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true, deviceScaleFactor: 2 } : { viewport: { width: 1508, height: 660 }, deviceScaleFactor: 1 }
+const clickText = (page, text) => page.evaluate((t) => { const el = [...document.querySelectorAll('button')].find((x) => x.textContent.replace(/\s+/g, '').includes(t) && !x.disabled); if (!el) return false; el.click(); return true }, text)
+const clickSel = (page, sel) => page.evaluate((s) => { const el = document.querySelector(s); if (!el || el.disabled) return false; el.click(); return true }, sel)
+const pageState = (page) => page.evaluate(() => ({ hScroll: document.documentElement.scrollWidth > document.documentElement.clientWidth, overflowEls: [...document.querySelectorAll('#root *')].filter((e) => { const r = e.getBoundingClientRect(); return r.width > 0 && (r.right > innerWidth + 1 || r.left < -1) && getComputedStyle(e).position !== 'fixed' }).slice(0, 5).map((e) => `${e.tagName}.${String(e.className).split(' ')[0]}`) }))
+const PROBE = () => {
+  const P = (window.__p = { se: [], inputs: [] })
+  const urlOf = new WeakMap()
+  const of = window.fetch
+  window.fetch = function (...a) { return of.apply(this, a).then((r) => { const u = typeof a[0] === 'string' ? a[0] : a[0].url; const ab = r.arrayBuffer.bind(r); r.arrayBuffer = () => ab().then((b) => { urlOf.set(b, u); return b }); return r }) }
+  const BAC = window.BaseAudioContext || window.AudioContext
+  if (BAC) {
+    const dec = BAC.prototype.decodeAudioData
+    BAC.prototype.decodeAudioData = function (ab, ...r) { const u = urlOf.get(ab); return dec.call(this, ab, ...r).then((b) => { if (u) b.__name = u.split('/').pop().replace('.wav', ''); return b }) }
+    const st = AudioBufferSourceNode.prototype.start
+    AudioBufferSourceNode.prototype.start = function (when = 0, ...r) { P.se.push({ name: (this.buffer && this.buffer.__name) || null, perf: performance.now(), at: when, delayMs: Math.round((when - this.context.currentTime) * 1000), rate: this.playbackRate.value }); return st.call(this, when, ...r) }
+  }
+  for (const ev of ['pointerdown', 'click']) document.addEventListener(ev, (e) => { const t = e.target instanceof Element ? e.target.closest('.card-view, .end-round-button') : null; if (t) P.inputs.push({ ev, perf: performance.now(), target: t.classList.contains('end-round-button') ? 'end' : 'card', disabled: !!t.disabled }) }, true)
+}
+async function toBattle(page, seed) {
+  await page.goto(`${base}/?seed=${seed}`)
+  await page.waitForSelector('.home-screen .home-cta-primary', { timeout: 30000 }); await page.waitForTimeout(300)
+  if (await clickText(page, 'わかった')) await page.waitForTimeout(300)
+  if (!(await clickSel(page, '[data-testid="home-start"]'))) await clickText(page, '神を選ぶ')
+  await page.waitForTimeout(400)
+  if (await clickText(page, '新しく始める')) await page.waitForTimeout(300)
+  await clickText(page, '大耀'); await page.waitForTimeout(300)
+  await clickText(page, 'この構成で始める'); await page.waitForTimeout(300)
+  await clickText(page, '業斧の鬼将'); await page.waitForTimeout(500)
+  await clickText(page, 'この構成でバトル開始')
+  await page.waitForFunction(() => { const b = document.querySelector('.end-round-button'); return b && !b.disabled }, null, { timeout: 20000 })
+  await page.waitForTimeout(3600) // 降臨の間 Full を待つ
+}
+const tapResult = (page, n0, target) => page.evaluate(([n0, target]) => {
+  const P = window.__p
+  const inp = P.inputs.slice(n0).find((i) => i.ev === 'pointerdown') ?? P.inputs.slice(n0).find((i) => i.ev === 'click')
+  const clk = P.inputs.slice(n0).find((i) => i.ev === 'click')
+  const s = clk ? P.se.find((x) => x.name === 'card_play' && x.perf >= clk.perf - 1 && x.perf <= clk.perf + 300) : null
+  const plays = clk ? P.se.filter((x) => x.name === 'card_play' && x.perf >= clk.perf - 1 && x.perf <= clk.perf + 1100) : []
+  return { target, pointerdownToClickMs: inp && clk ? +(clk.perf - inp.perf).toFixed(1) : null, clickToStartMs: s ? +(s.perf - clk.perf).toFixed(1) : null, startDelayMs: s?.delayMs ?? null, rate: s?.rate ?? null, cardPlayCountWithin1100ms: plays.length }
+}, [n0, target])
+
+const browser = await chromium.launch({ args: ['--autoplay-policy=no-user-gesture-required'] })
+const ctx = await browser.newContext(VP)
+const page = await ctx.newPage()
+const errors = [], http = []
+page.on('console', (m) => { if (m.type() === 'error') errors.push(m.text().slice(0, 200)) })
+page.on('pageerror', (e) => errors.push('pageerror ' + String(e).slice(0, 200)))
+page.on('response', (r) => { const s = r.status(); if (!(s === 200 || s === 304 || s === 206)) http.push(`${s} ${r.url().slice(0, 120)}`) })
+const out = { mode, base, at: new Date().toISOString(), errors, http }
+try {
+  if (mode.startsWith('records')) {
+    await page.goto(`${base}/`); await page.waitForSelector('.home-screen .home-cta-primary', { timeout: 30000 }); await page.waitForTimeout(400)
+    if (await clickText(page, 'わかった')) await page.waitForTimeout(300)
+    out.recordOpened = await clickText(page, '戦績を見る'); await page.waitForTimeout(800)
+    out.record = await page.evaluate(() => ({ rows: document.querySelectorAll('[data-testid="matchup-row"]').length, chips: document.querySelectorAll('[data-testid="matchup-chip"]').length, total: document.querySelector('[data-testid="matchup-total"]')?.textContent.trim() ?? null, boardVisible: !!document.querySelector('[data-testid="matchup-board"]') }))
+    out.recordLayout = await pageState(page)
+    await page.screenshot({ path: `${outDir}/${mode}-record.png` })
+    out.backHome = (await clickText(page, 'ホーム')) || (await clickText(page, '戻る')); await page.waitForTimeout(600)
+    out.otomoOpened = await clickText(page, 'OTOMOとの絆を見る'); await page.waitForTimeout(800)
+    out.otomo = await page.evaluate(() => ({ text: document.body.innerText.replace(/\s+/g, ' ').slice(0, 160), imgs: document.querySelectorAll('img').length }))
+    out.otomoLayout = await pageState(page)
+  } else if (mode.startsWith('daily-resume')) {
+    await page.goto(`${base}/`); await page.waitForSelector('.home-screen .home-cta-primary', { timeout: 30000 }); await page.waitForTimeout(400)
+    if (await clickText(page, 'わかった')) await page.waitForTimeout(300)
+    const homeToday = () => page.evaluate(() => ({ attempts: document.querySelector('[data-testid="home-today-attempts"]')?.textContent.trim() ?? null, status: document.querySelector('[data-testid="home-today-status"]')?.textContent.trim() ?? null, cta: document.querySelector('[data-testid="home-today-cta"]')?.textContent.trim() ?? null, resume: !!document.querySelector('[data-testid="home-resume"]'), date: document.querySelector('[data-testid="home-today-date"]')?.textContent.trim() ?? null, enemy: document.querySelector('[data-testid="home-today-enemy"]')?.textContent.trim() ?? null }))
+    out.home0 = await homeToday()
+    out.dailyOpened = await clickSel(page, '[data-testid="home-today-cta"]')
+    await page.waitForSelector('.daily-screen', { timeout: 10000 }); await page.waitForTimeout(400)
+    out.dailyScreen = await page.evaluate(() => document.querySelector('.daily-screen')?.innerText.replace(/\s+/g, ' ').slice(0, 300) ?? null)
+    await clickText(page, '挑戦開始'); await page.waitForTimeout(400)
+    if (await clickText(page, '新しく始める')) await page.waitForTimeout(400)
+    await clickText(page, '大耀'); await page.waitForTimeout(300)
+    await clickText(page, 'この構成で始める'); await page.waitForTimeout(400)
+    out.enemySelectShown = await page.evaluate(() => document.querySelectorAll('.enemy-select-card').length)
+    await clickText(page, 'この構成でバトル開始')
+    await page.waitForFunction(() => { const b = document.querySelector('.end-round-button'); return b && !b.disabled }, null, { timeout: 20000 }); await page.waitForTimeout(3600)
+    out.battle = await page.evaluate(() => ({ topbar: document.querySelector('.battle-topbar')?.textContent.replace(/\s+/g, ' ').trim() ?? null }))
+    // R1 を 1 手進めてラウンド終了 → R2 の状態を保存させる
+    await page.evaluate(() => { const c = [...document.querySelectorAll('.hand .card-view')].find((x) => !x.disabled); c?.click() }); await page.waitForTimeout(900)
+    await clickSel(page, '.end-round-button'); await page.waitForTimeout(3600)
+    await page.waitForFunction(() => { const b = document.querySelector('.end-round-button'); return b && !b.disabled }, null, { timeout: 15000 }).catch(() => {})
+    const saveOf = () => page.evaluate(() => { try { const s = JSON.parse(localStorage.getItem('sevengods.battleSave') || 'null'); const st = s?.state ?? s; return st ? { version: s?.version ?? s?.saveVersion ?? null, round: st.round, hp: st.player?.hp, enemyHp: st.enemy?.hp, hand: st.hand?.map((c) => c.defId), rngCursor: st.rngCursor, score: st.score?.total, status: st.status } : null } catch { return 'ERR' } })
+    out.saveBefore = await saveOf()
+    out.saveRaw = await page.evaluate(() => { const s = localStorage.getItem('sevengods.battleSave'); return s ? { bytes: s.length, keys: Object.keys(JSON.parse(s)) } : null })
+    // reload → Home（続きから・残り回数）
+    await page.goto(`${base}/`); await page.waitForSelector('.home-screen', { timeout: 30000 }); await page.waitForTimeout(800)
+    out.home1 = await homeToday()
+    out.resumeClicked = await clickSel(page, '[data-testid="home-resume"]')
+    await page.waitForFunction(() => { const b = document.querySelector('.end-round-button'); return b && !b.disabled }, null, { timeout: 20000 }).catch(() => {})
+    out.entranceOnResume = await page.evaluate(() => !!document.querySelector('[data-testid="boss-entrance"]'))
+    await page.waitForTimeout(800)
+    out.resumed = await page.evaluate(() => ({ round: (document.body.innerText.match(/ラウンド\s*(\d)\s*\/\s*7/) || [])[1] ?? null, hand: document.querySelectorAll('.hand .card-view').length }))
+    out.saveAfter = await saveOf()
+    out.resumeSame = JSON.stringify(out.saveBefore) === JSON.stringify(out.saveAfter)
+    out.layout = await pageState(page)
+    await page.screenshot({ path: `${outDir}/${mode}-resumed.png` })
+  } else if (mode.startsWith('press')) {
+    await page.addInitScript(PROBE)
+    await toBattle(page, 'rcgate-press-01')
+    const taps = []
+    for (let r = 1; r <= 3; r++) {
+      for (let k = 0; k < 3; k++) {
+        const box = await page.evaluate(() => { const c = [...document.querySelectorAll('.hand .card-view')].find((x) => !x.disabled); if (!c) return null; const b = c.getBoundingClientRect(); return { x: b.x + b.width / 2, y: b.y + b.height / 2 } })
+        if (!box) break
+        const n0 = await page.evaluate(() => window.__p.inputs.length)
+        if (isSp) await page.touchscreen.tap(box.x, box.y); else await page.mouse.click(box.x, box.y)
+        await page.waitForTimeout(1200)
+        taps.push(await tapResult(page, n0, 'card'))
+      }
+      const eb = await page.evaluate(() => { const b = document.querySelector('.end-round-button'); if (!b || b.disabled) return null; const r = b.getBoundingClientRect(); return { x: r.x + r.width / 2, y: r.y + r.height / 2 } })
+      if (!eb) break
+      const n0 = await page.evaluate(() => window.__p.inputs.length)
+      if (isSp) await page.touchscreen.tap(eb.x, eb.y); else await page.mouse.click(eb.x, eb.y)
+      await page.waitForTimeout(400)
+      taps.push(await tapResult(page, n0, 'end'))
+      await page.waitForTimeout(3400)
+      await page.waitForFunction(() => { const b = document.querySelector('.end-round-button'); return (b && !b.disabled) || document.querySelector('.game-over-overlay, .victory-stage') }, null, { timeout: 15000 }).catch(() => {})
+      if (await page.evaluate(() => !!document.querySelector('.game-over-overlay, .victory-stage'))) break
+    }
+    const se = await page.evaluate(() => window.__p.se)
+    let dup = 0
+    for (let i = 0; i < se.length; i++) for (let j = i + 1; j < se.length; j++) if (se[i].name && se[i].name === se[j].name && se[i].rate === se[j].rate && Math.abs((se[i].at - se[j].at) * 1000) < 30) dup++
+    out.taps = taps
+    out.seTotal = se.length
+    out.seNames = [...new Set(se.map((s) => s.name))]
+    out.duplicates30ms = dup
+    out.layout = await pageState(page)
+  }
+} catch (e) { out.failure = String(e).slice(0, 400) }
+await ctx.close(); await browser.close()
+writeFileSync(`${outDir}/${mode}.json`, JSON.stringify(out, null, 1))
+console.log(JSON.stringify(out).slice(0, 1800))

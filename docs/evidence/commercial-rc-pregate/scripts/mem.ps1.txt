@@ -1,0 +1,13 @@
+param([string]$label)
+$log = 'C:\Users\kimi1\SevenGodsGame-rcgate\docs\evidence\commercial-rc-pregate\memory.log.txt'
+$deadline = (Get-Date).AddMinutes(20)
+while ($true) {
+  $m = [int](Get-Counter '\Memory\Available MBytes').CounterSamples.CookedValue
+  $ts = Get-Date -Format 'yyyy-MM-ddTHH:mm:ss'
+  if ($m -ge 300) { Add-Content -Encoding utf8 $log "$ts $label $m OK"; Write-Output "$m OK"; break }
+  Add-Content -Encoding utf8 $log "$ts $label $m WAIT60"
+  if ((Get-Date) -gt $deadline) { Write-Output "$m TIMEOUT"; break }
+  Start-Sleep 60
+}
+$locks = Get-ChildItem C:\Users\kimi1\AppData\Local\Temp\sevengods-locks -ErrorAction SilentlyContinue | % Name
+Write-Output "locks: $locks"

@@ -1,0 +1,22 @@
+// G7 God Strike：決定250 Fast Gate summary（headless 全 14 ケース＋headed noshot）を判定。before=preview / after=Production
+// poster+ は MutationObserver の ms 丸めのため ≤1ms を 0ms 扱い。playing ≤278ms と dropped は headed（実 Chrome・GPU）でのみ判定（headless は参考値＝決定250 と同じ扱い）
+// 基準（決定250）：poster+ 0ms・is-video（playing）≤278ms・404／stall／reduced は静止（video なし）へ fallback・着弾 impactAt 1600／stop 80ms（reduced 0ms）・dropped PC ≤2%／SP ≤5%（headed 実 Chrome）
+import { readFileSync, writeFileSync } from 'node:fs'
+const [hl, hd, outF] = process.argv.slice(2)
+const parse = (f) => { const [h, ...rows] = readFileSync(f, 'utf8').trim().split(/\r?\n/).map((l) => l.split('\t')); return rows.map((r) => Object.fromEntries(h.map((k, i) => [k, r[i]]))) }
+const H = parse(hl), G = parse(hd)
+const num = (v) => (v === '' || v === undefined ? null : Number(v))
+const evalRow = (r, headedRun) => {
+  const lab = r.label, video = !/reduced|404|stall/.test(lab)
+  const c = { burst: r.burst !== '-', cutinAt0: num(r['cutin+']) !== null && Math.abs(num(r['cutin+'])) <= 1, impact1600: r.impactAt === '1600', stop: lab.includes('reduced') ? r.stop === '0ms' : r.stop === '80ms', hScroll0: r.hScroll === 'false', errors0: r.errors === '0' }
+  if (video) { c.poster0 = num(r['poster+']) !== null && num(r['poster+']) <= 1; if (headedRun) c.playingLe278 = num(r['is-video']) !== null && num(r['is-video']) <= 278 }
+  if (/reduced|404|stall/.test(lab)) c.staticFallback = r['video+'] === '' && r['is-video'] === '' && num(r.unlock) !== null
+  const [d, t] = (r['dropped/total'] ?? '-').split('/').map(Number)
+  return { label: lab, checks: c, pass: Object.values(c).every(Boolean), isVideo: num(r['is-video']), dropped: Number.isFinite(d) ? `${d}/${t}` : '-', droppedPct: Number.isFinite(d) ? +((d / t) * 100).toFixed(1) : null, unlock: num(r.unlock), enemyHpPost: r['enemy-Hp post'] ?? r['enemyHp post'], result: r.result }
+}
+const headless = H.map((r) => evalRow(r, false)), headed = G.map((r) => evalRow(r, true))
+const droppedHeaded = headed.filter((r) => r.label.includes('after')).map((r) => ({ label: r.label, dropped: r.dropped, pct: r.droppedPct, limit: r.label.startsWith('sp') ? 5 : 2, ok: r.droppedPct !== null && r.droppedPct <= (r.label.startsWith('sp') ? 5 : 2) }))
+const hpSame = (() => { const m = {}; for (const r of [...headless, ...headed]) { const k = r.label.split('-')[0]; (m[k] ??= new Set()).add(r.enemyHpPost) } return Object.fromEntries(Object.entries(m).map(([k, s]) => [k, s.size])) })()
+const out = { headlessPass: headless.filter((r) => r.pass).length, headlessTotal: headless.length, headedPass: headed.filter((r) => r.pass).length, headedTotal: headed.length, droppedHeaded, droppedHeadless: headless.filter((r) => r.dropped !== '-').map((r) => `${r.label} ${r.dropped}`), enemyHpPostDistinctPerVp: hpSame, headless, headed }
+writeFileSync(outF, JSON.stringify(out, null, 1))
+console.log(JSON.stringify({ headless: `${out.headlessPass}/${out.headlessTotal}`, headed: `${out.headedPass}/${out.headedTotal}`, failing: [...headless, ...headed].filter((r) => !r.pass).map((r) => r.label + ':' + Object.entries(r.checks).filter(([, v]) => !v).map(([k]) => k)), droppedHeaded, hpSame }))

@@ -1,0 +1,601 @@
+﻿
+ RUN  v4.1.10 C:/Users/kimi1/SevenGodsGame-rcgate
+
+stdout | src/core/engine/balanceSim.test.ts > バランスシミュレーション（Planner用・アサーションなし） > 恵比寿：複数戦略×複数シードで難易度傾向を出力する
+
+--- 恵比寿 / 戦略: balanced (40回) ---
+勝利: 40(100%) / 敗北: 0 / 未撃破: 0
+平均スコア: 635.7
+勝利時の平均ラウンド: 5.7
+敗北時の平均ラウンド: 0.0
+勝利時の平均残りHP: 22.9 / 30
+勝利ラウンド分布: R5=14, R6=26
+
+--- 恵比寿 / 戦略: aggressive (40回) ---
+勝利: 24(60%) / 敗北: 16 / 未撃破: 0
+平均スコア: 451.5
+勝利時の平均ラウンド: 5.1
+敗北時の平均ラウンド: 4.1
+勝利時の平均残りHP: 10.5 / 30
+勝利ラウンド分布: R4=3, R5=15, R6=6
+
+--- 恵比寿 / 戦略: defensive (40回) ---
+勝利: 40(100%) / 敗北: 0 / 未撃破: 0
+平均スコア: 649.2
+勝利時の平均ラウンド: 5.5
+敗北時の平均ラウンド: 0.0
+勝利時の平均残りHP: 23.7 / 30
+勝利ラウンド分布: R5=21, R6=19
+
+stdout | src/core/engine/balanceSim.test.ts > バランスシミュレーション（Planner用・アサーションなし） > 他6神：おすすめデッキで複数戦略×複数シードの難易度傾向を出力する（決定26）
+
+--- 大耀 / 戦略: balanced (40回) ---
+勝利: 40(100%) / 敗北: 0 / 未撃破: 0
+平均スコア: 636.3
+勝利時の平均ラウンド: 5.7
+敗北時の平均ラウンド: 0.0
+勝利時の平均残りHP: 16.2 / 30
+勝利ラウンド分布: R5=15, R6=22, R7=3
+
+--- 大耀 / 戦略: aggressive (40回) ---
+勝利: 20(50%) / 敗北: 20 / 未撃破: 0
+平均スコア: 409.6
+勝利時の平均ラウンド: 5.0
+敗北時の平均ラウンド: 4.0
+勝利時の平均残りHP: 10.3 / 30
+勝利ラウンド分布: R4=6, R5=7, R6=7
+
+--- 大耀 / 戦略: defensive (40回) ---
+勝利: 40(100%) / 敗北: 0 / 未撃破: 0
+平均スコア: 627.3
+勝利時の平均ラウンド: 5.8
+敗北時の平均ラウンド: 0.0
+勝利時の平均残りHP: 15.7 / 30
+勝利ラウンド分布: R5=9, R6=28, R7=3
+
+--- 蒼毘 / 戦略: balanced (40回) ---
+勝利: 40(100%) / 敗北: 0 / 未撃破: 0
+平均スコア: 637.4
+勝利時の平均ラウンド: 5.6
+敗北時の平均ラウンド: 0.0
+勝利時の平均残りHP: 21.3 / 30
+勝利ラウンド分布: R4=1, R5=15, R6=24
+
+--- 蒼毘 / 戦略: aggressive (40回) ---
+勝利: 40(100%) / 敗北: 0 / 未撃破: 0
+平均スコア: 617.3
+勝利時の平均ラウンド: 5.8
+敗北時の平均ラウンド: 0.0
+勝利時の平均残りHP: 20.6 / 30
+勝利ラウンド分布: R5=7, R6=33
+
+--- 蒼毘 / 戦略: defensive (40回) ---
+勝利: 40(100%) / 敗北: 0 / 未撃破: 0
+平均スコア: 638.5
+勝利時の平均ラウンド: 5.6
+敗北時の平均ラウンド: 0.0
+勝利時の平均残りHP: 24.2 / 30
+勝利ラウンド分布: R4=1, R5=15, R6=22, R7=2
+
+--- 才華 / 戦略: balanced (40回) ---
+勝利: 40(100%) / 敗北: 0 / 未撃破: 0
+平均スコア: 652.8
+勝利時の平均ラウンド: 5.8
+敗北時の平均ラウンド: 0.0
+勝利時の平均残りHP: 15.1 / 30
+勝利ラウンド分布: R5=9, R6=31
+
+--- 才華 / 戦略: aggressive (40回) ---
+勝利: 8(20%) / 敗北: 32 / 未撃破: 0
+平均スコア: 267.7
+勝利時の平均ラウンド: 5.0
+敗北時の平均ラウンド: 4.0
+勝利時の平均残りHP: 2.1 / 30
+勝利ラウンド分布: R5=8
+
+--- 才華 / 戦略: defensive (40回) ---
+勝利: 40(100%) / 敗北: 0 / 未撃破: 0
+平均スコア: 654.2
+勝利時の平均ラウンド: 5.8
+敗北時の平均ラウンド: 0.0
+勝利時の平均残りHP: 15.6 / 30
+勝利ラウンド分布: R5=11, R6=28, R7=1
+
+--- 寿楽 / 戦略: balanced (40回) ---
+勝利: 40(100%) / 敗北: 0 / 未撃破: 0
+平均スコア: 601.4
+勝利時の平均ラウンド: 6.0
+敗北時の平均ラウンド: 0.0
+勝利時の平均残りHP: 25.7 / 30
+勝利ラウンド分布: R5=6, R6=28, R7=6
+
+--- 寿楽 / 戦略: aggressive (40回) ---
+勝利: 40(100%) / 敗北: 0 / 未撃破: 0
+平均スコア: 612.2
+勝利時の平均ラウンド: 5.7
+敗北時の平均ラウンド: 0.0
+勝利時の平均残りHP: 18.9 / 30
+勝利ラウンド分布: R5=16, R6=21, R7=3
+
+--- 寿楽 / 戦略: defensive (40回) ---
+勝利: 39(98%) / 敗北: 0 / 未撃破: 1
+平均スコア: 579.9
+勝利時の平均ラウンド: 6.2
+敗北時の平均ラウンド: 0.0
+勝利時の平均残りHP: 26.2 / 30
+勝利ラウンド分布: R5=5, R6=22, R7=12
+
+--- 福永 / 戦略: balanced (40回) ---
+勝利: 40(100%) / 敗北: 0 / 未撃破: 0
+平均スコア: 612.5
+勝利時の平均ラウンド: 6.3
+敗北時の平均ラウンド: 0.0
+勝利時の平均残りHP: 26.3 / 30
+勝利ラウンド分布: R5=1, R6=28, R7=11
+
+--- 福永 / 戦略: aggressive (40回) ---
+勝利: 27(68%) / 敗北: 13 / 未撃破: 0
+平均スコア: 487.9
+勝利時の平均ラウンド: 5.5
+敗北時の平均ラウンド: 4.2
+勝利時の平均残りHP: 15.3 / 30
+勝利ラウンド分布: R4=2, R5=12, R6=11, R7=2
+
+--- 福永 / 戦略: defensive (40回) ---
+勝利: 40(100%) / 敗北: 0 / 未撃破: 0
+平均スコア: 603.2
+勝利時の平均ラウンド: 6.5
+敗北時の平均ラウンド: 0.0
+勝利時の平均残りHP: 29.3 / 30
+勝利ラウンド分布: R5=1, R6=20, R7=19
+
+--- 笑蓮 / 戦略: balanced (40回) ---
+勝利: 40(100%) / 敗北: 0 / 未撃破: 0
+平均スコア: 633.1
+勝利時の平均ラウンド: 5.8
+敗北時の平均ラウンド: 0.0
+勝利時の平均残りHP: 27.7 / 30
+勝利ラウンド分布: R5=11, R6=25, R7=4
+
+--- 笑蓮 / 戦略: aggressive (40回) ---
+勝利: 36(90%) / 敗北: 4 / 未撃破: 0
+平均スコア: 579.2
+勝利時の平均ラウンド: 5.8
+敗北時の平均ラウンド: 4.3
+勝利時の平均残りHP: 24.7 / 30
+勝利ラウンド分布: R5=12, R6=19, R7=5
+
+--- 笑蓮 / 戦略: defensive (40回) ---
+勝利: 40(100%) / 敗北: 0 / 未撃破: 0
+平均スコア: 629.1
+勝利時の平均ラウンド: 5.9
+敗北時の平均ラウンド: 0.0
+勝利時の平均残りHP: 29.0 / 30
+勝利ラウンド分布: R5=7, R6=29, R7=4
+
+ ✓ src/core/replay/actionLog.test.ts (12 tests) 1024ms
+     ✓ 7神 × 7敵(Daily seed) × 3デッキ × 3打ち筋 のすべてで完全一致する  945ms
+ ✓ src/core/replay/determinism.test.ts (7 tests) 1067ms
+     ✓ 7神 × 7敵(Daily seed) × 3デッキ × 3打ち筋 のすべてでGameStateが完全一致する  1000ms
+stdout | src/core/engine/balanceSim.test.ts > バランスシミュレーション（Planner用・アサーションなし） > 新6敵（決定32）：7神×3戦略で勝率を出力し、0%/97.5%以上の組み合わせを検出する（決定36）
+
+=== 敵: 業斧の鬼将 (HP94) ===
+  恵比寿: balanced=100%(R5.3) / aggressive=57%(R5.0) / defensive=100%(R5.3)
+  大耀: balanced=100%(R5.8) / aggressive=28%(R5.1) / defensive=100%(R5.7)
+  蒼毘: balanced=100%(R5.6) / aggressive=95%(R5.6) / defensive=100%(R5.3)
+  才華: balanced=100%(R5.6) / aggressive=15%(R4.2) / defensive=100%(R5.4)
+  寿楽: balanced=100%(R5.6) / aggressive=98%(R5.5) / defensive=100%(R5.7)
+  福永: balanced=100%(R6.1) / aggressive=48%(R5.1) / defensive=100%(R6.4)
+  笑蓮: balanced=100%(R5.5) / aggressive=80%(R5.3) / defensive=100%(R5.4)
+
+=== 敵: 藍花の怨霊 (HP95) ===
+  恵比寿: balanced=100%(R5.4) / aggressive=40%(R5.0) / defensive=100%(R5.4)
+  大耀: balanced=100%(R5.7) / aggressive=23%(R4.7) / defensive=100%(R5.7)
+  蒼毘: balanced=100%(R5.6) / aggressive=93%(R5.5) / defensive=100%(R5.3)
+  才華: balanced=100%(R5.5) / aggressive=15%(R4.0) / defensive=100%(R5.5)
+  寿楽: balanced=100%(R5.6) / aggressive=93%(R5.5) / defensive=100%(R5.8)
+  福永: balanced=100%(R6.3) / aggressive=33%(R5.4) / defensive=100%(R6.3)
+  笑蓮: balanced=100%(R5.4) / aggressive=80%(R4.9) / defensive=100%(R5.3)
+
+=== 敵: 銀甲の機工師 (HP100) ===
+  恵比寿: balanced=100%(R5.5) / aggressive=98%(R5.0) / defensive=100%(R5.4)
+  大耀: balanced=100%(R5.8) / aggressive=48%(R5.1) / defensive=100%(R5.8)
+  蒼毘: balanced=100%(R6.1) / aggressive=95%(R5.6) / defensive=100%(R5.6)
+  才華: balanced=100%(R5.7) / aggressive=100%(R4.9) / defensive=100%(R5.8)
+  寿楽: balanced=100%(R6.0) / aggressive=98%(R5.6) / defensive=100%(R6.0)
+  福永: balanced=100%(R6.2) / aggressive=65%(R5.3) / defensive=100%(R6.3)
+  笑蓮: balanced=100%(R5.6) / aggressive=88%(R5.3) / defensive=100%(R5.5)
+
+=== 敵: 双牙の魔獣 (HP85) ===
+  恵比寿: balanced=100%(R5.2) / aggressive=68%(R4.4) / defensive=100%(R5.2)
+  大耀: balanced=100%(R5.5) / aggressive=20%(R4.1) / defensive=100%(R5.5)
+  蒼毘: balanced=100%(R5.2) / aggressive=93%(R5.3) / defensive=100%(R5.1)
+  才華: balanced=100%(R5.3) / aggressive=40%(R4.0) / defensive=100%(R5.2)
+  寿楽: balanced=100%(R5.3) / aggressive=93%(R5.2) / defensive=100%(R5.5)
+  福永: balanced=100%(R5.7) / aggressive=45%(R4.3) / defensive=100%(R5.9)
+  笑蓮: balanced=100%(R5.4) / aggressive=60%(R5.3) / defensive=100%(R5.3)
+
+=== 敵: 蒼海の龍神 (HP103) ===
+  恵比寿: balanced=100%(R5.6) / aggressive=50%(R5.1) / defensive=100%(R5.5)
+  大耀: balanced=100%(R5.8) / aggressive=23%(R5.2) / defensive=100%(R5.8)
+  蒼毘: balanced=100%(R5.9) / aggressive=98%(R5.7) / defensive=100%(R5.5)
+  才華: balanced=100%(R5.8) / aggressive=0%(R0.0) / defensive=100%(R5.8)
+  寿楽: balanced=100%(R5.8) / aggressive=98%(R5.7) / defensive=100%(R6.2)
+  福永: balanced=100%(R6.3) / aggressive=35%(R5.8) / defensive=100%(R6.4)
+  笑蓮: balanced=100%(R5.8) / aggressive=78%(R5.7) / defensive=100%(R5.8)
+
+=== 敵: 乱舞の道化 (HP92) ===
+  恵比寿: balanced=100%(R5.2) / aggressive=80%(R4.9) / defensive=100%(R5.3)
+  大耀: balanced=100%(R5.6) / aggressive=43%(R4.8) / defensive=100%(R5.8)
+  蒼毘: balanced=100%(R5.9) / aggressive=100%(R5.6) / defensive=100%(R5.4)
+  才華: balanced=100%(R5.0) / aggressive=33%(R4.2) / defensive=100%(R5.0)
+  寿楽: balanced=100%(R5.6) / aggressive=100%(R5.5) / defensive=100%(R5.7)
+  福永: balanced=100%(R6.0) / aggressive=45%(R5.3) / defensive=100%(R6.4)
+  笑蓮: balanced=100%(R5.3) / aggressive=88%(R5.0) / defensive=100%(R5.3)
+
+--- 要調整（勝率0%または97.5%以上） ---
+業斧の鬼将 × 恵比寿 × balanced: 勝率100%（未撃破0%）
+業斧の鬼将 × 恵比寿 × defensive: 勝率100%（未撃破0%）
+業斧の鬼将 × 大耀 × balanced: 勝率100%（未撃破0%）
+業斧の鬼将 × 大耀 × defensive: 勝率100%（未撃破0%）
+業斧の鬼将 × 蒼毘 × balanced: 勝率100%（未撃破0%）
+業斧の鬼将 × 蒼毘 × defensive: 勝率100%（未撃破0%）
+業斧の鬼将 × 才華 × balanced: 勝率100%（未撃破0%）
+業斧の鬼将 × 才華 × defensive: 勝率100%（未撃破0%）
+業斧の鬼将 × 寿楽 × balanced: 勝率100%（未撃破0%）
+業斧の鬼将 × 寿楽 × aggressive: 勝率98%（未撃破0%）
+業斧の鬼将 × 寿楽 × defensive: 勝率100%（未撃破0%）
+業斧の鬼将 × 福永 × balanced: 勝率100%（未撃破0%）
+業斧の鬼将 × 福永 × defensive: 勝率100%（未撃破0%）
+業斧の鬼将 × 笑蓮 × balanced: 勝率100%（未撃破0%）
+業斧の鬼将 × 笑蓮 × defensive: 勝率100%（未撃破0%）
+藍花の怨霊 × 恵比寿 × balanced: 勝率100%（未撃破0%）
+藍花の怨霊 × 恵比寿 × defensive: 勝率100%（未撃破0%）
+藍花の怨霊 × 大耀 × balanced: 勝率100%（未撃破0%）
+藍花の怨霊 × 大耀 × defensive: 勝率100%（未撃破0%）
+藍花の怨霊 × 蒼毘 × balanced: 勝率100%（未撃破0%）
+藍花の怨霊 × 蒼毘 × defensive: 勝率100%（未撃破0%）
+藍花の怨霊 × 才華 × balanced: 勝率100%（未撃破0%）
+藍花の怨霊 × 才華 × defensive: 勝率100%（未撃破0%）
+藍花の怨霊 × 寿楽 × balanced: 勝率100%（未撃破0%）
+藍花の怨霊 × 寿楽 × defensive: 勝率100%（未撃破0%）
+藍花の怨霊 × 福永 × balanced: 勝率100%（未撃破0%）
+藍花の怨霊 × 福永 × defensive: 勝率100%（未撃破0%）
+藍花の怨霊 × 笑蓮 × balanced: 勝率100%（未撃破0%）
+藍花の怨霊 × 笑蓮 × defensive: 勝率100%（未撃破0%）
+銀甲の機工師 × 恵比寿 × balanced: 勝率100%（未撃破0%）
+銀甲の機工師 × 恵比寿 × aggressive: 勝率98%（未撃破0%）
+銀甲の機工師 × 恵比寿 × defensive: 勝率100%（未撃破0%）
+銀甲の機工師 × 大耀 × balanced: 勝率100%（未撃破0%）
+銀甲の機工師 × 大耀 × defensive: 勝率100%（未撃破0%）
+銀甲の機工師 × 蒼毘 × balanced: 勝率100%（未撃破0%）
+銀甲の機工師 × 蒼毘 × defensive: 勝率100%（未撃破0%）
+銀甲の機工師 × 才華 × balanced: 勝率100%（未撃破0%）
+銀甲の機工師 × 才華 × aggressive: 勝率100%（未撃破0%）
+銀甲の機工師 × 才華 × defensive: 勝率100%（未撃破0%）
+銀甲の機工師 × 寿楽 × balanced: 勝率100%（未撃破0%）
+銀甲の機工師 × 寿楽 × aggressive: 勝率98%（未撃破0%）
+銀甲の機工師 × 寿楽 × defensive: 勝率100%（未撃破0%）
+銀甲の機工師 × 福永 × balanced: 勝率100%（未撃破0%）
+銀甲の機工師 × 福永 × defensive: 勝率100%（未撃破0%）
+銀甲の機工師 × 笑蓮 × balanced: 勝率100%（未撃破0%）
+銀甲の機工師 × 笑蓮 × defensive: 勝率100%（未撃破0%）
+双牙の魔獣 × 恵比寿 × balanced: 勝率100%（未撃破0%）
+双牙の魔獣 × 恵比寿 × defensive: 勝率100%（未撃破0%）
+双牙の魔獣 × 大耀 × balanced: 勝率100%（未撃破0%）
+双牙の魔獣 × 大耀 × defensive: 勝率100%（未撃破0%）
+双牙の魔獣 × 蒼毘 × balanced: 勝率100%（未撃破0%）
+双牙の魔獣 × 蒼毘 × defensive: 勝率100%（未撃破0%）
+双牙の魔獣 × 才華 × balanced: 勝率100%（未撃破0%）
+双牙の魔獣 × 才華 × defensive: 勝率100%（未撃破0%）
+双牙の魔獣 × 寿楽 × balanced: 勝率100%（未撃破0%）
+双牙の魔獣 × 寿楽 × defensive: 勝率100%（未撃破0%）
+双牙の魔獣 × 福永 × balanced: 勝率100%（未撃破0%）
+双牙の魔獣 × 福永 × defensive: 勝率100%（未撃破0%）
+双牙の魔獣 × 笑蓮 × balanced: 勝率100%（未撃破0%）
+双牙の魔獣 × 笑蓮 × defensive: 勝率100%（未撃破0%）
+蒼海の龍神 × 恵比寿 × balanced: 勝率100%（未撃破0%）
+蒼海の龍神 × 恵比寿 × defensive: 勝率100%（未撃破0%）
+蒼海の龍神 × 大耀 × balanced: 勝率100%（未撃破0%）
+蒼海の龍神 × 大耀 × defensive: 勝率100%（未撃破0%）
+蒼海の龍神 × 蒼毘 × balanced: 勝率100%（未撃破0%）
+蒼海の龍神 × 蒼毘 × aggressive: 勝率98%（未撃破0%）
+蒼海の龍神 × 蒼毘 × defensive: 勝率100%（未撃破0%）
+蒼海の龍神 × 才華 × balanced: 勝率100%（未撃破0%）
+蒼海の龍神 × 才華 × aggressive: 勝率0%（未撃破0%）
+蒼海の龍神 × 才華 × defensive: 勝率100%（未撃破0%）
+蒼海の龍神 × 寿楽 × balanced: 勝率100%（未撃破0%）
+蒼海の龍神 × 寿楽 × aggressive: 勝率98%（未撃破0%）
+蒼海の龍神 × 寿楽 × defensive: 勝率100%（未撃破0%）
+蒼海の龍神 × 福永 × balanced: 勝率100%（未撃破0%）
+蒼海の龍神 × 福永 × defensive: 勝率100%（未撃破0%）
+蒼海の龍神 × 笑蓮 × balanced: 勝率100%（未撃破0%）
+蒼海の龍神 × 笑蓮 × defensive: 勝率100%（未撃破0%）
+乱舞の道化 × 恵比寿 × balanced: 勝率100%（未撃破0%）
+乱舞の道化 × 恵比寿 × defensive: 勝率100%（未撃破0%）
+乱舞の道化 × 大耀 × balanced: 勝率100%（未撃破0%）
+乱舞の道化 × 大耀 × defensive: 勝率100%（未撃破0%）
+乱舞の道化 × 蒼毘 × balanced: 勝率100%（未撃破0%）
+乱舞の道化 × 蒼毘 × aggressive: 勝率100%（未撃破0%）
+乱舞の道化 × 蒼毘 × defensive: 勝率100%（未撃破0%）
+乱舞の道化 × 才華 × balanced: 勝率100%（未撃破0%）
+乱舞の道化 × 才華 × defensive: 勝率100%（未撃破0%）
+乱舞の道化 × 寿楽 × balanced: 勝率100%（未撃破0%）
+乱舞の道化 × 寿楽 × aggressive: 勝率100%（未撃破0%）
+乱舞の道化 × 寿楽 × defensive: 勝率100%（未撃破0%）
+乱舞の道化 × 福永 × balanced: 勝率100%（未撃破0%）
+乱舞の道化 × 福永 × defensive: 勝率100%（未撃破0%）
+乱舞の道化 × 笑蓮 × balanced: 勝率100%（未撃破0%）
+乱舞の道化 × 笑蓮 × defensive: 勝率100%（未撃破0%）
+
+stdout | src/core/engine/balanceSim.test.ts > バランスシミュレーション（Planner用・アサーションなし） > 力の絆（決定44）：7神×3戦略で勝率を出力し、0%/97.5%以上の組み合わせを検出する（決定47）
+  恵比寿（力の絆）: balanced=100%(R5.5) / aggressive=65%(R5.2) / defensive=100%(R5.6)
+  大耀（力の絆）: balanced=100%(R5.7) / aggressive=35%(R5.1) / defensive=100%(R5.9)
+  蒼毘（力の絆）: balanced=100%(R5.7) / aggressive=98%(R5.6) / defensive=100%(R5.7)
+  才華（力の絆）: balanced=100%(R5.7) / aggressive=35%(R4.6) / defensive=100%(R5.8)
+  寿楽（力の絆）: balanced=100%(R5.9) / aggressive=100%(R5.7) / defensive=100%(R5.9)
+  福永（力の絆）: balanced=100%(R6.3) / aggressive=73%(R5.4) / defensive=100%(R6.4)
+  笑蓮（力の絆）: balanced=100%(R5.6) / aggressive=85%(R5.5) / defensive=100%(R5.8)
+
+--- 要調整（勝率0%または97.5%以上） ---
+恵比寿（力の絆） × balanced: 勝率100%（未撃破0%）
+恵比寿（力の絆） × defensive: 勝率100%（未撃破0%）
+大耀（力の絆） × balanced: 勝率100%（未撃破0%）
+大耀（力の絆） × defensive: 勝率100%（未撃破0%）
+蒼毘（力の絆） × balanced: 勝率100%（未撃破0%）
+蒼毘（力の絆） × aggressive: 勝率98%（未撃破0%）
+蒼毘（力の絆） × defensive: 勝率100%（未撃破0%）
+才華（力の絆） × balanced: 勝率100%（未撃破0%）
+才華（力の絆） × defensive: 勝率100%（未撃破0%）
+寿楽（力の絆） × balanced: 勝率100%（未撃破0%）
+寿楽（力の絆） × aggressive: 勝率100%（未撃破0%）
+寿楽（力の絆） × defensive: 勝率100%（未撃破0%）
+福永（力の絆） × balanced: 勝率100%（未撃破0%）
+福永（力の絆） × defensive: 勝率100%（未撃破0%）
+笑蓮（力の絆） × balanced: 勝率100%（未撃破0%）
+笑蓮（力の絆） × defensive: 勝率100%（未撃破0%）
+
+ ✓ src/components/battle/useReactionLanguage.test.ts (7 tests) 312ms
+ ✓ src/components/battle/visualHp.test.ts (13 tests) 448ms
+     ✓ カード使用・ラウンド終了の reveal は従来どおり（280ms / 700ms）  400ms
+stdout | src/core/engine/balanceSim.test.ts > バランスシミュレーション（Planner用・アサーションなし） > 決定57：難易度ごとの敗北（HP0）率・膠着（未撃破）率を計測する
+
+=== 難易度: normal ===
+  恵比寿: balanced=勝100%/敗0%/未0% / aggressive=勝78%/敗23%/未0% / defensive=勝100%/敗0%/未0%
+  大耀: balanced=勝100%/敗0%/未0% / aggressive=勝40%/敗60%/未0% / defensive=勝100%/敗0%/未0%
+  蒼毘: balanced=勝100%/敗0%/未0% / aggressive=勝98%/敗3%/未0% / defensive=勝100%/敗0%/未0%
+  才華: balanced=勝100%/敗0%/未0% / aggressive=勝10%/敗90%/未0% / defensive=勝100%/敗0%/未0%
+  寿楽: balanced=勝100%/敗0%/未0% / aggressive=勝100%/敗0%/未0% / defensive=勝100%/敗0%/未0%
+  福永: balanced=勝100%/敗0%/未0% / aggressive=勝68%/敗33%/未0% / defensive=勝100%/敗0%/未0%
+  笑蓮: balanced=勝100%/敗0%/未0% / aggressive=勝80%/敗20%/未0% / defensive=勝100%/敗0%/未0%
+
+=== 難易度: hard ===
+  恵比寿: balanced=勝100%/敗0%/未0% / aggressive=勝10%/敗90%/未0% / defensive=勝100%/敗0%/未0%
+  大耀: balanced=勝98%/敗3%/未0% / aggressive=勝23%/敗78%/未0% / defensive=勝95%/敗5%/未0%
+  蒼毘: balanced=勝100%/敗0%/未0% / aggressive=勝90%/敗10%/未0% / defensive=勝100%/敗0%/未0%
+  才華: balanced=勝100%/敗0%/未0% / aggressive=勝0%/敗100%/未0% / defensive=勝100%/敗0%/未0%
+  寿楽: balanced=勝98%/敗0%/未3% / aggressive=勝93%/敗8%/未0% / defensive=勝100%/敗0%/未0%
+  福永: balanced=勝90%/敗0%/未10% / aggressive=勝28%/敗73%/未0% / defensive=勝78%/敗0%/未23%
+  笑蓮: balanced=勝98%/敗0%/未3% / aggressive=勝45%/敗55%/未0% / defensive=勝98%/敗0%/未3%
+
+ ✓ src/core/engine/godCardsPhase5c.test.ts (25 tests) 108ms
+ ✓ src/components/battle/battleRecap.test.ts (16 tests) 214ms
+ ✓ src/components/pressFeel.test.ts (11 tests) 228ms
+ ✓ src/components/battle/combatTimeline.test.ts (27 tests) 312ms
+ ✓ src/components/cardTextScale.test.ts (86 tests) 94ms
+ ✓ src/components/battle/tapFeedback.test.ts (11 tests) 114ms
+stdout | src/core/engine/balanceSim.test.ts > バランスシミュレーション（Planner用・アサーションなし） > DAILY-01：神域強化×全神×全敵で、少なくとも1戦略が50%以上の勝率を保つ（Daily詰み防止）
+[DAILY-01 sim] modifier={"enemyHpMul":1.25,"enemyAtkMul":1.15} seeds=20
+試練の影 × 恵比寿: balanced=100%（勝利時score avg818/min749/max872） / aggressive=25%（勝利時score avg830/min745/max923） / defensive=100%（勝利時score avg803/min730/max873）
+試練の影 × 大耀: balanced=90%（勝利時score avg783/min732/max845） / aggressive=20%（勝利時score avg922/min856/max976） / defensive=100%（勝利時score avg802/min725/max916）
+試練の影 × 蒼毘: balanced=100%（勝利時score avg818/min725/max931） / aggressive=95%（勝利時score avg809/min715/max938） / defensive=100%（勝利時score avg818/min711/max933）
+試練の影 × 才華: balanced=100%（勝利時score avg852/min768/max916） / aggressive=0%（勝利時score avg0/min0/max0） / defensive=100%（勝利時score avg861/min784/max910）
+試練の影 × 寿楽: balanced=85%（勝利時score avg770/min716/max856） / aggressive=85%（勝利時score avg752/min698/max892） / defensive=75%（勝利時score avg772/min732/max840）
+試練の影 × 福永: balanced=65%（勝利時score avg794/min750/max885） / aggressive=30%（勝利時score avg825/min747/max910） / defensive=35%（勝利時score avg784/min773/max801）
+試練の影 × 笑蓮: balanced=95%（勝利時score avg801/min747/max882） / aggressive=65%（勝利時score avg822/min745/max862） / defensive=85%（勝利時score avg794/min741/max867）
+業斧の鬼将 × 恵比寿: balanced=100%（勝利時score avg828/min733/max911） / aggressive=5%（勝利時score avg844/min844/max844） / defensive=100%（勝利時score avg817/min722/max916）
+業斧の鬼将 × 大耀: balanced=95%（勝利時score avg799/min721/max874） / aggressive=10%（勝利時score avg929/min899/max959） / defensive=100%（勝利時score avg814/min708/max922）
+業斧の鬼将 × 蒼毘: balanced=100%（勝利時score avg800/min696/max894） / aggressive=70%（勝利時score avg786/min704/max880） / defensive=100%（勝利時score avg835/min670/max928）
+業斧の鬼将 × 才華: balanced=100%（勝利時score avg838/min747/max907） / aggressive=0%（勝利時score avg0/min0/max0） / defensive=100%（勝利時score avg838/min734/max890）
+業斧の鬼将 × 寿楽: balanced=95%（勝利時score avg777/min711/max825） / aggressive=95%（勝利時score avg761/min672/max828） / defensive=100%（勝利時score avg763/min711/max906）
+業斧の鬼将 × 福永: balanced=95%（勝利時score avg785/min731/max873） / aggressive=10%（勝利時score avg824/min812/max835） / defensive=55%（勝利時score avg756/min734/max779）
+業斧の鬼将 × 笑蓮: balanced=95%（勝利時score avg794/min724/max913） / aggressive=45%（勝利時score avg776/min733/max855） / defensive=100%（勝利時score avg807/min743/max900）
+藍花の怨霊 × 恵比寿: balanced=100%（勝利時score avg801/min711/max854） / aggressive=0%（勝利時score avg0/min0/max0） / defensive=100%（勝利時score avg822/min732/max907）
+藍花の怨霊 × 大耀: balanced=100%（勝利時score avg790/min686/max853） / aggressive=10%（勝利時score avg892/min824/max960） / defensive=75%（勝利時score avg812/min734/max890）
+藍花の怨霊 × 蒼毘: balanced=100%（勝利時score avg788/min702/max898） / aggressive=35%（勝利時score avg811/min730/max902） / defensive=100%（勝利時score avg825/min711/max927）
+藍花の怨霊 × 才華: balanced=100%（勝利時score avg855/min767/max890） / aggressive=0%（勝利時score avg0/min0/max0） / defensive=100%（勝利時score avg869/min823/max949）
+藍花の怨霊 × 寿楽: balanced=100%（勝利時score avg758/min691/max824） / aggressive=45%（勝利時score avg733/min693/max814） / defensive=100%（勝利時score avg775/min685/max894）
+藍花の怨霊 × 福永: balanced=90%（勝利時score avg787/min725/max872） / aggressive=5%（勝利時score avg797/min797/max797） / defensive=70%（勝利時score avg783/min745/max849）
+藍花の怨霊 × 笑蓮: balanced=100%（勝利時score avg810/min720/max915） / aggressive=35%（勝利時score avg824/min742/max871） / defensive=95%（勝利時score avg795/min732/max862）
+銀甲の機工師 × 恵比寿: balanced=100%（勝利時score avg818/min722/max931） / aggressive=40%（勝利時score avg852/min803/max892） / defensive=100%（勝利時score avg807/min727/max941）
+銀甲の機工師 × 大耀: balanced=100%（勝利時score avg805/min728/max874） / aggressive=15%（勝利時score avg891/min885/max897） / defensive=100%（勝利時score avg792/min718/max930）
+銀甲の機工師 × 蒼毘: balanced=95%（勝利時score avg774/min728/max871） / aggressive=55%（勝利時score avg805/min727/max853） / defensive=100%（勝利時score avg796/min740/max861）
+銀甲の機工師 × 才華: balanced=100%（勝利時score avg868/min776/max954） / aggressive=45%（勝利時score avg932/min911/max971） / defensive=100%（勝利時score avg859/min761/max905）
+銀甲の機工師 × 寿楽: balanced=95%（勝利時score avg733/min707/max763） / aggressive=30%（勝利時score avg757/min689/max818） / defensive=85%（勝利時score avg744/min711/max829）
+銀甲の機工師 × 福永: balanced=85%（勝利時score avg785/min746/max888） / aggressive=30%（勝利時score avg846/min763/max927） / defensive=50%（勝利時score avg777/min766/max792）
+銀甲の機工師 × 笑蓮: balanced=90%（勝利時score avg792/min728/max863） / aggressive=45%（勝利時score avg795/min742/max915） / defensive=90%（勝利時score avg810/min740/max944）
+双牙の魔獣 × 恵比寿: balanced=100%（勝利時score avg833/min788/max915） / aggressive=5%（勝利時score avg882/min882/max882） / defensive=100%（勝利時score avg830/min710/max917）
+双牙の魔獣 × 大耀: balanced=100%（勝利時score avg802/min698/max897） / aggressive=0%（勝利時score avg0/min0/max0） / defensive=90%（勝利時score avg808/min689/max948）
+双牙の魔獣 × 蒼毘: balanced=100%（勝利時score avg809/min700/max901） / aggressive=75%（勝利時score avg789/min693/max884） / defensive=100%（勝利時score avg811/min698/max918）
+双牙の魔獣 × 才華: balanced=100%（勝利時score avg832/min730/max943） / aggressive=0%（勝利時score avg0/min0/max0） / defensive=100%（勝利時score avg833/min727/max935）
+双牙の魔獣 × 寿楽: balanced=100%（勝利時score avg786/min693/max819） / aggressive=80%（勝利時score avg787/min683/max858） / defensive=100%（勝利時score avg754/min684/max806）
+双牙の魔獣 × 福永: balanced=100%（勝利時score avg783/min698/max873） / aggressive=5%（勝利時score avg861/min861/max861） / defensive=100%（勝利時score avg777/min707/max897）
+双牙の魔獣 × 笑蓮: balanced=100%（勝利時score avg809/min719/max899） / aggressive=40%（勝利時score avg850/min788/max908） / defensive=100%（勝利時score avg800/min715/max896）
+蒼海の龍神 × 恵比寿: balanced=100%（勝利時score avg808/min724/max881） / aggressive=0%（勝利時score avg0/min0/max0） / defensive=100%（勝利時score avg802/min736/max869）
+蒼海の龍神 × 大耀: balanced=95%（勝利時score avg782/min726/max912） / aggressive=10%（勝利時score avg879/min830/max927） / defensive=90%（勝利時score avg808/min721/max931）
+蒼海の龍神 × 蒼毘: balanced=100%（勝利時score avg774/min712/max916） / aggressive=65%（勝利時score avg824/min732/max911） / defensive=95%（勝利時score avg834/min729/max929）
+蒼海の龍神 × 才華: balanced=100%（勝利時score avg869/min750/max920） / aggressive=0%（勝利時score avg0/min0/max0） / defensive=100%（勝利時score avg860/min758/max893）
+蒼海の龍神 × 寿楽: balanced=100%（勝利時score avg743/min708/max820） / aggressive=70%（勝利時score avg760/min710/max810） / defensive=80%（勝利時score avg737/min703/max760）
+蒼海の龍神 × 福永: balanced=80%（勝利時score avg778/min749/max807） / aggressive=15%（勝利時score avg817/min777/max855） / defensive=40%（勝利時score avg802/min747/max872）
+蒼海の龍神 × 笑蓮: balanced=100%（勝利時score avg794/min741/max881） / aggressive=45%（勝利時score avg800/min745/max941） / defensive=80%（勝利時score avg814/min759/max937）
+乱舞の道化 × 恵比寿: balanced=100%（勝利時score avg825/min719/max913） / aggressive=40%（勝利時score avg838/min771/max898） / defensive=100%（勝利時score avg836/min728/max905）
+乱舞の道化 × 大耀: balanced=100%（勝利時score avg823/min729/max917） / aggressive=25%（勝利時score avg807/min697/max887） / defensive=100%（勝利時score avg809/min709/max900）
+乱舞の道化 × 蒼毘: balanced=100%（勝利時score avg794/min718/max928） / aggressive=85%（勝利時score avg804/min693/max894） / defensive=100%（勝利時score avg805/min712/max918）
+乱舞の道化 × 才華: balanced=100%（勝利時score avg870/min732/max949） / aggressive=0%（勝利時score avg0/min0/max0） / defensive=100%（勝利時score avg854/min735/max927）
+乱舞の道化 × 寿楽: balanced=100%（勝利時score avg764/min689/max866） / aggressive=100%（勝利時score avg774/min664/max870） / defensive=100%（勝利時score avg752/min706/max863）
+乱舞の道化 × 福永: balanced=95%（勝利時score avg804/min733/max868） / aggressive=35%（勝利時score avg834/min723/max919） / defensive=65%（勝利時score avg777/min732/max857）
+乱舞の道化 × 笑蓮: balanced=100%（勝利時score avg819/min716/max909） / aggressive=30%（勝利時score avg845/min736/max923） / defensive=100%（勝利時score avg795/min709/max918）
+
+ ✓ src/hooks/dailyRunStorage.test.ts (26 tests) 104ms
+ ✓ src/core/replay/resume.test.ts (10 tests) 81ms
+stdout | src/core/engine/balanceSim.test.ts > バランスシミュレーション（Planner用・アサーションなし） > 決定98：勝利試合の「最終スコア×撃破ラウンド×神×難易度」相関ログ（アサーションなし・計測専用）
+
+--- 決定98計測：撃破ラウンド別の平均スコア（全神・全戦略・全難易度、勝利試合のみ） ---
+R3撃破: 1件, 平均スコア720.6
+R4撃破: 51件, 平均スコア700.6
+R5撃破: 379件, 平均スコア656.2
+R6撃破: 514件, 平均スコア624.3
+R7撃破: 174件, 平均スコア582.1
+
+--- 決定98計測：神×難易度別の平均スコア・平均撃破ラウンド（勝利試合のみ） ---
+恵比寿 / easy: 60件, 平均スコア632.5, 平均撃破ラウンドR5.0
+恵比寿 / normal: 52件, 平均スコア648.2, 平均撃破ラウンドR5.4
+恵比寿 / hard: 46件, 平均スコア664.3, 平均撃破ラウンドR6.0
+大耀 / easy: 59件, 平均スコア612.1, 平均撃破ラウンドR5.4
+大耀 / normal: 46件, 平均スコア642.9, 平均撃破ラウンドR5.6
+大耀 / hard: 41件, 平均スコア652.3, 平均撃破ラウンドR6.1
+蒼毘 / easy: 60件, 平均スコア626.6, 平均撃破ラウンドR5.2
+蒼毘 / normal: 60件, 平均スコア644.2, 平均撃破ラウンドR5.5
+蒼毘 / hard: 58件, 平均スコア655.6, 平均撃破ラウンドR6.0
+才華 / easy: 60件, 平均スコア651.8, 平均撃破ラウンドR5.0
+才華 / normal: 45件, 平均スコア651.8, 平均撃破ラウンドR5.7
+才華 / hard: 40件, 平均スコア684.9, 平均撃破ラウンドR6.1
+寿楽 / easy: 60件, 平均スコア585.9, 平均撃破ラウンドR5.6
+寿楽 / normal: 60件, 平均スコア596.6, 平均撃破ラウンドR6.0
+寿楽 / hard: 57件, 平均スコア611.6, 平均撃破ラウンドR6.5
+福永 / easy: 60件, 平均スコア605.9, 平均撃破ラウンドR5.7
+福永 / normal: 53件, 平均スコア614.7, 平均撃破ラウンドR6.2
+福永 / hard: 41件, 平均スコア624.6, 平均撃破ラウンドR6.7
+笑蓮 / easy: 60件, 平均スコア636.9, 平均撃破ラウンドR5.0
+笑蓮 / normal: 57件, 平均スコア634.3, 平均撃破ラウンドR5.7
+笑蓮 / hard: 44件, 平均スコア633.4, 平均撃破ラウンドR6.6
+
+--- 決定98計測：戦略別の平均スコア（勝利試合のみ、全神・全難易度） ---
+balanced: 418件, 平均スコア632.2
+aggressive: 292件, 平均スコア633.3
+defensive: 409件, 平均スコア631.2
+
+ ✓ src/core/replay/replay.test.ts (29 tests) 129ms
+ ✓ src/core/replay/gameVersion.test.ts (10 tests) 84ms
+ ✓ src/components/battle/cardIcon.test.ts (1 test) 65ms
+ ✓ src/components/battle/nextGoal.test.ts (30 tests) 74ms
+ ✓ src/core/engine/sameSeedRetry.test.ts (4 tests) 94ms
+ ✓ src/components/battle/oraclePreview.test.ts (9 tests) 86ms
+stdout | src/core/engine/balanceSim.test.ts > バランスシミュレーション（Planner用・アサーションなし） > 決定126 STAKE-01：神階Ⅰ〜Ⅶ×7神×7敵で、各神に少なくとも1戦略が段別の下限勝率を満たす（神の公平性ゲート）
+
+--- STAKE-01 神階Ⅰ〜Ⅶ（7敵×6seeds×3戦略、Ⅶは3択の最良） ---
+神階1: overall 81% | 恵比寿 100%(bal) / 大耀 98%(bal) / 蒼毘 100%(bal) / 才華 100%(bal) / 寿楽 100%(bal) / 福永 100%(bal) / 笑蓮 100%(bal)
+神階2: overall 80% | 恵比寿 100%(bal) / 大耀 90%(bal) / 蒼毘 100%(bal) / 才華 100%(bal) / 寿楽 100%(def) / 福永 98%(bal) / 笑蓮 100%(bal)
+神階3: overall 72% | 恵比寿 100%(bal) / 大耀 90%(def) / 蒼毘 100%(bal) / 才華 100%(bal) / 寿楽 93%(def) / 福永 83%(bal) / 笑蓮 86%(def)
+神階4: overall 68% | 恵比寿 100%(def) / 大耀 86%(bal) / 蒼毘 100%(def) / 才華 95%(bal) / 寿楽 98%(bal) / 福永 71%(bal) / 笑蓮 83%(def)
+神階5: overall 64% | 恵比寿 93%(def) / 大耀 76%(bal) / 蒼毘 100%(bal) / 才華 90%(bal) / 寿楽 95%(def) / 福永 74%(bal) / 笑蓮 69%(bal)
+神階6: overall 62% | 恵比寿 95%(def) / 大耀 79%(bal) / 蒼毘 98%(bal) / 才華 90%(bal) / 寿楽 98%(def) / 福永 67%(bal) / 笑蓮 76%(bal)
+神階7: overall 46% | 恵比寿 95%(def/tempo) / 大耀 71%(def/tempo) / 蒼毘 100%(def/tempo) / 才華 83%(bal/race) / 寿楽 95%(bal/tempo) / 福永 60%(def/tempo) / 笑蓮 67%(bal)
+
+ ✓ src/core/engine/balanceSim.test.ts (11 tests) 8012ms
+     ✓ 他6神：おすすめデッキで複数戦略×複数シードの難易度傾向を出力する（決定26）  305ms
+     ✓ 新6敵（決定32）：7神×3戦略で勝率を出力し、0%/97.5%以上の組み合わせを検出する（決定36）  1150ms
+     ✓ 決定57：難易度ごとの敗北（HP0）率・膠着（未撃破）率を計測する  365ms
+     ✓ 決定58：hard×全神×全敵で、少なくとも1戦略が50%以上の勝率を保つことを保証する（再現防止）  1537ms
+     ✓ DAILY-01：神域強化×全神×全敵で、少なくとも1戦略が50%以上の勝率を保つ（Daily詰み防止）  918ms
+     ✓ 決定126 STAKE-01：神階Ⅰ〜Ⅶ×7神×7敵で、各神に少なくとも1戦略が段別の下限勝率を満たす（神の公平性ゲート）  2768ms
+ ✓ src/components/battle/decisionFeedback.test.ts (16 tests) 61ms
+ ✓ src/components/battle/cardStyle.test.ts (16 tests) 62ms
+ ✓ src/components/battle/defeatCause.test.ts (4 tests) 50ms
+ ✓ src/core/rng/seededRandom.test.ts (8 tests) 48ms
+ ✓ src/components/battle/dailyDiff.test.ts (11 tests) 69ms
+ ✓ src/hooks/matchupStorage.test.ts (23 tests) 59ms
+ ✓ src/hooks/dailyFairness.test.ts (19 tests) 49ms
+ ✓ src/components/battle/soundLayer.test.ts (14 tests) 45ms
+ ✓ src/core/engine/fukueiMastery.test.ts (31 tests) 41ms
+ ✓ src/core/engine/cardBonus.test.ts (23 tests) 48ms
+ ✓ src/components/battle/formatEvent.test.ts (11 tests) 49ms
+ ✓ src/components/displayScale.test.ts (7 tests) 56ms
+ ✓ src/core/engine/intentGuard.test.ts (44 tests) 43ms
+ ✓ src/hooks/battleSaveStorage.test.ts (24 tests) 46ms
+ ✓ src/components/battle/fxToastText.test.ts (5 tests) 45ms
+ ✓ src/core/engine/reducer.test.ts (17 tests) 36ms
+ ✓ src/core/engine/godPassive.test.ts (23 tests) 35ms
+ ✓ src/core/engine/enemyActions.test.ts (24 tests) 34ms
+ ✓ src/core/engine/cardBonusPhase5a.test.ts (16 tests) 43ms
+ ✓ src/hooks/dailyStorage.test.ts (7 tests) 33ms
+ ✓ src/core/engine/effects.test.ts (21 tests) 36ms
+ ✓ src/hooks/otomoBondStorage.test.ts (13 tests) 22ms
+ ✓ src/components/battle/castFlashBlend.test.ts (3 tests) 31ms
+ ✓ src/components/battle/cardSemantic.test.ts (19 tests) 32ms
+ ✓ src/components/battle/resultContext.test.ts (8 tests) 39ms
+ ✓ src/core/replay/actionDistribution.test.ts (5 tests) 12ms
+ ✓ src/core/engine/stakeRules.test.ts (10 tests) 26ms
+ ✓ src/core/engine/score.test.ts (11 tests) 31ms
+ ✓ src/components/scoreLegacyIntegrity.test.ts (22 tests) 33ms
+ ✓ src/core/engine/jurakuMastery.test.ts (18 tests) 37ms
+ ✓ src/core/engine/sobiMastery.test.ts (19 tests) 26ms
+ ✓ src/hooks/localQuotaProvider.test.ts (12 tests) 23ms
+ ✓ src/hooks/stakeStorage.test.ts (7 tests) 28ms
+ ✓ src/core/engine/mastery.test.ts (11 tests) 20ms
+ ✓ src/components/matchupWiring.test.ts (12 tests) 16ms
+ ✓ src/components/entranceWiring.test.ts (23 tests) 43ms
+ ✓ src/components/battle/cardTravel.test.ts (14 tests) 19ms
+ ✓ src/core/data/enemies.test.ts (12 tests) 26ms
+ ✓ src/hooks/recordStorage.test.ts (9 tests) 27ms
+ ✓ src/components/battle/masteryDisplay.test.ts (27 tests) 28ms
+ ✓ src/components/battle/godStrikeStage.test.ts (11 tests) 23ms
+ ✓ src/components/battle/battleEntrance.test.ts (14 tests) 24ms
+ ✓ src/components/enemyIdResilience.test.ts (5 tests) 22ms
+ ✓ src/core/data/dailyBoss.test.ts (12 tests) 30ms
+ ✓ src/core/data/deckBuilder.test.ts (13 tests) 30ms
+ ✓ src/core/data/gods.test.ts (9 tests) 22ms
+ ✓ src/components/setup/otomoGrowthDisplay.test.ts (27 tests) 34ms
+ ✓ src/core/engine/dailyModifier.test.ts (6 tests) 27ms
+ ✓ src/core/engine/enemySpawn.test.ts (2 tests) 22ms
+ ✓ src/core/data/stakes.test.ts (11 tests) 22ms
+ ✓ src/components/battle/resultHub.test.ts (9 tests) 20ms
+ ✓ src/hooks/godIdentitySave.test.ts (3 tests) 18ms
+ ✓ src/components/battle/battleViewportLayout.test.ts (11 tests) 21ms
+ ✓ src/core/engine/applyDivination.test.ts (5 tests) 21ms
+ ✓ src/components/resultTransitions.test.ts (8 tests) 22ms
+ ✓ src/components/battle/hudPlate.test.ts (9 tests) 18ms
+ ✓ src/hooks/deckPreferenceStorage.test.ts (10 tests) 19ms
+ ✓ src/components/solveLoopWiring.test.ts (7 tests) 18ms
+ ✓ src/hooks/dailyClock.test.ts (7 tests) 22ms
+ ✓ src/components/battle/dockControls.test.ts (8 tests) 21ms
+ ✓ src/components/feedback/feedbackSnapshot.test.ts (9 tests) 20ms
+ ✓ src/components/battle/sound.test.ts (4 tests) 17ms
+ ✓ src/components/battle/autoFocusSession.test.ts (10 tests) 18ms
+ ✓ src/components/setup/firstBattle.test.ts (12 tests) 15ms
+ ✓ src/components/battle/cardGodLabelLowscreen.test.ts (4 tests) 16ms
+ ✓ src/core/data/cards/cards.test.ts (3 tests) 16ms
+ ✓ src/components/cardBonusText.test.ts (5 tests) 15ms
+ ✓ src/components/setup/homePrimary.test.ts (14 tests) 15ms
+ ✓ src/components/enemyLookup.test.ts (5 tests) 16ms
+ ✓ src/components/setup/heroGod.test.ts (5 tests) 15ms
+ ✓ src/hooks/rewardStorage.test.ts (7 tests) 15ms
+ ✓ src/core/engine/deck.test.ts (4 tests) 14ms
+ ✓ src/core/engine/buffs.test.ts (8 tests) 14ms
+ ✓ src/core/replay/replayBoundary.test.ts (7 tests) 18ms
+ ✓ src/core/data/decks.test.ts (2 tests) 13ms
+ ✓ src/components/enemyIdHardeningWiring.test.ts (6 tests) 23ms
+ ✓ src/components/battle/godStrikeVideo.test.ts (5 tests) 15ms
+ ✓ src/hooks/quotaProvider.test.ts (5 tests) 10ms
+ ✓ src/components/battle/victoryReveal.test.ts (4 tests) 15ms
+ ✓ src/components/battle/matchupCelebration.test.ts (6 tests) 11ms
+ ✓ src/hooks/startDaily.test.ts (3 tests) 13ms
+ ✓ src/components/battle/retrySemantics.test.ts (7 tests) 10ms
+ ✓ src/components/battle/artWindow.test.ts (4 tests) 304ms
+ ✓ src/components/battle/useMobileAutoFocus.test.ts (3 tests) 10ms
+ ✓ src/components/battle/readyMaterial.test.ts (3 tests) 10ms
+ ✓ src/hooks/startEnemy.test.ts (3 tests) 11ms
+ ✓ src/components/battle/feelTier.test.ts (4 tests) 10ms
+ ↓ scripts/phase5a-cards/cardsAudit.test.ts (3 tests | 3 skipped)
+ ↓ scripts/phase5b-stakes/stakesAudit.test.ts (2 tests | 2 skipped)
+ ↓ scripts/phase5c-god-cards/godCardsAudit.test.ts (1 test | 1 skipped)
+ ↓ scripts/phase5d-guard/guardAudit.test.ts (1 test | 1 skipped)
+ ↓ scripts/phase5e-guard-structure/structureAudit.test.ts (1 test | 1 skipped)
+ ↓ scripts/phase5f-rc/phase5Compare.test.ts (1 test | 1 skipped)
+
+ Test Files  106 passed | 6 skipped (112)
+      Tests  1303 passed | 9 skipped (1312)
+   Start at  23:26:39
+   Duration  34.40s (transform 16.61s, setup 0ms, import 28.53s, tests 15.30s, environment 34ms)
+
+JSON report written to C:/Users/kimi1/AppData/Local/Temp/claude/C--Users-kimi1-SevenGodsGame/1141c1d1-9eb9-4c4a-a511-66373648126e/scratchpad/vitest.json

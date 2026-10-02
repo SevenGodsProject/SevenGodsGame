@@ -1,0 +1,8 @@
+param([string]$label, [string]$script, [string]$log, [string[]]$rest = @())
+$lockdir = 'C:\Users\kimi1\AppData\Local\Temp\sevengods-locks'
+& 'C:\Users\kimi1\AppData\Local\Temp\claude\C--Users-kimi1-SevenGodsGame\1141c1d1-9eb9-4c4a-a511-66373648126e\scratchpad\mem.ps1' $label
+while (Test-Path "$lockdir\sim.lock") { Write-Output 'sim.lock present, waiting'; Start-Sleep 30 }
+Set-Content -Encoding utf8 "$lockdir\browser.lock" "rcgate $label $(Get-Date -Format s)"
+Set-Location C:\Users\kimi1\SevenGodsGame-rcgate
+try { $o = node $script @rest 2>&1 | ForEach-Object { "$_" }; $code = $LASTEXITCODE; $o | Out-File -Encoding utf8 $log; $o | Select-Object -Last 25; "exit=$code" }
+finally { Remove-Item "$lockdir\browser.lock" -ErrorAction SilentlyContinue }

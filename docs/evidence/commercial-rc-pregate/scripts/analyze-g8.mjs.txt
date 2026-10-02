@@ -1,0 +1,23 @@
+// G8 Enemy Ultimate Presentation：gate-presentation.json（before=preview 538a3ef dist / after=Production）を
+// ① preview vs Production、② 決定252 Presentation gate の After（Pilot 合格時の値）と比較する。node analyze-g8.mjs <now.json> <d252.json> <out.json>
+import { readFileSync, writeFileSync } from 'node:fs'
+const [f, ref, outF] = process.argv.slice(2)
+const N = JSON.parse(readFileSync(f, 'utf8')), D = JSON.parse(readFileSync(ref, 'utf8'))
+const sig = (r) => ({ round: r.before?.round, intentText: r.before?.intentText, tier: (r.before?.intentClass ?? '').split(' ').filter((c) => c.startsWith('intent-tier')).join(' '), stance: (r.before?.avatarClass ?? '').split(' ').filter((c) => /^(intent-|charging)/.test(c)).sort().join(' '), ring: r.before?.footRing?.height ?? null, glyph: r.before?.intentGlyph, scale: r.before?.avatarScale, cutinSeen: r.cutinSeen, cutinText: r.cutinText, hScroll: r.before?.hScroll })
+const rows = [], diffs = []
+for (const k of Object.keys(N).filter((k) => k.endsWith('/after'))) {
+  const a = N[k], b = N[k.replace('/after', '/before')], d = D[k]
+  const ra = (a.rounds ?? []).map(sig), rb = (b?.rounds ?? []).map(sig), rd = (d?.rounds ?? []).map(sig)
+  const keys = ['intentText', 'tier', 'stance', 'ring', 'glyph', 'scale', 'cutinSeen', 'cutinText']
+  ra.forEach((x, i) => {
+    const vsPreview = keys.filter((kk) => JSON.stringify(x[kk]) !== JSON.stringify(rb[i]?.[kk]))
+    const vsD252 = keys.filter((kk) => JSON.stringify(x[kk]) !== JSON.stringify(rd[i]?.[kk]))
+    rows.push({ k: k.replace('/after', ''), ...x, vsPreview, vsD252 })
+    if (vsPreview.length || vsD252.length) diffs.push({ k, round: x.round, vsPreview, vsD252, now: x, preview: rb[i], d252: rd[i] })
+  })
+}
+const errs = Object.fromEntries(Object.entries(N).map(([k, v]) => [k, v.error ? 'RUN-ERROR ' + v.error : v.errors.length]))
+const cut = rows.filter((r) => r.cutinSeen).map((r) => `${r.k} R${r.round} ${r.cutinText} ring=${r.ring}`)
+const out = { runs: Object.keys(N).length, consoleErrors: errs, hScroll: rows.filter((r) => r.hScroll).length, cutins: cut, ringsPx: [...new Set(rows.filter((r) => r.ring && r.ring !== 'auto').map((r) => `${r.k.split('/')[1]}:${r.ring}`))], diffCount: diffs.length, diffs, rows }
+writeFileSync(outF, JSON.stringify(out, null, 1))
+console.log(JSON.stringify({ runs: out.runs, errors: Object.values(errs).filter((v) => v !== 0), hScroll: out.hScroll, cutins: cut.length, rings: out.ringsPx, diffCount: out.diffCount, diffKeys: diffs.map((d) => `${d.k} R${d.round} P:${d.vsPreview} D:${d.vsD252}`).slice(0, 20) }))

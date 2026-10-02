@@ -1,0 +1,143 @@
+{
+ "suites": [
+  {
+   "file": "src/components/enemyIdHardeningWiring.test.ts",
+   "passed": 6,
+   "failed": 0,
+   "skipped": 0
+  },
+  {
+   "file": "src/components/enemyIdResilience.test.ts",
+   "passed": 5,
+   "failed": 0,
+   "skipped": 0
+  },
+  {
+   "file": "src/components/scoreLegacyIntegrity.test.ts",
+   "passed": 22,
+   "failed": 0,
+   "skipped": 0
+  },
+  {
+   "file": "src/hooks/battleSaveStorage.test.ts",
+   "passed": 24,
+   "failed": 0,
+   "skipped": 0
+  },
+  {
+   "file": "src/hooks/dailyRunStorage.test.ts",
+   "passed": 26,
+   "failed": 0,
+   "skipped": 0
+  },
+  {
+   "file": "src/hooks/godIdentitySave.test.ts",
+   "passed": 3,
+   "failed": 0,
+   "skipped": 0
+  },
+  {
+   "file": "src/core/replay/actionLog.test.ts",
+   "passed": 12,
+   "failed": 0,
+   "skipped": 0
+  },
+  {
+   "file": "src/core/replay/determinism.test.ts",
+   "passed": 7,
+   "failed": 0,
+   "skipped": 0
+  },
+  {
+   "file": "src/core/replay/gameVersion.test.ts",
+   "passed": 10,
+   "failed": 0,
+   "skipped": 0
+  },
+  {
+   "file": "src/core/replay/replay.test.ts",
+   "passed": 29,
+   "failed": 0,
+   "skipped": 0
+  },
+  {
+   "file": "src/core/replay/replayBoundary.test.ts",
+   "passed": 7,
+   "failed": 0,
+   "skipped": 0
+  },
+  {
+   "file": "src/core/replay/resume.test.ts",
+   "passed": 10,
+   "failed": 0,
+   "skipped": 0
+  }
+ ],
+ "files": 12,
+ "passed": 161,
+ "failed": 0,
+ "tamper": [
+  {
+   "title": "日付・神・OTOMOの絆が食い違うログは引き継がない",
+   "status": "passed",
+   "ms": 3
+  },
+  {
+   "title": "盤面と食い違うログ（改ざん・欠落）は引き継がず捨てる",
+   "status": "passed",
+   "ms": 3
+  }
+ ],
+ "migration": [
+  {
+   "title": "v3セーブは破棄せず移行して読み込む（旧式スコアはlegacyへ畳み込み、totalの連続性を保つ）",
+   "status": "passed",
+   "ms": 2
+  },
+  {
+   "title": "v4セーブは破棄せず移行して読み込む（大耀値保持・寿楽フィールドはdefault-fill・スコア不変）",
+   "status": "passed",
+   "ms": 1
+  },
+  {
+   "title": "v5セーブは破棄せず移行して読み込む（大耀・寿楽値保持・蒼毘フィールドはdefault-fill・スコア不変）",
+   "status": "passed",
+   "ms": 1
+  },
+  {
+   "title": "v6セーブは破棄せず移行して読み込む（HP/deck/round/score/Mastery全保持・intent正規化のみ）",
+   "status": "passed",
+   "ms": 1
+  },
+  {
+   "title": "v3セーブはv3→…→v9へ連鎖移行され、現行バージョンで読み込まれる（経路維持）",
+   "status": "passed",
+   "ms": 1
+  },
+  {
+   "title": "未知のバージョン（v2以前・将来版）はnull（読み込まない）",
+   "status": "passed",
+   "ms": 1
+  },
+  {
+   "title": "v7セーブは破棄せず移行して読み込む（mode:normalを補完、他は全保持）",
+   "status": "passed",
+   "ms": 2
+  },
+  {
+   "title": "v3セーブはv3→…→v8へ連鎖移行され、mode:normalで読み込まれる",
+   "status": "passed",
+   "ms": 2
+  },
+  {
+   "title": "v8セーブ（stake無し）はv9へ移行され、stakeは未定義＝通常として扱われる",
+   "status": "passed",
+   "ms": 1
+  },
+  {
+   "title": "v9セーブは神階フィールドを保ったまま往復する",
+   "status": "passed",
+   "ms": 1
+  }
+ ]
+}

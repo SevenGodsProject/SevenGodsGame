@@ -1,0 +1,197 @@
+// 決定250 God Strike Premium Cut-in v2（H3 Max W2＋poster continuity）— Fast Gate（v1 harness を流用）
+// Before = Production b1ae088 dist (:4261) / After = feat/d250 dist (:4262)
+// 大耀 × 蒼海の龍神 seed rl-qa-7、攻撃カード連打で共鳴 7/7 → God Strike を起こし、
+// timeline（cutin mount／exit／banner／impact 計画／入力ロック）と engine 結果（HP・score）を Before/After で比較する。
+import { createRequire } from 'node:module'
+import { writeFileSync, mkdirSync } from 'node:fs'
+const require = createRequire('C:/Users/kimi1/SevenGodsGame/package.json')
+const { chromium } = require('playwright')
+const OUT = process.argv[2] ?? 'C:/Users/kimi1/AppData/Local/Temp/claude/C--Users-kimi1-SevenGodsGame/6fe4fc80-fd9c-4de7-b7bd-2f96a81a033c/scratchpad/d250v2/out'
+mkdirSync(OUT, { recursive: true })
+const BASES = { before: 'http://127.0.0.1:4291', after: 'https://seven-gods-game.vercel.app' }
+const VPS = { pc: { width: 1508, height: 660 }, sp: { width: 390, height: 844 } }
+const SC = { god: '大耀', enemy: '蒼海の龍神', seed: 'rl-qa-7' }
+const MP4 = /god-strike-v2[.]mp4/
+const POSTER = /god-strike-v2-poster[.]webp/
+
+const clickText = (page, text) => page.evaluate((t) => { const el = [...document.querySelectorAll('button')].find((x) => x.textContent.replace(/\s+/g, '').includes(t) && !x.disabled); if (!el) return false; el.click(); return true }, text)
+const clickSel = (page, sel) => page.evaluate((s) => { const el = document.querySelector(s); if (!el || el.disabled) return false; el.click(); return true }, sel)
+
+// ページ側の計測器：DOM の増減・class 変化・media event・end-round の disabled を時刻付きで記録
+const INIT = () => {
+  const log = []
+  const t = () => Math.round(performance.now())
+  window.__gs = { log, t0: null, video: [] }
+  const mark = (ev, extra) => log.push({ t: t(), ev, ...(extra ?? {}) })
+  const onNode = (n, added) => {
+    if (!(n instanceof Element)) return
+    const cl = n.classList
+    if (cl.contains('resonance-cutin')) { mark(added ? 'cutin+' : 'cutin-', { premium: n.dataset.premium ?? null }); if (added) window.__gs.t0 = t() }
+    if (cl.contains('burst-banner')) mark(added ? 'banner+' : 'banner-')
+    if (cl.contains('resonance-cutin-video')) mark(added ? 'video+' : 'video-')
+    if (cl.contains('resonance-cutin-poster')) mark(added ? 'poster+' : 'poster-', { complete: n.complete, nw: n.naturalWidth })
+    if (cl.contains('resonance-cutin-portrait') && added) mark('portrait+', { premium: cl.contains('is-premium') })
+    if (cl.contains('enemy-reaction') && added && n.dataset.impactAt) mark('reaction+', { impactAt: Number(n.dataset.impactAt), stop: n.style.getPropertyValue('--stop') })
+    if (cl.contains('evolve-banner')) mark(added ? 'evolve+' : 'evolve-')
+    if (cl.contains('victory-stage')) mark(added ? 'victory+' : 'victory-')
+    if (cl.contains('game-over-overlay')) mark(added ? 'gameover+' : 'gameover-')
+  }
+  const mo = new MutationObserver((muts) => {
+    for (const m of muts) {
+      if (m.type === 'childList') { m.addedNodes.forEach((n) => { onNode(n, true); if (n.querySelectorAll) n.querySelectorAll('.resonance-cutin-video,.resonance-cutin-poster,.resonance-cutin-portrait,.enemy-reaction,.burst-banner').forEach((c) => onNode(c, true)) }); m.removedNodes.forEach((n) => onNode(n, false)) }
+      else if (m.type === 'attributes') {
+        const el = m.target
+        if (m.attributeName === 'class') {
+          if (el.classList.contains('resonance-cutin') && el.classList.contains('is-exiting') && !el.__exitMarked) { el.__exitMarked = true; mark('exiting') }
+          if (el.classList.contains('resonance-cutin-portrait') && el.classList.contains('is-video') && !el.__vidMarked) { el.__vidMarked = true; mark('is-video') }
+        }
+        if (m.attributeName === 'disabled' && el.classList.contains('end-round-button')) mark(el.disabled ? 'lock' : 'unlock')
+      }
+    }
+  })
+  mo.observe(document, { childList: true, subtree: true, attributes: true, attributeFilter: ['class', 'disabled'] })
+  for (const ev of ['playing', 'ended', 'error', 'pause']) document.addEventListener(ev, (e) => { if (e.target instanceof HTMLVideoElement) mark('media:' + ev, { ct: Math.round(e.target.currentTime * 1000), rs: e.target.readyState }) }, true)
+  window.__gsVideoQuality = () => { const v = document.querySelector('video.resonance-cutin-video') ?? window.__gsLastVideo; if (!v || !v.getVideoPlaybackQuality) return null; const q = v.getVideoPlaybackQuality(); return { dropped: q.droppedVideoFrames, total: q.totalVideoFrames, rs: v.readyState, err: v.error ? v.error.code : null } }
+  const origAppend = Node.prototype.appendChild
+  Node.prototype.appendChild = function (c) { if (c instanceof HTMLVideoElement) window.__gsLastVideo = c; return origAppend.call(this, c) }
+}
+
+async function start(page, base) {
+  await page.goto(`${base}/?seed=${SC.seed}`)
+  await page.waitForSelector('.home-screen .home-cta-primary', { timeout: 30000 })
+  await page.waitForTimeout(300)
+  if (await clickText(page, 'わかった')) await page.waitForTimeout(300)
+  if (!(await clickSel(page, '[data-testid="home-start"]'))) await clickText(page, '神を選ぶ')
+  await page.waitForTimeout(400)
+  if (await clickText(page, '新しく始める')) await page.waitForTimeout(300)
+  await clickText(page, SC.god); await page.waitForTimeout(300)
+  await clickText(page, 'この構成で始める'); await page.waitForTimeout(300)
+  await clickText(page, SC.enemy); await page.waitForTimeout(500)
+  await clickText(page, 'この構成でバトル開始')
+  await page.waitForFunction(() => { const b = document.querySelector('.end-round-button'); return b && !b.disabled }, null, { timeout: 20000 })
+  await page.waitForTimeout(2200)
+}
+const hud = (page) => page.evaluate(() => ({
+  enemyHp: document.querySelector('.enemy-plate')?.textContent.replace(/\s+/g, ' ').trim() ?? null,
+  playerHp: document.querySelector('.player-plate')?.textContent.replace(/\s+/g, ' ').trim() ?? null,
+  topbar: document.querySelector('.battle-topbar')?.textContent.replace(/\s+/g, ' ').trim() ?? null,
+  hScroll: document.documentElement.scrollWidth > window.innerWidth + 1,
+  cutin: !!document.querySelector('.resonance-cutin'),
+  round: document.querySelector('.battle-topbar')?.textContent.match(/R\s*(\d)/)?.[1] ?? null,
+}))
+// 攻撃系（敵にダメージ）を優先して連打：hand の中で「一撃」「攻撃」「斬」「撃」を含む名前 → それ以外
+const playAny = (page) => page.evaluate(() => {
+  const cards = [...document.querySelectorAll('.hand .card-view')].filter((c) => !c.disabled)
+  if (!cards.length) return null
+  const name = (c) => (c.querySelector('.card-view-name')?.textContent.trim() ?? '').replace(/^[^\p{L}\p{N}]+\s*/u, '')
+  const pick = cards.find((c) => /一撃|攻撃|撃|斬|砲|爆/.test(name(c))) ?? cards[0]
+  const n = name(pick); pick.click(); return n
+})
+
+async function run({ vp, side, reduced = false, mode = 'normal', label }) {
+  const base = BASES[side]
+  const browser = await chromium.launch(process.env.HEADED ? { headless: false, channel: process.env.CHANNEL || 'chrome' } : {})
+  const ctx = await browser.newContext({ viewport: VPS[vp], reducedMotion: reduced ? 'reduce' : 'no-preference', deviceScaleFactor: vp === 'sp' ? 2 : 1, isMobile: vp === 'sp', hasTouch: vp === 'sp' })
+  const page = await ctx.newPage()
+  const errors = [], resourceErrors = [], mp4 = [], poster = []
+  page.on('console', (m) => { if (m.type() === 'error') (/Failed to load resource/.test(m.text()) ? resourceErrors : errors).push(m.text()) })
+  page.on('pageerror', (e) => errors.push(String(e)))
+  const cdp = await ctx.newCDPSession(page)
+  await cdp.send('Network.enable')
+  cdp.on('Network.responseReceived', (e) => { if (POSTER.test(e.response.url)) poster.push({ status: e.response.status, fromDisk: e.response.fromDiskCache, size: e.response.encodedDataLength }); if (MP4.test(e.response.url)) mp4.push({ status: e.response.status, fromDisk: e.response.fromDiskCache, fromMem: !!e.response.fromPrefetchCache, size: e.response.encodedDataLength, t: Math.round(e.timestamp * 1000) }) })
+  cdp.on('Network.loadingFinished', (e) => { const m = mp4.at(-1); if (m && m.size === 0) m.size = e.encodedDataLength })
+  if (mode === '404') await page.route(MP4, (r) => r.fulfill({ status: 404, body: 'not found' }))
+  if (mode === 'stall') await page.route(MP4, async (r) => { await new Promise((res) => setTimeout(res, 90000)); await r.abort() })
+  await page.addInitScript(INIT)
+  const rec = { label, vp, side, reduced, mode, errors, resourceErrors, mp4, poster, plays: [] }
+  try {
+    for (let battle = 1; battle <= (mode === 'cache' ? 2 : 1); battle++) {
+      await start(page, base)
+      const preloadState = await page.evaluate(() => { const v = window.__gsLastVideo; return v ? { rs: v.readyState, err: v.error ? v.error.code : null, src: v.currentSrc.split('/').pop() } : null })
+      let burst = null
+      const pre = await hud(page)
+      for (let round = 1; round <= 5 && !burst; round++) {
+        for (let k = 0; k < 6; k++) {
+          const name = await playAny(page)
+          if (!name) break
+          rec.plays.push({ battle, round, name })
+          await page.waitForTimeout(650)
+          if (await page.evaluate(() => window.__gs.log.some((l) => l.ev === 'cutin+'))) { burst = { round, card: name }; break }
+        }
+        if (burst) break
+        await clickSel(page, '.end-round-button')
+        await page.waitForTimeout(3200)
+        await page.waitForFunction(() => { const b = document.querySelector('.end-round-button'); return (b && !b.disabled) || document.querySelector('.game-over-overlay, .victory-stage') }, null, { timeout: 15000 }).catch(() => {})
+        if (await page.evaluate(() => window.__gs.log.some((l) => l.ev === 'cutin+'))) { burst = { round, card: 'end-round' }; break }
+        if (await page.evaluate(() => !!document.querySelector('.game-over-overlay, .victory-stage'))) break
+      }
+      if (burst) {
+        if (mode === "noshot") { await page.waitForTimeout(4700) } else if (mode === "shot") {
+          await page.waitForSelector(".resonance-cutin-portrait.is-video", { timeout: 1500 }).catch(() => {})
+          await page.waitForTimeout(700)
+          await page.screenshot({ path: `${OUT}/${label}-b${battle}-video.png` }).catch(() => {})
+          await page.waitForTimeout(4300)
+        } else {
+        // カットイン中のスクリーンショット（mount +450 / +1150）と退場までの待ち
+        await page.waitForTimeout(80)
+        rec[`posterState${battle}`] = await page.evaluate(() => { const f = document.querySelector('.resonance-cutin-video-frame'); const img = document.querySelector('.resonance-cutin-poster'); return f ? { frameOpacity: getComputedStyle(f).opacity, poster: img ? { complete: img.complete, nw: img.naturalWidth, src: img.currentSrc.split('/').pop() } : null, premium: !!document.querySelector('.resonance-cutin-portrait.is-premium') } : null })
+        await page.screenshot({ path: `${OUT}/${label}-b${battle}-cutin-early.png` }).catch(() => {})
+        await page.waitForTimeout(600)
+        await page.screenshot({ path: `${OUT}/${label}-b${battle}-cutin-late.png` }).catch(() => {})
+        await page.waitForTimeout(1400)
+        await page.screenshot({ path: `${OUT}/${label}-b${battle}-impact.png` }).catch(() => {})
+        await page.waitForTimeout(2600)
+        }
+      }
+      const post = await hud(page)
+      const quality = await page.evaluate(() => window.__gsVideoQuality())
+      const log = await page.evaluate(() => { const t0 = window.__gs.t0 ?? 0; return window.__gs.log.filter((l) => l.t >= t0 - 1500).map((l) => ({ ...l, rel: l.t - t0 })) })
+      // 勝敗まで進める（結果画面の score を取る）
+      for (let round = 1; round <= 8; round++) {
+        if (await page.evaluate(() => !!document.querySelector('.game-over-overlay, .victory-stage'))) break
+        for (let k = 0; k < 6; k++) { if (!(await playAny(page))) break; await page.waitForTimeout(500) }
+        await clickSel(page, '.end-round-button')
+        await page.waitForTimeout(3000)
+        await page.waitForFunction(() => { const b = document.querySelector('.end-round-button'); return (b && !b.disabled) || document.querySelector('.game-over-overlay, .victory-stage') }, null, { timeout: 15000 }).catch(() => {})
+      }
+      await page.waitForTimeout(4500)
+      const result = await page.evaluate(() => ({ overlay: document.querySelector('.game-over-overlay')?.textContent.replace(/\s+/g, ' ').trim().slice(0, 400) ?? null, victory: !!document.querySelector('.victory-stage') }))
+      rec[`battle${battle}`] = { preloadState, burst, pre, post, quality, log, result }
+    }
+  } catch (e) { rec.failure = String(e) }
+  await ctx.close(); await browser.close()
+  return rec
+}
+
+const CASES = [
+  { vp: 'pc', side: 'before', label: 'pc-before' },
+  { vp: 'pc', side: 'after', label: 'pc-after' },
+  { vp: 'sp', side: 'before', label: 'sp-before' },
+  { vp: 'sp', side: 'after', label: 'sp-after' },
+  { vp: 'pc', side: 'after', reduced: true, label: 'pc-after-reduced' },
+  { vp: 'pc', side: 'after', mode: '404', label: 'pc-after-404' },
+  { vp: 'pc', side: 'after', mode: 'stall', label: 'pc-after-stall' },
+  { vp: 'pc', side: 'after', mode: 'cache', label: 'pc-after-cache' },
+  { vp: 'pc', side: 'before', mode: 'noshot', label: 'pc-before-noshot' },
+  { vp: 'pc', side: 'after', mode: 'noshot', label: 'pc-after-noshot' },
+  { vp: 'sp', side: 'before', mode: 'noshot', label: 'sp-before-noshot' },
+  { vp: 'sp', side: 'after', mode: 'noshot', label: 'sp-after-noshot' },
+  { vp: 'pc', side: 'after', mode: 'shot', label: 'pc-after-shot' },
+  { vp: 'sp', side: 'after', mode: 'shot', label: 'sp-after-shot' },
+]
+const only = process.argv[3]
+const results = []
+for (const c of CASES) { if (only && !c.label.includes(only)) continue; console.log('▶', c.label); const r = await run(c); results.push(r); console.log('  burst', JSON.stringify(r.battle1?.burst), 'err', r.errors.length, r.failure ? 'FAIL ' + r.failure.slice(0, 120) : '') }
+writeFileSync(`${OUT}/gate${only ? '-' + only : ''}.json`, JSON.stringify(results, null, 1))
+
+// summary
+const ev = (log, name) => log.find((l) => l.ev === name)?.rel ?? null
+const rows = [['label', 'burst', 'cutin+', 'poster+', 'video+', 'is-video', 'unlock', 'banner+', 'exiting', 'media:ended', 'cutin-', 'impactAt', 'stop', 'evolve+', 'dropped/total', 'mp4 req', 'hScroll', 'errors', 'resErr', 'enemyHp post', 'result'].join('\t')]
+for (const r of results) for (const b of ['battle1', 'battle2']) {
+  const B = r[b]; if (!B) continue
+  const L = B.log ?? []
+  const react = L.find((l) => l.ev === 'reaction+')
+  rows.push([r.label + (b === 'battle2' ? '/b2' : ''), B.burst ? `R${B.burst.round}` : '-', ev(L, 'cutin+'), ev(L, 'poster+'), ev(L, 'video+'), ev(L, 'is-video'), L.filter((l) => l.ev === 'unlock' && l.rel > 0).map((l) => l.rel)[0] ?? null, ev(L, 'banner+'), ev(L, 'exiting'), ev(L, 'media:ended'), ev(L, 'cutin-'), react?.impactAt ?? null, react?.stop ?? null, ev(L, 'evolve+'), B.quality ? `${B.quality.dropped}/${B.quality.total}` : '-', r.mp4.map((m) => `${m.status}${m.fromDisk ? 'D' : ''}:${m.size}`).join(','), B.post?.hScroll, r.errors.length, r.resourceErrors.length, B.post?.enemyHp, B.result?.victory ? 'victory' : (B.result?.overlay ?? '').slice(0, 60)].join('\t'))
+}
+writeFileSync(`${OUT}/summary${only ? '-' + only : ''}.tsv`, rows.join('\n'))
+console.log(rows.join('\n'))
