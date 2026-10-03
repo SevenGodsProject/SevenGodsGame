@@ -1,0 +1,914 @@
+[
+ {
+  "label": "pc-before-noshot",
+  "vp": "pc",
+  "side": "before",
+  "reduced": false,
+  "mode": "noshot",
+  "errors": [],
+  "resourceErrors": [],
+  "mp4": [
+   {
+    "status": 206,
+    "fromDisk": false,
+    "fromMem": false,
+    "size": 342,
+    "t": 3296543
+   }
+  ],
+  "poster": [
+   {
+    "status": 200,
+    "fromDisk": false,
+    "size": 268
+   },
+   {
+    "status": 200,
+    "fromDisk": false,
+    "size": 127
+   }
+  ],
+  "plays": [
+   {
+    "battle": 1,
+    "round": 1,
+    "name": "一撃"
+   },
+   {
+    "battle": 1,
+    "round": 1,
+    "name": "姉御の号令"
+   },
+   {
+    "battle": 1,
+    "round": 2,
+    "name": "豪快な一撃"
+   },
+   {
+    "battle": 1,
+    "round": 2,
+    "name": "巫女の舞"
+   },
+   {
+    "battle": 1,
+    "round": 3,
+    "name": "剛撃"
+   },
+   {
+    "battle": 1,
+    "round": 3,
+    "name": "豪快な一撃"
+   },
+   {
+    "battle": 1,
+    "round": 4,
+    "name": "鉄壁の構え"
+   },
+   {
+    "battle": 1,
+    "round": 4,
+    "name": "予言"
+   },
+   {
+    "battle": 1,
+    "round": 4,
+    "name": "守護"
+   },
+   {
+    "battle": 1,
+    "round": 5,
+    "name": "神楽舞"
+   },
+   {
+    "battle": 1,
+    "round": 5,
+    "name": "共振"
+   }
+  ],
+  "battle1": {
+   "preloadState": null,
+   "burst": {
+    "round": 5,
+    "card": "end-round"
+   },
+   "pre": {
+    "enemyHp": "蒼海の龍神【耐久型】R4の大海嘯。長い波を受け続けろ。1,030 / 1,03040",
+    "playerHp": "大耀「退屈より、玉砕上等」300 / 300",
+    "topbar": "ラウンド 1 / 7神力 2 / 2スコア 0",
+    "hScroll": false,
+    "cutin": false,
+    "round": null
+   },
+   "post": {
+    "enemyHp": "蒼海の龍神【耐久型】R4の大海嘯。長い波を受け続けろ。190 / 1,030特大 160",
+    "playerHp": "大耀「退屈より、玉砕上等」30 / 300🛡 30攻撃力 +30（2）",
+    "topbar": "ラウンド 5 / 7神力 3 / 6スコア 2,190",
+    "hScroll": false,
+    "cutin": false,
+    "round": null
+   },
+   "quality": {
+    "dropped": 1,
+    "total": 33,
+    "rs": 4,
+    "err": null
+   },
+   "log": [
+    {
+     "t": 27995,
+     "ev": "unlock",
+     "rel": -1409
+    },
+    {
+     "t": 28680,
+     "ev": "lock",
+     "rel": -724
+    },
+    {
+     "t": 29037,
+     "ev": "unlock",
+     "rel": -367
+    },
+    {
+     "t": 29037,
+     "ev": "reaction+",
+     "impactAt": 1600,
+     "stop": "80ms",
+     "rel": -367
+    },
+    {
+     "t": 29038,
+     "ev": "lock",
+     "rel": -366
+    },
+    {
+     "t": 29404,
+     "ev": "cutin+",
+     "premium": "video",
+     "rel": 0
+    },
+    {
+     "t": 29404,
+     "ev": "portrait+",
+     "premium": true,
+     "rel": 0
+    },
+    {
+     "t": 29404,
+     "ev": "poster+",
+     "complete": false,
+     "nw": 0,
+     "rel": 0
+    },
+    {
+     "t": 29408,
+     "ev": "video+",
+     "rel": 4
+    },
+    {
+     "t": 29958,
+     "ev": "media:playing",
+     "ct": 475,
+     "rs": 4,
+     "rel": 554
+    },
+    {
+     "t": 29959,
+     "ev": "is-video",
+     "rel": 555
+    },
+    {
+     "t": 30718,
+     "ev": "exiting",
+     "rel": 1314
+    },
+    {
+     "t": 30718,
+     "ev": "banner+",
+     "rel": 1314
+    },
+    {
+     "t": 30718,
+     "ev": "unlock",
+     "rel": 1314
+    },
+    {
+     "t": 30763,
+     "ev": "media:pause",
+     "ct": 1208,
+     "rs": 4,
+     "rel": 1359
+    },
+    {
+     "t": 30763,
+     "ev": "media:ended",
+     "ct": 1208,
+     "rs": 4,
+     "rel": 1359
+    },
+    {
+     "t": 30766,
+     "ev": "cutin-",
+     "premium": "video",
+     "rel": 1362
+    },
+    {
+     "t": 32034,
+     "ev": "evolve+",
+     "rel": 2630
+    }
+   ],
+   "result": {
+    "overlay": "敗北敵の残りHP 120 / 1,030予告された攻撃5回のうち、無傷で受け切った攻撃はありませんでした（盾で防いだ量 230）R5：160の大技に対し、盾は60でした。加護や防御札で予告ぶんの盾を用意すると受け切れます敗因：R5：蒼海の龍神の「攻撃」で 100 ダメージスコア 2,460次の目標蒼海の龍神を撃破する（残りHP 12%）同じ盤面でもう一度デッキを調整神・デッキを選び直すスコア内訳実効ダメージ敵に効いたダメージ分1,090連携1ラウンドに2枚以上でUP800撃破敵を倒すと加算0早期撃破早く倒すほどUP0生存残りHPが多いほどUP0難易度難しいほどUP0小計 ×1.3最終スコア＝小計の1.3倍1,890 → 2,460ホームへ今日の神域挑戦へ挑戦状をコピー",
+    "victory": false
+   }
+  }
+ },
+ {
+  "label": "pc-after-noshot",
+  "vp": "pc",
+  "side": "after",
+  "reduced": false,
+  "mode": "noshot",
+  "errors": [],
+  "resourceErrors": [],
+  "mp4": [
+   {
+    "status": 206,
+    "fromDisk": false,
+    "fromMem": false,
+    "size": 342,
+    "t": 3345633
+   }
+  ],
+  "poster": [
+   {
+    "status": 200,
+    "fromDisk": false,
+    "size": 268
+   },
+   {
+    "status": 200,
+    "fromDisk": false,
+    "size": 127
+   }
+  ],
+  "plays": [
+   {
+    "battle": 1,
+    "round": 1,
+    "name": "一撃"
+   },
+   {
+    "battle": 1,
+    "round": 1,
+    "name": "姉御の号令"
+   },
+   {
+    "battle": 1,
+    "round": 2,
+    "name": "豪快な一撃"
+   },
+   {
+    "battle": 1,
+    "round": 2,
+    "name": "巫女の舞"
+   },
+   {
+    "battle": 1,
+    "round": 3,
+    "name": "剛撃"
+   },
+   {
+    "battle": 1,
+    "round": 3,
+    "name": "豪快な一撃"
+   },
+   {
+    "battle": 1,
+    "round": 4,
+    "name": "鉄壁の構え"
+   },
+   {
+    "battle": 1,
+    "round": 4,
+    "name": "予言"
+   },
+   {
+    "battle": 1,
+    "round": 4,
+    "name": "守護"
+   },
+   {
+    "battle": 1,
+    "round": 5,
+    "name": "神楽舞"
+   },
+   {
+    "battle": 1,
+    "round": 5,
+    "name": "共振"
+   }
+  ],
+  "battle1": {
+   "preloadState": null,
+   "burst": {
+    "round": 5,
+    "card": "共振"
+   },
+   "pre": {
+    "enemyHp": "蒼海の龍神【耐久型】R4の大海嘯。長い波を受け続けろ。1,030 / 1,03040",
+    "playerHp": "大耀「退屈より、玉砕上等」300 / 300",
+    "topbar": "ラウンド 1 / 7神力 2 / 2スコア 0",
+    "hScroll": false,
+    "cutin": false,
+    "round": null
+   },
+   "post": {
+    "enemyHp": "蒼海の龍神【耐久型】R4の大海嘯。長い波を受け続けろ。190 / 1,030特大 160",
+    "playerHp": "大耀「退屈より、玉砕上等」30 / 300🛡 30攻撃力 +30（2）",
+    "topbar": "ラウンド 5 / 7神力 3 / 6スコア 2,190",
+    "hScroll": false,
+    "cutin": false,
+    "round": null
+   },
+   "quality": {
+    "dropped": 12,
+    "total": 33,
+    "rs": 4,
+    "err": null
+   },
+   "log": [
+    {
+     "t": 26506,
+     "ev": "lock",
+     "rel": -1230
+    },
+    {
+     "t": 26789,
+     "ev": "unlock",
+     "rel": -947
+    },
+    {
+     "t": 27244,
+     "ev": "lock",
+     "rel": -492
+    },
+    {
+     "t": 27520,
+     "ev": "unlock",
+     "rel": -216
+    },
+    {
+     "t": 27520,
+     "ev": "reaction+",
+     "impactAt": 1600,
+     "stop": "80ms",
+     "rel": -216
+    },
+    {
+     "t": 27522,
+     "ev": "lock",
+     "rel": -214
+    },
+    {
+     "t": 27736,
+     "ev": "cutin+",
+     "premium": "video",
+     "rel": 0
+    },
+    {
+     "t": 27737,
+     "ev": "portrait+",
+     "premium": true,
+     "rel": 1
+    },
+    {
+     "t": 27737,
+     "ev": "poster+",
+     "complete": false,
+     "nw": 0,
+     "rel": 1
+    },
+    {
+     "t": 27743,
+     "ev": "video+",
+     "rel": 7
+    },
+    {
+     "t": 27780,
+     "ev": "media:playing",
+     "ct": 1,
+     "rs": 4,
+     "rel": 44
+    },
+    {
+     "t": 27781,
+     "ev": "is-video",
+     "rel": 45
+    },
+    {
+     "t": 28938,
+     "ev": "exiting",
+     "rel": 1202
+    },
+    {
+     "t": 28938,
+     "ev": "banner+",
+     "rel": 1202
+    },
+    {
+     "t": 28938,
+     "ev": "unlock",
+     "rel": 1202
+    },
+    {
+     "t": 29033,
+     "ev": "media:pause",
+     "ct": 1208,
+     "rs": 4,
+     "rel": 1297
+    },
+    {
+     "t": 29034,
+     "ev": "media:ended",
+     "ct": 1208,
+     "rs": 4,
+     "rel": 1298
+    },
+    {
+     "t": 29036,
+     "ev": "cutin-",
+     "premium": "video",
+     "rel": 1300
+    },
+    {
+     "t": 30422,
+     "ev": "evolve+",
+     "rel": 2686
+    }
+   ],
+   "result": {
+    "overlay": "敗北敵の残りHP 120 / 1,030予告された攻撃5回のうち、無傷で受け切った攻撃はありませんでした（盾で防いだ量 230）R5：160の大技に対し、盾は60でした。加護や防御札で予告ぶんの盾を用意すると受け切れます敗因：R5：蒼海の龍神の「攻撃」で 100 ダメージスコア 2,460次の目標蒼海の龍神を撃破する（残りHP 12%）同じ盤面でもう一度デッキを調整神・デッキを選び直すスコア内訳実効ダメージ敵に効いたダメージ分1,090連携1ラウンドに2枚以上でUP800撃破敵を倒すと加算0早期撃破早く倒すほどUP0生存残りHPが多いほどUP0難易度難しいほどUP0小計 ×1.3最終スコア＝小計の1.3倍1,890 → 2,460ホームへ今日の神域挑戦へ挑戦状をコピー",
+    "victory": false
+   }
+  }
+ },
+ {
+  "label": "sp-before-noshot",
+  "vp": "sp",
+  "side": "before",
+  "reduced": false,
+  "mode": "noshot",
+  "errors": [],
+  "resourceErrors": [],
+  "mp4": [
+   {
+    "status": 206,
+    "fromDisk": false,
+    "fromMem": false,
+    "size": 342,
+    "t": 3387457
+   }
+  ],
+  "poster": [
+   {
+    "status": 200,
+    "fromDisk": false,
+    "size": 268
+   }
+  ],
+  "plays": [
+   {
+    "battle": 1,
+    "round": 1,
+    "name": "一撃"
+   },
+   {
+    "battle": 1,
+    "round": 1,
+    "name": "姉御の号令"
+   },
+   {
+    "battle": 1,
+    "round": 2,
+    "name": "豪快な一撃"
+   },
+   {
+    "battle": 1,
+    "round": 2,
+    "name": "巫女の舞"
+   },
+   {
+    "battle": 1,
+    "round": 3,
+    "name": "剛撃"
+   },
+   {
+    "battle": 1,
+    "round": 3,
+    "name": "豪快な一撃"
+   },
+   {
+    "battle": 1,
+    "round": 4,
+    "name": "鉄壁の構え"
+   },
+   {
+    "battle": 1,
+    "round": 4,
+    "name": "予言"
+   },
+   {
+    "battle": 1,
+    "round": 4,
+    "name": "守護"
+   },
+   {
+    "battle": 1,
+    "round": 5,
+    "name": "神楽舞"
+   },
+   {
+    "battle": 1,
+    "round": 5,
+    "name": "共振"
+   }
+  ],
+  "battle1": {
+   "preloadState": null,
+   "burst": {
+    "round": 5,
+    "card": "共振"
+   },
+   "pre": {
+    "enemyHp": "蒼海の龍神【耐久型】R4の大海嘯。長い波を受け続けろ。1,030 / 1,03040",
+    "playerHp": "大耀「退屈より、玉砕上等」300 / 300",
+    "topbar": "ラウンド 1 / 7神力 2 / 2スコア 0",
+    "hScroll": false,
+    "cutin": false,
+    "round": null
+   },
+   "post": {
+    "enemyHp": "蒼海の龍神【耐久型】R4の大海嘯。長い波を受け続けろ。190 / 1,030特大 160",
+    "playerHp": "大耀「退屈より、玉砕上等」30 / 300🛡 30攻撃力 +30（2）",
+    "topbar": "ラウンド 5 / 7神力 3 / 6スコア 2,190",
+    "hScroll": false,
+    "cutin": false,
+    "round": null
+   },
+   "quality": {
+    "dropped": 3,
+    "total": 33,
+    "rs": 4,
+    "err": null
+   },
+   "log": [
+    {
+     "t": 25894,
+     "ev": "lock",
+     "rel": -1343
+    },
+    {
+     "t": 26387,
+     "ev": "unlock",
+     "rel": -850
+    },
+    {
+     "t": 26623,
+     "ev": "lock",
+     "rel": -614
+    },
+    {
+     "t": 27030,
+     "ev": "unlock",
+     "rel": -207
+    },
+    {
+     "t": 27030,
+     "ev": "reaction+",
+     "impactAt": 1600,
+     "stop": "80ms",
+     "rel": -207
+    },
+    {
+     "t": 27033,
+     "ev": "lock",
+     "rel": -204
+    },
+    {
+     "t": 27237,
+     "ev": "cutin+",
+     "premium": "video",
+     "rel": 0
+    },
+    {
+     "t": 27237,
+     "ev": "portrait+",
+     "premium": true,
+     "rel": 0
+    },
+    {
+     "t": 27237,
+     "ev": "poster+",
+     "complete": true,
+     "nw": 720,
+     "rel": 0
+    },
+    {
+     "t": 27239,
+     "ev": "video+",
+     "rel": 2
+    },
+    {
+     "t": 27489,
+     "ev": "media:playing",
+     "ct": 1,
+     "rs": 4,
+     "rel": 252
+    },
+    {
+     "t": 27490,
+     "ev": "is-video",
+     "rel": 253
+    },
+    {
+     "t": 28360,
+     "ev": "exiting",
+     "rel": 1123
+    },
+    {
+     "t": 28360,
+     "ev": "banner+",
+     "rel": 1123
+    },
+    {
+     "t": 28360,
+     "ev": "unlock",
+     "rel": 1123
+    },
+    {
+     "t": 28700,
+     "ev": "media:pause",
+     "ct": 1208,
+     "rs": 4,
+     "rel": 1463
+    },
+    {
+     "t": 28700,
+     "ev": "media:ended",
+     "ct": 1208,
+     "rs": 4,
+     "rel": 1463
+    },
+    {
+     "t": 28702,
+     "ev": "cutin-",
+     "premium": "video",
+     "rel": 1465
+    },
+    {
+     "t": 29348,
+     "ev": "evolve+",
+     "rel": 2111
+    }
+   ],
+   "result": {
+    "overlay": "敗北敵の残りHP 120 / 1,030予告された攻撃5回のうち、無傷で受け切った攻撃はありませんでした（盾で防いだ量 230）R5：160の大技に対し、盾は60でした。加護や防御札で予告ぶんの盾を用意すると受け切れます敗因：R5：蒼海の龍神の「攻撃」で 100 ダメージスコア 2,460次の目標蒼海の龍神を撃破する（残りHP 12%）同じ盤面でもう一度デッキを調整神・デッキを選び直すスコア内訳実効ダメージ敵に効いたダメージ分1,090連携1ラウンドに2枚以上でUP800撃破敵を倒すと加算0早期撃破早く倒すほどUP0生存残りHPが多いほどUP0難易度難しいほどUP0小計 ×1.3最終スコア＝小計の1.3倍1,890 → 2,460ホームへ今日の神域挑戦へ挑戦状をコピー",
+    "victory": false
+   }
+  }
+ },
+ {
+  "label": "sp-after-noshot",
+  "vp": "sp",
+  "side": "after",
+  "reduced": false,
+  "mode": "noshot",
+  "errors": [],
+  "resourceErrors": [],
+  "mp4": [
+   {
+    "status": 206,
+    "fromDisk": false,
+    "fromMem": false,
+    "size": 342,
+    "t": 3428887
+   }
+  ],
+  "poster": [
+   {
+    "status": 200,
+    "fromDisk": false,
+    "size": 268
+   }
+  ],
+  "plays": [
+   {
+    "battle": 1,
+    "round": 1,
+    "name": "一撃"
+   },
+   {
+    "battle": 1,
+    "round": 1,
+    "name": "姉御の号令"
+   },
+   {
+    "battle": 1,
+    "round": 2,
+    "name": "豪快な一撃"
+   },
+   {
+    "battle": 1,
+    "round": 2,
+    "name": "巫女の舞"
+   },
+   {
+    "battle": 1,
+    "round": 3,
+    "name": "剛撃"
+   },
+   {
+    "battle": 1,
+    "round": 3,
+    "name": "豪快な一撃"
+   },
+   {
+    "battle": 1,
+    "round": 4,
+    "name": "鉄壁の構え"
+   },
+   {
+    "battle": 1,
+    "round": 4,
+    "name": "予言"
+   },
+   {
+    "battle": 1,
+    "round": 4,
+    "name": "守護"
+   },
+   {
+    "battle": 1,
+    "round": 5,
+    "name": "神楽舞"
+   },
+   {
+    "battle": 1,
+    "round": 5,
+    "name": "共振"
+   },
+   {
+    "battle": 1,
+    "round": 5,
+    "name": "一心不乱"
+   }
+  ],
+  "battle1": {
+   "preloadState": null,
+   "burst": {
+    "round": 5,
+    "card": "一心不乱"
+   },
+   "pre": {
+    "enemyHp": "蒼海の龍神【耐久型】R4の大海嘯。長い波を受け続けろ。1,030 / 1,03040",
+    "playerHp": "大耀「退屈より、玉砕上等」300 / 300",
+    "topbar": "ラウンド 1 / 7神力 2 / 2スコア 0",
+    "hScroll": false,
+    "cutin": false,
+    "round": null
+   },
+   "post": {
+    "enemyHp": "蒼海の龍神【耐久型】R4の大海嘯。長い波を受け続けろ。120 / 1,030特大 160",
+    "playerHp": "大耀「退屈より、玉砕上等」30 / 300🛡 30攻撃力 +30（2）",
+    "topbar": "ラウンド 5 / 7神力 2 / 6スコア 2,410",
+    "hScroll": false,
+    "cutin": false,
+    "round": null
+   },
+   "quality": {
+    "dropped": 3,
+    "total": 33,
+    "rs": 4,
+    "err": null
+   },
+   "log": [
+    {
+     "t": 26885,
+     "ev": "unlock",
+     "rel": -974
+    },
+    {
+     "t": 26895,
+     "ev": "lock",
+     "rel": -964
+    },
+    {
+     "t": 27627,
+     "ev": "unlock",
+     "rel": -232
+    },
+    {
+     "t": 27627,
+     "ev": "reaction+",
+     "impactAt": 1600,
+     "stop": "80ms",
+     "rel": -232
+    },
+    {
+     "t": 27635,
+     "ev": "lock",
+     "rel": -224
+    },
+    {
+     "t": 27859,
+     "ev": "cutin+",
+     "premium": "video",
+     "rel": 0
+    },
+    {
+     "t": 27859,
+     "ev": "portrait+",
+     "premium": true,
+     "rel": 0
+    },
+    {
+     "t": 27859,
+     "ev": "poster+",
+     "complete": true,
+     "nw": 720,
+     "rel": 0
+    },
+    {
+     "t": 27861,
+     "ev": "video+",
+     "rel": 2
+    },
+    {
+     "t": 28105,
+     "ev": "media:playing",
+     "ct": 215,
+     "rs": 4,
+     "rel": 246
+    },
+    {
+     "t": 28112,
+     "ev": "is-video",
+     "rel": 253
+    },
+    {
+     "t": 28112,
+     "ev": "reaction+",
+     "impactAt": 90,
+     "stop": "30ms",
+     "rel": 253
+    },
+    {
+     "t": 29083,
+     "ev": "exiting",
+     "rel": 1224
+    },
+    {
+     "t": 29083,
+     "ev": "banner+",
+     "rel": 1224
+    },
+    {
+     "t": 29083,
+     "ev": "unlock",
+     "rel": 1224
+    },
+    {
+     "t": 29101,
+     "ev": "media:pause",
+     "ct": 1208,
+     "rs": 4,
+     "rel": 1242
+    },
+    {
+     "t": 29101,
+     "ev": "media:ended",
+     "ct": 1208,
+     "rs": 4,
+     "rel": 1242
+    },
+    {
+     "t": 29132,
+     "ev": "cutin-",
+     "premium": "video",
+     "rel": 1273
+    },
+    {
+     "t": 30131,
+     "ev": "evolve+",
+     "rel": 2272
+    }
+   ],
+   "result": {
+    "overlay": "敗北敵の残りHP 120 / 1,030予告された攻撃5回のうち、無傷で受け切った攻撃はありませんでした（盾で防いだ量 230）R5：160の大技に対し、盾は60でした。加護や防御札で予告ぶんの盾を用意すると受け切れます敗因：R5：蒼海の龍神の「攻撃」で 100 ダメージスコア 2,460次の目標蒼海の龍神を撃破する（残りHP 12%）同じ盤面でもう一度デッキを調整神・デッキを選び直すスコア内訳実効ダメージ敵に効いたダメージ分1,090連携1ラウンドに2枚以上でUP800撃破敵を倒すと加算0早期撃破早く倒すほどUP0生存残りHPが多いほどUP0難易度難しいほどUP0小計 ×1.3最終スコア＝小計の1.3倍1,890 → 2,460ホームへ今日の神域挑戦へ挑戦状をコピー",
+    "victory": false
+   }
+  }
+ }
+]

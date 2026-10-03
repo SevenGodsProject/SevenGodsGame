@@ -1,0 +1,1280 @@
+{
+ "summary": {
+  "pc/before": {
+   "cutinIn": [
+    947,
+    831,
+    802,
+    1386,
+    949
+   ],
+   "cutinOut": [
+    2616,
+    2503,
+    2263,
+    3095,
+    2406
+   ],
+   "unlock": [
+    2616,
+    2503,
+    2263,
+    3095,
+    2406
+   ],
+   "medIn": 947,
+   "medOut": 2503,
+   "medUnlock": 2503,
+   "impactAt": [
+    null
+   ],
+   "states": [
+    "{\"round\":5,\"hp\":7,\"enemyHp\":71,\"status\":\"playing\",\"score\":67.60000000000001}"
+   ],
+   "intentsR4": [
+    "業斧・断岩 260"
+   ],
+   "errors": 0
+  },
+  "pc/after": {
+   "cutinIn": [
+    945,
+    1451,
+    913,
+    834,
+    973
+   ],
+   "cutinOut": [
+    2409,
+    2912,
+    2773,
+    2303,
+    2448
+   ],
+   "unlock": [
+    2409,
+    2912,
+    2773,
+    2303,
+    2448
+   ],
+   "medIn": 945,
+   "medOut": 2448,
+   "medUnlock": 2448,
+   "impactAt": [
+    null
+   ],
+   "states": [
+    "{\"round\":5,\"hp\":7,\"enemyHp\":71,\"status\":\"playing\",\"score\":67.60000000000001}"
+   ],
+   "intentsR4": [
+    "業斧・断岩 260"
+   ],
+   "errors": 0
+  },
+  "sp/before": {
+   "cutinIn": [
+    1110,
+    939,
+    924,
+    905,
+    950
+   ],
+   "cutinOut": [
+    2537,
+    2403,
+    2384,
+    2852,
+    2349
+   ],
+   "unlock": [
+    2537,
+    2403,
+    2384,
+    2852,
+    2349
+   ],
+   "medIn": 939,
+   "medOut": 2403,
+   "medUnlock": 2403,
+   "impactAt": [
+    null
+   ],
+   "states": [
+    "{\"round\":5,\"hp\":7,\"enemyHp\":71,\"status\":\"playing\",\"score\":67.60000000000001}"
+   ],
+   "intentsR4": [
+    "業斧・断岩 260"
+   ],
+   "errors": 0
+  },
+  "sp/after": {
+   "cutinIn": [
+    1363,
+    1301,
+    1307,
+    1152,
+    896
+   ],
+   "cutinOut": [
+    2833,
+    2738,
+    2801,
+    2611,
+    2350
+   ],
+   "unlock": [
+    2833,
+    2738,
+    2801,
+    2612,
+    2350
+   ],
+   "medIn": 1301,
+   "medOut": 2738,
+   "medUnlock": 2738,
+   "impactAt": [
+    null
+   ],
+   "states": [
+    "{\"round\":5,\"hp\":7,\"enemyHp\":71,\"status\":\"playing\",\"score\":67.60000000000001}"
+   ],
+   "intentsR4": [
+    "業斧・断岩 260"
+   ],
+   "errors": 0
+  },
+  "pc/delta": {
+   "in": -2,
+   "out": -55,
+   "unlock": -55
+  },
+  "sp/delta": {
+   "in": 362,
+   "out": 335,
+   "unlock": 335
+  }
+ },
+ "recs": [
+  {
+   "side": "before",
+   "vp": "pc",
+   "i": 1,
+   "mem": 677,
+   "cutinIn": 947,
+   "cutinOut": 2616,
+   "impactAt": null,
+   "unlock": 2616,
+   "intents": [
+    "50",
+    "90",
+    "斧を振りかぶっている…",
+    "業斧・断岩 260"
+   ],
+   "state": {
+    "round": 5,
+    "hp": 7,
+    "enemyHp": 71,
+    "status": "playing",
+    "score": 67.60000000000001
+   },
+   "errors": 0,
+   "tl": [
+    {
+     "t": 32616,
+     "ev": "lock",
+     "rel": 3
+    },
+    {
+     "t": 33557,
+     "ev": "unlock",
+     "rel": 944
+    },
+    {
+     "t": 33560,
+     "ev": "cutin+",
+     "rel": 947
+    },
+    {
+     "t": 33560,
+     "ev": "lock",
+     "rel": 947
+    },
+    {
+     "t": 35229,
+     "ev": "cutin-",
+     "rel": 2616
+    },
+    {
+     "t": 35229,
+     "ev": "unlock",
+     "rel": 2616
+    }
+   ]
+  },
+  {
+   "side": "after",
+   "vp": "pc",
+   "i": 1,
+   "mem": 913,
+   "cutinIn": 945,
+   "cutinOut": 2409,
+   "impactAt": null,
+   "unlock": 2409,
+   "intents": [
+    "50",
+    "90",
+    "斧を振りかぶっている…",
+    "業斧・断岩 260"
+   ],
+   "state": {
+    "round": 5,
+    "hp": 7,
+    "enemyHp": 71,
+    "status": "playing",
+    "score": 67.60000000000001
+   },
+   "errors": 0,
+   "tl": [
+    {
+     "t": 25865,
+     "ev": "lock",
+     "rel": 3
+    },
+    {
+     "t": 26801,
+     "ev": "unlock",
+     "rel": 939
+    },
+    {
+     "t": 26807,
+     "ev": "cutin+",
+     "rel": 945
+    },
+    {
+     "t": 26807,
+     "ev": "lock",
+     "rel": 945
+    },
+    {
+     "t": 28271,
+     "ev": "cutin-",
+     "rel": 2409
+    },
+    {
+     "t": 28271,
+     "ev": "unlock",
+     "rel": 2409
+    }
+   ]
+  },
+  {
+   "side": "before",
+   "vp": "sp",
+   "i": 1,
+   "mem": 998,
+   "cutinIn": 1110,
+   "cutinOut": 2537,
+   "impactAt": null,
+   "unlock": 2537,
+   "intents": [
+    "50",
+    "90",
+    "斧を振りかぶっている…",
+    "業斧・断岩 260"
+   ],
+   "state": {
+    "round": 5,
+    "hp": 7,
+    "enemyHp": 71,
+    "status": "playing",
+    "score": 67.60000000000001
+   },
+   "errors": 0,
+   "tl": [
+    {
+     "t": 25792,
+     "ev": "lock",
+     "rel": 9
+    },
+    {
+     "t": 26637,
+     "ev": "unlock",
+     "rel": 854
+    },
+    {
+     "t": 26893,
+     "ev": "cutin+",
+     "rel": 1110
+    },
+    {
+     "t": 26893,
+     "ev": "lock",
+     "rel": 1110
+    },
+    {
+     "t": 28320,
+     "ev": "cutin-",
+     "rel": 2537
+    },
+    {
+     "t": 28320,
+     "ev": "unlock",
+     "rel": 2537
+    }
+   ]
+  },
+  {
+   "side": "after",
+   "vp": "sp",
+   "i": 1,
+   "mem": 1014,
+   "cutinIn": 1363,
+   "cutinOut": 2833,
+   "impactAt": null,
+   "unlock": 2833,
+   "intents": [
+    "50",
+    "90",
+    "斧を振りかぶっている…",
+    "業斧・断岩 260"
+   ],
+   "state": {
+    "round": 5,
+    "hp": 7,
+    "enemyHp": 71,
+    "status": "playing",
+    "score": 67.60000000000001
+   },
+   "errors": 0,
+   "tl": [
+    {
+     "t": 25897,
+     "ev": "lock",
+     "rel": 8
+    },
+    {
+     "t": 26909,
+     "ev": "unlock",
+     "rel": 1020
+    },
+    {
+     "t": 27252,
+     "ev": "cutin+",
+     "rel": 1363
+    },
+    {
+     "t": 27252,
+     "ev": "lock",
+     "rel": 1363
+    },
+    {
+     "t": 28722,
+     "ev": "cutin-",
+     "rel": 2833
+    },
+    {
+     "t": 28722,
+     "ev": "unlock",
+     "rel": 2833
+    }
+   ]
+  },
+  {
+   "side": "before",
+   "vp": "pc",
+   "i": 2,
+   "mem": 963,
+   "cutinIn": 831,
+   "cutinOut": 2503,
+   "impactAt": null,
+   "unlock": 2503,
+   "intents": [
+    "50",
+    "90",
+    "斧を振りかぶっている…",
+    "業斧・断岩 260"
+   ],
+   "state": {
+    "round": 5,
+    "hp": 7,
+    "enemyHp": 71,
+    "status": "playing",
+    "score": 67.60000000000001
+   },
+   "errors": 0,
+   "tl": [
+    {
+     "t": 26584,
+     "ev": "lock",
+     "rel": 3
+    },
+    {
+     "t": 27409,
+     "ev": "unlock",
+     "rel": 828
+    },
+    {
+     "t": 27412,
+     "ev": "cutin+",
+     "rel": 831
+    },
+    {
+     "t": 27412,
+     "ev": "lock",
+     "rel": 831
+    },
+    {
+     "t": 29084,
+     "ev": "cutin-",
+     "rel": 2503
+    },
+    {
+     "t": 29084,
+     "ev": "unlock",
+     "rel": 2503
+    }
+   ]
+  },
+  {
+   "side": "after",
+   "vp": "pc",
+   "i": 2,
+   "mem": 924,
+   "cutinIn": 1451,
+   "cutinOut": 2912,
+   "impactAt": null,
+   "unlock": 2912,
+   "intents": [
+    "50",
+    "90",
+    "斧を振りかぶっている…",
+    "業斧・断岩 260"
+   ],
+   "state": {
+    "round": 5,
+    "hp": 7,
+    "enemyHp": 71,
+    "status": "playing",
+    "score": 67.60000000000001
+   },
+   "errors": 0,
+   "tl": [
+    {
+     "t": 27815,
+     "ev": "lock",
+     "rel": 3
+    },
+    {
+     "t": 28776,
+     "ev": "unlock",
+     "rel": 964
+    },
+    {
+     "t": 29263,
+     "ev": "cutin+",
+     "rel": 1451
+    },
+    {
+     "t": 29263,
+     "ev": "lock",
+     "rel": 1451
+    },
+    {
+     "t": 30724,
+     "ev": "cutin-",
+     "rel": 2912
+    },
+    {
+     "t": 30724,
+     "ev": "unlock",
+     "rel": 2912
+    }
+   ]
+  },
+  {
+   "side": "before",
+   "vp": "sp",
+   "i": 2,
+   "mem": 927,
+   "cutinIn": 939,
+   "cutinOut": 2403,
+   "impactAt": null,
+   "unlock": 2403,
+   "intents": [
+    "50",
+    "90",
+    "斧を振りかぶっている…",
+    "業斧・断岩 260"
+   ],
+   "state": {
+    "round": 5,
+    "hp": 7,
+    "enemyHp": 71,
+    "status": "playing",
+    "score": 67.60000000000001
+   },
+   "errors": 0,
+   "tl": [
+    {
+     "t": 24575,
+     "ev": "lock",
+     "rel": 8
+    },
+    {
+     "t": 25502,
+     "ev": "unlock",
+     "rel": 935
+    },
+    {
+     "t": 25506,
+     "ev": "cutin+",
+     "rel": 939
+    },
+    {
+     "t": 25506,
+     "ev": "lock",
+     "rel": 939
+    },
+    {
+     "t": 26970,
+     "ev": "cutin-",
+     "rel": 2403
+    },
+    {
+     "t": 26970,
+     "ev": "unlock",
+     "rel": 2403
+    }
+   ]
+  },
+  {
+   "side": "after",
+   "vp": "sp",
+   "i": 2,
+   "mem": 1038,
+   "cutinIn": 1301,
+   "cutinOut": 2738,
+   "impactAt": null,
+   "unlock": 2738,
+   "intents": [
+    "50",
+    "90",
+    "斧を振りかぶっている…",
+    "業斧・断岩 260"
+   ],
+   "state": {
+    "round": 5,
+    "hp": 7,
+    "enemyHp": 71,
+    "status": "playing",
+    "score": 67.60000000000001
+   },
+   "errors": 0,
+   "tl": [
+    {
+     "t": 41293,
+     "ev": "lock",
+     "rel": 10
+    },
+    {
+     "t": 42143,
+     "ev": "unlock",
+     "rel": 860
+    },
+    {
+     "t": 42584,
+     "ev": "cutin+",
+     "rel": 1301
+    },
+    {
+     "t": 42585,
+     "ev": "lock",
+     "rel": 1302
+    },
+    {
+     "t": 44021,
+     "ev": "cutin-",
+     "rel": 2738
+    },
+    {
+     "t": 44021,
+     "ev": "unlock",
+     "rel": 2738
+    }
+   ]
+  },
+  {
+   "side": "before",
+   "vp": "pc",
+   "i": 3,
+   "mem": 941,
+   "cutinIn": 802,
+   "cutinOut": 2263,
+   "impactAt": null,
+   "unlock": 2263,
+   "intents": [
+    "50",
+    "90",
+    "斧を振りかぶっている…",
+    "業斧・断岩 260"
+   ],
+   "state": {
+    "round": 5,
+    "hp": 7,
+    "enemyHp": 71,
+    "status": "playing",
+    "score": 67.60000000000001
+   },
+   "errors": 0,
+   "tl": [
+    {
+     "t": 30437,
+     "ev": "lock",
+     "rel": 2
+    },
+    {
+     "t": 31235,
+     "ev": "unlock",
+     "rel": 800
+    },
+    {
+     "t": 31237,
+     "ev": "cutin+",
+     "rel": 802
+    },
+    {
+     "t": 31237,
+     "ev": "lock",
+     "rel": 802
+    },
+    {
+     "t": 32698,
+     "ev": "cutin-",
+     "rel": 2263
+    },
+    {
+     "t": 32698,
+     "ev": "unlock",
+     "rel": 2263
+    }
+   ]
+  },
+  {
+   "side": "after",
+   "vp": "pc",
+   "i": 3,
+   "mem": 1072,
+   "cutinIn": 913,
+   "cutinOut": 2773,
+   "impactAt": null,
+   "unlock": 2773,
+   "intents": [
+    "50",
+    "90",
+    "斧を振りかぶっている…",
+    "業斧・断岩 260"
+   ],
+   "state": {
+    "round": 5,
+    "hp": 7,
+    "enemyHp": 71,
+    "status": "playing",
+    "score": 67.60000000000001
+   },
+   "errors": 0,
+   "tl": [
+    {
+     "t": 37162,
+     "ev": "lock",
+     "rel": 4
+    },
+    {
+     "t": 38068,
+     "ev": "unlock",
+     "rel": 910
+    },
+    {
+     "t": 38071,
+     "ev": "cutin+",
+     "rel": 913
+    },
+    {
+     "t": 38071,
+     "ev": "lock",
+     "rel": 913
+    },
+    {
+     "t": 39931,
+     "ev": "cutin-",
+     "rel": 2773
+    },
+    {
+     "t": 39931,
+     "ev": "unlock",
+     "rel": 2773
+    }
+   ]
+  },
+  {
+   "side": "before",
+   "vp": "sp",
+   "i": 3,
+   "mem": 1017,
+   "cutinIn": 924,
+   "cutinOut": 2384,
+   "impactAt": null,
+   "unlock": 2384,
+   "intents": [
+    "50",
+    "90",
+    "斧を振りかぶっている…",
+    "業斧・断岩 260"
+   ],
+   "state": {
+    "round": 5,
+    "hp": 7,
+    "enemyHp": 71,
+    "status": "playing",
+    "score": 67.60000000000001
+   },
+   "errors": 0,
+   "tl": [
+    {
+     "t": 24958,
+     "ev": "lock",
+     "rel": 6
+    },
+    {
+     "t": 25873,
+     "ev": "unlock",
+     "rel": 921
+    },
+    {
+     "t": 25876,
+     "ev": "cutin+",
+     "rel": 924
+    },
+    {
+     "t": 25876,
+     "ev": "lock",
+     "rel": 924
+    },
+    {
+     "t": 27336,
+     "ev": "cutin-",
+     "rel": 2384
+    },
+    {
+     "t": 27336,
+     "ev": "unlock",
+     "rel": 2384
+    }
+   ]
+  },
+  {
+   "side": "after",
+   "vp": "sp",
+   "i": 3,
+   "mem": 1005,
+   "cutinIn": 1307,
+   "cutinOut": 2801,
+   "impactAt": null,
+   "unlock": 2801,
+   "intents": [
+    "50",
+    "90",
+    "斧を振りかぶっている…",
+    "業斧・断岩 260"
+   ],
+   "state": {
+    "round": 5,
+    "hp": 7,
+    "enemyHp": 71,
+    "status": "playing",
+    "score": 67.60000000000001
+   },
+   "errors": 0,
+   "tl": [
+    {
+     "t": 26196,
+     "ev": "lock",
+     "rel": 7
+    },
+    {
+     "t": 27146,
+     "ev": "unlock",
+     "rel": 957
+    },
+    {
+     "t": 27496,
+     "ev": "cutin+",
+     "rel": 1307
+    },
+    {
+     "t": 27496,
+     "ev": "lock",
+     "rel": 1307
+    },
+    {
+     "t": 28990,
+     "ev": "cutin-",
+     "rel": 2801
+    },
+    {
+     "t": 28990,
+     "ev": "unlock",
+     "rel": 2801
+    }
+   ]
+  },
+  {
+   "side": "before",
+   "vp": "pc",
+   "i": 4,
+   "mem": 978,
+   "cutinIn": 1386,
+   "cutinOut": 3095,
+   "impactAt": null,
+   "unlock": 3095,
+   "intents": [
+    "50",
+    "90",
+    "斧を振りかぶっている…",
+    "業斧・断岩 260"
+   ],
+   "state": {
+    "round": 5,
+    "hp": 7,
+    "enemyHp": 71,
+    "status": "playing",
+    "score": 67.60000000000001
+   },
+   "errors": 0,
+   "tl": [
+    {
+     "t": 34430,
+     "ev": "lock",
+     "rel": 3
+    },
+    {
+     "t": 35210,
+     "ev": "unlock",
+     "rel": 783
+    },
+    {
+     "t": 35813,
+     "ev": "cutin+",
+     "rel": 1386
+    },
+    {
+     "t": 35813,
+     "ev": "lock",
+     "rel": 1386
+    },
+    {
+     "t": 37522,
+     "ev": "cutin-",
+     "rel": 3095
+    },
+    {
+     "t": 37522,
+     "ev": "unlock",
+     "rel": 3095
+    }
+   ]
+  },
+  {
+   "side": "after",
+   "vp": "pc",
+   "i": 4,
+   "mem": 810,
+   "cutinIn": 834,
+   "cutinOut": 2303,
+   "impactAt": null,
+   "unlock": 2303,
+   "intents": [
+    "50",
+    "90",
+    "斧を振りかぶっている…",
+    "業斧・断岩 260"
+   ],
+   "state": {
+    "round": 5,
+    "hp": 7,
+    "enemyHp": 71,
+    "status": "playing",
+    "score": 67.60000000000001
+   },
+   "errors": 0,
+   "tl": [
+    {
+     "t": 29601,
+     "ev": "lock",
+     "rel": 3
+    },
+    {
+     "t": 30430,
+     "ev": "unlock",
+     "rel": 832
+    },
+    {
+     "t": 30432,
+     "ev": "cutin+",
+     "rel": 834
+    },
+    {
+     "t": 30432,
+     "ev": "lock",
+     "rel": 834
+    },
+    {
+     "t": 31901,
+     "ev": "cutin-",
+     "rel": 2303
+    },
+    {
+     "t": 31901,
+     "ev": "unlock",
+     "rel": 2303
+    }
+   ]
+  },
+  {
+   "side": "before",
+   "vp": "sp",
+   "i": 4,
+   "mem": 1011,
+   "cutinIn": 905,
+   "cutinOut": 2852,
+   "impactAt": null,
+   "unlock": 2852,
+   "intents": [
+    "50",
+    "90",
+    "斧を振りかぶっている…",
+    "業斧・断岩 260"
+   ],
+   "state": {
+    "round": 5,
+    "hp": 7,
+    "enemyHp": 71,
+    "status": "playing",
+    "score": 67.60000000000001
+   },
+   "errors": 0,
+   "tl": [
+    {
+     "t": 24180,
+     "ev": "lock",
+     "rel": 5
+    },
+    {
+     "t": 24890,
+     "ev": "unlock",
+     "rel": 715
+    },
+    {
+     "t": 25080,
+     "ev": "cutin+",
+     "rel": 905
+    },
+    {
+     "t": 25080,
+     "ev": "lock",
+     "rel": 905
+    },
+    {
+     "t": 27027,
+     "ev": "cutin-",
+     "rel": 2852
+    },
+    {
+     "t": 27027,
+     "ev": "unlock",
+     "rel": 2852
+    }
+   ]
+  },
+  {
+   "side": "after",
+   "vp": "sp",
+   "i": 4,
+   "mem": 1056,
+   "cutinIn": 1152,
+   "cutinOut": 2611,
+   "impactAt": null,
+   "unlock": 2612,
+   "intents": [
+    "50",
+    "90",
+    "斧を振りかぶっている…",
+    "業斧・断岩 260"
+   ],
+   "state": {
+    "round": 5,
+    "hp": 7,
+    "enemyHp": 71,
+    "status": "playing",
+    "score": 67.60000000000001
+   },
+   "errors": 0,
+   "tl": [
+    {
+     "t": 31691,
+     "ev": "lock",
+     "rel": 6
+    },
+    {
+     "t": 32512,
+     "ev": "unlock",
+     "rel": 827
+    },
+    {
+     "t": 32837,
+     "ev": "cutin+",
+     "rel": 1152
+    },
+    {
+     "t": 32838,
+     "ev": "lock",
+     "rel": 1153
+    },
+    {
+     "t": 34296,
+     "ev": "cutin-",
+     "rel": 2611
+    },
+    {
+     "t": 34297,
+     "ev": "unlock",
+     "rel": 2612
+    }
+   ]
+  },
+  {
+   "side": "before",
+   "vp": "pc",
+   "i": 5,
+   "mem": 975,
+   "cutinIn": 949,
+   "cutinOut": 2406,
+   "impactAt": null,
+   "unlock": 2406,
+   "intents": [
+    "50",
+    "90",
+    "斧を振りかぶっている…",
+    "業斧・断岩 260"
+   ],
+   "state": {
+    "round": 5,
+    "hp": 7,
+    "enemyHp": 71,
+    "status": "playing",
+    "score": 67.60000000000001
+   },
+   "errors": 0,
+   "tl": [
+    {
+     "t": 29554,
+     "ev": "lock",
+     "rel": 3
+    },
+    {
+     "t": 30497,
+     "ev": "unlock",
+     "rel": 946
+    },
+    {
+     "t": 30500,
+     "ev": "cutin+",
+     "rel": 949
+    },
+    {
+     "t": 30500,
+     "ev": "lock",
+     "rel": 949
+    },
+    {
+     "t": 31957,
+     "ev": "cutin-",
+     "rel": 2406
+    },
+    {
+     "t": 31957,
+     "ev": "unlock",
+     "rel": 2406
+    }
+   ]
+  },
+  {
+   "side": "after",
+   "vp": "pc",
+   "i": 5,
+   "mem": 1029,
+   "cutinIn": 973,
+   "cutinOut": 2448,
+   "impactAt": null,
+   "unlock": 2448,
+   "intents": [
+    "50",
+    "90",
+    "斧を振りかぶっている…",
+    "業斧・断岩 260"
+   ],
+   "state": {
+    "round": 5,
+    "hp": 7,
+    "enemyHp": 71,
+    "status": "playing",
+    "score": 67.60000000000001
+   },
+   "errors": 0,
+   "tl": [
+    {
+     "t": 40568,
+     "ev": "lock",
+     "rel": 2
+    },
+    {
+     "t": 41536,
+     "ev": "unlock",
+     "rel": 970
+    },
+    {
+     "t": 41539,
+     "ev": "cutin+",
+     "rel": 973
+    },
+    {
+     "t": 41539,
+     "ev": "lock",
+     "rel": 973
+    },
+    {
+     "t": 43014,
+     "ev": "cutin-",
+     "rel": 2448
+    },
+    {
+     "t": 43014,
+     "ev": "unlock",
+     "rel": 2448
+    }
+   ]
+  },
+  {
+   "side": "before",
+   "vp": "sp",
+   "i": 5,
+   "mem": 1004,
+   "cutinIn": 950,
+   "cutinOut": 2349,
+   "impactAt": null,
+   "unlock": 2349,
+   "intents": [
+    "50",
+    "90",
+    "斧を振りかぶっている…",
+    "業斧・断岩 260"
+   ],
+   "state": {
+    "round": 5,
+    "hp": 7,
+    "enemyHp": 71,
+    "status": "playing",
+    "score": 67.60000000000001
+   },
+   "errors": 0,
+   "tl": [
+    {
+     "t": 23248,
+     "ev": "lock",
+     "rel": 5
+    },
+    {
+     "t": 23963,
+     "ev": "unlock",
+     "rel": 720
+    },
+    {
+     "t": 24193,
+     "ev": "cutin+",
+     "rel": 950
+    },
+    {
+     "t": 24193,
+     "ev": "lock",
+     "rel": 950
+    },
+    {
+     "t": 25592,
+     "ev": "cutin-",
+     "rel": 2349
+    },
+    {
+     "t": 25592,
+     "ev": "unlock",
+     "rel": 2349
+    }
+   ]
+  },
+  {
+   "side": "after",
+   "vp": "sp",
+   "i": 5,
+   "mem": 1054,
+   "cutinIn": 896,
+   "cutinOut": 2350,
+   "impactAt": null,
+   "unlock": 2350,
+   "intents": [
+    "50",
+    "90",
+    "斧を振りかぶっている…",
+    "業斧・断岩 260"
+   ],
+   "state": {
+    "round": 5,
+    "hp": 7,
+    "enemyHp": 71,
+    "status": "playing",
+    "score": 67.60000000000001
+   },
+   "errors": 0,
+   "tl": [
+    {
+     "t": 26931,
+     "ev": "lock",
+     "rel": 6
+    },
+    {
+     "t": 27818,
+     "ev": "unlock",
+     "rel": 893
+    },
+    {
+     "t": 27821,
+     "ev": "cutin+",
+     "rel": 896
+    },
+    {
+     "t": 27821,
+     "ev": "lock",
+     "rel": 896
+    },
+    {
+     "t": 29275,
+     "ev": "cutin-",
+     "rel": 2350
+    },
+    {
+     "t": 29275,
+     "ev": "unlock",
+     "rel": 2350
+    }
+   ]
+  }
+ ]
+}

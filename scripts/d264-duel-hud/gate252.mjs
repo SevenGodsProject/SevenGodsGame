@@ -9,8 +9,10 @@ const OUT = 'docs/evidence/decision264/g10-enemy-ultimate'
 mkdirSync(OUT, { recursive: true })
 const args = Object.fromEntries(process.argv.slice(2).map((a) => a.split('=')))
 const RUNS = Number(args.runs ?? 5)
+const VPL = (args.vps ?? 'pc,sp').split(',')
+const TAG = args.tag ? '-' + args.tag : ''
 const VPS = { pc: { viewport: { width: 1508, height: 660 } }, sp: { viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true } }
-const log = logger(`${OUT}/gate252.log.txt`)
+const log = logger(`${OUT}/gate252${TAG}.log.txt`)
 
 const INIT = () => {
   const log = []
@@ -73,13 +75,13 @@ async function one(side, vp, i) {
 }
 
 const recs = []
-for (let i = 1; i <= RUNS; i++) for (const vp of ['pc', 'sp']) for (const side of ['before', 'after']) recs.push(await one(side, vp, i))
+for (let i = 1; i <= RUNS; i++) for (const vp of VPL) for (const side of ['before', 'after']) recs.push(await one(side, vp, i))
 const med = (xs) => { const s = xs.filter((x) => x != null).sort((a, b) => a - b); return s.length ? s[Math.floor(s.length / 2)] : null }
 const summary = {}
-for (const vp of ['pc', 'sp']) for (const side of ['before', 'after']) {
+for (const vp of VPL) for (const side of ['before', 'after']) {
   const v = recs.filter((r) => r.vp === vp && r.side === side)
   summary[`${vp}/${side}`] = { cutinIn: v.map((r) => r.cutinIn), cutinOut: v.map((r) => r.cutinOut), unlock: v.map((r) => r.unlock), medIn: med(v.map((r) => r.cutinIn)), medOut: med(v.map((r) => r.cutinOut)), medUnlock: med(v.map((r) => r.unlock)), impactAt: [...new Set(v.map((r) => r.impactAt))], states: [...new Set(v.map((r) => JSON.stringify(r.state)))], intentsR4: [...new Set(v.map((r) => r.intents[3]))], errors: v.reduce((s, r) => s + r.errors, 0) }
 }
-for (const vp of ['pc', 'sp']) { const b = summary[`${vp}/before`], a = summary[`${vp}/after`]; summary[`${vp}/delta`] = { in: a.medIn - b.medIn, out: a.medOut - b.medOut, unlock: a.medUnlock - b.medUnlock } }
-writeFileSync(`${OUT}/gate252.json`, JSON.stringify({ summary, recs }, null, 1))
+for (const vp of VPL) { const b = summary[`${vp}/before`], a = summary[`${vp}/after`]; summary[`${vp}/delta`] = { in: a.medIn - b.medIn, out: a.medOut - b.medOut, unlock: a.medUnlock - b.medUnlock } }
+writeFileSync(`${OUT}/gate252${TAG}.json`, JSON.stringify({ summary, recs }, null, 1))
 log(JSON.stringify(summary))
