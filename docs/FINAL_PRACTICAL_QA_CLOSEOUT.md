@@ -14,11 +14,11 @@
 
 | 項目 | 結論 |
 |---|---|
-| Session 1〜3 | **COMPLETE**（S1 6/6 YES・S2 5/6 YES（Q2 NO）・S3 Daily 実施・自由所感 3 件）。evidence：`docs/evidence/final-practical-qa-v2/session-1.md`（S1・S2）・`session-3.md` |
+| Session 1〜3 | **COMPLETE → 正式 CLOSED（CEO・2026-10-03）**（S1 6/6 YES・S2 5/6 YES（Q2 NO）・S3 Daily 実施・自由所感 3 件）。evidence：`docs/evidence/final-practical-qa-v2/session-1.md`（S1・S2）・`session-3.md` |
 | Primary Fun「解く」 | **成立**【CEO】S1 Q2「予告で行動を変えた」YES／S2 Q1 YES／S2 Q3 託宣の使い分け YES／S2 Q6 危険・敗北理由を理解 YES。critical（Q2 意図・Q7 敗北理由）に NO なし |
 | 残課題（Final QA で新たに／繰り返し指摘） | A カード画像の品質統一（S1）／B カード選択が勝敗に効きにくい（S2 Q2 NO・決定260 NO-GO 後も OPEN）／C 神 vs 敵の相対スケール・ゲージ配置（S3「敵と神の大きさがアンバランス」「ゲージの場所」）／D 戦闘ボイス（S3） |
 | Triage | **BLOCKER 0／MUST FIX BEFORE RC 1（K02 の iOS 割り込み後 BGM 再開＝未確認・5 分の Device Check・runtime 変更なし）／CAN SHIP 3（C・K01・OTOMO 面積ほか）／POST-RC 3（A・B・D）**（§3） |
-| **COMMERCIAL RC** | **GO**【AI 判断・CEO 承認待ち】（§4）。条件＝RC 前に K02 Device Check（5 分）と Known Issues 一覧の CEO 承認。A〜D は RC 後改善ロードマップへ（§5）。CEO が「RC 1 回につき 1 件」の昇格枠を使うなら C（Composition v3-lite：神／敵の相対 scale 正規化・CSS のみ）を推奨 |
+| **COMMERCIAL RC** | **GO【CEO 決定・2026-10-03】**（§7。K02 Device Check PASS・Known Issues 承認済み・RC 基準 runtime `8cba184` 固定）。AI 推奨時の記述＝条件＝RC 前に K02 Device Check（5 分）と Known Issues 一覧の CEO 承認。A〜D は RC 後改善ロードマップへ（§5）。CEO が「RC 1 回につき 1 件」の昇格枠を使うなら C（Composition v3-lite：神／敵の相対 scale 正規化・CSS のみ）を推奨 |
 
 ---
 
@@ -99,7 +99,7 @@ CAN SHIP: C Duel HUD／相対 scale（昇格枠候補 #1）・K01・K13（UNKNOW
 DEFER / POST-RC: A Card Art Unity・B Card Decision Meaning（設計研究）・D Battle Voice Layer・Home 動き・敵アート・Daily spread（決定259）・Ranking・局所 outlier
 
 Exit Criteria（v1 §3）：P0 0 ✓／P1 0 ✓（K02 は確認のみ）／deterministic mismatch 0 ✓（M3 G4・決定261 G10 154 行）／console error 0 ✓／save corruption 0 ✓（G10・実プレイ）／unrecoverable battle 0 ✓／input penetration 0 ✓／mobile 横スクロール 0 ✓／Human QA critical NO 0 ✓／台帳 ✓（SE-02 記入済み・UNKNOWN は維持）／Known Issues 承認 → CEO
-COMMERCIAL RC EXIT: **GO（AI 推奨）**  ← CEO が記入
+COMMERCIAL RC EXIT: **GO（CEO 決定・2026-10-03。§7）**
 GO の条件：K02 Device Check（結果が NO なら MUST の修正へ戻す）・Known Issues 一覧（本書 §3）の CEO 承認
 ```
 
@@ -111,8 +111,8 @@ GO の条件：K02 Device Check（結果が NO なら MUST の修正へ戻す）
 ## 5. RC 前に残る作業と POST-RC ロードマップ
 
 ### 5-1. RC 前（最小）
-1. **K02 Device Check**（CEO・iPhone・5 分・runtime 変更なし）→ 結果を `docs/evidence/final-practical-qa-v2/device-check-k02.md` に記録
-2. **Known Issues 一覧（§3）の CEO 承認**（RELEASE_STATUS「Known Non-blockers」の形式で Decision に残す）
+1. ~~K02 Device Check~~ → **PASS（CEO・iPhone・2026-10-03）**。evidence `docs/evidence/final-practical-qa-v2/device-check-k02.md`。当初の指示：結果を `docs/evidence/final-practical-qa-v2/device-check-k02.md` に記録
+2. ~~Known Issues 一覧（§3）の CEO 承認~~ → **承認済み（CEO・2026-10-03）**（RELEASE_STATUS「Known Non-blockers」の形式で Decision に残す）
 3. （任意）CEO が昇格枠を使う場合：**C Composition v3-lite**（敵ごとの `--artScale` 正規化・CSS のみ・Fast Gate 型・Human QA 1 問）
 
 ### 5-2. POST-RC 改善ロードマップ（優先順：Primary Fun → Loop → fairness → presentation → cleanup）
@@ -137,3 +137,12 @@ GO の条件：K02 Device Check（結果が NO なら MUST の修正へ戻す）
 - `node scripts/release-audit/ranking-absence.mjs` → RESULT: PASS（dist submissionEnabled:!0 = 0）
 - `node scripts/release-audit/secret-audit.mjs` → RESULT: PASS（credential-format value 0）
 - 変更ファイル：`docs/FINAL_PRACTICAL_QA_CLOSEOUT.md`（新規）・`docs/FINAL_PRACTICAL_QA_V2.md`・`docs/COMMERCIAL_RC_KNOWN_ISSUES_TRIAGE.md`・`docs/DECISIONS.md`（1 行追記）・`docs/evidence/final-practical-qa-v2/session-1.md`・`session-3.md`（新規）
+
+## 7. CEO FINAL DECISION（2026-10-03）【CEO】
+
+- **K02 Device Check：PASS**。手順＝戦闘中 BGM 再生 → iPhone でアプリ切替 → Safari 復帰 → ゲーム操作 → BGM 復帰。CEO「BGM が戻った」。evidence `docs/evidence/final-practical-qa-v2/device-check-k02.md`。K02 は CLOSED
+- **Final Practical QA v2：Session 1〜3 COMPLETE → 正式 CLOSED**
+- **Known Issues**：§3 の CAN SHIP／POST-RC 項目を既知課題として承認
+- **COMMERCIAL RC = GO**（CEO 決定）。**RC 基準＝Production runtime `8cba184`**（決定261 対峙構図 v2・Vercel `6820829725`）を固定。runtime／src／CSS／画像／音声の変更・新規 simulation は行わない
+- **POST-RC BACKLOG（消さずに保持）**：Card Decision Meaning（K33）／Battle Composition v3 — Duel HUD（K34）／Battle Voice Layer（K35）／Card Art Unity（K32）／Enemy Art（K07）／Home Motion（K06）／Daily God Spread（K11・決定259 PARTIAL）／Ranking integration（K12・READY-DORMANT）。いずれも RC GO を妨げない・正式な POST-RC 改善ロードマップ（§5-2）として保持
+- 確定集計：BLOCKER 0／MUST FIX BEFORE RC 0（K02 PASS）／CAN SHIP（K01・K03〜K05・K09・K10・K13 UNKNOWN 維持・K14・K15・K18〜K29・K31・K34・決定261 Known）／POST-RC（K06〜K08・K11・K12・K16・K17・K30・K32・K33・K35）
