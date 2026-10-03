@@ -1,0 +1,36 @@
+// 決定261 Production Smoke — 本番 URL で PC／SP の構図・着弾・重なり・反転・文字切れ・横スクロール・console を 1 browser／1 run 直列で確認
+import { withBrowser, startBattle, MEASURE, logger } from './lib.mjs'
+import { writeFileSync, mkdirSync } from 'node:fs'
+import { execSync } from 'node:child_process'
+const BASE = process.env.SMOKE_BASE ?? 'https://seven-gods-game.vercel.app'
+const OUT = process.env.SMOKE_OUT ?? 'docs/evidence/decision261/production-smoke'
+mkdirSync(OUT, { recursive: true })
+const log = logger(`${OUT}/smoke.log.txt`)
+// served bundle check
+const html = execSync(`curl -s ${BASE}/`, { encoding: 'utf8' })
+const css = html.match(/assets\/index-[A-Za-z0-9_-]+\.css/)?.[0], js = html.match(/assets\/index-[A-Za-z0-9_-]+\.js/)?.[0]
+const md5 = (p) => execSync(`curl -s ${BASE}/${p} | md5sum`, { encoding: 'utf8' }).slice(0, 32)
+const served = { css, js, cssMd5: css ? md5(css) : null, jsMd5: js ? md5(js) : null }
+log(`served ${JSON.stringify(served)}`)
+const CASES = [
+  { vp: 'pc660', god: 'taiyo', enemy: 'oni' }, { vp: 'pc660', god: 'shouren', enemy: 'ryujin' },
+  { vp: 'sp844', god: 'taiyo', enemy: 'doukeshi' }, { vp: 'sp844', god: 'sobi', enemy: 'karakuri' },
+  { vp: 'sp660', god: 'taiyo', enemy: 'oni' }, { vp: 'pc800', god: 'ebisu', enemy: 'juuma' },
+]
+const results = []
+for (const c of CASES) {
+  const key = `prod-${c.vp}-${c.god}-${c.enemy}`
+  try {
+    const { mem, result } = await withBrowser(async (browser) => {
+      const { page, errors, entrance } = await startBattle(browser, BASE, c.vp, { ...c, seed: 'd261-smoke' })
+      const m = await page.evaluate(MEASURE)
+      await page.screenshot({ path: `${OUT}/${key}.jpg`, type: 'jpeg', quality: 55 })
+      return { m, entrance, errors: [...errors] }
+    }, log)
+    const r = { key, ...c, mem, ...result }
+    results.push(r)
+    log(`done ${key} mem=${mem}MB errors=${r.errors.length} area e=${r.m.area.enemy} g=${r.m.area.god} o=${r.m.area.otomo} gap=${r.m.gapEnemyGod} hit=${[r.m.hit.enemySlashIn, r.m.hit.enemyNumberIn, r.m.hit.godSlashIn, r.m.hit.godNumberIn].filter(Boolean).length}/4 overlapEG=${r.m.overlap.enemyGod} scale=${r.m.scale}/${r.m.cutinScaleRule} clipped=${r.m.clipped.length} hs=${r.m.hScroll}`)
+  } catch (e) { log(`FAIL ${key} ${String(e).slice(0, 200)}`); results.push({ key, error: String(e).slice(0, 300) }) }
+}
+writeFileSync(`${OUT}/smoke261.json`, JSON.stringify({ base: BASE, served, results }, null, 1))
+log('smoke finished')

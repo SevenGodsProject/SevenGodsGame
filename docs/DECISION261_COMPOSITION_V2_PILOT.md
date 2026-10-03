@@ -162,3 +162,19 @@ SP は既存の `--d229-*` の**式の形を保ったまま値だけ**上書き�
 
 - 対象 build：`e2a5ea9`（After `:4302`・JS `e6c26c81…`＝Production・CSS `index-BE9_YcYs.css` `e0f4ae5f…`）／Before `:4301`（master `694dd0b` の clean build）
 - CEO 指示：対峙構図 v2 を **正式採用（決定261）** → Release Gate → master 統合 → push → Vercel deploy → Production Smoke → PC／SP の最低限の Regression → PRODUCTION LIVE / CLOSED。runtime は決定261 の変更だけ（Hand Decision Density Audit からの runtime 変更は混入させない）
+
+## §10. Production Release — PRODUCTION LIVE / CLOSED（2026-10-03）
+
+| 項目 | 内容 |
+|---|---|
+| Release Gate | PASS（`docs/evidence/decision261/release/RELEASE_GATE.md`：lineage ff・差分＝`battle.css` のみ・tsc 0／oxlint 0／vitest 1,303 PASS／build md5＝Human QA dist／release-audit 2 本 PASS） |
+| master | `694dd0b` → **`8cba184`**（RC `release/d261-composition-v2-rc`＝`7d7fe3b` Human QA PASS ＋ Release Gate docs）。push 2026-10-03 09:10 JST |
+| Vercel Production deployment | **`6820829725`**（sha `8cba184`・success・2026-10-03T00:10:20Z） |
+| 配信 | `index-BRcv8Oau.js` md5 `e6c26c81…`（Production 従来と同一）／`index-BE9_YcYs.css` md5 `e0f4ae5f…`＝RC build |
+| **rollback target** | deployment **`6813532298`**（sha `694dd0b`・runtime `538a3ef`＝決定257） |
+| Production Smoke | **PASS 6/6**（本番 URL・1 browser／1 run 直列・`production-smoke/smoke261.json`・`smoke.log.txt`・jpg 6 枚）：PC 1508×660 大耀×鬼将 敵 4.96%／神 5.82%／OTOMO 0.25%／間隔 92px・笑蓮×龍神 4.88／5.03／0.27／127／SP 844 大耀×道化 8.49／8.97／0.29／18・蒼毘×機工師 5.79／9.65／0.29／35／SP 660 大耀×鬼将 8.71／7.33／0.23／28／PC 1280×800 恵比寿×魔獣 7.15／6.98／0.36／92。着弾中心∈絵 **24/24**・敵–神 重なり 0・HUD／カットイン `scale -1 1`・文字切れ 0・横スクロール 0・console error 0（6/6）。決定254 入口の HUD 箱差 0 |
+| PC／SP 最低限の Regression | 上記 Smoke＝PC 2 サイズ・SP 2 サイズで 決定229（着弾）・247（反転）・252（カットイン反転）・254（入口）を確認。決定249 反応・決定257 音・決定250 動画は CSS 外（Fast Gate G6／G10 で Before と同一を確認済み） |
+| Known（§7 と同じ） | OTOMO 面積 0.29〜0.36%（≤0.3 目標を一部超過）／SP 660 の神÷カード高 <1.0／PC 間隔 74〜128px／決定241 トーストの一時重なり／入口の操作開放 PC +34〜50ms／魔獣 HUD 向き・笑蓮／才華 keyvisual・入口の神の向きは対象外 |
+| cleanup | QA preview `:4301`／`:4302` は停止（後述）・Playwright 残存 0・一時 FW 0・ロック空・worktree `SevenGodsGame-comp-pilot`／`-d261-rc` 保持 |
+
+**決定261 CLOSED**。
