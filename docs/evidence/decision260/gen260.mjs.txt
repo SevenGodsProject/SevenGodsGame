@@ -1,0 +1,50 @@
+// 決定260 — sim260.json から SIMULATION_SUMMARY.md を生成（手入力なし）
+import { readFileSync, writeFileSync } from 'node:fs'
+const DIR = process.argv[2] ?? 'C:/Users/kimi1/SevenGodsGame-d254-rc/docs/evidence/decision260'
+const J = JSON.parse(readFileSync(`${DIR}/sim260.json`, 'utf8'))
+const O = J.out
+const p1 = (x) => (100 * (x ?? 0)).toFixed(1), f2 = (x) => (x ?? 0).toFixed(2), f1 = (x) => (x ?? 0).toFixed(1), pt = (a, b) => (100 * (a - b)).toFixed(1)
+const FACES = [['normal', '通常'], ['easy', 'Easy'], ['hard', 'Hard'], ['daily', 'Daily'], ['rank1', '神階Ⅰ'], ['rank3', 'Ⅲ'], ['rank5', 'Ⅴ'], ['rank6', 'Ⅵ'], ['rank7p', 'Ⅶ猛威'], ['rank7r', 'Ⅶ巨躯'], ['rank7t', 'Ⅶ静寂']]
+const VS = Object.keys(O)
+const L = []
+L.push('# 決定260 AP 後半の平準化 Preflight — simulation summary（`sim260.json` から自動生成）', '')
+L.push(`- runtime Production **${J.runtime}**（master の runtime・src 変更 0。AP 曲線は harness が \`RULES.ap.perRound\` をメモリ上で書き換え、variant 後に復元）。総試合数 **${J.games.toLocaleString()}**（${J.elapsed.toFixed(0)}s）・seed 面 ${J.seeds}／神階 ${J.seedsRank}`)
+L.push('- variant：' + VS.map((v) => `**${v}**＝[${J.variants[v].join(',')}]`).join('／'))
+L.push('- 方策：reader／naive／greedy／planner（決定255）／**randomRO**（出せる札から一様ランダム・託宣だけ reader の規則＝Hand Decision Density Audit）。「randomRO − reader」が小さいほど「カード選択が勝敗に効いていない」', '')
+// 1. win by variant/face/policy
+L.push('## 1. 勝率（variant × 面 × 方策）と randomRO − reader・reader − naive', '')
+L.push('| variant | 面 | reader | naive | greedy | planner | randomRO | **randomRO−reader** | reader−naive | reader 未撃破 | reader 撃破 R | reader GS |')
+L.push('|---|---|---|---|---|---|---|---|---|---|---|---|')
+for (const [f, fn] of FACES) for (const v of VS) { const g = O[v][f]; if (!g) continue; const r = g.reader.agg; L.push(`| ${v} | ${fn} | ${p1(r.win)} | ${p1(g.naive.agg.win)} | ${p1(g.greedy.agg.win)} | ${p1(g.planner.agg.win)} | ${p1(g.randomRO.agg.win)} | **${pt(g.randomRO.agg.win, r.win)}** | ${pt(r.win, g.naive.agg.win)} | ${p1(r.unfinished)} | ${f2(r.killR)} | ${p1(r.gs)} |`) }
+L.push('')
+// 2. per-round play
+L.push('## 2. ラウンド別（通常・reader）— 出した枚数／未使用 AP／手札（開始時）', '')
+L.push('| variant | 出した枚数 R1..R7 | 未使用 AP R1..R7 | 手札 R1..R7 | randomRO 出した枚数 |'); L.push('|---|---|---|---|---|')
+for (const v of VS) { const a = O[v].normal.reader.agg, b = O[v].normal.randomRO.agg; L.push(`| ${v} | ${a.playedPerRound.map(f1).join('/')} | ${a.unusedApPerRound.map(f1).join('/')} | ${a.handPerRound.map(f1).join('/')} | ${b.playedPerRound.map(f1).join('/')} |`) }
+L.push('')
+L.push('### 2-b. Hard・Daily（reader）', '')
+L.push('| variant | 面 | 出した枚数 R1..R7 | 未使用 AP R1..R7 | 手札 R1..R7 |'); L.push('|---|---|---|---|---|')
+for (const f of ['hard', 'daily']) for (const v of VS) { const a = O[v][f].reader.agg; L.push(`| ${v} | ${f} | ${a.playedPerRound.map(f1).join('/')} | ${a.unusedApPerRound.map(f1).join('/')} | ${a.handPerRound.map(f1).join('/')} |`) }
+L.push('')
+// 3. protections: unfinished, GS, killR, minHp, score, oracle by variant for key faces
+L.push('## 3. 保護面（reader）— 未撃破・敗北・撃破 R・R5 敵ターン経験・最低 HP・勝利スコア・託宣・加護率・必殺 R 盾率', '')
+L.push('| variant | 面 | win | lost | 未撃破 | 撃破 R | R6 到達 | 最低 HP | 勝利スコア | GS | 託宣/戦 | 加護% | 必殺 R 盾≥50% |'); L.push('|---|---|---|---|---|---|---|---|---|---|---|---|---|')
+for (const [f, fn] of FACES) for (const v of VS) { const a = O[v][f]?.reader?.agg; if (!a) continue; L.push(`| ${v} | ${fn} | ${p1(a.win)} | ${p1(a.lost)} | ${p1(a.unfinished)} | ${f2(a.killR)} | ${p1(a.reachR6)} | ${f1(a.minHp)} | ${f1(a.scoreWon)} | ${p1(a.gs)} | ${f2(a.oracleUses)} | ${p1(a.guardShare)} | ${p1(a.ultGuardRate)} |`) }
+L.push('')
+// 4. by enemy (normal, hard): randomRO-reader and reader win
+L.push('## 4. 敵別（通常／Hard）— reader win・randomRO − reader・未撃破・撃破 R', '')
+L.push('| variant | 面 | ' + Object.keys(O[VS[0]].normal.reader.byEnemy).map((e) => e).join(' | ') + ' |'); L.push('|---|---|' + Object.keys(O[VS[0]].normal.reader.byEnemy).map(() => '---').join('|') + '|')
+for (const f of ['normal', 'hard']) for (const v of VS) { const g = O[v][f]; L.push(`| ${v} | ${f} | ` + Object.keys(g.reader.byEnemy).map((e) => `${p1(g.reader.byEnemy[e].win)}／${pt(g.randomRO.byEnemy[e].win, g.reader.byEnemy[e].win)}／${p1(g.reader.byEnemy[e].unfinished)}／${f2(g.reader.byEnemy[e].killR)}`).join(' | ') + ' |') }
+L.push('', '（セル＝reader win／randomRO−reader pt／reader 未撃破／reader 撃破 R）', '')
+// 5. by god (normal): reader win, randomRO-reader, GS, score
+L.push('## 5. 神別（通常）— reader win・randomRO − reader・GS・勝利スコア', '')
+L.push('| variant | ' + Object.keys(O[VS[0]].normal.reader.byGod).join(' | ') + ' |'); L.push('|---|' + Object.keys(O[VS[0]].normal.reader.byGod).map(() => '---').join('|') + '|')
+for (const v of VS) { const g = O[v].normal; L.push(`| ${v} | ` + Object.keys(g.reader.byGod).map((e) => `${p1(g.reader.byGod[e].win)}／${pt(g.randomRO.byGod[e].win, g.reader.byGod[e].win)}／${p1(g.reader.byGod[e].gs)}／${f1(g.reader.byGod[e].scoreWon)}`).join(' | ') + ' |') }
+L.push('', '（セル＝reader win／randomRO−reader pt／GS／勝利スコア）', '')
+// 6. 49 cells <50% counts (reader) and planner
+L.push('## 6. 49 セル — reader<50% セル数／randomRO<50% セル数／reader 100% セル数', '')
+L.push('| variant | ' + FACES.map(([f, fn]) => fn).join(' | ') + ' |'); L.push('|---|' + FACES.map(() => '---').join('|') + '|')
+for (const v of VS) L.push(`| ${v} | ` + FACES.map(([f]) => { const g = O[v][f]; if (!g) return '—'; const c = Object.values(g.reader.cells), r = Object.values(g.randomRO.cells); return `${c.filter((x) => x < 0.5).length}／${r.filter((x) => x < 0.5).length}／${c.filter((x) => x === 1).length}` }).join(' | ') + ' |')
+L.push('')
+writeFileSync(`${DIR}/SIMULATION_SUMMARY.md`, L.join('\n'))
+console.log('written', L.length)
