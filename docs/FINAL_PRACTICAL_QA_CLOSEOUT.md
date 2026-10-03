@@ -118,7 +118,7 @@ GO の条件：K02 Device Check（結果が NO なら MUST の修正へ戻す）
 ### 5-2. POST-RC 改善ロードマップ（優先順：Primary Fun → Loop → fairness → presentation → cleanup）
 | 順 | 項目 | 形 | 依存 |
 |---|---|---|---|
-| 1 | **B Card Decision Meaning**：「答えの可視化」（結果画面に 盾／弱体／回復／一撃 のどれで解いたか・神階で組み合わせが必要になることを 1 行）＋設計レベルの再検討（Oracle／敵表／カードの保護を解く案は CEO 判断） | presentation Preflight → 設計判断 | 決定255／260 の結論 |
+| 1 | **B Card Decision Meaning**：（2026-10-03 追記：「答えの可視化」は決定262 NO-GO＝CEO Human QA NO。次＝「開幕の手札読み」Preflight）「答えの可視化」（結果画面に 盾／弱体／回復／一撃 のどれで解いたか・神階で組み合わせが必要になることを 1 行）＋設計レベルの再検討（Oracle／敵表／カードの保護を解く案は CEO 判断） | presentation Preflight → 設計判断 | 決定255／260 の結論 |
 | 2 | **C Battle Composition v3 — Duel HUD**：神 vs 敵の相対 scale 正規化（v3-lite）→ HP／名札／共鳴ゲージの帰属を「敵 vs 神」の構図に再配置（Preflight） | CSS → TSX（決定235・240・241 の保護） | 決定261 |
 | 3 | **D Battle Voice Layer**：Battle Start／Enemy Ultimate／God Strike／Victory・7 神＋7 敵のオリジナル音声（模倣なし）・決定257 の duck 経路と統合 | 権利・生成方式・費用の CEO 判断 → Preflight → Pilot | 決定257 |
 | 4 | **A Card Art Unity**：60 枚の品質統一（決定243 の受入 MUST／TARGET と台帳の手順で 1 枚ずつ） | CEO 生成・台帳・accept-art | 決定242／243 |

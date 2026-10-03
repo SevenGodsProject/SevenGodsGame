@@ -198,3 +198,10 @@ HOLD の場合の再開条件：K02 Device Check で BGM が戻らない場合�
 
 ### 8-1. 最終集計（RC GO 時点）
 A BLOCKER **0**／B MUST FIX BEFORE RC **0**／C CAN SHIP **23**（K01・K03・K04・K05・K09・K10・K13・K14・K15・K18〜K29・K31・K34）／D POST-RC **11**（K06・K07・K08・K11・K12・K16・K17・K30・K32・K33・K35）／CLOSED **1**（K02）。合計 K01〜K35＝35 件（§2 の分類列と一致。K01・K10・K24・K26・K27 は M3 で C 確定）
+
+## 9. 決定262 後の更新（2026-10-03）
+
+| # | 更新 |
+|---|---|
+| K33 Card Decision Meaning | 決定262「結果画面の『解き方』1 行」Narrow Pilot＝Fast Gate PASS・**CEO Human QA NO → NO-GO**。事後の可視化（presentation）は lever ではないと確定。**OPEN 維持（D・POST-RC）**。次＝「開幕の手札読み」Preflight（戦闘中・開幕に考える構造。正解カード／おすすめ／自動選択／Intent の答えは表示しない） |
+| K34 Battle Composition v3 | 名称を **「Character Integration / Duel HUD」** に拡張。CEO Visual QA 所感（2026-10-03）「敵と神のまわりの円や四角の枠が気になる」＝円形・角丸四角プレートが接地感を弱める／上部 HP・共鳴パネルを含め四角い箱が多い／キャラクターが背景に統合されず別画像に見える。evidence `docs/evidence/final-practical-qa-v2/visual-qa-frames-2026-10-03.md`。**まだ実装しない**（C・CAN SHIP のまま） |
