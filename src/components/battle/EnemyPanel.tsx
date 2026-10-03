@@ -129,7 +129,7 @@ export function EnemyPanel({
   const collapseStyle = { '--collapse': `${reduced ? DEFEAT_COLLAPSE_REDUCED_MS : DEFEAT_COLLAPSE_MS}ms` } as CSSProperties
 
   return (
-    <div className={`panel enemy-panel enemy-band-${band}`}>
+    <div className={`panel enemy-panel enemy-band-${band}`} data-enemy={enemy.defId}>
       {/* Phase 6-B（決定164）：名前・HP・予告・状態を立ち絵の「上」に1枚の名札としてまとめる。
           こうすると、どの画面高でも予告と HP が立ち絵と一緒に必ず見える（旧：立ち絵の下にあり、
           手札を触る位置までスクロールすると画面外になっていた）。 */}

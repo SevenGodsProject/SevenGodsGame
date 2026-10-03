@@ -7413,6 +7413,334 @@ body.battle-viewport .battle-main > .battle-callout {
 }
 
 /* ============================================================
+   決定264（候補）Battle Composition v3 — Duel HUD v3「2 柱 HUD＋神側チャージ」Narrow Pilot
+   （docs/BATTLE_COMPOSITION_V3_DUEL_HUD_PREFLIGHT.md §6・docs/DECISION264_DUEL_HUD_V3_PILOT.md）
+   ------------------------------------------------------------
+   「UI の箱の中にキャラがいる」→「敵と神が同じ戦場で対峙している」。CSS 1 ブロック＋TSX 1 行（data-enemy）。
+   ・A 2 列化：アリーナ上段を［敵｜神］の 2 列に（共鳴の第 3 列を廃止）。名札列が伸び、敵 HP は左・神 HP は右の長い横ゲージ
+   ・B 神側チャージ：共鳴の札（.god-otomo-panel）を神の列の名札の直下へ従属させる（横型 12px・7 分割）。
+     PC は神の .player-panel の行を subgrid にして「名札の行の高さ」を共有＝名札が 🛡／バフで伸びても重ならない
+   ・C 回転オーラ環 3 つ（敵・神・OTOMO）を撤去。名札 3 枚の漆黒の札＋金縁＋角金具（決定235）を縁無しの陰（scrim）へ。
+     ゲージの材質（hudPlate.css）は不変。足元に接地影、負傷の赤い円は足元の楕円へ
+   ・D 敵 7 体の --artScale（原画の余白差の正規化・敵のみ・縮小しない）。`.enemy-avatar-wrap` の独立 scale＋translate で
+     足元（舞台の下端）を固定したまま拡大＝連撃 lunge の transform とは合成。`.enemy-avatar` には触れない（決定240／247）
+   触れないもの：`.intent` の文字の大きさ・行高（決定240 A1）・`.enemy-avatar` の filter／translate／scale（決定240／247）・
+   決定249 の animation・決定250／252 のカットイン・決定254 の入口・`.result-toast`（決定241）・吹き出し（決定228 C）・
+   hudPlate.css（詳細度 0,4,1 以上で上書きする）・timing 定数。reduce の @media はここに書かない（決定232）
+   ============================================================ */
+
+/* ---- C：回転オーラ環 3 つを撤去（装飾。機能のリム・足元環（決定240／252）・負傷は別要素で残る） ---- */
+body.battle-viewport .battle-main .enemy-avatar-wrap::before,
+body.battle-viewport .battle-main .player-avatar-wrap::before,
+body.battle-viewport .battle-main .portrait-otomo::before {
+  content: none;
+  display: none;
+}
+
+/* ---- C：名札 3 枚＝縁無しの陰（scrim）。敵は左（画面の外側）から、神と共鳴は右から濃く、舞台側へ消える ---- */
+body.battle-viewport .battle-main .enemy-panel .enemy-plate,
+body.battle-viewport .battle-main .player-panel .player-plate,
+body.battle-viewport .battle-main .god-otomo-panel .god-otomo-plate {
+  border-color: transparent;
+  border-radius: 0;
+  box-shadow: none;
+  background: linear-gradient(90deg, #05060dcc 0%, #05060d99 70%, #05060d00 100%);
+  /* 透明の縁（1px）の下にも陰を敷く（padding-box 基準のままだと縁に陰の繰り返しが 1px の線として出る） */
+  background-origin: border-box;
+}
+
+body.battle-viewport .battle-main .player-panel .player-plate,
+body.battle-viewport .battle-main .god-otomo-panel .god-otomo-plate {
+  background: linear-gradient(270deg, #05060dcc 0%, #05060d99 70%, #05060d00 100%);
+  background-origin: border-box;
+}
+
+/* 神側は鏡像：文字を右（画面の外側＝陰の濃い側）へ寄せる。HP・共鳴ゲージの向き（左から満ちる）は不変 */
+body.battle-viewport .battle-main .player-panel .player-plate-head,
+body.battle-viewport .battle-main .player-panel .player-plate-status {
+  justify-content: flex-end;
+}
+
+body.battle-viewport .battle-main .god-otomo-panel .burst-preview-head {
+  text-align: right;
+}
+
+body.battle-viewport .battle-main .god-otomo-panel .god-otomo-plate-head {
+  justify-content: flex-end;
+}
+
+body.battle-viewport .battle-main .enemy-panel .enemy-plate::before,
+body.battle-viewport .battle-main .player-panel .player-plate::before,
+body.battle-viewport .battle-main .god-otomo-panel .god-otomo-plate::before {
+  content: none;
+  display: none;
+}
+
+/* ---- C：接地影（静止・animation 0）。舞台の下端＝床線に楕円の影を落とす（z -1＝立ち絵の後ろ） ---- */
+body.battle-viewport .battle-main .enemy-stage::after,
+body.battle-viewport .battle-main .player-stage::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  width: 62%;
+  height: 10%;
+  translate: -50% 40%;
+  border-radius: 50%;
+  background: radial-gradient(ellipse at center, #000000a6 0%, #00000000 70%);
+  z-index: -1;
+  pointer-events: none;
+}
+
+/* ---- C：負傷（HP ≤50％／≤25％）の赤い円 → 足元の楕円（色・段階は不変） ---- */
+body.battle-viewport .battle-main .enemy-wound {
+  top: auto;
+  bottom: 0;
+  width: 70%;
+  height: 18%;
+  margin: 0;
+  translate: -50% 30%;
+  background: radial-gradient(ellipse at center, #ff3b3b30 0%, transparent 62%);
+}
+
+body.battle-viewport .battle-main .enemy-wound-quarter {
+  background: radial-gradient(ellipse at center, #ff3b3b55 0%, #ff3b3b1c 45%, transparent 70%);
+}
+
+/* ---- B：共鳴＝神側の横型チャージ（12px・7 分割）。見出し「共鳴」はゲージ内ラベル「共鳴 N / 7」が担う。
+   READY の発光（決定128 .resonance-gauge-ready-flash）・5／6 の助走グロー（決定95 .resonance-gauge-wrap::after）は要素・セレクタとも不変 ---- */
+body.battle-viewport .battle-main .god-otomo-plate {
+  gap: 3px;
+}
+
+body.battle-viewport .battle-main .god-otomo-plate-head .panel-title {
+  display: none;
+}
+
+/* 並び：ゲージ → あと N → 得意技バッジ（見出し行は DOM では先頭。flex の order で最後へ） */
+body.battle-viewport .battle-main .god-otomo-plate-head {
+  order: 1;
+}
+
+body.battle-viewport .battle-main .resonance-gauge {
+  height: 12px;
+}
+
+body.battle-viewport .battle-main .resonance-gauge-label {
+  line-height: 1;
+}
+
+/* 7 分割の目盛り（fill の width＝value/7 と同じ刻み）。::before は fill（非 positioned）より後・ラベル（absolute）より前に描かれる */
+body.battle-viewport .battle-main .resonance-gauge::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: repeating-linear-gradient(90deg, #00000000 0, #00000000 calc(100% / 7 - 1px), #05060dcc calc(100% / 7 - 1px), #05060dcc calc(100% / 7));
+}
+
+/* 神技プレビューは箱を外して文字のみ（2 行・10px は不変）。OTOMO の後ろへ */
+body.battle-viewport .battle-main .god-otomo-panel .burst-preview {
+  order: 1;
+  background: none;
+  border-color: transparent;
+  box-shadow: none;
+}
+
+/* ---- D：敵の --artScale（決定261 Gate の ink 面積 → 目標 5.5％。sqrt(5.5/実測)・上限 1.17・縮小しない）。
+   data-enemy は enemy.defId（ENEMY_IDS：enemy_02 鬼将・enemy_03 怨霊・enemy_04 機工師・enemy_06 龍神。他 3 体は 1） ---- */
+body.battle-viewport .enemy-panel[data-enemy='enemy_04'] {
+  --artScale: 1.17;
+}
+
+body.battle-viewport .enemy-panel[data-enemy='enemy_03'] {
+  --artScale: 1.08;
+}
+
+/* 龍神（enemy_06）：机上 1.06。7 神 × 龍神 の神÷敵（笑蓮 5.03〜才華 6.35％）を 0.9〜1.15 に収める敵の幅は 5.52〜5.59％（PC 660 実測）→ 1.07 */
+body.battle-viewport .enemy-panel[data-enemy='enemy_06'] {
+  --artScale: 1.07;
+}
+
+body.battle-viewport .enemy-panel[data-enemy='enemy_02'] {
+  --artScale: 1.05;
+}
+
+/* 試練の影（enemy_01）：机上 1.00（PC 5.39％）だが SP 390×844 の実測で神÷敵 1.16（>1.15）。sqrt(5.5/5.39)＝1.01 を 0.02 刻みで 1.02 */
+body.battle-viewport .enemy-panel[data-enemy='enemy_01'] {
+  --artScale: 1.02;
+}
+
+/* 正規化しない画面（実測）：
+   ・PC >720px 高（P-2）は名札が立ち絵の真上にあり、上へ伸ばすと名札に重なる（機工師 1.17 で 5,362px²）
+   ・SP ≤760px 高（S-1 lite）は神の箱が据え置き（147px）で、すでに敵が神より大きい（神÷敵 0.70〜0.78）
+   どちらも決定261 と同じ大きさ（--artScale 1） */
+@media (min-width: 900px) and (min-height: 721px), (max-width: 899px) and (max-height: 760px) {
+  body.battle-viewport .enemy-panel[data-enemy] {
+    --artScale: 1;
+  }
+}
+
+/* 中心拡大（lunge の transform とその scale の基点は不変）＋上へ (s−1)/2 だけ戻す＝足元は舞台の下端のまま */
+body.battle-viewport .battle-main .enemy-avatar-wrap {
+  scale: var(--artScale, 1);
+  translate: 0 calc((1 - var(--artScale, 1)) * 50%);
+}
+
+/* ---- A／B PC（≥900px）：［敵｜神］2 列。共鳴は神の列の 2 行目（名札の直下・名札列の幅） ---- */
+@media (min-width: 900px) and (min-height: 461px) {
+  body.battle-viewport .battle-main {
+    grid-template-columns: minmax(0, 1.18fr) minmax(0, 1fr);
+    grid-template-rows: auto minmax(0, 1fr);
+  }
+
+  body.battle-viewport .battle-main > .enemy-panel {
+    grid-column: 1;
+    grid-row: 1 / -1;
+  }
+
+  /* 神の panel は 2 行を subgrid で共有：1 行目＝名札（padding 込み）、2 行目＝残り。舞台は 2 行にまたがる */
+  body.battle-viewport .ally-row > .player-panel {
+    grid-column: 2;
+    grid-row: 1 / -1;
+    display: grid;
+    grid-template-rows: subgrid;
+    column-gap: 8px;
+    align-items: start;
+  }
+
+  /* 神の名札は中身の高さ（名前・HP・🛡／バフ）＝共鳴が名札のすぐ下に続く。敵の名札（予告つき）とは上端で揃う */
+  body.battle-viewport .ally-row > .player-panel .player-plate {
+    min-height: 0;
+  }
+
+  body.battle-viewport .ally-row > .god-otomo-panel {
+    grid-column: 2;
+    grid-row: 2;
+    justify-self: end;
+    align-self: start;
+    min-height: 0;
+    margin: 0 11px 0 0;
+    padding: 0;
+    gap: 4px;
+  }
+
+  body.battle-viewport .god-otomo-panel .god-otomo-portraits {
+    flex: 0 0 auto;
+    justify-content: flex-end;
+    align-items: flex-start;
+    background-image: none;
+  }
+
+  /* 中間幅（900〜1000px）では名札列が ≈127px まで細くなり、1 行のバッジ（最長 ≈132px）が札の外へ出る（実測）。
+     決定230（SP）と同じ規則で、入らないときだけ語の境目で折り返す */
+  body.battle-viewport .battle-main .god-otomo-plate .god-passive-badge {
+    max-width: 100%;
+    white-space: normal;
+    word-break: keep-all;
+    overflow-wrap: anywhere;
+  }
+
+  /* OTOMO は決定261 O-1 の大きさのまま（列の高さ 100% を基準にしない＝絵が列幅まで膨らまない） */
+  body.battle-viewport .god-otomo-panel .portrait img {
+    height: clamp(36px, 8.5vh, 76px);
+  }
+}
+
+/* P-1（≤720px 高）：神は［舞台｜名札］。名札列＝列の内幅 − 舞台 − 8px。舞台の式は決定261 の --comp-stage のまま
+   （敵の内幅 ＝ 1.18 ×（神の内幅＋22px）− 22px）。共鳴の札の幅は列の幅 100%（＝神の内幅＋22px）から同じ式で逆算 */
+@media (min-width: 900px) and (min-height: 461px) and (max-height: 720px) {
+  /* 2 列化で敵の舞台は上限 300px に届く（決定261：286px）。神の立ち絵は原則据え置き（CEO）＝ 0.9 → 0.86 で ≈258px を保つ */
+  body.battle-viewport .battle-main {
+    --comp-god-ratio: 0.86;
+    /* 神の名札・共鳴の札の幅の上限：神 HP を決定261 の ≈100px の ≈2.2 倍（CEO「約 2.0〜2.2 倍」）に。余りは舞台との間の空き */
+    --d264-god-plate-max: 237px;
+  }
+
+  body.battle-viewport .ally-row > .player-panel .player-plate {
+    justify-self: end;
+    width: min(100%, var(--d264-god-plate-max));
+  }
+
+  body.battle-viewport .ally-row > .god-otomo-panel {
+    width: min(calc(100% - 30px - min(118% - 22px - var(--comp-plate-min, 162px) - 8px, 300px) * var(--comp-god-ratio, 0.9)), var(--d264-god-plate-max));
+  }
+
+  /* 機工師は縦の余白が大きく、1.17 だと PC 660 で頭がアリーナの上端を 7px 越える（実測）。0.02 刻みで 1.13 */
+  body.battle-viewport .enemy-panel[data-enemy='enemy_04'] {
+    --artScale: 1.13;
+  }
+}
+
+/* P-2（>720px 高）：名札は舞台の上（列の幅いっぱい）。神の舞台は列の左、共鳴は舞台の右の空き列（≥170px） */
+@media (min-width: 900px) and (min-height: 721px) {
+  body.battle-viewport .ally-row > .player-panel {
+    grid-template-columns: min(calc(100% - 178px), var(--comp-god-max, 306px)) minmax(0, 1fr);
+  }
+
+  body.battle-viewport .player-panel .player-plate {
+    grid-column: 1 / -1;
+    grid-row: 1;
+  }
+
+  body.battle-viewport .player-panel .player-stage {
+    grid-column: 1;
+    grid-row: 2;
+    align-self: stretch;
+    justify-self: stretch;
+    width: auto;
+  }
+
+  body.battle-viewport .ally-row > .god-otomo-panel {
+    width: calc(100% - 30px - min(100% - 200px, var(--comp-god-max, 306px)));
+  }
+}
+
+/* ---- A／B SP（<900px）：［敵｜神］2 列。神の列＝名札（1 行目）→ 共鳴（2 行目）。舞台は決定229 の床（式は不変） ---- */
+@media (max-width: 899px) {
+  body.battle-viewport .battle-main {
+    grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+    grid-template-rows: auto minmax(0, 1fr);
+  }
+
+  body.battle-viewport .battle-main > .enemy-panel {
+    grid-column: 1;
+    grid-row: 1 / -1;
+  }
+
+  body.battle-viewport .ally-row > .player-panel {
+    grid-column: 2;
+    grid-row: 1;
+    padding-bottom: 0;
+  }
+
+  /* 神の名札は中身の高さ（名前・HP・🛡／バフ）。共鳴がすぐ下に続き、得意技の神（2 行バッジ）でも神の頭に届かない */
+  body.battle-viewport .ally-row > .player-panel .player-plate {
+    min-height: 0;
+  }
+
+  body.battle-viewport .ally-row > .god-otomo-panel {
+    grid-column: 2;
+    grid-row: 2;
+    padding-top: 4px;
+  }
+
+  /* 決定230 は「共鳴」＋バッジの見出し 1 列が前提。見出しの「共鳴」が非表示になったので、バッジは札の幅に収める
+     （入らなければ決定230 の規則どおり語の境目で折返し） */
+  body.battle-viewport .battle-main .god-otomo-plate .god-passive-badge {
+    flex: 0 1 auto;
+    margin: 0;
+  }
+}
+
+/* SP 縦長（≥761px 高・S-1）：龍神は 7 神 × 龍神 の神÷敵を 0.9〜1.15 に収める幅（8.50〜8.58％・390×844 実測）→ 1.103（1.10 は才華 1.152） */
+@media (max-width: 899px) and (min-height: 761px) {
+  body.battle-viewport .enemy-panel[data-enemy='enemy_06'] {
+    --artScale: 1.103;
+  }
+}
+
+/* ============================================================
    決定254 Game Entry「降臨の間」Pilot（docs/GAME_ENTRY_IMMERSION_PREFLIGHT.md §4〜§7・C3）
    暗転 → 神紋 → 選んだ神の降臨 → 舞台と敵の顕現（対峙）→ HUD 開示。時刻は BossEntrance.tsx の
    BATTLE_ENTRANCE_TIMING と一致させる（Full 2.8s／操作 2.4s・Short 1.5s／1.15s・reduced 0.9s／0.72s・skip 0.2s）。
