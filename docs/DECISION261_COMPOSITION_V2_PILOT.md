@@ -150,3 +150,15 @@ SP は既存の `--d229-*` の**式の形を保ったまま値だけ**上書き�
 - `git diff --stat 694dd0b -- src/core`：0 行／`combatTimeline.ts`・`enemyVfxTiming.ts`・`battleEntrance.ts`：0 行／画像・数値・TSX：0 行。変更は `battle.css` 1 ブロック（+195 行）のみ
 - build JS md5＝Production `e6c26c81…`（同一）
 - commit：`5191c3d`（CSS）→ 以降 docs のみ。push／merge／deploy 0。一時 FW 0。ロックディレクトリ空
+
+## §9. CEO Human QA（2026-10-03）— PASS 4/4
+
+| # | 質問 | 回答 |
+|---|---|---|
+| Q1 | 敵は神の方を向いているか（立ち絵＋必殺のカットイン） | **YES** |
+| Q2 | 敵と神はカードより大きく、戦って見えるか（PC／iPhone） | **YES** |
+| Q3 | OTOMO は相棒として邪魔にならない大きさ・位置か | **YES** |
+| Q4 | 名札・手札は読みにくくなっていないか | **YES** |
+
+- 対象 build：`e2a5ea9`（After `:4302`・JS `e6c26c81…`＝Production・CSS `index-BE9_YcYs.css` `e0f4ae5f…`）／Before `:4301`（master `694dd0b` の clean build）
+- CEO 指示：対峙構図 v2 を **正式採用（決定261）** → Release Gate → master 統合 → push → Vercel deploy → Production Smoke → PC／SP の最低限の Regression → PRODUCTION LIVE / CLOSED。runtime は決定261 の変更だけ（Hand Decision Density Audit からの runtime 変更は混入させない）
