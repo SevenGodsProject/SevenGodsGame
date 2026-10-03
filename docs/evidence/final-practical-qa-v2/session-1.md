@@ -53,4 +53,31 @@ Home から始めて、好きな神と敵を選び、普段どおりに 1 戦し
 ## 6. Triage 入力（§7 へ）
 - 所感①「考えなくても勝てる」→ Primary Fun「解く」の設計課題。`docs/HAND_DECISION_DENSITY_AUDIT.md`（SUPPORTED・Root Cause＝AP 曲線が手札総コストを追い越す）→ 決定260 候補「AP 後半の平準化」Preflight（CEO：Preflight のみ GO）。BLOCKER／MUST ではない（determinism・save・fairness・進行に無関係）
 - 所感②「敵が左向き」「敵と神がカードより小さい」→ presentation。`docs/BATTLE_CHARACTER_COMPOSITION_V2_PREFLIGHT.md` → 決定261「対峙構図 v2」Pilot → CEO Human QA 4/4 → PRODUCTION LIVE（2026-10-03）
-- Session 3（Daily・別日）：**未完了**
+- Session 3（Daily・別日）：**完了（2026-10-03）**＝ `session-3.md`。Session 1〜3 の Closeout＝`docs/FINAL_PRACTICAL_QA_CLOSEOUT.md`
+
+## 7. 正式回答（CEO・Closeout で受領・2026-10-03）
+
+### Session 1（2026-10-02・PC・初見に近い 1 戦）
+- 所感：「対戦画面がかなりかっこよくなった。特に必殺技のカットインがいい。あとはカードの画像の質を揃えたいのと敵が左をむいているのを直したい。」
+| # | 質問 | 回答 |
+|---|---|---|
+| Q1 | 戦闘は楽しいか | YES |
+| Q2 | 敵の予告で行動を変えたか | YES |
+| Q3 | 敵の必殺は危険に感じたか | YES |
+| Q4 | 託宣のタイミングを考えたか | YES |
+| Q5 | 神の一撃は気持ちよかったか | YES |
+| Q6 | もう 1 戦したいか | YES |
+＝ **6/6 YES**
+
+### Session 2（2026-10-02・別の神 × 別の敵）
+- 所感：「敵と神の大きさがカードより小さく感じる。OTOMO をもう少し小さくして敵と神の画像を大きくして戦っている臨場感を出せたら最高」
+| # | 質問 | 回答 |
+|---|---|---|
+| Q1 | 予告で行動を変えたか | YES |
+| Q2 | 手札によって今回はどう戦おうと考えたか | **NO** |
+| Q3 | 託宣を使う／温存の判断をしたか | YES |
+| Q4 | 敵の必殺を別の脅威として感じたか | YES |
+| Q5 | 神・敵による戦い方の違いを感じたか | YES |
+| Q6 | 危険・敗北理由を理解できたか | YES |
+＝ **5/6 YES**（Q2 NO → Hand Decision Density Audit → 決定260 Preflight NO-GO。観察は OPEN＝CLOSEOUT §3 B）
+- 所感 → 決定261「対峙構図 v2」（Human QA 4/4・LIVE）

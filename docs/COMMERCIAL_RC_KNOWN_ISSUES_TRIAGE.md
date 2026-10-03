@@ -15,7 +15,7 @@
 | 項目 | 内容 |
 |---|---|
 | 既知問題の総数 | **31 件**（重複除去後）。A BLOCKER **0**（仮・M3 判定待ち 6 件を除く）／B MUST FIX BEFORE RC **2**（いずれも「対応＝記録・確認」で runtime 変更なし）／C CAN SHIP・FOLLOW-UP **17**／D DEFERRED・BLOCKED **12** |
-| M3 判定待ち | 6 件（determinism・save・Daily・mobile 表示・音・Entry の各 Gate。§2 の「M3」列） |
+| M3 判定待ち | 6 件 → **M3（`COMMERCIAL_RC_PREGATE.md`）で実測・すべて C に確定**（G7 dropped＝K23・G19 入口時刻＝K01 は既知の再現・新規回帰 0）。§7 参照 |
 | RC 判断ルール（§3） | BLOCKER／MUST に上げるのは「解く」不成立・determinism 破壊・save 破損・fairness 重大・進行不能・入力不能・重大なモバイル崩れ・重大な音声障害・再現性の高いクラッシュ **のみ**。見た目・追加演出・将来機能は C か D |
 | 判断テンプレート | §5（Final Practical QA v2 の直後に AI が埋め、CEO が GO／HOLD を記入） |
 
@@ -150,3 +150,38 @@ HOLD の場合の再開条件：
 - 実行：2026-10-02（worktree `C:/Users/kimi1/SevenGodsGame-rwa`・branch `docs/rc-pregate-m2-ledger`・親 `593f33d`・base `3b8d739`）
 - `git status --porcelain`：`?? docs/COMMERCIAL_RC_KNOWN_ISSUES_TRIAGE.md` の 1 行のみ／`git diff --stat 3b8d739 -- src public package.json`：0 行
 - ブラウザ・vitest・build・simulation・server・生成・外部サービス・push・DECISIONS 編集・M3 worktree：0
+
+## 7. Final Practical QA v2 Closeout（2026-10-03）— 追加項目と確定分類
+
+Session 1〜3 の CEO 所感から追加した項目（詳細＝`docs/FINAL_PRACTICAL_QA_CLOSEOUT.md` §3）：
+
+| # | 既知問題 | 出典【CEO】 | 分類 | 根拠 |
+|---|---|---|---|---|
+| K32 | **A Card Art Unity**：60 枚の画像品質・画風・premium 感の統一（決定243「豪快な一撃」v2 と既存 59 枚の差） | S1「カードの画像の質を揃えたい」 | **D（POST-RC）** | asset 側・CEO 生成・台帳。Primary Fun／determinism／fairness に無関係 |
+| K33 | **B Card Decision Meaning**：カード選択が勝敗に効きにくい（randomRO＝reader） | S2 Q2 NO | **D（POST-RC・OPEN・設計研究）** | 決定255／260 で数値解なし。「解く」は成立（S1 Q2・S2 Q1 YES）。残る lever＝「答えの可視化」か設計レベルの判断（CEO） |
+| K34 | **C Battle Composition v3 — Duel HUD**：神 vs 敵の相対 scale（S3「アンバランス」）・HP／名札／ゲージの帰属（S3「ゲージの場所」） | S3 | **C（CAN SHIP・RC 1 回の昇格枠候補 #1）** | 決定261 Human QA 4/4 の次段階。相対 scale は敵原画の余白（trim）由来＝CSS の `--artScale` 正規化で v3-lite 可。ゲージ再配置は Preflight が必要 |
+| K35 | **D Battle Voice Layer**：Battle Start／Enemy Ultimate／God Strike／Victory の短い voice（7 神の台詞・7 敵の台詞／咆哮／機械音・模倣なし） | S3 | **D（POST-RC・NEEDS CEO）** | 権利・生成方式・費用（§6-3 #5／#6）。決定257 の duck 経路が受け皿。未生成・未実装 |
+| K02（更新） | iOS 割り込み後の BGM 再開 | Session 3 に証拠なし | **B（確認のみ）→ RC 前の Device Check 5 分** | 推測で PASS にしない。NO なら修正、YES なら Known 削除 |
+| K13（更新） | 台帳 UNKNOWN | — | **C（UNKNOWN／unverifiable 維持）** | CEO に推測入力を求めない・BLOCKER 化しない |
+
+### 7-1. 確定集計（Closeout 時点）
+A BLOCKER **0**／B MUST FIX BEFORE RC **1**（K02 確認のみ）／C CAN SHIP（K01・K03〜K05・K09・K10・K13・K14・K15・K18〜K29・K31・K34・決定261 Known）／D POST-RC・BLOCKED（K06〜K08・K11・K12・K16・K17・K30・K32・K33・K35）
+
+### 7-2. 判断テンプレート（§5）の記入
+```
+【COMMERCIAL RC DECISION — Final Practical QA v2 後】
+対象：Production master cce3bb4／runtime 8cba184／Vercel 6820829725
+M3 Regression Gate：PASS 17/19・FAIL 2（既知 K23／K01）・未計測 0（GF Ranking＝future gate）
+Final QA v2：Session 1 2026-10-02 PC／Session 2 2026-10-02 PC／Session 3 2026-10-03 Daily iPhone
+一番気になったこと（CEO の言葉）：S1 カード画像の質／敵の向き・S2 敵と神がカードより小さい・S3 敵と神のバランス／ゲージの場所／声
+Q：S1 6/6 YES・S2 5/6 YES（Q2 NO）・critical NO 0
+
+BLOCKER: なし
+MUST FIX: K02 iOS 割り込み後の BGM 再開（未確認・Device Check 5 分・runtime 変更なし）
+CAN SHIP: K34 Duel HUD／相対 scale（昇格枠候補 #1）・K01・K13・K23／K24・決定261 Known
+DEFER: K32 Card Art Unity・K33 Card Decision Meaning・K35 Voice Layer・Home・敵アート・Daily spread・Ranking・局所 outlier
+
+Exit Criteria：P0 0／P1 0（K02 確認のみ）／deterministic mismatch 0／console 0／save corruption 0／unrecoverable 0／input penetration 0／横スクロール 0／critical NO 0／台帳 ✓／Known Issues 承認 → CEO
+COMMERCIAL RC EXIT: GO（AI 推奨）← CEO が記入
+HOLD の場合の再開条件：K02 Device Check で BGM が戻らない場合のみ（bgm.ts 再開経路の修正 → Fast Gate → Human QA 1 問）
+```

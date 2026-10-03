@@ -1,9 +1,10 @@
 # Final Practical QA v2 — ゼノちゃん本人が「普通に遊んで」確かめる最終 Human QA 手順
 
-- 日付：2026-10-02
+- 日付：2026-10-02（手順書）／2026-10-03 **Session 1〜3 COMPLETE**
+- 状態：**COMPLETE**。結果・Triage・RC 判定は `docs/FINAL_PRACTICAL_QA_CLOSEOUT.md`（S1 6/6・S2 5/6（Q2 NO）・S3 Daily 実施・RC 判定 GO（AI 推奨・CEO 承認待ち）・K02 は未確認＝Device Check へ）。evidence：`docs/evidence/final-practical-qa-v2/session-1.md`（S1・S2）・`session-3.md`
 - 種別：**docs-only**（QA の手順書。テストの実行ではない。runtime・src・public・Production：変更 0。ブラウザ・vitest・build・simulation・server：使用 0）
 - 位置づけ：`docs/FINAL_PRACTICAL_QA_COMMERCIAL_RC_PREFLIGHT.md`（v1＝設計）を、決定246〜257 の改善と `docs/POST_D257_REMAINING_WORK_AUDIT.md` を反映して **実施用の手順**に書き直したもの。Regression Gate（G1〜G19）・Exit Criteria・Triage の基準は v1 と矛盾させない（v1 を正とし、本書は実施面だけを定める）
-- 前提の状態：決定246〜254 は PRODUCTION LIVE／決定255 は NO-GO で CLOSED（runtime 変更なし）／**決定257 Sound Layer v1 は Human QA 4/4 PASS・Release 進行中（CLOSED とは断定しない）**／決定259 Daily 神間 spread は PARTIAL（未検証部分は本書に書かない）／Ranking は READY-DORMANT（本書に Ranking UI の評価は含めない）／Home の動き・敵アート・Voice は Final QA の必須完成条件に **含めない**
+- 前提の状態（実施時点で更新）：決定246〜254 PRODUCTION LIVE／決定255 NO-GO CLOSED／決定257 Sound Layer v1 PRODUCTION LIVE／**決定261 対峙構図 v2 PRODUCTION LIVE（Session 2 の所感を受けて Session 3 の前に Release）**／決定260 AP Flattening NO-GO CLOSED／決定259 Daily 神間 spread は PARTIAL（未検証部分は本書に書かない）／Ranking は READY-DORMANT（本書に Ranking UI の評価は含めない）／Home の動き・敵アート・Voice は Final QA の必須完成条件に **含めない**
 - 原則：**最初は普通のプレイヤーとして自然に遊ぶ**。チェック項目はプレイ中に見ない。遊び終わってから自由感想 → 最大 10 問 → Triage の順
 
 ---
