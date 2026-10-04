@@ -1,0 +1,2919 @@
+[
+ {
+  "key": "after-pc660-taiyo-oni",
+  "side": "after",
+  "vp": "pc660",
+  "god": "taiyo",
+  "enemy": "oni",
+  "mem": 1430,
+  "pseudo": {
+   "ringEnemy": "none",
+   "ringGod": "none",
+   "ringOtomo": "none",
+   "cornerEnemy": "none",
+   "cornerGod": "none",
+   "cornerReso": "none",
+   "groundEnemy": "\"\"",
+   "groundGod": "\"\"",
+   "plateEnemy": {
+    "bg": "linear-gradient(90deg, rgba(5, 6, 13, 0.8) 0%, rgba(5, 6, 13, 0.6) 70%, rgba(5, 6, 13, 0) ",
+    "border": "rgba(0, 0, 0, 0)",
+    "radius": "0px",
+    "shadow": "none"
+   },
+   "plateGod": {
+    "bg": "linear-gradient(270deg, rgba(5, 6, 13, 0.8) 0%, rgba(5, 6, 13, 0.6) 70%, rgba(5, 6, 13, 0)",
+    "border": "rgba(0, 0, 0, 0)",
+    "radius": "0px",
+    "shadow": "none"
+   },
+   "plateReso": {
+    "bg": "linear-gradient(270deg, rgba(5, 6, 13, 0.8) 0%, rgba(5, 6, 13, 0.6) 70%, rgba(5, 6, 13, 0)",
+    "border": "rgba(0, 0, 0, 0)",
+    "radius": "0px",
+    "shadow": "none"
+   },
+   "wound": {
+    "enemy-wound-half": {
+     "w": 210,
+     "h": 51,
+     "bottomFromStage": -15,
+     "radius": "50%",
+     "bg": "radial-gradient(rgba(255, 59, 59, 0.19) 0%, rgba(0, 0, 0, 0) 62%)"
+    },
+    "enemy-wound-quarter": {
+     "w": 210,
+     "h": 51,
+     "bottomFromStage": -15,
+     "radius": "50%",
+     "bg": "radial-gradient(rgba(255, 59, 59, 0.333) 0%, rgba(255, 59, 59, 0.11) 4"
+    }
+   },
+   "hp": [
+    [
+     307,
+     18
+    ],
+    [
+     219,
+     18
+    ],
+    [
+     217,
+     12
+    ]
+   ],
+   "intentBox": {
+    "h": 25,
+    "fontSize": "20px",
+    "lineHeight": "25px",
+    "cls": "intent"
+   }
+  },
+  "contrast": {
+   "enemyName": {
+    "color": "rgb(232, 233, 243)",
+    "Lt": 0.819,
+    "bgMedian": 0.0024,
+    "bgP95": 0.0031,
+    "crMedian": 16.57,
+    "crP95": 16.36
+   },
+   "enemyType": {
+    "color": "rgb(255, 209, 102)",
+    "Lt": 0.678,
+    "bgMedian": 0.0034,
+    "bgP95": 0.0057,
+    "crMedian": 13.64,
+    "crP95": 13.09
+   },
+   "intent": {
+    "color": "rgb(255, 180, 180)",
+    "Lt": 0.572,
+    "bgMedian": 0.0028,
+    "bgP95": 0.0034,
+    "crMedian": 11.79,
+    "crP95": 11.65
+   },
+   "godName": {
+    "color": "rgb(232, 233, 243)",
+    "Lt": 0.819,
+    "bgMedian": 0.0025,
+    "bgP95": 0.0028,
+    "crMedian": 16.54,
+    "crP95": 16.45
+   },
+   "burstHead": {
+    "color": "rgb(255, 233, 176)",
+    "Lt": 0.827,
+    "bgMedian": 0.0047,
+    "bgP95": 0.0058,
+    "crMedian": 16.03,
+    "crP95": 15.7
+   },
+   "enemyHpLabel": {
+    "color": "rgb(232, 233, 243)",
+    "Lt": 0.819,
+    "bgMedian": 0.2183,
+    "bgP95": 0.2939,
+    "crMedian": 3.24,
+    "crP95": 2.53
+   },
+   "godHpLabel": {
+    "color": "rgb(232, 233, 243)",
+    "Lt": 0.819,
+    "bgMedian": 0.3923,
+    "bgP95": 0.4767,
+    "crMedian": 1.96,
+    "crP95": 1.65
+   },
+   "resoLabel": {
+    "color": "rgb(232, 233, 243)",
+    "Lt": 0.819,
+    "bgMedian": 0.0051,
+    "bgP95": 0.0317,
+    "crMedian": 15.76,
+    "crP95": 10.63
+   },
+   "passive": null
+  },
+  "reso": [
+   {
+    "v": 0,
+    "cls": "resonance-gauge-wrap",
+    "afterOpacity": "0",
+    "afterShadow": "none",
+    "afterAnim": "none",
+    "gaugeAnim": "none",
+    "fillW": 0,
+    "gaugeW": 217,
+    "gaugeH": 12,
+    "fillRatio": 0,
+    "ticks": "repeating-linear-gradient(90deg, rgba(0,"
+   },
+   {
+    "v": 1,
+    "cls": "resonance-gauge-wrap",
+    "afterOpacity": "0",
+    "afterShadow": "none",
+    "afterAnim": "none",
+    "gaugeAnim": "none",
+    "fillW": 31,
+    "gaugeW": 217,
+    "gaugeH": 12,
+    "fillRatio": 0.143,
+    "ticks": "repeating-linear-gradient(90deg, rgba(0,"
+   },
+   {
+    "v": 2,
+    "cls": "resonance-gauge-wrap",
+    "afterOpacity": "0",
+    "afterShadow": "none",
+    "afterAnim": "none",
+    "gaugeAnim": "none",
+    "fillW": 62,
+    "gaugeW": 217,
+    "gaugeH": 12,
+    "fillRatio": 0.286,
+    "ticks": "repeating-linear-gradient(90deg, rgba(0,"
+   },
+   {
+    "v": 3,
+    "cls": "resonance-gauge-wrap",
+    "afterOpacity": "0",
+    "afterShadow": "none",
+    "afterAnim": "none",
+    "gaugeAnim": "none",
+    "fillW": 93,
+    "gaugeW": 217,
+    "gaugeH": 12,
+    "fillRatio": 0.429,
+    "ticks": "repeating-linear-gradient(90deg, rgba(0,"
+   },
+   {
+    "v": 4,
+    "cls": "resonance-gauge-wrap",
+    "afterOpacity": "0",
+    "afterShadow": "none",
+    "afterAnim": "none",
+    "gaugeAnim": "none",
+    "fillW": 124,
+    "gaugeW": 217,
+    "gaugeH": 12,
+    "fillRatio": 0.571,
+    "ticks": "repeating-linear-gradient(90deg, rgba(0,"
+   },
+   {
+    "v": 5,
+    "cls": "resonance-gauge-wrap resonance-gauge-mid",
+    "afterOpacity": "0.45",
+    "afterShadow": "rgba(255, 209, 102, 0.6) 0px 0px 10px 1px",
+    "afterAnim": "none",
+    "gaugeAnim": "none",
+    "fillW": 155,
+    "gaugeW": 217,
+    "gaugeH": 12,
+    "fillRatio": 0.714,
+    "ticks": "repeating-linear-gradient(90deg, rgba(0,"
+   },
+   {
+    "v": 6,
+    "cls": "resonance-gauge-wrap resonance-gauge-high",
+    "afterOpacity": "0.5",
+    "afterShadow": "rgba(255, 209, 102, 0.8) 0px 0px 16px 2px",
+    "afterAnim": "arena-glow-breathe",
+    "gaugeAnim": "none",
+    "fillW": 186,
+    "gaugeW": 217,
+    "gaugeH": 12,
+    "fillRatio": 0.857,
+    "ticks": "repeating-linear-gradient(90deg, rgba(0,"
+   },
+   {
+    "v": 7,
+    "cls": "resonance-gauge-wrap resonance-gauge-high resonance-gauge-ready-flash",
+    "afterOpacity": "0.585708",
+    "afterShadow": "rgba(255, 209, 102, 0.8) 0px 0px 16px 2px",
+    "afterAnim": "arena-glow-breathe",
+    "gaugeAnim": "resonance-ready-flash",
+    "fillW": 222.2,
+    "gaugeW": 222.2,
+    "gaugeH": 12.3,
+    "fillRatio": 1,
+    "ticks": "repeating-linear-gradient(90deg, rgba(0,"
+   }
+  ],
+  "errors": []
+ },
+ {
+  "key": "after-pc660-taiyo-karakuri",
+  "side": "after",
+  "vp": "pc660",
+  "god": "taiyo",
+  "enemy": "karakuri",
+  "mem": 1371,
+  "pseudo": {
+   "ringEnemy": "none",
+   "ringGod": "none",
+   "ringOtomo": "none",
+   "cornerEnemy": "none",
+   "cornerGod": "none",
+   "cornerReso": "none",
+   "groundEnemy": "\"\"",
+   "groundGod": "\"\"",
+   "plateEnemy": {
+    "bg": "linear-gradient(90deg, rgba(5, 6, 13, 0.8) 0%, rgba(5, 6, 13, 0.6) 70%, rgba(5, 6, 13, 0) ",
+    "border": "rgba(0, 0, 0, 0)",
+    "radius": "0px",
+    "shadow": "none"
+   },
+   "plateGod": {
+    "bg": "linear-gradient(270deg, rgba(5, 6, 13, 0.8) 0%, rgba(5, 6, 13, 0.6) 70%, rgba(5, 6, 13, 0)",
+    "border": "rgba(0, 0, 0, 0)",
+    "radius": "0px",
+    "shadow": "none"
+   },
+   "plateReso": {
+    "bg": "linear-gradient(270deg, rgba(5, 6, 13, 0.8) 0%, rgba(5, 6, 13, 0.6) 70%, rgba(5, 6, 13, 0)",
+    "border": "rgba(0, 0, 0, 0)",
+    "radius": "0px",
+    "shadow": "none"
+   },
+   "wound": {
+    "enemy-wound-half": {
+     "w": 210,
+     "h": 51,
+     "bottomFromStage": -15,
+     "radius": "50%",
+     "bg": "radial-gradient(rgba(255, 59, 59, 0.19) 0%, rgba(0, 0, 0, 0) 62%)"
+    },
+    "enemy-wound-quarter": {
+     "w": 210,
+     "h": 51,
+     "bottomFromStage": -15,
+     "radius": "50%",
+     "bg": "radial-gradient(rgba(255, 59, 59, 0.333) 0%, rgba(255, 59, 59, 0.11) 4"
+    }
+   },
+   "hp": [
+    [
+     307,
+     18
+    ],
+    [
+     219,
+     18
+    ],
+    [
+     217,
+     12
+    ]
+   ],
+   "intentBox": {
+    "h": 25,
+    "fontSize": "20px",
+    "lineHeight": "25px",
+    "cls": "intent"
+   }
+  },
+  "contrast": {
+   "enemyName": {
+    "color": "rgb(232, 233, 243)",
+    "Lt": 0.819,
+    "bgMedian": 0.0039,
+    "bgP95": 0.0209,
+    "crMedian": 16.13,
+    "crP95": 12.26
+   },
+   "enemyType": {
+    "color": "rgb(255, 209, 102)",
+    "Lt": 0.678,
+    "bgMedian": 0.0043,
+    "bgP95": 0.0126,
+    "crMedian": 13.4,
+    "crP95": 11.64
+   },
+   "intent": {
+    "color": "rgb(255, 180, 180)",
+    "Lt": 0.572,
+    "bgMedian": 0.0029,
+    "bgP95": 0.0044,
+    "crMedian": 11.77,
+    "crP95": 11.42
+   },
+   "godName": {
+    "color": "rgb(232, 233, 243)",
+    "Lt": 0.819,
+    "bgMedian": 0.0038,
+    "bgP95": 0.0073,
+    "crMedian": 16.15,
+    "crP95": 15.17
+   },
+   "burstHead": {
+    "color": "rgb(255, 233, 176)",
+    "Lt": 0.827,
+    "bgMedian": 0.0043,
+    "bgP95": 0.0132,
+    "crMedian": 16.14,
+    "crP95": 13.88
+   },
+   "enemyHpLabel": {
+    "color": "rgb(232, 233, 243)",
+    "Lt": 0.819,
+    "bgMedian": 0.2183,
+    "bgP95": 0.2939,
+    "crMedian": 3.24,
+    "crP95": 2.53
+   },
+   "godHpLabel": {
+    "color": "rgb(232, 233, 243)",
+    "Lt": 0.819,
+    "bgMedian": 0.3923,
+    "bgP95": 0.4767,
+    "crMedian": 1.96,
+    "crP95": 1.65
+   },
+   "resoLabel": {
+    "color": "rgb(232, 233, 243)",
+    "Lt": 0.819,
+    "bgMedian": 0.0051,
+    "bgP95": 0.0317,
+    "crMedian": 15.76,
+    "crP95": 10.63
+   },
+   "passive": null
+  },
+  "reso": [
+   {
+    "v": 0,
+    "cls": "resonance-gauge-wrap",
+    "afterOpacity": "0",
+    "afterShadow": "none",
+    "afterAnim": "none",
+    "gaugeAnim": "none",
+    "fillW": 0,
+    "gaugeW": 217,
+    "gaugeH": 12,
+    "fillRatio": 0,
+    "ticks": "repeating-linear-gradient(90deg, rgba(0,"
+   },
+   {
+    "v": 1,
+    "cls": "resonance-gauge-wrap",
+    "afterOpacity": "0",
+    "afterShadow": "none",
+    "afterAnim": "none",
+    "gaugeAnim": "none",
+    "fillW": 31,
+    "gaugeW": 217,
+    "gaugeH": 12,
+    "fillRatio": 0.143,
+    "ticks": "repeating-linear-gradient(90deg, rgba(0,"
+   },
+   {
+    "v": 2,
+    "cls": "resonance-gauge-wrap",
+    "afterOpacity": "0",
+    "afterShadow": "none",
+    "afterAnim": "none",
+    "gaugeAnim": "none",
+    "fillW": 62,
+    "gaugeW": 217,
+    "gaugeH": 12,
+    "fillRatio": 0.286,
+    "ticks": "repeating-linear-gradient(90deg, rgba(0,"
+   },
+   {
+    "v": 3,
+    "cls": "resonance-gauge-wrap",
+    "afterOpacity": "0",
+    "afterShadow": "none",
+    "afterAnim": "none",
+    "gaugeAnim": "none",
+    "fillW": 93,
+    "gaugeW": 217,
+    "gaugeH": 12,
+    "fillRatio": 0.429,
+    "ticks": "repeating-linear-gradient(90deg, rgba(0,"
+   },
+   {
+    "v": 4,
+    "cls": "resonance-gauge-wrap",
+    "afterOpacity": "0",
+    "afterShadow": "none",
+    "afterAnim": "none",
+    "gaugeAnim": "none",
+    "fillW": 124,
+    "gaugeW": 217,
+    "gaugeH": 12,
+    "fillRatio": 0.571,
+    "ticks": "repeating-linear-gradient(90deg, rgba(0,"
+   },
+   {
+    "v": 5,
+    "cls": "resonance-gauge-wrap resonance-gauge-mid",
+    "afterOpacity": "0.45",
+    "afterShadow": "rgba(255, 209, 102, 0.6) 0px 0px 10px 1px",
+    "afterAnim": "none",
+    "gaugeAnim": "none",
+    "fillW": 155,
+    "gaugeW": 217,
+    "gaugeH": 12,
+    "fillRatio": 0.714,
+    "ticks": "repeating-linear-gradient(90deg, rgba(0,"
+   },
+   {
+    "v": 6,
+    "cls": "resonance-gauge-wrap resonance-gauge-high",
+    "afterOpacity": "0.500792",
+    "afterShadow": "rgba(255, 209, 102, 0.8) 0px 0px 16px 2px",
+    "afterAnim": "arena-glow-breathe",
+    "gaugeAnim": "none",
+    "fillW": 186,
+    "gaugeW": 217,
+    "gaugeH": 12,
+    "fillRatio": 0.857,
+    "ticks": "repeating-linear-gradient(90deg, rgba(0,"
+   },
+   {
+    "v": 7,
+    "cls": "resonance-gauge-wrap resonance-gauge-high resonance-gauge-ready-flash",
+    "afterOpacity": "0.603114",
+    "afterShadow": "rgba(255, 209, 102, 0.8) 0px 0px 16px 2px",
+    "afterAnim": "arena-glow-breathe",
+    "gaugeAnim": "resonance-ready-flash",
+    "fillW": 222.2,
+    "gaugeW": 222.2,
+    "gaugeH": 12.3,
+    "fillRatio": 1,
+    "ticks": "repeating-linear-gradient(90deg, rgba(0,"
+   }
+  ],
+  "errors": []
+ },
+ {
+  "key": "after-pc660-taiyo-ryujin",
+  "side": "after",
+  "vp": "pc660",
+  "god": "taiyo",
+  "enemy": "ryujin",
+  "mem": 1368,
+  "pseudo": {
+   "ringEnemy": "none",
+   "ringGod": "none",
+   "ringOtomo": "none",
+   "cornerEnemy": "none",
+   "cornerGod": "none",
+   "cornerReso": "none",
+   "groundEnemy": "\"\"",
+   "groundGod": "\"\"",
+   "plateEnemy": {
+    "bg": "linear-gradient(90deg, rgba(5, 6, 13, 0.8) 0%, rgba(5, 6, 13, 0.6) 70%, rgba(5, 6, 13, 0) ",
+    "border": "rgba(0, 0, 0, 0)",
+    "radius": "0px",
+    "shadow": "none"
+   },
+   "plateGod": {
+    "bg": "linear-gradient(270deg, rgba(5, 6, 13, 0.8) 0%, rgba(5, 6, 13, 0.6) 70%, rgba(5, 6, 13, 0)",
+    "border": "rgba(0, 0, 0, 0)",
+    "radius": "0px",
+    "shadow": "none"
+   },
+   "plateReso": {
+    "bg": "linear-gradient(270deg, rgba(5, 6, 13, 0.8) 0%, rgba(5, 6, 13, 0.6) 70%, rgba(5, 6, 13, 0)",
+    "border": "rgba(0, 0, 0, 0)",
+    "radius": "0px",
+    "shadow": "none"
+   },
+   "wound": {
+    "enemy-wound-half": {
+     "w": 210,
+     "h": 51,
+     "bottomFromStage": -15,
+     "radius": "50%",
+     "bg": "radial-gradient(rgba(255, 59, 59, 0.19) 0%, rgba(0, 0, 0, 0) 62%)"
+    },
+    "enemy-wound-quarter": {
+     "w": 210,
+     "h": 51,
+     "bottomFromStage": -15,
+     "radius": "50%",
+     "bg": "radial-gradient(rgba(255, 59, 59, 0.333) 0%, rgba(255, 59, 59, 0.11) 4"
+    }
+   },
+   "hp": [
+    [
+     307,
+     18
+    ],
+    [
+     219,
+     18
+    ],
+    [
+     217,
+     12
+    ]
+   ],
+   "intentBox": {
+    "h": 25,
+    "fontSize": "20px",
+    "lineHeight": "25px",
+    "cls": "intent"
+   }
+  },
+  "contrast": {
+   "enemyName": {
+    "color": "rgb(232, 233, 243)",
+    "Lt": 0.819,
+    "bgMedian": 0.0039,
+    "bgP95": 0.0159,
+    "crMedian": 16.12,
+    "crP95": 13.19
+   },
+   "enemyType": {
+    "color": "rgb(255, 209, 102)",
+    "Lt": 0.678,
+    "bgMedian": 0.0148,
+    "bgP95": 0.0385,
+    "crMedian": 11.23,
+    "crP95": 8.23
+   },
+   "intent": {
+    "color": "rgb(255, 180, 180)",
+    "Lt": 0.572,
+    "bgMedian": 0.0064,
+    "bgP95": 0.0159,
+    "crMedian": 11.03,
+    "crP95": 9.44
+   },
+   "godName": {
+    "color": "rgb(232, 233, 243)",
+    "Lt": 0.819,
+    "bgMedian": 0.0039,
+    "bgP95": 0.0048,
+    "crMedian": 16.11,
+    "crP95": 15.86
+   },
+   "burstHead": {
+    "color": "rgb(255, 233, 176)",
+    "Lt": 0.827,
+    "bgMedian": 0.0075,
+    "bgP95": 0.0135,
+    "crMedian": 15.25,
+    "crP95": 13.8
+   },
+   "enemyHpLabel": {
+    "color": "rgb(232, 233, 243)",
+    "Lt": 0.819,
+    "bgMedian": 0.2183,
+    "bgP95": 0.2939,
+    "crMedian": 3.24,
+    "crP95": 2.53
+   },
+   "godHpLabel": {
+    "color": "rgb(232, 233, 243)",
+    "Lt": 0.819,
+    "bgMedian": 0.3923,
+    "bgP95": 0.4767,
+    "crMedian": 1.96,
+    "crP95": 1.65
+   },
+   "resoLabel": {
+    "color": "rgb(232, 233, 243)",
+    "Lt": 0.819,
+    "bgMedian": 0.0051,
+    "bgP95": 0.0317,
+    "crMedian": 15.76,
+    "crP95": 10.63
+   },
+   "passive": null
+  },
+  "reso": [
+   {
+    "v": 0,
+    "cls": "resonance-gauge-wrap",
+    "afterOpacity": "0",
+    "afterShadow": "none",
+    "afterAnim": "none",
+    "gaugeAnim": "none",
+    "fillW": 0,
+    "gaugeW": 217,
+    "gaugeH": 12,
+    "fillRatio": 0,
+    "ticks": "repeating-linear-gradient(90deg, rgba(0,"
+   },
+   {
+    "v": 1,
+    "cls": "resonance-gauge-wrap",
+    "afterOpacity": "0",
+    "afterShadow": "none",
+    "afterAnim": "none",
+    "gaugeAnim": "none",
+    "fillW": 31,
+    "gaugeW": 217,
+    "gaugeH": 12,
+    "fillRatio": 0.143,
+    "ticks": "repeating-linear-gradient(90deg, rgba(0,"
+   },
+   {
+    "v": 2,
+    "cls": "resonance-gauge-wrap",
+    "afterOpacity": "0",
+    "afterShadow": "none",
+    "afterAnim": "none",
+    "gaugeAnim": "none",
+    "fillW": 62,
+    "gaugeW": 217,
+    "gaugeH": 12,
+    "fillRatio": 0.286,
+    "ticks": "repeating-linear-gradient(90deg, rgba(0,"
+   },
+   {
+    "v": 3,
+    "cls": "resonance-gauge-wrap",
+    "afterOpacity": "0",
+    "afterShadow": "none",
+    "afterAnim": "none",
+    "gaugeAnim": "none",
+    "fillW": 93,
+    "gaugeW": 217,
+    "gaugeH": 12,
+    "fillRatio": 0.429,
+    "ticks": "repeating-linear-gradient(90deg, rgba(0,"
+   },
+   {
+    "v": 4,
+    "cls": "resonance-gauge-wrap",
+    "afterOpacity": "0",
+    "afterShadow": "none",
+    "afterAnim": "none",
+    "gaugeAnim": "none",
+    "fillW": 124,
+    "gaugeW": 217,
+    "gaugeH": 12,
+    "fillRatio": 0.571,
+    "ticks": "repeating-linear-gradient(90deg, rgba(0,"
+   },
+   {
+    "v": 5,
+    "cls": "resonance-gauge-wrap resonance-gauge-mid",
+    "afterOpacity": "0.45",
+    "afterShadow": "rgba(255, 209, 102, 0.6) 0px 0px 10px 1px",
+    "afterAnim": "none",
+    "gaugeAnim": "none",
+    "fillW": 155,
+    "gaugeW": 217,
+    "gaugeH": 12,
+    "fillRatio": 0.714,
+    "ticks": "repeating-linear-gradient(90deg, rgba(0,"
+   },
+   {
+    "v": 6,
+    "cls": "resonance-gauge-wrap resonance-gauge-high",
+    "afterOpacity": "0.5",
+    "afterShadow": "rgba(255, 209, 102, 0.8) 0px 0px 16px 2px",
+    "afterAnim": "arena-glow-breathe",
+    "gaugeAnim": "none",
+    "fillW": 186,
+    "gaugeW": 217,
+    "gaugeH": 12,
+    "fillRatio": 0.857,
+    "ticks": "repeating-linear-gradient(90deg, rgba(0,"
+   },
+   {
+    "v": 7,
+    "cls": "resonance-gauge-wrap resonance-gauge-high resonance-gauge-ready-flash",
+    "afterOpacity": "0.594271",
+    "afterShadow": "rgba(255, 209, 102, 0.8) 0px 0px 16px 2px",
+    "afterAnim": "arena-glow-breathe",
+    "gaugeAnim": "resonance-ready-flash",
+    "fillW": 222.2,
+    "gaugeW": 222.2,
+    "gaugeH": 12.3,
+    "fillRatio": 1,
+    "ticks": "repeating-linear-gradient(90deg, rgba(0,"
+   }
+  ],
+  "errors": []
+ },
+ {
+  "key": "after-pc660-sobi-ryujin",
+  "side": "after",
+  "vp": "pc660",
+  "god": "sobi",
+  "enemy": "ryujin",
+  "mem": 1368,
+  "pseudo": {
+   "ringEnemy": "none",
+   "ringGod": "none",
+   "ringOtomo": "none",
+   "cornerEnemy": "none",
+   "cornerGod": "none",
+   "cornerReso": "none",
+   "groundEnemy": "\"\"",
+   "groundGod": "\"\"",
+   "plateEnemy": {
+    "bg": "linear-gradient(90deg, rgba(5, 6, 13, 0.8) 0%, rgba(5, 6, 13, 0.6) 70%, rgba(5, 6, 13, 0) ",
+    "border": "rgba(0, 0, 0, 0)",
+    "radius": "0px",
+    "shadow": "none"
+   },
+   "plateGod": {
+    "bg": "linear-gradient(270deg, rgba(5, 6, 13, 0.8) 0%, rgba(5, 6, 13, 0.6) 70%, rgba(5, 6, 13, 0)",
+    "border": "rgba(0, 0, 0, 0)",
+    "radius": "0px",
+    "shadow": "none"
+   },
+   "plateReso": {
+    "bg": "linear-gradient(270deg, rgba(5, 6, 13, 0.8) 0%, rgba(5, 6, 13, 0.6) 70%, rgba(5, 6, 13, 0)",
+    "border": "rgba(0, 0, 0, 0)",
+    "radius": "0px",
+    "shadow": "none"
+   },
+   "wound": {
+    "enemy-wound-half": {
+     "w": 210,
+     "h": 51,
+     "bottomFromStage": -15,
+     "radius": "50%",
+     "bg": "radial-gradient(rgba(255, 59, 59, 0.19) 0%, rgba(0, 0, 0, 0) 62%)"
+    },
+    "enemy-wound-quarter": {
+     "w": 210,
+     "h": 51,
+     "bottomFromStage": -15,
+     "radius": "50%",
+     "bg": "radial-gradient(rgba(255, 59, 59, 0.333) 0%, rgba(255, 59, 59, 0.11) 4"
+    }
+   },
+   "hp": [
+    [
+     307,
+     18
+    ],
+    [
+     219,
+     18
+    ],
+    [
+     217,
+     12
+    ]
+   ],
+   "intentBox": {
+    "h": 25,
+    "fontSize": "20px",
+    "lineHeight": "25px",
+    "cls": "intent"
+   }
+  },
+  "contrast": {
+   "enemyName": {
+    "color": "rgb(232, 233, 243)",
+    "Lt": 0.819,
+    "bgMedian": 0.0039,
+    "bgP95": 0.0159,
+    "crMedian": 16.12,
+    "crP95": 13.19
+   },
+   "enemyType": {
+    "color": "rgb(255, 209, 102)",
+    "Lt": 0.678,
+    "bgMedian": 0.0148,
+    "bgP95": 0.0385,
+    "crMedian": 11.23,
+    "crP95": 8.23
+   },
+   "intent": {
+    "color": "rgb(255, 180, 180)",
+    "Lt": 0.572,
+    "bgMedian": 0.0064,
+    "bgP95": 0.0159,
+    "crMedian": 11.03,
+    "crP95": 9.44
+   },
+   "godName": {
+    "color": "rgb(232, 233, 243)",
+    "Lt": 0.819,
+    "bgMedian": 0.0039,
+    "bgP95": 0.0048,
+    "crMedian": 16.11,
+    "crP95": 15.86
+   },
+   "burstHead": {
+    "color": "rgb(255, 233, 176)",
+    "Lt": 0.827,
+    "bgMedian": 0.0075,
+    "bgP95": 0.0134,
+    "crMedian": 15.25,
+    "crP95": 13.83
+   },
+   "enemyHpLabel": {
+    "color": "rgb(232, 233, 243)",
+    "Lt": 0.819,
+    "bgMedian": 0.2183,
+    "bgP95": 0.2939,
+    "crMedian": 3.24,
+    "crP95": 2.53
+   },
+   "godHpLabel": {
+    "color": "rgb(232, 233, 243)",
+    "Lt": 0.819,
+    "bgMedian": 0.3923,
+    "bgP95": 0.4767,
+    "crMedian": 1.96,
+    "crP95": 1.65
+   },
+   "resoLabel": {
+    "color": "rgb(232, 233, 243)",
+    "Lt": 0.819,
+    "bgMedian": 0.0051,
+    "bgP95": 0.0317,
+    "crMedian": 15.76,
+    "crP95": 10.63
+   },
+   "passive": {
+    "color": "rgb(154, 163, 204)",
+    "Lt": 0.374,
+    "bgMedian": 0.0142,
+    "bgP95": 0.0302,
+    "crMedian": 6.61,
+    "crP95": 5.29
+   }
+  },
+  "reso": [
+   {
+    "v": 0,
+    "cls": "resonance-gauge-wrap",
+    "afterOpacity": "0",
+    "afterShadow": "none",
+    "afterAnim": "none",
+    "gaugeAnim": "none",
+    "fillW": 0,
+    "gaugeW": 217,
+    "gaugeH": 12,
+    "fillRatio": 0,
+    "ticks": "repeating-linear-gradient(90deg, rgba(0,"
+   },
+   {
+    "v": 1,
+    "cls": "resonance-gauge-wrap",
+    "afterOpacity": "0",
+    "afterShadow": "none",
+    "afterAnim": "none",
+    "gaugeAnim": "none",
+    "fillW": 31,
+    "gaugeW": 217,
+    "gaugeH": 12,
+    "fillRatio": 0.143,
+    "ticks": "repeating-linear-gradient(90deg, rgba(0,"
+   },
+   {
+    "v": 2,
+    "cls": "resonance-gauge-wrap",
+    "afterOpacity": "0",
+    "afterShadow": "none",
+    "afterAnim": "none",
+    "gaugeAnim": "none",
+    "fillW": 62,
+    "gaugeW": 217,
+    "gaugeH": 12,
+    "fillRatio": 0.286,
+    "ticks": "repeating-linear-gradient(90deg, rgba(0,"
+   },
+   {
+    "v": 3,
+    "cls": "resonance-gauge-wrap",
+    "afterOpacity": "0",
+    "afterShadow": "none",
+    "afterAnim": "none",
+    "gaugeAnim": "none",
+    "fillW": 93,
+    "gaugeW": 217,
+    "gaugeH": 12,
+    "fillRatio": 0.429,
+    "ticks": "repeating-linear-gradient(90deg, rgba(0,"
+   },
+   {
+    "v": 4,
+    "cls": "resonance-gauge-wrap",
+    "afterOpacity": "0",
+    "afterShadow": "none",
+    "afterAnim": "none",
+    "gaugeAnim": "none",
+    "fillW": 124,
+    "gaugeW": 217,
+    "gaugeH": 12,
+    "fillRatio": 0.571,
+    "ticks": "repeating-linear-gradient(90deg, rgba(0,"
+   },
+   {
+    "v": 5,
+    "cls": "resonance-gauge-wrap resonance-gauge-mid",
+    "afterOpacity": "0.45",
+    "afterShadow": "rgba(255, 209, 102, 0.6) 0px 0px 10px 1px",
+    "afterAnim": "none",
+    "gaugeAnim": "none",
+    "fillW": 155,
+    "gaugeW": 217,
+    "gaugeH": 12,
+    "fillRatio": 0.714,
+    "ticks": "repeating-linear-gradient(90deg, rgba(0,"
+   },
+   {
+    "v": 6,
+    "cls": "resonance-gauge-wrap resonance-gauge-high",
+    "afterOpacity": "0.50321",
+    "afterShadow": "rgba(255, 209, 102, 0.8) 0px 0px 16px 2px",
+    "afterAnim": "arena-glow-breathe",
+    "gaugeAnim": "none",
+    "fillW": 186,
+    "gaugeW": 217,
+    "gaugeH": 12,
+    "fillRatio": 0.857,
+    "ticks": "repeating-linear-gradient(90deg, rgba(0,"
+   },
+   {
+    "v": 7,
+    "cls": "resonance-gauge-wrap resonance-gauge-high resonance-gauge-ready-flash",
+    "afterOpacity": "0.603122",
+    "afterShadow": "rgba(255, 209, 102, 0.8) 0px 0px 16px 2px",
+    "afterAnim": "arena-glow-breathe",
+    "gaugeAnim": "resonance-ready-flash",
+    "fillW": 222.2,
+    "gaugeW": 222.2,
+    "gaugeH": 12.3,
+    "fillRatio": 1,
+    "ticks": "repeating-linear-gradient(90deg, rgba(0,"
+   }
+  ],
+  "errors": []
+ },
+ {
+  "key": "after-sp844-taiyo-oni",
+  "side": "after",
+  "vp": "sp844",
+  "god": "taiyo",
+  "enemy": "oni",
+  "mem": 1350,
+  "pseudo": {
+   "ringEnemy": "none",
+   "ringGod": "none",
+   "ringOtomo": "none",
+   "cornerEnemy": "none",
+   "cornerGod": "none",
+   "cornerReso": "none",
+   "groundEnemy": "\"\"",
+   "groundGod": "\"\"",
+   "plateEnemy": {
+    "bg": "linear-gradient(90deg, rgba(5, 6, 13, 0.8) 0%, rgba(5, 6, 13, 0.6) 70%, rgba(5, 6, 13, 0) ",
+    "border": "rgba(0, 0, 0, 0)",
+    "radius": "0px",
+    "shadow": "none"
+   },
+   "plateGod": {
+    "bg": "linear-gradient(270deg, rgba(5, 6, 13, 0.8) 0%, rgba(5, 6, 13, 0.6) 70%, rgba(5, 6, 13, 0)",
+    "border": "rgba(0, 0, 0, 0)",
+    "radius": "0px",
+    "shadow": "none"
+   },
+   "plateReso": {
+    "bg": "linear-gradient(270deg, rgba(5, 6, 13, 0.8) 0%, rgba(5, 6, 13, 0.6) 70%, rgba(5, 6, 13, 0)",
+    "border": "rgba(0, 0, 0, 0)",
+    "radius": "0px",
+    "shadow": "none"
+   },
+   "wound": {
+    "enemy-wound-half": {
+     "w": 143,
+     "h": 37,
+     "bottomFromStage": -11,
+     "radius": "50%",
+     "bg": "radial-gradient(rgba(255, 59, 59, 0.19) 0%, rgba(0, 0, 0, 0) 62%)"
+    },
+    "enemy-wound-quarter": {
+     "w": 143,
+     "h": 37,
+     "bottomFromStage": -11,
+     "radius": "50%",
+     "bg": "radial-gradient(rgba(255, 59, 59, 0.333) 0%, rgba(255, 59, 59, 0.11) 4"
+    }
+   },
+   "hp": [
+    [
+     154.5,
+     18
+    ],
+    [
+     137.5,
+     18
+    ],
+    [
+     133.5,
+     12
+    ]
+   ],
+   "intentBox": {
+    "h": 21.3,
+    "fontSize": "17px",
+    "lineHeight": "21.25px",
+    "cls": "intent"
+   }
+  },
+  "contrast": {
+   "enemyName": {
+    "color": "rgb(232, 233, 243)",
+    "Lt": 0.819,
+    "bgMedian": 0.0046,
+    "bgP95": 0.0076,
+    "crMedian": 15.92,
+    "crP95": 15.08
+   },
+   "enemyType": null,
+   "intent": {
+    "color": "rgb(255, 180, 180)",
+    "Lt": 0.572,
+    "bgMedian": 0.0067,
+    "bgP95": 0.0096,
+    "crMedian": 10.96,
+    "crP95": 10.44
+   },
+   "godName": {
+    "color": "rgb(232, 233, 243)",
+    "Lt": 0.819,
+    "bgMedian": 0.0044,
+    "bgP95": 0.0057,
+    "crMedian": 15.96,
+    "crP95": 15.61
+   },
+   "burstHead": {
+    "color": "rgb(255, 233, 176)",
+    "Lt": 0.827,
+    "bgMedian": 0.0202,
+    "bgP95": 0.0355,
+    "crMedian": 12.49,
+    "crP95": 10.25
+   },
+   "enemyHpLabel": {
+    "color": "rgb(232, 233, 243)",
+    "Lt": 0.819,
+    "bgMedian": 0.2183,
+    "bgP95": 0.2765,
+    "crMedian": 3.24,
+    "crP95": 2.66
+   },
+   "godHpLabel": {
+    "color": "rgb(232, 233, 243)",
+    "Lt": 0.819,
+    "bgMedian": 0.3923,
+    "bgP95": 0.4569,
+    "crMedian": 1.96,
+    "crP95": 1.71
+   },
+   "resoLabel": {
+    "color": "rgb(232, 233, 243)",
+    "Lt": 0.819,
+    "bgMedian": 0.0051,
+    "bgP95": 0.0317,
+    "crMedian": 15.76,
+    "crP95": 10.63
+   },
+   "passive": null
+  },
+  "reso": [
+   {
+    "v": 0,
+    "cls": "resonance-gauge-wrap",
+    "afterOpacity": "0",
+    "afterShadow": "none",
+    "afterAnim": "none",
+    "gaugeAnim": "none",
+    "fillW": 0,
+    "gaugeW": 133.5,
+    "gaugeH": 12,
+    "fillRatio": 0,
+    "ticks": "repeating-linear-gradient(90deg, rgba(0,"
+   },
+   {
+    "v": 1,
+    "cls": "resonance-gauge-wrap",
+    "afterOpacity": "0",
+    "afterShadow": "none",
+    "afterAnim": "none",
+    "gaugeAnim": "none",
+    "fillW": 19.1,
+    "gaugeW": 133.5,
+    "gaugeH": 12,
+    "fillRatio": 0.143,
+    "ticks": "repeating-linear-gradient(90deg, rgba(0,"
+   },
+   {
+    "v": 2,
+    "cls": "resonance-gauge-wrap",
+    "afterOpacity": "0",
+    "afterShadow": "none",
+    "afterAnim": "none",
+    "gaugeAnim": "none",
+    "fillW": 38.1,
+    "gaugeW": 133.5,
+    "gaugeH": 12,
+    "fillRatio": 0.286,
+    "ticks": "repeating-linear-gradient(90deg, rgba(0,"
+   },
+   {
+    "v": 3,
+    "cls": "resonance-gauge-wrap",
+    "afterOpacity": "0",
+    "afterShadow": "none",
+    "afterAnim": "none",
+    "gaugeAnim": "none",
+    "fillW": 57.2,
+    "gaugeW": 133.5,
+    "gaugeH": 12,
+    "fillRatio": 0.429,
+    "ticks": "repeating-linear-gradient(90deg, rgba(0,"
+   },
+   {
+    "v": 4,
+    "cls": "resonance-gauge-wrap",
+    "afterOpacity": "0",
+    "afterShadow": "none",
+    "afterAnim": "none",
+    "gaugeAnim": "none",
+    "fillW": 76.3,
+    "gaugeW": 133.5,
+    "gaugeH": 12,
+    "fillRatio": 0.571,
+    "ticks": "repeating-linear-gradient(90deg, rgba(0,"
+   },
+   {
+    "v": 5,
+    "cls": "resonance-gauge-wrap resonance-gauge-mid",
+    "afterOpacity": "0.45",
+    "afterShadow": "rgba(255, 209, 102, 0.6) 0px 0px 10px 1px",
+    "afterAnim": "none",
+    "gaugeAnim": "none",
+    "fillW": 95.4,
+    "gaugeW": 133.5,
+    "gaugeH": 12,
+    "fillRatio": 0.714,
+    "ticks": "repeating-linear-gradient(90deg, rgba(0,"
+   },
+   {
+    "v": 6,
+    "cls": "resonance-gauge-wrap resonance-gauge-high",
+    "afterOpacity": "0.503214",
+    "afterShadow": "rgba(255, 209, 102, 0.8) 0px 0px 16px 2px",
+    "afterAnim": "arena-glow-breathe",
+    "gaugeAnim": "none",
+    "fillW": 114.5,
+    "gaugeW": 133.5,
+    "gaugeH": 12,
+    "fillRatio": 0.857,
+    "ticks": "repeating-linear-gradient(90deg, rgba(0,"
+   },
+   {
+    "v": 7,
+    "cls": "resonance-gauge-wrap resonance-gauge-high resonance-gauge-ready-flash",
+    "afterOpacity": "0.603126",
+    "afterShadow": "rgba(255, 209, 102, 0.8) 0px 0px 16px 2px",
+    "afterAnim": "arena-glow-breathe",
+    "gaugeAnim": "resonance-ready-flash",
+    "fillW": 136.7,
+    "gaugeW": 136.7,
+    "gaugeH": 12.3,
+    "fillRatio": 1,
+    "ticks": "repeating-linear-gradient(90deg, rgba(0,"
+   }
+  ],
+  "errors": []
+ },
+ {
+  "key": "after-sp844-taiyo-karakuri",
+  "side": "after",
+  "vp": "sp844",
+  "god": "taiyo",
+  "enemy": "karakuri",
+  "mem": 1358,
+  "pseudo": {
+   "ringEnemy": "none",
+   "ringGod": "none",
+   "ringOtomo": "none",
+   "cornerEnemy": "none",
+   "cornerGod": "none",
+   "cornerReso": "none",
+   "groundEnemy": "\"\"",
+   "groundGod": "\"\"",
+   "plateEnemy": {
+    "bg": "linear-gradient(90deg, rgba(5, 6, 13, 0.8) 0%, rgba(5, 6, 13, 0.6) 70%, rgba(5, 6, 13, 0) ",
+    "border": "rgba(0, 0, 0, 0)",
+    "radius": "0px",
+    "shadow": "none"
+   },
+   "plateGod": {
+    "bg": "linear-gradient(270deg, rgba(5, 6, 13, 0.8) 0%, rgba(5, 6, 13, 0.6) 70%, rgba(5, 6, 13, 0)",
+    "border": "rgba(0, 0, 0, 0)",
+    "radius": "0px",
+    "shadow": "none"
+   },
+   "plateReso": {
+    "bg": "linear-gradient(270deg, rgba(5, 6, 13, 0.8) 0%, rgba(5, 6, 13, 0.6) 70%, rgba(5, 6, 13, 0)",
+    "border": "rgba(0, 0, 0, 0)",
+    "radius": "0px",
+    "shadow": "none"
+   },
+   "wound": {
+    "enemy-wound-half": {
+     "w": 143,
+     "h": 37,
+     "bottomFromStage": -11,
+     "radius": "50%",
+     "bg": "radial-gradient(rgba(255, 59, 59, 0.19) 0%, rgba(0, 0, 0, 0) 62%)"
+    },
+    "enemy-wound-quarter": {
+     "w": 143,
+     "h": 37,
+     "bottomFromStage": -11,
+     "radius": "50%",
+     "bg": "radial-gradient(rgba(255, 59, 59, 0.333) 0%, rgba(255, 59, 59, 0.11) 4"
+    }
+   },
+   "hp": [
+    [
+     154.5,
+     18
+    ],
+    [
+     137.5,
+     18
+    ],
+    [
+     133.5,
+     12
+    ]
+   ],
+   "intentBox": {
+    "h": 21.3,
+    "fontSize": "17px",
+    "lineHeight": "21.25px",
+    "cls": "intent"
+   }
+  },
+  "contrast": {
+   "enemyName": {
+    "color": "rgb(232, 233, 243)",
+    "Lt": 0.819,
+    "bgMedian": 0.0063,
+    "bgP95": 0.0095,
+    "crMedian": 15.44,
+    "crP95": 14.61
+   },
+   "enemyType": null,
+   "intent": {
+    "color": "rgb(255, 180, 180)",
+    "Lt": 0.572,
+    "bgMedian": 0.0082,
+    "bgP95": 0.0192,
+    "crMedian": 10.68,
+    "crP95": 8.99
+   },
+   "godName": {
+    "color": "rgb(232, 233, 243)",
+    "Lt": 0.819,
+    "bgMedian": 0.0066,
+    "bgP95": 0.0088,
+    "crMedian": 15.35,
+    "crP95": 14.79
+   },
+   "burstHead": {
+    "color": "rgb(255, 233, 176)",
+    "Lt": 0.827,
+    "bgMedian": 0.0109,
+    "bgP95": 0.0461,
+    "crMedian": 14.4,
+    "crP95": 9.12
+   },
+   "enemyHpLabel": {
+    "color": "rgb(232, 233, 243)",
+    "Lt": 0.819,
+    "bgMedian": 0.2183,
+    "bgP95": 0.2765,
+    "crMedian": 3.24,
+    "crP95": 2.66
+   },
+   "godHpLabel": {
+    "color": "rgb(232, 233, 243)",
+    "Lt": 0.819,
+    "bgMedian": 0.3923,
+    "bgP95": 0.4569,
+    "crMedian": 1.96,
+    "crP95": 1.71
+   },
+   "resoLabel": {
+    "color": "rgb(232, 233, 243)",
+    "Lt": 0.819,
+    "bgMedian": 0.0051,
+    "bgP95": 0.0317,
+    "crMedian": 15.76,
+    "crP95": 10.63
+   },
+   "passive": null
+  },
+  "reso": [
+   {
+    "v": 0,
+    "cls": "resonance-gauge-wrap",
+    "afterOpacity": "0",
+    "afterShadow": "none",
+    "afterAnim": "none",
+    "gaugeAnim": "none",
+    "fillW": 0,
+    "gaugeW": 133.5,
+    "gaugeH": 12,
+    "fillRatio": 0,
+    "ticks": "repeating-linear-gradient(90deg, rgba(0,"
+   },
+   {
+    "v": 1,
+    "cls": "resonance-gauge-wrap",
+    "afterOpacity": "0",
+    "afterShadow": "none",
+    "afterAnim": "none",
+    "gaugeAnim": "none",
+    "fillW": 19.1,
+    "gaugeW": 133.5,
+    "gaugeH": 12,
+    "fillRatio": 0.143,
+    "ticks": "repeating-linear-gradient(90deg, rgba(0,"
+   },
+   {
+    "v": 2,
+    "cls": "resonance-gauge-wrap",
+    "afterOpacity": "0",
+    "afterShadow": "none",
+    "afterAnim": "none",
+    "gaugeAnim": "none",
+    "fillW": 38.1,
+    "gaugeW": 133.5,
+    "gaugeH": 12,
+    "fillRatio": 0.286,
+    "ticks": "repeating-linear-gradient(90deg, rgba(0,"
+   },
+   {
+    "v": 3,
+    "cls": "resonance-gauge-wrap",
+    "afterOpacity": "0",
+    "afterShadow": "none",
+    "afterAnim": "none",
+    "gaugeAnim": "none",
+    "fillW": 57.2,
+    "gaugeW": 133.5,
+    "gaugeH": 12,
+    "fillRatio": 0.429,
+    "ticks": "repeating-linear-gradient(90deg, rgba(0,"
+   },
+   {
+    "v": 4,
+    "cls": "resonance-gauge-wrap",
+    "afterOpacity": "0",
+    "afterShadow": "none",
+    "afterAnim": "none",
+    "gaugeAnim": "none",
+    "fillW": 76.3,
+    "gaugeW": 133.5,
+    "gaugeH": 12,
+    "fillRatio": 0.571,
+    "ticks": "repeating-linear-gradient(90deg, rgba(0,"
+   },
+   {
+    "v": 5,
+    "cls": "resonance-gauge-wrap resonance-gauge-mid",
+    "afterOpacity": "0.45",
+    "afterShadow": "rgba(255, 209, 102, 0.6) 0px 0px 10px 1px",
+    "afterAnim": "none",
+    "gaugeAnim": "none",
+    "fillW": 95.4,
+    "gaugeW": 133.5,
+    "gaugeH": 12,
+    "fillRatio": 0.714,
+    "ticks": "repeating-linear-gradient(90deg, rgba(0,"
+   },
+   {
+    "v": 6,
+    "cls": "resonance-gauge-wrap resonance-gauge-high",
+    "afterOpacity": "0.505052",
+    "afterShadow": "rgba(255, 209, 102, 0.8) 0px 0px 16px 2px",
+    "afterAnim": "arena-glow-breathe",
+    "gaugeAnim": "none",
+    "fillW": 114.5,
+    "gaugeW": 133.5,
+    "gaugeH": 12,
+    "fillRatio": 0.857,
+    "ticks": "repeating-linear-gradient(90deg, rgba(0,"
+   },
+   {
+    "v": 7,
+    "cls": "resonance-gauge-wrap resonance-gauge-high resonance-gauge-ready-flash",
+    "afterOpacity": "0.612244",
+    "afterShadow": "rgba(255, 209, 102, 0.8) 0px 0px 16px 2px",
+    "afterAnim": "arena-glow-breathe",
+    "gaugeAnim": "resonance-ready-flash",
+    "fillW": 136.9,
+    "gaugeW": 136.9,
+    "gaugeH": 12.3,
+    "fillRatio": 1,
+    "ticks": "repeating-linear-gradient(90deg, rgba(0,"
+   }
+  ],
+  "errors": []
+ },
+ {
+  "key": "after-sp844-taiyo-ryujin",
+  "side": "after",
+  "vp": "sp844",
+  "god": "taiyo",
+  "enemy": "ryujin",
+  "mem": 1378,
+  "pseudo": {
+   "ringEnemy": "none",
+   "ringGod": "none",
+   "ringOtomo": "none",
+   "cornerEnemy": "none",
+   "cornerGod": "none",
+   "cornerReso": "none",
+   "groundEnemy": "\"\"",
+   "groundGod": "\"\"",
+   "plateEnemy": {
+    "bg": "linear-gradient(90deg, rgba(5, 6, 13, 0.8) 0%, rgba(5, 6, 13, 0.6) 70%, rgba(5, 6, 13, 0) ",
+    "border": "rgba(0, 0, 0, 0)",
+    "radius": "0px",
+    "shadow": "none"
+   },
+   "plateGod": {
+    "bg": "linear-gradient(270deg, rgba(5, 6, 13, 0.8) 0%, rgba(5, 6, 13, 0.6) 70%, rgba(5, 6, 13, 0)",
+    "border": "rgba(0, 0, 0, 0)",
+    "radius": "0px",
+    "shadow": "none"
+   },
+   "plateReso": {
+    "bg": "linear-gradient(270deg, rgba(5, 6, 13, 0.8) 0%, rgba(5, 6, 13, 0.6) 70%, rgba(5, 6, 13, 0)",
+    "border": "rgba(0, 0, 0, 0)",
+    "radius": "0px",
+    "shadow": "none"
+   },
+   "wound": {
+    "enemy-wound-half": {
+     "w": 143,
+     "h": 37,
+     "bottomFromStage": -11,
+     "radius": "50%",
+     "bg": "radial-gradient(rgba(255, 59, 59, 0.19) 0%, rgba(0, 0, 0, 0) 62%)"
+    },
+    "enemy-wound-quarter": {
+     "w": 143,
+     "h": 37,
+     "bottomFromStage": -11,
+     "radius": "50%",
+     "bg": "radial-gradient(rgba(255, 59, 59, 0.333) 0%, rgba(255, 59, 59, 0.11) 4"
+    }
+   },
+   "hp": [
+    [
+     154.5,
+     18
+    ],
+    [
+     137.5,
+     18
+    ],
+    [
+     133.5,
+     12
+    ]
+   ],
+   "intentBox": {
+    "h": 21.3,
+    "fontSize": "17px",
+    "lineHeight": "21.25px",
+    "cls": "intent"
+   }
+  },
+  "contrast": {
+   "enemyName": {
+    "color": "rgb(232, 233, 243)",
+    "Lt": 0.819,
+    "bgMedian": 0.0056,
+    "bgP95": 0.0105,
+    "crMedian": 15.64,
+    "crP95": 14.36
+   },
+   "enemyType": null,
+   "intent": {
+    "color": "rgb(255, 180, 180)",
+    "Lt": 0.572,
+    "bgMedian": 0.0056,
+    "bgP95": 0.0193,
+    "crMedian": 11.2,
+    "crP95": 8.97
+   },
+   "godName": {
+    "color": "rgb(232, 233, 243)",
+    "Lt": 0.819,
+    "bgMedian": 0.0065,
+    "bgP95": 0.0129,
+    "crMedian": 15.38,
+    "crP95": 13.81
+   },
+   "burstHead": {
+    "color": "rgb(255, 233, 176)",
+    "Lt": 0.827,
+    "bgMedian": 0.0149,
+    "bgP95": 0.0365,
+    "crMedian": 13.51,
+    "crP95": 10.14
+   },
+   "enemyHpLabel": {
+    "color": "rgb(232, 233, 243)",
+    "Lt": 0.819,
+    "bgMedian": 0.2183,
+    "bgP95": 0.2765,
+    "crMedian": 3.24,
+    "crP95": 2.66
+   },
+   "godHpLabel": {
+    "color": "rgb(232, 233, 243)",
+    "Lt": 0.819,
+    "bgMedian": 0.3923,
+    "bgP95": 0.4569,
+    "crMedian": 1.96,
+    "crP95": 1.71
+   },
+   "resoLabel": {
+    "color": "rgb(232, 233, 243)",
+    "Lt": 0.819,
+    "bgMedian": 0.0051,
+    "bgP95": 0.0317,
+    "crMedian": 15.76,
+    "crP95": 10.63
+   },
+   "passive": null
+  },
+  "reso": [
+   {
+    "v": 0,
+    "cls": "resonance-gauge-wrap",
+    "afterOpacity": "0",
+    "afterShadow": "none",
+    "afterAnim": "none",
+    "gaugeAnim": "none",
+    "fillW": 0,
+    "gaugeW": 133.5,
+    "gaugeH": 12,
+    "fillRatio": 0,
+    "ticks": "repeating-linear-gradient(90deg, rgba(0,"
+   },
+   {
+    "v": 1,
+    "cls": "resonance-gauge-wrap",
+    "afterOpacity": "0",
+    "afterShadow": "none",
+    "afterAnim": "none",
+    "gaugeAnim": "none",
+    "fillW": 19.1,
+    "gaugeW": 133.5,
+    "gaugeH": 12,
+    "fillRatio": 0.143,
+    "ticks": "repeating-linear-gradient(90deg, rgba(0,"
+   },
+   {
+    "v": 2,
+    "cls": "resonance-gauge-wrap",
+    "afterOpacity": "0",
+    "afterShadow": "none",
+    "afterAnim": "none",
+    "gaugeAnim": "none",
+    "fillW": 38.1,
+    "gaugeW": 133.5,
+    "gaugeH": 12,
+    "fillRatio": 0.286,
+    "ticks": "repeating-linear-gradient(90deg, rgba(0,"
+   },
+   {
+    "v": 3,
+    "cls": "resonance-gauge-wrap",
+    "afterOpacity": "0",
+    "afterShadow": "none",
+    "afterAnim": "none",
+    "gaugeAnim": "none",
+    "fillW": 57.2,
+    "gaugeW": 133.5,
+    "gaugeH": 12,
+    "fillRatio": 0.429,
+    "ticks": "repeating-linear-gradient(90deg, rgba(0,"
+   },
+   {
+    "v": 4,
+    "cls": "resonance-gauge-wrap",
+    "afterOpacity": "0",
+    "afterShadow": "none",
+    "afterAnim": "none",
+    "gaugeAnim": "none",
+    "fillW": 76.3,
+    "gaugeW": 133.5,
+    "gaugeH": 12,
+    "fillRatio": 0.571,
+    "ticks": "repeating-linear-gradient(90deg, rgba(0,"
+   },
+   {
+    "v": 5,
+    "cls": "resonance-gauge-wrap resonance-gauge-mid",
+    "afterOpacity": "0.45",
+    "afterShadow": "rgba(255, 209, 102, 0.6) 0px 0px 10px 1px",
+    "afterAnim": "none",
+    "gaugeAnim": "none",
+    "fillW": 95.4,
+    "gaugeW": 133.5,
+    "gaugeH": 12,
+    "fillRatio": 0.714,
+    "ticks": "repeating-linear-gradient(90deg, rgba(0,"
+   },
+   {
+    "v": 6,
+    "cls": "resonance-gauge-wrap resonance-gauge-high",
+    "afterOpacity": "0.503205",
+    "afterShadow": "rgba(255, 209, 102, 0.8) 0px 0px 16px 2px",
+    "afterAnim": "arena-glow-breathe",
+    "gaugeAnim": "none",
+    "fillW": 114.5,
+    "gaugeW": 133.5,
+    "gaugeH": 12,
+    "fillRatio": 0.857,
+    "ticks": "repeating-linear-gradient(90deg, rgba(0,"
+   },
+   {
+    "v": 7,
+    "cls": "resonance-gauge-wrap resonance-gauge-high resonance-gauge-ready-flash",
+    "afterOpacity": "0.603129",
+    "afterShadow": "rgba(255, 209, 102, 0.8) 0px 0px 16px 2px",
+    "afterAnim": "arena-glow-breathe",
+    "gaugeAnim": "resonance-ready-flash",
+    "fillW": 136.9,
+    "gaugeW": 136.9,
+    "gaugeH": 12.3,
+    "fillRatio": 1,
+    "ticks": "repeating-linear-gradient(90deg, rgba(0,"
+   }
+  ],
+  "errors": []
+ },
+ {
+  "key": "after-sp844-sobi-ryujin",
+  "side": "after",
+  "vp": "sp844",
+  "god": "sobi",
+  "enemy": "ryujin",
+  "mem": 1423,
+  "pseudo": {
+   "ringEnemy": "none",
+   "ringGod": "none",
+   "ringOtomo": "none",
+   "cornerEnemy": "none",
+   "cornerGod": "none",
+   "cornerReso": "none",
+   "groundEnemy": "\"\"",
+   "groundGod": "\"\"",
+   "plateEnemy": {
+    "bg": "linear-gradient(90deg, rgba(5, 6, 13, 0.8) 0%, rgba(5, 6, 13, 0.6) 70%, rgba(5, 6, 13, 0) ",
+    "border": "rgba(0, 0, 0, 0)",
+    "radius": "0px",
+    "shadow": "none"
+   },
+   "plateGod": {
+    "bg": "linear-gradient(270deg, rgba(5, 6, 13, 0.8) 0%, rgba(5, 6, 13, 0.6) 70%, rgba(5, 6, 13, 0)",
+    "border": "rgba(0, 0, 0, 0)",
+    "radius": "0px",
+    "shadow": "none"
+   },
+   "plateReso": {
+    "bg": "linear-gradient(270deg, rgba(5, 6, 13, 0.8) 0%, rgba(5, 6, 13, 0.6) 70%, rgba(5, 6, 13, 0)",
+    "border": "rgba(0, 0, 0, 0)",
+    "radius": "0px",
+    "shadow": "none"
+   },
+   "wound": {
+    "enemy-wound-half": {
+     "w": 143,
+     "h": 37,
+     "bottomFromStage": -11,
+     "radius": "50%",
+     "bg": "radial-gradient(rgba(255, 59, 59, 0.19) 0%, rgba(0, 0, 0, 0) 62%)"
+    },
+    "enemy-wound-quarter": {
+     "w": 143,
+     "h": 37,
+     "bottomFromStage": -11,
+     "radius": "50%",
+     "bg": "radial-gradient(rgba(255, 59, 59, 0.333) 0%, rgba(255, 59, 59, 0.11) 4"
+    }
+   },
+   "hp": [
+    [
+     154.5,
+     18
+    ],
+    [
+     137.5,
+     18
+    ],
+    [
+     133.5,
+     12
+    ]
+   ],
+   "intentBox": {
+    "h": 21.3,
+    "fontSize": "17px",
+    "lineHeight": "21.25px",
+    "cls": "intent"
+   }
+  },
+  "contrast": {
+   "enemyName": {
+    "color": "rgb(232, 233, 243)",
+    "Lt": 0.819,
+    "bgMedian": 0.0056,
+    "bgP95": 0.0105,
+    "crMedian": 15.64,
+    "crP95": 14.36
+   },
+   "enemyType": null,
+   "intent": {
+    "color": "rgb(255, 180, 180)",
+    "Lt": 0.572,
+    "bgMedian": 0.0056,
+    "bgP95": 0.0193,
+    "crMedian": 11.2,
+    "crP95": 8.97
+   },
+   "godName": {
+    "color": "rgb(232, 233, 243)",
+    "Lt": 0.819,
+    "bgMedian": 0.0065,
+    "bgP95": 0.013,
+    "crMedian": 15.38,
+    "crP95": 13.78
+   },
+   "burstHead": {
+    "color": "rgb(255, 233, 176)",
+    "Lt": 0.827,
+    "bgMedian": 0.0149,
+    "bgP95": 0.0362,
+    "crMedian": 13.51,
+    "crP95": 10.16
+   },
+   "enemyHpLabel": {
+    "color": "rgb(232, 233, 243)",
+    "Lt": 0.819,
+    "bgMedian": 0.2183,
+    "bgP95": 0.2765,
+    "crMedian": 3.24,
+    "crP95": 2.66
+   },
+   "godHpLabel": {
+    "color": "rgb(232, 233, 243)",
+    "Lt": 0.819,
+    "bgMedian": 0.3923,
+    "bgP95": 0.4569,
+    "crMedian": 1.96,
+    "crP95": 1.71
+   },
+   "resoLabel": {
+    "color": "rgb(232, 233, 243)",
+    "Lt": 0.819,
+    "bgMedian": 0.0051,
+    "bgP95": 0.0317,
+    "crMedian": 15.76,
+    "crP95": 10.63
+   },
+   "passive": {
+    "color": "rgb(154, 163, 204)",
+    "Lt": 0.374,
+    "bgMedian": 0.0155,
+    "bgP95": 0.0282,
+    "crMedian": 6.47,
+    "crP95": 5.43
+   }
+  },
+  "reso": [
+   {
+    "v": 0,
+    "cls": "resonance-gauge-wrap",
+    "afterOpacity": "0",
+    "afterShadow": "none",
+    "afterAnim": "none",
+    "gaugeAnim": "none",
+    "fillW": 0,
+    "gaugeW": 133.5,
+    "gaugeH": 12,
+    "fillRatio": 0,
+    "ticks": "repeating-linear-gradient(90deg, rgba(0,"
+   },
+   {
+    "v": 1,
+    "cls": "resonance-gauge-wrap",
+    "afterOpacity": "0",
+    "afterShadow": "none",
+    "afterAnim": "none",
+    "gaugeAnim": "none",
+    "fillW": 19.1,
+    "gaugeW": 133.5,
+    "gaugeH": 12,
+    "fillRatio": 0.143,
+    "ticks": "repeating-linear-gradient(90deg, rgba(0,"
+   },
+   {
+    "v": 2,
+    "cls": "resonance-gauge-wrap",
+    "afterOpacity": "0",
+    "afterShadow": "none",
+    "afterAnim": "none",
+    "gaugeAnim": "none",
+    "fillW": 38.1,
+    "gaugeW": 133.5,
+    "gaugeH": 12,
+    "fillRatio": 0.286,
+    "ticks": "repeating-linear-gradient(90deg, rgba(0,"
+   },
+   {
+    "v": 3,
+    "cls": "resonance-gauge-wrap",
+    "afterOpacity": "0",
+    "afterShadow": "none",
+    "afterAnim": "none",
+    "gaugeAnim": "none",
+    "fillW": 57.2,
+    "gaugeW": 133.5,
+    "gaugeH": 12,
+    "fillRatio": 0.429,
+    "ticks": "repeating-linear-gradient(90deg, rgba(0,"
+   },
+   {
+    "v": 4,
+    "cls": "resonance-gauge-wrap",
+    "afterOpacity": "0",
+    "afterShadow": "none",
+    "afterAnim": "none",
+    "gaugeAnim": "none",
+    "fillW": 76.3,
+    "gaugeW": 133.5,
+    "gaugeH": 12,
+    "fillRatio": 0.571,
+    "ticks": "repeating-linear-gradient(90deg, rgba(0,"
+   },
+   {
+    "v": 5,
+    "cls": "resonance-gauge-wrap resonance-gauge-mid",
+    "afterOpacity": "0.45",
+    "afterShadow": "rgba(255, 209, 102, 0.6) 0px 0px 10px 1px",
+    "afterAnim": "none",
+    "gaugeAnim": "none",
+    "fillW": 95.4,
+    "gaugeW": 133.5,
+    "gaugeH": 12,
+    "fillRatio": 0.714,
+    "ticks": "repeating-linear-gradient(90deg, rgba(0,"
+   },
+   {
+    "v": 6,
+    "cls": "resonance-gauge-wrap resonance-gauge-high",
+    "afterOpacity": "0.503205",
+    "afterShadow": "rgba(255, 209, 102, 0.8) 0px 0px 16px 2px",
+    "afterAnim": "arena-glow-breathe",
+    "gaugeAnim": "none",
+    "fillW": 114.5,
+    "gaugeW": 133.5,
+    "gaugeH": 12,
+    "fillRatio": 0.857,
+    "ticks": "repeating-linear-gradient(90deg, rgba(0,"
+   },
+   {
+    "v": 7,
+    "cls": "resonance-gauge-wrap resonance-gauge-high resonance-gauge-ready-flash",
+    "afterOpacity": "0.621504",
+    "afterShadow": "rgba(255, 209, 102, 0.8) 0px 0px 16px 2px",
+    "afterAnim": "arena-glow-breathe",
+    "gaugeAnim": "resonance-ready-flash",
+    "fillW": 136.7,
+    "gaugeW": 136.7,
+    "gaugeH": 12.3,
+    "fillRatio": 1,
+    "ticks": "repeating-linear-gradient(90deg, rgba(0,"
+   }
+  ],
+  "errors": []
+ },
+ {
+  "key": "after-sp660-taiyo-oni",
+  "side": "after",
+  "vp": "sp660",
+  "god": "taiyo",
+  "enemy": "oni",
+  "mem": 1408,
+  "pseudo": {
+   "ringEnemy": "none",
+   "ringGod": "none",
+   "ringOtomo": "none",
+   "cornerEnemy": "none",
+   "cornerGod": "none",
+   "cornerReso": "none",
+   "groundEnemy": "\"\"",
+   "groundGod": "\"\"",
+   "plateEnemy": {
+    "bg": "linear-gradient(90deg, rgba(5, 6, 13, 0.8) 0%, rgba(5, 6, 13, 0.6) 70%, rgba(5, 6, 13, 0) ",
+    "border": "rgba(0, 0, 0, 0)",
+    "radius": "0px",
+    "shadow": "none"
+   },
+   "plateGod": {
+    "bg": "linear-gradient(270deg, rgba(5, 6, 13, 0.8) 0%, rgba(5, 6, 13, 0.6) 70%, rgba(5, 6, 13, 0)",
+    "border": "rgba(0, 0, 0, 0)",
+    "radius": "0px",
+    "shadow": "none"
+   },
+   "plateReso": {
+    "bg": "linear-gradient(270deg, rgba(5, 6, 13, 0.8) 0%, rgba(5, 6, 13, 0.6) 70%, rgba(5, 6, 13, 0)",
+    "border": "rgba(0, 0, 0, 0)",
+    "radius": "0px",
+    "shadow": "none"
+   },
+   "wound": {
+    "enemy-wound-half": {
+     "w": 140,
+     "h": 36,
+     "bottomFromStage": -11,
+     "radius": "50%",
+     "bg": "radial-gradient(rgba(255, 59, 59, 0.19) 0%, rgba(0, 0, 0, 0) 62%)"
+    },
+    "enemy-wound-quarter": {
+     "w": 140,
+     "h": 36,
+     "bottomFromStage": -11,
+     "radius": "50%",
+     "bg": "radial-gradient(rgba(255, 59, 59, 0.333) 0%, rgba(255, 59, 59, 0.11) 4"
+    }
+   },
+   "hp": [
+    [
+     154.5,
+     18
+    ],
+    [
+     137.5,
+     18
+    ],
+    [
+     133.5,
+     12
+    ]
+   ],
+   "intentBox": {
+    "h": 21.3,
+    "fontSize": "17px",
+    "lineHeight": "21.25px",
+    "cls": "intent"
+   }
+  },
+  "contrast": {
+   "enemyName": {
+    "color": "rgb(232, 233, 243)",
+    "Lt": 0.819,
+    "bgMedian": 0.0042,
+    "bgP95": 0.0096,
+    "crMedian": 16.02,
+    "crP95": 14.59
+   },
+   "enemyType": null,
+   "intent": {
+    "color": "rgb(255, 180, 180)",
+    "Lt": 0.572,
+    "bgMedian": 0.0074,
+    "bgP95": 0.0121,
+    "crMedian": 10.83,
+    "crP95": 10.01
+   },
+   "godName": {
+    "color": "rgb(232, 233, 243)",
+    "Lt": 0.819,
+    "bgMedian": 0.0047,
+    "bgP95": 0.0098,
+    "crMedian": 15.88,
+    "crP95": 14.52
+   },
+   "burstHead": {
+    "color": "rgb(255, 233, 176)",
+    "Lt": 0.827,
+    "bgMedian": 0.014,
+    "bgP95": 0.027,
+    "crMedian": 13.7,
+    "crP95": 11.38
+   },
+   "enemyHpLabel": {
+    "color": "rgb(232, 233, 243)",
+    "Lt": 0.819,
+    "bgMedian": 0.2183,
+    "bgP95": 0.2765,
+    "crMedian": 3.24,
+    "crP95": 2.66
+   },
+   "godHpLabel": {
+    "color": "rgb(232, 233, 243)",
+    "Lt": 0.819,
+    "bgMedian": 0.3923,
+    "bgP95": 0.4569,
+    "crMedian": 1.96,
+    "crP95": 1.71
+   },
+   "resoLabel": {
+    "color": "rgb(232, 233, 243)",
+    "Lt": 0.819,
+    "bgMedian": 0.0051,
+    "bgP95": 0.0317,
+    "crMedian": 15.76,
+    "crP95": 10.63
+   },
+   "passive": null
+  },
+  "reso": [
+   {
+    "v": 0,
+    "cls": "resonance-gauge-wrap",
+    "afterOpacity": "0",
+    "afterShadow": "none",
+    "afterAnim": "none",
+    "gaugeAnim": "none",
+    "fillW": 0,
+    "gaugeW": 133.5,
+    "gaugeH": 12,
+    "fillRatio": 0,
+    "ticks": "repeating-linear-gradient(90deg, rgba(0,"
+   },
+   {
+    "v": 1,
+    "cls": "resonance-gauge-wrap",
+    "afterOpacity": "0",
+    "afterShadow": "none",
+    "afterAnim": "none",
+    "gaugeAnim": "none",
+    "fillW": 19.1,
+    "gaugeW": 133.5,
+    "gaugeH": 12,
+    "fillRatio": 0.143,
+    "ticks": "repeating-linear-gradient(90deg, rgba(0,"
+   },
+   {
+    "v": 2,
+    "cls": "resonance-gauge-wrap",
+    "afterOpacity": "0",
+    "afterShadow": "none",
+    "afterAnim": "none",
+    "gaugeAnim": "none",
+    "fillW": 38.1,
+    "gaugeW": 133.5,
+    "gaugeH": 12,
+    "fillRatio": 0.286,
+    "ticks": "repeating-linear-gradient(90deg, rgba(0,"
+   },
+   {
+    "v": 3,
+    "cls": "resonance-gauge-wrap",
+    "afterOpacity": "0",
+    "afterShadow": "none",
+    "afterAnim": "none",
+    "gaugeAnim": "none",
+    "fillW": 57.2,
+    "gaugeW": 133.5,
+    "gaugeH": 12,
+    "fillRatio": 0.429,
+    "ticks": "repeating-linear-gradient(90deg, rgba(0,"
+   },
+   {
+    "v": 4,
+    "cls": "resonance-gauge-wrap",
+    "afterOpacity": "0",
+    "afterShadow": "none",
+    "afterAnim": "none",
+    "gaugeAnim": "none",
+    "fillW": 76.3,
+    "gaugeW": 133.5,
+    "gaugeH": 12,
+    "fillRatio": 0.571,
+    "ticks": "repeating-linear-gradient(90deg, rgba(0,"
+   },
+   {
+    "v": 5,
+    "cls": "resonance-gauge-wrap resonance-gauge-mid",
+    "afterOpacity": "0.45",
+    "afterShadow": "rgba(255, 209, 102, 0.6) 0px 0px 10px 1px",
+    "afterAnim": "none",
+    "gaugeAnim": "none",
+    "fillW": 95.4,
+    "gaugeW": 133.5,
+    "gaugeH": 12,
+    "fillRatio": 0.714,
+    "ticks": "repeating-linear-gradient(90deg, rgba(0,"
+   },
+   {
+    "v": 6,
+    "cls": "resonance-gauge-wrap resonance-gauge-high",
+    "afterOpacity": "0.50321",
+    "afterShadow": "rgba(255, 209, 102, 0.8) 0px 0px 16px 2px",
+    "afterAnim": "arena-glow-breathe",
+    "gaugeAnim": "none",
+    "fillW": 114.5,
+    "gaugeW": 133.5,
+    "gaugeH": 12,
+    "fillRatio": 0.857,
+    "ticks": "repeating-linear-gradient(90deg, rgba(0,"
+   },
+   {
+    "v": 7,
+    "cls": "resonance-gauge-wrap resonance-gauge-high resonance-gauge-ready-flash",
+    "afterOpacity": "0.603105",
+    "afterShadow": "rgba(255, 209, 102, 0.8) 0px 0px 16px 2px",
+    "afterAnim": "arena-glow-breathe",
+    "gaugeAnim": "resonance-ready-flash",
+    "fillW": 136.7,
+    "gaugeW": 136.7,
+    "gaugeH": 12.3,
+    "fillRatio": 1,
+    "ticks": "repeating-linear-gradient(90deg, rgba(0,"
+   }
+  ],
+  "errors": []
+ },
+ {
+  "key": "after-sp660-taiyo-karakuri",
+  "side": "after",
+  "vp": "sp660",
+  "god": "taiyo",
+  "enemy": "karakuri",
+  "mem": 1344,
+  "pseudo": {
+   "ringEnemy": "none",
+   "ringGod": "none",
+   "ringOtomo": "none",
+   "cornerEnemy": "none",
+   "cornerGod": "none",
+   "cornerReso": "none",
+   "groundEnemy": "\"\"",
+   "groundGod": "\"\"",
+   "plateEnemy": {
+    "bg": "linear-gradient(90deg, rgba(5, 6, 13, 0.8) 0%, rgba(5, 6, 13, 0.6) 70%, rgba(5, 6, 13, 0) ",
+    "border": "rgba(0, 0, 0, 0)",
+    "radius": "0px",
+    "shadow": "none"
+   },
+   "plateGod": {
+    "bg": "linear-gradient(270deg, rgba(5, 6, 13, 0.8) 0%, rgba(5, 6, 13, 0.6) 70%, rgba(5, 6, 13, 0)",
+    "border": "rgba(0, 0, 0, 0)",
+    "radius": "0px",
+    "shadow": "none"
+   },
+   "plateReso": {
+    "bg": "linear-gradient(270deg, rgba(5, 6, 13, 0.8) 0%, rgba(5, 6, 13, 0.6) 70%, rgba(5, 6, 13, 0)",
+    "border": "rgba(0, 0, 0, 0)",
+    "radius": "0px",
+    "shadow": "none"
+   },
+   "wound": {
+    "enemy-wound-half": {
+     "w": 140,
+     "h": 36,
+     "bottomFromStage": -11,
+     "radius": "50%",
+     "bg": "radial-gradient(rgba(255, 59, 59, 0.19) 0%, rgba(0, 0, 0, 0) 62%)"
+    },
+    "enemy-wound-quarter": {
+     "w": 140,
+     "h": 36,
+     "bottomFromStage": -11,
+     "radius": "50%",
+     "bg": "radial-gradient(rgba(255, 59, 59, 0.333) 0%, rgba(255, 59, 59, 0.11) 4"
+    }
+   },
+   "hp": [
+    [
+     154.5,
+     18
+    ],
+    [
+     137.5,
+     18
+    ],
+    [
+     133.5,
+     12
+    ]
+   ],
+   "intentBox": {
+    "h": 21.3,
+    "fontSize": "17px",
+    "lineHeight": "21.25px",
+    "cls": "intent"
+   }
+  },
+  "contrast": {
+   "enemyName": {
+    "color": "rgb(232, 233, 243)",
+    "Lt": 0.819,
+    "bgMedian": 0.0082,
+    "bgP95": 0.0199,
+    "crMedian": 14.93,
+    "crP95": 12.43
+   },
+   "enemyType": null,
+   "intent": {
+    "color": "rgb(255, 180, 180)",
+    "Lt": 0.572,
+    "bgMedian": 0.0056,
+    "bgP95": 0.0091,
+    "crMedian": 11.19,
+    "crP95": 10.53
+   },
+   "godName": {
+    "color": "rgb(232, 233, 243)",
+    "Lt": 0.819,
+    "bgMedian": 0.0098,
+    "bgP95": 0.015,
+    "crMedian": 14.53,
+    "crP95": 13.37
+   },
+   "burstHead": {
+    "color": "rgb(255, 233, 176)",
+    "Lt": 0.827,
+    "bgMedian": 0.0095,
+    "bgP95": 0.0265,
+    "crMedian": 14.74,
+    "crP95": 11.47
+   },
+   "enemyHpLabel": {
+    "color": "rgb(232, 233, 243)",
+    "Lt": 0.819,
+    "bgMedian": 0.2183,
+    "bgP95": 0.2765,
+    "crMedian": 3.24,
+    "crP95": 2.66
+   },
+   "godHpLabel": {
+    "color": "rgb(232, 233, 243)",
+    "Lt": 0.819,
+    "bgMedian": 0.3923,
+    "bgP95": 0.4569,
+    "crMedian": 1.96,
+    "crP95": 1.71
+   },
+   "resoLabel": {
+    "color": "rgb(232, 233, 243)",
+    "Lt": 0.819,
+    "bgMedian": 0.0051,
+    "bgP95": 0.0317,
+    "crMedian": 15.76,
+    "crP95": 10.63
+   },
+   "passive": null
+  },
+  "reso": [
+   {
+    "v": 0,
+    "cls": "resonance-gauge-wrap",
+    "afterOpacity": "0",
+    "afterShadow": "none",
+    "afterAnim": "none",
+    "gaugeAnim": "none",
+    "fillW": 0,
+    "gaugeW": 133.5,
+    "gaugeH": 12,
+    "fillRatio": 0,
+    "ticks": "repeating-linear-gradient(90deg, rgba(0,"
+   },
+   {
+    "v": 1,
+    "cls": "resonance-gauge-wrap",
+    "afterOpacity": "0",
+    "afterShadow": "none",
+    "afterAnim": "none",
+    "gaugeAnim": "none",
+    "fillW": 19.1,
+    "gaugeW": 133.5,
+    "gaugeH": 12,
+    "fillRatio": 0.143,
+    "ticks": "repeating-linear-gradient(90deg, rgba(0,"
+   },
+   {
+    "v": 2,
+    "cls": "resonance-gauge-wrap",
+    "afterOpacity": "0",
+    "afterShadow": "none",
+    "afterAnim": "none",
+    "gaugeAnim": "none",
+    "fillW": 38.1,
+    "gaugeW": 133.5,
+    "gaugeH": 12,
+    "fillRatio": 0.286,
+    "ticks": "repeating-linear-gradient(90deg, rgba(0,"
+   },
+   {
+    "v": 3,
+    "cls": "resonance-gauge-wrap",
+    "afterOpacity": "0",
+    "afterShadow": "none",
+    "afterAnim": "none",
+    "gaugeAnim": "none",
+    "fillW": 57.2,
+    "gaugeW": 133.5,
+    "gaugeH": 12,
+    "fillRatio": 0.429,
+    "ticks": "repeating-linear-gradient(90deg, rgba(0,"
+   },
+   {
+    "v": 4,
+    "cls": "resonance-gauge-wrap",
+    "afterOpacity": "0",
+    "afterShadow": "none",
+    "afterAnim": "none",
+    "gaugeAnim": "none",
+    "fillW": 76.3,
+    "gaugeW": 133.5,
+    "gaugeH": 12,
+    "fillRatio": 0.571,
+    "ticks": "repeating-linear-gradient(90deg, rgba(0,"
+   },
+   {
+    "v": 5,
+    "cls": "resonance-gauge-wrap resonance-gauge-mid",
+    "afterOpacity": "0.45",
+    "afterShadow": "rgba(255, 209, 102, 0.6) 0px 0px 10px 1px",
+    "afterAnim": "none",
+    "gaugeAnim": "none",
+    "fillW": 95.4,
+    "gaugeW": 133.5,
+    "gaugeH": 12,
+    "fillRatio": 0.714,
+    "ticks": "repeating-linear-gradient(90deg, rgba(0,"
+   },
+   {
+    "v": 6,
+    "cls": "resonance-gauge-wrap resonance-gauge-high",
+    "afterOpacity": "0.505067",
+    "afterShadow": "rgba(255, 209, 102, 0.8) 0px 0px 16px 2px",
+    "afterAnim": "arena-glow-breathe",
+    "gaugeAnim": "none",
+    "fillW": 114.5,
+    "gaugeW": 133.5,
+    "gaugeH": 12,
+    "fillRatio": 0.857,
+    "ticks": "repeating-linear-gradient(90deg, rgba(0,"
+   },
+   {
+    "v": 7,
+    "cls": "resonance-gauge-wrap resonance-gauge-high resonance-gauge-ready-flash",
+    "afterOpacity": "0.630913",
+    "afterShadow": "rgba(255, 209, 102, 0.8) 0px 0px 16px 2px",
+    "afterAnim": "arena-glow-breathe",
+    "gaugeAnim": "resonance-ready-flash",
+    "fillW": 136.7,
+    "gaugeW": 136.7,
+    "gaugeH": 12.3,
+    "fillRatio": 1,
+    "ticks": "repeating-linear-gradient(90deg, rgba(0,"
+   }
+  ],
+  "errors": []
+ },
+ {
+  "key": "after-sp660-taiyo-ryujin",
+  "side": "after",
+  "vp": "sp660",
+  "god": "taiyo",
+  "enemy": "ryujin",
+  "mem": 1408,
+  "pseudo": {
+   "ringEnemy": "none",
+   "ringGod": "none",
+   "ringOtomo": "none",
+   "cornerEnemy": "none",
+   "cornerGod": "none",
+   "cornerReso": "none",
+   "groundEnemy": "\"\"",
+   "groundGod": "\"\"",
+   "plateEnemy": {
+    "bg": "linear-gradient(90deg, rgba(5, 6, 13, 0.8) 0%, rgba(5, 6, 13, 0.6) 70%, rgba(5, 6, 13, 0) ",
+    "border": "rgba(0, 0, 0, 0)",
+    "radius": "0px",
+    "shadow": "none"
+   },
+   "plateGod": {
+    "bg": "linear-gradient(270deg, rgba(5, 6, 13, 0.8) 0%, rgba(5, 6, 13, 0.6) 70%, rgba(5, 6, 13, 0)",
+    "border": "rgba(0, 0, 0, 0)",
+    "radius": "0px",
+    "shadow": "none"
+   },
+   "plateReso": {
+    "bg": "linear-gradient(270deg, rgba(5, 6, 13, 0.8) 0%, rgba(5, 6, 13, 0.6) 70%, rgba(5, 6, 13, 0)",
+    "border": "rgba(0, 0, 0, 0)",
+    "radius": "0px",
+    "shadow": "none"
+   },
+   "wound": {
+    "enemy-wound-half": {
+     "w": 140,
+     "h": 36,
+     "bottomFromStage": -11,
+     "radius": "50%",
+     "bg": "radial-gradient(rgba(255, 59, 59, 0.19) 0%, rgba(0, 0, 0, 0) 62%)"
+    },
+    "enemy-wound-quarter": {
+     "w": 140,
+     "h": 36,
+     "bottomFromStage": -11,
+     "radius": "50%",
+     "bg": "radial-gradient(rgba(255, 59, 59, 0.333) 0%, rgba(255, 59, 59, 0.11) 4"
+    }
+   },
+   "hp": [
+    [
+     154.5,
+     18
+    ],
+    [
+     137.5,
+     18
+    ],
+    [
+     133.5,
+     12
+    ]
+   ],
+   "intentBox": {
+    "h": 21.3,
+    "fontSize": "17px",
+    "lineHeight": "21.25px",
+    "cls": "intent"
+   }
+  },
+  "contrast": {
+   "enemyName": {
+    "color": "rgb(232, 233, 243)",
+    "Lt": 0.819,
+    "bgMedian": 0.0049,
+    "bgP95": 0.0115,
+    "crMedian": 15.84,
+    "crP95": 14.14
+   },
+   "enemyType": null,
+   "intent": {
+    "color": "rgb(255, 180, 180)",
+    "Lt": 0.572,
+    "bgMedian": 0.0091,
+    "bgP95": 0.0243,
+    "crMedian": 10.52,
+    "crP95": 8.37
+   },
+   "godName": {
+    "color": "rgb(232, 233, 243)",
+    "Lt": 0.819,
+    "bgMedian": 0.0047,
+    "bgP95": 0.0122,
+    "crMedian": 15.88,
+    "crP95": 13.96
+   },
+   "burstHead": {
+    "color": "rgb(255, 233, 176)",
+    "Lt": 0.827,
+    "bgMedian": 0.0094,
+    "bgP95": 0.0287,
+    "crMedian": 14.77,
+    "crP95": 11.15
+   },
+   "enemyHpLabel": {
+    "color": "rgb(232, 233, 243)",
+    "Lt": 0.819,
+    "bgMedian": 0.2183,
+    "bgP95": 0.2765,
+    "crMedian": 3.24,
+    "crP95": 2.66
+   },
+   "godHpLabel": {
+    "color": "rgb(232, 233, 243)",
+    "Lt": 0.819,
+    "bgMedian": 0.3923,
+    "bgP95": 0.4569,
+    "crMedian": 1.96,
+    "crP95": 1.71
+   },
+   "resoLabel": {
+    "color": "rgb(232, 233, 243)",
+    "Lt": 0.819,
+    "bgMedian": 0.0051,
+    "bgP95": 0.0317,
+    "crMedian": 15.76,
+    "crP95": 10.63
+   },
+   "passive": null
+  },
+  "reso": [
+   {
+    "v": 0,
+    "cls": "resonance-gauge-wrap",
+    "afterOpacity": "0",
+    "afterShadow": "none",
+    "afterAnim": "none",
+    "gaugeAnim": "none",
+    "fillW": 0,
+    "gaugeW": 133.5,
+    "gaugeH": 12,
+    "fillRatio": 0,
+    "ticks": "repeating-linear-gradient(90deg, rgba(0,"
+   },
+   {
+    "v": 1,
+    "cls": "resonance-gauge-wrap",
+    "afterOpacity": "0",
+    "afterShadow": "none",
+    "afterAnim": "none",
+    "gaugeAnim": "none",
+    "fillW": 19.1,
+    "gaugeW": 133.5,
+    "gaugeH": 12,
+    "fillRatio": 0.143,
+    "ticks": "repeating-linear-gradient(90deg, rgba(0,"
+   },
+   {
+    "v": 2,
+    "cls": "resonance-gauge-wrap",
+    "afterOpacity": "0",
+    "afterShadow": "none",
+    "afterAnim": "none",
+    "gaugeAnim": "none",
+    "fillW": 38.1,
+    "gaugeW": 133.5,
+    "gaugeH": 12,
+    "fillRatio": 0.286,
+    "ticks": "repeating-linear-gradient(90deg, rgba(0,"
+   },
+   {
+    "v": 3,
+    "cls": "resonance-gauge-wrap",
+    "afterOpacity": "0",
+    "afterShadow": "none",
+    "afterAnim": "none",
+    "gaugeAnim": "none",
+    "fillW": 57.2,
+    "gaugeW": 133.5,
+    "gaugeH": 12,
+    "fillRatio": 0.429,
+    "ticks": "repeating-linear-gradient(90deg, rgba(0,"
+   },
+   {
+    "v": 4,
+    "cls": "resonance-gauge-wrap",
+    "afterOpacity": "0",
+    "afterShadow": "none",
+    "afterAnim": "none",
+    "gaugeAnim": "none",
+    "fillW": 76.3,
+    "gaugeW": 133.5,
+    "gaugeH": 12,
+    "fillRatio": 0.571,
+    "ticks": "repeating-linear-gradient(90deg, rgba(0,"
+   },
+   {
+    "v": 5,
+    "cls": "resonance-gauge-wrap resonance-gauge-mid",
+    "afterOpacity": "0.45",
+    "afterShadow": "rgba(255, 209, 102, 0.6) 0px 0px 10px 1px",
+    "afterAnim": "none",
+    "gaugeAnim": "none",
+    "fillW": 95.4,
+    "gaugeW": 133.5,
+    "gaugeH": 12,
+    "fillRatio": 0.714,
+    "ticks": "repeating-linear-gradient(90deg, rgba(0,"
+   },
+   {
+    "v": 6,
+    "cls": "resonance-gauge-wrap resonance-gauge-high",
+    "afterOpacity": "0.503219",
+    "afterShadow": "rgba(255, 209, 102, 0.8) 0px 0px 16px 2px",
+    "afterAnim": "arena-glow-breathe",
+    "gaugeAnim": "none",
+    "fillW": 114.5,
+    "gaugeW": 133.5,
+    "gaugeH": 12,
+    "fillRatio": 0.857,
+    "ticks": "repeating-linear-gradient(90deg, rgba(0,"
+   },
+   {
+    "v": 7,
+    "cls": "resonance-gauge-wrap resonance-gauge-high resonance-gauge-ready-flash",
+    "afterOpacity": "0.603153",
+    "afterShadow": "rgba(255, 209, 102, 0.8) 0px 0px 16px 2px",
+    "afterAnim": "arena-glow-breathe",
+    "gaugeAnim": "resonance-ready-flash",
+    "fillW": 136.7,
+    "gaugeW": 136.7,
+    "gaugeH": 12.3,
+    "fillRatio": 1,
+    "ticks": "repeating-linear-gradient(90deg, rgba(0,"
+   }
+  ],
+  "errors": []
+ },
+ {
+  "key": "after-sp660-sobi-ryujin",
+  "side": "after",
+  "vp": "sp660",
+  "god": "sobi",
+  "enemy": "ryujin",
+  "mem": 1341,
+  "pseudo": {
+   "ringEnemy": "none",
+   "ringGod": "none",
+   "ringOtomo": "none",
+   "cornerEnemy": "none",
+   "cornerGod": "none",
+   "cornerReso": "none",
+   "groundEnemy": "\"\"",
+   "groundGod": "\"\"",
+   "plateEnemy": {
+    "bg": "linear-gradient(90deg, rgba(5, 6, 13, 0.8) 0%, rgba(5, 6, 13, 0.6) 70%, rgba(5, 6, 13, 0) ",
+    "border": "rgba(0, 0, 0, 0)",
+    "radius": "0px",
+    "shadow": "none"
+   },
+   "plateGod": {
+    "bg": "linear-gradient(270deg, rgba(5, 6, 13, 0.8) 0%, rgba(5, 6, 13, 0.6) 70%, rgba(5, 6, 13, 0)",
+    "border": "rgba(0, 0, 0, 0)",
+    "radius": "0px",
+    "shadow": "none"
+   },
+   "plateReso": {
+    "bg": "linear-gradient(270deg, rgba(5, 6, 13, 0.8) 0%, rgba(5, 6, 13, 0.6) 70%, rgba(5, 6, 13, 0)",
+    "border": "rgba(0, 0, 0, 0)",
+    "radius": "0px",
+    "shadow": "none"
+   },
+   "wound": {
+    "enemy-wound-half": {
+     "w": 140,
+     "h": 36,
+     "bottomFromStage": -11,
+     "radius": "50%",
+     "bg": "radial-gradient(rgba(255, 59, 59, 0.19) 0%, rgba(0, 0, 0, 0) 62%)"
+    },
+    "enemy-wound-quarter": {
+     "w": 140,
+     "h": 36,
+     "bottomFromStage": -11,
+     "radius": "50%",
+     "bg": "radial-gradient(rgba(255, 59, 59, 0.333) 0%, rgba(255, 59, 59, 0.11) 4"
+    }
+   },
+   "hp": [
+    [
+     154.5,
+     18
+    ],
+    [
+     137.5,
+     18
+    ],
+    [
+     133.5,
+     12
+    ]
+   ],
+   "intentBox": {
+    "h": 21.3,
+    "fontSize": "17px",
+    "lineHeight": "21.25px",
+    "cls": "intent"
+   }
+  },
+  "contrast": {
+   "enemyName": {
+    "color": "rgb(232, 233, 243)",
+    "Lt": 0.819,
+    "bgMedian": 0.0049,
+    "bgP95": 0.0115,
+    "crMedian": 15.84,
+    "crP95": 14.14
+   },
+   "enemyType": null,
+   "intent": {
+    "color": "rgb(255, 180, 180)",
+    "Lt": 0.572,
+    "bgMedian": 0.0091,
+    "bgP95": 0.0243,
+    "crMedian": 10.52,
+    "crP95": 8.37
+   },
+   "godName": {
+    "color": "rgb(232, 233, 243)",
+    "Lt": 0.819,
+    "bgMedian": 0.0047,
+    "bgP95": 0.0124,
+    "crMedian": 15.88,
+    "crP95": 13.94
+   },
+   "burstHead": {
+    "color": "rgb(255, 233, 176)",
+    "Lt": 0.827,
+    "bgMedian": 0.0094,
+    "bgP95": 0.0287,
+    "crMedian": 14.76,
+    "crP95": 11.15
+   },
+   "enemyHpLabel": {
+    "color": "rgb(232, 233, 243)",
+    "Lt": 0.819,
+    "bgMedian": 0.2183,
+    "bgP95": 0.2765,
+    "crMedian": 3.24,
+    "crP95": 2.66
+   },
+   "godHpLabel": {
+    "color": "rgb(232, 233, 243)",
+    "Lt": 0.819,
+    "bgMedian": 0.3923,
+    "bgP95": 0.4569,
+    "crMedian": 1.96,
+    "crP95": 1.71
+   },
+   "resoLabel": {
+    "color": "rgb(232, 233, 243)",
+    "Lt": 0.819,
+    "bgMedian": 0.0051,
+    "bgP95": 0.0317,
+    "crMedian": 15.76,
+    "crP95": 10.63
+   },
+   "passive": {
+    "color": "rgb(154, 163, 204)",
+    "Lt": 0.374,
+    "bgMedian": 0.0189,
+    "bgP95": 0.0308,
+    "crMedian": 6.16,
+    "crP95": 5.25
+   }
+  },
+  "reso": [
+   {
+    "v": 0,
+    "cls": "resonance-gauge-wrap",
+    "afterOpacity": "0",
+    "afterShadow": "none",
+    "afterAnim": "none",
+    "gaugeAnim": "none",
+    "fillW": 0,
+    "gaugeW": 133.5,
+    "gaugeH": 12,
+    "fillRatio": 0,
+    "ticks": "repeating-linear-gradient(90deg, rgba(0,"
+   },
+   {
+    "v": 1,
+    "cls": "resonance-gauge-wrap",
+    "afterOpacity": "0",
+    "afterShadow": "none",
+    "afterAnim": "none",
+    "gaugeAnim": "none",
+    "fillW": 19.1,
+    "gaugeW": 133.5,
+    "gaugeH": 12,
+    "fillRatio": 0.143,
+    "ticks": "repeating-linear-gradient(90deg, rgba(0,"
+   },
+   {
+    "v": 2,
+    "cls": "resonance-gauge-wrap",
+    "afterOpacity": "0",
+    "afterShadow": "none",
+    "afterAnim": "none",
+    "gaugeAnim": "none",
+    "fillW": 38.1,
+    "gaugeW": 133.5,
+    "gaugeH": 12,
+    "fillRatio": 0.286,
+    "ticks": "repeating-linear-gradient(90deg, rgba(0,"
+   },
+   {
+    "v": 3,
+    "cls": "resonance-gauge-wrap",
+    "afterOpacity": "0",
+    "afterShadow": "none",
+    "afterAnim": "none",
+    "gaugeAnim": "none",
+    "fillW": 57.2,
+    "gaugeW": 133.5,
+    "gaugeH": 12,
+    "fillRatio": 0.429,
+    "ticks": "repeating-linear-gradient(90deg, rgba(0,"
+   },
+   {
+    "v": 4,
+    "cls": "resonance-gauge-wrap",
+    "afterOpacity": "0",
+    "afterShadow": "none",
+    "afterAnim": "none",
+    "gaugeAnim": "none",
+    "fillW": 76.3,
+    "gaugeW": 133.5,
+    "gaugeH": 12,
+    "fillRatio": 0.571,
+    "ticks": "repeating-linear-gradient(90deg, rgba(0,"
+   },
+   {
+    "v": 5,
+    "cls": "resonance-gauge-wrap resonance-gauge-mid",
+    "afterOpacity": "0.45",
+    "afterShadow": "rgba(255, 209, 102, 0.6) 0px 0px 10px 1px",
+    "afterAnim": "none",
+    "gaugeAnim": "none",
+    "fillW": 95.4,
+    "gaugeW": 133.5,
+    "gaugeH": 12,
+    "fillRatio": 0.714,
+    "ticks": "repeating-linear-gradient(90deg, rgba(0,"
+   },
+   {
+    "v": 6,
+    "cls": "resonance-gauge-wrap resonance-gauge-high",
+    "afterOpacity": "0.50505",
+    "afterShadow": "rgba(255, 209, 102, 0.8) 0px 0px 16px 2px",
+    "afterAnim": "arena-glow-breathe",
+    "gaugeAnim": "none",
+    "fillW": 114.5,
+    "gaugeW": 133.5,
+    "gaugeH": 12,
+    "fillRatio": 0.857,
+    "ticks": "repeating-linear-gradient(90deg, rgba(0,"
+   },
+   {
+    "v": 7,
+    "cls": "resonance-gauge-wrap resonance-gauge-high resonance-gauge-ready-flash",
+    "afterOpacity": "0.603083",
+    "afterShadow": "rgba(255, 209, 102, 0.8) 0px 0px 16px 2px",
+    "afterAnim": "arena-glow-breathe",
+    "gaugeAnim": "resonance-ready-flash",
+    "fillW": 136.9,
+    "gaugeW": 136.9,
+    "gaugeH": 12.3,
+    "fillRatio": 1,
+    "ticks": "repeating-linear-gradient(90deg, rgba(0,"
+   }
+  ],
+  "errors": []
+ }
+]

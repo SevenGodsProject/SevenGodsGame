@@ -1,0 +1,939 @@
+{
+ "key": "after-pc900",
+ "side": "after",
+ "vp": "pc900",
+ "god": "taiyo",
+ "enemy": "ryujin",
+ "seed": "d266-hand",
+ "mem": 909,
+ "steps": [
+  {
+   "round": 1,
+   "n": 5,
+   "p": {
+    "arena": {
+     "x": 6,
+     "y": 91.5,
+     "w": 888,
+     "h": 326.5
+    },
+    "battle": {
+     "x": 6,
+     "y": 41,
+     "w": 888,
+     "h": 613
+    },
+    "topbar": {
+     "x": 6,
+     "y": 41,
+     "w": 888,
+     "h": 42.5
+    },
+    "dock": {
+     "x": 6,
+     "y": 426,
+     "w": 888,
+     "h": 228
+    },
+    "hand": {
+     "x": 6,
+     "y": 490,
+     "w": 766,
+     "h": 164
+    },
+    "handScroll": {
+     "sw": 766,
+     "cw": 766,
+     "sh": 164,
+     "ch": 164,
+     "ox": "visible",
+     "wrap": "nowrap"
+    },
+    "handCount": "5",
+    "enemyHp": {
+     "x": 36,
+     "y": 144.5,
+     "w": 144,
+     "h": 18
+    },
+    "godHp": {
+     "x": 752.7,
+     "y": 144.5,
+     "w": 111.3,
+     "h": 18
+    },
+    "intent": {
+     "x": 36,
+     "y": 166.5,
+     "w": 43.6,
+     "h": 25
+    },
+    "intentFont": "20px",
+    "intentText": "40",
+    "reso": {
+     "x": 753.7,
+     "y": 185,
+     "w": 109.3,
+     "h": 12
+    },
+    "enemyAvatar": {
+     "x": 185.3,
+     "y": 87.1,
+     "w": 295.8,
+     "h": 309
+    },
+    "godAvatar": {
+     "x": 499.7,
+     "y": 107.4,
+     "w": 237.8,
+     "h": 288.7
+    },
+    "cardBoxes": [
+     {
+      "x": 83,
+      "y": 490,
+      "w": 116,
+      "h": 164
+     },
+     {
+      "x": 207,
+      "y": 490,
+      "w": 116,
+      "h": 164
+     },
+     {
+      "x": 331,
+      "y": 490,
+      "w": 116,
+      "h": 164
+     },
+     {
+      "x": 455,
+      "y": 490,
+      "w": 116,
+      "h": 164
+     },
+     {
+      "x": 579,
+      "y": 490,
+      "w": 116,
+      "h": 164
+     }
+    ]
+   },
+   "ink": {
+    "enemy": {
+     "x": 185.3,
+     "y": 123.3,
+     "w": 216.9,
+     "h": 235,
+     "drawn": 296,
+     "box": [
+      296,
+      309
+     ]
+    },
+    "god": {
+     "x": 517.5,
+     "y": 165.4,
+     "w": 218.8,
+     "h": 220.3,
+     "drawn": 238,
+     "box": [
+      238,
+      289
+     ]
+    }
+   },
+   "clipped": [],
+   "hScroll": false,
+   "hits": [
+    {
+     "i": 0,
+     "hit": true,
+     "inView": true,
+     "scrolled": false,
+     "disabled": false,
+     "w": 116,
+     "x": 83
+    },
+    {
+     "i": 1,
+     "hit": true,
+     "inView": true,
+     "scrolled": false,
+     "disabled": false,
+     "w": 116,
+     "x": 207
+    },
+    {
+     "i": 2,
+     "hit": true,
+     "inView": true,
+     "scrolled": false,
+     "disabled": false,
+     "w": 116,
+     "x": 331
+    },
+    {
+     "i": 3,
+     "hit": true,
+     "inView": true,
+     "scrolled": false,
+     "disabled": false,
+     "w": 116,
+     "x": 455
+    },
+    {
+     "i": 4,
+     "hit": true,
+     "inView": true,
+     "scrolled": false,
+     "disabled": true,
+     "w": 116,
+     "x": 579
+    }
+   ],
+   "status": "ラウンド 1 / 7神力 2 / 2スコア 0"
+  },
+  {
+   "round": 2,
+   "n": 7,
+   "p": {
+    "arena": {
+     "x": 6,
+     "y": 91.5,
+     "w": 888,
+     "h": 326.5
+    },
+    "battle": {
+     "x": 6,
+     "y": 41,
+     "w": 888,
+     "h": 613
+    },
+    "topbar": {
+     "x": 6,
+     "y": 41,
+     "w": 888,
+     "h": 42.5
+    },
+    "dock": {
+     "x": 6,
+     "y": 426,
+     "w": 888,
+     "h": 228
+    },
+    "hand": {
+     "x": 6,
+     "y": 490,
+     "w": 766,
+     "h": 164
+    },
+    "handScroll": {
+     "sw": 766,
+     "cw": 766,
+     "sh": 164,
+     "ch": 164,
+     "ox": "visible",
+     "wrap": "nowrap"
+    },
+    "handCount": "7",
+    "enemyHp": {
+     "x": 36,
+     "y": 144.5,
+     "w": 144,
+     "h": 18
+    },
+    "godHp": {
+     "x": 752.7,
+     "y": 144.5,
+     "w": 111.3,
+     "h": 18
+    },
+    "intent": {
+     "x": 36,
+     "y": 166.5,
+     "w": 42.8,
+     "h": 25
+    },
+    "intentFont": "20px",
+    "intentText": "70",
+    "reso": {
+     "x": 753.7,
+     "y": 185,
+     "w": 109.3,
+     "h": 12
+    },
+    "enemyAvatar": {
+     "x": 185.3,
+     "y": 87.1,
+     "w": 295.9,
+     "h": 309
+    },
+    "godAvatar": {
+     "x": 499.7,
+     "y": 107.4,
+     "w": 237.8,
+     "h": 288.8
+    },
+    "cardBoxes": [
+     {
+      "x": 6,
+      "y": 490,
+      "w": 116,
+      "h": 164
+     },
+     {
+      "x": 114.3,
+      "y": 490,
+      "w": 116,
+      "h": 164
+     },
+     {
+      "x": 222.7,
+      "y": 490,
+      "w": 116,
+      "h": 164
+     },
+     {
+      "x": 331,
+      "y": 490,
+      "w": 116,
+      "h": 164
+     },
+     {
+      "x": 439.3,
+      "y": 490,
+      "w": 116,
+      "h": 164
+     },
+     {
+      "x": 547.7,
+      "y": 490,
+      "w": 116,
+      "h": 164
+     },
+     {
+      "x": 656,
+      "y": 490,
+      "w": 116,
+      "h": 164
+     }
+    ]
+   },
+   "ink": {
+    "enemy": {
+     "x": 185.3,
+     "y": 123.3,
+     "w": 216.9,
+     "h": 235,
+     "drawn": 296,
+     "box": [
+      296,
+      309
+     ]
+    },
+    "god": {
+     "x": 517.5,
+     "y": 165.4,
+     "w": 218.8,
+     "h": 220.3,
+     "drawn": 238,
+     "box": [
+      238,
+      289
+     ]
+    }
+   },
+   "clipped": [],
+   "hScroll": false,
+   "hits": [
+    {
+     "i": 0,
+     "hit": true,
+     "inView": true,
+     "scrolled": false,
+     "disabled": false,
+     "w": 116,
+     "x": 6
+    },
+    {
+     "i": 1,
+     "hit": true,
+     "inView": true,
+     "scrolled": false,
+     "disabled": false,
+     "w": 116,
+     "x": 114
+    },
+    {
+     "i": 2,
+     "hit": true,
+     "inView": true,
+     "scrolled": false,
+     "disabled": false,
+     "w": 116,
+     "x": 223
+    },
+    {
+     "i": 3,
+     "hit": true,
+     "inView": true,
+     "scrolled": false,
+     "disabled": false,
+     "w": 116,
+     "x": 331
+    },
+    {
+     "i": 4,
+     "hit": true,
+     "inView": true,
+     "scrolled": false,
+     "disabled": false,
+     "w": 116,
+     "x": 439
+    },
+    {
+     "i": 5,
+     "hit": true,
+     "inView": true,
+     "scrolled": false,
+     "disabled": false,
+     "w": 116,
+     "x": 548
+    },
+    {
+     "i": 6,
+     "hit": true,
+     "inView": true,
+     "scrolled": false,
+     "disabled": false,
+     "w": 116,
+     "x": 656
+    }
+   ],
+   "status": "ラウンド 2 / 7神力 3 / 3スコア 0"
+  },
+  {
+   "round": 3,
+   "n": 9,
+   "p": {
+    "arena": {
+     "x": 6,
+     "y": 91.5,
+     "w": 888,
+     "h": 326.5
+    },
+    "battle": {
+     "x": 6,
+     "y": 41,
+     "w": 888,
+     "h": 613
+    },
+    "topbar": {
+     "x": 6,
+     "y": 41,
+     "w": 888,
+     "h": 42.5
+    },
+    "dock": {
+     "x": 6,
+     "y": 426,
+     "w": 888,
+     "h": 228
+    },
+    "hand": {
+     "x": 6,
+     "y": 490,
+     "w": 766,
+     "h": 164
+    },
+    "handScroll": {
+     "sw": 766,
+     "cw": 766,
+     "sh": 164,
+     "ch": 164,
+     "ox": "visible",
+     "wrap": "nowrap"
+    },
+    "handCount": "9",
+    "enemyHp": {
+     "x": 36,
+     "y": 144.5,
+     "w": 144,
+     "h": 18
+    },
+    "godHp": {
+     "x": 752.7,
+     "y": 144.5,
+     "w": 111.3,
+     "h": 18
+    },
+    "intent": {
+     "x": 36,
+     "y": 166.5,
+     "w": 96.8,
+     "h": 25
+    },
+    "intentFont": "20px",
+    "intentText": "強打 120",
+    "reso": {
+     "x": 753.7,
+     "y": 185,
+     "w": 109.3,
+     "h": 12
+    },
+    "enemyAvatar": {
+     "x": 185.3,
+     "y": 87.2,
+     "w": 295.8,
+     "h": 308.9
+    },
+    "godAvatar": {
+     "x": 499.7,
+     "y": 107.5,
+     "w": 237.7,
+     "h": 288.7
+    },
+    "cardBoxes": [
+     {
+      "x": 6,
+      "y": 490,
+      "w": 116,
+      "h": 164
+     },
+     {
+      "x": 87.3,
+      "y": 490,
+      "w": 116,
+      "h": 164
+     },
+     {
+      "x": 168.5,
+      "y": 490,
+      "w": 116,
+      "h": 164
+     },
+     {
+      "x": 249.8,
+      "y": 490,
+      "w": 116,
+      "h": 164
+     },
+     {
+      "x": 331,
+      "y": 490,
+      "w": 116,
+      "h": 164
+     },
+     {
+      "x": 412.3,
+      "y": 490,
+      "w": 116,
+      "h": 164
+     },
+     {
+      "x": 493.5,
+      "y": 490,
+      "w": 116,
+      "h": 164
+     },
+     {
+      "x": 574.8,
+      "y": 490,
+      "w": 116,
+      "h": 164
+     },
+     {
+      "x": 656,
+      "y": 490,
+      "w": 116,
+      "h": 164
+     }
+    ]
+   },
+   "ink": {
+    "enemy": {
+     "x": 185.3,
+     "y": 123.5,
+     "w": 216.8,
+     "h": 234.9,
+     "drawn": 296,
+     "box": [
+      296,
+      309
+     ]
+    },
+    "god": {
+     "x": 517.5,
+     "y": 165.5,
+     "w": 218.8,
+     "h": 220.2,
+     "drawn": 238,
+     "box": [
+      238,
+      289
+     ]
+    }
+   },
+   "clipped": [],
+   "hScroll": false,
+   "hits": [
+    {
+     "i": 0,
+     "hit": true,
+     "inView": true,
+     "scrolled": false,
+     "disabled": false,
+     "w": 116,
+     "x": 6
+    },
+    {
+     "i": 1,
+     "hit": true,
+     "inView": true,
+     "scrolled": false,
+     "disabled": false,
+     "w": 116,
+     "x": 87
+    },
+    {
+     "i": 2,
+     "hit": true,
+     "inView": true,
+     "scrolled": false,
+     "disabled": false,
+     "w": 116,
+     "x": 169
+    },
+    {
+     "i": 3,
+     "hit": true,
+     "inView": true,
+     "scrolled": false,
+     "disabled": false,
+     "w": 116,
+     "x": 250
+    },
+    {
+     "i": 4,
+     "hit": true,
+     "inView": true,
+     "scrolled": false,
+     "disabled": false,
+     "w": 116,
+     "x": 331
+    },
+    {
+     "i": 5,
+     "hit": true,
+     "inView": true,
+     "scrolled": false,
+     "disabled": false,
+     "w": 116,
+     "x": 412
+    },
+    {
+     "i": 6,
+     "hit": true,
+     "inView": true,
+     "scrolled": false,
+     "disabled": false,
+     "w": 116,
+     "x": 494
+    },
+    {
+     "i": 7,
+     "hit": true,
+     "inView": true,
+     "scrolled": false,
+     "disabled": false,
+     "w": 116,
+     "x": 575
+    },
+    {
+     "i": 8,
+     "hit": true,
+     "inView": true,
+     "scrolled": false,
+     "disabled": false,
+     "w": 116,
+     "x": 656
+    }
+   ],
+   "status": "ラウンド 3 / 7神力 4 / 4スコア 0"
+  },
+  {
+   "round": 4,
+   "n": 10,
+   "p": {
+    "arena": {
+     "x": 6,
+     "y": 91.5,
+     "w": 888,
+     "h": 326.5
+    },
+    "battle": {
+     "x": 6,
+     "y": 41,
+     "w": 888,
+     "h": 613
+    },
+    "topbar": {
+     "x": 6,
+     "y": 41,
+     "w": 888,
+     "h": 42.5
+    },
+    "dock": {
+     "x": 6,
+     "y": 426,
+     "w": 888,
+     "h": 228
+    },
+    "hand": {
+     "x": 6,
+     "y": 490,
+     "w": 766,
+     "h": 164
+    },
+    "handScroll": {
+     "sw": 766,
+     "cw": 766,
+     "sh": 164,
+     "ch": 164,
+     "ox": "visible",
+     "wrap": "nowrap"
+    },
+    "handCount": "10",
+    "enemyHp": {
+     "x": 36,
+     "y": 144.5,
+     "w": 144,
+     "h": 18
+    },
+    "godHp": {
+     "x": 752.7,
+     "y": 144.5,
+     "w": 111.3,
+     "h": 18
+    },
+    "intent": {
+     "x": 36,
+     "y": 166.5,
+     "w": 119.8,
+     "h": 25
+    },
+    "intentFont": "20px",
+    "intentText": "大海嘯 200",
+    "reso": {
+     "x": 753.7,
+     "y": 185,
+     "w": 109.3,
+     "h": 12
+    },
+    "enemyAvatar": {
+     "x": 185.3,
+     "y": 83.9,
+     "w": 295.8,
+     "h": 308.9
+    },
+    "godAvatar": {
+     "x": 500.5,
+     "y": 109.8,
+     "w": 236.1,
+     "h": 286.7
+    },
+    "cardBoxes": [
+     {
+      "x": 6,
+      "y": 490,
+      "w": 116,
+      "h": 164
+     },
+     {
+      "x": 78.2,
+      "y": 490,
+      "w": 116,
+      "h": 164
+     },
+     {
+      "x": 150.4,
+      "y": 490,
+      "w": 116,
+      "h": 164
+     },
+     {
+      "x": 222.7,
+      "y": 490,
+      "w": 116,
+      "h": 164
+     },
+     {
+      "x": 294.9,
+      "y": 490,
+      "w": 116,
+      "h": 164
+     },
+     {
+      "x": 367.1,
+      "y": 490,
+      "w": 116,
+      "h": 164
+     },
+     {
+      "x": 439.4,
+      "y": 490,
+      "w": 116,
+      "h": 164
+     },
+     {
+      "x": 511.6,
+      "y": 490,
+      "w": 116,
+      "h": 164
+     },
+     {
+      "x": 583.8,
+      "y": 490,
+      "w": 116,
+      "h": 164
+     },
+     {
+      "x": 656.1,
+      "y": 490,
+      "w": 116,
+      "h": 164
+     }
+    ]
+   },
+   "ink": {
+    "enemy": {
+     "x": 185.3,
+     "y": 120.2,
+     "w": 216.9,
+     "h": 235,
+     "drawn": 296,
+     "box": [
+      296,
+      309
+     ]
+    },
+    "god": {
+     "x": 518.2,
+     "y": 167.5,
+     "w": 217.3,
+     "h": 218.8,
+     "drawn": 236,
+     "box": [
+      236,
+      287
+     ]
+    }
+   },
+   "clipped": [],
+   "hScroll": false,
+   "hits": [
+    {
+     "i": 0,
+     "hit": true,
+     "inView": true,
+     "scrolled": false,
+     "disabled": false,
+     "w": 116,
+     "x": 6
+    },
+    {
+     "i": 1,
+     "hit": true,
+     "inView": true,
+     "scrolled": false,
+     "disabled": false,
+     "w": 116,
+     "x": 78
+    },
+    {
+     "i": 2,
+     "hit": true,
+     "inView": true,
+     "scrolled": false,
+     "disabled": false,
+     "w": 116,
+     "x": 150
+    },
+    {
+     "i": 3,
+     "hit": true,
+     "inView": true,
+     "scrolled": false,
+     "disabled": false,
+     "w": 116,
+     "x": 223
+    },
+    {
+     "i": 4,
+     "hit": true,
+     "inView": true,
+     "scrolled": false,
+     "disabled": false,
+     "w": 116,
+     "x": 295
+    },
+    {
+     "i": 5,
+     "hit": true,
+     "inView": true,
+     "scrolled": false,
+     "disabled": false,
+     "w": 116,
+     "x": 367
+    },
+    {
+     "i": 6,
+     "hit": true,
+     "inView": true,
+     "scrolled": false,
+     "disabled": false,
+     "w": 116,
+     "x": 439
+    },
+    {
+     "i": 7,
+     "hit": true,
+     "inView": true,
+     "scrolled": false,
+     "disabled": false,
+     "w": 116,
+     "x": 512
+    },
+    {
+     "i": 8,
+     "hit": true,
+     "inView": true,
+     "scrolled": false,
+     "disabled": false,
+     "w": 116,
+     "x": 584
+    },
+    {
+     "i": 9,
+     "hit": true,
+     "inView": true,
+     "scrolled": false,
+     "disabled": false,
+     "w": 116,
+     "x": 656
+    }
+   ],
+   "status": "ラウンド 4 / 7神力 5 / 5スコア 0"
+  }
+ ],
+ "clickTest": {
+  "idx": 0,
+  "before": 10,
+  "after": 9,
+  "reacted": true
+ },
+ "errors": []
+}
