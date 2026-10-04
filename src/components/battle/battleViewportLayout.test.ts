@@ -124,3 +124,18 @@ describe('Phase 6-B：名札（常に見える情報）', () => {
     expect(Math.min(...sizes)).toBeGreaterThanOrEqual(16)
   })
 })
+
+describe('決定266：手札が増えても戦場（1fr のアリーナ）を縮めない', () => {
+  // 決定266 より前は PC の手札が折り返し（flex-wrap: wrap）、10 枚目でドックが 1 段（約 172px）高くなって
+  // 敵・神の立ち絵が 245px → 97px に縮んでいた（docs/evidence/decision266/hand/HAND_SUMMARY.md）
+  const d266 = css.slice(css.indexOf('決定266 Battle Viewport Stability Hotfix'))
+
+  it('keeps the PC hand on one line and absorbs extra cards by a small overlap', () => {
+    expect(d266).toMatch(/@media \(min-width: 900px\)[\s\S]*\.battle-dock-row \.hand \{\s*flex-wrap:\s*nowrap/)
+    expect(d266).toMatch(/\.hand > \.card-view \+ \.card-view \{\s*margin-left:\s*clamp\(-56px,/)
+  })
+
+  it('passes the hand count to CSS from the hand element', () => {
+    expect(screen).toMatch(/className="hand" data-hand-count=\{state\.hand\.length\} style=\{\{ \['--hand-n' as string\]: state\.hand\.length \}\}/)
+  })
+})

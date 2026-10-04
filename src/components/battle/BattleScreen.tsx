@@ -605,7 +605,7 @@ export function BattleScreen({
         />
 
         <div className="battle-dock-row">
-          <div className="hand">
+          <div className="hand" data-hand-count={state.hand.length} style={{ ['--hand-n' as string]: state.hand.length }}>
             {state.hand.map((instance) => (
               <CardView
                 key={instance.uid}

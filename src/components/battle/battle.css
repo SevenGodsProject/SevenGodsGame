@@ -8029,3 +8029,30 @@ body.battle-viewport .battle-main .enemy-avatar-wrap {
   from { opacity: 1; }
   to { opacity: 0.9; }
 }
+
+/* ============================================================
+   決定266 Battle Viewport Stability Hotfix（PC ≥900px のみ）
+   原則「戦場サイズは固定し、カード増加は手札エリアだけで吸収する」。
+   Root Cause：`.battle` は grid（auto／minmax(0,1fr)／auto）で、ドック行は auto＝中身の高さ。
+   PC の手札は `.hand { flex-wrap: wrap }` のため、横幅に入りきらない枚数（1508px 幅で 10 枚目）で
+   2 行に折り返し、ドックが 1 段（約 172px）高くなった分だけ 1fr のアリーナ＝敵・神の立ち絵が縮んでいた。
+   修正：PC も 1 行（nowrap）に固定し、入りきらない分はカード同士を少しだけ重ねて横方向で吸収する。
+   重なり量＝(手札の内幅 − n×116 − (n−1)×8) ÷ (n−1)（margin の % は flex container の内幅基準）。
+   0〜−56px に clamp（カード中心は常に自分自身が見える＝クリック可能）。n は BattleScreen の `--hand-n`。
+   SP（<900px）は既に横 1 列＋横スクロールでドック高が不変のため変更しない。
+   ============================================================ */
+@media (min-width: 900px) {
+  body.battle-viewport .battle-dock-row .hand {
+    flex-wrap: nowrap;
+  }
+
+  body.battle-viewport .battle-dock-row .hand > .card-view + .card-view {
+    margin-left: clamp(-56px, calc((100% - var(--hand-n, 1) * 116px - (var(--hand-n, 1) - 1) * 8px) / max(var(--hand-n, 1) - 1, 1)), 0px);
+  }
+
+  /* 重なったときだけ意味を持つ：指したカード・キーボードで選んだカードを隣より前へ（使用中 z-index:4 より下） */
+  body.battle-viewport .battle-dock-row .hand > .card-view:hover,
+  body.battle-viewport .battle-dock-row .hand > .card-view:focus-visible {
+    z-index: 3;
+  }
+}
