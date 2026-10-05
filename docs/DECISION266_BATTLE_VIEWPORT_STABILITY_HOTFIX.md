@@ -3,7 +3,7 @@
 - 日付：2026-10-04
 - branch：`feat/d266-battle-viewport-stability`（`0b6c332`＝決定264 Duel HUD v3 の上に積む）
 - 判断主体：Hotfix を Production Release 前に別 Decision として実施すること＝**AI 判断**（決定264 は CEO Human QA 4/4 PASS で目的達成、所感「カードが増えると戦闘画面が小さくなる」を分離）。Root Cause の特定・修正方式・AC 判定＝**AI 判断**（CLAUDE.md §6-2：軽微な UI 調整・レスポンシブ対応・バグ修正）。Production 公開・master merge は CEO 判断（本 Decision では行わない）
-- 状態：**HUMAN QA READY**（Polish 込み。2026-10-05 Polish を commit・§9）
+- 状態：**CEO HUMAN QA 4/4 PASS（2026-10-05）→ RELEASE GATE（決定264 と一括）**（Polish 込み・§9・§10）
 - runtime commit：`9c6596a`（Hotfix 本体）＋`a19166a`（Polish・§9）（Before 比較＝`:4302` 決定264 `0b6c332`／After＝`:4303`／Production 同一＝`:4301`）
 - 変更：`battle.css` 末尾に 1 ブロック（+27 行・PC ≥900px のみ）＋`BattleScreen.tsx` 1 行（手札 div に `data-hand-count` と `--hand-n`）＋`battleViewportLayout.test.ts`（+15 行・構造回帰）。`src/core`・`rules.ts`・カード・Intent・7R・AP・seed・timing 定数 変更 0。**Polish（`a19166a`）**：同ブロック内 +27/−8 行（`--hand-step`・`.card-view-name` max-width・focus-visible 持ち上げ）＋`battleViewportLayout.test.ts` +8/−1 行。JS 差分 0
 
@@ -156,3 +156,16 @@ URL（PC）：`http://127.0.0.1:4303/?seed=d266-hand&enemy=ryujin`（大耀を�
 - AC 判定（After・PC 6 VP）：AC1 arena／AC2 select／AC3 nameCost／AC4 hoverFocusFull／AC5 inViewport／noClipNoScrollNoError／AC7 sp すべて **PASS**。
 - 品質 Gate（2026-10-05 再実行）：tsc 0・対象 test 2 ファイル 20/20 PASS（`battleViewportLayout.test.ts`・`duelHud.test.ts`）。full vitest は同日朝に WIP 込みで 1,312 PASS を確認済みのため再実行せず（CEO 指示）。
 - 記録上の注意：`polish/polish-probe.log.txt` 末尾の `07:24:42 FAIL after-pc1024x660 TimeoutError: page.screenshot` は 10/05 の再実行で起きたスクリーンショットの 30 秒タイムアウト（低メモリ環境要因）。評価用 JSON／画像（10/04 21:24 まで）は上書きされていない。
+
+## 10. CEO Human QA 結果（2026-10-05）— 4/4 PASS
+
+対象：`:4303`（Polish 後 `a19166a` の build・`index-BPym-jW-.css`）・`?seed=d266-hand&enemy=ryujin`・大耀・ラウンドを終える ×3 → R4 手札 10 枚。判定は **CEO**。
+
+| # | 設問 | 結果 |
+|---|---|---|
+| 1 | 手札 10 枚でも敵・神・戦場が小さくならないか | **PASS**（敵・神・戦場サイズに問題なし） |
+| 2 | 10 枚すべての名前・コストが読めるか | **PASS**（全 10 枚可読） |
+| 3 | hover／focus したカードの本文を完全に読めるか | **PASS**（本文まで可読） |
+| 4 | カードの重なり方にプレイ上の違和感がないか | **PASS**（違和感なし） |
+
+→ 決定266 は **HUMAN QA PASS**。決定264（CEO Human QA 4/4 PASS・2026-10-04）と**一括で Release Gate** へ（CEO 指示 2026-10-05）。Release 対象 runtime＝`90093b2`（決定264）・`9c6596a`（決定266 Hotfix）・`a19166a`（決定266 Polish）。決定265（動画 docs）・決定267／263（未実装）は対象外。
