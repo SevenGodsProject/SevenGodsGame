@@ -132,7 +132,13 @@ describe('決定266：手札が増えても戦場（1fr のアリーナ）を縮
 
   it('keeps the PC hand on one line and absorbs extra cards by a small overlap', () => {
     expect(d266).toMatch(/@media \(min-width: 900px\)[\s\S]*\.battle-dock-row \.hand \{\s*flex-wrap:\s*nowrap/)
-    expect(d266).toMatch(/\.hand > \.card-view \+ \.card-view \{\s*margin-left:\s*clamp\(-56px,/)
+    expect(d266).toMatch(/--hand-step:\s*clamp\(68px, calc\(\(100cqw - 116px\)/)
+    expect(d266).toMatch(/\.hand > \.card-view \+ \.card-view \{\s*margin-left:\s*calc\(var\(--hand-step\) - 124px\)/)
+  })
+
+  it('keeps card names inside the visible strip and lifts focused cards like hovered ones (Polish)', () => {
+    expect(d266).toMatch(/\.card-view:not\(:last-child\) \.card-view-name \{\s*max-width:\s*calc\(var\(--hand-step\) - 12px\)/)
+    expect(d266).toMatch(/\.card-view:not\(:disabled\):focus-visible \{\s*transform:\s*translateY\(-8px\) scale\(1\.04\)/)
   })
 
   it('passes the hand count to CSS from the hand element', () => {

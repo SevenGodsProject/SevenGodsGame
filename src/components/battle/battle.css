@@ -8037,22 +8037,41 @@ body.battle-viewport .battle-main .enemy-avatar-wrap {
    PC の手札は `.hand { flex-wrap: wrap }` のため、横幅に入りきらない枚数（1508px 幅で 10 枚目）で
    2 行に折り返し、ドックが 1 段（約 172px）高くなった分だけ 1fr のアリーナ＝敵・神の立ち絵が縮んでいた。
    修正：PC も 1 行（nowrap）に固定し、入りきらない分はカード同士を少しだけ重ねて横方向で吸収する。
-   重なり量＝(手札の内幅 − n×116 − (n−1)×8) ÷ (n−1)（margin の % は flex container の内幅基準）。
-   0〜−56px に clamp（カード中心は常に自分自身が見える＝クリック可能）。n は BattleScreen の `--hand-n`。
+   送り幅 --hand-step＝(手札の内幅 − 116) ÷ (n−1) を 68〜124px に clamp（重なり 0〜56px・カード中心は常に
+   自分自身＝クリック可能）。n は BattleScreen の `--hand-n`。
+   Polish（Human QA フォローアップ）：名前を見えている帯に収め、focus-visible も hover と同じく前面＋持ち上げ。
    SP（<900px）は既に横 1 列＋横スクロールでドック高が不変のため変更しない。
    ============================================================ */
 @media (min-width: 900px) {
   body.battle-viewport .battle-dock-row .hand {
     flex-wrap: nowrap;
+    /* 決定266 Polish：カードの名前の幅を「次のカードまでの送り幅」から決めるため、手札を幅の container にする（cqw） */
+    container-type: inline-size;
+    /* 送り幅（カード左端→次のカード左端）。入りきるときは 116＋gap 8＝124px（重ならない）。
+       入りきらないときだけ (手札の内幅 − 116) ÷ (n−1) まで詰める＝枚数と横幅に応じて必要量だけ段階的に重なる。
+       下限 68px＝カード中心（58px）は常に隣に覆われない */
+    --hand-step: clamp(68px, calc((100cqw - 116px) / max(var(--hand-n, 1) - 1, 1)), 124px);
   }
 
   body.battle-viewport .battle-dock-row .hand > .card-view + .card-view {
-    margin-left: clamp(-56px, calc((100% - var(--hand-n, 1) * 116px - (var(--hand-n, 1) - 1) * 8px) / max(var(--hand-n, 1) - 1, 1)), 0px);
+    margin-left: calc(var(--hand-step) - 124px);
   }
 
-  /* 重なったときだけ意味を持つ：指したカード・キーボードで選んだカードを隣より前へ（使用中 z-index:4 より下） */
+  /* 決定266 Polish：名前は「見えている帯」の中に収める。帯より長い名前だけ 2 行に折り返す
+     （名前の左端＝枠 2px＋内側 6〜7px、次のカードの枠 2px と 1〜2px の余白を引いて step − 12px）。
+     重ならない（step 124px）ときは内幅 102px より広い＝今までどおり。最後の 1 枚は覆われないので対象外 */
+  body.battle-viewport .battle-dock-row .hand > .card-view:not(:last-child) .card-view-name {
+    max-width: calc(var(--hand-step) - 12px);
+  }
+
+  /* 指したカード・キーボードで選んだカードを隣より前へ（使用中 z-index:4 より下）。
+     キーボード（focus-visible）でも hover と同じだけ持ち上げる＝本文まで隣に隠れずに読める */
   body.battle-viewport .battle-dock-row .hand > .card-view:hover,
   body.battle-viewport .battle-dock-row .hand > .card-view:focus-visible {
     z-index: 3;
+  }
+
+  body.battle-viewport .battle-dock-row .hand > .card-view:not(:disabled):focus-visible {
+    transform: translateY(-8px) scale(1.04);
   }
 }
