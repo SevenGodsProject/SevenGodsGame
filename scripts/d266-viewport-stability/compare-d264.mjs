@@ -2,7 +2,9 @@
 // 同じ key（vp×神×敵・同一 seed）で突き合わせる。面積・HP 幅・環 none・scrim（名札背景）・artScale・共鳴・intent・重なり・文字切れ・横スク・console。
 import { readdirSync, readFileSync, writeFileSync, existsSync } from 'node:fs'
 const A = 'docs/evidence/decision264/layout/runs-layout'
-const B = 'docs/evidence/decision266/d264-regression/layout/runs-layout'
+// dir= で比較先（After 側）のディレクトリを変えられる（Polish：docs/evidence/decision266/polish/d264-regression）
+const DIR = (process.argv.find((x) => x.startsWith('dir=')) ?? 'dir=docs/evidence/decision266/d264-regression').slice(4)
+const B = `${DIR}/layout/runs-layout`
 const L = ['# 決定266 AC8：決定264 回帰（D264 After :4302 ↔ D266 After :4303・同一 seed／同一 key）', '']
 const rows = []
 let worst = { area: 0, hp: 0, reso: 0, intent: 0, gap: 0 }
@@ -35,7 +37,7 @@ L.push(`レイアウト箱（舞台・名札・HP・共鳴・intent・OTOMO・do
 L.push(`runs: ${rows.length}・FAIL ${fails.length}${fails.length ? '（' + fails.join(', ') + '）' : ''}`, '', `最大差：面積 ${worst.area} pt・HP 箱 ${worst.hp} px・共鳴 ${worst.reso} px・intent ${worst.intent} px・敵–神間隔 ${worst.gap} px（立ち絵の呼吸アニメによる測定時刻差を含む）`, '')
 L.push('| key | 敵 面積% | 神 面積% | 敵 HP 幅 | 神 HP 幅 | 環 | scrim | artScale | 列 | 文字切れ | 横スク | console | 判定 |', '|---|---|---|---|---|---|---|---|---|---|---|---|---|', ...rows.sort())
 // gate-hud
-const ha = 'docs/evidence/decision264/gate-hud/gate-hud.json', hb = 'docs/evidence/decision266/d264-regression/gate-hud/gate-hud-after.json'
+const ha = 'docs/evidence/decision264/gate-hud/gate-hud.json', hb = `${DIR}/gate-hud/gate-hud-after.json`
 if (existsSync(ha) && existsSync(hb)) {
   const ja = JSON.parse(readFileSync(ha, 'utf8')).filter((r) => r.side === 'after'), jb = JSON.parse(readFileSync(hb, 'utf8'))
   L.push('', '## gate-hud（環・角金具・名札 scrim・HP 箱・intent 箱・コントラスト）', '', '| key | pseudo 同値 | hp 同値 | intentBox 同値 | contrast 最大差 | 判定 |', '|---|---|---|---|---|---|')
@@ -55,6 +57,6 @@ if (existsSync(ha) && existsSync(hb)) {
   }
   L.push('', `gate-hud FAIL ${hf}`)
 }
-writeFileSync('docs/evidence/decision266/d264-regression/COMPARE_D264.md', L.join('\n') + '\n')
+writeFileSync(`${DIR}/COMPARE_D264.md`, L.join('\n') + '\n')
 console.log(L.slice(0, 6).join('\n'))
 console.log(L.filter((l) => l.startsWith('gate-hud FAIL')).join('\n'))

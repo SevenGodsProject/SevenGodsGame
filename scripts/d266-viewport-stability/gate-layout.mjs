@@ -5,7 +5,7 @@
 // node scripts/d264-duel-hud/gate-layout.mjs [only=after] [vp=pc660,sp844]
 import { withBrowser, startBattle, MEASURE, BASES, logger } from './lib.mjs'
 import { writeFileSync, mkdirSync, existsSync, readFileSync } from 'node:fs'
-const OUT = 'docs/evidence/decision266/d264-regression/layout'
+const OUT = (process.argv.find((x) => x.startsWith('out=')) ?? 'out=docs/evidence/decision266/d264-regression').slice(4) + '/layout'
 const RUNS = `${OUT}/runs-layout`
 mkdirSync(RUNS, { recursive: true })
 const args = Object.fromEntries(process.argv.slice(2).map((a) => a.split('=')))

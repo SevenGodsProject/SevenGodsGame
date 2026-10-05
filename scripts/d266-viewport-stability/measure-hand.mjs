@@ -4,7 +4,8 @@
 // node scripts/d266-viewport-stability/measure-hand.mjs [only=before|after] [vp=pc660,sp844] [force=1]
 import { withBrowser, startBattle, MEASURE, BASES, logger } from './lib.mjs'
 import { writeFileSync, mkdirSync, existsSync, readFileSync } from 'node:fs'
-const OUT = 'docs/evidence/decision266/hand'
+const OUT = args_out() ?? 'docs/evidence/decision266/hand'
+function args_out() { const a = process.argv.find((x) => x.startsWith('out=')); return a ? a.slice(4) : null }
 mkdirSync(`${OUT}/runs`, { recursive: true })
 mkdirSync(`${OUT}/shots`, { recursive: true })
 const args = Object.fromEntries(process.argv.slice(2).map((a) => a.split('=')))
@@ -83,8 +84,9 @@ async function one(side, vp) {
       const loc = page.locator('.hand .card-view').nth(idx)
       await loc.scrollIntoViewIfNeeded()
       const before = await page.evaluate(() => document.querySelectorAll('.hand .card-view').length)
-      await loc.click({ timeout: 5000 })
-      await page.waitForTimeout(1500)
+      // 低メモリ機で main thread が混むと「安定待ち」が 5 秒を超えることがある（Polish 再実測時に SP で発生）→ 15 秒
+      await loc.click({ timeout: 15000 })
+      await page.waitForFunction((n) => document.querySelectorAll('.hand .card-view').length < n, before, { timeout: 8000 }).catch(() => {})
       const after = await page.evaluate(() => document.querySelectorAll('.hand .card-view').length)
       clickTest = { idx, before, after, reacted: after < before }
     }

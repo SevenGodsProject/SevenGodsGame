@@ -4,7 +4,7 @@
 // 1 browser・context を 1 つずつ直列（6GB 機）。Before＝:4301（Production 8cba184 と同一 runtime）／After＝:4302
 import { withBrowser, startBattle, BASES, logger } from './lib.mjs'
 import { writeFileSync, mkdirSync } from 'node:fs'
-const OUT = 'docs/evidence/decision266/d264-regression/gate-hud'
+const OUT = (process.argv.find((x) => x.startsWith('out=')) ?? 'out=docs/evidence/decision266/d264-regression').slice(4) + '/gate-hud'
 mkdirSync(`${OUT}/shots`, { recursive: true })
 const args = Object.fromEntries(process.argv.slice(2).map((a) => a.split('=')))
 const SIDES = args.only ? [args.only] : ['before', 'after']
