@@ -3,7 +3,7 @@
 - 日付：2026-10-04
 - branch：`feat/d266-battle-viewport-stability`（`0b6c332`＝決定264 Duel HUD v3 の上に積む）
 - 判断主体：Hotfix を Production Release 前に別 Decision として実施すること＝**AI 判断**（決定264 は CEO Human QA 4/4 PASS で目的達成、所感「カードが増えると戦闘画面が小さくなる」を分離）。Root Cause の特定・修正方式・AC 判定＝**AI 判断**（CLAUDE.md §6-2：軽微な UI 調整・レスポンシブ対応・バグ修正）。Production 公開・master merge は CEO 判断（本 Decision では行わない）
-- 状態：**CEO HUMAN QA 4/4 PASS（2026-10-05）→ RELEASE GATE（決定264 と一括）**（Polish 込み・§9・§10）
+- 状態：**PRODUCTION LIVE / CLOSED（2026-10-05・決定264 と一括・deployment 6859334890・rollback 6823201527・Production Smoke PASS）**（Polish 込み・§9・§10）
 - runtime commit：`9c6596a`（Hotfix 本体）＋`a19166a`（Polish・§9）（Before 比較＝`:4302` 決定264 `0b6c332`／After＝`:4303`／Production 同一＝`:4301`）
 - 変更：`battle.css` 末尾に 1 ブロック（+27 行・PC ≥900px のみ）＋`BattleScreen.tsx` 1 行（手札 div に `data-hand-count` と `--hand-n`）＋`battleViewportLayout.test.ts`（+15 行・構造回帰）。`src/core`・`rules.ts`・カード・Intent・7R・AP・seed・timing 定数 変更 0。**Polish（`a19166a`）**：同ブロック内 +27/−8 行（`--hand-step`・`.card-view-name` max-width・focus-visible 持ち上げ）＋`battleViewportLayout.test.ts` +8/−1 行。JS 差分 0
 
