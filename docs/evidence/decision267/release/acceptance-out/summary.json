@@ -1,0 +1,711 @@
+{
+  "base": "http://127.0.0.1:4306",
+  "at": "2026-10-06T19:54:43.844Z",
+  "summary": [
+    {
+      "tag": "u1-pc",
+      "pass": true,
+      "failed": [],
+      "errors": []
+    },
+    {
+      "tag": "u2-sp",
+      "pass": true,
+      "failed": [],
+      "errors": []
+    },
+    {
+      "tag": "u3-pc",
+      "pass": true,
+      "failed": [],
+      "errors": []
+    },
+    {
+      "tag": "",
+      "pass": false,
+      "failed": [
+        "実行エラー: Error: winBattle: could not win in 3 attempts"
+      ],
+      "errors": []
+    },
+    {
+      "tag": "u5-pc",
+      "pass": true,
+      "failed": [],
+      "errors": []
+    },
+    {
+      "tag": "u6-sp",
+      "pass": true,
+      "failed": [],
+      "errors": []
+    }
+  ],
+  "runs": [
+    {
+      "tag": "u1-pc",
+      "viewport": {
+        "width": 1508,
+        "height": 660
+      },
+      "win": {
+        "attempts": 1,
+        "seed": null
+      },
+      "reward": {
+        "count": 3,
+        "cards": [
+          {
+            "id": "card_common_resonance_01",
+            "role": "ready",
+            "chip": "即戦力",
+            "now": "いま 1 枚編成中",
+            "limit": "上限 2 → 3",
+            "hint": "2 枚目を足してから 3 枚目",
+            "god": false,
+            "insideViewport": true,
+            "chipInside": true,
+            "nowInside": true,
+            "limitInside": true
+          },
+          {
+            "id": "card_ebisu_attack_02",
+            "role": "identity",
+            "chip": "神の個性",
+            "now": "いま 2 枚編成中",
+            "limit": "上限 2 → 3",
+            "hint": null,
+            "god": true,
+            "insideViewport": true,
+            "chipInside": true,
+            "nowInside": true,
+            "limitInside": true
+          },
+          {
+            "id": "card_common_support_01",
+            "role": "next",
+            "chip": "次の構築",
+            "now": "いま 0 枚",
+            "limit": "上限 2 → 3",
+            "hint": "まず 1〜2 枚入れてみよう",
+            "god": false,
+            "insideViewport": true,
+            "chipInside": true,
+            "nowInside": true,
+            "limitInside": true
+          }
+        ],
+        "skip": {
+          "text": "今回は見送るこの 3 枚は次の 2 勝では出ません",
+          "inside": true
+        },
+        "note": {
+          "text": "この 3 枚は次の 2 勝では出ません",
+          "inside": true
+        },
+        "hScroll": false,
+        "subtitle": "選んだカードは、次回からこの神のデッキで1枚多く編成できます。"
+      },
+      "toast": "次回の編成で『共振』を 3 枚まで積めます",
+      "storage": {
+        "keys": [
+          "sevengods.deckPreference",
+          "sevengods.matchups",
+          "sevengods.otomoBond",
+          "sevengods.records",
+          "sevengods.rewardBonuses",
+          "sevengods.rewardHistory",
+          "sevengods.stakes"
+        ],
+        "rewardBonuses": {
+          "ebisu": {
+            "card_common_resonance_01": 1
+          }
+        },
+        "rewardHistory": {
+          "ebisu": {
+            "offered": [
+              "card_common_resonance_01",
+              "card_ebisu_attack_02",
+              "card_common_support_01"
+            ],
+            "declined": []
+          }
+        },
+        "hasHistoryKey": true
+      },
+      "errors": [],
+      "checks": [
+        {
+          "label": "AC1 3 枚・重複なし",
+          "pass": true
+        },
+        {
+          "label": "AC13 役割チップ 3 個・文言",
+          "pass": true
+        },
+        {
+          "label": "AC13 枚数行の文言",
+          "pass": true
+        },
+        {
+          "label": "AC13 カード・チップ・枚数行が枠内",
+          "pass": true
+        },
+        {
+          "label": "AC13 横スクロール 0",
+          "pass": true
+        },
+        {
+          "label": "§1-4 先頭は即戦力",
+          "pass": true
+        },
+        {
+          "label": "AC5 神の個性 1 枚＝専用",
+          "pass": true
+        },
+        {
+          "label": "AC14 トースト文言",
+          "pass": true
+        },
+        {
+          "label": "AC10 rewardBonuses +1",
+          "pass": true
+        },
+        {
+          "label": "AC10 offered に 3 枚",
+          "pass": true
+        },
+        {
+          "label": "AC10 declined 不変",
+          "pass": true
+        },
+        {
+          "label": "§5 サブタイトル",
+          "pass": true
+        },
+        {
+          "label": "console error 0",
+          "pass": true
+        }
+      ]
+    },
+    {
+      "tag": "u2-sp",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "win": {
+        "attempts": 1,
+        "seed": null
+      },
+      "reward": {
+        "count": 3,
+        "cards": [
+          {
+            "id": "card_common_hinder_02",
+            "role": "ready",
+            "chip": "即戦力",
+            "now": "いま 1 枚編成中",
+            "limit": "上限 2 → 3",
+            "hint": "2 枚目を足してから 3 枚目",
+            "god": false,
+            "insideViewport": true,
+            "chipInside": true,
+            "nowInside": true,
+            "limitInside": true
+          },
+          {
+            "id": "card_ebisu_attack_02",
+            "role": "identity",
+            "chip": "神の個性",
+            "now": "いま 2 枚編成中",
+            "limit": "上限 2 → 3",
+            "hint": null,
+            "god": true,
+            "insideViewport": true,
+            "chipInside": true,
+            "nowInside": true,
+            "limitInside": true
+          },
+          {
+            "id": "card_common_attack_08",
+            "role": "next",
+            "chip": "次の構築",
+            "now": "いま 0 枚",
+            "limit": "上限 2 → 3",
+            "hint": "まず 1〜2 枚入れてみよう",
+            "god": false,
+            "insideViewport": true,
+            "chipInside": true,
+            "nowInside": true,
+            "limitInside": true
+          }
+        ],
+        "skip": {
+          "text": "今回は見送るこの 3 枚は次の 2 勝では出ません",
+          "inside": true
+        },
+        "note": {
+          "text": "この 3 枚は次の 2 勝では出ません",
+          "inside": true
+        },
+        "hScroll": false,
+        "subtitle": "選んだカードは、次回からこの神のデッキで1枚多く編成できます。"
+      },
+      "toast": "次回の編成で『見切り』を 3 枚まで積めます",
+      "storage": {
+        "keys": [
+          "sevengods.deckPreference",
+          "sevengods.matchups",
+          "sevengods.otomoBond",
+          "sevengods.records",
+          "sevengods.rewardBonuses",
+          "sevengods.rewardHistory",
+          "sevengods.stakes"
+        ],
+        "rewardBonuses": {
+          "ebisu": {
+            "card_common_hinder_02": 1
+          }
+        },
+        "rewardHistory": {
+          "ebisu": {
+            "offered": [
+              "card_common_hinder_02",
+              "card_ebisu_attack_02",
+              "card_common_attack_08"
+            ],
+            "declined": []
+          }
+        },
+        "hasHistoryKey": true
+      },
+      "errors": [],
+      "checks": [
+        {
+          "label": "AC1 3 枚・重複なし",
+          "pass": true
+        },
+        {
+          "label": "AC13 役割チップ 3 個・文言",
+          "pass": true
+        },
+        {
+          "label": "AC13 枚数行の文言",
+          "pass": true
+        },
+        {
+          "label": "AC13 カード・チップ・枚数行が枠内",
+          "pass": true
+        },
+        {
+          "label": "AC13 横スクロール 0",
+          "pass": true
+        },
+        {
+          "label": "§1-4 先頭は即戦力",
+          "pass": true
+        },
+        {
+          "label": "AC5 神の個性 1 枚＝専用",
+          "pass": true
+        },
+        {
+          "label": "AC14 トースト文言",
+          "pass": true
+        },
+        {
+          "label": "AC10 rewardBonuses +1",
+          "pass": true
+        },
+        {
+          "label": "AC10 offered に 3 枚",
+          "pass": true
+        },
+        {
+          "label": "AC10 declined 不変",
+          "pass": true
+        },
+        {
+          "label": "§5 サブタイトル",
+          "pass": true
+        },
+        {
+          "label": "console error 0",
+          "pass": true
+        }
+      ]
+    },
+    {
+      "tag": "u3-pc",
+      "viewport": {
+        "width": 1508,
+        "height": 660
+      },
+      "win1": {
+        "attempts": 3,
+        "seed": null
+      },
+      "win2": {
+        "attempts": 1,
+        "seed": null
+      },
+      "seed2Start": "seed-1791316160016",
+      "reward1": {
+        "count": 3,
+        "cards": [
+          {
+            "id": "card_common_attack_02",
+            "role": "ready",
+            "chip": "即戦力",
+            "now": "いま 1 枚編成中",
+            "limit": "上限 2 → 3",
+            "hint": "2 枚目を足してから 3 枚目",
+            "god": false,
+            "insideViewport": true,
+            "chipInside": true,
+            "nowInside": true,
+            "limitInside": true
+          },
+          {
+            "id": "card_common_support_01",
+            "role": "next",
+            "chip": "次の構築",
+            "now": "いま 0 枚",
+            "limit": "上限 2 → 3",
+            "hint": "まず 1〜2 枚入れてみよう",
+            "god": false,
+            "insideViewport": true,
+            "chipInside": true,
+            "nowInside": true,
+            "limitInside": true
+          },
+          {
+            "id": "card_common_attack_09",
+            "role": "next",
+            "chip": "次の構築",
+            "now": "いま 0 枚",
+            "limit": "上限 2 → 3",
+            "hint": "まず 1〜2 枚入れてみよう",
+            "god": false,
+            "insideViewport": true,
+            "chipInside": true,
+            "nowInside": true,
+            "limitInside": true
+          }
+        ],
+        "skip": {
+          "text": "今回は見送るこの 3 枚は次の 2 勝では出ません",
+          "inside": true
+        },
+        "note": {
+          "text": "この 3 枚は次の 2 勝では出ません",
+          "inside": true
+        },
+        "hScroll": false,
+        "subtitle": "選んだカードは、次回からこの神のデッキで1枚多く編成できます。"
+      },
+      "reward2": {
+        "count": 3,
+        "cards": [
+          {
+            "id": "card_common_guard_02",
+            "role": "ready",
+            "chip": "即戦力",
+            "now": "いま 1 枚編成中",
+            "limit": "上限 2 → 3",
+            "hint": "2 枚目を足してから 3 枚目",
+            "god": false,
+            "insideViewport": true,
+            "chipInside": true,
+            "nowInside": true,
+            "limitInside": true
+          },
+          {
+            "id": "card_common_attack_07",
+            "role": "next",
+            "chip": "次の構築",
+            "now": "いま 0 枚",
+            "limit": "上限 2 → 3",
+            "hint": "まず 1〜2 枚入れてみよう",
+            "god": false,
+            "insideViewport": true,
+            "chipInside": true,
+            "nowInside": true,
+            "limitInside": true
+          },
+          {
+            "id": "card_common_attack_08",
+            "role": "next",
+            "chip": "次の構築",
+            "now": "いま 0 枚",
+            "limit": "上限 2 → 3",
+            "hint": "まず 1〜2 枚入れてみよう",
+            "god": false,
+            "insideViewport": true,
+            "chipInside": true,
+            "nowInside": true,
+            "limitInside": true
+          }
+        ],
+        "skip": {
+          "text": "今回は見送るこの 3 枚は次の 2 勝では出ません",
+          "inside": true
+        },
+        "note": {
+          "text": "この 3 枚は次の 2 勝では出ません",
+          "inside": true
+        },
+        "hScroll": false,
+        "subtitle": "選んだカードは、次回からこの神のデッキで1枚多く編成できます。"
+      },
+      "storageAfterSkip": {
+        "keys": [
+          "sevengods.deckPreference",
+          "sevengods.matchups",
+          "sevengods.otomoBond",
+          "sevengods.records",
+          "sevengods.rewardBonuses",
+          "sevengods.rewardHistory",
+          "sevengods.stakes"
+        ],
+        "rewardBonuses": {
+          "ebisu": {
+            "card_ebisu_attack_01": 1,
+            "card_ebisu_support_01": 1,
+            "card_ebisu_attack_02": 1,
+            "card_ebisu_support_02": 1
+          }
+        },
+        "rewardHistory": {
+          "ebisu": {
+            "offered": [
+              "card_common_attack_02",
+              "card_common_support_01",
+              "card_common_attack_09"
+            ],
+            "declined": [
+              "card_common_attack_02",
+              "card_common_support_01",
+              "card_common_attack_09"
+            ]
+          }
+        },
+        "hasHistoryKey": true
+      },
+      "storageEnd": {
+        "keys": [
+          "sevengods.deckPreference",
+          "sevengods.matchups",
+          "sevengods.otomoBond",
+          "sevengods.records",
+          "sevengods.rewardBonuses",
+          "sevengods.rewardHistory",
+          "sevengods.stakes"
+        ],
+        "rewardBonuses": {
+          "ebisu": {
+            "card_ebisu_attack_01": 1,
+            "card_ebisu_support_01": 1,
+            "card_ebisu_attack_02": 1,
+            "card_ebisu_support_02": 1,
+            "card_common_guard_02": 1
+          }
+        },
+        "rewardHistory": {
+          "ebisu": {
+            "offered": [
+              "card_common_attack_02",
+              "card_common_support_01",
+              "card_common_attack_09",
+              "card_common_guard_02",
+              "card_common_attack_07",
+              "card_common_attack_08"
+            ],
+            "declined": [
+              "card_common_attack_02",
+              "card_common_support_01",
+              "card_common_attack_09"
+            ]
+          }
+        },
+        "hasHistoryKey": true
+      },
+      "errors": [],
+      "checks": [
+        {
+          "label": "AC8 神の個性 0",
+          "pass": true
+        },
+        {
+          "label": "AC8 次の構築 2",
+          "pass": true
+        },
+        {
+          "label": "AC8 専用札なし",
+          "pass": true
+        },
+        {
+          "label": "AC11 見送りで rewardBonuses 不変",
+          "pass": true
+        },
+        {
+          "label": "AC11 offered に 3 枚",
+          "pass": true
+        },
+        {
+          "label": "AC11 declined に同じ 3 枚",
+          "pass": true
+        },
+        {
+          "label": "AC12 2 勝目は別 seed",
+          "pass": true
+        },
+        {
+          "label": "AC12 1 勝目の 3 枚が 2 勝目に出ない",
+          "pass": true
+        },
+        {
+          "label": "AC1 2 勝目も 3 枚",
+          "pass": true
+        },
+        {
+          "label": "§5 見送りボタン本文・注記が枠内",
+          "pass": true
+        },
+        {
+          "label": "AC13 横スクロール 0",
+          "pass": true
+        },
+        {
+          "label": "AC10 2 勝で offered 6",
+          "pass": true
+        },
+        {
+          "label": "console error 0",
+          "pass": true
+        }
+      ]
+    },
+    {
+      "tag": "",
+      "error": "Error: winBattle: could not win in 3 attempts",
+      "checks": [
+        {
+          "label": "実行エラー: Error: winBattle: could not win in 3 attempts",
+          "pass": false
+        }
+      ]
+    },
+    {
+      "tag": "u5-pc",
+      "viewport": {
+        "width": 1508,
+        "height": 660
+      },
+      "attempts": 2,
+      "status": "勝利",
+      "dom": {
+        "openReward": false,
+        "resultHub": true,
+        "dailyDiff": true,
+        "rewardOverlay": false
+      },
+      "storage": {
+        "keys": [
+          "sevengods.daily",
+          "sevengods.deckPreference",
+          "sevengods.matchups",
+          "sevengods.otomoBond",
+          "sevengods.pendingRuns"
+        ],
+        "rewardBonuses": null,
+        "rewardHistory": null,
+        "hasHistoryKey": false
+      },
+      "errors": [],
+      "checks": [
+        {
+          "label": "Daily で勝利できた（前提）",
+          "pass": true
+        },
+        {
+          "label": "AC15 open-reward 無し",
+          "pass": true
+        },
+        {
+          "label": "AC15 result-hub 直接",
+          "pass": true
+        },
+        {
+          "label": "AC15 daily-diff あり",
+          "pass": true
+        },
+        {
+          "label": "AC15 rewardHistory 未作成",
+          "pass": true
+        },
+        {
+          "label": "console error 0",
+          "pass": true
+        }
+      ]
+    },
+    {
+      "tag": "u6-sp",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "attempts": 2,
+      "status": "勝利",
+      "dom": {
+        "openReward": false,
+        "resultHub": true,
+        "dailyDiff": true,
+        "rewardOverlay": false
+      },
+      "storage": {
+        "keys": [
+          "sevengods.daily",
+          "sevengods.deckPreference",
+          "sevengods.matchups",
+          "sevengods.otomoBond",
+          "sevengods.pendingRuns"
+        ],
+        "rewardBonuses": null,
+        "rewardHistory": null,
+        "hasHistoryKey": false
+      },
+      "errors": [],
+      "checks": [
+        {
+          "label": "Daily で勝利できた（前提）",
+          "pass": true
+        },
+        {
+          "label": "AC15 open-reward 無し",
+          "pass": true
+        },
+        {
+          "label": "AC15 result-hub 直接",
+          "pass": true
+        },
+        {
+          "label": "AC15 daily-diff あり",
+          "pass": true
+        },
+        {
+          "label": "AC15 rewardHistory 未作成",
+          "pass": true
+        },
+        {
+          "label": "console error 0",
+          "pass": true
+        }
+      ]
+    }
+  ]
+}

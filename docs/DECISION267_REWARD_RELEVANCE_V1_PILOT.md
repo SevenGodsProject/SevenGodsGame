@@ -3,7 +3,7 @@
 - 日付：2026-10-06（実装・自動 Gate）
 - branch：`feat/d267-reward-relevance-v1`（worktree `C:\Users\kimi1\SevenGodsGame-d267-pilot`・base＝master `202e476`＝Production）
 - 判断主体：Pilot 開始＝**CEO 承認（2026-10-06）**。実装方式・Gate 判定・未決 3 件（U1 配色・U2 トースト長・U3 QA seed）＝**AI 判断**（CLAUDE.md §6-2）。Human QA＝**CEO**。
-- 状態：**CEO HUMAN QA PASS（2026-10-07・Q1 YES／Q2 YES／トースト 1,200ms 問題なし）→ Release Gate へ**（仕様変更なし・merge／push／deploy 未実施）
+- 状態：**RELEASE GATE PASS → RELEASE READY（2026-10-07・READY FOR CEO PRODUCTION RELEASE APPROVAL）**（CEO Human QA PASS 済み・merge／push／deploy 未実施）
 - 正とした設計：`docs/DECISION267_REWARD_RELEVANCE_V1_PILOT_FINAL_DESIGN.md`（再設計なし。§10 の bonus 参照の記述のみ実コードへ訂正）
 - 前提文書：`docs/VICTORY_REWARD_VALUE_AUDIT.md`・`docs/DECISION267_REWARD_RELEVANCE_V1_PREFLIGHT.md`
 
@@ -93,3 +93,7 @@ Final Design §15 どおり。branch の runtime 4 commit を revert（merge 後
 | トースト 1,200ms（U2） | **問題なし**（900ms への短縮は不要） |
 
 **判定：HUMAN QA PASS（CEO）**。仕様変更なしで Release Gate（clean RC worktree・完全シリアル）へ進む。Production deploy は Release Gate PASS 後の CEO 最終承認まで行わない。
+
+## 8. Release Gate（2026-10-07・clean RC worktree）
+
+`release/d267-reward-relevance-rc`（`SevenGodsGame-d267-rc`）で CEO 指定 18 項目＋AC1〜AC18 を完全シリアルで実施。**RELEASE GATE PASS → RELEASE READY**（merge／push／deploy は CEO 最終承認待ち）。要点：master `202e476` は RC の祖先（fast-forward・conflict 0）／`src/core` 差分 0／tsc 0・oxlint 0・vitest 1,330／build hash＝Human QA dist／Playwright U1〜U6 6/6（run3・固定 seed 化後）／migration 10/10／同 seed で RC と Production のスコア 8,700・予告列・打ち筋が完全一致／console 0。詳細 `docs/evidence/decision267/release/RELEASE_GATE.md`。

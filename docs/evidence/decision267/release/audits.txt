@@ -1,0 +1,1842 @@
+PASS  ranking backend files (api/, src/server/, tsconfig.api.json): 0
+PASS  ranking client/ticket/leaderboard/identity files: 0
+PASS  Phase 4 ranking scripts/docs: 0
+PASS  DB schema / migration files (*.sql, migrations/): 0
+PASS  Neon / postgres / pglite dependencies: 0
+PASS  lockfile neon/pglite entries: 0
+PASS  src: network calls other than same-origin asset loads (non-test): 0
+info  src: same-origin asset fetch (SE .wav; identical on master): src/components/battle/sound.ts:104
+PASS  src: /api/ URL literals: 0
+PASS  src: ranking env vars (RANKING_*, DATABASE_URL, NEON_, VITE_RANKING) in non-test source: 0
+info  src: same words inside test token lists: src/core/replay/replayBoundary.test.ts:146
+PASS  src: imports of removed ranking modules: 0
+PASS  RULES.ranking.submissionEnabled === false: 1 (expect 1)
+PASS  submissionEnabled: true anywhere in tracked text files: 0
+PASS  dist: "/api/" occurrences: 0
+PASS  dist: neon / postgres / pglite: 0
+PASS  dist: DATABASE_URL / RANKING_ / NEON_: 0
+PASS  dist: fetch( calls other than Vite modulepreload polyfill / SE .wav: 0
+info  dist: benign fetch( = 2 (Vite modulepreload polyfill, SE .wav)
+PASS  dist: api/ranking or /ranking/ paths: 0
+PASS  dist: submissionEnabled:!0 (=true): 0
+info  dist: submissionEnabled:!1 (=false) = 1; word ランキング = 1 (RecordScreen の「ランキングやオンライン通信はありません」文言のみ想定)
+RESULT: PASS (ranking absence)
+exit 0
+tracked .env files: 0
+hits by area: {"other":8,"build":1,"docs(prose)":2831,"script":119,"test":62,"source":4}
+  [other] .env reference @ .gitignore:28
+  [other] .env reference @ .gitignore:29
+  [other] .env reference @ .gitignore:30
+  [other] .env reference @ .gitignore:31
+  [build] PASSWORD @ dist/assets/index-3It0LpNO.js (x2)
+  [docs(prose)] long hex >=48 @ docs/ASSET_RIGHTS_LEDGER.md:87
+  [docs(prose)] long hex >=48 @ docs/ASSET_RIGHTS_LEDGER.md:88
+  [docs(prose)] long hex >=48 @ docs/assets-kit/manifest.json:107
+  [docs(prose)] long hex >=48 @ docs/assets-kit/manifest.json:122
+  [docs(prose)] long hex >=48 @ docs/assets-kit/manifest.json:154
+  [docs(prose)] long hex >=48 @ docs/assets-kit/manifest.json:169
+  [docs(prose)] long hex >=48 @ docs/assets-kit/manifest.json:184
+  [docs(prose)] long hex >=48 @ docs/assets-kit/manifest.json:199
+  [docs(prose)] long hex >=48 @ docs/assets-kit/manifest.json:214
+  [docs(prose)] long hex >=48 @ docs/assets-kit/manifest.json:229
+  [docs(prose)] long hex >=48 @ docs/assets-kit/manifest.json:261
+  [docs(prose)] long hex >=48 @ docs/assets-kit/manifest.json:276
+  [docs(prose)] long hex >=48 @ docs/assets-kit/manifest.json:291
+  [docs(prose)] long hex >=48 @ docs/assets-kit/manifest.json:306
+  [docs(prose)] long hex >=48 @ docs/assets-kit/manifest.json:321
+  [docs(prose)] long hex >=48 @ docs/assets-kit/manifest.json:336
+  [docs(prose)] long hex >=48 @ docs/assets-kit/manifest.json:368
+  [docs(prose)] long hex >=48 @ docs/assets-kit/manifest.json:383
+  [docs(prose)] long hex >=48 @ docs/assets-kit/manifest.json:398
+  [docs(prose)] long hex >=48 @ docs/assets-kit/manifest.json:413
+  [docs(prose)] long hex >=48 @ docs/assets-kit/manifest.json:428
+  [docs(prose)] long hex >=48 @ docs/assets-kit/manifest.json:443
+  [docs(prose)] long hex >=48 @ docs/assets-kit/manifest.json:47
+  [docs(prose)] long hex >=48 @ docs/assets-kit/manifest.json:475
+  [docs(prose)] long hex >=48 @ docs/assets-kit/manifest.json:490
+  [docs(prose)] long hex >=48 @ docs/assets-kit/manifest.json:505
+  [docs(prose)] long hex >=48 @ docs/assets-kit/manifest.json:520
+  [docs(prose)] long hex >=48 @ docs/assets-kit/manifest.json:535
+  [docs(prose)] long hex >=48 @ docs/assets-kit/manifest.json:550
+  [docs(prose)] long hex >=48 @ docs/assets-kit/manifest.json:582
+  [docs(prose)] long hex >=48 @ docs/assets-kit/manifest.json:597
+  [docs(prose)] long hex >=48 @ docs/assets-kit/manifest.json:612
+  [docs(prose)] long hex >=48 @ docs/assets-kit/manifest.json:62
+  [docs(prose)] long hex >=48 @ docs/assets-kit/manifest.json:627
+  [docs(prose)] long hex >=48 @ docs/assets-kit/manifest.json:642
+  [docs(prose)] long hex >=48 @ docs/assets-kit/manifest.json:657
+  [docs(prose)] long hex >=48 @ docs/assets-kit/manifest.json:689
+  [docs(prose)] long hex >=48 @ docs/assets-kit/manifest.json:704
+  [docs(prose)] long hex >=48 @ docs/assets-kit/manifest.json:719
+  [docs(prose)] long hex >=48 @ docs/assets-kit/manifest.json:734
+  [docs(prose)] long hex >=48 @ docs/assets-kit/manifest.json:749
+  [docs(prose)] long hex >=48 @ docs/assets-kit/manifest.json:764
+  [docs(prose)] long hex >=48 @ docs/assets-kit/manifest.json:77
+  [docs(prose)] long hex >=48 @ docs/assets-kit/manifest.json:92
+  [docs(prose)] NEON @ docs/CLEAN_RELEASE_AUDIT.md:132
+  [docs(prose)] NEON @ docs/CLEAN_RELEASE_AUDIT.md:146
+  [docs(prose)] DATABASE_URL @ docs/CLEAN_RELEASE_AUDIT.md:149
+  [docs(prose)] DATABASE_URL @ docs/CLEAN_RELEASE_AUDIT.md:152
+  [docs(prose)] NEON @ docs/CLEAN_RELEASE_AUDIT.md:152
+  [docs(prose)] NEON @ docs/CLEAN_RELEASE_AUDIT.md:158
+  [docs(prose)] NEON @ docs/CLEAN_RELEASE_AUDIT.md:160
+  [docs(prose)] NEON @ docs/CLEAN_RELEASE_AUDIT.md:162
+  [docs(prose)] .env reference @ docs/CLEAN_RELEASE_AUDIT.md:166
+  [docs(prose)] DATABASE_URL @ docs/CLEAN_RELEASE_AUDIT.md:170
+  [docs(prose)] NEON @ docs/CLEAN_RELEASE_AUDIT.md:170
+  [docs(prose)] SECRET @ docs/CLEAN_RELEASE_AUDIT.md:170
+  [docs(prose)] BYPASS @ docs/CLEAN_RELEASE_AUDIT.md:170
+  [docs(prose)] .env reference @ docs/CLEAN_RELEASE_AUDIT.md:170
+  [docs(prose)] .env reference @ docs/CLEAN_RELEASE_AUDIT.md:171
+  [docs(prose)] .env reference @ docs/CLEAN_RELEASE_AUDIT.md:172
+  [docs(prose)] NEON @ docs/CLEAN_RELEASE_AUDIT.md:173
+  [docs(prose)] PASSWORD @ docs/CLEAN_RELEASE_AUDIT.md:174
+  [docs(prose)] .env reference @ docs/CLEAN_RELEASE_AUDIT.md:175
+  [docs(prose)] NEON @ docs/CLEAN_RELEASE_AUDIT.md:18
+  [docs(prose)] BYPASS @ docs/CLEAN_RELEASE_AUDIT.md:18
+  [docs(prose)] NEON @ docs/CLEAN_RELEASE_AUDIT.md:183
+  [docs(prose)] NEON @ docs/CLEAN_RELEASE_AUDIT.md:203
+  [docs(prose)] .env reference @ docs/CLEAN_RELEASE_AUDIT.md:302
+  [docs(prose)] NEON @ docs/CLEAN_RELEASE_AUDIT.md:52
+  [docs(prose)] BYPASS @ docs/CLEAN_RELEASE_AUDIT.md:52
+  [docs(prose)] .env reference @ docs/CLEAN_RELEASE_AUDIT.md:60
+  [docs(prose)] NEON @ docs/CLEAN_RELEASE_AUDIT.md:61
+  [docs(prose)] BYPASS @ docs/CLEAN_RELEASE_AUDIT.md:69
+  [docs(prose)] NEON @ docs/CLEAN_RELEASE_AUDIT.md:73
+  [docs(prose)] NEON @ docs/DECISION197_RELEASE_GATE_E1_SOLVE_LOOP.md:129
+  [docs(prose)] NEON @ docs/DECISION197_RELEASE_GATE_E1_SOLVE_LOOP.md:133
+  [docs(prose)] NEON @ docs/DECISION197_RELEASE_GATE_E1_SOLVE_LOOP.md:136
+  [docs(prose)] NEON @ docs/DECISION198_PRODUCTION_RELEASE_E1_SOLVE_LOOP.md:102
+  [docs(prose)] .env reference @ docs/DECISION198_PRODUCTION_RELEASE_E1_SOLVE_LOOP.md:102
+  [docs(prose)] NEON @ docs/DECISION198_PRODUCTION_RELEASE_E1_SOLVE_LOOP.md:26
+  [docs(prose)] NEON @ docs/DECISION198_PRODUCTION_RELEASE_E1_SOLVE_LOOP.md:98
+  [docs(prose)] NEON @ docs/DECISION199_INTERACTION_FEEL_AUDIT.md:297
+  [docs(prose)] NEON @ docs/DECISION200_INTERACTION_FEEL_V1.md:171
+  [docs(prose)] NEON @ docs/DECISION200_INTERACTION_FEEL_V1.md:173
+  [docs(prose)] .env reference @ docs/DECISION200_INTERACTION_FEEL_V1.md:173
+  [docs(prose)] NEON @ docs/DECISION201_RELEASE_GATE_INTERACTION_FEEL_V1.md:146
+  [docs(prose)] NEON @ docs/DECISION201_RELEASE_GATE_INTERACTION_FEEL_V1.md:149
+  [docs(prose)] .env reference @ docs/DECISION201_RELEASE_GATE_INTERACTION_FEEL_V1.md:152
+  [docs(prose)] .env reference @ docs/DECISION201_RELEASE_GATE_INTERACTION_FEEL_V1.md:82
+  [docs(prose)] DATABASE_URL @ docs/DECISION201_RELEASE_GATE_INTERACTION_FEEL_V1.md:83
+  [docs(prose)] NEON @ docs/DECISION201_RELEASE_GATE_INTERACTION_FEEL_V1.md:83
+  [docs(prose)] DATABASE_URL @ docs/DECISION201_RELEASE_GATE_INTERACTION_FEEL_V1.md:95
+  [docs(prose)] NEON @ docs/DECISION201_RELEASE_GATE_INTERACTION_FEEL_V1.md:95
+  [docs(prose)] NEON @ docs/DECISION202_PRODUCTION_RELEASE_INTERACTION_FEEL_V1.md:78
+  [docs(prose)] NEON @ docs/DECISION202_PRODUCTION_RELEASE_INTERACTION_FEEL_V1.md:80
+  [docs(prose)] .env reference @ docs/DECISION202_PRODUCTION_RELEASE_INTERACTION_FEEL_V1.md:80
+  [docs(prose)] NEON @ docs/DECISION203_SOLVE_LEGIBILITY_AUDIT.md:4
+  [docs(prose)] NEON @ docs/DECISION205_SOLVE_LEGIBILITY_V1_SPEC.md:4
+  [docs(prose)] NEON @ docs/DECISION207_RELEASE_GATE_SOLVE_LEGIBILITY_V1.md:8
+  [docs(prose)] NEON @ docs/DECISION208_PRODUCTION_RELEASE_SOLVE_LEGIBILITY_V1.md:58
+  [docs(prose)] .env reference @ docs/DECISION208_PRODUCTION_RELEASE_SOLVE_LEGIBILITY_V1.md:58
+  [docs(prose)] NEON @ docs/DECISION213_OTOMO_STANCE_NARROW_PILOT.md:7
+  [docs(prose)] .env reference @ docs/DECISION213_OTOMO_STANCE_NARROW_PILOT.md:7
+  [docs(prose)] NEON @ docs/DECISION223_PILOT_PREFLIGHT.md:208
+  [docs(prose)] NEON @ docs/DECISION223_PILOT_PREFLIGHT.md:4
+  [docs(prose)] NEON @ docs/DECISION223_PREMIUM_COMBAT_LANGUAGE_FINAL_AUDIT.md:4
+  [docs(prose)] NEON @ docs/DECISION223_PREMIUM_COMBAT_LANGUAGE_FINAL_AUDIT.md:429
+  [docs(prose)] NEON @ docs/DECISION224_VISUAL_STANDARD_GATE.md:262
+  [docs(prose)] NEON @ docs/DECISION224_VISUAL_STANDARD_GATE.md:4
+  [docs(prose)] NEON @ docs/DECISION225_BATTLE_SCREEN_PREMIUM_QUALITY_AUDIT.md:4
+  [docs(prose)] NEON @ docs/DECISION226_VICTORY_REVEAL_PREFLIGHT.md:4
+  [docs(prose)] NEON @ docs/DECISIONS.md:294
+  [docs(prose)] .env reference @ docs/DECISIONS.md:294
+  [docs(prose)] NEON @ docs/DECISIONS.md:295
+  [docs(prose)] NEON @ docs/DECISIONS.md:296
+  [docs(prose)] DATABASE_URL @ docs/DECISIONS.md:297
+  [docs(prose)] NEON @ docs/DECISIONS.md:297
+  [docs(prose)] .env reference @ docs/DECISIONS.md:297
+  [docs(prose)] DATABASE_URL @ docs/DECISIONS.md:298
+  [docs(prose)] NEON @ docs/DECISIONS.md:298
+  [docs(prose)] DATABASE_URL @ docs/DECISIONS.md:299
+  [docs(prose)] NEON @ docs/DECISIONS.md:299
+  [docs(prose)] .env reference @ docs/DECISIONS.md:299
+  [docs(prose)] NEON @ docs/DECISIONS.md:300
+  [docs(prose)] NEON @ docs/DECISIONS.md:301
+  [docs(prose)] NEON @ docs/DECISIONS.md:302
+  [docs(prose)] NEON @ docs/DECISIONS.md:303
+  [docs(prose)] DATABASE_URL @ docs/DECISIONS.md:304
+  [docs(prose)] NEON @ docs/DECISIONS.md:304
+  [docs(prose)] DATABASE_URL @ docs/DECISIONS.md:305
+  [docs(prose)] NEON @ docs/DECISIONS.md:305
+  [docs(prose)] .env reference @ docs/DECISIONS.md:305
+  [docs(prose)] DATABASE_URL @ docs/DECISIONS.md:306
+  [docs(prose)] NEON @ docs/DECISIONS.md:306
+  [docs(prose)] SECRET @ docs/DECISIONS.md:306
+  [docs(prose)] BYPASS @ docs/DECISIONS.md:306
+  [docs(prose)] DATABASE_URL @ docs/DECISIONS.md:307
+  [docs(prose)] NEON @ docs/DECISIONS.md:307
+  [docs(prose)] BYPASS @ docs/DECISIONS.md:307
+  [docs(prose)] NEON @ docs/DECISIONS.md:308
+  [docs(prose)] DATABASE_URL @ docs/DECISIONS.md:309
+  [docs(prose)] NEON @ docs/DECISIONS.md:309
+  [docs(prose)] DATABASE_URL @ docs/DECISIONS.md:310
+  [docs(prose)] NEON @ docs/DECISIONS.md:310
+  [docs(prose)] NEON @ docs/DECISIONS.md:311
+  [docs(prose)] NEON @ docs/DECISIONS.md:312
+  [docs(prose)] DATABASE_URL @ docs/DECISIONS.md:313
+  [docs(prose)] DATABASE_URL @ docs/DECISIONS.md:314
+  [docs(prose)] NEON @ docs/DECISIONS.md:314
+  [docs(prose)] NEON @ docs/DECISIONS.md:316
+  [docs(prose)] NEON @ docs/DECISIONS.md:317
+  [docs(prose)] NEON @ docs/DECISIONS.md:319
+  [docs(prose)] NEON @ docs/DECISIONS.md:320
+  [docs(prose)] NEON @ docs/DECISIONS.md:321
+  [docs(prose)] NEON @ docs/DECISIONS.md:322
+  [docs(prose)] NEON @ docs/DECISIONS.md:323
+  [docs(prose)] NEON @ docs/DECISIONS.md:324
+  [docs(prose)] NEON @ docs/DECISIONS.md:325
+  [docs(prose)] NEON @ docs/DECISIONS.md:327
+  [docs(prose)] NEON @ docs/DECISIONS.md:328
+  [docs(prose)] NEON @ docs/DECISIONS.md:329
+  [docs(prose)] NEON @ docs/DECISIONS.md:330
+  [docs(prose)] NEON @ docs/DECISIONS.md:331
+  [docs(prose)] NEON @ docs/DECISIONS.md:332
+  [docs(prose)] .env reference @ docs/DECISIONS.md:332
+  [docs(prose)] DATABASE_URL @ docs/DECISIONS.md:333
+  [docs(prose)] NEON @ docs/DECISIONS.md:333
+  [docs(prose)] .env reference @ docs/DECISIONS.md:333
+  [docs(prose)] NEON @ docs/DECISIONS.md:337
+  [docs(prose)] .env reference @ docs/DECISIONS.md:337
+  [docs(prose)] NEON @ docs/DECISIONS.md:338
+  [docs(prose)] .env reference @ docs/DECISIONS.md:338
+  [docs(prose)] long hex >=48 @ docs/DECISIONS.md:338
+  [docs(prose)] DATABASE_URL @ docs/DECISIONS.md:339
+  [docs(prose)] NEON @ docs/DECISIONS.md:339
+  [docs(prose)] .env reference @ docs/DECISIONS.md:339
+  [docs(prose)] long hex >=48 @ docs/DECISIONS.md:339
+  [docs(prose)] DATABASE_URL @ docs/DECISIONS.md:340
+  [docs(prose)] NEON @ docs/DECISIONS.md:340
+  [docs(prose)] .env reference @ docs/DECISIONS.md:340
+  [docs(prose)] long hex >=48 @ docs/DECISIONS.md:340
+  [docs(prose)] DATABASE_URL @ docs/DECISIONS.md:341
+  [docs(prose)] NEON @ docs/DECISIONS.md:341
+  [docs(prose)] .env reference @ docs/DECISIONS.md:341
+  [docs(prose)] long hex >=48 @ docs/DECISIONS.md:341
+  [docs(prose)] DATABASE_URL @ docs/DECISIONS.md:342
+  [docs(prose)] NEON @ docs/DECISIONS.md:342
+  [docs(prose)] .env reference @ docs/DECISIONS.md:342
+  [docs(prose)] long hex >=48 @ docs/DECISIONS.md:342
+  [docs(prose)] DATABASE_URL @ docs/DECISIONS.md:343
+  [docs(prose)] NEON @ docs/DECISIONS.md:343
+  [docs(prose)] BYPASS @ docs/DECISIONS.md:343
+  [docs(prose)] .env reference @ docs/DECISIONS.md:343
+  [docs(prose)] DATABASE_URL @ docs/DECISIONS.md:344
+  [docs(prose)] NEON @ docs/DECISIONS.md:344
+  [docs(prose)] BYPASS @ docs/DECISIONS.md:344
+  [docs(prose)] .env reference @ docs/DECISIONS.md:344
+  [docs(prose)] NEON @ docs/DECISIONS.md:345
+  [docs(prose)] NEON @ docs/DECISIONS.md:346
+  [docs(prose)] DATABASE_URL @ docs/DECISIONS.md:348
+  [docs(prose)] NEON @ docs/DECISIONS.md:348
+  [docs(prose)] .env reference @ docs/DECISIONS.md:348
+  [docs(prose)] NEON @ docs/DECISIONS.md:349
+  [docs(prose)] DATABASE_URL @ docs/DECISIONS.md:351
+  [docs(prose)] NEON @ docs/DECISIONS.md:351
+  [docs(prose)] .env reference @ docs/DECISIONS.md:351
+  [docs(prose)] NEON @ docs/DECISIONS.md:352
+  [docs(prose)] DATABASE_URL @ docs/DECISIONS.md:354
+  [docs(prose)] NEON @ docs/DECISIONS.md:354
+  [docs(prose)] .env reference @ docs/DECISIONS.md:354
+  [docs(prose)] NEON @ docs/DECISIONS.md:355
+  [docs(prose)] NEON @ docs/DECISIONS.md:358
+  [docs(prose)] NEON @ docs/DECISIONS.md:359
+  [docs(prose)] NEON @ docs/DECISIONS.md:361
+  [docs(prose)] .env reference @ docs/DECISIONS.md:361
+  [docs(prose)] NEON @ docs/DECISIONS.md:362
+  [docs(prose)] .env reference @ docs/DECISIONS.md:362
+  [docs(prose)] NEON @ docs/DECISIONS.md:364
+  [docs(prose)] NEON @ docs/DECISIONS.md:366
+  [docs(prose)] .env reference @ docs/DECISIONS.md:366
+  [docs(prose)] NEON @ docs/DECISIONS.md:427
+  [docs(prose)] NEON @ docs/DECISIONS.md:469
+  [docs(prose)] .env reference @ docs/DECISIONS.md:469
+  [docs(prose)] .env reference @ docs/ENEMY_BATCH_B1_JUUMA_M4_RC.md:159
+  [docs(prose)] NEON @ docs/ENEMY_BATCH_B1_JUUMA_M4_RC.md:187
+  [docs(prose)] long hex >=48 @ docs/ENEMY_BATCH_B1_JUUMA_M4_RC.md:21
+  [docs(prose)] long hex >=48 @ docs/ENEMY_BATCH_B1_JUUMA_M4_RC.md:219
+  [docs(prose)] DATABASE_URL @ docs/ENEMY_BATCH_B1_JUUMA_M4_RC.md:255
+  [docs(prose)] NEON @ docs/ENEMY_BATCH_B1_JUUMA_M4_RC.md:255
+  [docs(prose)] long hex >=48 @ docs/ENEMY_BATCH_B1_JUUMA_M4_RC.md:43
+  [docs(prose)] long hex >=48 @ docs/ENEMY_BATCH_B1_JUUMA_M4_RC.md:6
+  [docs(prose)] long hex >=48 @ docs/ENEMY_GENA_INTEGRATED_RELEASE_GATE.md:33
+  [docs(prose)] long hex >=48 @ docs/ENEMY_GENA_INTEGRATED_RELEASE_GATE.md:34
+  [docs(prose)] long hex >=48 @ docs/ENEMY_GENA_INTEGRATED_RELEASE_GATE.md:35
+  [docs(prose)] long hex >=48 @ docs/ENEMY_GENA_INTEGRATED_RELEASE_GATE.md:36
+  [docs(prose)] DATABASE_URL @ docs/ENEMY_GENA_INTEGRATED_RELEASE_GATE.md:52
+  [docs(prose)] NEON @ docs/ENEMY_GENA_INTEGRATED_RELEASE_GATE.md:52
+  [docs(prose)] NEON @ docs/ENEMY_GENA_INTEGRATED_RELEASE_GATE.md:54
+  [docs(prose)] DATABASE_URL @ docs/ENEMY_GENA_INTEGRATED_RELEASE_GATE.md:56
+  [docs(prose)] NEON @ docs/ENEMY_GENA_INTEGRATED_RELEASE_GATE.md:56
+  [docs(prose)] BYPASS @ docs/ENEMY_GENA_INTEGRATED_RELEASE_GATE.md:56
+  [docs(prose)] .env reference @ docs/ENEMY_GENA_INTEGRATED_RELEASE_GATE.md:56
+  [docs(prose)] DATABASE_URL @ docs/ENEMY_GENA_ONI_M4_RC.md:157
+  [docs(prose)] NEON @ docs/ENEMY_GENA_ONI_M4_RC.md:157
+  [docs(prose)] .env reference @ docs/ENEMY_GENA_ONI_M4_RC.md:158
+  [docs(prose)] NEON @ docs/ENEMY_GENA_ONI_M4_RC.md:171
+  [docs(prose)] .env reference @ docs/ENEMY_GENA_ONI_M4_RC.md:171
+  [docs(prose)] long hex >=48 @ docs/ENEMY_GENA_ONI_M4_RC.md:23
+  [docs(prose)] long hex >=48 @ docs/ENEMY_GENA_ONI_M4_RC.md:47
+  [docs(prose)] long hex >=48 @ docs/ENEMY_GENA_ONI_M4_RC.md:6
+  [docs(prose)] DATABASE_URL @ docs/ENEMY_GENA_ONRYO_M4I_RC.md:184
+  [docs(prose)] NEON @ docs/ENEMY_GENA_ONRYO_M4I_RC.md:184
+  [docs(prose)] .env reference @ docs/ENEMY_GENA_ONRYO_M4I_RC.md:184
+  [docs(prose)] long hex >=48 @ docs/ENEMY_GENA_ONRYO_M4I_RC.md:19
+  [docs(prose)] NEON @ docs/ENEMY_GENA_ONRYO_M4I_RC.md:194
+  [docs(prose)] long hex >=48 @ docs/ENEMY_GENA_ONRYO_M4I_RC.md:6
+  [docs(prose)] long hex >=48 @ docs/ENEMY_GENA_ONRYO_M4I_RC.md:69
+  [docs(prose)] DATABASE_URL @ docs/ENEMY_GENA_PRODUCTION_RELEASE.md:17
+  [docs(prose)] NEON @ docs/ENEMY_GENA_PRODUCTION_RELEASE.md:17
+  [docs(prose)] BYPASS @ docs/ENEMY_GENA_PRODUCTION_RELEASE.md:17
+  [docs(prose)] .env reference @ docs/ENEMY_GENA_PRODUCTION_RELEASE.md:17
+  [docs(prose)] NEON @ docs/ENEMY_GENA_PRODUCTION_RELEASE.md:49
+  [docs(prose)] DATABASE_URL @ docs/ENEMY_GENA_PRODUCTION_RELEASE.md:51
+  [docs(prose)] NEON @ docs/ENEMY_GENA_PRODUCTION_RELEASE.md:51
+  [docs(prose)] BYPASS @ docs/ENEMY_GENA_PRODUCTION_RELEASE.md:51
+  [docs(prose)] .env reference @ docs/ENEMY_GENA_PRODUCTION_RELEASE.md:51
+  [docs(prose)] DATABASE_URL @ docs/ENEMY_GENA_RYUJIN_M4I_RC.md:173
+  [docs(prose)] NEON @ docs/ENEMY_GENA_RYUJIN_M4I_RC.md:173
+  [docs(prose)] .env reference @ docs/ENEMY_GENA_RYUJIN_M4I_RC.md:173
+  [docs(prose)] NEON @ docs/ENEMY_GENA_RYUJIN_M4I_RC.md:183
+  [docs(prose)] long hex >=48 @ docs/ENEMY_GENA_RYUJIN_M4I_RC.md:20
+  [docs(prose)] long hex >=48 @ docs/ENEMY_GENA_RYUJIN_M4I_RC.md:47
+  [docs(prose)] long hex >=48 @ docs/ENEMY_GENA_RYUJIN_M4I_RC.md:6
+  [docs(prose)] NEON @ docs/ENEMY_VISUAL_BATCH_A_PRODUCTION_RELEASE.md:198
+  [docs(prose)] NEON @ docs/ENEMY_VISUAL_BATCH_A_PRODUCTION_RELEASE.md:20
+  [docs(prose)] DATABASE_URL @ docs/ENEMY_VISUAL_BATCH_A_PRODUCTION_RELEASE.md:208
+  [docs(prose)] NEON @ docs/ENEMY_VISUAL_BATCH_A_PRODUCTION_RELEASE.md:208
+  [docs(prose)] NEON @ docs/ENEMY_VISUAL_BATCH_A_PRODUCTION_RELEASE.md:44
+  [docs(prose)] .env reference @ docs/ENEMY_VISUAL_BATCH_A_PRODUCTION_RELEASE.md:44
+  [docs(prose)] DATABASE_URL @ docs/ENEMY_VISUAL_BATCH_A_PRODUCTION_RELEASE.md:72
+  [docs(prose)] NEON @ docs/ENEMY_VISUAL_BATCH_A_PRODUCTION_RELEASE.md:72
+  [docs(prose)] .env reference @ docs/ENEMY_VISUAL_BATCH_A_PRODUCTION_RELEASE.md:74
+  [docs(prose)] .env reference @ docs/evidence/commercial-rc-pregate/scripts/analyze-smoke.mjs.txt:3
+  [docs(prose)] .env reference @ docs/evidence/commercial-rc-pregate/scripts/gate-d253.mjs.txt:7
+  [docs(prose)] .env reference @ docs/evidence/commercial-rc-pregate/scripts/gate-d253.mjs.txt:8
+  [docs(prose)] .env reference @ docs/evidence/commercial-rc-pregate/scripts/gate-lock.mjs.txt:7
+  [docs(prose)] .env reference @ docs/evidence/commercial-rc-pregate/scripts/gate-lock.mjs.txt:8
+  [docs(prose)] .env reference @ docs/evidence/commercial-rc-pregate/scripts/gate2.mjs.txt:10
+  [docs(prose)] .env reference @ docs/evidence/commercial-rc-pregate/scripts/gate2.mjs.txt:7
+  [docs(prose)] .env reference @ docs/evidence/commercial-rc-pregate/scripts/gate2.mjs.txt:9
+  [docs(prose)] .env reference @ docs/evidence/commercial-rc-pregate/scripts/gate250.mjs.txt:93
+  [docs(prose)] .env reference @ docs/evidence/commercial-rc-pregate/scripts/gen254.mjs.txt:4
+  [docs(prose)] .env reference @ docs/evidence/commercial-rc-pregate/scripts/perf2.mjs.txt:108
+  [docs(prose)] .env reference @ docs/evidence/commercial-rc-pregate/scripts/perf2.mjs.txt:5
+  [docs(prose)] .env reference @ docs/evidence/commercial-rc-pregate/scripts/perf2.mjs.txt:6
+  [docs(prose)] .env reference @ docs/evidence/commercial-rc-pregate/scripts/smoke257.mjs.txt:7
+  [docs(prose)] .env reference @ docs/evidence/commercial-rc-pregate/scripts/smoke257.mjs.txt:8
+  [docs(prose)] .env reference @ docs/evidence/commercial-rc-pregate/scripts/smoke257.mjs.txt:9
+  [docs(prose)] NEON @ docs/evidence/commercial-rc-pregate/vitest.json:1
+  [docs(prose)] .env reference @ docs/evidence/decision246/harness.d246.gate.test.ts.txt:19
+  [docs(prose)] .env reference @ docs/evidence/decision246/harness.d246.gate.test.ts.txt:251
+  [docs(prose)] .env reference @ docs/evidence/decision250/fast-gate/gate.mjs.txt:90
+  [docs(prose)] .env reference @ docs/evidence/decision250/pilot-v2/fast-gate/gate.mjs.txt:93
+  [docs(prose)] .env reference @ docs/evidence/decision250/try2/gen_try2.mjs:23
+  [docs(prose)] long hex >=48 @ docs/evidence/decision250/try2/gen_try2.mjs:28
+  [docs(prose)] long hex >=48 @ docs/evidence/decision250/try2/try2_request.json:13
+  [docs(prose)] .env reference @ docs/evidence/decision251/harness.d251.preflight.test.ts.txt:19
+  [docs(prose)] .env reference @ docs/evidence/decision251/harness.d251.preflight.test.ts.txt:21
+  [docs(prose)] .env reference @ docs/evidence/decision251/harness.d251.preflight.test.ts.txt:258
+  [docs(prose)] .env reference @ docs/evidence/decision251/harness.d251.preflight.test.ts.txt:289
+  [docs(prose)] .env reference @ docs/evidence/decision251/harness.d251.preflight.test.ts.txt:297
+  [docs(prose)] .env reference @ docs/evidence/decision252/harness.d252.preflight.test.ts.txt:100
+  [docs(prose)] .env reference @ docs/evidence/decision252/harness.d252.preflight.test.ts.txt:26
+  [docs(prose)] .env reference @ docs/evidence/decision252/harness.d252.preflight.test.ts.txt:28
+  [docs(prose)] .env reference @ docs/evidence/decision252/harness.d252.preflight.test.ts.txt:378
+  [docs(prose)] .env reference @ docs/evidence/decision252/harness.d252.preflight.test.ts.txt:421
+  [docs(prose)] .env reference @ docs/evidence/decision252/harness.d252.preflight.test.ts.txt:436
+  [docs(prose)] .env reference @ docs/evidence/decision252/harness.d252.preflight.test.ts.txt:91
+  [docs(prose)] .env reference @ docs/evidence/decision252/harness.d252.preflight.test.ts.txt:97
+  [docs(prose)] .env reference @ docs/evidence/decision252/harness.d252.preflight.test.ts.txt:99
+  [docs(prose)] .env reference @ docs/evidence/decision253/harness.d253.test.ts.txt:19
+  [docs(prose)] .env reference @ docs/evidence/decision253/harness.d253.test.ts.txt:21
+  [docs(prose)] .env reference @ docs/evidence/decision253/harness.d253.test.ts.txt:300
+  [docs(prose)] .env reference @ docs/evidence/decision253/harness.d253.test.ts.txt:334
+  [docs(prose)] .env reference @ docs/evidence/decision253/harness.d253.test.ts.txt:335
+  [docs(prose)] .env reference @ docs/evidence/decision253/harness.d253.test.ts.txt:337
+  [docs(prose)] .env reference @ docs/evidence/decision253/production-smoke/gate-d253.mjs.txt:7
+  [docs(prose)] .env reference @ docs/evidence/decision253/production-smoke/gate-d253.mjs.txt:8
+  [docs(prose)] .env reference @ docs/evidence/decision253/release/gate-d253.mjs.txt:7
+  [docs(prose)] .env reference @ docs/evidence/decision253/release/gate-d253.mjs.txt:8
+  [docs(prose)] .env reference @ docs/evidence/decision254/pilot/gate-lock.mjs.txt:8
+  [docs(prose)] .env reference @ docs/evidence/decision254/production-smoke/gate-lock.mjs.txt:7
+  [docs(prose)] .env reference @ docs/evidence/decision254/production-smoke/gate-lock.mjs.txt:8
+  [docs(prose)] .env reference @ docs/evidence/decision254/production-smoke/gate2.mjs.txt:10
+  [docs(prose)] .env reference @ docs/evidence/decision254/production-smoke/gate2.mjs.txt:7
+  [docs(prose)] .env reference @ docs/evidence/decision254/production-smoke/gate2.mjs.txt:9
+  [docs(prose)] .env reference @ docs/evidence/decision254/production-smoke/gen254.mjs.txt:4
+  [docs(prose)] .env reference @ docs/evidence/decision254/production-smoke/perf2.mjs.txt:108
+  [docs(prose)] .env reference @ docs/evidence/decision254/production-smoke/perf2.mjs.txt:5
+  [docs(prose)] .env reference @ docs/evidence/decision254/production-smoke/perf2.mjs.txt:6
+  [docs(prose)] .env reference @ docs/evidence/decision254/release/gate-lock.mjs.txt:7
+  [docs(prose)] .env reference @ docs/evidence/decision254/release/gate-lock.mjs.txt:8
+  [docs(prose)] .env reference @ docs/evidence/decision254/release/gate2.mjs.txt:10
+  [docs(prose)] .env reference @ docs/evidence/decision254/release/gate2.mjs.txt:7
+  [docs(prose)] .env reference @ docs/evidence/decision254/release/gate2.mjs.txt:9
+  [docs(prose)] .env reference @ docs/evidence/decision254/release/gen254.mjs.txt:4
+  [docs(prose)] .env reference @ docs/evidence/decision254/release/perf2.mjs.txt:108
+  [docs(prose)] .env reference @ docs/evidence/decision254/release/perf2.mjs.txt:5
+  [docs(prose)] .env reference @ docs/evidence/decision254/release/perf2.mjs.txt:6
+  [docs(prose)] .env reference @ docs/evidence/decision255/harness.d255.test.ts.txt:21
+  [docs(prose)] .env reference @ docs/evidence/decision255/harness.d255.test.ts.txt:23
+  [docs(prose)] .env reference @ docs/evidence/decision255/harness.d255.test.ts.txt:24
+  [docs(prose)] .env reference @ docs/evidence/decision255/harness.d255.test.ts.txt:25
+  [docs(prose)] .env reference @ docs/evidence/decision255/harness.d255.test.ts.txt:440
+  [docs(prose)] .env reference @ docs/evidence/decision255/harness.d255.test.ts.txt:453
+  [docs(prose)] .env reference @ docs/evidence/decision257/analyze257.mjs.txt:3
+  [docs(prose)] .env reference @ docs/evidence/decision257/gate257.mjs.txt:7
+  [docs(prose)] .env reference @ docs/evidence/decision257/gate257.mjs.txt:8
+  [docs(prose)] .env reference @ docs/evidence/decision257/gate257.mjs.txt:9
+  [docs(prose)] .env reference @ docs/evidence/decision257/gen-se.diff.txt:11
+  [docs(prose)] .env reference @ docs/evidence/decision257/production-smoke/analyze-smoke.mjs.txt:3
+  [docs(prose)] .env reference @ docs/evidence/decision257/production-smoke/smoke257.mjs.txt:7
+  [docs(prose)] .env reference @ docs/evidence/decision257/production-smoke/smoke257.mjs.txt:8
+  [docs(prose)] .env reference @ docs/evidence/decision257/production-smoke/smoke257.mjs.txt:9
+  [docs(prose)] DATABASE_URL @ docs/evidence/decision257/release/ranking-absence.txt:10
+  [docs(prose)] NEON @ docs/evidence/decision257/release/ranking-absence.txt:16
+  [docs(prose)] DATABASE_URL @ docs/evidence/decision257/release/ranking-absence.txt:17
+  [docs(prose)] NEON @ docs/evidence/decision257/release/ranking-absence.txt:5
+  [docs(prose)] NEON @ docs/evidence/decision257/release/ranking-absence.txt:6
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:1
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:100
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:101
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:102
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:103
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:104
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:105
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:106
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:107
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:108
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:109
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:110
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:111
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:112
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:113
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:114
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:115
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:116
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:117
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:118
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:119
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:120
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:121
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:122
+  [docs(prose)] DATABASE_URL @ docs/evidence/decision257/release/secret-audit.txt:123
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:124
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:125
+  [docs(prose)] DATABASE_URL @ docs/evidence/decision257/release/secret-audit.txt:126
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:127
+  [docs(prose)] DATABASE_URL @ docs/evidence/decision257/release/secret-audit.txt:128
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:129
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:130
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:131
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:132
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:133
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:134
+  [docs(prose)] DATABASE_URL @ docs/evidence/decision257/release/secret-audit.txt:135
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:136
+  [docs(prose)] DATABASE_URL @ docs/evidence/decision257/release/secret-audit.txt:137
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:138
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:139
+  [docs(prose)] DATABASE_URL @ docs/evidence/decision257/release/secret-audit.txt:140
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:141
+  [docs(prose)] SECRET @ docs/evidence/decision257/release/secret-audit.txt:142
+  [docs(prose)] BYPASS @ docs/evidence/decision257/release/secret-audit.txt:143
+  [docs(prose)] DATABASE_URL @ docs/evidence/decision257/release/secret-audit.txt:144
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:145
+  [docs(prose)] BYPASS @ docs/evidence/decision257/release/secret-audit.txt:146
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:147
+  [docs(prose)] DATABASE_URL @ docs/evidence/decision257/release/secret-audit.txt:148
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:149
+  [docs(prose)] DATABASE_URL @ docs/evidence/decision257/release/secret-audit.txt:150
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:151
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:152
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:153
+  [docs(prose)] DATABASE_URL @ docs/evidence/decision257/release/secret-audit.txt:154
+  [docs(prose)] DATABASE_URL @ docs/evidence/decision257/release/secret-audit.txt:155
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:156
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:157
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:158
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:159
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:160
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:161
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:162
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:163
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:164
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:165
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:166
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:167
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:168
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:169
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:170
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:171
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:172
+  [docs(prose)] DATABASE_URL @ docs/evidence/decision257/release/secret-audit.txt:173
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:174
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:175
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:176
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:177
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:178
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:179
+  [docs(prose)] DATABASE_URL @ docs/evidence/decision257/release/secret-audit.txt:181
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:182
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:183
+  [docs(prose)] DATABASE_URL @ docs/evidence/decision257/release/secret-audit.txt:185
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:186
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:187
+  [docs(prose)] DATABASE_URL @ docs/evidence/decision257/release/secret-audit.txt:189
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:190
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:191
+  [docs(prose)] DATABASE_URL @ docs/evidence/decision257/release/secret-audit.txt:193
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:194
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:195
+  [docs(prose)] DATABASE_URL @ docs/evidence/decision257/release/secret-audit.txt:197
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:198
+  [docs(prose)] BYPASS @ docs/evidence/decision257/release/secret-audit.txt:199
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:200
+  [docs(prose)] DATABASE_URL @ docs/evidence/decision257/release/secret-audit.txt:201
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:202
+  [docs(prose)] BYPASS @ docs/evidence/decision257/release/secret-audit.txt:203
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:204
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:205
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:206
+  [docs(prose)] DATABASE_URL @ docs/evidence/decision257/release/secret-audit.txt:207
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:208
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:209
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:210
+  [docs(prose)] DATABASE_URL @ docs/evidence/decision257/release/secret-audit.txt:211
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:212
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:213
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:214
+  [docs(prose)] DATABASE_URL @ docs/evidence/decision257/release/secret-audit.txt:215
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:216
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:217
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:218
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:219
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:220
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:221
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:222
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:223
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:224
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:225
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:226
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:227
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:228
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:229
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:230
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:231
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:232
+  [docs(prose)] DATABASE_URL @ docs/evidence/decision257/release/secret-audit.txt:235
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:236
+  [docs(prose)] DATABASE_URL @ docs/evidence/decision257/release/secret-audit.txt:243
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:244
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:245
+  [docs(prose)] DATABASE_URL @ docs/evidence/decision257/release/secret-audit.txt:246
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:247
+  [docs(prose)] BYPASS @ docs/evidence/decision257/release/secret-audit.txt:248
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:249
+  [docs(prose)] DATABASE_URL @ docs/evidence/decision257/release/secret-audit.txt:250
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:251
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:252
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:253
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:254
+  [docs(prose)] DATABASE_URL @ docs/evidence/decision257/release/secret-audit.txt:258
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:259
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:260
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:262
+  [docs(prose)] DATABASE_URL @ docs/evidence/decision257/release/secret-audit.txt:265
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:266
+  [docs(prose)] BYPASS @ docs/evidence/decision257/release/secret-audit.txt:267
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:268
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:269
+  [docs(prose)] DATABASE_URL @ docs/evidence/decision257/release/secret-audit.txt:270
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:271
+  [docs(prose)] BYPASS @ docs/evidence/decision257/release/secret-audit.txt:272
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:273
+  [docs(prose)] DATABASE_URL @ docs/evidence/decision257/release/secret-audit.txt:274
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:275
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:276
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:277
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:281
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:282
+  [docs(prose)] DATABASE_URL @ docs/evidence/decision257/release/secret-audit.txt:283
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:284
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:285
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:286
+  [docs(prose)] DATABASE_URL @ docs/evidence/decision257/release/secret-audit.txt:287
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:288
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:289
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:290
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:291
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:292
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:293
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:294
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:297
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:298
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:299
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:3
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:300
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:301
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:302
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:303
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:304
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:305
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:306
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:307
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:308
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:309
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:310
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:311
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:312
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:313
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:314
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:315
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:316
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:317
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:318
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:319
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:320
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:321
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:322
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:323
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:324
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:325
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:326
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:327
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:328
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:329
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:330
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:331
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:332
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:333
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:334
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:335
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:336
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:337
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:338
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:339
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:340
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:341
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:342
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:343
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:344
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:345
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:346
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:347
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:348
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:349
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:350
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:351
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:352
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:354
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:355
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:356
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:357
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:358
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:359
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:360
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:361
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:362
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:363
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:364
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:365
+  [docs(prose)] DATABASE_URL @ docs/evidence/decision257/release/secret-audit.txt:366
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:367
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:368
+  [docs(prose)] DATABASE_URL @ docs/evidence/decision257/release/secret-audit.txt:369
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:370
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:371
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:372
+  [docs(prose)] DATABASE_URL @ docs/evidence/decision257/release/secret-audit.txt:373
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:374
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:375
+  [docs(prose)] DATABASE_URL @ docs/evidence/decision257/release/secret-audit.txt:376
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:377
+  [docs(prose)] SECRET @ docs/evidence/decision257/release/secret-audit.txt:378
+  [docs(prose)] BYPASS @ docs/evidence/decision257/release/secret-audit.txt:379
+  [docs(prose)] DATABASE_URL @ docs/evidence/decision257/release/secret-audit.txt:380
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:381
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:382
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:383
+  [docs(prose)] DATABASE_URL @ docs/evidence/decision257/release/secret-audit.txt:384
+  [docs(prose)] DATABASE_URL @ docs/evidence/decision257/release/secret-audit.txt:385
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:386
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:387
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:388
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:389
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:390
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:391
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:392
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:393
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:394
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:395
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:396
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:397
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:398
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:399
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:4
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:400
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:401
+  [docs(prose)] DATABASE_URL @ docs/evidence/decision257/release/secret-audit.txt:402
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:403
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:404
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:405
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:406
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:407
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:408
+  [docs(prose)] DATABASE_URL @ docs/evidence/decision257/release/secret-audit.txt:410
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:411
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:412
+  [docs(prose)] DATABASE_URL @ docs/evidence/decision257/release/secret-audit.txt:414
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:415
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:416
+  [docs(prose)] DATABASE_URL @ docs/evidence/decision257/release/secret-audit.txt:418
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:419
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:420
+  [docs(prose)] DATABASE_URL @ docs/evidence/decision257/release/secret-audit.txt:422
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:423
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:424
+  [docs(prose)] DATABASE_URL @ docs/evidence/decision257/release/secret-audit.txt:426
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:427
+  [docs(prose)] BYPASS @ docs/evidence/decision257/release/secret-audit.txt:428
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:429
+  [docs(prose)] DATABASE_URL @ docs/evidence/decision257/release/secret-audit.txt:430
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:431
+  [docs(prose)] BYPASS @ docs/evidence/decision257/release/secret-audit.txt:432
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:433
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:434
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:435
+  [docs(prose)] DATABASE_URL @ docs/evidence/decision257/release/secret-audit.txt:436
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:437
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:438
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:439
+  [docs(prose)] DATABASE_URL @ docs/evidence/decision257/release/secret-audit.txt:440
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:441
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:442
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:443
+  [docs(prose)] DATABASE_URL @ docs/evidence/decision257/release/secret-audit.txt:444
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:445
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:446
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:447
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:448
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:449
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:450
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:451
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:452
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:453
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:454
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:455
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:456
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:457
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:458
+  [docs(prose)] DATABASE_URL @ docs/evidence/decision257/release/secret-audit.txt:459
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:460
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:461
+  [docs(prose)] DATABASE_URL @ docs/evidence/decision257/release/secret-audit.txt:462
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:463
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:464
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:465
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:466
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:467
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:468
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:469
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:470
+  [docs(prose)] DATABASE_URL @ docs/evidence/decision257/release/secret-audit.txt:471
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:472
+  [docs(prose)] DATABASE_URL @ docs/evidence/decision257/release/secret-audit.txt:473
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:474
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:475
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:476
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:477
+  [docs(prose)] DATABASE_URL @ docs/evidence/decision257/release/secret-audit.txt:478
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:479
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:480
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:481
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:482
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:483
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:484
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:485
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:486
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:487
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:488
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:489
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:490
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:491
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:492
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:493
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:494
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:495
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:496
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:497
+  [docs(prose)] DATABASE_URL @ docs/evidence/decision257/release/secret-audit.txt:498
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:499
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:5
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:500
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:501
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:502
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:503
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:504
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:505
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:506
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:507
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:508
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:509
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:510
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:511
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:512
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:513
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:514
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:515
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:516
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:517
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:518
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:519
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:52
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:520
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:521
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:522
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:523
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:524
+  [docs(prose)] DATABASE_URL @ docs/evidence/decision257/release/secret-audit.txt:525
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:526
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:527
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:528
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:529
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:53
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:530
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:531
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:532
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:533
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:534
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:535
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:536
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:537
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:538
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:539
+  [docs(prose)] DATABASE_URL @ docs/evidence/decision257/release/secret-audit.txt:54
+  [docs(prose)] DATABASE_URL @ docs/evidence/decision257/release/secret-audit.txt:540
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:541
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:542
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:543
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:544
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:545
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:546
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:547
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:548
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:549
+  [docs(prose)] DATABASE_URL @ docs/evidence/decision257/release/secret-audit.txt:55
+  [docs(prose)] DATABASE_URL @ docs/evidence/decision257/release/secret-audit.txt:550
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:551
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:552
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:553
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:554
+  [docs(prose)] DATABASE_URL @ docs/evidence/decision257/release/secret-audit.txt:555
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:556
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:557
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:558
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:559
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:56
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:560
+  [docs(prose)] DATABASE_URL @ docs/evidence/decision257/release/secret-audit.txt:561
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:562
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:563
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:564
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:565
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:566
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:567
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:568
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:569
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:57
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:570
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:571
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:572
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:573
+  [docs(prose)] DATABASE_URL @ docs/evidence/decision257/release/secret-audit.txt:574
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:575
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:576
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:577
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:578
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:579
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:58
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:580
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:581
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:582
+  [docs(prose)] DATABASE_URL @ docs/evidence/decision257/release/secret-audit.txt:583
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:584
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:585
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:586
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:587
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:588
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:589
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:59
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:591
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:592
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:593
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:594
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:595
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:596
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:597
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:598
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:599
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:6
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:60
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:600
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:601
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:602
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:603
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:604
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:605
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:608
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:609
+  [docs(prose)] DATABASE_URL @ docs/evidence/decision257/release/secret-audit.txt:61
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:611
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:612
+  [docs(prose)] DATABASE_URL @ docs/evidence/decision257/release/secret-audit.txt:613
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:614
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:615
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:616
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:617
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:618
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:619
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:62
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:620
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:621
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:622
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:623
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:624
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:625
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:626
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:627
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:628
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:629
+  [docs(prose)] SECRET @ docs/evidence/decision257/release/secret-audit.txt:63
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:630
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:631
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:632
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:633
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:634
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:635
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:636
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:637
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:638
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:639
+  [docs(prose)] BYPASS @ docs/evidence/decision257/release/secret-audit.txt:64
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:640
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:641
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:642
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:645
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:646
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:647
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:648
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:649
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:65
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:650
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:651
+  [docs(prose)] BYPASS @ docs/evidence/decision257/release/secret-audit.txt:652
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:653
+  [docs(prose)] DATABASE_URL @ docs/evidence/decision257/release/secret-audit.txt:654
+  [docs(prose)] SECRET @ docs/evidence/decision257/release/secret-audit.txt:655
+  [docs(prose)] PASSWORD @ docs/evidence/decision257/release/secret-audit.txt:656
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:657
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:658
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:659
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:66
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:660
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:661
+  [docs(prose)] DATABASE_URL @ docs/evidence/decision257/release/secret-audit.txt:662
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:663
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:664
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:665
+  [docs(prose)] DATABASE_URL @ docs/evidence/decision257/release/secret-audit.txt:666
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:667
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:668
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:67
+  [docs(prose)] DATABASE_URL @ docs/evidence/decision257/release/secret-audit.txt:671
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:672
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:673
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:674
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:675
+  [docs(prose)] DATABASE_URL @ docs/evidence/decision257/release/secret-audit.txt:676
+  [docs(prose)] SECRET @ docs/evidence/decision257/release/secret-audit.txt:677
+  [docs(prose)] BYPASS @ docs/evidence/decision257/release/secret-audit.txt:678
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:679
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:68
+  [docs(prose)] DATABASE_URL @ docs/evidence/decision257/release/secret-audit.txt:680
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:681
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:682
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:683
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:684
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:685
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:686
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:687
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:688
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:689
+  [docs(prose)] PASSWORD @ docs/evidence/decision257/release/secret-audit.txt:69
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:690
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:691
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:692
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:693
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:694
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:695
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:696
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:697
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:698
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:699
+  [docs(prose)] PASSWORD @ docs/evidence/decision257/release/secret-audit.txt:7
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:70
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:700
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:701
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:702
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:703
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:704
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:705
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:706
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:707
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:708
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:709
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:71
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:710
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:711
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:712
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:713
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:714
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:715
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:716
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:717
+  [docs(prose)] DATABASE_URL @ docs/evidence/decision257/release/secret-audit.txt:718
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:719
+  [docs(prose)] BYPASS @ docs/evidence/decision257/release/secret-audit.txt:72
+  [docs(prose)] DATABASE_URL @ docs/evidence/decision257/release/secret-audit.txt:720
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:721
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:722
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:723
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:724
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:725
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:726
+  [docs(prose)] DATABASE_URL @ docs/evidence/decision257/release/secret-audit.txt:727
+  [docs(prose)] SECRET @ docs/evidence/decision257/release/secret-audit.txt:728
+  [docs(prose)] BYPASS @ docs/evidence/decision257/release/secret-audit.txt:729
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:73
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:731
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:732
+  [docs(prose)] DATABASE_URL @ docs/evidence/decision257/release/secret-audit.txt:733
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:734
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:735
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:736
+  [docs(prose)] DATABASE_URL @ docs/evidence/decision257/release/secret-audit.txt:737
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:738
+  [docs(prose)] DATABASE_URL @ docs/evidence/decision257/release/secret-audit.txt:739
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:74
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:740
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:741
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:742
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:743
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:744
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:745
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:746
+  [docs(prose)] DATABASE_URL @ docs/evidence/decision257/release/secret-audit.txt:747
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:748
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:749
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:75
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:750
+  [docs(prose)] DATABASE_URL @ docs/evidence/decision257/release/secret-audit.txt:751
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:752
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:753
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:754
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:755
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:756
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:757
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:758
+  [docs(prose)] DATABASE_URL @ docs/evidence/decision257/release/secret-audit.txt:759
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:76
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:760
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:761
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:762
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:763
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:764
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:765
+  [docs(prose)] DATABASE_URL @ docs/evidence/decision257/release/secret-audit.txt:766
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:767
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:768
+  [docs(prose)] BYPASS @ docs/evidence/decision257/release/secret-audit.txt:77
+  [docs(prose)] BYPASS @ docs/evidence/decision257/release/secret-audit.txt:770
+  [docs(prose)] DATABASE_URL @ docs/evidence/decision257/release/secret-audit.txt:772
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:773
+  [docs(prose)] BYPASS @ docs/evidence/decision257/release/secret-audit.txt:774
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:775
+  [docs(prose)] DATABASE_URL @ docs/evidence/decision257/release/secret-audit.txt:777
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:778
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:779
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:78
+  [docs(prose)] DATABASE_URL @ docs/evidence/decision257/release/secret-audit.txt:781
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:782
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:783
+  [docs(prose)] DATABASE_URL @ docs/evidence/decision257/release/secret-audit.txt:785
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:786
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:787
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:788
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:789
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:79
+  [docs(prose)] DATABASE_URL @ docs/evidence/decision257/release/secret-audit.txt:790
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:791
+  [docs(prose)] SECRET @ docs/evidence/decision257/release/secret-audit.txt:792
+  [docs(prose)] BYPASS @ docs/evidence/decision257/release/secret-audit.txt:793
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:794
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:795
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:796
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:797
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:798
+  [docs(prose)] DATABASE_URL @ docs/evidence/decision257/release/secret-audit.txt:799
+  [docs(prose)] BYPASS @ docs/evidence/decision257/release/secret-audit.txt:80
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:800
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:801
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:802
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:803
+  [docs(prose)] DATABASE_URL @ docs/evidence/decision257/release/secret-audit.txt:804
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:805
+  [docs(prose)] BYPASS @ docs/evidence/decision257/release/secret-audit.txt:806
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:807
+  [docs(prose)] DATABASE_URL @ docs/evidence/decision257/release/secret-audit.txt:808
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:809
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:81
+  [docs(prose)] BYPASS @ docs/evidence/decision257/release/secret-audit.txt:810
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:811
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:812
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:813
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:814
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:815
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:816
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:817
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:818
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:819
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:82
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:820
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:821
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:822
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:823
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:824
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:825
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:826
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:827
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:828
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:829
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:83
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:830
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:831
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:832
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:833
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:834
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:835
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:836
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:837
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:838
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:839
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:84
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:840
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:841
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:842
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:843
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:844
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:845
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:846
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:847
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:848
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:849
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:85
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:850
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:851
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:852
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:853
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:854
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:855
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:856
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:857
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:858
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:859
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:86
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:860
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:861
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:862
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:863
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:864
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:865
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:866
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:867
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:868
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:869
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:87
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:870
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:871
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:872
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:873
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:874
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:875
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:876
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:877
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:878
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:879
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:88
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:880
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:881
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:882
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:883
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:884
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:885
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:886
+  [docs(prose)] DATABASE_URL @ docs/evidence/decision257/release/secret-audit.txt:887
+  [docs(prose)] DATABASE_URL @ docs/evidence/decision257/release/secret-audit.txt:888
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:889
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:89
+  [docs(prose)] DATABASE_URL @ docs/evidence/decision257/release/secret-audit.txt:890
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:891
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:892
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:893
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:894
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:895
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:896
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:897
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:898
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:899
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:90
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:900
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:901
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:902
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:903
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:904
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:905
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:906
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:907
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:908
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:909
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:91
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:910
+  [docs(prose)] DATABASE_URL @ docs/evidence/decision257/release/secret-audit.txt:911
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:912
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:92
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:93
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:94
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:95
+  [docs(prose)] .env reference @ docs/evidence/decision257/release/secret-audit.txt:96
+  [docs(prose)] DATABASE_URL @ docs/evidence/decision257/release/secret-audit.txt:97
+  [docs(prose)] NEON @ docs/evidence/decision257/release/secret-audit.txt:98
+  [docs(prose)] DATABASE_URL @ docs/evidence/decision257/release/secret-audit.txt:99
+  [docs(prose)] .env reference @ docs/evidence/decision259/decomp.d259.audit.ts.txt:16
+  [docs(prose)] .env reference @ docs/evidence/decision259/gate.d259.audit.ts.txt:13
+  [docs(prose)] .env reference @ docs/evidence/decision259/gate.d259.audit.ts.txt:28
+  [docs(prose)] .env reference @ docs/evidence/decision259/protect.d259.audit.ts.txt:167
+  [docs(prose)] .env reference @ docs/evidence/decision259/protect.d259.audit.ts.txt:24
+  [docs(prose)] .env reference @ docs/evidence/decision259/protect.d259.audit.ts.txt:25
+  [docs(prose)] .env reference @ docs/evidence/decision259/variants.ts.txt:248
+  [docs(prose)] .env reference @ docs/evidence/decision260/harness.d260.test.ts.txt:18
+  [docs(prose)] .env reference @ docs/evidence/decision260/harness.d260.test.ts.txt:20
+  [docs(prose)] .env reference @ docs/evidence/decision260/harness.d260.test.ts.txt:210
+  [docs(prose)] .env reference @ docs/evidence/decision260/harness.d260.test.ts.txt:226
+  [docs(prose)] .env reference @ docs/evidence/decision261/pilot/scripts/gate-lock.mjs.txt:7
+  [docs(prose)] .env reference @ docs/evidence/decision261/pilot/scripts/gate-lock.mjs.txt:8
+  [docs(prose)] .env reference @ docs/evidence/decision261/pilot/scripts/gate250.mjs.txt:93
+  [docs(prose)] .env reference @ docs/evidence/decision261/production-smoke/smoke261.mjs.txt:5
+  [docs(prose)] .env reference @ docs/evidence/decision261/production-smoke/smoke261.mjs.txt:6
+  [docs(prose)] .env reference @ docs/evidence/h3-god-strike-try1/gen_try1.mjs:2
+  [docs(prose)] .env reference @ docs/evidence/h3-god-strike-try1/ROOT_CAUSE_MODEL_SELECTION.md:15
+  [docs(prose)] long hex >=48 @ docs/evidence/h3-god-strike-try1/try1_request.json:7
+  [docs(prose)] .env reference @ docs/evidence/hand-decision-density/harness.hdd.test.ts.txt:20
+  [docs(prose)] .env reference @ docs/evidence/hand-decision-density/harness.hdd.test.ts.txt:22
+  [docs(prose)] .env reference @ docs/evidence/post-d254-practical-qa/harness.post254.test.ts.txt:20
+  [docs(prose)] .env reference @ docs/evidence/post-d254-practical-qa/harness.post254.test.ts.txt:22
+  [docs(prose)] .env reference @ docs/evidence/post-d254-practical-qa/harness.post254.test.ts.txt:23
+  [docs(prose)] NEON @ docs/evidence/ranking-integration-preflight/03_phase4_branch_log.txt:42
+  [docs(prose)] NEON @ docs/evidence/ranking-integration-preflight/03_phase4_branch_log.txt:48
+  [docs(prose)] NEON @ docs/evidence/ranking-integration-preflight/03_phase4_branch_log.txt:54
+  [docs(prose)] NEON @ docs/evidence/ranking-integration-preflight/04_decision171_removal_commit.txt:1
+  [docs(prose)] NEON @ docs/evidence/ranking-integration-preflight/04_decision171_removal_commit.txt:12
+  [docs(prose)] NEON @ docs/evidence/ranking-integration-preflight/05_decisions_md_ranking_lines.txt:16
+  [docs(prose)] .env reference @ docs/evidence/ranking-integration-preflight/05_decisions_md_ranking_lines.txt:16
+  [docs(prose)] NEON @ docs/evidence/ranking-integration-preflight/05_decisions_md_ranking_lines.txt:17
+  [docs(prose)] NEON @ docs/evidence/ranking-integration-preflight/05_decisions_md_ranking_lines.txt:18
+  [docs(prose)] DATABASE_URL @ docs/evidence/ranking-integration-preflight/05_decisions_md_ranking_lines.txt:19
+  [docs(prose)] NEON @ docs/evidence/ranking-integration-preflight/05_decisions_md_ranking_lines.txt:19
+  [docs(prose)] .env reference @ docs/evidence/ranking-integration-preflight/05_decisions_md_ranking_lines.txt:19
+  [docs(prose)] DATABASE_URL @ docs/evidence/ranking-integration-preflight/05_decisions_md_ranking_lines.txt:20
+  [docs(prose)] NEON @ docs/evidence/ranking-integration-preflight/05_decisions_md_ranking_lines.txt:20
+  [docs(prose)] NEON @ docs/evidence/ranking-integration-preflight/05_decisions_md_ranking_lines.txt:21
+  [docs(prose)] NEON @ docs/evidence/ranking-integration-preflight/05_decisions_md_ranking_lines.txt:22
+  [docs(prose)] DATABASE_URL @ docs/evidence/ranking-integration-preflight/05_decisions_md_ranking_lines.txt:23
+  [docs(prose)] NEON @ docs/evidence/ranking-integration-preflight/05_decisions_md_ranking_lines.txt:23
+  [docs(prose)] .env reference @ docs/evidence/ranking-integration-preflight/05_decisions_md_ranking_lines.txt:23
+  [docs(prose)] DATABASE_URL @ docs/evidence/ranking-integration-preflight/05_decisions_md_ranking_lines.txt:24
+  [docs(prose)] NEON @ docs/evidence/ranking-integration-preflight/05_decisions_md_ranking_lines.txt:24
+  [docs(prose)] SECRET @ docs/evidence/ranking-integration-preflight/05_decisions_md_ranking_lines.txt:24
+  [docs(prose)] BYPASS @ docs/evidence/ranking-integration-preflight/05_decisions_md_ranking_lines.txt:24
+  [docs(prose)] DATABASE_URL @ docs/evidence/ranking-integration-preflight/05_decisions_md_ranking_lines.txt:25
+  [docs(prose)] NEON @ docs/evidence/ranking-integration-preflight/05_decisions_md_ranking_lines.txt:25
+  [docs(prose)] NEON @ docs/evidence/ranking-integration-preflight/05_decisions_md_ranking_lines.txt:26
+  [docs(prose)] NEON @ docs/evidence/ranking-integration-preflight/05_decisions_md_ranking_lines.txt:27
+  [docs(prose)] DATABASE_URL @ docs/evidence/ranking-integration-preflight/05_decisions_md_ranking_lines.txt:28
+  [docs(prose)] DATABASE_URL @ docs/evidence/ranking-integration-preflight/05_decisions_md_ranking_lines.txt:29
+  [docs(prose)] NEON @ docs/evidence/ranking-integration-preflight/05_decisions_md_ranking_lines.txt:29
+  [docs(prose)] NEON @ docs/evidence/ranking-integration-preflight/05_decisions_md_ranking_lines.txt:31
+  [docs(prose)] NEON @ docs/evidence/ranking-integration-preflight/05_decisions_md_ranking_lines.txt:33
+  [docs(prose)] NEON @ docs/evidence/ranking-integration-preflight/05_decisions_md_ranking_lines.txt:34
+  [docs(prose)] NEON @ docs/evidence/ranking-integration-preflight/05_decisions_md_ranking_lines.txt:35
+  [docs(prose)] NEON @ docs/evidence/ranking-integration-preflight/05_decisions_md_ranking_lines.txt:36
+  [docs(prose)] NEON @ docs/evidence/ranking-integration-preflight/05_decisions_md_ranking_lines.txt:37
+  [docs(prose)] NEON @ docs/evidence/ranking-integration-preflight/05_decisions_md_ranking_lines.txt:38
+  [docs(prose)] NEON @ docs/evidence/ranking-integration-preflight/05_decisions_md_ranking_lines.txt:39
+  [docs(prose)] NEON @ docs/evidence/ranking-integration-preflight/05_decisions_md_ranking_lines.txt:40
+  [docs(prose)] NEON @ docs/evidence/ranking-integration-preflight/05_decisions_md_ranking_lines.txt:41
+  [docs(prose)] NEON @ docs/evidence/ranking-integration-preflight/05_decisions_md_ranking_lines.txt:42
+  [docs(prose)] NEON @ docs/evidence/ranking-integration-preflight/05_decisions_md_ranking_lines.txt:43
+  [docs(prose)] NEON @ docs/evidence/ranking-integration-preflight/05_decisions_md_ranking_lines.txt:44
+  [docs(prose)] NEON @ docs/evidence/ranking-integration-preflight/05_decisions_md_ranking_lines.txt:45
+  [docs(prose)] .env reference @ docs/evidence/ranking-integration-preflight/05_decisions_md_ranking_lines.txt:45
+  [docs(prose)] DATABASE_URL @ docs/evidence/ranking-integration-preflight/05_decisions_md_ranking_lines.txt:46
+  [docs(prose)] NEON @ docs/evidence/ranking-integration-preflight/05_decisions_md_ranking_lines.txt:46
+  [docs(prose)] .env reference @ docs/evidence/ranking-integration-preflight/05_decisions_md_ranking_lines.txt:46
+  [docs(prose)] NEON @ docs/evidence/ranking-integration-preflight/05_decisions_md_ranking_lines.txt:47
+  [docs(prose)] .env reference @ docs/evidence/ranking-integration-preflight/05_decisions_md_ranking_lines.txt:47
+  [docs(prose)] NEON @ docs/evidence/ranking-integration-preflight/05_decisions_md_ranking_lines.txt:48
+  [docs(prose)] .env reference @ docs/evidence/ranking-integration-preflight/05_decisions_md_ranking_lines.txt:48
+  [docs(prose)] long hex >=48 @ docs/evidence/ranking-integration-preflight/05_decisions_md_ranking_lines.txt:48
+  [docs(prose)] DATABASE_URL @ docs/evidence/ranking-integration-preflight/05_decisions_md_ranking_lines.txt:49
+  [docs(prose)] NEON @ docs/evidence/ranking-integration-preflight/05_decisions_md_ranking_lines.txt:49
+  [docs(prose)] .env reference @ docs/evidence/ranking-integration-preflight/05_decisions_md_ranking_lines.txt:49
+  [docs(prose)] long hex >=48 @ docs/evidence/ranking-integration-preflight/05_decisions_md_ranking_lines.txt:49
+  [docs(prose)] DATABASE_URL @ docs/evidence/ranking-integration-preflight/05_decisions_md_ranking_lines.txt:50
+  [docs(prose)] NEON @ docs/evidence/ranking-integration-preflight/05_decisions_md_ranking_lines.txt:50
+  [docs(prose)] .env reference @ docs/evidence/ranking-integration-preflight/05_decisions_md_ranking_lines.txt:50
+  [docs(prose)] long hex >=48 @ docs/evidence/ranking-integration-preflight/05_decisions_md_ranking_lines.txt:50
+  [docs(prose)] DATABASE_URL @ docs/evidence/ranking-integration-preflight/05_decisions_md_ranking_lines.txt:51
+  [docs(prose)] NEON @ docs/evidence/ranking-integration-preflight/05_decisions_md_ranking_lines.txt:51
+  [docs(prose)] .env reference @ docs/evidence/ranking-integration-preflight/05_decisions_md_ranking_lines.txt:51
+  [docs(prose)] long hex >=48 @ docs/evidence/ranking-integration-preflight/05_decisions_md_ranking_lines.txt:51
+  [docs(prose)] DATABASE_URL @ docs/evidence/ranking-integration-preflight/05_decisions_md_ranking_lines.txt:52
+  [docs(prose)] NEON @ docs/evidence/ranking-integration-preflight/05_decisions_md_ranking_lines.txt:52
+  [docs(prose)] .env reference @ docs/evidence/ranking-integration-preflight/05_decisions_md_ranking_lines.txt:52
+  [docs(prose)] long hex >=48 @ docs/evidence/ranking-integration-preflight/05_decisions_md_ranking_lines.txt:52
+  [docs(prose)] DATABASE_URL @ docs/evidence/ranking-integration-preflight/05_decisions_md_ranking_lines.txt:53
+  [docs(prose)] NEON @ docs/evidence/ranking-integration-preflight/05_decisions_md_ranking_lines.txt:53
+  [docs(prose)] BYPASS @ docs/evidence/ranking-integration-preflight/05_decisions_md_ranking_lines.txt:53
+  [docs(prose)] .env reference @ docs/evidence/ranking-integration-preflight/05_decisions_md_ranking_lines.txt:53
+  [docs(prose)] DATABASE_URL @ docs/evidence/ranking-integration-preflight/05_decisions_md_ranking_lines.txt:54
+  [docs(prose)] NEON @ docs/evidence/ranking-integration-preflight/05_decisions_md_ranking_lines.txt:54
+  [docs(prose)] BYPASS @ docs/evidence/ranking-integration-preflight/05_decisions_md_ranking_lines.txt:54
+  [docs(prose)] .env reference @ docs/evidence/ranking-integration-preflight/05_decisions_md_ranking_lines.txt:54
+  [docs(prose)] NEON @ docs/evidence/ranking-integration-preflight/05_decisions_md_ranking_lines.txt:55
+  [docs(prose)] NEON @ docs/evidence/ranking-integration-preflight/05_decisions_md_ranking_lines.txt:56
+  [docs(prose)] DATABASE_URL @ docs/evidence/ranking-integration-preflight/05_decisions_md_ranking_lines.txt:57
+  [docs(prose)] NEON @ docs/evidence/ranking-integration-preflight/05_decisions_md_ranking_lines.txt:57
+  [docs(prose)] .env reference @ docs/evidence/ranking-integration-preflight/05_decisions_md_ranking_lines.txt:57
+  [docs(prose)] NEON @ docs/evidence/ranking-integration-preflight/05_decisions_md_ranking_lines.txt:58
+  [docs(prose)] DATABASE_URL @ docs/evidence/ranking-integration-preflight/05_decisions_md_ranking_lines.txt:59
+  [docs(prose)] NEON @ docs/evidence/ranking-integration-preflight/05_decisions_md_ranking_lines.txt:59
+  [docs(prose)] .env reference @ docs/evidence/ranking-integration-preflight/05_decisions_md_ranking_lines.txt:59
+  [docs(prose)] NEON @ docs/evidence/ranking-integration-preflight/05_decisions_md_ranking_lines.txt:60
+  [docs(prose)] DATABASE_URL @ docs/evidence/ranking-integration-preflight/05_decisions_md_ranking_lines.txt:61
+  [docs(prose)] NEON @ docs/evidence/ranking-integration-preflight/05_decisions_md_ranking_lines.txt:61
+  [docs(prose)] .env reference @ docs/evidence/ranking-integration-preflight/05_decisions_md_ranking_lines.txt:61
+  [docs(prose)] NEON @ docs/evidence/ranking-integration-preflight/05_decisions_md_ranking_lines.txt:62
+  [docs(prose)] NEON @ docs/evidence/ranking-integration-preflight/05_decisions_md_ranking_lines.txt:64
+  [docs(prose)] NEON @ docs/evidence/ranking-integration-preflight/05_decisions_md_ranking_lines.txt:65
+  [docs(prose)] NEON @ docs/evidence/ranking-integration-preflight/05_decisions_md_ranking_lines.txt:67
+  [docs(prose)] .env reference @ docs/evidence/ranking-integration-preflight/05_decisions_md_ranking_lines.txt:67
+  [docs(prose)] NEON @ docs/evidence/ranking-integration-preflight/05_decisions_md_ranking_lines.txt:68
+  [docs(prose)] .env reference @ docs/evidence/ranking-integration-preflight/05_decisions_md_ranking_lines.txt:68
+  [docs(prose)] NEON @ docs/evidence/ranking-integration-preflight/05_decisions_md_ranking_lines.txt:70
+  [docs(prose)] NEON @ docs/evidence/ranking-integration-preflight/05_decisions_md_ranking_lines.txt:72
+  [docs(prose)] .env reference @ docs/evidence/ranking-integration-preflight/05_decisions_md_ranking_lines.txt:72
+  [docs(prose)] NEON @ docs/evidence/ranking-integration-preflight/05_decisions_md_ranking_lines.txt:74
+  [docs(prose)] NEON @ docs/evidence/ranking-integration-preflight/05b_decisions_md_ranking_lines_short.txt:20
+  [docs(prose)] DATABASE_URL @ docs/evidence/ranking-integration-preflight/06_decisions_phase4_rows_excerpt.txt:14
+  [docs(prose)] NEON @ docs/evidence/ranking-integration-preflight/06_decisions_phase4_rows_excerpt.txt:14
+  [docs(prose)] .env reference @ docs/evidence/ranking-integration-preflight/06_decisions_phase4_rows_excerpt.txt:14
+  [docs(prose)] DATABASE_URL @ docs/evidence/ranking-integration-preflight/06_decisions_phase4_rows_excerpt.txt:23
+  [docs(prose)] NEON @ docs/evidence/ranking-integration-preflight/06_decisions_phase4_rows_excerpt.txt:23
+  [docs(prose)] NEON @ docs/evidence/ranking-integration-preflight/06_decisions_phase4_rows_excerpt.txt:26
+  [docs(prose)] NEON @ docs/evidence/ranking-integration-preflight/06_decisions_phase4_rows_excerpt.txt:29
+  [docs(prose)] .env reference @ docs/evidence/ranking-integration-preflight/06_decisions_phase4_rows_excerpt.txt:29
+  [docs(prose)] NEON @ docs/evidence/ranking-integration-preflight/06_decisions_phase4_rows_excerpt.txt:8
+  [docs(prose)] NEON @ docs/evidence/ranking-integration-preflight/11_production_key_snippets_3dd8b5c.txt:102
+  [docs(prose)] NEON @ docs/evidence/ranking-integration-preflight/11_production_key_snippets_3dd8b5c.txt:62
+  [docs(prose)] NEON @ docs/evidence/ranking-integration-preflight/inventory.json:22
+  [docs(prose)] DATABASE_URL @ docs/evidence/ranking-integration-preflight/inventory.json:25
+  [docs(prose)] NEON @ docs/evidence/ranking-integration-preflight/inventory.json:88
+  [docs(prose)] DATABASE_URL @ docs/evidence/ranking-integration-preflight/phase4-branch-readonly/api__lib_env_readonly.txt:19
+  [docs(prose)] NEON @ docs/evidence/ranking-integration-preflight/phase4-branch-readonly/api__lib_env_readonly.txt:20
+  [docs(prose)] NEON @ docs/evidence/ranking-integration-preflight/phase4-branch-readonly/api__lib_env_readonly.txt:35
+  [docs(prose)] .env reference @ docs/evidence/ranking-integration-preflight/phase4-branch-readonly/api__lib_env_readonly.txt:4
+  [docs(prose)] .env reference @ docs/evidence/ranking-integration-preflight/phase4-branch-readonly/api__lib_env_readonly.txt:67
+  [docs(prose)] DATABASE_URL @ docs/evidence/ranking-integration-preflight/phase4-branch-readonly/api__lib_env_readonly.txt:79
+  [docs(prose)] NEON @ docs/evidence/ranking-integration-preflight/phase4-branch-readonly/api__lib_handler_readonly.txt:1
+  [docs(prose)] .env reference @ docs/evidence/ranking-integration-preflight/phase4-branch-readonly/api__lib_handler_readonly.txt:141
+  [docs(prose)] .env reference @ docs/evidence/ranking-integration-preflight/phase4-branch-readonly/api__lib_handler_readonly.txt:147
+  [docs(prose)] .env reference @ docs/evidence/ranking-integration-preflight/phase4-branch-readonly/api__lib_handler_readonly.txt:148
+  [docs(prose)] .env reference @ docs/evidence/ranking-integration-preflight/phase4-branch-readonly/api__lib_handler_readonly.txt:149
+  [docs(prose)] .env reference @ docs/evidence/ranking-integration-preflight/phase4-branch-readonly/api__lib_handler_readonly.txt:159
+  [docs(prose)] .env reference @ docs/evidence/ranking-integration-preflight/phase4-branch-readonly/api__lib_handler_readonly.txt:164
+  [docs(prose)] .env reference @ docs/evidence/ranking-integration-preflight/phase4-branch-readonly/api__lib_handler_readonly.txt:184
+  [docs(prose)] .env reference @ docs/evidence/ranking-integration-preflight/phase4-branch-readonly/api__lib_handler_readonly.txt:188
+  [docs(prose)] NEON @ docs/evidence/ranking-integration-preflight/phase4-branch-readonly/api__lib_handler_readonly.txt:203
+  [docs(prose)] NEON @ docs/evidence/ranking-integration-preflight/phase4-branch-readonly/api__lib_handler_readonly.txt:204
+  [docs(prose)] NEON @ docs/evidence/ranking-integration-preflight/phase4-branch-readonly/api__lib_handler_readonly.txt:211
+  [docs(prose)] NEON @ docs/evidence/ranking-integration-preflight/phase4-branch-readonly/api__lib_handler_readonly.txt:213
+  [docs(prose)] NEON @ docs/evidence/ranking-integration-preflight/phase4-branch-readonly/api__lib_handler_readonly.txt:27
+  [docs(prose)] NEON @ docs/evidence/ranking-integration-preflight/phase4-branch-readonly/api__lib_handler_readonly.txt:40
+  [docs(prose)] NEON @ docs/evidence/ranking-integration-preflight/phase4-branch-readonly/src_server_ranking_schema_readonly.txt:4
+  [docs(prose)] NEON @ docs/evidence/ranking-integration-preflight/phase4-branch-readonly/src_server_ranking_schema_readonly.txt:50
+  [docs(prose)] NEON @ docs/evidence/ranking-integration-preflight/phase4-branch-readonly/src_server_ranking_start_readonly.txt:218
+  [docs(prose)] NEON @ docs/PHASE5D_ORACLE_GUARD.md:245
+  [docs(prose)] DATABASE_URL @ docs/PHASE5F_RC_AUDIT.md:244
+  [docs(prose)] NEON @ docs/PHASE5F_RC_AUDIT.md:245
+  [docs(prose)] NEON @ docs/PHASE5F_RC_AUDIT.md:322
+  [docs(prose)] NEON @ docs/PHASE6_COMMERCIAL_BENCHMARK_V2.md:392
+  [docs(prose)] NEON @ docs/PHASE6_COMMERCIAL_BENCHMARK_V2.md:5
+  [docs(prose)] NEON @ docs/PHASE6_COMMERCIAL_QUALITY_AUDIT.md:28
+  [docs(prose)] NEON @ docs/PHASE6A_COMBAT_JUICE.md:65
+  [docs(prose)] NEON @ docs/PHASE6B_BATTLE_HUD_DESIGN.md:292
+  [docs(prose)] NEON @ docs/PHASE6B_BATTLE_HUD_IMPLEMENTATION.md:74
+  [docs(prose)] NEON @ docs/PHASE6C_DECISION_FEEDBACK.md:19
+  [docs(prose)] NEON @ docs/PHASE6C_DECISION_FEEDBACK.md:204
+  [docs(prose)] NEON @ docs/PHASE6D_VISUAL_DIRECTION_AUDIT.md:4
+  [docs(prose)] NEON @ docs/PHASE6D_VISUAL_PATCH_V1.md:191
+  [docs(prose)] NEON @ docs/PHASE6D_VISUAL_PATCH_V1.md:7
+  [docs(prose)] NEON @ docs/PHASE7_ENTRANCE_E1_MINIMAL_SPEC.md:449
+  [docs(prose)] NEON @ docs/PHASE7_ENTRANCE_E1_MINIMAL_SPEC.md:5
+  [docs(prose)] NEON @ docs/PHASE7_ENTRANCE_E1_MINIMAL_SPEC.md:541
+  [docs(prose)] NEON @ docs/PHASE7_ENTRANCE_FIRST_IMPRESSION_AUDIT.md:5
+  [docs(prose)] NEON @ docs/PHASE7_ENTRANCE_FIRST_IMPRESSION_AUDIT.md:554
+  [docs(prose)] NEON @ docs/PHASE7_P1_RESULT_HOME_SPEC.md:545
+  [docs(prose)] NEON @ docs/PHASE7_P2_49_MATRIX_SPEC.md:5
+  [docs(prose)] NEON @ docs/PHASE7_RETURN_LOOP_COMMERCIAL_AUDIT.md:216
+  [docs(prose)] NEON @ docs/PHASE7_RETURN_LOOP_COMMERCIAL_AUDIT.md:264
+  [docs(prose)] NEON @ docs/PHASE7_RETURN_LOOP_COMMERCIAL_AUDIT.md:343
+  [docs(prose)] NEON @ docs/PHASE7_RETURN_LOOP_COMMERCIAL_AUDIT.md:376
+  [docs(prose)] .env reference @ docs/RANKING_INTEGRATION_PREFLIGHT.md:105
+  [docs(prose)] NEON @ docs/RANKING_INTEGRATION_PREFLIGHT.md:112
+  [docs(prose)] DATABASE_URL @ docs/RANKING_INTEGRATION_PREFLIGHT.md:213
+  [docs(prose)] .env reference @ docs/RANKING_INTEGRATION_PREFLIGHT.md:213
+  [docs(prose)] NEON @ docs/RANKING_INTEGRATION_PREFLIGHT.md:214
+  [docs(prose)] NEON @ docs/RANKING_INTEGRATION_PREFLIGHT.md:258
+  [docs(prose)] NEON @ docs/RANKING_INTEGRATION_PREFLIGHT.md:26
+  [docs(prose)] NEON @ docs/RANKING_INTEGRATION_PREFLIGHT.md:307
+  [docs(prose)] NEON @ docs/RANKING_INTEGRATION_PREFLIGHT.md:308
+  [docs(prose)] NEON @ docs/RANKING_INTEGRATION_PREFLIGHT.md:318
+  [docs(prose)] .env reference @ docs/RANKING_INTEGRATION_PREFLIGHT.md:35
+  [docs(prose)] NEON @ docs/RANKING_INTEGRATION_PREFLIGHT.md:44
+  [docs(prose)] NEON @ docs/RANKING_INTEGRATION_PREFLIGHT.md:5
+  [docs(prose)] NEON @ docs/RANKING_INTEGRATION_PREFLIGHT.md:60
+  [docs(prose)] NEON @ docs/RANKING_INTEGRATION_PREFLIGHT.md:62
+  [docs(prose)] .env reference @ docs/RANKING_INTEGRATION_PREFLIGHT.md:62
+  [docs(prose)] NEON @ docs/RANKING_INTEGRATION_PREFLIGHT.md:76
+  [docs(prose)] DATABASE_URL @ docs/RANKING_INTEGRATION_PREFLIGHT.md:77
+  [docs(prose)] NEON @ docs/RANKING_INTEGRATION_PREFLIGHT.md:78
+  [docs(prose)] NEON @ docs/RANKING_V1_AUDIT.md:182
+  [docs(prose)] NEON @ docs/RANKING_V1_AUDIT.md:21
+  [docs(prose)] NEON @ docs/RANKING_V1_AUDIT.md:22
+  [docs(prose)] NEON @ docs/RANKING_V1_AUDIT.md:252
+  [docs(prose)] NEON @ docs/RANKING_V1_AUDIT.md:269
+  [docs(prose)] NEON @ docs/RANKING_V1_AUDIT.md:341
+  [docs(prose)] NEON @ docs/RANKING_V1_AUDIT.md:354
+  [docs(prose)] NEON @ docs/RANKING_V1_AUDIT.md:358
+  [docs(prose)] DATABASE_URL @ docs/RANKING_V1_AUDIT.md:387
+  [docs(prose)] NEON @ docs/RANKING_V1_AUDIT.md:4
+  [docs(prose)] NEON @ docs/RANKING_V1_AUDIT.md:40
+  [docs(prose)] NEON @ docs/RANKING_V1_AUDIT.md:414
+  [docs(prose)] .env reference @ docs/RANKING_V1_AUDIT.md:42
+  [docs(prose)] DATABASE_URL @ docs/RANKING_V1_AUDIT.md:43
+  [docs(prose)] NEON @ docs/RANKING_V1_AUDIT.md:44
+  [docs(prose)] NEON @ docs/RANKING_V1_AUDIT.md:444
+  [docs(prose)] .env reference @ docs/RANKING_V1_AUDIT.md:445
+  [docs(prose)] NEON @ docs/RANKING_V1_AUDIT.md:62
+  [docs(prose)] NEON @ docs/RANKING_V1_AUDIT.md:83
+  [docs(prose)] DATABASE_URL @ docs/RANKING_V1_AUDIT.md:85
+  [docs(prose)] NEON @ docs/RELEASE_HYGIENE_GATE.md:250
+  [docs(prose)] NEON @ docs/RELEASE_HYGIENE_GATE.md:266
+  [docs(prose)] NEON @ docs/RELEASE_HYGIENE_GATE.md:9
+  [docs(prose)] .env reference @ docs/SEVENGODS_47_LESSONS_CONSOLIDATION_AUDIT.md:151
+  [docs(prose)] NEON @ docs/SEVENGODS_47_LESSONS_CONSOLIDATION_AUDIT.md:195
+  [docs(prose)] .env reference @ docs/SEVENGODS_47_LESSONS_CONSOLIDATION_AUDIT.md:195
+  [docs(prose)] .env reference @ docs/SEVENGODS_47_LESSONS_CONSOLIDATION_AUDIT.md:378
+  [docs(prose)] .env reference @ docs/SEVENGODS_47_LESSONS_CONSOLIDATION_AUDIT.md:42
+  [docs(prose)] NEON @ docs/SEVENGODS_47_LESSONS_CONSOLIDATION_AUDIT.md:582
+  [docs(prose)] NEON @ docs/SEVENGODS_COMMERCIAL_DESIGN_RED_TEAM.md:497
+  [docs(prose)] NEON @ docs/SEVENGODS_NEXT_MILESTONES.md:79
+  [script] .env reference @ history 01a6482 scripts/gen-se.mjs
+  [docs(prose)] .env reference @ history 01f11c7 docs/evidence/decision257/production-smoke/analyze-smoke.mjs.txt
+  [docs(prose)] .env reference @ history 01f11c7 docs/evidence/decision257/production-smoke/smoke257.mjs.txt x3
+  [docs(prose)] DATABASE_URL @ history 0d98728 docs/DECISIONS.md
+  [docs(prose)] NEON @ history 0d98728 docs/DECISIONS.md
+  [docs(prose)] .env reference @ history 0d98728 docs/DECISIONS.md
+  [docs(prose)] .env reference @ history 17851d3 docs/evidence/decision259/decomp.d259.audit.ts.txt
+  [docs(prose)] .env reference @ history 17851d3 docs/evidence/decision259/gate.d259.audit.ts.txt x2
+  [docs(prose)] .env reference @ history 17851d3 docs/evidence/decision259/protect.d259.audit.ts.txt x3
+  [docs(prose)] .env reference @ history 17851d3 docs/evidence/decision259/variants.ts.txt
+  [docs(prose)] NEON @ history 1caaf39 docs/DECISIONS.md
+  [docs(prose)] NEON @ history 1cba2e6 docs/DECISIONS.md
+  [docs(prose)] NEON @ history 1cba2e6 docs/PHASE7_ENTRANCE_E1_MINIMAL_SPEC.md x3
+  [docs(prose)] NEON @ history 1cba2e6 docs/PHASE7_ENTRANCE_FIRST_IMPRESSION_AUDIT.md x2
+  [script] .env reference @ history 1cba2e6 scripts/entrance-e1/firstBattle.audit.ts x2
+  [docs(prose)] .env reference @ history 1d8605d docs/evidence/post-d254-practical-qa/harness.post254.test.ts.txt x3
+  [docs(prose)] DATABASE_URL @ history 1f5fecc docs/DECISIONS.md
+  [docs(prose)] NEON @ history 1f5fecc docs/DECISIONS.md
+  [docs(prose)] .env reference @ history 1f5fecc docs/DECISIONS.md
+  [docs(prose)] NEON @ history 270b3e7 docs/DECISION208_PRODUCTION_RELEASE_SOLVE_LEGIBILITY_V1.md
+  [docs(prose)] .env reference @ history 270b3e7 docs/DECISION208_PRODUCTION_RELEASE_SOLVE_LEGIBILITY_V1.md
+  [docs(prose)] NEON @ history 270b3e7 docs/DECISIONS.md
+  [docs(prose)] .env reference @ history 270b3e7 docs/DECISIONS.md
+  [docs(prose)] long hex >=48 @ history 289c457 docs/ASSET_RIGHTS_LEDGER.md x2
+  [docs(prose)] NEON @ history 289c457 docs/DECISION199_INTERACTION_FEEL_AUDIT.md
+  [docs(prose)] NEON @ history 289c457 docs/DECISION203_SOLVE_LEGIBILITY_AUDIT.md
+  [docs(prose)] NEON @ history 289c457 docs/DECISION205_SOLVE_LEGIBILITY_V1_SPEC.md
+  [docs(prose)] NEON @ history 289c457 docs/DECISION213_OTOMO_STANCE_NARROW_PILOT.md
+  [docs(prose)] .env reference @ history 289c457 docs/DECISION213_OTOMO_STANCE_NARROW_PILOT.md
+  [docs(prose)] NEON @ history 289c457 docs/DECISION223_PILOT_PREFLIGHT.md x2
+  [docs(prose)] NEON @ history 289c457 docs/DECISION223_PREMIUM_COMBAT_LANGUAGE_FINAL_AUDIT.md x2
+  [docs(prose)] NEON @ history 289c457 docs/DECISION224_VISUAL_STANDARD_GATE.md x2
+  [docs(prose)] NEON @ history 289c457 docs/DECISION225_BATTLE_SCREEN_PREMIUM_QUALITY_AUDIT.md
+  [docs(prose)] NEON @ history 289c457 docs/DECISION226_VICTORY_REVEAL_PREFLIGHT.md
+  [docs(prose)] NEON @ history 289c457 docs/DECISIONS.md
+  [docs(prose)] .env reference @ history 289c457 docs/evidence/decision246/harness.d246.gate.test.ts.txt x2
+  [docs(prose)] .env reference @ history 289c457 docs/evidence/decision250/fast-gate/gate.mjs.txt
+  [docs(prose)] .env reference @ history 289c457 docs/evidence/decision250/pilot-v2/fast-gate/gate.mjs.txt
+  [docs(prose)] .env reference @ history 289c457 docs/evidence/decision250/try2/gen_try2.mjs
+  [docs(prose)] long hex >=48 @ history 289c457 docs/evidence/decision250/try2/gen_try2.mjs
+  [docs(prose)] long hex >=48 @ history 289c457 docs/evidence/decision250/try2/try2_request.json
+  [docs(prose)] .env reference @ history 289c457 docs/evidence/h3-god-strike-try1/gen_try1.mjs
+  [docs(prose)] .env reference @ history 289c457 docs/evidence/h3-god-strike-try1/ROOT_CAUSE_MODEL_SELECTION.md
+  [docs(prose)] long hex >=48 @ history 289c457 docs/evidence/h3-god-strike-try1/try1_request.json
+  [docs(prose)] NEON @ history 289c457 docs/RANKING_V1_AUDIT.md x15
+  [docs(prose)] .env reference @ history 289c457 docs/RANKING_V1_AUDIT.md x2
+  [docs(prose)] DATABASE_URL @ history 289c457 docs/RANKING_V1_AUDIT.md x3
+  [docs(prose)] .env reference @ history 289c457 docs/SEVENGODS_47_LESSONS_CONSOLIDATION_AUDIT.md x4
+  [docs(prose)] NEON @ history 289c457 docs/SEVENGODS_47_LESSONS_CONSOLIDATION_AUDIT.md x2
+  [docs(prose)] NEON @ history 289c457 docs/SEVENGODS_COMMERCIAL_DESIGN_RED_TEAM.md
+  [docs(prose)] NEON @ history 289c457 docs/SEVENGODS_NEXT_MILESTONES.md
+  [docs(prose)] .env reference @ history 2b165c1 docs/evidence/decision253/harness.d253.test.ts.txt x6
+  [docs(prose)] NEON @ history 3470545 docs/DECISION198_PRODUCTION_RELEASE_E1_SOLVE_LOOP.md x3
+  [docs(prose)] .env reference @ history 3470545 docs/DECISION198_PRODUCTION_RELEASE_E1_SOLVE_LOOP.md
+  [docs(prose)] NEON @ history 3470545 docs/DECISIONS.md
+  [docs(prose)] NEON @ history 3551898 docs/DECISION202_PRODUCTION_RELEASE_INTERACTION_FEEL_V1.md x2
+  [docs(prose)] .env reference @ history 3551898 docs/DECISION202_PRODUCTION_RELEASE_INTERACTION_FEEL_V1.md
+  [docs(prose)] NEON @ history 3551898 docs/DECISIONS.md
+  [docs(prose)] .env reference @ history 3551898 docs/DECISIONS.md
+  [script] .env reference @ history 37a1461 scripts/d266-viewport-stability/production-smoke.mjs x3
+  [docs(prose)] NEON @ history 3b416da docs/DECISION197_RELEASE_GATE_E1_SOLVE_LOOP.md x3
+  [docs(prose)] NEON @ history 3b416da docs/DECISIONS.md
+  [docs(prose)] .env reference @ history 3c0072e docs/evidence/commercial-rc-pregate/scripts/analyze-smoke.mjs.txt
+  [docs(prose)] .env reference @ history 3c0072e docs/evidence/commercial-rc-pregate/scripts/gate-d253.mjs.txt x2
+  [docs(prose)] .env reference @ history 3c0072e docs/evidence/commercial-rc-pregate/scripts/gate-lock.mjs.txt x2
+  [docs(prose)] .env reference @ history 3c0072e docs/evidence/commercial-rc-pregate/scripts/gate2.mjs.txt x3
+  [docs(prose)] .env reference @ history 3c0072e docs/evidence/commercial-rc-pregate/scripts/gate250.mjs.txt
+  [docs(prose)] .env reference @ history 3c0072e docs/evidence/commercial-rc-pregate/scripts/gen254.mjs.txt
+  [docs(prose)] .env reference @ history 3c0072e docs/evidence/commercial-rc-pregate/scripts/perf2.mjs.txt x3
+  [docs(prose)] .env reference @ history 3c0072e docs/evidence/commercial-rc-pregate/scripts/smoke257.mjs.txt x3
+  [docs(prose)] NEON @ history 3c0072e docs/evidence/commercial-rc-pregate/vitest.json
+  [docs(prose)] NEON @ history 3ca2435 docs/DECISIONS.md
+  [docs(prose)] NEON @ history 3ca2435 docs/PHASE7_RETURN_LOOP_COMMERCIAL_AUDIT.md x4
+  [script] .env reference @ history 3ca2435 scripts/phase7-audit/masteryRaw.audit.ts x2
+  [script] .env reference @ history 3ca2435 scripts/phase7-audit/progression.audit.ts x2
+  [script] .env reference @ history 3ca2435 scripts/phase7-audit/returnLoop.audit.ts x2
+  [docs(prose)] .env reference @ history 3dd8b5c docs/evidence/decision254/production-smoke/gate-lock.mjs.txt x2
+  [docs(prose)] .env reference @ history 3dd8b5c docs/evidence/decision254/production-smoke/gate2.mjs.txt x3
+  [docs(prose)] .env reference @ history 3dd8b5c docs/evidence/decision254/production-smoke/gen254.mjs.txt
+  [docs(prose)] .env reference @ history 3dd8b5c docs/evidence/decision254/production-smoke/perf2.mjs.txt x3
+  [docs(prose)] .env reference @ history 3dd8b5c docs/evidence/decision254/release/gate-lock.mjs.txt x2
+  [docs(prose)] .env reference @ history 3dd8b5c docs/evidence/decision254/release/gate2.mjs.txt x3
+  [docs(prose)] .env reference @ history 3dd8b5c docs/evidence/decision254/release/gen254.mjs.txt
+  [docs(prose)] .env reference @ history 3dd8b5c docs/evidence/decision254/release/perf2.mjs.txt x3
+  [docs(prose)] .env reference @ history 3f0f2d2 docs/evidence/decision260/harness.d260.test.ts.txt x4
+  [docs(prose)] NEON @ history 4c33350 docs/DECISIONS.md
+  [docs(prose)] .env reference @ history 4c33350 docs/DECISIONS.md
+  [docs(prose)] long hex >=48 @ history 4c33350 docs/DECISIONS.md
+  [docs(prose)] long hex >=48 @ history 4c33350 docs/ENEMY_BATCH_B1_JUUMA_M4_RC.md x3
+  [docs(prose)] .env reference @ history 4c33350 docs/ENEMY_BATCH_B1_JUUMA_M4_RC.md
+  [docs(prose)] NEON @ history 4c33350 docs/ENEMY_BATCH_B1_JUUMA_M4_RC.md
+  [docs(prose)] NEON @ history 538a3ef docs/evidence/decision257/release/ranking-absence.txt x3
+  [docs(prose)] DATABASE_URL @ history 538a3ef docs/evidence/decision257/release/ranking-absence.txt x2
+  [docs(prose)] .env reference @ history 538a3ef docs/evidence/decision257/release/secret-audit.txt x340
+  [docs(prose)] PASSWORD @ history 538a3ef docs/evidence/decision257/release/secret-audit.txt x3
+  [docs(prose)] NEON @ history 538a3ef docs/evidence/decision257/release/secret-audit.txt x356
+  [docs(prose)] DATABASE_URL @ history 538a3ef docs/evidence/decision257/release/secret-audit.txt x95
+  [docs(prose)] SECRET @ history 538a3ef docs/evidence/decision257/release/secret-audit.txt x7
+  [docs(prose)] BYPASS @ history 538a3ef docs/evidence/decision257/release/secret-audit.txt x22
+  [script] .env reference @ history 6d525b4 scripts/solve-legibility-v1/acceptance.mjs
+  [docs(prose)] NEON @ history 72725c9 docs/DECISIONS.md
+  [docs(prose)] NEON @ history 72725c9 docs/PHASE7_P2_49_MATRIX_SPEC.md
+  [docs(prose)] NEON @ history 761887d docs/evidence/ranking-integration-preflight/inventory.json
+  [docs(prose)] NEON @ history 810f089 docs/CLEAN_RELEASE_AUDIT.md x14
+  [docs(prose)] BYPASS @ history 810f089 docs/CLEAN_RELEASE_AUDIT.md x4
+  [docs(prose)] .env reference @ history 810f089 docs/CLEAN_RELEASE_AUDIT.md x7
+  [docs(prose)] DATABASE_URL @ history 810f089 docs/CLEAN_RELEASE_AUDIT.md x3
+  [docs(prose)] SECRET @ history 810f089 docs/CLEAN_RELEASE_AUDIT.md
+  [docs(prose)] PASSWORD @ history 810f089 docs/CLEAN_RELEASE_AUDIT.md
+  [docs(prose)] NEON @ history 810f089 docs/DECISIONS.md
+  [docs(prose)] .env reference @ history 810f089 docs/DECISIONS.md
+  [script] .env reference @ history 810f089 scripts/release-audit/_lib.mjs
+  [script] NEON @ history 810f089 scripts/release-audit/_lib.mjs
+  [script] NEON @ history 810f089 scripts/release-audit/ranking-absence.mjs x4
+  [script] DATABASE_URL @ history 810f089 scripts/release-audit/ranking-absence.mjs x3
+  [docs(prose)] .env reference @ history 81a094f docs/evidence/decision257/analyze257.mjs.txt
+  [docs(prose)] .env reference @ history 81a094f docs/evidence/decision257/gate257.mjs.txt x3
+  [docs(prose)] .env reference @ history 81a094f docs/evidence/decision257/gen-se.diff.txt
+  [docs(prose)] DATABASE_URL @ history 8256b60 docs/DECISIONS.md
+  [docs(prose)] NEON @ history 8256b60 docs/DECISIONS.md
+  [docs(prose)] .env reference @ history 8256b60 docs/DECISIONS.md
+  [docs(prose)] long hex >=48 @ history 8256b60 docs/DECISIONS.md
+  [docs(prose)] long hex >=48 @ history 8256b60 docs/ENEMY_BATCH_B1_JUUMA_M4_RC.md
+  [docs(prose)] DATABASE_URL @ history 8256b60 docs/ENEMY_BATCH_B1_JUUMA_M4_RC.md
+  [docs(prose)] NEON @ history 8256b60 docs/ENEMY_BATCH_B1_JUUMA_M4_RC.md
+  [other] .env reference @ history 85c94ee .gitignore x4
+  [docs(prose)] NEON @ history 85c94ee docs/DECISIONS.md x34
+  [docs(prose)] .env reference @ history 85c94ee docs/DECISIONS.md x4
+  [docs(prose)] DATABASE_URL @ history 85c94ee docs/DECISIONS.md x11
+  [docs(prose)] SECRET @ history 85c94ee docs/DECISIONS.md
+  [docs(prose)] BYPASS @ history 85c94ee docs/DECISIONS.md x2
+  [docs(prose)] NEON @ history 85c94ee docs/PHASE5D_ORACLE_GUARD.md
+  [docs(prose)] DATABASE_URL @ history 85c94ee docs/PHASE5F_RC_AUDIT.md
+  [docs(prose)] NEON @ history 85c94ee docs/PHASE5F_RC_AUDIT.md x2
+  [docs(prose)] NEON @ history 85c94ee docs/PHASE6_COMMERCIAL_BENCHMARK_V2.md x2
+  [docs(prose)] NEON @ history 85c94ee docs/PHASE6_COMMERCIAL_QUALITY_AUDIT.md
+  [docs(prose)] NEON @ history 85c94ee docs/PHASE6A_COMBAT_JUICE.md
+  [docs(prose)] NEON @ history 85c94ee docs/PHASE6B_BATTLE_HUD_DESIGN.md
+  [docs(prose)] NEON @ history 85c94ee docs/PHASE6B_BATTLE_HUD_IMPLEMENTATION.md
+  [docs(prose)] NEON @ history 85c94ee docs/PHASE6C_DECISION_FEEDBACK.md x2
+  [docs(prose)] NEON @ history 85c94ee docs/PHASE6D_VISUAL_DIRECTION_AUDIT.md
+  [docs(prose)] NEON @ history 85c94ee docs/PHASE6D_VISUAL_PATCH_V1.md x2
+  [docs(prose)] NEON @ history 85c94ee docs/RELEASE_HYGIENE_GATE.md x3
+  [test] .env reference @ history 85c94ee scripts/phase5a-cards/cardsAudit.test.ts x3
+  [test] .env reference @ history 85c94ee scripts/phase5b-stakes/stakesAudit.test.ts x4
+  [test] .env reference @ history 85c94ee scripts/phase5c-god-cards/godCardsAudit.test.ts x4
+  [test] .env reference @ history 85c94ee scripts/phase5d-guard/guardAudit.test.ts x2
+  [test] .env reference @ history 85c94ee scripts/phase5e-guard-structure/structureAudit.test.ts x4
+  [test] .env reference @ history 85c94ee scripts/phase5f-rc/phase5Compare.test.ts x4
+  [script] .env reference @ history 85c94ee scripts/phase6-audit/inspect.mjs x3
+  [script] .env reference @ history 85c94ee scripts/phase6-audit/qa.mjs x2
+  [script] .env reference @ history 85c94ee scripts/phase6-audit/shots.mjs
+  [script] .env reference @ history 85c94ee scripts/phase6-audit/timeline.mjs
+  [script] .env reference @ history 85c94ee scripts/phase6-commercial-benchmark/perf.mjs
+  [script] .env reference @ history 85c94ee scripts/phase6-commercial-benchmark/play.mjs
+  [script] .env reference @ history 85c94ee scripts/phase6-commercial-benchmark/screens.mjs
+  [script] .env reference @ history 85c94ee scripts/phase6b-layout-audit/measure.mjs
+  [script] .env reference @ history 85c94ee scripts/phase6b-layout-audit/play.mjs
+  [script] .env reference @ history 85c94ee scripts/phase6b-layout-audit/shots.mjs
+  [script] .env reference @ history 85c94ee scripts/phase6c-decision-feedback/play.mjs
+  [script] .env reference @ history 85c94ee scripts/phase6d-visual-audit/godstrike.mjs
+  [script] .env reference @ history 85c94ee scripts/phase6d-visual-audit/mock.mjs
+  [script] .env reference @ history 85c94ee scripts/phase6d-visual-audit/perf.mjs
+  [script] .env reference @ history 85c94ee scripts/phase6d-visual-audit/screens.mjs
+  [script] .env reference @ history 85c94ee scripts/release-hygiene/audio-playback.mjs
+  [script] .env reference @ history 85c94ee scripts/release-hygiene/cls.mjs
+  [script] .env reference @ history 85c94ee scripts/release-hygiene/screens-smoke.mjs
+  [script] .env reference @ history 85c94ee scripts/release-hygiene/transfer.mjs
+  [source] NEON @ history 85c94ee src/core/data/rules.ts x2
+  [test] NEON @ history 85c94ee src/core/replay/replayBoundary.test.ts x3
+  [test] DATABASE_URL @ history 85c94ee src/core/replay/replayBoundary.test.ts
+  [test] .env reference @ history 85c94ee src/core/replay/replayBoundary.test.ts
+  [docs(prose)] DATABASE_URL @ history 88ca430 docs/DECISIONS.md
+  [docs(prose)] NEON @ history 88ca430 docs/DECISIONS.md
+  [docs(prose)] .env reference @ history 88ca430 docs/DECISIONS.md
+  [docs(prose)] NEON @ history 944eea6 docs/evidence/ranking-integration-preflight/03_phase4_branch_log.txt x3
+  [docs(prose)] NEON @ history 944eea6 docs/evidence/ranking-integration-preflight/04_decision171_removal_commit.txt x2
+  [docs(prose)] NEON @ history 944eea6 docs/evidence/ranking-integration-preflight/05_decisions_md_ranking_lines.txt x51
+  [docs(prose)] .env reference @ history 944eea6 docs/evidence/ranking-integration-preflight/05_decisions_md_ranking_lines.txt x19
+  [docs(prose)] DATABASE_URL @ history 944eea6 docs/evidence/ranking-integration-preflight/05_decisions_md_ranking_lines.txt x17
+  [docs(prose)] SECRET @ history 944eea6 docs/evidence/ranking-integration-preflight/05_decisions_md_ranking_lines.txt
+  [docs(prose)] BYPASS @ history 944eea6 docs/evidence/ranking-integration-preflight/05_decisions_md_ranking_lines.txt x3
+  [docs(prose)] long hex >=48 @ history 944eea6 docs/evidence/ranking-integration-preflight/05_decisions_md_ranking_lines.txt x5
+  [docs(prose)] NEON @ history 944eea6 docs/evidence/ranking-integration-preflight/05b_decisions_md_ranking_lines_short.txt
+  [docs(prose)] NEON @ history 944eea6 docs/evidence/ranking-integration-preflight/06_decisions_phase4_rows_excerpt.txt x5
+  [docs(prose)] DATABASE_URL @ history 944eea6 docs/evidence/ranking-integration-preflight/06_decisions_phase4_rows_excerpt.txt x2
+  [docs(prose)] .env reference @ history 944eea6 docs/evidence/ranking-integration-preflight/06_decisions_phase4_rows_excerpt.txt x2
+  [docs(prose)] NEON @ history 944eea6 docs/evidence/ranking-integration-preflight/11_production_key_snippets_3dd8b5c.txt x2
+  [docs(prose)] NEON @ history 944eea6 docs/evidence/ranking-integration-preflight/inventory.json
+  [docs(prose)] DATABASE_URL @ history 944eea6 docs/evidence/ranking-integration-preflight/inventory.json
+  [docs(prose)] .env reference @ history 944eea6 docs/evidence/ranking-integration-preflight/phase4-branch-readonly/api__lib_env.ts x2
+  [docs(prose)] DATABASE_URL @ history 944eea6 docs/evidence/ranking-integration-preflight/phase4-branch-readonly/api__lib_env.ts x2
+  [docs(prose)] NEON @ history 944eea6 docs/evidence/ranking-integration-preflight/phase4-branch-readonly/api__lib_env.ts x2
+  [docs(prose)] NEON @ history 944eea6 docs/evidence/ranking-integration-preflight/phase4-branch-readonly/api__lib_handler.ts x7
+  [docs(prose)] .env reference @ history 944eea6 docs/evidence/ranking-integration-preflight/phase4-branch-readonly/api__lib_handler.ts x8
+  [docs(prose)] NEON @ history 944eea6 docs/evidence/ranking-integration-preflight/phase4-branch-readonly/src_server_ranking_schema.ts x2
+  [docs(prose)] NEON @ history 944eea6 docs/evidence/ranking-integration-preflight/phase4-branch-readonly/src_server_ranking_start.ts
+  [docs(prose)] NEON @ history 944eea6 docs/RANKING_INTEGRATION_PREFLIGHT.md x13
+  [docs(prose)] .env reference @ history 944eea6 docs/RANKING_INTEGRATION_PREFLIGHT.md x4
+  [docs(prose)] DATABASE_URL @ history 944eea6 docs/RANKING_INTEGRATION_PREFLIGHT.md x2
+  [script] .env reference @ history 9777151 scripts/d264-duel-hud/gate-lock.mjs x2
+  [script] .env reference @ history 9777151 scripts/d264-duel-hud/gate250.mjs
+  [docs(prose)] .env reference @ history 98067ec docs/evidence/decision253/production-smoke/gate-d253.mjs.txt x2
+  [docs(prose)] .env reference @ history 98067ec docs/evidence/decision253/release/gate-d253.mjs.txt x2
+  [docs(prose)] .env reference @ history a2295e2 docs/evidence/decision261/production-smoke/smoke261.mjs.txt x2
+  [docs(prose)] .env reference @ history a611270 docs/evidence/decision254/pilot/gate-lock.mjs.txt
+  [docs(prose)] DATABASE_URL @ history ad7734b docs/DECISIONS.md
+  [docs(prose)] NEON @ history ad7734b docs/DECISIONS.md
+  [docs(prose)] .env reference @ history ad7734b docs/DECISIONS.md
+  [docs(prose)] NEON @ history b0fbd3c docs/DECISION207_RELEASE_GATE_SOLVE_LEGIBILITY_V1.md
+  [docs(prose)] NEON @ history b18964e docs/DECISIONS.md
+  [docs(prose)] NEON @ history b18964e docs/PHASE7_P1_RESULT_HOME_SPEC.md
+  [docs(prose)] .env reference @ history bb3b488 docs/evidence/decision255/harness.d255.test.ts.txt x6
+  [docs(prose)] .env reference @ history bba4c67 docs/DECISION201_RELEASE_GATE_INTERACTION_FEEL_V1.md x2
+  [docs(prose)] DATABASE_URL @ history bba4c67 docs/DECISION201_RELEASE_GATE_INTERACTION_FEEL_V1.md x2
+  [docs(prose)] NEON @ history bba4c67 docs/DECISION201_RELEASE_GATE_INTERACTION_FEEL_V1.md x4
+  [docs(prose)] NEON @ history bba4c67 docs/DECISIONS.md
+  [docs(prose)] .env reference @ history bba4c67 docs/DECISIONS.md
+  [docs(prose)] NEON @ history bbf00a0 docs/DECISIONS.md
+  [docs(prose)] .env reference @ history bd33015 docs/evidence/hand-decision-density/harness.hdd.test.ts.txt x2
+  [docs(prose)] .env reference @ history beb429f docs/evidence/decision261/pilot/scripts/gate250.mjs.txt
+  [docs(prose)] .env reference @ history ccb5237 docs/evidence/decision252/harness.d252.preflight.test.ts.txt x9
+  [script] .env reference @ history cd81ece scripts/enemy-visual-audit/capture.mjs x2
+  [docs(prose)] DATABASE_URL @ history d532b45 docs/DECISIONS.md x4
+  [docs(prose)] NEON @ history d532b45 docs/DECISIONS.md x4
+  [docs(prose)] .env reference @ history d532b45 docs/DECISIONS.md x4
+  [docs(prose)] long hex >=48 @ history d532b45 docs/DECISIONS.md x3
+  [docs(prose)] BYPASS @ history d532b45 docs/DECISIONS.md
+  [docs(prose)] long hex >=48 @ history d532b45 docs/ENEMY_GENA_INTEGRATED_RELEASE_GATE.md x4
+  [docs(prose)] DATABASE_URL @ history d532b45 docs/ENEMY_GENA_INTEGRATED_RELEASE_GATE.md x2
+  [docs(prose)] NEON @ history d532b45 docs/ENEMY_GENA_INTEGRATED_RELEASE_GATE.md x3
+  [docs(prose)] BYPASS @ history d532b45 docs/ENEMY_GENA_INTEGRATED_RELEASE_GATE.md
+  [docs(prose)] .env reference @ history d532b45 docs/ENEMY_GENA_INTEGRATED_RELEASE_GATE.md
+  [docs(prose)] long hex >=48 @ history d532b45 docs/ENEMY_GENA_ONI_M4_RC.md x3
+  [docs(prose)] DATABASE_URL @ history d532b45 docs/ENEMY_GENA_ONI_M4_RC.md
+  [docs(prose)] NEON @ history d532b45 docs/ENEMY_GENA_ONI_M4_RC.md x2
+  [docs(prose)] .env reference @ history d532b45 docs/ENEMY_GENA_ONI_M4_RC.md x2
+  [docs(prose)] long hex >=48 @ history d532b45 docs/ENEMY_GENA_ONRYO_M4I_RC.md x3
+  [docs(prose)] DATABASE_URL @ history d532b45 docs/ENEMY_GENA_ONRYO_M4I_RC.md
+  [docs(prose)] NEON @ history d532b45 docs/ENEMY_GENA_ONRYO_M4I_RC.md x2
+  [docs(prose)] .env reference @ history d532b45 docs/ENEMY_GENA_ONRYO_M4I_RC.md
+  [docs(prose)] long hex >=48 @ history d532b45 docs/ENEMY_GENA_RYUJIN_M4I_RC.md x3
+  [docs(prose)] DATABASE_URL @ history d532b45 docs/ENEMY_GENA_RYUJIN_M4I_RC.md
+  [docs(prose)] NEON @ history d532b45 docs/ENEMY_GENA_RYUJIN_M4I_RC.md x2
+  [docs(prose)] .env reference @ history d532b45 docs/ENEMY_GENA_RYUJIN_M4I_RC.md
+  [docs(prose)] .env reference @ history da3e6ba docs/evidence/decision251/harness.d251.preflight.test.ts.txt x5
+  [script] .env reference @ history dcfda3a scripts/enemy-visual-batch-a/acceptance-capture.mjs
+  [docs(prose)] DATABASE_URL @ history de039d8 docs/CLEAN_RELEASE_AUDIT.md
+  [docs(prose)] NEON @ history de039d8 docs/CLEAN_RELEASE_AUDIT.md x2
+  [docs(prose)] SECRET @ history de039d8 docs/CLEAN_RELEASE_AUDIT.md
+  [docs(prose)] BYPASS @ history de039d8 docs/CLEAN_RELEASE_AUDIT.md
+  [docs(prose)] .env reference @ history de039d8 docs/CLEAN_RELEASE_AUDIT.md x4
+  [docs(prose)] NEON @ history decebf6 docs/DECISIONS.md
+  [docs(prose)] .env reference @ history decebf6 docs/DECISIONS.md
+  [docs(prose)] NEON @ history decebf6 docs/ENEMY_VISUAL_BATCH_A_PRODUCTION_RELEASE.md x5
+  [docs(prose)] .env reference @ history decebf6 docs/ENEMY_VISUAL_BATCH_A_PRODUCTION_RELEASE.md x2
+  [docs(prose)] DATABASE_URL @ history decebf6 docs/ENEMY_VISUAL_BATCH_A_PRODUCTION_RELEASE.md x2
+  [docs(prose)] NEON @ history e359104 docs/DECISION200_INTERACTION_FEEL_V1.md x2
+  [docs(prose)] .env reference @ history e359104 docs/DECISION200_INTERACTION_FEEL_V1.md
+  [docs(prose)] NEON @ history e8c2cae docs/DECISIONS.md
+  [docs(prose)] .env reference @ history e8c2cae docs/DECISIONS.md
+  [docs(prose)] .env reference @ history eefe11f docs/evidence/decision261/pilot/scripts/gate-lock.mjs.txt x2
+  [docs(prose)] DATABASE_URL @ history ffd8450 docs/DECISIONS.md
+  [docs(prose)] NEON @ history ffd8450 docs/DECISIONS.md
+  [docs(prose)] BYPASS @ history ffd8450 docs/DECISIONS.md
+  [docs(prose)] .env reference @ history ffd8450 docs/DECISIONS.md
+  [docs(prose)] DATABASE_URL @ history ffd8450 docs/ENEMY_GENA_PRODUCTION_RELEASE.md x2
+  [docs(prose)] NEON @ history ffd8450 docs/ENEMY_GENA_PRODUCTION_RELEASE.md x3
+  [docs(prose)] BYPASS @ history ffd8450 docs/ENEMY_GENA_PRODUCTION_RELEASE.md x2
+  [docs(prose)] .env reference @ history ffd8450 docs/ENEMY_GENA_PRODUCTION_RELEASE.md x2
+  [script] .env reference @ scripts/d264-duel-hud/gate-lock.mjs:7
+  [script] .env reference @ scripts/d264-duel-hud/gate-lock.mjs:8
+  [script] .env reference @ scripts/d264-duel-hud/gate250.mjs:93
+  [script] .env reference @ scripts/d266-viewport-stability/production-smoke.mjs:21
+  [script] .env reference @ scripts/d266-viewport-stability/production-smoke.mjs:7
+  [script] .env reference @ scripts/d266-viewport-stability/production-smoke.mjs:8
+  [script] .env reference @ scripts/enemy-visual-audit/capture.mjs:13
+  [script] .env reference @ scripts/enemy-visual-audit/capture.mjs:24
+  [script] .env reference @ scripts/enemy-visual-batch-a/acceptance-capture.mjs:15
+  [script] .env reference @ scripts/entrance-e1/firstBattle.audit.ts:22
+  [script] .env reference @ scripts/entrance-e1/firstBattle.audit.ts:23
+  [script] .env reference @ scripts/gen-se.mjs:16
+  [script] .env reference @ scripts/phase3-audit/step2/cardpref.audit.ts:15
+  [script] .env reference @ scripts/phase3-audit/step2/cardpref.audit.ts:16
+  [script] .env reference @ scripts/phase3-audit/step2/full.audit.ts:14
+  [script] .env reference @ scripts/phase3-audit/step2/full.audit.ts:15
+  [script] .env reference @ scripts/phase3-audit/step2/full.audit.ts:17
+  [script] .env reference @ scripts/phase3-audit/step2/marginal_report.audit.ts:17
+  [script] .env reference @ scripts/phase3-audit/step2/marginal_report.audit.ts:18
+  [script] .env reference @ scripts/phase3-audit/step2/marginal_report.audit.ts:19
+  [script] .env reference @ scripts/phase3-audit/step2/marginal.audit.ts:22
+  [script] .env reference @ scripts/phase3-audit/step2/marginal.audit.ts:23
+  [script] .env reference @ scripts/phase3-audit/step2/marginal.audit.ts:24
+  [script] .env reference @ scripts/phase3-audit/step2/marginal.audit.ts:27
+  [script] .env reference @ scripts/phase3-audit/step2/marginal.audit.ts:28
+  [script] .env reference @ scripts/phase3-audit/step2/mastery.audit.ts:20
+  [script] .env reference @ scripts/phase3-audit/step2/pilot.audit.ts:10
+  [script] .env reference @ scripts/phase3-audit/step2/pilot.audit.ts:11
+  [script] .env reference @ scripts/phase3-audit/step2/pilot.audit.ts:13
+  [script] .env reference @ scripts/phase3-audit/step2/pilot.audit.ts:15
+  [script] .env reference @ scripts/phase3-audit/step2/pilot.audit.ts:93
+  [test] .env reference @ scripts/phase5a-cards/cardsAudit.test.ts:301
+  [test] .env reference @ scripts/phase5a-cards/cardsAudit.test.ts:371
+  [test] .env reference @ scripts/phase5a-cards/cardsAudit.test.ts:42
+  [test] .env reference @ scripts/phase5b-stakes/stakesAudit.test.ts:29
+  [test] .env reference @ scripts/phase5b-stakes/stakesAudit.test.ts:358
+  [test] .env reference @ scripts/phase5b-stakes/stakesAudit.test.ts:397
+  [test] .env reference @ scripts/phase5b-stakes/stakesAudit.test.ts:399
+  [test] .env reference @ scripts/phase5c-god-cards/godCardsAudit.test.ts:375
+  [test] .env reference @ scripts/phase5c-god-cards/godCardsAudit.test.ts:44
+  [test] .env reference @ scripts/phase5c-god-cards/godCardsAudit.test.ts:556
+  [test] .env reference @ scripts/phase5c-god-cards/godCardsAudit.test.ts:557
+  [test] .env reference @ scripts/phase5d-guard/guardAudit.test.ts:34
+  [test] .env reference @ scripts/phase5d-guard/guardAudit.test.ts:390
+  [test] .env reference @ scripts/phase5e-guard-structure/structureAudit.test.ts:265
+  [test] .env reference @ scripts/phase5e-guard-structure/structureAudit.test.ts:41
+  [test] .env reference @ scripts/phase5e-guard-structure/structureAudit.test.ts:493
+  [test] .env reference @ scripts/phase5e-guard-structure/structureAudit.test.ts:495
+  [test] .env reference @ scripts/phase5f-rc/phase5Compare.test.ts:29
+  [test] .env reference @ scripts/phase5f-rc/phase5Compare.test.ts:351
+  [test] .env reference @ scripts/phase5f-rc/phase5Compare.test.ts:523
+  [test] .env reference @ scripts/phase5f-rc/phase5Compare.test.ts:524
+  [script] .env reference @ scripts/phase6-audit/inspect.mjs:33
+  [script] .env reference @ scripts/phase6-audit/inspect.mjs:5
+  [script] .env reference @ scripts/phase6-audit/inspect.mjs:63
+  [script] .env reference @ scripts/phase6-audit/qa.mjs:11
+  [script] .env reference @ scripts/phase6-audit/qa.mjs:149
+  [script] .env reference @ scripts/phase6-audit/shots.mjs:13
+  [script] .env reference @ scripts/phase6-audit/timeline.mjs:16
+  [script] .env reference @ scripts/phase6-commercial-benchmark/perf.mjs:16
+  [script] .env reference @ scripts/phase6-commercial-benchmark/play.mjs:25
+  [script] .env reference @ scripts/phase6-commercial-benchmark/screens.mjs:11
+  [script] .env reference @ scripts/phase6b-layout-audit/measure.mjs:24
+  [script] .env reference @ scripts/phase6b-layout-audit/play.mjs:16
+  [script] .env reference @ scripts/phase6b-layout-audit/shots.mjs:18
+  [script] .env reference @ scripts/phase6c-decision-feedback/play.mjs:24
+  [script] .env reference @ scripts/phase6d-visual-audit/godstrike.mjs:25
+  [script] .env reference @ scripts/phase6d-visual-audit/mock.mjs:4
+  [script] .env reference @ scripts/phase6d-visual-audit/perf.mjs:20
+  [script] .env reference @ scripts/phase6d-visual-audit/screens.mjs:12
+  [script] .env reference @ scripts/phase7-audit/masteryRaw.audit.ts:15
+  [script] .env reference @ scripts/phase7-audit/masteryRaw.audit.ts:16
+  [script] .env reference @ scripts/phase7-audit/progression.audit.ts:17
+  [script] .env reference @ scripts/phase7-audit/progression.audit.ts:18
+  [script] .env reference @ scripts/phase7-audit/returnLoop.audit.ts:29
+  [script] .env reference @ scripts/phase7-audit/returnLoop.audit.ts:30
+  [script] .env reference @ scripts/release-audit/_lib.mjs:5
+  [script] NEON @ scripts/release-audit/_lib.mjs:71
+  [script] NEON @ scripts/release-audit/ranking-absence.mjs:29
+  [script] NEON @ scripts/release-audit/ranking-absence.mjs:3
+  [script] NEON @ scripts/release-audit/ranking-absence.mjs:31
+  [script] DATABASE_URL @ scripts/release-audit/ranking-absence.mjs:40
+  [script] DATABASE_URL @ scripts/release-audit/ranking-absence.mjs:41
+  [script] NEON @ scripts/release-audit/ranking-absence.mjs:55
+  [script] DATABASE_URL @ scripts/release-audit/ranking-absence.mjs:56
+  [script] .env reference @ scripts/release-hygiene/audio-playback.mjs:10
+  [script] .env reference @ scripts/release-hygiene/cls.mjs:14
+  [script] .env reference @ scripts/release-hygiene/screens-smoke.mjs:14
+  [script] .env reference @ scripts/release-hygiene/transfer.mjs:13
+  [script] .env reference @ scripts/solve-legibility-v1/acceptance.mjs:475
+  [test] .env reference @ src/components/battle/autoFocusSession.test.ts:101
+  [test] .env reference @ src/components/battle/autoFocusSession.test.ts:111
+  [test] .env reference @ src/components/battle/autoFocusSession.test.ts:123
+  [test] .env reference @ src/components/battle/autoFocusSession.test.ts:133
+  [test] .env reference @ src/components/battle/autoFocusSession.test.ts:142
+  [test] .env reference @ src/components/battle/autoFocusSession.test.ts:153
+  [test] .env reference @ src/components/battle/autoFocusSession.test.ts:59
+  [test] .env reference @ src/components/battle/autoFocusSession.test.ts:70
+  [test] .env reference @ src/components/battle/autoFocusSession.test.ts:83
+  [test] .env reference @ src/components/battle/autoFocusSession.test.ts:93
+  [source] NEON @ src/core/data/rules.ts:256
+  [source] NEON @ src/core/data/rules.ts:296
+  [test] NEON @ src/core/replay/replayBoundary.test.ts:140
+  [test] NEON @ src/core/replay/replayBoundary.test.ts:142
+  [test] NEON @ src/core/replay/replayBoundary.test.ts:143
+  [test] DATABASE_URL @ src/core/replay/replayBoundary.test.ts:146
+  [test] .env reference @ src/core/replay/replayBoundary.test.ts:147
+RESULT: PASS (no credential-format value found; remaining hits are identifiers/prose/hashes - review the list above)
+exit 0

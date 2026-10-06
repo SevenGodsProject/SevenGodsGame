@@ -1,0 +1,19 @@
+{
+  "prod": "index-Bm2fe2Up.js",
+  "prodBytes": 455895,
+  "rcBytes": 460271,
+  "delta": 4376,
+  "commonPrefix": 351557,
+  "commonSuffix": 11,
+  "prodChangedBytes": 104327,
+  "rcChangedBytes": 108703
+}
+
+# RC changed region contains: rewardHistory=true, pickRewardOffer=false, 即戦力=true, 神の個性=true, 次の構築=true, 新しい選択肢=true, reward-toast=true, daily=true
+# prod changed region contains: rewardHistory=false, pickRewardOffer=false, 即戦力=false, 神の個性=false, 次の構築=false, 新しい選択肢=false, reward-toast=false, daily=true
+
+--- prod changed region (first 800) ---
+var Ss=1050,Cs=1260,ws=[0,180,500],Ts=1100;function Es(e){return e<ws.length?ws[e]:ws[ws.length-1]+(e-ws.length+1)*180}var Ds=1600,Os=2500,ks={1:30,2:40,3:45,4:60},As={normal:158,fast:105,heavy:228};function js(e){return e===`fast`?As.fast:e===`heavy`?As.heavy:As.normal}function Ms(e,t={}){let n=e.find(e=>e.t===`GAME_ENDED`),r=n?n.status:null,i=e.find(e=>e.t===`ENEMY_ACTED`&&e.kind!==`charge`),a=i?.kind===`multiAttack`,o=i?.kind===`special`||a&&!!i?.label,s=js(t.enemyVisualType),c=e.some(e=>e.t===`RESONANCE_BURST`),l=0;{let t=!1,n=!1,r=!1,i=!1;for(let a of e)a.t===`ENEMY_ACTED`?t=!0:a.t===`RESONANCE_BURST`?n=!0:a.t===`BONUS_TRIGGERED`?r=!0:a.t===`PASSIVE_TRIGGERED`&&(i=!0),a.t===`DAMAGE_DEALT`&&a.target===`enemy`&&(n||t||i||r||(l=Math.max(l,Hr(a.amount+a.blocked))))}let u=!t.reduced&&!c&&l
+
+--- rc changed region (first 2000) ---
+function Ss(e,t,n){let r=0;for(let e=0;e<t.length;e++)r=r*31+t.charCodeAt(e)>>>0;let i=[...e];for(let e=i.length-1;e>0;e--){r=r*1103515245+12345>>>0;let t=r%(e+1);[i[e],i[t]]=[i[t],i[e]]}return i.slice(0,n)}function Cs(e,t){let n=0;return t.exclusiveTypes.has(e.type)&&(n+=2),e.bonus&&(t.strongConds.has(e.bonus.when)?n+=2:t.strongConds.size===0&&(n+=.5)),t.recommendedSet.has(e.id)&&(n+=1),n}function ws(e){return[...e.deck,...e.hand,...e.discard,...e.exhausted].map(e=>e.defId)}function Ts(e,t){return{now:e===0?`いま 0 枚`:`いま ${e} 枚編成中`,limit:`上限 ${t} → ${t+1}`,hint:e===0?`まず 1〜2 枚入れてみよう`:e<t?`${t} 枚目を足してから ${t+1} 枚目`:null}}var Es=(...e)=>(t,n)=>{for(let r of e){let e=r(t)-r(n);if(e!==0)return e}return 0};function Ds(e){let{pool:t,deck20:n,bonuses:r,history:i,godId:a}=e,o=Ss(t,`${e.seed}-reward`,t.length),s=new Map(o.map((e,t)=>[e.id,t])),c=e=>s.get(e.id)??2**53-1,l=new Map;for(let e of n)l.set(e,(l.get(e)??0)+1);let u=e=>l.get(e)??0,d=e=>Ee(e,r),f=e=>r.get(e)??0,p=new Set(e.recommended),m=t.filter(e=>e.godId===a),h=t.filter(e=>!e.godId),g={exclusiveTypes:new Set(m.map(e=>e.type)),strongConds:new Set(m.flatMap(e=>e.bonus?[e.bonus.when]:[])),recommendedSet:p},_=e=>f(e)>0&&u(e)<d(e),v=[],y=new Set,b=(e,t)=>{v.push({card:e,role:t,copiesInDeck:u(e.id),maxCopies:d(e.id)}),y.add(e.id)},x=e=>!y.has(e.id),S=(e,t)=>{let n=t=>x(t)&&!e.has(t.id);if(t){let e=h.filter(e=>n(e)&&u(e.id)>=d(e.id)&&!_(e.id)).sort(Es(e=>f(e.id),e=>-u(e.id),c)),t=h.filter(e=>n(e)&&u(e.id)===1&&f(e.id)===0).sort(Es(c)),r=e[0]??t[0];r&&b(r,`ready`);let i=m.filter(e=>n(e)&&f(e.id)===0).sort(Es(c))[0];i&&b(i,`identity`);let a=i?1:2;h.filter(e=>n(e)&&u(e.id)===0&&f(e.id)===0).sort(Es(e=>-Cs(e,g),c)).slice(0,a).forEach(e=>b(e,`next`))}h.filter(e=>n(e)&&!_(e.id)).sort(Es(e=>u(e.id)===0?0:1,c)).slice(0,Math.max(0,3-v.length)).forEach(e=>b(e,`fill`))},C=new Set(i.offered),w=new Set(i.declined);S(new Set([...C,...w]),!0),v.length<3&&S(C,!1),v.length<3&&S(new Set,!1);let T=!1;if(v.length<3){T=!0;for(let e of o){if(v.

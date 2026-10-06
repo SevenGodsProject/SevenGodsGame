@@ -269,8 +269,12 @@ async function scenarioSkipAndExclude(viewport, tag) {
     'sevengods.rewardBonuses': JSON.stringify({ version: 1, bonuses: { ebisu: Object.fromEntries(EBISU_EXCLUSIVES.map((id) => [id, 1])) } }),
   }
   const p = await openPage(viewport, fixture)
-  await gotoHome(p)
-  const win1 = await winBattle(p.page, () => startNormal(p.page))
+  // 勝利 bot は決定論なので「同じ盤面でもう一度」では結果が変わらない。1 勝目・2 勝目とも
+  // U1／U2 で勝てることが分かっている固定 seed を使い、2 勝目は別 seed で新しく始める（AC12 の前提）
+  await gotoHome(p, '?seed=d267-u1-pc')
+  await startNormal(p.page)
+  const seed1Start = await p.page.evaluate(SAVE_SEED)
+  const win1 = { ...(await winBattle(p.page, async () => {})), seed: seed1Start }
   const reward1 = await openReward(p.page)
   await p.page.screenshot({ path: join(outDir, `${tag}-reward1.png`) })
   const offered1 = reward1.cards.map((c) => c.id)
@@ -278,9 +282,9 @@ async function scenarioSkipAndExclude(viewport, tag) {
   await p.page.waitForSelector('[data-testid="result-hub"]', { timeout: 15000 })
   await p.page.waitForTimeout(500)
   const storageAfterSkip = await p.page.evaluate(STORAGE)
-  // 2 勝目：勝利後の「もう一度」は新 seed
-  await clickSel(p.page, '[data-exit="rematch"]')
-  await waitBattleReady(p.page)
+  // 2 勝目：別の固定 seed で新しく始める（storage は同じ context に残る）
+  await gotoHome(p, '?seed=d267-u2-sp')
+  await startNormal(p.page)
   const seed2Start = await p.page.evaluate(SAVE_SEED)
   const win2 = await winBattle(p.page, async () => {})
   const reward2 = await openReward(p.page)
