@@ -1,0 +1,9 @@
+ src/components/battle/BattleScreen.tsx          |    16 +-
+ src/components/battle/RewardOverlay.tsx         |    88 +-
+ src/components/battle/battle.css                | 16166 +++++++++++-----------
+ src/components/battle/rewardDailyWiring.test.ts |    41 +
+ src/components/battle/rewardPicker.test.ts      |   222 +
+ src/components/battle/rewardPicker.ts           |   185 +-
+ src/hooks/rewardHistoryStorage.test.ts          |    87 +
+ src/hooks/rewardHistoryStorage.ts               |   101 +
+ 8 files changed, 8851 insertions(+), 8055 deletions(-)
