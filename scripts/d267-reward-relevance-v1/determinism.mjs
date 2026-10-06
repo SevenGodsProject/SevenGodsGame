@@ -87,7 +87,7 @@ await page.waitForSelector('.game-over-status', { timeout: 15000 })
 await page.waitForTimeout(1500)
 const result = await page.evaluate(() => ({
   status: document.querySelector('.game-over-status')?.textContent.trim() ?? null,
-  score: document.querySelector('.game-over-overlay')?.textContent.match(/スコア\s*([\d,]+)/)?.[1] ?? null,
+  score: document.querySelector('.game-over-score')?.textContent.replace(/[^0-9,]/g, '') ?? null,
   recap: [...document.querySelectorAll('[data-testid="battle-recap"] li')].map((li) => li.textContent.trim()),
   saveSeed: (() => {
     try {
