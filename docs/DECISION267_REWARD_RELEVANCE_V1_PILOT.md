@@ -3,7 +3,7 @@
 - 日付：2026-10-06（実装・自動 Gate）
 - branch：`feat/d267-reward-relevance-v1`（worktree `C:\Users\kimi1\SevenGodsGame-d267-pilot`・base＝master `202e476`＝Production）
 - 判断主体：Pilot 開始＝**CEO 承認（2026-10-06）**。実装方式・Gate 判定・未決 3 件（U1 配色・U2 トースト長・U3 QA seed）＝**AI 判断**（CLAUDE.md §6-2）。Human QA＝**CEO**。
-- 状態：**RELEASE GATE PASS → RELEASE READY（2026-10-07・READY FOR CEO PRODUCTION RELEASE APPROVAL）**（CEO Human QA PASS 済み・merge／push／deploy 未実施）
+- 状態：**PRODUCTION LIVE / CLOSED（2026-10-07・deployment 6894408979・rollback 6859615239＝`202e476`・Production Smoke 6/6 PASS）**
 - 正とした設計：`docs/DECISION267_REWARD_RELEVANCE_V1_PILOT_FINAL_DESIGN.md`（再設計なし。§10 の bonus 参照の記述のみ実コードへ訂正）
 - 前提文書：`docs/VICTORY_REWARD_VALUE_AUDIT.md`・`docs/DECISION267_REWARD_RELEVANCE_V1_PREFLIGHT.md`
 
@@ -97,3 +97,13 @@ Final Design §15 どおり。branch の runtime 4 commit を revert（merge 後
 ## 8. Release Gate（2026-10-07・clean RC worktree）
 
 `release/d267-reward-relevance-rc`（`SevenGodsGame-d267-rc`）で CEO 指定 18 項目＋AC1〜AC18 を完全シリアルで実施。**RELEASE GATE PASS → RELEASE READY**（merge／push／deploy は CEO 最終承認待ち）。要点：master `202e476` は RC の祖先（fast-forward・conflict 0）／`src/core` 差分 0／tsc 0・oxlint 0・vitest 1,330／build hash＝Human QA dist／Playwright U1〜U6 6/6（run3・固定 seed 化後）／migration 10/10／同 seed で RC と Production のスコア 8,700・予告列・打ち筋が完全一致／console 0。詳細 `docs/evidence/decision267/release/RELEASE_GATE.md`。
+
+## 9. Production Release（2026-10-07・CEO 承認）
+
+| 項目 | 内容 |
+|---|---|
+| 手順 | master `202e476` → RC HEAD `12e1ad5` へ fast-forward（merge commit なし）→ `git push origin master`（05:22 JST）→ Vercel 自動 deploy |
+| deployment | GitHub/Vercel deployment **`6894408979`**（sha `12e1ad5`・Production・status success 05:22:54 JST）。push 後 ≈30 秒で本番が `index-3It0LpNO.js`（md5 `c41abc0782e0…`＝RC clean build・Human QA dist と一致）を配信 |
+| rollback 先 | 前 Production deployment **`6859615239`**（sha `202e476`・決定266 文書更新のみ。runtime は `46b7fd4`＝deployment `6859334890` と同一）。手順：master を `202e476` へ戻す／Vercel で `6859615239` を promote。`sevengods.rewardHistory` は旧コードが読まないため残っても無害 |
+| Production Smoke | `acceptance.mjs` を本番 URL で実行：**U1〜U6 6/6 PASS**・console error 0・製品異常 0（追加修正なし）。Reward 3 択（恵比寿×試練 seed `d267-u1-pc`＝共振／潮招き／癒し）・pick→上限 +1・トースト・skip→次 2 勝除外・Daily 非表示・PC 1508×660／SP 390×844。証跡 `docs/evidence/decision267/production-smoke/SMOKE.md` |
+| 判定 | **PRODUCTION LIVE / CLOSED** |
