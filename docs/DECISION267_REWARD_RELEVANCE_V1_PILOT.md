@@ -3,7 +3,7 @@
 - 日付：2026-10-06（実装・自動 Gate）
 - branch：`feat/d267-reward-relevance-v1`（worktree `C:\Users\kimi1\SevenGodsGame-d267-pilot`・base＝master `202e476`＝Production）
 - 判断主体：Pilot 開始＝**CEO 承認（2026-10-06）**。実装方式・Gate 判定・未決 3 件（U1 配色・U2 トースト長・U3 QA seed）＝**AI 判断**（CLAUDE.md §6-2）。Human QA＝**CEO**。
-- 状態：**AUTOMATED GATE PASS → HUMAN QA READY**（merge／push／deploy 未実施）
+- 状態：**CEO HUMAN QA PASS（2026-10-07・Q1 YES／Q2 YES／トースト 1,200ms 問題なし）→ Release Gate へ**（仕様変更なし・merge／push／deploy 未実施）
 - 正とした設計：`docs/DECISION267_REWARD_RELEVANCE_V1_PILOT_FINAL_DESIGN.md`（再設計なし。§10 の bonus 参照の記述のみ実コードへ訂正）
 - 前提文書：`docs/VICTORY_REWARD_VALUE_AUDIT.md`・`docs/DECISION267_REWARD_RELEVANCE_V1_PREFLIGHT.md`
 
@@ -83,3 +83,13 @@
 ## 6. rollback
 
 Final Design §15 どおり。branch の runtime 4 commit を revert（merge 後は merge commit を `git revert -m 1`）。`sevengods.rewardHistory` は旧コードが読まないため残っても無害。`sevengods.rewardBonuses` は形式不変。
+
+## 7. CEO Human QA 結果（2026-10-07）
+
+| 設問 | 回答 |
+|---|---|
+| Q1：3 択のどれかを「取りたい」と思ったか | **YES** |
+| Q2：取ったあと、次の編成で何が変わるか画面で分かったか | **YES** |
+| トースト 1,200ms（U2） | **問題なし**（900ms への短縮は不要） |
+
+**判定：HUMAN QA PASS（CEO）**。仕様変更なしで Release Gate（clean RC worktree・完全シリアル）へ進む。Production deploy は Release Gate PASS 後の CEO 最終承認まで行わない。
