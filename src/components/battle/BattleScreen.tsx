@@ -11,6 +11,8 @@ import { getOtomoDef } from '../../core/data/otomo'
 import { stakeLabel } from '../../core/data/stakes'
 import type { UseGameEngine } from '../../hooks/useGameEngine'
 import { addRewardBonus } from '../../hooks/rewardStorage'
+import { pushDeclinedRewards, pushOfferedRewards } from '../../hooks/rewardHistoryStorage'
+import { collectDeckCardIds } from './rewardPicker'
 import { detectOtomoLevelUp } from '../setup/otomoGrowthDisplay'
 import { useBattleFx } from './useBattleFx'
 import { dealsEnemyDamage, useMobileAutoFocus } from './useMobileAutoFocus'
@@ -655,16 +657,22 @@ export function BattleScreen({
       )}
 
       {/* Phase 6-C：報酬は結果画面の「報酬カードを選ぶ」から開く（決定43の提示内容・1回だけの規則は不変） */}
-      {state.status === 'won' && !rewardDone && rewardOpen && (
+      {state.status === 'won' && state.mode !== 'daily' && !rewardDone && rewardOpen && (
         <RewardOverlay
           godId={state.godId}
           seed={state.seed}
-          onPick={(cardId) => {
+          deckFromState={collectDeckCardIds(state)}
+          onPick={(cardId, offered) => {
+            // 決定267：確定時に提示 3 枚を履歴へ（表示時ではなく確定時＝D3）。bonus の付与は従来どおり
+            pushOfferedRewards(state.godId, offered)
             addRewardBonus(state.godId, cardId)
             setRewardDone(true)
             setRewardOpen(false)
           }}
-          onSkip={() => {
+          onSkip={(offered) => {
+            // 決定267：見送り＝「この 3 枚は次の 2 勝では出ません」を文字どおり守るため offered と declined の両方へ
+            pushOfferedRewards(state.godId, offered)
+            pushDeclinedRewards(state.godId, offered)
             setRewardDone(true)
             setRewardOpen(false)
           }}
@@ -675,7 +683,7 @@ export function BattleScreen({
         <GameOverOverlay
           bridged={showVictoryStage}
           recap={buildBattleRecap(log, state)}
-          rewardPending={state.status === 'won' && !rewardDone}
+          rewardPending={state.status === 'won' && state.mode !== 'daily' && !rewardDone}
           onOpenReward={() => setRewardOpen(true)}
           status={state.status}
           score={state.score}
