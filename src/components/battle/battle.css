@@ -8075,3 +8075,99 @@ body.battle-viewport .battle-main .enemy-avatar-wrap {
     transform: translateY(-8px) scale(1.04);
   }
 }
+
+/* 決定267：Reward Relevance v1 — 報酬 3 択の役割チップ・枚数表示・見送り注記・選択後トースト。
+   `.reward-card`（140px）の中に収める。配色は既存 token から（U1・AI 判断）：
+   即戦力＝共鳴の金 #ffd166／神の個性＝レアの青 #4d9fff／次の構築＝支援の緑 #4dbd74／新しい選択肢＝灰 #a9adc4 */
+.reward-card-tags {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex-wrap: wrap;
+}
+
+.reward-role-chip {
+  --reward-role: #a9adc4;
+  display: inline-block;
+  padding: 1px 6px;
+  border-radius: 999px;
+  border: 1px solid var(--reward-role);
+  color: var(--reward-role);
+  background: #05060dcc;
+  font-size: 9px;
+  font-weight: 700;
+  line-height: 1.4;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+}
+
+.reward-role-chip[data-role='ready'] {
+  --reward-role: #ffd166;
+}
+
+.reward-role-chip[data-role='identity'] {
+  --reward-role: #4d9fff;
+}
+
+.reward-role-chip[data-role='next'] {
+  --reward-role: #4dbd74;
+}
+
+.reward-role-chip[data-role='fill'] {
+  --reward-role: #a9adc4;
+}
+
+.reward-copies {
+  margin-top: 4px;
+  padding-top: 4px;
+  border-top: 1px solid #ffffff14;
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  font-size: 10px;
+  line-height: 1.35;
+}
+
+.reward-copies-now {
+  color: #e6e9ff;
+}
+
+.reward-copies-limit {
+  color: #ffd166;
+  font-weight: 700;
+}
+
+.reward-copies-hint {
+  color: #a9adc4;
+  font-size: 9px;
+}
+
+.reward-skip {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  line-height: 1.3;
+}
+
+.reward-skip-note {
+  font-size: 10px;
+  color: #7f86a8;
+}
+
+.reward-skip:not(:disabled):hover .reward-skip-note {
+  color: #ffd166cc;
+}
+
+/* 選択後のトースト。見送りボタンの位置に差し替えて表示（`.reward-card-panel` 内＝決定241 の `.result-toast` とは別 class・重ならない） */
+.reward-toast {
+  padding: 8px 16px;
+  border-radius: 999px;
+  border: 1px solid #ffd16688;
+  background: #1a1707;
+  color: #ffd166;
+  font-size: 12px;
+  text-align: center;
+  max-width: 100%;
+  animation: overlay-fade-in 0.2s ease-out;
+}
