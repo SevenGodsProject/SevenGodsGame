@@ -149,3 +149,39 @@ SECOND BATTLE の Root Cause（§7）に対する runtime 案（結果画面の�
 - 実行したコマンド：Read／Grep／Glob のみ。build・vitest・browser・Playwright・simulation 実行 0（6GB RAM 制約遵守）
 - 参照 worktree：`SevenGodsGame-integ`（master `641ea5c`）のみ。`SevenGodsGame`（stale）・`SevenGodsGame-d263-pilot` は未参照
 - commit 0・Decision 番号追加 0
+
+---
+
+## §11. External Human Evidence（2026-10-07 追記・事実のみ・原因未確定）
+
+**事実：** 2026-10-07、Discord で SEVEN GODS 紹介動画を公開した後、実際にゲームをプレイした「ゲームに不慣れな女性プレイヤー複数名」から「**やってみたけど少し難しい**」というフィードバックを受領（CEO 報告・KAGURA 経由）。
+人数・年齢層・デバイス・到達 Stage・勝敗・使用神・難易度・プレイ時間・「難しい」の対象（戦闘／ルール／UI／カード／予告／導入）：**いずれも未取得（UNKNOWN）**。
+
+**原因は特定できていない：** battle difficulty／rules comprehension／UI comprehension／card comprehension／Intent comprehension／onboarding のどれが「少し難しい」の原因かは不明。本書は推測で原因を確定しない（§3〜§5 の仮説 HYP に紐づけない）。
+
+**禁止（CEO 指示 2026-10-07）：** 敵 HP 低下／敵 ATK 低下／強カード配布／おすすめカード表示／正解表示／自動選択 などの runtime 変更は行わない。決定263 Human QA を止めない（最優先維持）。
+
+### §11-1. Practical QA v3 追加候補 — First Battle Beginner QA（4 問）
+
+| # | 質問 | 観点 |
+|---|---|---|
+| BQ1 | 何をすれば勝てるゲームなのか分かったか | rules comprehension |
+| BQ2 | 敵の「次の行動」を見ていたか | Intent comprehension（決定263 と同じ軸） |
+| BQ3 | カードを選ぶ基準が分かったか | card comprehension（PJ-03 と同じ軸） |
+| BQ4 | もう一度やれば、今度はもっと上手くできそうと思ったか | 自己効力感（Failure Teaches） |
+
+**最重要判定（CEO 指示）：**
+- **BQ4 YES かつ BQ1〜BQ3 の弱点が特定できる** → Core difficulty を下げるより **onboarding 改善を優先**
+- **BQ4 NO で、本人にも何を改善すればよいか分からない** → **First Battle comprehension を重大課題**として扱う
+
+PJ-02（2 戦目の観察欄）と同じ Session で取れる。既存 Practical QA v2 Q1〜Q10（`FINAL_PRACTICAL_QA_V2.md` §6）とは別枠（初心者層向け・初回 1 戦）。
+
+### §11-2. 将来候補 — First Battle Guidance v1（Decision 化前・runtime 変更なし）
+
+- **目的：** 「敵を見る → 考える → 選ぶ → 結果が返る」を初回 1 戦で理解させる
+- **やらないこと：** 正解そのものは教えない。おすすめカード highlight は禁止（OB-04 DROP・決定262 NO-GO と同じ線）
+- **Decision 化の前提：** 決定263（Threat Shape v1・軸①「いつ備えるか」）／Tutorial（E1 決定193／198・`TutorialOverlay.tsx`）／本書 PJ-03（Tutorial step 2 の語彙差し替え）／OB-01 との重複を必ず整理してから。重複整理前に Decision 番号は取らない
+- **現時点：** runtime 変更なし・新 Decision 番号なし・`MASTER_BACKLOG_AUDIT.md` §3-5 に OB-05（Evidence 記録）／OB-06（候補）として登録
+
+### §11-3. 本節の runtime 変更 0
+- 本節は 2026-10-07 の追記（docs-only）。`src/`・`public/`・`scripts/` 変更 0・build／vitest／browser 0。決定263 Pilot（`SevenGodsGame-d263-pilot`）は未接触

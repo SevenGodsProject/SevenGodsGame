@@ -148,3 +148,21 @@ P0 blocker 0／P1（MUST FIX）0／core deterministic mismatch 0（metric lock�
 - 実行：2026-10-02（worktree `C:/Users/kimi1/SevenGodsGame-rwa`・branch `docs/post-d257-remaining-work-audit`・親 `aae81fb`・base `538a3ef`）
 - `git status --porcelain`：`?? docs/FINAL_PRACTICAL_QA_V2.md` の 1 行のみ／`git diff --stat 538a3ef -- src public package.json`：0 行
 - ブラウザ・vitest・build・simulation・server・外部サービス・push・DECISIONS 編集・決定257 Release lane・決定259 simulation：0
+
+---
+
+## 11. Practical QA v3 追加候補（2026-10-07 追記）— First Battle Beginner QA 4 問
+
+- **経緯（事実のみ）：** 2026-10-07、Discord で SEVEN GODS 紹介動画を公開した後、実際にゲームをプレイした「ゲームに不慣れな女性プレイヤー複数名」から「**やってみたけど少し難しい**」というフィードバックを受領（CEO 報告・KAGURA 経由）。 人数・年齢層・デバイス・到達 Stage・勝敗・使用神・難易度・プレイ時間・「難しい」の対象（戦闘／ルール／UI／カード／予告／導入）：**いずれも未取得（UNKNOWN）**。 原因は未特定（推測で確定しない）。記録：`PLAYER_JOURNEY_AUDIT.md` §11・`MASTER_BACKLOG_AUDIT.md` OB-05
+- **位置づけ：** v2 本文（§1〜§10・Q1〜Q10）は変更しない。v3 は未作成。以下は v3 起草時に「初心者層・初回 1 戦」の枠として入れる**候補**。CEO 本人向け Q1〜Q10 とは別枠
+
+| # | 質問 | YES／NO |
+|---|---|---|
+| BQ1 | 何をすれば勝てるゲームなのか分かったか | |
+| BQ2 | 敵の「次の行動」を見ていたか | |
+| BQ3 | カードを選ぶ基準が分かったか | |
+| BQ4 | もう一度やれば、今度はもっと上手くできそうと思ったか | |
+
+**最重要判定：** BQ4 YES かつ BQ1〜BQ3 の弱点が特定できる → Core difficulty を下げるより onboarding 改善を優先。BQ4 NO で本人にも改善点が分からない → First Battle comprehension を重大課題として扱う。
+
+**禁止：** 敵 HP／ATK 低下・強カード配布・おすすめカード表示・正解表示・自動選択（CEO 2026-10-07）。決定263 Human QA を止めない。本節追記は docs-only・runtime 変更 0。

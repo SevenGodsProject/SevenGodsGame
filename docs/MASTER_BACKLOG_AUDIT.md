@@ -16,7 +16,7 @@
 | 項目 | 結論 |
 |---|---|
 | **現在の完成度** | **70 / 100**（§2）。「遊び」は商用 RC 水準（CEO RC GO 済み・Primary Fun Gate 群 PASS）。足りないのは「公開面（Face）」「権利・法務の確定」「運用の安全網（セーブ互換・CI・正本文書）」。これらは全て **XS〜S コスト・runtime 影響ほぼ 0** で埋まる |
-| 棚卸し総数 | **110 ID**（§3 の表に定義された ID 数【2026-10-07 機械集計】。5 レーン 123 findings → 重複除去・既存 CLOSED／LIVE／NO-GO 除外後。※初版の「96 件」は §3 の ID 数と一致しなかったため訂正） |
+| 棚卸し総数 | **112 ID**（2026-10-07 OB-05／OB-06 追記後）（§3 の表に定義された ID 数【2026-10-07 機械集計】。5 レーン 123 findings → 重複除去・既存 CLOSED／LIVE／NO-GO 除外後。※初版の「96 件」は §3 の ID 数と一致しなかったため訂正） |
 | 分類 | **P0 = 5 束（ID 8：SG-01・UX-09 は CM-01・RL-02 と同一）**／**P1 = 10 束（ID 14）**／**P2 = 38**／**P3 = 41**／**DROP = ID 5＋§4 の閉じたレバー群**／OBSERVE（記録のみ）= ID 4＋Known 監視項目（§3 Pri 列の機械集計 2026-10-07。初版の P2 22／P3 27 は §5 の ID 列挙と一致しなかったため訂正） |
 | P0 の性質 | **5 件すべて「ゲームの面白さ」ではなく「正式公開を宣言できる状態」の条件**。runtime 変更は `index.html`／`public/`／storage ガードのみ。`src/core` 0 |
 | 最大の未解決リスク | ①セーブ互換（battleSave 以外 13 storage が version 不一致で無言初期化）②公開面・権利・法務の空白（OGP／favicon／クレジット／台帳 UNKNOWN／プライバシー）③作業環境の単一障害点（CI 0・worktree 73 本 ≈34GB → 10/07 cleanup で 16 本・main repo dirty・未 push branch） |
@@ -77,7 +77,7 @@
 
 ---
 
-## 3. 領域別棚卸し（110 ID）【AI 判断】
+## 3. 領域別棚卸し（112 ID・2026-10-07 OB-05／OB-06 追記）【AI 判断】
 
 凡例：Pri＝P0 正式 Release blocker／P1 Release 前に強く推奨／P2 Release 後の改善／P3 Growth／DROP／OBS＝観察・記録のみ。Impact＝Fun（Primary Fun）／UX／Ret（Retention）／Com（Commercial）／Rel（Reliability）。Cost＝XS／S／M／L／XL。Risk＝LOW／MED／HIGH。Ev＝HQA（Human QA）／SIM（Simulation）／EXT（External Feedback）／CA（Code Audit）／HYP（Hypothesis）。★＝CEO 判断事項（§6-3）。
 
@@ -147,6 +147,8 @@
 | OB-02 | TutorialOverlay に Esc／初期フォーカス／focus trap なし（Brief・ConfirmDialog は対応済み） | `TutorialOverlay.tsx:49,73` | P2 → A11Y-01 に統合 | UX | XS | LOW | CA |
 | OB-03 | 「遊び方」完全版は本アイコンからのみ（E1 で意図的）。再表示導線の Battle 中可否を確認 | `App.tsx:87` | P3 | UX | XS | LOW | CA |
 | OB-04 | 「おすすめカード＝正解表示」「結果画面で解き方説明」（決定262 NO-GO）系の提案 | 決定262 | **DROP** | — | — | — | HQA |
+| OB-05 | **External Human Evidence（2026-10-07 受領・事実のみ）**：Discord 紹介動画公開後、実プレイした「ゲームに不慣れな女性プレイヤー複数名」から「やってみたけど少し難しい」。原因（battle difficulty／rules／UI／card／Intent／onboarding）は**未特定・推測で確定しない**。敵 HP／ATK 低下・強カード配布・おすすめ表示・正解表示・自動選択の runtime 変更は禁止（CEO）。Practical QA v3 に **First Battle Beginner QA 4 問**（BQ1 勝ち方が分かったか／BQ2 敵の次の行動を見ていたか／BQ3 カードを選ぶ基準が分かったか／BQ4 もう一度やればもっと上手くできそうか）を追加候補。判定：BQ4 YES＋BQ1〜3 の弱点特定 → onboarding 改善優先／BQ4 NO＋本人も不明 → First Battle comprehension を重大課題 | `PLAYER_JOURNEY_AUDIT.md` §11・CEO 報告 2026-10-07 | **OBS**（記録・QA 設問） | Fun／UX | XS（QA 設問） | LOW | **Human Evidence（原因 UNKNOWN）** |
+| OB-06 | **候補：First Battle Guidance v1**（「敵を見る → 考える → 選ぶ → 結果が返る」を初回 1 戦で理解させる。正解は教えない・おすすめ highlight 禁止）。決定263／Tutorial（E1）／PJ-03／OB-01 との重複整理後に Decision 化。**現時点 runtime 変更なし・Decision 番号なし** | `PLAYER_JOURNEY_AUDIT.md` §11-2 | **未採番**（決定263 クローズ後・OB-05 の QA 結果で確定） | Fun／Ret | 未定 | 未定 | HYP |
 
 ### 3-6. Replayability（領域 6）
 
@@ -295,7 +297,8 @@
 | **P2** | **38** | CF-02〜07・BF-03／04／07／08・AR-02／03／06・UX-02〜05・OB-02・RP-01／02／05・RK-05・SG-02〜04・CM-05・RL-05／06・PF-02〜04・CC-01／02・TD-03〜06／10 |
 | **P3** | **41** | CF-08・BF-05／06／10・AR-04／05／07／08・UX-06〜08・OB-03・RP-03／04／06・RK-01〜04／06／08〜11・SG-05／06・CM-06〜08・RL-08〜10・A11Y-03〜06・PF-05・CC-04・TD-07〜09 |
 | **DROP** | **ID 5＋閉じたレバー群** | CF-09 マリガン／OB-04 おすすめ・正解表示・解き方説明／CM-09 課金・広告／RK-07 timer→順位／CC-03（条件付き）／§4 の閉じたレバー群（BURST 任意・Ranking whole merge・7 OTOMO・敵 guard・Living BG・新 mechanic・late-round 延長・AP 平準化・カード数値 SD・日次 salt・Daily 倍率・通常戦総合 RK） |
-| OBS | ID 4＋Known 監視 | CF-10／11・BF-09・CC-05・各 Known の監視項目（K15〜K20・K22〜K25） |
+| OBS | ID 5＋Known 監視 | CF-10／11・BF-09・CC-05・**OB-05 External Human Evidence（2026-10-07）**・各 Known の監視項目（K15〜K20・K22〜K25） |
+| 候補（Pri 未採番） | ID 1 | OB-06 First Battle Guidance v1（決定263 クローズ後・OB-05 の Beginner QA 結果で Pri 確定。重複整理前に Decision 化しない） |
 
 **P0 が「遊び」を 1 件も含まない理由**：CEO 2026-10-03 の COMMERCIAL RC = GO で Primary Fun／determinism／save／fairness／game-breaking UI の BLOCKER 0 が確定し、以後 決定264／266／267 が全て Human QA PASS → LIVE。敵アート（K07）・Voice（K08／K35）・Card Art（K32）は同決定で D（RC 条件外）と承認済みのため、本書は P1 ★ に置く（復活ではなく CEO 課金判断の提示）。
 
@@ -313,5 +316,5 @@
 
 - 本書と `ROADMAP_TO_RELEASE.md` の 2 ファイルを clean worktree `SevenGodsGame-integ`（master `641ea5c`）に **untracked として作成**したのみ。commit／merge／push／deploy／Decision 番号追加：0
 - runtime／src／CSS／public／scripts／package.json 変更：0。build／vitest／Playwright／ブラウザ／simulation／Lighthouse／画像・音声生成／外部サービス：0
-- 決定263 Lane（`SevenGodsGame-d263-pilot`・`feat/d263-threat-shape-v1`）：読み取りのみ（`git log`・docs 1 本）。External Player Feedback Lane：未接触
+- 決定263 Lane（`SevenGodsGame-d263-pilot`・`feat/d263-threat-shape-v1`）：読み取りのみ（`git log`・docs 1 本）。External Player Feedback Lane：未接触（**2026-10-07 追記：** External Human Evidence「少し難しい」を受領 → OB-05／OB-06 を §3-5 に追記・§5 集計更新。runtime 変更 0・Decision 番号追加 0）
 - 5 監査レーンは全て Read／Grep／Glob／`git log`／`git show`／`git branch`／`git worktree list`／`ls`／`du` のみ。worktree／branch の削除・prune：0

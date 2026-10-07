@@ -3,7 +3,7 @@
 - 日付：2026-10-07
 - 種別：**docs-only**（runtime 変更 0・commit／merge／push 0・Decision 番号追加 0）
 - 判断主体：AI チーム（CLAUDE.md §6-2）。各 Phase の実装開始・Production 公開・★印の判断は CEO（§6-3）
-- 根拠：`docs/MASTER_BACKLOG_AUDIT.md`（110 ID の棚卸し・ID はそのまま参照。2026-10-07 集計訂正）
+- 根拠：`docs/MASTER_BACKLOG_AUDIT.md`（112 ID の棚卸し・ID はそのまま参照。2026-10-07 集計訂正・OB-05／OB-06 追記）
 - 基準点：Production = master = origin/master **`641ea5c`**（決定267 PRODUCTION LIVE / CLOSED）。別 Lane＝決定263 Threat Shape v1 Pilot（Human QA 待ち）・External Player Feedback Audit。**どちらも本書で中断・変更しない**
 - ルール：NEXT NOW は常に 1 つ／各 Phase 最大 5 件／Phase を閉じてから次へ（docs-only・git-only の作業は並行可）／Human QA を要する Lane は同時に 1 本（決定263 が占有中）
 
@@ -39,7 +39,7 @@ GROWTH ──────────── Daily 神間 spread 是正 → Ranki
 | 4 | **worktree 整理の一覧提示**（`WORKTREE_BRANCH_CLEANUP_AUDIT.md` の分類で提示。**削除実行は CEO 確認** ★ §6-3 #9）— **完了 2026-10-07：worktree 73→16・branch 124→46（同監査 §7）** | TD-02 | git read-only → CEO 承認後 prune | 一覧 docs 1 本・CEO「承認／拒否」 → 完了 |
 | 5 | **権利台帳 CEO INPUT 依頼**（UNKNOWN 欄・AI 生成素材規約 #2／#6 の最終 Status を §6-4 形式で 1 枚にまとめて提出） | CM-04 ★ | docs-only | CEO 回答 → 台帳反映 |
 
-NOW の 2〜5 は決定263 Lane と接触しない（docs／git のみ・`src` 0・Human QA 0）。External Feedback Lane の結果が来たら、その findings を `MASTER_BACKLOG_AUDIT.md` §3 に ID 付きで追記する（新 Phase は作らない）。
+NOW の 2〜5 は決定263 Lane と接触しない（docs／git のみ・`src` 0・Human QA 0）。External Feedback Lane の結果が来たら、その findings を `MASTER_BACKLOG_AUDIT.md` §3 に ID 付きで追記する（新 Phase は作らない）。**2026-10-07 受領：** Discord 紹介動画公開後の初心者層（ゲームに不慣れな女性プレイヤー複数名）から「やってみたけど少し難しい」→ OB-05（Evidence・原因未特定）／OB-06（候補 First Battle Guidance v1）として追記済み。runtime 変更 0・NOW 1（決定263 Human QA）は継続・新 Phase なし。
 
 ---
 
