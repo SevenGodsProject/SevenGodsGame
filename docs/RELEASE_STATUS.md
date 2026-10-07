@@ -16,7 +16,7 @@ Production の「確定状態」を一目で確認するための要約です。
 | **Quality Gate（決定267 Release Gate）** | tsc 0／oxlint 0／vitest **1,330 PASS・9 skip（意図的 `skipIf`）／110 files**／Playwright acceptance＋migration 10/10／`ranking-absence.mjs` 17 項目／RC と Production の同 seed 一致／Production Smoke 6/6 PASS・製品異常 0 |
 | **Commercial RC** | **GO（CEO 決定 2026-10-03）**・RC 基準 runtime `8cba184` → 以後 決定261／264／266／267 を Human QA PASS で追加 |
 | **Code Freeze** | なし（CLAUDE.md §6 の AI 自律判断で Narrow Pilot 単位。Human QA Lane は同時 1 本） |
-| **進行中（別 Lane）** | 決定263 Threat Shape v1 Narrow Pilot（worktree `SevenGodsGame-d263-pilot`・`78ce071`・**AUTOMATED GATE PASS → HUMAN QA READY**＝CEO Human QA Q1〜Q4 待ち。決定263 の DECISIONS 行・`DECISION263*` 文書は pilot branch 側のみで **master 未反映**＝Closeout 時に取り込む）／External Player Feedback Audit |
+| **進行中（別 Lane）** | なし。決定263 Threat Shape v1 Narrow Pilot は **CEO Human QA NO / Production NO-GO → CLOSED（2026-10-07・Q1 YES／Q2 YES／Q3 YES／Q4 NO）**。Pilot branch `feat/d263-threat-shape-v1`（`78ce071`）は Evidence として保持・master merge なし・deploy なし。DECISIONS 行と `DECISION263*` 文書は Closeout で master へ取り込み済み（docs のみ）。External Player Feedback：2026-10-07 Human Evidence 受領（OB-05）。**NEXT NOW＝Public Face Pack v1（CM-01）** |
 | **次の Release 条件** | `docs/ROADMAP_TO_RELEASE.md` §1〜§4（v1.0.0 = P0 5 束＋DoD 18 項目。※ROADMAP §7 の DoD 18 項目であり、上記「決定267 Release Gate 18 項目」とは別物） |
 
 ### A-2. Production に入っている主要機能（決定番号）
@@ -51,7 +51,7 @@ BURST 任意発動（127）／Ranking 統合（152・256 NO-GO・READY-DORMANT�
 | K30 | Daily 端末時計／localStorage 依存・挑戦状は自己申告 | D | RK-06 |
 | K31 | 寿楽一強・共通カード差別化・神技評価偏り・SE 数式合成・Boss Entrance 中カード可・STAKE-01 timeout | C（7・13 は D） | CF-04／BF-01／— |
 | K32 | Card Art Unity（60 枚） | D | AR-04 |
-| K33 | Card Decision Meaning「手札で戦い方を考える」（262 NO-GO 後 OPEN） | D | **決定263 で検証中** |
+| K33 | Card Decision Meaning「手札で戦い方を考える」（262 NO-GO 後 OPEN） | D | **決定263 Human QA NO / NO-GO（2026-10-07）→ OPEN のまま**。Evidence：未来 Threat 可視化は温存行動を生むが、提示量を増やすほど「正解を教えられている」感覚が出る境界を確認 |
 | K34 | Character Integration／Duel HUD | **決定264 で主要 4 点 PASS → 残りは接地・枠**（C） | AR-02 |
 | 新 | battleSave 以外 13 storage が version 不一致で無言初期化 | **B 相当（version を上げる変更の前に必須）** | **RL-01** |
 | 新 | OGP／description／favicon／version 表示なし・Legal／Credits なし | 公開面 | CM-01〜03 |

@@ -61,7 +61,7 @@
 | 2 Battle Feel | 75 | Hit Weight／Reaction Language／God Strike v2／Sound Layer LIVE。残＝SE 全数式合成・Voice 0・動画 1 柱・敗北帳票即出し |
 | 3 Character／Art | 55 | 敵 7 体が 2 世代（4 体 45〜59 点）・接地影 0・OTOMO 320px・カード 60 枚の画風差（K32）。Brief HOLD＝CEO 課金判断 |
 | 4 UI／UX | 75 | 主要画面に Human QA PASS。残＝神選択画面の密度・2 戦目の壁・SP 空き帯 |
-| 5 Onboarding | 70 | E1＋Brief 3 行＋Tutorial は良質。残＝2 戦目の壁（evidence 0）・初陣で「読む」が報われるか（263 待ち） |
+| 5 Onboarding | 70 | E1＋Brief 3 行＋Tutorial は良質。残＝2 戦目の壁（evidence 0）・初陣で「読む」が報われるか（決定263 NO-GO 2026-10-07 → 未解決のまま・境界 evidence あり） |
 | 6 Replayability | 65 | Solve Loop／Reward 3 役／神階／Daily LIVE。残＝49 攻略 boolean・「別構成で勝ち方が変わった」evidence 0 |
 | 7 Ranking | —（設計上 dormant・減点対象外） | READY-DORMANT・TRIGGER 未到達。純部品のみ移植価値 |
 | 8 Social／Growth | 30 | 挑戦状テキスト＋deep link のみ。OGP 0・Web Share 0 |
@@ -85,7 +85,7 @@
 
 | ID | タスク | Evidence | Pri | Impact | Cost | Risk | Ev |
 |---|---|---|---|---|---|---|---|
-| CF-01 | **決定263 Threat Shape v1 Pilot のクローズアウト**（CEO Human QA Q1〜Q4 → Release Gate or NO-GO 記録）。中断・方向変更しない | `-d263-pilot` `78ce071`・Gate PASS | **P1（進行中・別 Lane）** | Fun | S | LOW | HQA 待ち |
+| CF-01 | **決定263 Threat Shape v1 Pilot のクローズアウト** — **完了 2026-10-07：CEO Human QA NO / Production NO-GO**（Q1 YES／Q2 YES／Q3 YES／Q4 NO。温存行動は生んだが「正解を教えられている」感覚が発生）。救済・再 QA・代替 Decision なし。branch `78ce071` は Evidence 保持 | `DECISION263_THREAT_SHAPE_V1_PILOT.md` §7 | **CLOSED（NO-GO）** | Fun | — | — | HQA |
 | CF-02 | 神 passive 3/7・Mastery 4/7 の非対称を解消するか「意図的非対称」として確定する（`rules.ts:146`「プロトタイプ」注記の更新を含む） | `gods.ts:109-199`・`mastery.ts:12,123` | P2 | Fun | M | MED | CA |
 | CF-03 | 託宣「温存する判断が生まれたか」「導き」の人間使用率を Practical QA v3 で 1 問ずつ観測 | K21・`divination.ts` | P2 | Fun | XS | LOW | HQA 未観測 |
 | CF-04 | 7 神バランス（寿楽一強・蒼毘／笑蓮下位）の最新 paired-seed 数値を決定246／251／252 後の evidence JSON から再集計し Decision に集約（sim 新規実行なし） | RELEASE_STATUS P2・K31-7 | P2 | Fun | S | LOW | SIM（既存） |
@@ -143,7 +143,7 @@
 
 | ID | タスク | Evidence | Pri | Impact | Cost | Risk | Ev |
 |---|---|---|---|---|---|---|---|
-| OB-01 | 初陣で「読む」が報われるか（決定260 SUPPORTED「考えなくても勝てる」）＝決定263 に委ねる。**「おすすめカード／正解表示／自動選択」で埋めるのは North Star「読む→組む→決まる」（`DECISION203 §:17,27`）の「組む」を奪うため DROP** | DECISIONS L481／L487 | P1（CF-01 に従属） | Fun | — | — | HQA |
+| OB-01 | 初陣で「読む」が報われるか（決定260 SUPPORTED「考えなくても勝てる」）＝決定263 に委ねた → **決定263 Human QA NO / NO-GO（2026-10-07）で未解決のまま**（Evidence：未来情報の提示量を増やすほど解く楽しさを侵食する境界）。**「おすすめカード／正解表示／自動選択」で埋めるのは North Star「読む→組む→決まる」（`DECISION203 §:17,27`）の「組む」を奪うため DROP** | DECISIONS L481／L487 | P1（CF-01 に従属） | Fun | — | — | HQA |
 | OB-02 | TutorialOverlay に Esc／初期フォーカス／focus trap なし（Brief・ConfirmDialog は対応済み） | `TutorialOverlay.tsx:49,73` | P2 → A11Y-01 に統合 | UX | XS | LOW | CA |
 | OB-03 | 「遊び方」完全版は本アイコンからのみ（E1 で意図的）。再表示導線の Battle 中可否を確認 | `App.tsx:87` | P3 | UX | XS | LOW | CA |
 | OB-04 | 「おすすめカード＝正解表示」「結果画面で解き方説明」（決定262 NO-GO）系の提案 | 決定262 | **DROP** | — | — | — | HQA |
@@ -293,7 +293,7 @@
 | 分類 | 件数 | 内訳（ID） |
 |---|---|---|
 | **P0** | **5 束（ID 8）** | CM-01 Public Face Pack（＝SG-01）／CM-02 Legal・Credits ★／CM-03 プライバシー最小 ★／CM-04 権利台帳確定 ★／RL-01 Save Compatibility Guard＋RL-02 Release Ops Baseline（＝UX-09・**運用安全網として 1 束**） |
-| **P1** | **10 束（ID 14）** | CF-01 決定263 クローズアウト（進行中）／AR-01 Enemy Art Brief v1.1 → CEO 判断 ★／BF-01 SE 実音源 ★／BF-02 God Strike Voice ★／UX-01 2 戦目の壁 QA＋OB-01／A11Y-01＋02 A11y Minimum Pack／RL-03＋04 CI＋playwright 宣言／RL-07 docs branch push／PF-01 SP perf evidence／TD-01＋02 作業環境衛生 |
+| **P1** | **10 束（ID 14）** | CF-01 決定263 クローズアウト（**完了 2026-10-07 NO-GO**）／AR-01 Enemy Art Brief v1.1 → CEO 判断 ★／BF-01 SE 実音源 ★／BF-02 God Strike Voice ★／UX-01 2 戦目の壁 QA＋OB-01／A11Y-01＋02 A11y Minimum Pack／RL-03＋04 CI＋playwright 宣言／RL-07 docs branch push／PF-01 SP perf evidence／TD-01＋02 作業環境衛生 |
 | **P2** | **38** | CF-02〜07・BF-03／04／07／08・AR-02／03／06・UX-02〜05・OB-02・RP-01／02／05・RK-05・SG-02〜04・CM-05・RL-05／06・PF-02〜04・CC-01／02・TD-03〜06／10 |
 | **P3** | **41** | CF-08・BF-05／06／10・AR-04／05／07／08・UX-06〜08・OB-03・RP-03／04／06・RK-01〜04／06／08〜11・SG-05／06・CM-06〜08・RL-08〜10・A11Y-03〜06・PF-05・CC-04・TD-07〜09 |
 | **DROP** | **ID 5＋閉じたレバー群** | CF-09 マリガン／OB-04 おすすめ・正解表示・解き方説明／CM-09 課金・広告／RK-07 timer→順位／CC-03（条件付き）／§4 の閉じたレバー群（BURST 任意・Ranking whole merge・7 OTOMO・敵 guard・Living BG・新 mechanic・late-round 延長・AP 平準化・カード数値 SD・日次 salt・Daily 倍率・通常戦総合 RK） |

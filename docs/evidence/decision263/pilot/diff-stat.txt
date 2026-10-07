@@ -1,0 +1,9 @@
+ src/components/battle/BattleScreen.tsx      |   8 +-
+ src/components/battle/EnemyPanel.tsx        |  24 ++++++
+ src/components/battle/battle.css            |  87 ++++++++++++++++++++++
+ src/components/battle/threatShape.test.ts   |  97 ++++++++++++++++++++++++
+ src/components/battle/threatShape.ts        |  63 ++++++++++++++++
+ src/core/engine/previewEnemyActions.test.ts | 110 ++++++++++++++++++++++++++++
+ src/core/engine/previewEnemyActions.ts      |  44 +++++++++++
+ src/core/engine/round.ts                    |   7 +-
+ 8 files changed, 437 insertions(+), 3 deletions(-)

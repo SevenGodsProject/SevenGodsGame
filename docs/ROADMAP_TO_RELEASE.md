@@ -4,15 +4,15 @@
 - 種別：**docs-only**（runtime 変更 0・commit／merge／push 0・Decision 番号追加 0）
 - 判断主体：AI チーム（CLAUDE.md §6-2）。各 Phase の実装開始・Production 公開・★印の判断は CEO（§6-3）
 - 根拠：`docs/MASTER_BACKLOG_AUDIT.md`（112 ID の棚卸し・ID はそのまま参照。2026-10-07 集計訂正・OB-05／OB-06 追記）
-- 基準点：Production = master = origin/master **`641ea5c`**（決定267 PRODUCTION LIVE / CLOSED）。別 Lane＝決定263 Threat Shape v1 Pilot（Human QA 待ち）・External Player Feedback Audit。**どちらも本書で中断・変更しない**
-- ルール：NEXT NOW は常に 1 つ／各 Phase 最大 5 件／Phase を閉じてから次へ（docs-only・git-only の作業は並行可）／Human QA を要する Lane は同時に 1 本（決定263 が占有中）
+- 基準点：Production = master = origin/master **`641ea5c`**（決定267 PRODUCTION LIVE / CLOSED）。別 Lane＝決定263 Threat Shape v1 Pilot（**2026-10-07 CEO Human QA NO / Production NO-GO → CLOSED**・branch は Evidence 保持）・External Player Feedback Audit（2026-10-07 Human Evidence 受領 → OB-05）。**どちらも本書で中断・変更しない**
+- ルール：NEXT NOW は常に 1 つ／各 Phase 最大 5 件／Phase を閉じてから次へ（docs-only・git-only の作業は並行可）／Human QA を要する Lane は同時に 1 本（決定263 は 2026-10-07 クローズ → 空き）
 
 ---
 
 ## 0. 一本道（全体像）
 
 ```
-NOW ─────────────── 決定263 クローズアウト（別 Lane・待ち）
+NOW ─────────────── 決定263 クローズアウト **完了（2026-10-07 Human QA NO / Production NO-GO）**
                     ＋ docs／git のみの地ならし（RELEASE_STATUS 正本化・main repo 救出・worktree 一覧・台帳 CEO INPUT 依頼）
    ↓
 NEXT ────────────── Public Face Pack v1（index.html／public のみ・Human QA 不要）
@@ -33,7 +33,7 @@ GROWTH ──────────── Daily 神間 spread 是正 → Ranki
 
 | # | タスク | ID | 性質 | 完了条件 |
 |---|---|---|---|---|
-| 1 | **決定263 Threat Shape v1 クローズアウト**（CEO Human QA Q1〜Q4 → PASS なら Release Gate → Production／NO なら NO-GO 記録。**本書から干渉しない**） | CF-01 | 別 Lane・Human QA | DECISIONS.md に LIVE or NO-GO の行 |
+| 1 | **決定263 Threat Shape v1 クローズアウト**（CEO Human QA Q1〜Q4 → PASS なら Release Gate → Production／NO なら NO-GO 記録。**本書から干渉しない**）— **完了 2026-10-07：Human QA NO / Production NO-GO（Q1 YES／Q2 YES／Q3 YES／Q4 NO）・DECISIONS.md に NO-GO 行・branch は Evidence 保持** | CF-01 | 別 Lane・Human QA | DECISIONS.md に LIVE or NO-GO の行 → 完了 |
 | 2 | **`RELEASE_STATUS.md` 正本化**（Production HEAD `641ea5c`・runtime・Vercel deployment／rollback id・生存 Known 一覧 K01／K10／K11／K12／K14／K32〜K35・Code Freeze 欄）— **完了 2026-10-07（§A）** | RL-02（前半） | docs-only | 1 ファイル更新・CEO 確認不要 → 完了 |
 | 3 | **main repo 救出**（`feat/d224` の dirty 12 files を patch 保存 → branch に commit → main repo を master へ。push 不要） | TD-01 | git-only・runtime 0 | `git status` clean・patch ファイルの所在を記録 |
 | 4 | **worktree 整理の一覧提示**（`WORKTREE_BRANCH_CLEANUP_AUDIT.md` の分類で提示。**削除実行は CEO 確認** ★ §6-3 #9）— **完了 2026-10-07：worktree 73→16・branch 124→46（同監査 §7）** | TD-02 | git read-only → CEO 承認後 prune | 一覧 docs 1 本・CEO「承認／拒否」 → 完了 |
@@ -158,7 +158,7 @@ NOW の 2〜5 は決定263 Lane と接触しない（docs／git のみ・`src` 0
 
 ## 9. 推奨：次に実行するタスク（1 件）
 
-**「Public Face Pack v1」（CM-01）** — ただし着手は決定263 クローズアウト後（Human QA Lane の直列ルール）。それまでは NOW §1 の 2〜5（docs／git のみ）を進める。
+**「Public Face Pack v1」（CM-01）** — 決定263 クローズアウト完了（2026-10-07 NO-GO）により **着手可（NEXT NOW・CEO 指示 2026-10-07）**。順序：Public Face Pack v1 → Save Compatibility Guard → Release Safety → Practical QA v3 → v1.0。runtime 変更前に Closeout 状態と master／origin 状態を報告する。
 
 理由【AI 判断】：
 - P0 のうち **唯一 CEO／専門家 INPUT なしに AI チームだけで完了**できる（CM-02〜04 は文言・権利の CEO 確認待ち、RL-01／02 は NOW の docs 正本化を先に済ませてから）

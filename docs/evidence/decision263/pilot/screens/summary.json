@@ -1,0 +1,375 @@
+{
+  "base": "http://127.0.0.1:4307",
+  "prod": null,
+  "at": "2026-10-06T21:10:58.634Z",
+  "summary": [
+    {
+      "tag": "e3-pc",
+      "pass": true,
+      "failed": [],
+      "rounds": 4,
+      "shape": "[\"normal\",\"normal\",\"strong\",\"special\",\"huge\",\"normal\",\"normal\"]"
+    },
+    {
+      "tag": "e4-sp",
+      "pass": true,
+      "failed": [],
+      "rounds": 7,
+      "shape": "[\"normal\",\"charge\",\"huge\",\"charge\",\"special\",\"normal\",\"normal\"]"
+    }
+  ],
+  "runs": [
+    {
+      "tag": "e3-pc",
+      "enemy": "藍花の怨霊",
+      "viewport": {
+        "width": 1508,
+        "height": 660
+      },
+      "first": {
+        "slots": [
+          {
+            "round": 1,
+            "tier": "normal",
+            "glyph": "sword",
+            "phase": "current",
+            "text": "",
+            "title": ""
+          },
+          {
+            "round": 2,
+            "tier": "normal",
+            "glyph": "sword",
+            "phase": "future",
+            "text": "",
+            "title": ""
+          },
+          {
+            "round": 3,
+            "tier": "strong",
+            "glyph": "swordHeavy",
+            "phase": "future",
+            "text": "",
+            "title": ""
+          },
+          {
+            "round": 4,
+            "tier": "special",
+            "glyph": "burst",
+            "phase": "future",
+            "text": "怨嗟の花",
+            "title": "怨嗟の花"
+          },
+          {
+            "round": 5,
+            "tier": "huge",
+            "glyph": "burst",
+            "phase": "future",
+            "text": "",
+            "title": ""
+          },
+          {
+            "round": 6,
+            "tier": "normal",
+            "glyph": "sword",
+            "phase": "future",
+            "text": "",
+            "title": ""
+          },
+          {
+            "round": 7,
+            "tier": "normal",
+            "glyph": "sword",
+            "phase": "future",
+            "text": "",
+            "title": ""
+          }
+        ],
+        "text": "怨嗟の花",
+        "rect": {
+          "x": 164,
+          "y": 166.5,
+          "w": 306.953125,
+          "h": 20
+        },
+        "insidePlate": true,
+        "belowHp": true,
+        "hScroll": false,
+        "intentCls": "",
+        "intentFont": "20px",
+        "intentH": 25,
+        "roundText": 0
+      },
+      "rounds": [
+        {
+          "round": 1,
+          "slotTier": "normal",
+          "intentCls": "",
+          "match": true,
+          "current": true,
+          "pastCount": 0
+        },
+        {
+          "round": 2,
+          "slotTier": "normal",
+          "intentCls": "",
+          "match": true,
+          "current": true,
+          "pastCount": 1
+        },
+        {
+          "round": 3,
+          "slotTier": "strong",
+          "intentCls": "intent-tier-strong",
+          "match": true,
+          "current": true,
+          "pastCount": 2
+        },
+        {
+          "round": 4,
+          "slotTier": "special",
+          "intentCls": "intent-tier-huge",
+          "match": true,
+          "current": true,
+          "pastCount": 3
+        }
+      ],
+      "errors": [],
+      "checks": [
+        {
+          "label": "T1 7 スロット",
+          "pass": true
+        },
+        {
+          "label": "T1 帯が名札内・HP ゲージ直下",
+          "pass": true
+        },
+        {
+          "label": "T1 高さ ≤20px",
+          "pass": true
+        },
+        {
+          "label": "T1 横スクロール 0",
+          "pass": true
+        },
+        {
+          "label": "T1 帯のテキストに数値なし",
+          "pass": true
+        },
+        {
+          "label": "T1 ヒント文なし",
+          "pass": true
+        },
+        {
+          "label": "T1 R4 以上まで観測（4R）",
+          "pass": true
+        },
+        {
+          "label": "T1 今 R のスロット段階 ＝ 実際の予告 tier（観測した全 R）",
+          "pass": true
+        },
+        {
+          "label": "T1 is-current ＝ 今 R・is-past ＝ 前の R",
+          "pass": true
+        },
+        {
+          "label": "T1 🔥 が 1 つ以上",
+          "pass": true
+        },
+        {
+          "label": "T5 console error 0",
+          "pass": true
+        }
+      ],
+      "shape": "[\"normal\",\"normal\",\"strong\",\"special\",\"huge\",\"normal\",\"normal\"]"
+    },
+    {
+      "tag": "e4-sp",
+      "enemy": "銀甲の機工師",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "first": {
+        "slots": [
+          {
+            "round": 1,
+            "tier": "normal",
+            "glyph": "sword",
+            "phase": "current",
+            "text": "",
+            "title": ""
+          },
+          {
+            "round": 2,
+            "tier": "charge",
+            "glyph": "bolt",
+            "phase": "future",
+            "text": "",
+            "title": "砲身に魔力を溜めている…"
+          },
+          {
+            "round": 3,
+            "tier": "huge",
+            "glyph": "burst",
+            "phase": "future",
+            "text": "",
+            "title": ""
+          },
+          {
+            "round": 4,
+            "tier": "charge",
+            "glyph": "bolt",
+            "phase": "future",
+            "text": "",
+            "title": "⚠ 主砲充填開始…！"
+          },
+          {
+            "round": 5,
+            "tier": "special",
+            "glyph": "burst",
+            "phase": "future",
+            "text": "神滅甲",
+            "title": "主砲・神滅甲"
+          },
+          {
+            "round": 6,
+            "tier": "normal",
+            "glyph": "sword",
+            "phase": "future",
+            "text": "",
+            "title": ""
+          },
+          {
+            "round": 7,
+            "tier": "normal",
+            "glyph": "sword",
+            "phase": "future",
+            "text": "",
+            "title": ""
+          }
+        ],
+        "text": "神滅甲",
+        "rect": {
+          "x": 30,
+          "y": 158.25,
+          "w": 154.46875,
+          "h": 18
+        },
+        "insidePlate": true,
+        "belowHp": true,
+        "hScroll": false,
+        "intentCls": "",
+        "intentFont": "17px",
+        "intentH": 21.25,
+        "roundText": 0
+      },
+      "rounds": [
+        {
+          "round": 1,
+          "slotTier": "normal",
+          "intentCls": "",
+          "match": true,
+          "current": true,
+          "pastCount": 0
+        },
+        {
+          "round": 2,
+          "slotTier": "charge",
+          "intentCls": "intent-tier-charge",
+          "match": true,
+          "current": true,
+          "pastCount": 1
+        },
+        {
+          "round": 3,
+          "slotTier": "huge",
+          "intentCls": "intent-tier-huge",
+          "match": true,
+          "current": true,
+          "pastCount": 2
+        },
+        {
+          "round": 4,
+          "slotTier": "charge",
+          "intentCls": "intent-tier-charge",
+          "match": true,
+          "current": true,
+          "pastCount": 3
+        },
+        {
+          "round": 5,
+          "slotTier": "special",
+          "intentCls": "intent-tier-huge",
+          "match": true,
+          "current": true,
+          "pastCount": 4
+        },
+        {
+          "round": 6,
+          "slotTier": "normal",
+          "intentCls": "",
+          "match": true,
+          "current": true,
+          "pastCount": 5
+        },
+        {
+          "round": 7,
+          "slotTier": "normal",
+          "intentCls": "",
+          "match": true,
+          "current": true,
+          "pastCount": 6
+        }
+      ],
+      "errors": [],
+      "checks": [
+        {
+          "label": "T1 7 スロット",
+          "pass": true
+        },
+        {
+          "label": "T1 帯が名札内・HP ゲージ直下",
+          "pass": true
+        },
+        {
+          "label": "T1 高さ ≤18px",
+          "pass": true
+        },
+        {
+          "label": "T1 横スクロール 0",
+          "pass": true
+        },
+        {
+          "label": "T1 帯のテキストに数値なし",
+          "pass": true
+        },
+        {
+          "label": "T1 ヒント文なし",
+          "pass": true
+        },
+        {
+          "label": "T1 R4 以上まで観測（7R）",
+          "pass": true
+        },
+        {
+          "label": "T1 今 R のスロット段階 ＝ 実際の予告 tier（観測した全 R）",
+          "pass": true
+        },
+        {
+          "label": "T1 is-current ＝ 今 R・is-past ＝ 前の R",
+          "pass": true
+        },
+        {
+          "label": "T1 🔥 が 1 つ以上",
+          "pass": true
+        },
+        {
+          "label": "T5 console error 0",
+          "pass": true
+        }
+      ],
+      "shape": "[\"normal\",\"charge\",\"huge\",\"charge\",\"special\",\"normal\",\"normal\"]"
+    }
+  ]
+}
