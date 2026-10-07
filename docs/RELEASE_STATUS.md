@@ -1,8 +1,76 @@
-# SEVEN GODS 8/31 Public Beta リリースステータス（2026-09-06 Phase 3「神格」追加・RELEASED）
+# SEVEN GODS リリースステータス（正本・2026-10-07 更新）
 
-8/31公開版の「確定状態」を一目で確認するための要約です。新しい仕様判断は含みません（詳細・根拠は`docs/DECISIONS.md` 決定119〜125を参照）。
+Production の「確定状態」を一目で確認するための要約です。新しい仕様判断は含みません（根拠は `docs/DECISIONS.md`）。**§A が現在の正本**。§B 以降は 8/31 Public Beta〜Phase 3（2026-09-06）時点の履歴として残します（当時の Known Non-blockers 1〜16 は §A-4 の生存 Known に統合済み）。
 
-## Release Summary
+## A. 現在の Production 状態（2026-10-07・決定267 PRODUCTION LIVE / CLOSED）
+
+### A-1. Release Summary
+
+| 項目 | 状態 |
+|---|---|
+| **Release** | 決定267 Reward Relevance v1「3 役ローテーション」（2026-10-07）。直前＝決定264 Duel HUD v3＋決定266 Viewport Stability（2026-10-05） |
+| **Production HEAD** | master = origin/master **`641ea5c`**（docs-only commit）／**RC `12e1ad5`**（`release/d267-reward-relevance-rc`・docs／scripts のみの commit）。runtime（`src/`・`public/`）を最後に変更した master 上の commit＝**`f350726`**（2026-10-07・決定267 battle.css 行末復元）【実測 `git log master -- src public`】 |
+| **Vercel deployment** | **`6894408979`**（sha `12e1ad5`）／Production bundle `index-3It0LpNO.js`・`index-CJxzYDUP.css` |
+| **Rollback 先** | deployment **`6859615239`**（sha `202e476`＝決定264＋266 Release 後の master。決定266 Release 時の deployment は `6859334890`（RC `46b7fd4`）で、`6859615239` は同じ runtime bundle を配信する**別 id**＝決定267 Release 行（DECISIONS 2026-10-07）に記録された rollback 先）。手順＝Vercel で promote、または master を `202e476` へ revert → push。**演習は未実施**（ROADMAP RL-02・v1.0 前に 1 回） |
+| **Production URL** | https://seven-gods-game.vercel.app/ |
+| **Quality Gate（決定267 Release Gate）** | tsc 0／oxlint 0／vitest **1,330 PASS・9 skip（意図的 `skipIf`）／110 files**／Playwright acceptance＋migration 10/10／`ranking-absence.mjs` 17 項目／RC と Production の同 seed 一致／Production Smoke 6/6 PASS・製品異常 0 |
+| **Commercial RC** | **GO（CEO 決定 2026-10-03）**・RC 基準 runtime `8cba184` → 以後 決定261／264／266／267 を Human QA PASS で追加 |
+| **Code Freeze** | なし（CLAUDE.md §6 の AI 自律判断で Narrow Pilot 単位。Human QA Lane は同時 1 本） |
+| **進行中（別 Lane）** | 決定263 Threat Shape v1 Narrow Pilot（worktree `SevenGodsGame-d263-pilot`・`78ce071`・**AUTOMATED GATE PASS → HUMAN QA READY**＝CEO Human QA Q1〜Q4 待ち。決定263 の DECISIONS 行・`DECISION263*` 文書は pilot branch 側のみで **master 未反映**＝Closeout 時に取り込む）／External Player Feedback Audit |
+| **次の Release 条件** | `docs/ROADMAP_TO_RELEASE.md` §1〜§4（v1.0.0 = P0 5 束＋DoD 18 項目。※ROADMAP §7 の DoD 18 項目であり、上記「決定267 Release Gate 18 項目」とは別物） |
+
+### A-2. Production に入っている主要機能（決定番号）
+
+8/31 Public Beta（§B）＋ 神階（126）・Game Feel（128）・God Identity（129）・Clean Release／Ranking 完全切断（171／172）・Entrance E1（193／198）・Solve Loop（196）・Interaction Feel（200／202）・Solve Legibility（206／208）・Premium Visual Phase（224〜241：Victory Reveal・SP 舞台レイヤー・Hit Weight・Tap Sound・Dock／HUD Plate・Card Art Window・Cast Flash・Card Travel・Enemy Intent・Toast）・Card Art v2 大耀（243）・Combat Tension v1（246）・PC 敵反転（247）・Reaction Language（249）・God Strike Cut-in v2 大耀（250）・神階 Re-centering（251）・Enemy Ultimate（252）・Oracle Readability（253）・降臨の間（254）・Sound Layer v1（257）・対峙構図 v2（261）・Duel HUD v3（264）・Viewport Stability＋Hand Readability（266）・Reward Relevance v1（267）
+
+### A-3. 閉じたレバー（再開しない・根拠は DECISIONS.md）
+
+BURST 任意発動（127）／Ranking 統合（152・256 NO-GO・READY-DORMANT）／7 OTOMO 展開（214）／龍神 R4 守り（216）／Living Background（219〜222）／Solution Diversity 数値（255）／AP 平準化（260）／Answer Visibility（262）／Late-Round 統合「7R は上限」（恒久方針）
+
+### A-4. 生存 Known Issues（CEO 承認済み・v1.0 までの扱いは ROADMAP の ID）
+
+| Known | 内容 | 分類 | BACKLOG ID（`MASTER_BACKLOG_AUDIT.md` §3。ROADMAP に昇格済みのものは同 ID） |
+|---|---|---|---|
+| K01 | 入口の JS 予約が重い main thread で ≈230ms 遅れる（映像は時刻どおり） | C・CEO「修正しない」 | BF-04（解除時 1 行） |
+| K03／K04 | 初回 duck の経路切替 1 回・iPhone は `volume` 無視（duck 1.0→0.343） | C | — |
+| K05 | 向きの残り（笑蓮右向き・才華 keyvisual 鏡像・敵カットイン原画向き） | C | AR-03 |
+| K06 | Home が静止 | D | AR-08（背景アニメ方式は 220／222 で終了） |
+| K07 | 敵 7 体の画風・接地（Brief v1.1 → CEO 課金判断） | D | AR-01／02 |
+| K08／K35 | God Strike Voice／Battle Voice Layer なし | D | BF-02 |
+| K09 | Oracle SP の ellipsis・導き候補先頭 1 枚・満タン時 fallback | C | — |
+| K10 | 未知 `otomo.defId` の guard なし（発生経路なし・G10 PASS） | C | —（RL-01 は storage version の無言初期化が対象。defId guard は RL-01 実装時に同時検討・未登録） |
+| K11 | Daily 神間 spread 13.82%（決定259 PARTIAL） | D | RP-05 |
+| K12 | Ranking READY-DORMANT（B1〜B4 未修正） | D | RK-03 |
+| K13 | 台帳 UNKNOWN（推測入力を求めない）→ **2026-10-07 CEO 決定「Rights Ledger B 条件付き承認」で UNKNOWN-ACCEPTED として確定**（UNKNOWN＝権利確認済みとは扱わない・Legal／Credits 上の最終扱いは CM-02） | C | CM-04（台帳 §7・`ASSET_RIGHTS_LEDGER_CEO_INPUT_2026-10-07.md` §6） |
+| K14 | 作業環境衛生 | C → **2026-10-07 大幅解消**（worktree 73→16・branch 124→46・≈31.5GB 回収。`WORKTREE_BRANCH_CLEANUP_AUDIT.md` §7） | TD-01（main repo 救出は未） |
+| K15〜K20 | reader 未撃破 9%・才華×魔獣Ⅵ／Ⅶ・蒼毘×機工師・Ⅶ巨躯・道化 hard 無防御・鬼将 God Strike 率 | C／D（監視） | CF-04（再集計のみ） |
+| K21 | 「導き」人間使用率 未観測 | C | CF-03（Practical QA v3） |
+| K22〜K25 | OTOMO 反応 SP 小・dropped frames 2/33・headless 外れ値・ジングル前即停止 | C | K25 → BF-03（RETURN TO CALM）／K22〜K24 → OBS（監視のみ） |
+| K26 | 旧セーブの託宣回数（gameVersion 変更時は次ラウンドから新表） | C | — |
+| K27〜K29 | Auto Focus 停止位置・道化紅背景の数字コントラスト・Enemy Select cold load 1〜3s・701〜899px 縦スクロール・375px 難易度画面 899px | C | UX-06／BF-07／UX-05／UX-07／UX-02 |
+| K30 | Daily 端末時計／localStorage 依存・挑戦状は自己申告 | D | RK-06 |
+| K31 | 寿楽一強・共通カード差別化・神技評価偏り・SE 数式合成・Boss Entrance 中カード可・STAKE-01 timeout | C（7・13 は D） | CF-04／BF-01／— |
+| K32 | Card Art Unity（60 枚） | D | AR-04 |
+| K33 | Card Decision Meaning「手札で戦い方を考える」（262 NO-GO 後 OPEN） | D | **決定263 で検証中** |
+| K34 | Character Integration／Duel HUD | **決定264 で主要 4 点 PASS → 残りは接地・枠**（C） | AR-02 |
+| 新 | battleSave 以外 13 storage が version 不一致で無言初期化 | **B 相当（version を上げる変更の前に必須）** | **RL-01** |
+| 新 | OGP／description／favicon／version 表示なし・Legal／Credits なし | 公開面 | CM-01〜03 |
+
+CLOSED（記録のみ）：K02 iOS 割り込み後 BGM 再開（CEO 実機 PASS 2026-10-03）。
+
+### A-5. 運用メモ（現行）
+
+- Release 手順：clean RC worktree（`release/<decision>-rc`）で Gate 全項を 1 browser 直列 → master fast-forward → `git push origin master` → Vercel 自動 deploy → Production Smoke → DECISIONS.md に LIVE 行。rollback 先 deployment id を必ず同じ行に記録
+- 6GB RAM：Gate と cleanup／simulation を同時に走らせない。worktree は ACTIVE のみ保持（2026-10-07 時点 16 本・内訳は `WORKTREE_BRANCH_CLEANUP_AUDIT.md` §7-5）
+- main repo `C:\Users\kimi1\SevenGodsGame` は `feat/d224` で dirty（決定213／224 作業コピー＋CEO 生成 raw 25MB）。**触らない**（救出手順＝同監査 §4-3）
+- 除外ローカルファイル（`.claude/settings.local.json`・`敵画像`）は commit しない（本書末尾「Excluded Local Files」参照）
+- 正常完了時のみ通知音 1 回
+
+---
+
+## B. 8/31 Public Beta〜Phase 3 時点の記録（履歴・2026-09-06）
+
+## Release Summary（2026-09-06 時点）
 
 | 項目 | 状態 |
 |---|---|

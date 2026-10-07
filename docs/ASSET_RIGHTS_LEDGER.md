@@ -3,6 +3,7 @@
 - 作成日：2026-09-27（docs-only・AI 作成。`PREMIUM_PHASE_JUDGMENT_2026-09-27.md` §2-3／§5-3・`SEVENGODS_47_LESSONS_CONSOLIDATION_AUDIT.md` §21-b（P15）・`SEVENGODS_NEXT_MILESTONES.md` L4 の「台帳雛形」を実体化したもの）
 - 性質：**記録のみ**。runtime／assets／scripts／`docs/DECISIONS.md` への変更 0。法的認定は行わない（§21-b と同じ）。「誰が・何で・いつ・どの規約で作ったか」を後から遡れるようにする台帳であり、可否の判断は CEO（CLAUDE.md §6-3 #5）
 - 表記：【実測】＝本日 `node`（`crypto`）で served ファイルの sha256 を計算・Kit `manifest.json` の sha256 と照合した結果／【docs】＝Decision・監査文書の記録／**UNKNOWN**＝docs に記録がない（推測で埋めない）
+- **2026-10-07 更新（CEO 決定「Rights Ledger B 条件付き承認」の反映・AI 作業・docs-only）**：§7 に A-1〜A-4 の確認結果・B の UNKNOWN-ACCEPTED 確定・C-1 VID-01 行（§3-K）・C-2 転記（§2-3）・事実状態集計（§7-4）を追記。§3 各行の 2026-09-27 時点の記録は保持し、同日以降に実測で確定した cell のみ【実測 2026-10-07】を付して上書きした。**UNKNOWN-ACCEPTED ＝ 権利確認済みではない**（§1-2）
 - 除外ローカルファイル `敵画像`（repo 直下・69 byte のメモ・未追跡）は本台帳でも**内容を転記しない・commit しない**（`docs/RELEASE_STATUS.md`「含めない」）。敵 世代 A の原本シートは repo 外にあることだけを記す
 
 ---
@@ -42,6 +43,7 @@
 - **△ 一部未記録**：Creator と Source（原本の保全）はあるが、Model-Service のプラン／生成日／規約版・確認日のいずれかが UNKNOWN
 - **✗ 未記録**：原本が保全されておらず、かつ 規約版・確認日が UNKNOWN（「何で作ったか」以外を後から証明できない）
 - **UNKNOWN**：予約行（ファイル未配置）
+- **事実状態（2026-10-07 追加・§7 で使用。◎△✗ とは別軸）**：**KNOWN**＝権利根拠（Creator・Terms・Commercial）が Evidence で埋まり、UNKNOWN cell があっても周辺情報（生成時刻等）のみ／**UNKNOWN-ACCEPTED**＝権利根拠 cell（プラン・当時の規約版・出所・生成日）に UNKNOWN を含み、2026-10-07 CEO 承認で「確認不能として維持」。**権利確認済みとは扱わない**。CEO が UNKNOWN の存在を認識・推測による補完をしない・現時点で配信除外を要する具体的 Evidence なし・Legal／Credits 上の最終扱いは CM-02 で確認／**CONDITIONAL**＝規約監査の結論が条件付き（現在 VID-01 のみ）／**BLOCKED**＝配信除外を要する具体的 Evidence がある（現在 0）。DoD B-7 は「UNKNOWN 0」ではなく「全行に事実状態が付き、UNKNOWN-ACCEPTED の根拠が §7 にある」ことで満たす（「UNKNOWN 0」とは記載しない）
 
 ### 1-3. Evidence（sha256）の取り方（読み取り専用・依存追加なし）
 
@@ -89,13 +91,21 @@ node -e "const c=require('crypto'),f=require('fs');console.log(c.createHash('sha
 
 ---
 
+## 2-3. §3-E への転記（2026-10-07・既存 Evidence のみ・推測追加なし）
+
+| ID | Path（配信） | Source file（art-source） | Category | Creator | Model-Service | Generation date | Prompt reference | Reference inputs | Terms version・date checked | Commercial use | Modification | Attribution | Canonical source | Evidence（sha256） | Status |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| **CARD-TAIYO-02**（旧 CARD-NEXT-01） | `cards/card_taiyo_attack_01_v2.webp`（640×960・92,130B・配信中 2026-09-28〜・Vercel `6697593799`） | `art-source/cards/card_taiyo_attack_01_v2.png`（1024×1536・sha256 `25a6dc0f700e7201…`・C2PA `gpt-image`） | card | CEO 生成 | OpenAI ChatGPT（個人向け Web）gpt-image／**Plus**（CEO INPUT C1） | 2026-09-27（保存 23:37 JST・生成時刻は **UNKNOWN-ACCEPTED**） | `docs/LANE3_IMAGE_BRIEF_GOUKAI_NO_ICHIGEKI.md` §12-1 | **UNKNOWN-ACCEPTED**（A-2・Evidence 再確認 2026-10-07：`LANE3_IMAGE_BRIEF_GOUKAI_NO_ICHIGEKI.md` §17 の運用指示は「1 回目と同じ Kit 公式 2 枚 `main.webp`・`front.webp`」と規定するが、これは生成前の指示であり生成後の申告 Evidence ではない＝推測で埋めない） | Kit `SGG-FAN-CREATION-GUIDELINES-1.0.0`／OpenAI Terms Eff. 2026-01-01・Usage Policies Eff. 2025-10-29（AI 確認 2026-09-27）／**学習 OFF（CEO 2026-09-27・SS 確認済み）** | 可（Terms「own the Output」・AI 確認 2026-09-27） | sharp resize 640×960 q85 のみ。supersedes CARD-TAIYO-01 `attack_01`（旧ファイル残置） | 義務なし・「人間製」と表示しない | master PNG（art-source） | 配信 md5 `39ada1c61f6d…`（決定243 Release Gate）。sha256 は次回 Smoke で採取 | **◎（KNOWN）**— Reference inputs と生成時刻の 2 cell は UNKNOWN-ACCEPTED |
+
+---
+
 ## 3. 現状棚卸し（2026-09-27・`public/assets/` 209 ファイル【実測】）
 
 以下、群ごとに表を分ける。列は §1-1 と同じ順。sha256 は先頭 16 桁。
 
 ### 3-A. 神 — Kit 公式ファイル（配信中・21 行）
 
-共通：Creator＝Kit 公式／Model-Service＝—／Generation date＝Kit `releasedAt` 2026-07-16／Prompt reference＝—／Reference inputs＝—／Terms＝`SGG-FAN-CREATION-GUIDELINES-1.0.0`（Effective 2026-07-16・repo 取込済み `docs/assets-kit/SGG-CREATOR-KIT-RIGHTS.md`・**CEO の確認日 UNKNOWN**）／Commercial＝可（§1）／Modification＝可（§2）・本ファイルは**無加工**／Attribution＝任意（§4）／Canonical＝manifest assetId の sha256 と**一致**【実測】／Status＝◎。参照状況：`main.webp` は `front_640` の RGB 原本（決定130）・`front.webp` は別ポーズで未使用（`gods.ts` 注記）・`back.webp` は未参照（決定37 行の備考）。
+共通：Creator＝Kit 公式／Model-Service＝—／Generation date＝Kit `releasedAt` 2026-07-16／Prompt reference＝—／Reference inputs＝—／Terms＝`SGG-FAN-CREATION-GUIDELINES-1.0.0`（Effective 2026-07-16・repo 取込済み `docs/assets-kit/SGG-CREATOR-KIT-RIGHTS.md`・CEO 本人の初回確認日 UNKNOWN-ACCEPTED・**AI 再確認 2026-10-07**【CEO 指示 A-1：リポジトリ内 v1.0.0 全文 §1〜§8 を再読・sha256 `03ebf89b6c6d34d9…`・git 初出 `7ddbd5c` 2026-08-14。公式配布 URL は docs に記録なし＝オンライン再取得は未実施】）／Commercial＝可（§1）／Modification＝可（§2）・本ファイルは**無加工**／Attribution＝任意（§4）／Canonical＝manifest assetId の sha256 と**一致**【実測】／Status＝◎。参照状況：`main.webp` は `front_640` の RGB 原本（決定130）・`front.webp` は別ポーズで未使用（`gods.ts` 注記）・`back.webp` は未参照（決定37 行の備考）。
 
 | ID | Path（配信） | Source | Category | Canonical（assetId） | Evidence（sha256） | Status |
 |---|---|---|---|---|---|---|
@@ -140,7 +150,7 @@ node -e "const c=require('crypto'),f=require('fs');console.log(c.createHash('sha
 
 ### 3-C. 敵（配信 7 行＋未参照 3 行）
 
-共通：Category＝enemy／Attribution＝UNKNOWN（生成サービス規約次第）／Commercial＝UNKNOWN（同）。敵は自前 IP（Kit の名称・キャラクターを含まない）。**世代 A の原本シート**（`ChatGPT Image 2026年8月4日 07_35_20.png`・1536×1024・7 体分）は **repo 外**（CEO の Downloads。`ENEMY_VISUAL_QUALITY_AUDIT.md` §3・決定182）で、本台帳は所在のみ記す。
+共通：Category＝enemy／Attribution＝UNKNOWN（生成サービス規約次第）／Commercial＝UNKNOWN（同）。敵は自前 IP（Kit の名称・キャラクターを含まない）。**世代 A の原本シート**（`ChatGPT Image 2026年8月4日 07_35_20.png`・1536×1024・7 体分）は **repo 外**（CEO の Downloads。`ENEMY_VISUAL_QUALITY_AUDIT.md` §3・決定182）で、本台帳は所在のみ記す。**【実測 2026-10-07・A-3 ④ YES】`Downloads\ChatGPT Image 2026年8月4日 07_35_20.png` に実在：1536×1024・2,480,632B・sha256 `fcbefbde59621cb2…`・mtime 2026-08-04 07:35 JST・C2PA `gpt-image` 2.0（OpenAI）。`art-source/enemies/generation-a-sheet.png` へ複製済み（untracked・commit は §7-3）**。
 
 | ID | Path（配信） | Source file（art-source） | Creator | Model-Service | Generation date | Prompt reference | Reference inputs | Terms version・date checked | Modification | Canonical source | Evidence（sha256） | Status |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|
@@ -163,23 +173,23 @@ node -e "const c=require('crypto'),f=require('fs');console.log(c.createHash('sha
 | OTM-D-01 | `otomo/<id>/spirit_320.webp` ×7（320²・alpha） | `art-source/otomo/<id>/spirit_transparent.webp`（決定117）← Kit `spirit.webp`（art-source・manifest 一致【実測】） | otomo | AI 非生成加工 | — | 透過 2026-08-28（決定117）・320 化 2026-09-06（決定130） | — | — | Kit | 可 | 可・実施：PLAN-C ハイブリッド背景除去（決定117）→320px（決定130）。描き直し 0 | 任意 | `<pair>:OTOMO_SPIRIT` | taimaru `cf7e6d93496b760d`・kozuchi `0c15680e11d5061b`・momokatsu `c4ddf0e08854ccad`・kotone `7bbd2c2076373faf`・juka `cb5611ca26bc00cc`・haku `a6c5e34754853bd7`・shofuku `c2299d7a8916fdfb` | ◎ |
 | OTM-D-02 | `otomo/<id>/incarnate_320.webp` ×7 | `art-source/otomo/<id>/incarnate_transparent.webp` ← Kit `incarnate.webp`（manifest 一致【実測】） | otomo | AI 非生成加工 | — | 同上 | — | — | Kit | 可 | 同上 | 任意 | `<pair>:OTOMO_INCARNATE` | taimaru `51c80f01f6463c7e`・kozuchi `d08eb18f9b6bd08d`・momokatsu `4a145cb103a852d4`・kotone `ea46f5f9e34b208e`・juka `e07d92813be21c1f`・haku `3c82221ff69d5625`・shofuku `8bd92e2d92d1b272` | ◎ |
 | OTM-D-03 | `otomo/<id>/doji_320.webp` ×7 | `art-source/otomo/<id>/doji_transparent.webp` ← OTM-KIT-01 | otomo | AI 非生成加工 | — | 同上 | — | — | Kit | 可 | 同上 | 任意 | `<pair>:OTOMO_DOJI` | taimaru `a322fa16ed899be3`・kozuchi `63af8959614f2b46`・momokatsu `98e310ac24c0908e`・kotone `68d423bd564f5ac8`・juka `5a6546e39f2666f0`・haku `8ae933a16ce85429`・shofuku `b4b64500dd40e6e6` | ◎ |
-| OTM-BG-01 | `otomo/<id>/background.webp` ×7（900×437／shofuku 900×404）・OTOMO 絆カードの背景（`godStyle.ts` `OTOMO_BACKGROUND_IMAGE`） | **未保全**（`godStyle.ts` 注記：CEO 承認の参考イメージ 7 枚（Downloads・リポジトリ外）から切り出し。「原本は保存していない」） | otomo | **UNKNOWN**（CEO 提供の参考画像。生成か否か docs に記録なし） | UNKNOWN | git 初出 2026-08-21 `ee433f7`【実測】 | UNKNOWN | UNKNOWN | UNKNOWN | UNKNOWN | 実施：パネル切り出し＋WebP 軽量化（非生成） | UNKNOWN | なし（原本未保全） | taimaru `5acfd974dbac6ef5`・kozuchi `7f7ae7b6990b543c`・momokatsu `ad6430fa7241b5c4`・kotone `cbdeb6a4fe9044a2`・juka `b9efe05b4d78fa8b`・haku `0a2cb6c652f43bf6`・shofuku `33c19fa8498e5c9e` | ✗ |
+| OTM-BG-01 | `otomo/<id>/background.webp` ×7（900×437／shofuku 900×404）・OTOMO 絆カードの背景（`godStyle.ts` `OTOMO_BACKGROUND_IMAGE`） | **未保全 → 原本所在 KNOWN**（`godStyle.ts` 注記：CEO 承認の参考イメージ 7 枚（Downloads・リポジトリ外）から切り出し。「原本は保存していない」）**【実測 2026-10-07・A-3 ⑤ YES】原本は 1 枚のボード画像 `Downloads\ChatGPT Image 2026年8月21日 02_35_13.png`（1643×957・1,978,746B・sha256 `18b66b92449c34a6…`）。7 パネルすべてが同画像内に 3 列×3 段で位置（位置合わせ後の相関 0.963〜0.986）＝「参考画像 7 枚」ではなく 1 シート。`art-source/otomo/bond-background-board.png` へ複製済み（untracked）** | otomo | **CEO 生成**【実測 2026-10-07：原本 PNG の C2PA が OpenAI `gpt-image` 2.0 を記録。2026-09-27 時点は UNKNOWN】 | ChatGPT（gpt-image）・プラン UNKNOWN-ACCEPTED | 2026-08-21 02:35 JST【実測 mtime】・git 初出 2026-08-21 `ee433f7`【実測】 | UNKNOWN | UNKNOWN | UNKNOWN | UNKNOWN | 実施：パネル切り出し＋WebP 軽量化（非生成） | UNKNOWN | なし（原本未保全） | taimaru `5acfd974dbac6ef5`・kozuchi `7f7ae7b6990b543c`・momokatsu `ad6430fa7241b5c4`・kotone `cbdeb6a4fe9044a2`・juka `b9efe05b4d78fa8b`・haku `0a2cb6c652f43bf6`・shofuku `33c19fa8498e5c9e` | ✗ |
 
 ### 3-E. カード（60 枚・16 行）
 
-共通【docs：決定37】：Creator＝CEO 生成／Model-Service＝ChatGPT（Web）・**プラン UNKNOWN**／生成方式＝4 枚を 2×2 または横並びの 1 シートで生成→PowerShell System.Drawing で 4 分割（各 362×543 相当）→1024×1536 へ**拡大**リサイズ＝master（`art-source/cards/*.png`・56 枚）→Canvas API で 512×768 WebP q0.85（決定84 記載の手順）／Prompt reference＝`docs/card-art-prompts.md`（①土台＋バッチ別）／Reference inputs＝**UNKNOWN**（神専用カードは「顔の一致は求めない」方針＝Kit 画像を入力したかは未記録）／Terms＝**UNKNOWN**（サービス規約の版・確認日）／Commercial＝UNKNOWN／Modification＝上記の切り出し・リサイズ・WebP 化のみ／Attribution＝UNKNOWN／Canonical＝master PNG（決定84 の 4 枚は master 未保全）／Generation date＝≈2026-08-05〜06（決定37・共通→神専用の順）・決定84 の 4 枚＝2026-08-16／git：`7ddbd5c`（08-14）・`7f53f25`（08-16 optimize）。画風＝E（`CARD_ART_STYLE_GUIDE.md`）。
+共通【docs：決定37】：Creator＝CEO 生成／Model-Service＝ChatGPT（Web）・**プラン UNKNOWN**／生成方式＝4 枚を 2×2 または横並びの 1 シートで生成→PowerShell System.Drawing で 4 分割（各 362×543 相当）→1024×1536 へ**拡大**リサイズ＝master（`art-source/cards/*.png`・56 枚）→Canvas API で 512×768 WebP q0.85（決定84 記載の手順）／Prompt reference＝`docs/card-art-prompts.md`（①土台＋バッチ別）／Reference inputs＝**UNKNOWN**（神専用カードは「顔の一致は求めない」方針＝Kit 画像を入力したかは未記録）／Terms＝**UNKNOWN**（サービス規約の版・確認日）／Commercial＝UNKNOWN／Modification＝上記の切り出し・リサイズ・WebP 化のみ／Attribution＝UNKNOWN／Canonical＝master PNG（決定84 の 4 枚は master 未保全 → **【実測 2026-10-07・A-3 ①】4 枚中 3 枚の原本が Downloads に実在・`art-source/cards/` へ複製済み（untracked）。`support_07` は NOT FOUND（§7-3）**）／Generation date＝≈2026-08-05〜06（決定37・共通→神専用の順）・決定84 の 4 枚＝2026-08-16／git：`7ddbd5c`（08-14）・`7f53f25`（08-16 optimize）。画風＝E（`CARD_ART_STYLE_GUIDE.md`）。
 
 | ID | Path（配信） | Source（art-source/cards） | Generation date | Evidence（sha256・配信） | Status |
 |---|---|---|---|---|---|
 | CARD-CA-01 | `cards/card_common_attack_01〜08.webp`（8） | 同名 PNG 8 枚 | ≈2026-08-05（決定37 バッチ 1〜2） | 01 `e53aaacc6c395c59`・02 `e6ad9bc883de1c0b`・03 `bcbb279a2da4526f`・04 `ba4429e1114c3e86`・05 `768aea3bedda89f4`・06 `0db9a0143a8136b7`・07 `4cb24c3cd94fa6dd`・08 `a8f1e9c18ffe5f2b` | △ |
-| CARD-CA-02 | `cards/card_common_attack_09.webp`（連撃） | **未保全**（art-source に無し） | 2026-08-16（決定84） | `c085c86713532a81` | ✗ |
+| CARD-CA-02 | `cards/card_common_attack_09.webp`（連撃） | **未保全 → 原本所在 KNOWN**：`Downloads\ChatGPT Image 2026年8月16日 02_32_21.png`（1024×1536・sha256 `36b8713083f736b6…`・配信 WebP との相関 0.995・C2PA gpt-image）→ `art-source/cards/card_common_attack_09.png` 複製済み（untracked）【実測 2026-10-07】 | 2026-08-16（決定84） | `c085c86713532a81` | ✗ |
 | CARD-CG-01 | `cards/card_common_guard_01〜04.webp`（4） | 同名 PNG 4 枚 | ≈2026-08-05 | 01 `c812bcab6b6f779c`・02 `127a352f5ca02798`・03 `61ce04d51343af35`・04 `ccdfc186233a965c` | △ |
 | CARD-CH-01 | `cards/card_common_hinder_01〜04.webp`（4） | 同名 PNG 4 枚 | ≈2026-08-05 | 01 `5d950dff209549c1`・02 `e2eba140d7b2d70f`・03 `11a23f044ea62f55`・04 `1fb57f872f470d4f` | △ |
-| CARD-CH-02 | `cards/card_common_hinder_05.webp`（浄めの光） | **未保全** | 2026-08-16（決定84） | `c9d569d8eea6606d` | ✗ |
+| CARD-CH-02 | `cards/card_common_hinder_05.webp`（浄めの光） | **未保全 → 原本所在 KNOWN**：`…8月16日 02_48_37.png`（1024×1536・sha256 `f297b3e1515d0d04…`・相関 0.995）→ `art-source/cards/card_common_hinder_05.png`（untracked）【実測 2026-10-07】 | 2026-08-16（決定84） | `c9d569d8eea6606d` | ✗ |
 | CARD-CO-01 | `cards/card_common_oracle_01〜03.webp`（3・alpha あり） | 同名 PNG 3 枚 | ≈2026-08-06（バッチ 7-2） | 01 `ba52f64d78f76ed3`・02 `d562f568e65730ac`・03 `47dcdf38bcf04260` | △ |
 | CARD-CR-01 | `cards/card_common_resonance_01〜04.webp`（4） | 同名 PNG 4 枚 | ≈2026-08-05 | 01 `1dae1d6c9aae731d`・02 `44a7867a9aea8771`・03 `035af70cb219560c`・04 `1d16bb8a1b73b4f8` | △ |
 | CARD-CS-01 | `cards/card_common_support_01〜05.webp`（5） | 同名 PNG 5 枚 | ≈2026-08-05 | 01 `23cfeb45f8ab9942`・02 `2b5dde61a9c5d0b9`・03 `3eca75fc8aae46c4`・04 `6322866bf7347750`・05 `1dafa4a9482f1197` | △ |
-| CARD-CS-02 | `cards/card_common_support_06〜07.webp`（闘志・見通し） | **未保全** | 2026-08-16（決定84） | 06 `db4fb4f03c4ba811`・07 `aa27703d5bc4e1ba` | ✗ |
+| CARD-CS-02 | `cards/card_common_support_06〜07.webp`（闘志・見通し） | 06 闘志＝**原本所在 KNOWN** `…8月16日 02_43_43.png`（1024×1536・sha256 `67af85249573328a…`・相関 0.996）→ `art-source/cards/card_common_support_06.png`（untracked）／07 見通し＝**NOT FOUND**（探索範囲 §7-3。最近傍は `…02_39_30.png` 3 枚シート中央・相関 0.754＝同一と断定しない。存在しないとも断定しない＝UNKNOWN-ACCEPTED）【実測 2026-10-07】 | 2026-08-16（決定84） | 06 `db4fb4f03c4ba811`・07 `aa27703d5bc4e1ba` | ✗ |
 | CARD-EBISU-01 | `cards/card_ebisu_{attack_01,attack_02,support_01,support_02}.webp`（4・alpha あり・スタイルガイド C 評価「再生成した方がよい」＝再生成の記録なし） | 同名 PNG 4 枚 | ≈2026-08-06（バッチ 8） | `47f763c45edf192b`・`61c237da76695458`・`9bb6c7618830312c`・`24001f4610b39aba` | △ |
 | CARD-TAIYO-01 | `cards/card_taiyo_{attack_01,attack_02,support_01,support_02}.webp`（4）。`attack_01` は CARD-NEXT-01 で supersede 予定（旧ファイルは残す） | 同名 PNG 4 枚 | ≈2026-08-06（バッチ 9） | attack_01 `442aa5ae733ec7c2`・attack_02 `7676a075ff5bab6e`・support_01 `d638c1c8f4cc8634`・support_02 `15bfa978a823d2f8` | △ |
 | CARD-SOBI-01 | `cards/card_sobi_{attack_01,guard_01,guard_02,hinder_01}.webp`（4） | 同名 PNG 4 枚 | ≈2026-08-06（バッチ 10） | `26b851522df60a2c`・`0fa19bc6210cf7c4`・`bf0ea31cb906d91b`・`2696ca25cf85046a` | △ |
@@ -188,9 +198,11 @@ node -e "const c=require('crypto'),f=require('fs');console.log(c.createHash('sha
 | CARD-FUKUEI-01 | `cards/card_fukuei_{attack_01,attack_02,resonance_01,support_01}.webp`（4） | 同名 PNG 4 枚 | ≈2026-08-06（バッチ 13） | `57db7edafd0aede9`・`de02cb8423da0d59`・`7fa4fa97c758483a`・`58624a0b652489dd` | △ |
 | CARD-SHOUREN-01 | `cards/card_shouren_{attack_01,guard_01,support_01,support_02}.webp`（4） | 同名 PNG 4 枚 | ≈2026-08-06（バッチ 14） | `5cab7acc53e7e45c`・`a03998fd9639b275`・`79f8cf37554700e0`・`86b390d50a64be21` | △ |
 
+本群に属する 17 行目：**CARD-TAIYO-02**（`cards/card_taiyo_attack_01_v2.webp`・決定243 LIVE・旧 CARD-NEXT-01）は 16 列で §2-3 に記載（2026-10-07 転記・既存 Evidence のみ）。
+
 ### 3-F. ステージ背景（7 行）＋アリーナ（1 行）
 
-共通【docs：決定124】：Creator＝CEO 生成／Model-Service＝ChatGPT・**プラン UNKNOWN**／生成＝1 ステージ 1 生成・各 1672×941／配信＝1600×900 WebP（非生成の縮小・エンコード）／**原本未保全**（art-source なし）／Prompt reference＝UNKNOWN（決定124 にアート方向の記述のみ・プロンプト本文の docs なし）／Reference inputs＝UNKNOWN／Terms＝UNKNOWN／Commercial＝UNKNOWN／Attribution＝UNKNOWN／Generation date＝≈2026-08-30（決定124・commit `8b2a980` 同日【実測】）／画風＝F（厚塗り風景）。Status＝✗（原本未保全＋規約 UNKNOWN。判定 §2-1 と同じ）。
+共通【docs：決定124】：Creator＝CEO 生成／Model-Service＝ChatGPT・**プラン UNKNOWN**／生成＝1 ステージ 1 生成・各 1672×941／配信＝1600×900 WebP（非生成の縮小・エンコード）／**原本未保全 → 原本所在 KNOWN**【実測 2026-10-07・A-3 ② YES：1672×941 PNG 7 枚が Downloads に実在（§7-3 表・sha256・C2PA gpt-image）。配信 WebP は原本の約 92% 幅をトリミングして縮小したもの（位置合わせ後の相関 0.950〜0.969・次点候補 ≤0.549）。`art-source/backgrounds/stages/NN-*.png` へ複製済み（untracked）】／Prompt reference＝UNKNOWN（決定124 にアート方向の記述のみ・プロンプト本文の docs なし）／Reference inputs＝UNKNOWN／Terms＝UNKNOWN／Commercial＝UNKNOWN／Attribution＝UNKNOWN／Generation date＝2026-08-30 14:53〜15:02 JST【実測 2026-10-07：原本 mtime。決定124・commit `8b2a980` 同日】／画風＝F（厚塗り風景）。Status＝✗（原本未保全＋規約 UNKNOWN。判定 §2-1 と同じ）。
 
 | ID | Path（配信） | 敵（`enemies.ts` `stage`） | Evidence（sha256） | Status |
 |---|---|---|---|---|
@@ -201,11 +213,11 @@ node -e "const c=require('crypto'),f=require('fs');console.log(c.createHash('sha
 | STG-05 | `backgrounds/stages/05-beast-moonpeak.webp`（308,102B） | 双牙の魔獣「月牙の霊峰」`#9fb8e8` | `3b4a4fce06f89ec8` | ✗ |
 | STG-06 | `backgrounds/stages/06-dragon-ocean.webp`（321,686B） | 蒼海の龍神「蒼海の宮」`#1a3a6b` | `b0f489e3071b971e` | ✗ |
 | STG-07 | `backgrounds/stages/07-jester-festival.webp`（281,906B） | 乱舞の道化「幻惑の舞台」`#c0122f` | `91d943203db98938` | ✗ |
-| STG-ARENA | `backgrounds/arena.jpg`（1672×941・308,876B・`battle.css` の `--stage-bg` フォールバック） | 共通（決定41 ①・`docs/battle-fx-prompts.md` ①がプロンプト・CEO 生成 ChatGPT・≈2026-08-07・原本未保全・プラン／規約 UNKNOWN） | `533c6ee080eba531` | ✗ |
+| STG-ARENA | `backgrounds/arena.jpg`（1672×941・308,876B・`battle.css` の `--stage-bg` フォールバック） | 共通（決定41 ①・`docs/battle-fx-prompts.md` ①がプロンプト・CEO 生成 ChatGPT・**2026-08-07 22:23 JST【実測 mtime】・原本所在 KNOWN：`Downloads\ChatGPT Image 2026年8月7日 22_23_45.png`（1672×941・sha256 `0a8a6d05504a0e7c…`・相関 0.996・C2PA gpt-image）→ `art-source/backgrounds/arena.png` 複製済み（untracked）**・プラン／規約 UNKNOWN-ACCEPTED） | `533c6ee080eba531` | ✗ |
 
 ### 3-G. FX（6 行）
 
-共通【docs：決定41 ②】：Creator＝CEO 生成／Model-Service＝ChatGPT・**プラン UNKNOWN**／生成＝6 種を **1 シート（2×3）黒背景**で生成→6 分割・縮小→320×480 PNG（黒地のまま `mix-blend-mode: screen` で合成）／**原本シート未保全**／Prompt reference＝`docs/battle-fx-prompts.md` ②／Reference inputs＝UNKNOWN／Terms＝UNKNOWN／Commercial＝UNKNOWN／Attribution＝UNKNOWN／Generation date＝≈2026-08-07（決定41 の記録日 08-08）／git 初出 `7ddbd5c`（08-14）。Status＝✗。
+共通【docs：決定41 ②】：Creator＝CEO 生成／Model-Service＝ChatGPT・**プラン UNKNOWN**／生成＝6 種を **1 シート（2×3）黒背景**で生成→6 分割・縮小→320×480 PNG（黒地のまま `mix-blend-mode: screen` で合成）／**原本シート未保全 → 原本所在 KNOWN**【実測 2026-10-07・A-3 ③ YES：`Downloads\ChatGPT Image 2026年8月7日 22_26_24.png`（1254×1254・2,388,858B・sha256 `e6b5421dd06fc9ff…`・mtime 2026-08-07 22:26 JST・C2PA gpt-image）。実際の配置は **3 列×2 段**（上段：攻撃・防御・共鳴／下段：支援・妨害・神託）で、各セルが配信 PNG と一致（平均絶対差 0.8〜1.3／255）。`art-source/fx/cast-sheet-3x2.png` へ複製済み（untracked）】／Prompt reference＝`docs/battle-fx-prompts.md` ②／Reference inputs＝UNKNOWN／Terms＝UNKNOWN／Commercial＝UNKNOWN／Attribution＝UNKNOWN／Generation date＝2026-08-07 22:26 JST【実測 2026-10-07：原本 mtime。決定41 の記録日 08-08】／git 初出 `7ddbd5c`（08-14）。Status＝✗。
 
 | ID | Path（配信） | 用途（`cardStyle.ts` `CAST_FX`） | Evidence（sha256） | Status |
 |---|---|---|---|---|
@@ -225,20 +237,32 @@ node -e "const c=require('crypto'),f=require('fs');console.log(c.createHash('sha
 
 ### 3-I. BGM（4 行）
 
-共通【docs：決定120・170】：Creator＝CEO 生成／Model-Service＝**Suno**（ID3v2 `made with suno`・Suno, Inc. 署名の C2PA マニフェスト・systemVersion `chirp-auk-turbo-t2`）・プラン＝**有料プラン**（「2026-08-13 の生成時は有料プランだった」を CEO がアカウント側で確認・スクリーンショット保存【docs：決定120】。**プラン名（Pro／Premier）は UNKNOWN**）／Source＝`audio-source/bgm/*.mp3`（200kbps 原音源）／配信＝WebM Opus 48k（主）＋MP3 96k（フォールバック）（決定170・非生成の再エンコード）／Prompt reference＝`docs/bgm-prompts.md`／Reference inputs＝なし（テキストプロンプトのみ・docs 記載）／**Terms version＝UNKNOWN**（Suno 利用規約の版・確認日は未記録。§21-b と同じ）／Commercial＝可（Suno の規定「有料プラン加入中に生成した曲＝commercial use rights」に対し CEO 確認済み・決定120。著作権の帰属保証は Suno 規約上なし）／Attribution＝UNKNOWN（規約の版に依存）／Modification＝再エンコードのみ。Status＝△。
+共通【docs：決定120・170】：Creator＝CEO 生成／Model-Service＝**Suno**（ID3v2 `made with suno`・Suno, Inc. 署名の C2PA マニフェスト・systemVersion `chirp-auk-turbo-t2`）・プラン＝**有料プラン**（「2026-08-13 の生成時は有料プランだった」を CEO がアカウント側で確認・スクリーンショット保存【docs：決定120】。**プラン名（Pro／Premier）は UNKNOWN-ACCEPTED**【A-4・2026-10-07：決定120 の「有料プランだった」スクリーンショットは Downloads・OneDrive スクリーンショット（2026-08-27〜29 の 118 枚を一覧画像で確認）・`Videos\SEVENGODS-PV-REVIEW` のいずれにも見当たらず＝所在不明（存在しないとは断定しない）。ID3／C2PA にプラン情報なし】）／Source＝`audio-source/bgm/*.mp3`（200kbps 原音源）／配信＝WebM Opus 48k（主）＋MP3 96k（フォールバック）（決定170・非生成の再エンコード）／Prompt reference＝`docs/bgm-prompts.md`／Reference inputs＝なし（テキストプロンプトのみ・docs 記載）／**Terms version＝UNKNOWN-ACCEPTED**（Suno 利用規約の版・確認日は未記録。決定120（2026-08-29）で AI が Suno 公式ヘルプの規定を参照した記録のみ・版日付なし。§21-b と同じ）／Commercial＝可（Suno の規定「有料プラン加入中に生成した曲＝commercial use rights」に対し CEO 確認済み・決定120。著作権の帰属保証は Suno 規約上なし）／Attribution＝UNKNOWN（規約の版に依存）／Modification＝再エンコードのみ。Status＝△。
 
 | ID | Path（配信） | 曲名／song id | Generation date | Evidence（sha256：webm／mp3） | Status |
 |---|---|---|---|---|---|
 | BGM-01 | `bgm/battle.webm`＋`bgm/battle.mp3` | 「七神の戦場」 `c057529a-440b-4756-af43-6895fe01e6d9` | 2026-08-13 12:48:51Z（決定120・ID3 記録） | `94a9a3c41f24dad8`／`08a31184f78f0a23` | △ |
-| BGM-02 | `bgm/home.webm`＋`bgm/home.mp3` | UNKNOWN（決定120「4 曲とも Suno」・song id は battle のみ docs に記載） | UNKNOWN（≈2026-08-13〜14・決定52〜55） | `04dd82303caf26df`／`40c09b7a73519cbb` | △ |
-| BGM-03 | `bgm/victory.webm`＋`bgm/victory.mp3` | UNKNOWN | UNKNOWN（同上） | `dc3226d20861a299`／`1e951ffca1257b34` | △ |
-| BGM-04 | `bgm/defeat.webm`＋`bgm/defeat.mp3` | UNKNOWN | UNKNOWN（同上） | `70315a7201058f16`／`6b70df4b909c7168` | △ |
+| BGM-02 | `bgm/home.webm`＋`bgm/home.mp3` | 「七福神の冒険」（決定52） `0e697fbf-c7fc-4978-965f-5518226e8652`【実測 2026-10-07：`audio-source/bgm/home.mp3` ID3 コメント `suno; created=…; id=…`・`suno.com/song/…`】 | 2026-08-13 12:25:56Z【同 ID3 created】 | `04dd82303caf26df`／`40c09b7a73519cbb` | △ |
+| BGM-03 | `bgm/victory.webm`＋`bgm/victory.mp3` | 「七神の勝利」（決定54） `aa3a2256-171a-44da-9db5-a11944d351b3`【実測 2026-10-07：`audio-source/bgm/victory.mp3` ID3 コメント。TIT2／TPE1／C2PA は検出されず（他 3 曲と構造が異なる＝理由は docs に記録なし）】 | 2026-08-13T13:00:00Z【同 ID3 created・秒以下なし】 | `dc3226d20861a299`／`1e951ffca1257b34` | △ |
+| BGM-04 | `bgm/defeat.webm`＋`bgm/defeat.mp3` | `2de196da-5963-4eee-ad42-98c363b0a47f`【実測 2026-10-07：`audio-source/bgm/defeat.mp3` ID3 コメント・`suno.com/song/…`・Suno C2PA あり】 | 2026-08-13 13:10:13Z【同 ID3 created】 | `70315a7201058f16`／`6b70df4b909c7168` | △ |
 
 ### 3-J. その他
 
 | ID | Path | 備考 | Status |
 |---|---|---|---|
 | MISC-01 | `.gitkeep`（305B） | asset ではない（sha `f25a69ce7c163180`） | — |
+
+---
+
+### 3-K. 演出動画（1 行・2026-10-07 追加・C-1）
+
+根拠：`docs/ASSET_GENERATION_SERVICE_TERMS_AUDIT_ADDENDUM_FAL_MINIMAX.md`（fal.ai＋MiniMax 規約監査補遺・公式ページ取得 2026-10-07・F1 は同日 AI 再検証）。**結論＝CONDITIONAL**（現在規約に対して。生成当時の規約版は UNKNOWN＝現在規約から推定しない）。
+
+| ID | Path（配信） | Source file（art-source） | Category | Creator | Model-Service | Generation date | Prompt reference | Reference inputs | Terms version・date checked | Commercial use | Modification | Attribution | Canonical source | Evidence（sha256） | Status |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| **VID-01** | `gods/taiyo/god-strike-v2.mp4`（166,058B）＋`gods/taiyo/god-strike-v2-poster.webp`（61,866B）。`BattleResonanceCutin` から実行時参照（大耀のみ）。**配信中：Vercel Production LIVE 2026-09-30（決定250・deploy `6738586429`）** | `art-source/h3-god-strike/`（Try2 原本・**main repo のみ・git 外・唯一の実体 25MB**） | god（演出動画） | CEO 生成（CEO 承認・FAL_KEY 課金）＋AI 非生成加工 | **provider**＝fal.ai（Features & Labels, Inc.）／**model**＝`minimax/h3-max/image-to-video`（fal 自社推論の post-trained 版）・従量課金（プラン区分なし）・表示価格 $0.20 | 2026-09-29T12:29:35Z 送信（JST 09-29 21:29） | `docs/evidence/decision250/try2/try2_request.json`（全文）・request_id `01a0ed24-623b-7e22-8acf-b4feb0e13b74`・`try2_response.json` | **source image**＝Kit `taiyo:GOD_MAIN` `main.webp`（sha `a9714359e8a5a2cc…`）由来ポスター 1024² PNG（sha `57eabb31856d1870…`・`art-source/h3-god-strike/taiyo_god_strike_input_1024.png`）。first／end frame 同一 | **現在規約（取得 2026-10-07）**：fal ToS Last Updated 2026-09-08／Privacy 2026-07-22／DPA 2026-07-31／AUP・API Services 日付なし；MiniMax Open Platform 2026-03-30（参考・直接契約なし）；Kit Guidelines 1.0.0。**生成当時（09-29〜30）の版＝UNKNOWN**（web.archive 取得不可・推定しない） | **CONDITIONAL**：fal は Output に権利を主張しない（ToS §4(c)）が顧客帰属の明文なし。商用可の根拠はモデルページ「Commercial use」バッジ＋FAQ | 非生成：W2 1.083〜2.250s 切り出し・等速・720²・H.264 CRF24・poster WebP【決定250 §8-1】 | fal：義務なし。MiniMax 深度合成マークは「サービス提供者」向け・本件適用 UNKNOWN | 入力＝Kit manifest 一致。出力は生成物（正典なし） | **output file**：mp4 `6664ccb449b9dcb7`／poster `f0329bb0b69ef472` | **△／事実状態 CONDITIONAL**（Output 帰属条項なし・当時のモデルページ／AUP／API Services 版 UNKNOWN。CM-02 で Legal／Credits 上の扱いを確定） |
+
+**rights evidence**：補遺 §0（10 項目判定表：商用利用・出力所有権・有料／無料差・帰属表示・学習利用・入力画像の権利・禁止用途・サブライセンス／再配布・ゲーム組み込み・動画配信）・§1（当時 vs 現在＝当時は UNKNOWN）・§4（取得ログ F1〜F10・M1〜M6）。CEO に必要な行動＝なし（現状配信継続可）。CONDITIONAL を解消する唯一の手段は fal サポートへの Output 帰属の書面確認（外部問い合わせ＝CEO 操作・任意）。
 
 ---
 
@@ -263,6 +287,8 @@ node -e "const c=require('crypto'),f=require('fs');console.log(c.createHash('sha
 
 CEO INPUT が不要なもの：SE（自作）、Kit 公式ファイルの sha256 照合（AI 実測済み）、非生成加工の履歴（決定117／130／174／177〜183 に記録済み）。
 
+**2026-10-07 結果**：#1〜#12 の最終状態は §7-2（CEO 決定 B＝UNKNOWN-ACCEPTED で確定・A-1〜A-4 の実測で解消した cell は個別に記載）。本表は依頼時点の記録として保持する。
+
 ---
 
 ## 5. 集計（2026-09-27）
@@ -284,6 +310,10 @@ CEO INPUT が不要なもの：SE（自作）、Kit 公式ファイルの sha256
 - ファイル数ベース（`public/assets/` は **209 ファイル**【実測：`inventory.json` rows＝209・`find` 209。判定 §付録の「218」は誤記】。`.gitkeep` を除く 208）：◎＝神 Kit 21＋front_640 7＋OTOMO doji 7＋OTOMO _320 21＋SE 20＝**76**／△＝神 main.png・front.png 14＋keyvisual 7＋keyvisual-home 5＋keyvisual-hero 1＋敵 16＋カード 56＋BGM 8＝**107**／✗＝OTOMO background 7＋カード 4＋ステージ 7＋アリーナ 1＋FX 6＝**25**（76＋107＋25＝208・一致）
 - UNKNOWN cell の主因は 3 つ：①生成サービスの**プラン・規約版・確認日**（カード・敵・背景・FX・BGM の全行）②**原本未保全**（背景 8・FX 6・OTOMO 背景 7・カード 4）③**keyvisual の出所**（公式か生成か）
 
+### 5-2. 2026-10-07 以降の集計
+
+本表（2026-09-27）は保持。SE-02（2026-10-02 追加）・CARD-TAIYO-02（§2-3）・VID-01（§3-K）を含む最新の行数と**事実状態**の集計は §7-4。
+
 ## 6. 参照
 
 - `docs/PREMIUM_PHASE_JUDGMENT_2026-09-27.md` §2（棚卸し・画風系統 A〜F）・§2-3（権利整理）・§5-3・§6（CEO 確認事項）
@@ -292,3 +322,94 @@ CEO INPUT が不要なもの：SE（自作）、Kit 公式ファイルの sha256
 - `art-source/README.md`（原本の所在と書き出し手順）・`docs/ENEMY_VISUAL_BATCH_A.md`・`docs/ENEMY_VISUAL_QUALITY_AUDIT.md`・`docs/SE_ASSETS.md`・`docs/card-art-prompts.md`・`docs/battle-fx-prompts.md`・`docs/bgm-prompts.md`・`docs/god-portrait-prompts.md`
 - `scripts/premium-phase-judgment/out/inventory.json`（寸法・形式・容量）
 - 次の記入：`docs/LANE3_IMAGE_BRIEF_GOUKAI_NO_ICHIGEKI.md` §13〜§14（After-2）・`docs/ENEMY_ART_DIRECTION_BRIEF_V1.md` §13（敵 v2）
+
+---
+
+## 7. 2026-10-07 CEO 決定「Rights Ledger B 条件付き承認」の反映（AI 作業・docs-only）
+
+### 7-0. 決定要旨（CEO・2026-10-07）
+
+- **B 承認**：既存の確認不能項目は「2026-10-07 時点で確認不能のため UNKNOWN 維持」として確定してよい。ただし **UNKNOWN＝権利確認済みとは扱わない**。記録上は①CEO が UNKNOWN の存在を認識 ②推測による補完をしない ③現時点で配信除外を要求する具体的 Evidence なし ④Legal／Credits 上の最終扱いは CM-02 で確認、として残す。DoD 上も「UNKNOWN 0」と偽装しない（→ §1-2 事実状態 KNOWN／UNKNOWN-ACCEPTED／CONDITIONAL／BLOCKED）
+- **A-1〜A-4**：記憶だけで回答しない。A-1 は本日実際に再確認できるなら 2026-10-07 を記録可／A-2 は Evidence で確認できなければ UNKNOWN／A-3 は PC 上の原本を機械的に確認できるものだけ YES（見つからない＝存在しないとは断定しない）／A-4 は Suno プラン・生成当時の条件を Evidence で確認できなければ UNKNOWN
+- **C-1**：fal.ai／MiniMax 規約監査を AI で実施（公式 Terms 優先・当時と現在を区別・過去規約が確認できなければ現在から推定しない・結論は CLEAR／CONDITIONAL／UNKNOWN／BLOCKED）。VID-01 を台帳へ追加
+- **CARD-NEXT-01**：既存 Evidence から §3-E を転記・新しい事実を推測追加しない
+
+### 7-1. A-1〜A-4 の確認結果（実測 2026-10-07）
+
+| # | 方法（機械的確認） | 結果 | 反映先 |
+|---|---|---|---|
+| A-1 Kit Guidelines 確認日 | リポジトリ内 `docs/assets-kit/SGG-CREATOR-KIT-RIGHTS.md`（v1.0.0・Effective 2026-07-16）全文 §1〜§8 を再読。sha256 `03ebf89b6c6d34d938bc637376db850275cb1cee1650e72afe0d27c4a0901d1d`・git 初出 `7ddbd5c`（2026-08-14）。公式配布元 URL は `manifest.json` に相対パス `/creator-kit/v1/RIGHTS.md` のみでドメイン記録なし → オンライン再取得は未実施 | **AI 再確認 2026-10-07 を記録**（CEO 指示）。CEO 本人の初回確認日は UNKNOWN-ACCEPTED | §3-A 共通行（GOD-KIT／OTM-KIT／OTM-D 全行に適用） |
+| A-2 v2 原画の添付ファイル名 | `LANE3_IMAGE_BRIEF_GOUKAI_NO_ICHIGEKI.md` §13・§17・`docs/DECISIONS.md` 決定243・`docs/evidence/` を grep。生成後の申告（添付したファイル名）の記録は 0。§17 の「添付は 1 回目と同じ Kit 公式 2 枚」は生成前の運用指示 | **UNKNOWN-ACCEPTED**（指示を申告として転記しない） | §2-3 Reference inputs |
+| A-3 原本の所在（①〜⑤） | `Downloads`・`OneDrive\デスクトップ`・`OneDrive\画像`・`Documents`・`Videos` を走査（ChatGPT Image 72 枚＋その他画像）。配信ファイルと候補を縮小グレースケールで比較（全面一致は平均絶対差、トリミング・シート切り出しは位置合わせ後の相関係数）。一致したもののみ YES | **①カード 4 枚：3 枚 YES・1 枚 NOT FOUND／②背景 7＋アリーナ 1：8 枚 YES／③FX：1 シート YES（6 セル一致）／④世代 A 敵シート：YES／⑤OTOMO 絆背景：1 ボード YES（7 パネル一致）** → 25 ファイル中 24 の原本所在が KNOWN。詳細 §7-3 | §3-C／3-D／3-E／3-F／3-G |
+| A-4 Suno プラン・規約版 | 決定120（2026-08-29）の「有料プランだった」スクリーンショットを探索：`OneDrive\画像\スクリーンショット` 2026-08-27〜29 の 118 枚（一覧画像で目視）・`Downloads`・`Videos\SEVENGODS-PV-REVIEW`・`docs/evidence`。該当なし。`audio-source/bgm/*.mp3` の ID3／C2PA にプラン情報なし | **プラン名・当時の条件・規約版＝UNKNOWN-ACCEPTED**（スクリーンショットは所在不明＝存在しないとは断定しない）。副産物：home／victory／defeat の song id と生成時刻を ID3 から機械読取（§3-I） | §3-I |
+
+### 7-2. B：§4 #1〜#12 の最終状態
+
+| # | 対象 | 2026-10-07 の状態 |
+|---|---|---|
+| 1 | CARD-* 60 枚のプラン／実日付／Terms 版・確認日 | **UNKNOWN-ACCEPTED**（現在値は Plus・学習 OFF 2026-09-27＝§2-1。過去値は確認不能） |
+| 2 | 神専用 28 枚の Reference inputs | **UNKNOWN-ACCEPTED** |
+| 3 | 決定84 の 4 枚の master 所在 | **3 枚 KNOWN（art-source へ複製済み・untracked）／`support_07` UNKNOWN-ACCEPTED**（§7-3） |
+| 4 | STG-01〜07・ARENA の原本所在 | **8 枚 KNOWN（複製済み）**。プラン／Terms は UNKNOWN-ACCEPTED |
+| 5 | FX-01〜06 の原本シート | **KNOWN（複製済み）**。プラン／Terms は UNKNOWN-ACCEPTED |
+| 6 | ENM-01／04／07 のプラン／Terms／プロンプト／Reference inputs | **UNKNOWN-ACCEPTED** |
+| 7 | 世代 A シートの所在・保全可否 | **所在 KNOWN（複製済み・untracked）**。プラン／Terms は UNKNOWN-ACCEPTED |
+| 8 | keyvisual 7 柱の出所 | **UNKNOWN-ACCEPTED**（C2PA `gpt-image` の実測は保持。公式配布物か CEO 生成かは確定しない） |
+| 9 | OTM-BG-01 の参考画像の出所 | **Creator＝CEO 生成に更新（原本 C2PA 実測）**。プラン／Terms は UNKNOWN-ACCEPTED |
+| 10 | BGM の Suno 規約版・プラン名 | **UNKNOWN-ACCEPTED**。song id／生成時刻は ID3 実測で KNOWN |
+| 11 | GOD-D-02／03 を Kit へ戻した決定番号 | **UNKNOWN-ACCEPTED**（優先度低・Kit 派生は実測済み） |
+| 12 | Kit Guidelines の CEO 確認日 | **AI 再確認 2026-10-07 を記録**。CEO 初回確認日は UNKNOWN-ACCEPTED |
+
+### 7-3. A-3 原本所在表（実測 2026-10-07・`Downloads` 原本 → `art-source/` 複製。複製は untracked・本 commit には含めない）
+
+| 配信 ID | 原本（Downloads・ファイル名） | 寸法／バイト | sha256 | 一致指標 | 複製先（art-source） |
+|---|---|---|---|---|---|
+| STG-01 | `ChatGPT Image 2026年8月30日 14_53_34.png` | 1672×941／2,993,560 | `2c7602636c45adbcde90a1dd7889d237ddd4850e99562406b68687eaded14510` | r 0.967（次点 0.549） | `backgrounds/stages/01-trial-shadow.png` |
+| STG-02 | `…8月30日 14_55_07.png` | 1672×941／2,649,344 | `981bea513afccce956e812576b284fa2ce5d1d9ed341ddf3e506acc4e7a58e28` | r 0.969（0.497） | `…/02-oni-castle.png` |
+| STG-03 | `…8月30日 14_56_36.png` | 1672×941／3,267,213 | `452538600e3b9a002ef47cac3cefb6ad02bec5be942417b95338a05ef1928bd2` | r 0.951（0.407） | `…/03-ghost-hydrangea.png` |
+| STG-04 | `…8月30日 14_57_47.png` | 1672×941／3,108,414 | `6f36838bb6745ec4728eef33737a32cd965e1d6cf73b920ff4c9345ce581ab58` | r 0.951（0.350） | `…/04-mecha-workshop.png` |
+| STG-05 | `…8月30日 14_59_01.png` | 1672×941／3,317,380 | `fbda37cc0dd770487d5c662486b941188239b740cb58137f9b2103bbb53463bc` | r 0.962（0.544） | `…/05-beast-moonpeak.png` |
+| STG-06 | `…8月30日 15_00_25.png` | 1672×941／3,332,304 | `6564f39afc3f32acb3f3a264fca15b4865ddb0c13a4624bf10290dd507efaf80` | r 0.959（0.361） | `…/06-dragon-ocean.png` |
+| STG-07 | `…8月30日 15_01_55.png` | 1672×941／3,092,304 | `2ab66b4ad65a378d9dd6401b33a1ac32f4a450092273981b91d45727a0f05c6b` | r 0.950（0.432） | `…/07-jester-festival.png` |
+| STG-ARENA | `ChatGPT Image 2026年8月7日 22_23_45.png` | 1672×941／2,402,380 | `0a8a6d05504a0e7cf7ef9e01056b6bd7dacf2c6b52b6fdeb0da22309cf9a9751` | r 0.996・MAD 1.5 | `backgrounds/arena.png` |
+| FX-01〜06 | `ChatGPT Image 2026年8月7日 22_26_24.png`（3 列×2 段シート） | 1254×1254／2,388,858 | `e6b5421dd06fc9ff0d7470d7929a5df077afd20ab8aebfc9e5b6b226fa9577ff` | 各セル MAD 0.8〜1.3（次点 ≥28） | `fx/cast-sheet-3x2.png` |
+| ENM-02／03／05／06・U1〜U3 | `ChatGPT Image 2026年8月4日 07_35_20.png`（世代 A シート） | 1536×1024／2,480,632 | `fcbefbde59621cb204bf915649c0dfb50ceea04071fa78b6734887ff1c5f050b` | ファイル名・寸法が docs 記録と一致（決定32・`ENEMY_VISUAL_QUALITY_AUDIT.md` §3） | `enemies/generation-a-sheet.png` |
+| OTM-BG-01 ×7 | `ChatGPT Image 2026年8月21日 02_35_13.png`（7 パネルのボード） | 1643×957／1,978,746 | `18b66b92449c34a664a518eda7b74dd79715d21bd09f7b829f3be9a6ac0c4b18` | 7 パネル r 0.963〜0.986 | `otomo/bond-background-board.png` |
+| CARD-CA-02 `attack_09` | `ChatGPT Image 2026年8月16日 02_32_21.png` | 1024×1536／2,311,282 | `36b8713083f736b6cc2cfc1138b050d3ad0351cfce90f8ec3ee00754e3a07de0` | r 0.995 | `cards/card_common_attack_09.png` |
+| CARD-CH-02 `hinder_05` | `…8月16日 02_48_37.png` | 1024×1536／2,931,127 | `f297b3e1515d0d043232ebee362ffa4f1c120d79f071b7f01c7aa3a496297a2a` | r 0.995 | `cards/card_common_hinder_05.png` |
+| CARD-CS-02 `support_06` | `…8月16日 02_43_43.png` | 1024×1536／2,576,361 | `67af85249573328a14d976abf12465f8cba9f5d097b687f6aeae4b475e1a7fc7` | r 0.996 | `cards/card_common_support_06.png` |
+| CARD-CS-02 `support_07` | **NOT FOUND**（最近傍 `…8月16日 02_39_30.png` 3 枚シート中央 r 0.754） | — | — | 同一と断定しない | — |
+
+- 原本 15 ファイルすべてに OpenAI C2PA（`gpt-image` 2.0）が埋め込まれている【実測】＝Creator「CEO 生成（ChatGPT）」を裏付ける。プラン・学習設定・規約版は原本からは読めない（UNKNOWN-ACCEPTED のまま）
+- Status 記号は §1-2 の定義どおり **✗ のまま**（「art-source に保全＝commit」が未了）。複製 14 ファイル（≈39MB）の commit は TD-04（`art-source/` の git 管理方針）と `h3-god-strike/` 25MB の扱い（WORKTREE 監査 §4-3 ②）と同時に AI が判断する。複製は `SevenGodsGame-integ/art-source/` に untracked で置き、main repo には触れていない
+
+### 7-4. 事実状態 集計（2026-10-07・86 行）
+
+| 群 | 行数 | KNOWN | UNKNOWN-ACCEPTED | CONDITIONAL | BLOCKED |
+|---|---|---|---|---|---|
+| 3-A 神 Kit 公式 | 21 | 21 | 0 | 0 | 0 |
+| 3-B 神 派生・keyvisual | 12 | 1 | 11 | 0 | 0 |
+| 3-C 敵 | 10 | 0 | 10 | 0 | 0 |
+| 3-D OTOMO | 5 | 4 | 1 | 0 | 0 |
+| 3-E カード（§2-3 含む） | 17 | 1 | 16 | 0 | 0 |
+| 3-F ステージ・アリーナ | 8 | 0 | 8 | 0 | 0 |
+| 3-G FX | 6 | 0 | 6 | 0 | 0 |
+| 3-H SE | 2 | 2 | 0 | 0 | 0 |
+| 3-I BGM | 4 | 0 | 4 | 0 | 0 |
+| 3-K 演出動画 | 1 | 0 | 0 | 1 | 0 |
+| **計** | **86** | **29** | **56** | **1** | **0** |
+
+- **UNKNOWN-ACCEPTED 56 行は権利確認済みではない**。配信除外を要する具体的 Evidence は現時点で 0（BLOCKED 0）。DoD B-7「UNKNOWN 行は『CEO 承認のうえ維持』か『配信除外』」＝全 56 行が前者で記録済み
+- ◎△✗ の記号集計（2026-09-27 基準＋追加行）：◎ 29（27＋SE-02＋CARD-TAIYO-02）／△ 39（38＋VID-01）／✗ 18／予約 0
+
+### 7-5. CM-02（Legal／Credits）へ引き継ぐ事項
+
+1. AI 生成物（ChatGPT gpt-image：カード 60・敵 7・背景 8・FX 6・OTOMO 背景 7・keyvisual 7／Suno：BGM 4／fal.ai H3 Max：演出動画 1）を「人間製」と表示しない・「公式・公認」と誤認させない（Kit Guidelines §5）
+2. SGG Creator Kit v1 の利用表記（任意・§4）と「非公式二次創作」の明示要否
+3. UNKNOWN-ACCEPTED 56 行の扱い（専門家確認は CM-02 と同時・台帳の記入では変わらない）
+4. VID-01 CONDITIONAL（fal Output 帰属の明文なし）の受容可否
+
+### 7-6. runtime 変更 0 の証明
+
+- 変更：本台帳・`ASSET_GENERATION_SERVICE_TERMS_AUDIT_ADDENDUM_FAL_MINIMAX.md`（§1 の「推定」を UNKNOWN に訂正・F1 再検証記録）・`ASSET_RIGHTS_LEDGER_CEO_INPUT_2026-10-07.md` §6（反映記録）・`RELEASE_STATUS.md` K13 行。`src/`・`public/`・`scripts/` 差分 0（commit 直前・直後に `git diff --stat` で確認）。生成 API／購入／外部サービスへの送信 0（fal ToS の再取得は閲覧のみ）
+- 複製した原本 14 ファイルは untracked・commit 対象外（§7-3）
