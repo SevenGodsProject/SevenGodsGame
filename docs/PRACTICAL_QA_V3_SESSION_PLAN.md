@@ -1,6 +1,7 @@
 # Practical QA v3 ＋ iPhone 性能確認 — 1 セッション実施計画（CEO 用）
 
 - 日付：2026-10-09（Lane 2・AI 準備）。設問の定義は `docs/PRACTICAL_QA_V3_DESIGN.md`、性能 3 問は `docs/SP_PERF_EVIDENCE_V1.md` §4、公式ボイスは `docs/OFFICIAL_VOICE_PILOT_V1.md` §9（**別 branch・別 URL**）
+- **実施済み（2026-10-10・CEO 報告）**：結果と A／B／C 判定は integ master の `docs/PRACTICAL_QA_V3_RESULT.md`。本書は手順の記録として残す（preview 4178／4173 は QA 後に停止してよい）
 - 所要：約 30〜40 分（本編 25〜35 分＋ボイス試聴 5 分）。端末：PC（Chrome）＋ iPhone（Safari）。同じ Wi-Fi
 
 ---

@@ -1,4 +1,5 @@
 > **状態（2026-10-09・Lane 3・AI 整理）：DoD の状態表と CI 初回実行の安全手順。CI の実行・master の push・Production 反映はいずれも CEO 承認後。本書は何も PASS 扱いにしない。** 
+> **2026-10-10 更新：Practical QA v3 ＋ 実機 perf 3 問 ＋ Voice Q8 ＋ A11y Q9 を CEO が実施（A 0／B 0・CEO evidence・初見 0 名・D1 未実施）→ DoD #14／#15／#16 DONE・Voice Human QA PASS（統合 READY）。残項目の優先度順と CEO 判断 4 件は integ master の `docs/PRACTICAL_QA_V3_RESULT.md` §7・§9 を正とする。本書 §A の該当行だけ更新し、§C の CI 手順は不変。**
 
 # v1.0.0 Release Gate — 残作業と CI 初回実行の安全手順（read-only 調査・2026-10-09）
 
@@ -13,7 +14,7 @@
 
 | # | 項目 | ID | 状態 | 根拠 | 残作業（1 行） |
 |---|---|---|---|---|---|
-| 1 | Primary Fun critical 設問 NO 0 | — | DONE/Prod（維持条件） | `RELEASE_STATUS.md:17` Commercial RC GO 2026-10-03・ROADMAP §7 #1「達成済み」 | Practical QA v3 で A=0／B=0 を再確認（#16 と同時） |
+| 1 | Primary Fun critical 設問 NO 0 | — | DONE/Prod（維持） | `RELEASE_STATUS.md:17` Commercial RC GO 2026-10-03・**2026-10-10 Practical QA v3 Q1・Q3 CEO YES（`PRACTICAL_QA_V3_RESULT.md` §3：A 0／B 0）** | なし（初見プレイヤー evidence 0 は Known 候補） |
 | 2 | 全到達可能・determinism 機械検査 | — | DONE/Prod | `RELEASE_STATUS.md:16` 決定267 Gate（vitest 1,330・parity）。master は 1,404 PASS（`889d8e8`） | v1.0 Release Gate（§4 #1）で clean RC から再実行 |
 | 3 | 決定263 が LIVE or NO-GO で記録済み | CF-01 | DONE/Prod | DECISIONS 2026-10-07 NO-GO 行・commit `26a3171`・`RELEASE_STATUS.md:19` | なし |
 | 4 | 閉じたレバーを再開していない | — | DONE（維持） | `RELEASE_STATUS.md` A-3・`PRACTICAL_QA_V3_DESIGN.md` §6「再開しない」 | なし（監視のみ） |
@@ -26,13 +27,15 @@
 | 11 | Rollback 演習 1 回の記録 | RL-02 後半 | NOT STARTED | `RELEASE_SAFETY_PREFLIGHT.md` §3 計画のみ・`RELEASE_STATUS.md:14`「演習は未実施」・rollback 先 `6859615239` | Vercel Promote 2 回（★#8）＋AI Smoke → `docs/evidence/release-safety/rollback-drill.md` — **CEO ONLY（Promote）** |
 | 12 | CI（tsc／oxlint／vitest）が PR で自動実行 | RL-03 | DONE/master（定義のみ）・**未実行** | `.github/workflows/ci.yml`（`39186bf`→`d7003fd`）・決定270 `DECISIONS.md:512`「CI 未実行（GREEN とは記録しない）」・ROADMAP §9 (3) | §C の手順で GREEN 1 回 — **CEO ONLY（origin push 承認）** |
 | 13 | main repo＝master・worktree ACTIVE のみ・docs branch が origin に存在 | TD-01／02・RL-07 | PARTIAL | TD-01 **未**：main repo は `feat/d224` で dirty 1,882 entries（`git status`・A-5「触らない」）／TD-02 73→16 完了（現 20＝`.claude/worktrees/agent-*` 6 本が増加）／RL-07 固有 docs 4 本は `d8f9e95` で master へ（branch push 0 本で足りる）が **master 未 push＝origin に無い** | TD-01 patch 救出（AI・push 不要）＋ master push（**CEO ONLY**） |
-| 14 | a11y 基準文書が存在し全項目 PASS | A11Y-01／02 | DONE/master（自動 Gate）・Human QA 未 | `b04cc42`（決定271 `DECISIONS.md:513`「Human QA 未実施＝完了扱いにしない」）・`A11Y_MINIMUM_STANDARD.md`・`A11Y_MINIMUM_PACK_V1.md` §2 Playwright 70/70 | Practical QA v3 Q9（HP pill）1 問 — **CEO ONLY（実機）** |
-| 15 | SP 実機 perf evidence 1 セット | PF-01 | PARTIAL（半分） | `SP_PERF_EVIDENCE_V1.md:4`「エミュレーション 1 セット取得／実 iPhone 未実施」§5「半分」・`scripts/sp-perf/emulated.mjs`（`1804f50`） | 実 iPhone 3 問（同書 §4・約 5 分）— **CEO ONLY（実機）** |
-| 16 | 「2 戦目の壁」「託宣温存／導き」「別構成で勝ち方」Human QA 各 1 回 | UX-01／CF-03／RP-02 | NOT STARTED（設計のみ） | `PRACTICAL_QA_V3_DESIGN.md:1`「設計のみ・実施は CEO」9 問・A/B/C Gate | AI が §7 の事前準備（preview・seed・テンプレ）→ CEO 1 セッション — **CEO ONLY** |
-| 17 | 敵アート／SE 実音源／Voice の GO か NO が記録 | AR-01／BF-01／02 | NOT STARTED | `DECISIONS.md` に AR-01／BF-01／BF-02 の GO／NO 行なし（grep 0）・ROADMAP §3 #5 | AI が §6-4 形式 1 枚を提出 → **CEO ONLY（承認／拒否・課金 #4／#5）** |
+| 14 | a11y 基準文書が存在し全項目 PASS | A11Y-01／02 | **DONE/master（CEO Human QA PASS 2026-10-10）** | `b04cc42`（決定271）・`A11Y_MINIMUM_PACK_V1.md` §2 Playwright 70/70・**Q9 YES「HP 数字が読みやすく pill も邪魔ではない」（`PRACTICAL_QA_V3_RESULT.md` §1）** | なし（pill α 再調整不要） |
+| 15 | SP 実機 perf evidence 1 セット | PF-01 | **DONE/master（エミュレーション＋実機 2026-10-10）** | `SP_PERF_EVIDENCE_V1.md` §3 エミュレーション＋**§4-1 実機 P1〜P3 YES**（機種・iOS 版は未記録） | なし |
+| 16 | 「2 戦目の壁」「託宣温存／導き」「別構成で勝ち方」Human QA 各 1 回 | UX-01／CF-03／RP-02 | **DONE（CEO 1 回ずつ 2026-10-10）** | `PRACTICAL_QA_V3_RESULT.md` §1 Q2／Q5／Q7 YES（導きの使用有無・初見プレイヤーは未記録＝K21 未観測のまま） | なし（初見 QA は v1.0 後） |
+| 17 | 敵アート／SE 実音源／Voice の GO か NO が記録 | AR-01／BF-01／02 | PARTIAL（Voice のみ） | **Voice：Human QA Q8 3／3 PASS（2026-10-10）＝統合 READY・merge は CEO 承認**（`PRACTICAL_QA_V3_RESULT.md` §5）。敵アート／SE 実音源：GO／NO 行なし | AI 推奨「v1.0 は現状のまま（K07／K31）」を Known 凍結承認に含める → **CEO ONLY（承認／拒否）** |
 | 18 | `package.json` 1.0.0・tag `v1.0.0`・「正式公開」行・公開投稿 | — | NOT STARTED | `package.json:4` `1.0.0-rc.1`・`git tag` 0 本 | version bump＋行は AI、tag／公開／投稿は **CEO ONLY（#8）** |
 
-集計：DONE/Prod 5（#1〜4・#8）／DONE/master 5（#5・#7・#9・#12 定義・#14 自動）／PARTIAL 4（#6・#10・#13・#15）／NOT STARTED 4（#11・#16・#17・#18）。**CEO にしかできない工程を含む：#5・#6・#10・#11・#12・#13・#14・#15・#16・#17・#18（11 項目）**。
+集計：DONE/Prod 5（#1〜4・#8）／DONE/master 5（#5・#7・#9・#12 定義・#14 自動）／PARTIAL 4（#6・#10・#13・#15）／NOT STARTED 4（#11・#16・#17・#18）。
+
+**2026-10-10 再集計**：DONE/Prod 5（#1〜4・#8）／DONE/master 7（#5・#7・#9・#12 定義・#14・#15・#16）／PARTIAL 4（#6・#10・#13・#17）／NOT STARTED 2（#11・#18）。**CEO にしかできない工程を含む：#5・#6・#10・#11・#12・#13・#14・#15・#16・#17・#18（11 項目）**。
 
 ## B. 未 push commit 一覧（`git log origin/master..master`・22 件・新しい順）
 
@@ -99,5 +102,7 @@
 | 5 | **Practical QA v3 1 セッション**＋ A11y Q9 ＋ iPhone perf 3 問（実機は CEO しか持たない） | 実機 | #14・#15・#16 |
 | 6 | **敵アート／SE 実音源／Voice の GO・NO**（課金・権利） | #4／#5 | #17 |
 | 7 | **v1.0.0 時点の生存 Known 凍結承認**＋ tag `v1.0.0`＋公開宣言投稿 | #8 | #10・#18 |
+
+**2026-10-10 更新**：#5（実機 QA）は完了。#6 のうち Voice は Human QA PASS → 「master 統合の承認」に置き換わる。残る CEO 判断は **4 件**（`PRACTICAL_QA_V3_RESULT.md` §9：①Legal 文言確定 ②Voice 統合 ③CI 初回実行 ④Release 実行＝push・Rollback 演習・Known 凍結（敵アート／SE 現状維持を含む）・tag）。
 
 AI 側で承認なしに進められるもの（参考）：TD-01 main repo の patch 救出（push 0）／Practical QA v3 の事前準備（§7）／AR-01・BF-01／02 の §6-4 1 枚起草／Legal 画面の実装（文言差し替え前提のプレースホルダ＋契約テスト）／RELEASE_STATUS の v1.0 Known 再集計案。
