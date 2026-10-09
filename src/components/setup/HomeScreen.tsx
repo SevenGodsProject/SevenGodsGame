@@ -8,7 +8,8 @@ import { HomeProgressRow, HomeTodayPanel } from './HomeTodayPanel'
 import { ARCHETYPE_LABEL } from './godStyle'
 import { heroImageOf, selectHeroGod } from './heroGod'
 import { hasPlayTrace, selectHomePrimary } from './homePrimary'
-import { HeartIcon, TrophyIcon } from '../icons'
+import { HeartIcon, InfoIcon, TrophyIcon } from '../icons'
+import { CREDITS_LINK_LABEL } from './creditsText'
 import { loadLastUsedGodId } from '../../hooks/deckPreferenceStorage'
 import { loadGodRecord } from '../../hooks/recordStorage'
 import { dailyAttemptsLeft, loadDailyDay, loadRecentDailyDays } from '../../hooks/dailyStorage'
@@ -29,6 +30,8 @@ type HomeScreenProps = {
   onShowOtomoGrowth: () => void
   /** Task E1：戦績画面を開く */
   onShowRecord: () => void
+  /** CM-02／03：クレジット・権利表記（静的 1 画面）を開く */
+  onShowCredits: () => void
   /** DAILY-01：今日の神域挑戦画面を開く */
   onShowDaily: () => void
 }
@@ -51,7 +54,7 @@ export function HomeScreen({
   onResume,
   onStartFirstBattle,
   onShowOtomoGrowth,
-  onShowRecord,
+  onShowRecord, onShowCredits,
   onShowDaily,
 }: HomeScreenProps) {
   const nowMs = useMinuteClock()
@@ -185,6 +188,11 @@ export function HomeScreen({
           <button type="button" className="home-howto-button" onClick={onShowOtomoGrowth}>
             <HeartIcon className="home-howto-icon" />
             OTOMOとの絆を見る
+          </button>
+          {/* CM-02／03：クレジット・権利表記（非公式ファン作品の明示・出典・データ保存）。表示のみ */}
+          <button type="button" className="home-howto-button" onClick={onShowCredits}>
+            <InfoIcon className="home-howto-icon" />
+            {CREDITS_LINK_LABEL}
           </button>
         </div>
       </div>

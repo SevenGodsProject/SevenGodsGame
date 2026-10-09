@@ -17,6 +17,7 @@ import { EnemySelectScreen } from './setup/EnemySelectScreen'
 import { DeckBuilderScreen } from './setup/DeckBuilderScreen'
 import { OtomoGrowthScreen } from './setup/OtomoGrowthScreen'
 import { RecordScreen } from './setup/RecordScreen'
+import { CreditsScreen } from './setup/CreditsScreen'
 import { DailyChallengeScreen } from './setup/DailyChallengeScreen'
 import { FirstBattleBrief } from './FirstBattleBrief'
 import { FIRST_BATTLE_PRESET } from './setup/firstBattle'
@@ -29,7 +30,7 @@ import './polish.css'
 
 // LANE-D：'enemySelect'を追加（HOME→GOD SELECT（＋難易度）→ENEMY SELECT→DECK→BATTLE）
 // DAILY-01：'daily'を追加（HOME→DAILY→GOD SELECT（難易度なし）→DECK→BATTLE。敵選択は無い）
-type SetupScreen = 'home' | 'godSelect' | 'enemySelect' | 'deckBuild' | 'otomoGrowth' | 'record' | 'daily'
+type SetupScreen = 'home' | 'godSelect' | 'enemySelect' | 'deckBuild' | 'otomoGrowth' | 'record' | 'daily' | 'credits'
 
 type GameFlowProps = {
   /**
@@ -267,6 +268,7 @@ export function GameFlow({ onShowTutorial, onSnapshotChange }: GameFlowProps) {
             onStartFirstBattle={() => setShowFirstBattleBrief(true)}
             onShowOtomoGrowth={() => setSetupScreen('otomoGrowth')}
             onShowRecord={() => setSetupScreen('record')}
+            onShowCredits={() => setSetupScreen('credits')}
             onShowDaily={() => setSetupScreen('daily')}
             onStartFresh={() =>
               guardDiscard(() => {
@@ -293,6 +295,10 @@ export function GameFlow({ onShowTutorial, onSnapshotChange }: GameFlowProps) {
       }
       if (setupScreen === 'record') {
         return <RecordScreen onBack={() => setSetupScreen('home')} />
+      }
+      // CM-02／03：クレジット・権利表記（静的・storage 0）
+      if (setupScreen === 'credits') {
+        return <CreditsScreen onBack={() => setSetupScreen('home')} />
       }
       // DAILY-01：神域挑戦の入口。「挑戦開始」で今日の日付キーを確定し、神選択へ
       if (setupScreen === 'daily') {

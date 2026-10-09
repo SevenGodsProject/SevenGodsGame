@@ -66,6 +66,17 @@ export function TrophyIcon({ className }: { className?: string }) {
 }
 
 /** 実プレイ・フィードバック基盤：ヘッダーの「感想を送る」ボタン用の吹き出しアイコン */
+/** Legal／Credits（CM-02／03）：Home の「クレジット・権利表記」リンク用。丸に i */
+export function InfoIcon({ className }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" focusable="false">
+      <circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" strokeWidth="1.8" />
+      <circle cx="12" cy="8" r="1.2" fill="currentColor" />
+      <path d="M12 11v6" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+    </svg>
+  )
+}
+
 export function FeedbackIcon({ className }: { className?: string }) {
   return (
     <svg viewBox="0 0 24 24" className={className} aria-hidden="true">
