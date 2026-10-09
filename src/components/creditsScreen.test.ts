@@ -20,7 +20,7 @@ describe('禁止語（断定・誤認を招く表現）が画面文言に無い'
     ['ライセンス取得', /ライセンス取得/],
     ['商用利用可', /商用利用可/],
     ['人間製・手描き', /人間製|手描き/],
-    ['公式ボイス（未統合のため記載しない）', /公式ボイス|公式の声|神の音声/],
+    ['公式ボイス・公式の声（Kit 配布音声を「公式」と表示しない）・神の音声（総称しない。統合済みは大耀 1 本）', /公式ボイス|公式の声|神の音声/],
     ['外部送信なしの断定', /外部送信なし|外部へ送信しません|一切送信しません/],
     ['公式・公認・提携の肯定', /(^|[^非])公式(?!・公認・提携作品ではありません)|公認(?!・提携作品ではありません)|提携(?!作品ではありません)/m],
   ])('%s', (_label, re) => {
@@ -36,6 +36,8 @@ describe('必須語（方針で必ず書くもの）', () => {
   })
   it('Creator Kit の出典・BGM（Suno）・効果音（自作）・生成 AI・localStorage・Vercel の但し書き・問い合わせ先は準備中', () => {
     expect(ALL_TEXT).toContain('SEVENGODS Games Creator Kit')
+    expect(ALL_TEXT).toContain('大耀の音声（あいさつ）')
+    expect(ALL_TEXT).toContain('声の素材を本作で制作してはいません')
     expect(ALL_TEXT).toContain('Suno')
     expect(ALL_TEXT).toContain('効果音は制作者が合成')
     expect(ALL_TEXT).toContain('生成 AI')
