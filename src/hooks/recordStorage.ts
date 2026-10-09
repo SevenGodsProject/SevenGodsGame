@@ -11,6 +11,8 @@ import { getFinalScore } from '../core/engine'
  * `RULES.saveVersion`とは独立した専用バージョン＝決定不変ルール5）を踏襲。
  */
 
+import { pickValidEntries, setItemGuarded } from './storageGuard'
+
 const STORAGE_KEY = 'sevengods.records'
 const RECORD_VERSION = 1
 
@@ -78,8 +80,8 @@ function isGodRecord(value: unknown): value is GodRecord {
 function isRecordData(value: unknown): value is RecordData {
   if (!value || typeof value !== 'object') return false
   const v = value as Record<string, unknown>
-  if (typeof v.version !== 'number' || !v.records || typeof v.records !== 'object') return false
-  return Object.values(v.records as Record<string, unknown>).every(isGodRecord)
+  // RL-01：1 柱が壊れていても他の柱を捨てない（部分不正は load で除外するだけ）
+  return typeof v.version === 'number' && !!v.records && typeof v.records === 'object'
 }
 
 function load(): RecordData {
@@ -90,18 +92,15 @@ function load(): RecordData {
     if (!isRecordData(parsed) || parsed.version !== RECORD_VERSION) {
       return { version: RECORD_VERSION, records: {} }
     }
-    return parsed
+    return { version: RECORD_VERSION, records: pickValidEntries(parsed.records, isGodRecord) }
   } catch {
     return { version: RECORD_VERSION, records: {} }
   }
 }
 
+/** RL-01：未来 version（新しいビルドの記録）が入っていれば書かない。保存できなくてもゲームは止めない */
 function save(data: RecordData): void {
-  try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(data))
-  } catch {
-    // 保存できなくてもゲーム自体には影響しないため無視する
-  }
+  setItemGuarded(STORAGE_KEY, RECORD_VERSION, JSON.stringify(data))
 }
 
 /** その神の戦績を読み込む（未記録なら全項目0/nullの空レコード） */

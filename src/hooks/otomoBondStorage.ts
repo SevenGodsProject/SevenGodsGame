@@ -43,6 +43,8 @@ import type { GameState, GodId, OtomoForm } from '../core/types'
  *    入らない＝前回分の再加算は発生しない。
  */
 
+import { pickValidEntries, setItemGuarded } from './storageGuard'
+
 const STORAGE_KEY = 'sevengods.otomoBond'
 const BOND_VERSION = 1
 
@@ -93,8 +95,8 @@ function isOtomoBondRecord(value: unknown): value is OtomoBondRecord {
 function isBondData(value: unknown): value is BondData {
   if (!value || typeof value !== 'object') return false
   const v = value as Record<string, unknown>
-  if (typeof v.version !== 'number' || !v.records || typeof v.records !== 'object') return false
-  return Object.values(v.records as Record<string, unknown>).every(isOtomoBondRecord)
+  // RL-01：1 柱が壊れていても他の柱を捨てない（部分不正は load で除外するだけ）
+  return typeof v.version === 'number' && !!v.records && typeof v.records === 'object'
 }
 
 function load(): BondData {
@@ -105,18 +107,15 @@ function load(): BondData {
     if (!isBondData(parsed) || parsed.version !== BOND_VERSION) {
       return { version: BOND_VERSION, records: {} }
     }
-    return parsed
+    return { version: BOND_VERSION, records: pickValidEntries(parsed.records, isOtomoBondRecord) }
   } catch {
     return { version: BOND_VERSION, records: {} }
   }
 }
 
+/** RL-01：未来 version（新しいビルドの記録）が入っていれば書かない。保存できなくてもゲームは止めない */
 function save(data: BondData): void {
-  try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(data))
-  } catch {
-    // 保存できなくてもゲーム自体には影響しないため無視する
-  }
+  setItemGuarded(STORAGE_KEY, BOND_VERSION, JSON.stringify(data))
 }
 
 /** その神のOTOMO育成記録を読み込む（未記録なら全項目0の空レコード） */

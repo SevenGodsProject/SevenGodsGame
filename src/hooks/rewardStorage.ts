@@ -14,6 +14,8 @@ import type { CardDefId, GodId } from '../core/types'
  * 独立した専用のバージョンを持たせる（決定不変ルール5）。
  */
 
+import { setItemGuarded } from './storageGuard'
+
 const STORAGE_KEY = 'sevengods.rewardBonuses'
 const REWARD_VERSION = 1
 
@@ -43,12 +45,9 @@ function load(): RewardData {
   }
 }
 
+/** RL-01：未来 version（新しいビルドの記録）が入っていれば書かない。保存できなくてもゲームは止めない */
 function save(data: RewardData): void {
-  try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(data))
-  } catch {
-    // 保存できなくてもゲーム自体には影響しないため無視する
-  }
+  setItemGuarded(STORAGE_KEY, REWARD_VERSION, JSON.stringify(data))
 }
 
 /** その神の、カードごとの追加編成上限（Map化して`deckBuilder.ts`にそのまま渡せる形） */

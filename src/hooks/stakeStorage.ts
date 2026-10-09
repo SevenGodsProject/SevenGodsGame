@@ -16,6 +16,8 @@ import { loadGodRecord } from './recordStorage'
  *   が'hard'なら解放済みとみなす（過去の到達を無駄にしない。推定ではなく記録に基づく）。
  * - `localStorage` が使えない環境でも遊べるよう、読み書きは try-catch で握りつぶす（決定27と同方針）。
  */
+import { setItemGuarded } from './storageGuard'
+
 const STORAGE_KEY = 'sevengods.stakes'
 const STORAGE_VERSION = 1
 
@@ -41,7 +43,8 @@ function load(): StakeData {
       !parsed ||
       typeof parsed !== 'object' ||
       (parsed as StakeData).version !== STORAGE_VERSION ||
-      typeof (parsed as StakeData).byGod !== 'object'
+      typeof (parsed as StakeData).byGod !== 'object' ||
+      (parsed as StakeData).byGod === null // RL-01：null は typeof 'object'。通すと load().byGod[godId] で throw する
     ) {
       return { version: STORAGE_VERSION, byGod: {} }
     }
@@ -51,12 +54,9 @@ function load(): StakeData {
   }
 }
 
+/** RL-01：未来 version が入っていれば書かない。保存できない環境では記録だけが残らない（ゲーム進行は止めない） */
 function save(data: StakeData): void {
-  try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(data))
-  } catch {
-    // 保存できない環境では記録だけが残らない（ゲーム進行は止めない）
-  }
+  setItemGuarded(STORAGE_KEY, STORAGE_VERSION, JSON.stringify(data))
 }
 
 function normalize(rec: Partial<GodStakeRecord> | undefined): GodStakeRecord {

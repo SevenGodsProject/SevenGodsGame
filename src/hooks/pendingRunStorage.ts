@@ -26,6 +26,8 @@ import { isClientRunId } from './clientRunId'
  * score・勝敗・HP・rngCursorを持たない構造なので、ここへ足す余地が無い。
  */
 
+import { setItemGuarded } from './storageGuard'
+
 const STORAGE_KEY = 'sevengods.pendingRuns'
 
 /** 送信待ち保存の形式バージョン。`RULES.saveVersion`とは独立 */
@@ -90,13 +92,10 @@ function read(): PendingRun[] {
   }
 }
 
+/** RL-01：未来 version（新しいビルドの記録）が入っていれば書かない。保存できなくてもゲームは止めない */
 function write(runs: PendingRun[]): void {
-  try {
-    const payload: StoredPendingRuns = { version: PENDING_RUNS_VERSION, runs }
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(payload))
-  } catch {
-    // 保存できなくてもゲーム自体には影響しない
-  }
+  const payload: StoredPendingRuns = { version: PENDING_RUNS_VERSION, runs }
+  setItemGuarded(STORAGE_KEY, PENDING_RUNS_VERSION, JSON.stringify(payload))
 }
 
 /** `retentionDays`より古い日付キーのrunを落とす */

@@ -15,6 +15,8 @@ import { REWARD_OFFER_SIZE } from '../components/battle/rewardPicker'
  * version 不一致・JSON 壊れ・型不一致は「空で開始」し、保存データは消さない・直さない。
  */
 
+import { pickValidEntries, setItemGuarded } from './storageGuard'
+
 export const REWARD_HISTORY_STORAGE_KEY = 'sevengods.rewardHistory'
 export const REWARD_HISTORY_VERSION = 1
 /** 「直近 2 勝」＝ 3 枚 × 2。UI／メタ進行の定数でゲームバランス値ではないため rules.ts には置かない */
@@ -42,8 +44,8 @@ function isGodHistory(value: unknown): value is GodRewardHistory {
 function isRewardHistoryData(value: unknown): value is RewardHistoryData {
   if (!value || typeof value !== 'object') return false
   const v = value as Record<string, unknown>
-  if (typeof v.version !== 'number' || !v.gods || typeof v.gods !== 'object') return false
-  return Object.values(v.gods as Record<string, unknown>).every(isGodHistory)
+  // RL-01：1 柱が壊れていても他の柱を捨てない（部分不正は load で除外するだけ）
+  return typeof v.version === 'number' && !!v.gods && typeof v.gods === 'object'
 }
 
 function load(): RewardHistoryData {
@@ -54,18 +56,15 @@ function load(): RewardHistoryData {
     if (!isRewardHistoryData(parsed) || parsed.version !== REWARD_HISTORY_VERSION) {
       return { version: REWARD_HISTORY_VERSION, gods: {} }
     }
-    return parsed
+    return { version: REWARD_HISTORY_VERSION, gods: pickValidEntries(parsed.gods, isGodHistory) }
   } catch {
     return { version: REWARD_HISTORY_VERSION, gods: {} }
   }
 }
 
+/** RL-01：未来 version が入っていれば書かない。保存できなくても 3 択自体は成立する（反復抑制が効かないだけ） */
 function save(data: RewardHistoryData): void {
-  try {
-    localStorage.setItem(REWARD_HISTORY_STORAGE_KEY, JSON.stringify(data))
-  } catch {
-    // 保存できなくても 3 択自体は成立する（反復抑制が効かないだけ）ため無視する
-  }
+  setItemGuarded(REWARD_HISTORY_STORAGE_KEY, REWARD_HISTORY_VERSION, JSON.stringify(data))
 }
 
 /** 純関数：末尾へ追加し、先頭（古い方）から落として `max` 件に揃える（FIFO） */

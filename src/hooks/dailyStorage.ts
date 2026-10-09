@@ -18,6 +18,8 @@ import { dailyBossFor, isValidDailyKey } from '../core/data/dailyBoss'
  * hooks層（不変ルール1）。
  */
 
+import { pickValidEntries, setItemGuarded } from './storageGuard'
+
 const STORAGE_KEY = 'sevengods.daily'
 const DAILY_VERSION = 1
 
@@ -55,6 +57,31 @@ function isDailyData(value: unknown): value is DailyData {
   return typeof v.version === 'number' && !!v.days && typeof v.days === 'object'
 }
 
+/**
+ * RL-01：日の記録として読める最低限の形（日付キーが正しく `results` が配列）。壊れた日だけ除外し、他の日は残す。
+ * それ以外のフィールドは `normalizeDay` が default-fill する（R2「追加のみ互換」：`bestByGod` は後から足された項目）。
+ */
+function isDailyDayLike(value: unknown): value is Partial<DailyDay> & { dateKey: string; results: unknown[] } {
+  if (!value || typeof value !== 'object') return false
+  const d = value as Record<string, unknown>
+  return typeof d.dateKey === 'string' && isValidDailyKey(d.dateKey) && Array.isArray(d.results)
+}
+
+/** 欠けた項目を既定値で埋める（保存形式は変えない。読み取り時に整えるだけで、書き戻さない） */
+function normalizeDay(d: Partial<DailyDay> & { dateKey: string; results: unknown[] }): DailyDay {
+  const base = emptyDay(d.dateKey)
+  return {
+    dateKey: d.dateKey,
+    enemyId: typeof d.enemyId === 'string' ? d.enemyId : base.enemyId,
+    seed: typeof d.seed === 'string' ? d.seed : base.seed,
+    attemptsUsed: typeof d.attemptsUsed === 'number' ? d.attemptsUsed : 0,
+    results: d.results as DailyResult[],
+    bestScore: typeof d.bestScore === 'number' ? d.bestScore : 0,
+    bestGodId: typeof d.bestGodId === 'string' ? d.bestGodId : null,
+    bestByGod: d.bestByGod && typeof d.bestByGod === 'object' ? d.bestByGod : {},
+  }
+}
+
 function loadData(): DailyData {
   try {
     const raw = localStorage.getItem(STORAGE_KEY)
@@ -63,18 +90,17 @@ function loadData(): DailyData {
     if (!isDailyData(parsed) || parsed.version !== DAILY_VERSION) {
       return { version: DAILY_VERSION, days: {} }
     }
-    return parsed
+    const days: Record<string, DailyDay> = {}
+    for (const [k, d] of Object.entries(pickValidEntries(parsed.days, isDailyDayLike))) days[k] = normalizeDay(d)
+    return { version: DAILY_VERSION, days }
   } catch {
     return { version: DAILY_VERSION, days: {} }
   }
 }
 
+/** RL-01：未来 version（新しいビルドの記録）が入っていれば書かない。保存できなくてもゲームは止めない */
 function saveData(data: DailyData): void {
-  try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(data))
-  } catch {
-    // 保存できなくてもゲーム自体には影響しないため無視する
-  }
+  setItemGuarded(STORAGE_KEY, DAILY_VERSION, JSON.stringify(data))
 }
 
 /** 日付キーの辞書順＝時系列順（`YYYY-MM-DD`固定長）を利用して古い日を落とす */

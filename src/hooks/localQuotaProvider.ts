@@ -1,5 +1,7 @@
 import { dateKeyOf, type QuotaConsumeResult, type QuotaProvider, type QuotaState } from './quotaProvider'
 
+import { pickValidEntries, setItemGuarded } from './storageGuard'
+
 const STORAGE_KEY = 'sevengods.quota'
 const QUOTA_VERSION = 1
 
@@ -47,7 +49,8 @@ function isQuotaData(value: unknown): value is QuotaData {
   if (!value || typeof value !== 'object') return false
   const v = value as Record<string, unknown>
   if (typeof v.version !== 'number' || !v.records || typeof v.records !== 'object') return false
-  return Object.values(v.records as Record<string, unknown>).every(isQuotaRecord)
+  // RL-01：1 件が壊れていても他を捨てない（部分不正は load で除外するだけ）
+  return true
 }
 
 function load(): QuotaData {
@@ -58,18 +61,15 @@ function load(): QuotaData {
     if (!isQuotaData(parsed) || parsed.version !== QUOTA_VERSION) {
       return { version: QUOTA_VERSION, records: {} }
     }
-    return parsed
+    return { version: QUOTA_VERSION, records: pickValidEntries(parsed.records, isQuotaRecord) }
   } catch {
     return { version: QUOTA_VERSION, records: {} }
   }
 }
 
+/** RL-01：未来 version（新しいビルドの記録）が入っていれば書かない。保存できなくてもゲームは止めない */
 function save(data: QuotaData): void {
-  try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(data))
-  } catch {
-    // 保存できなくてもゲーム自体には影響しないため無視する
-  }
+  setItemGuarded(STORAGE_KEY, QUOTA_VERSION, JSON.stringify(data))
 }
 
 /** prevレコードと現在時刻から、今使うべきレコードを決める（保存が必要かどうかも返す） */
