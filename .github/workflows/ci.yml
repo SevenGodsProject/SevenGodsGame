@@ -1,0 +1,38 @@
+# RL-03（Release Safety）：master への PR と master への push で tsc／oxlint／vitest／build を自動実行する。
+# Playwright（ブラウザ）・決定論シミュレーションは含めない（ROADMAP §2 #4。重い検証はローカルで直列に行う）。
+name: ci
+
+on:
+  pull_request:
+    branches: [master]
+  push:
+    branches: [master]
+  workflow_dispatch:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  gate:
+    name: tsc / oxlint / vitest / build
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci --no-audit --no-fund
+      - name: tsc
+        run: npx tsc -b
+      - name: oxlint
+        run: npm run lint
+      - name: vitest
+        run: npm test -- --reporter=dot
+      - name: build
+        run: npx vite build
