@@ -3,6 +3,7 @@ import type { GameState } from '../../core/types'
 import { GODS } from '../../core/data/gods'
 import { RULES } from '../../core/data/rules'
 import { isKnownEnemyId, safeEnemyName } from '../enemyLookup'
+import { isKnownOtomoId } from '../otomoLookup'
 import { HomeProgressRow, HomeTodayPanel } from './HomeTodayPanel'
 import { ARCHETYPE_LABEL } from './godStyle'
 import { heroImageOf, selectHeroGod } from './heroGod'
@@ -71,7 +72,9 @@ export function HomeScreen({
   // 保存データは削除・修正しない（「神を選ぶ」で新しく始めることはできる）
   const savedEnemyKnown = savedBattle ? isKnownEnemyId(savedBattle.enemy.defId) : false
   const savedEnemyName = savedBattle ? safeEnemyName(savedBattle.enemy.defId) : ''
-  const canResume = !!(savedBattle && savedGod && savedEnemyKnown)
+  // RL-01b：OTOMO の id も同じ理由で確認する（Battle 側の OTOMO 定義の参照は未防御。保存は削除・修正しない）
+  const savedOtomoKnown = savedBattle ? isKnownOtomoId(savedBattle.otomo.defId) : false
+  const canResume = !!(savedBattle && savedGod && savedEnemyKnown && savedOtomoKnown)
 
   // Entrance E1：Hero God と Primary の状態（すべて読み取りのみ）
   const lastUsedGodId = loadLastUsedGodId()
