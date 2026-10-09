@@ -43,6 +43,11 @@ describe('必須語（方針で必ず書くもの）', () => {
     expect(ALL_TEXT).toContain('Vercel')
     expect(ALL_TEXT).toContain('問い合わせ先は準備中')
   })
+  it('確定文言（CEO 条件付き承認 2026-10-10）：SGG 運営へ問い合わせを送らない 1 文・生成記録が揃っていない素材の明示・制作者は SGG 運営とは別', () => {
+    expect(ALL_TEXT).toContain('本作に関するお問い合わせを SGG 運営へ送ることはお控えください')
+    expect(ALL_TEXT).toContain('生成時の記録（利用プラン・生成日時など）が揃っていないものがあり、制作者の責任で使用しています')
+    expect(CREDITS_FOOTER_LINES).toContain('制作：SEVENDAO GAMES（SGG 運営とは別の個人制作スタジオです）')
+  })
   it('クレジット行は SGG ガイドライン §4 の書式を含む', () => {
     expect(CREDITS_FOOTER_LINES).toContain('SEVENGODS（SGG）二次創作')
     expect(CREDITS_FOOTER_LINES).toContain('SEVENGODS Games Creator Kit')

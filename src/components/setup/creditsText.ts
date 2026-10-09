@@ -9,8 +9,10 @@
  *   「権利クリア」「許諾済み」とは書かない）
  * - 公式ボイスは未統合なので触れない（統合時に `docs/LEGAL_CREDITS_DRAFT_V1.md` §2-1 A-1 の 1 文を足す）
  * - 配信元（Vercel）のアクセス記録があるため「外部送信なし」と断定しない
- * - 問い合わせ先は未確定（「準備中」）
- * - 文言の最終確認は CEO（`docs/LEGAL_CREDITS_SCREEN_V1.md` §2 の表で 1 文ずつ状態を管理）
+ * - 問い合わせ先は未確定（「準備中」）。本作の問い合わせを SGG 運営へ送らないよう 1 文添える
+ * - 権利条件の未解決事項（生成記録が揃っていない素材＝Rights Ledger の UNKNOWN-ACCEPTED）は隠さず、制作者の責任で使用している事実を書く
+ * - 制作者名は SGG 運営とは別の個人制作スタジオであることを括弧書きで示す（なりすまし・関係者と誤認させない）
+ * - 文言の最終確認は CEO（`docs/LEGAL_CREDITS_SCREEN_V1.md` §2 の表で 1 文ずつ状態を管理。§2-2 の確定候補を CEO が 2026-10-10 に条件付き承認）
  */
 export const CREDITS_TITLE = 'クレジット・権利表記'
 
@@ -24,6 +26,7 @@ export const CREDITS_SECTIONS: ReadonlyArray<{ heading: string; lines: ReadonlyA
       '神と OTOMO の画像は「SEVENGODS Games Creator Kit」の配布素材を使用しています。',
       'BGM は制作者が Suno で生成しました。効果音は制作者が合成して作成しました。',
       '敵・カード・背景などの一部の画像は、制作者が生成 AI を用いて作成しました。',
+      '生成 AI で作成した素材の一部には、生成時の記録（利用プラン・生成日時など）が揃っていないものがあり、制作者の責任で使用しています。',
       'アイコンと SNS 用の画像は、上記の素材と自作の図形を組み合わせて作成しました。',
     ],
   },
@@ -37,12 +40,12 @@ export const CREDITS_SECTIONS: ReadonlyArray<{ heading: string; lines: ReadonlyA
   },
   {
     heading: 'お問い合わせ',
-    lines: ['問い合わせ先は準備中です。'],
+    lines: ['問い合わせ先は準備中です。本作に関するお問い合わせを SGG 運営へ送ることはお控えください。'],
   },
 ]
 
 /** 末尾のクレジット行（SGG ガイドライン §4 の書式 2 つ＋制作者） */
-export const CREDITS_FOOTER_LINES: ReadonlyArray<string> = ['SEVENGODS（SGG）二次創作', 'SEVENGODS Games Creator Kit', '制作：SEVENDAO GAMES']
+export const CREDITS_FOOTER_LINES: ReadonlyArray<string> = ['SEVENGODS（SGG）二次創作', 'SEVENGODS Games Creator Kit', '制作：SEVENDAO GAMES（SGG 運営とは別の個人制作スタジオです）']
 
 /** Home のリンク文言 */
 export const CREDITS_LINK_LABEL = 'クレジット・権利表記'

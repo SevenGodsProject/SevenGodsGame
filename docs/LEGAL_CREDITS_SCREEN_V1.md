@@ -1,7 +1,7 @@
 # Legal／Credits 画面 v1（CM-02／03）— 実装・Fast Gate・CEO 最終確認用の文言表
 
 - 日付：2026-10-09（Lane 1・**AI 判断**（CLAUDE.md §6-2）・CEO 採用方針 2026-10-09）
-- 状態：**IMPLEMENTED ON BRANCH `feat/legal-credits-screen-v1` — Fast Gate PASS — 文言は CEO 最終確認待ち（§2）**。master merge・push・deploy は未実施。権利の可否認定はしない（§6-3 #5）
+- 状態：**IMPLEMENTED ON BRANCH `feat/legal-credits-screen-v1` — Fast Gate PASS — 文言は CEO 条件付き承認（2026-10-10・§2-3）を反映済み・master 統合へ**。push・deploy は未実施。権利の可否認定はしない（§6-3 #5）
 - 起草元：`docs/LEGAL_CREDITS_DRAFT_V1.md`（文言 A を CEO 方針で修正：「外部送信なし」の断定を外し Vercel の但し書きを入れる／公式ボイスに触れない／問い合わせ先は準備中）
 - 不変：`src/core` 0・storage 0（画面は表示のみ）・既存画面の文言 0・色・骨格は RecordScreen と同じ
 
@@ -72,6 +72,19 @@ CEO が「承認」と返せば AI がそのまま `creditsText.ts` に反映す
 | A-1 | Voice 統合時の素材 1 行目 | 「神と OTOMO の画像、および神の音声は「SEVENGODS Games Creator Kit」の配布素材をそのまま使用しています（本作で制作した音声はありません）。」 | S1 を**置換**（Voice 統合と同時・CEO 判断不要の事実記載） | Kit §5（公式の声＝Kit 配布音声）・台帳 VOICE-KIT-01 KNOWN（原本＝配信＝MCP sha256 一致）。「公式ボイス」の語は使わない（Kit §5 の「公式」は Kit 配布分にしか使えず、禁止語テストも維持） |
 
 確定候補で変わるファイル：`src/components/setup/creditsText.ts`（C1 の 2 文目・F3 の括弧・A-1 の置換）と `src/components/creditsScreen.test.ts`（必須語の更新 2 箇所：F3 の行・A-1 後の S1）。Kit §4 の書式 2 行（F1・F2）・L1〜L2・D1〜D3・S2・S3・S5 は変更なし。統合順序・CI 安全条件は `docs/RC2_INTEGRATION_PLAN_V1.md`。
+
+### 2-3. 反映（2026-10-10・CEO 条件付き承認「SGG との関係・制作者名の事実整合性を確認し、誤認を招く表現があれば修正する。権利条件の未解決事項を隠さない」）
+
+| # | 画面文（反映済み・`creditsText.ts`） | 事実整合性の確認（AI・2026-10-10） |
+|---|---|---|
+| S4 | 変更なし | 事実（制作者が生成 AI で作成）のみ。サービス名・プランは書かない |
+| **S6（新規）** | 「生成 AI で作成した素材の一部には、生成時の記録（利用プラン・生成日時など）が揃っていないものがあり、制作者の責任で使用しています。」 | CEO 条件「権利条件の未解決事項を隠さない」の画面側の反映。根拠：Rights Ledger §1-2「UNKNOWN-ACCEPTED ＝ 権利確認済みではない」・§7-4（KNOWN 29／UNKNOWN-ACCEPTED 56／CONDITIONAL 1）。権利の可否は書かない（禁止語テスト維持）。**AI 追加＝CEO が不要と判断すれば 1 行削除で戻せる** |
+| C1 | 「問い合わせ先は準備中です。本作に関するお問い合わせを SGG 運営へ送ることはお控えください。」 | 窓口は repo に記載なし（事実）。SGG 運営を本作の窓口と誤認させない |
+| F3 | 「制作：SEVENDAO GAMES（SGG 運営とは別の個人制作スタジオです）」 | 表記は Home の eyebrow「SEVENDAO GAMES」と一致（`HomeScreen.tsx`）。CLAUDE.md §1「SEVENDAO ゲーム開発スタジオ」・CEO 1 名＝個人制作。法人登記・SGG 運営との契約は repo に記載なし＝「別の」とだけ書き、関係の有無を断定しない。GitHub org 名 `SevenGodsProject`・タイトルが IP 名と同一である点は L1（非公式のファン作品）と F3 で補う |
+| L1 | 変更なし | Kit §4（クレジットを記載しても公式・公認・提携にはならない）・§6（誤認表示の禁止）と整合 |
+| A-1 | voice 統合時に反映（master 上） | 「大耀の音声」と限定して書く（統合されるのは大耀「あいさつ」1 本のみ＝「神の音声」と総称しない） |
+
+**隠していない未解決事項（画面外・公開前 Gate §4 と台帳で管理）**：SGG 運営への事前相談は未送信（前提 1：相談する・回答待ちで v1.0 を止めない・送信は CEO 名義）／台帳 UNKNOWN-ACCEPTED 56 行・CONDITIONAL 1（VID-01・動画でありゲーム本体には含まれない）／OTM-BG-01 原本は 2026-10-07 に所在判明・art-source 複製は untracked（TD-04）／問い合わせ窓口は未確定。
 
 ## 3. Fast Gate（2026-10-09・worktree `SevenGodsGame-rl01`）
 
