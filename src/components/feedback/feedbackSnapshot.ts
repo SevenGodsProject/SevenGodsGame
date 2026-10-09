@@ -14,7 +14,7 @@ import { buildLabel } from '../../buildInfo'
  * 分離してテスト可能にしている。
  */
 export type FeedbackSnapshot = {
-  screen: 'ホーム' | '神選択' | '敵選択' | 'デッキ構築' | 'OTOMO育成' | '戦績' | '神域挑戦' | 'バトル中' | '決着'
+  screen: 'ホーム' | '神選択' | '敵選択' | 'デッキ構築' | 'OTOMO育成' | '戦績' | '神域挑戦' | 'クレジット' | 'バトル中' | '決着'
   godName?: string
   difficultyLabel: string
   round?: number
@@ -40,7 +40,7 @@ function godNameJa(godId: GodId): string {
 
 export type SnapshotInput = {
   /** GameFlowのセットアップ画面。バトル中（stateがある）はここを見ない */
-  setupScreen: 'home' | 'godSelect' | 'enemySelect' | 'deckBuild' | 'otomoGrowth' | 'record' | 'daily'
+  setupScreen: 'home' | 'godSelect' | 'enemySelect' | 'deckBuild' | 'otomoGrowth' | 'record' | 'daily' | 'credits'
   godId: GodId | null
   difficulty: Difficulty
   state: GameState | null
@@ -72,7 +72,9 @@ export function computeSnapshot({ setupScreen, godId, difficulty, state }: Snaps
               ? 'OTOMO育成'
               : setupScreen === 'daily'
                 ? '神域挑戦'
-                : '戦績'
+                : setupScreen === 'credits'
+                  ? 'クレジット'
+                  : '戦績'
   return {
     screen,
     godName: godId ? godNameJa(godId) : undefined,

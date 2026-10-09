@@ -2508,6 +2508,45 @@
 .record-screen {
   min-width: 0;
 }
+
+/* CM-02／03 Legal／Credits：静的 1 画面。本文は読みやすい幅と行間だけ（新しい色・装飾は足さない） */
+.credits-screen {
+  min-width: 0;
+}
+.credits-screen .credits-lead,
+.credits-screen .credits-line {
+  max-width: 720px;
+  margin: 0;
+  line-height: 1.75;
+  color: #d7d9e8;
+  overflow-wrap: anywhere;
+}
+.credits-screen .credits-section {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.credits-screen .credits-heading {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 700;
+  color: #f3d98a;
+  letter-spacing: 0.04em;
+}
+.credits-screen .credits-footer {
+  margin: 4px 0 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 16px;
+  font-size: 12px;
+  color: #a9adc4;
+  letter-spacing: 0.04em;
+}
+.credits-screen .credits-back {
+  align-self: flex-start;
+}
 .record-screen .record-daily {
   min-width: 0;
   max-width: 100%;
