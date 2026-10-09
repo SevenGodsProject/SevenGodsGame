@@ -1,0 +1,589 @@
+{
+  "base": "http://127.0.0.1:4184",
+  "at": "2026-10-09T23:05:40.343Z",
+  "allPass": true,
+  "results": [
+    {
+      "viewport": "pc",
+      "checks": [
+        {
+          "name": "tutorial opens",
+          "pass": true
+        },
+        {
+          "name": "initial focus on dialog card",
+          "pass": true
+        },
+        {
+          "name": "dialog not scrolled to bottom on open",
+          "pass": true,
+          "detail": {
+            "scrollTop": 0
+          }
+        },
+        {
+          "name": "Tab stays inside dialog",
+          "pass": true
+        },
+        {
+          "name": "Shift+Tab wraps inside dialog",
+          "pass": true
+        },
+        {
+          "name": "Escape closes tutorial",
+          "pass": true
+        },
+        {
+          "name": "focus returns to opener (遊び方を見る)",
+          "pass": true,
+          "detail": {
+            "focusBack": "遊び方を見る"
+          }
+        },
+        {
+          "name": "brief opens",
+          "pass": true
+        },
+        {
+          "name": "tutorial opens from brief",
+          "pass": true
+        },
+        {
+          "name": "Escape closes only the tutorial (brief stays)",
+          "pass": true,
+          "detail": {
+            "tutorialClosed": true,
+            "briefStill": true
+          }
+        },
+        {
+          "name": "mute button has fixed name",
+          "pass": true
+        },
+        {
+          "name": "mute aria-pressed=false initially",
+          "pass": true
+        },
+        {
+          "name": "mute click → aria-pressed=true",
+          "pass": true
+        },
+        {
+          "name": "mute Space → aria-pressed=false",
+          "pass": true
+        },
+        {
+          "name": "mute hit area ≥44 (::after)",
+          "pass": true,
+          "detail": {
+            "w": 44,
+            "h": 44
+          }
+        },
+        {
+          "name": "stepper visual ≥44×44",
+          "pass": true,
+          "detail": {
+            "n": 72,
+            "minW": 44,
+            "minH": 44,
+            "scrollWidth": 1508,
+            "innerWidth": 1508
+          }
+        },
+        {
+          "name": "deck builder no horizontal overflow",
+          "pass": true,
+          "detail": {
+            "n": 72,
+            "minW": 44,
+            "minH": 44,
+            "scrollWidth": 1508,
+            "innerWidth": 1508
+          }
+        },
+        {
+          "name": "two HP bars measured",
+          "pass": true,
+          "detail": [
+            {
+              "fill": "rgb(229, 72, 77)",
+              "pill": "rgba(5, 6, 11, 0.77)",
+              "text": "rgb(232, 233, 243)",
+              "onFill": 13.42,
+              "onTrough": 16.9,
+              "noPill": 3.24,
+              "pillH": 14,
+              "barH": 18,
+              "label": "940 / 940"
+            },
+            {
+              "fill": "rgb(77, 189, 116)",
+              "pill": "rgba(5, 6, 11, 0.77)",
+              "text": "rgb(232, 233, 243)",
+              "onFill": 11.73,
+              "onTrough": 16.9,
+              "noPill": 1.96,
+              "pillH": 14,
+              "barH": 18,
+              "label": "300 / 300"
+            }
+          ]
+        },
+        {
+          "name": "HP 940 / 940 contrast ≥4.5 on fill (was 3.24)",
+          "pass": true,
+          "detail": {
+            "fill": "rgb(229, 72, 77)",
+            "pill": "rgba(5, 6, 11, 0.77)",
+            "text": "rgb(232, 233, 243)",
+            "onFill": 13.42,
+            "onTrough": 16.9,
+            "noPill": 3.24,
+            "pillH": 14,
+            "barH": 18,
+            "label": "940 / 940"
+          }
+        },
+        {
+          "name": "HP 300 / 300 contrast ≥4.5 on fill (was 1.96)",
+          "pass": true,
+          "detail": {
+            "fill": "rgb(77, 189, 116)",
+            "pill": "rgba(5, 6, 11, 0.77)",
+            "text": "rgb(232, 233, 243)",
+            "onFill": 11.73,
+            "onTrough": 16.9,
+            "noPill": 1.96,
+            "pillH": 14,
+            "barH": 18,
+            "label": "300 / 300"
+          }
+        },
+        {
+          "name": "divination hit height ≥44 (::after)",
+          "pass": true,
+          "detail": [
+            {
+              "w": 342,
+              "h": 44,
+              "afterH": 45
+            },
+            {
+              "w": 342,
+              "h": 44,
+              "afterH": 45
+            },
+            {
+              "w": 342,
+              "h": 44,
+              "afterH": 45
+            }
+          ]
+        },
+        {
+          "name": "battle: no control under 44px without ::after extension",
+          "pass": true,
+          "detail": {
+            "total": 13,
+            "small": []
+          }
+        },
+        {
+          "name": "JS error 0",
+          "pass": true,
+          "detail": []
+        }
+      ],
+      "pass": true
+    },
+    {
+      "viewport": "sp",
+      "checks": [
+        {
+          "name": "tutorial opens",
+          "pass": true
+        },
+        {
+          "name": "initial focus on dialog card",
+          "pass": true
+        },
+        {
+          "name": "dialog not scrolled to bottom on open",
+          "pass": true,
+          "detail": {
+            "scrollTop": 0
+          }
+        },
+        {
+          "name": "Tab stays inside dialog",
+          "pass": true
+        },
+        {
+          "name": "Shift+Tab wraps inside dialog",
+          "pass": true
+        },
+        {
+          "name": "Escape closes tutorial",
+          "pass": true
+        },
+        {
+          "name": "focus returns to opener (遊び方を見る)",
+          "pass": true,
+          "detail": {
+            "focusBack": "遊び方を見る"
+          }
+        },
+        {
+          "name": "brief opens",
+          "pass": true
+        },
+        {
+          "name": "tutorial opens from brief",
+          "pass": true
+        },
+        {
+          "name": "Escape closes only the tutorial (brief stays)",
+          "pass": true,
+          "detail": {
+            "tutorialClosed": true,
+            "briefStill": true
+          }
+        },
+        {
+          "name": "mute button has fixed name",
+          "pass": true
+        },
+        {
+          "name": "mute aria-pressed=false initially",
+          "pass": true
+        },
+        {
+          "name": "mute click → aria-pressed=true",
+          "pass": true
+        },
+        {
+          "name": "mute Space → aria-pressed=false",
+          "pass": true
+        },
+        {
+          "name": "mute hit area ≥44 (::after)",
+          "pass": true,
+          "detail": {
+            "w": 44,
+            "h": 44
+          }
+        },
+        {
+          "name": "stepper visual ≥44×44",
+          "pass": true,
+          "detail": {
+            "n": 72,
+            "minW": 44,
+            "minH": 44,
+            "scrollWidth": 390,
+            "innerWidth": 390
+          }
+        },
+        {
+          "name": "deck builder no horizontal overflow",
+          "pass": true,
+          "detail": {
+            "n": 72,
+            "minW": 44,
+            "minH": 44,
+            "scrollWidth": 390,
+            "innerWidth": 390
+          }
+        },
+        {
+          "name": "two HP bars measured",
+          "pass": true,
+          "detail": [
+            {
+              "fill": "rgb(229, 72, 77)",
+              "pill": "rgba(5, 6, 11, 0.77)",
+              "text": "rgb(232, 233, 243)",
+              "onFill": 13.42,
+              "onTrough": 16.9,
+              "noPill": 3.24,
+              "pillH": 14,
+              "barH": 18,
+              "label": "940 / 940"
+            },
+            {
+              "fill": "rgb(77, 189, 116)",
+              "pill": "rgba(5, 6, 11, 0.77)",
+              "text": "rgb(232, 233, 243)",
+              "onFill": 11.73,
+              "onTrough": 16.9,
+              "noPill": 1.96,
+              "pillH": 14,
+              "barH": 18,
+              "label": "300 / 300"
+            }
+          ]
+        },
+        {
+          "name": "HP 940 / 940 contrast ≥4.5 on fill (was 3.24)",
+          "pass": true,
+          "detail": {
+            "fill": "rgb(229, 72, 77)",
+            "pill": "rgba(5, 6, 11, 0.77)",
+            "text": "rgb(232, 233, 243)",
+            "onFill": 13.42,
+            "onTrough": 16.9,
+            "noPill": 3.24,
+            "pillH": 14,
+            "barH": 18,
+            "label": "940 / 940"
+          }
+        },
+        {
+          "name": "HP 300 / 300 contrast ≥4.5 on fill (was 1.96)",
+          "pass": true,
+          "detail": {
+            "fill": "rgb(77, 189, 116)",
+            "pill": "rgba(5, 6, 11, 0.77)",
+            "text": "rgb(232, 233, 243)",
+            "onFill": 11.73,
+            "onTrough": 16.9,
+            "noPill": 1.96,
+            "pillH": 14,
+            "barH": 18,
+            "label": "300 / 300"
+          }
+        },
+        {
+          "name": "divination hit height ≥44 (::after)",
+          "pass": true,
+          "detail": [
+            {
+              "w": 79,
+              "h": 39,
+              "afterH": 45
+            },
+            {
+              "w": 79,
+              "h": 39,
+              "afterH": 45
+            },
+            {
+              "w": 79,
+              "h": 39,
+              "afterH": 45
+            }
+          ]
+        },
+        {
+          "name": "battle: no control under 44px without ::after extension",
+          "pass": true,
+          "detail": {
+            "total": 13,
+            "small": []
+          }
+        },
+        {
+          "name": "JS error 0",
+          "pass": true,
+          "detail": []
+        }
+      ],
+      "pass": true
+    },
+    {
+      "viewport": "sp375",
+      "checks": [
+        {
+          "name": "tutorial opens",
+          "pass": true
+        },
+        {
+          "name": "initial focus on dialog card",
+          "pass": true
+        },
+        {
+          "name": "dialog not scrolled to bottom on open",
+          "pass": true,
+          "detail": {
+            "scrollTop": 0
+          }
+        },
+        {
+          "name": "Tab stays inside dialog",
+          "pass": true
+        },
+        {
+          "name": "Shift+Tab wraps inside dialog",
+          "pass": true
+        },
+        {
+          "name": "Escape closes tutorial",
+          "pass": true
+        },
+        {
+          "name": "focus returns to opener (遊び方を見る)",
+          "pass": true,
+          "detail": {
+            "focusBack": "遊び方を見る"
+          }
+        },
+        {
+          "name": "brief opens",
+          "pass": true
+        },
+        {
+          "name": "tutorial opens from brief",
+          "pass": true
+        },
+        {
+          "name": "Escape closes only the tutorial (brief stays)",
+          "pass": true,
+          "detail": {
+            "tutorialClosed": true,
+            "briefStill": true
+          }
+        },
+        {
+          "name": "mute button has fixed name",
+          "pass": true
+        },
+        {
+          "name": "mute aria-pressed=false initially",
+          "pass": true
+        },
+        {
+          "name": "mute click → aria-pressed=true",
+          "pass": true
+        },
+        {
+          "name": "mute Space → aria-pressed=false",
+          "pass": true
+        },
+        {
+          "name": "mute hit area ≥44 (::after)",
+          "pass": true,
+          "detail": {
+            "w": 44,
+            "h": 44
+          }
+        },
+        {
+          "name": "stepper visual ≥44×44",
+          "pass": true,
+          "detail": {
+            "n": 72,
+            "minW": 44,
+            "minH": 44,
+            "scrollWidth": 375,
+            "innerWidth": 375
+          }
+        },
+        {
+          "name": "deck builder no horizontal overflow",
+          "pass": true,
+          "detail": {
+            "n": 72,
+            "minW": 44,
+            "minH": 44,
+            "scrollWidth": 375,
+            "innerWidth": 375
+          }
+        },
+        {
+          "name": "two HP bars measured",
+          "pass": true,
+          "detail": [
+            {
+              "fill": "rgb(229, 72, 77)",
+              "pill": "rgba(5, 6, 11, 0.77)",
+              "text": "rgb(232, 233, 243)",
+              "onFill": 13.42,
+              "onTrough": 16.9,
+              "noPill": 3.24,
+              "pillH": 14,
+              "barH": 18,
+              "label": "940 / 940"
+            },
+            {
+              "fill": "rgb(77, 189, 116)",
+              "pill": "rgba(5, 6, 11, 0.77)",
+              "text": "rgb(232, 233, 243)",
+              "onFill": 11.73,
+              "onTrough": 16.9,
+              "noPill": 1.96,
+              "pillH": 14,
+              "barH": 18,
+              "label": "300 / 300"
+            }
+          ]
+        },
+        {
+          "name": "HP 940 / 940 contrast ≥4.5 on fill (was 3.24)",
+          "pass": true,
+          "detail": {
+            "fill": "rgb(229, 72, 77)",
+            "pill": "rgba(5, 6, 11, 0.77)",
+            "text": "rgb(232, 233, 243)",
+            "onFill": 13.42,
+            "onTrough": 16.9,
+            "noPill": 3.24,
+            "pillH": 14,
+            "barH": 18,
+            "label": "940 / 940"
+          }
+        },
+        {
+          "name": "HP 300 / 300 contrast ≥4.5 on fill (was 1.96)",
+          "pass": true,
+          "detail": {
+            "fill": "rgb(77, 189, 116)",
+            "pill": "rgba(5, 6, 11, 0.77)",
+            "text": "rgb(232, 233, 243)",
+            "onFill": 11.73,
+            "onTrough": 16.9,
+            "noPill": 1.96,
+            "pillH": 14,
+            "barH": 18,
+            "label": "300 / 300"
+          }
+        },
+        {
+          "name": "divination hit height ≥44 (::after)",
+          "pass": true,
+          "detail": [
+            {
+              "w": 74,
+              "h": 39,
+              "afterH": 45
+            },
+            {
+              "w": 74,
+              "h": 39,
+              "afterH": 45
+            },
+            {
+              "w": 74,
+              "h": 39,
+              "afterH": 45
+            }
+          ]
+        },
+        {
+          "name": "battle: no control under 44px without ::after extension",
+          "pass": true,
+          "detail": {
+            "total": 13,
+            "small": []
+          }
+        },
+        {
+          "name": "JS error 0",
+          "pass": true,
+          "detail": []
+        }
+      ],
+      "pass": true
+    }
+  ]
+}

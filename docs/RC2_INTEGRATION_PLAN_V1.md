@@ -111,8 +111,8 @@
 | 1 | credits：確定文言反映（C1・F3・S6）→ rl01 `7e8e992` → master `6ffadbf`（--no-ff） | **DONE**。事実整合性の確認は `LEGAL_CREDITS_SCREEN_V1.md` §2-3 |
 | 2 | voice：master `e0ea825`（--no-ff）→ A-1 `f2366a6` | **DONE**。回帰：tsc 0／oxlint error 0／full vitest 1,431 PASS／build PASS／受入 legal-credits 40/40・official-voice 4/4（`docs/evidence/rc2-integration/`） |
 | 3 | DECISIONS 行 | **DONE**（決定275 候補） |
-| 4 | CI 初回実行 | **STOP**（§3 C1 未成立）。実測：repo **PUBLIC**（C2）。Vercel Preview Deployments 設定は repo から確認不能（C1）＝branch push が Preview deployment を作る可能性を否定できない。再開条件：CEO が Dashboard で Preview Deployments OFF（または Ignored Build Step で `master` 以外を skip）を確認・設定 → 一時 branch＋Draft PR で実行 |
-| 5 | RC Gate | 未着手（CI GREEN 後） |
+| 4 | CI 初回実行 | **DONE（private ミラー・CEO 承認 2026-10-10）**：`SevenGodsGame-ci` に `e09c1f8` を push → run `38002245813` GREEN（`docs/V1_0_RC_GATE.md` §1）。公開元 repo の CI は未実行（master push 時）。以下は停止時の記録：**STOP**（§3 C1 未成立）。実測：repo **PUBLIC**（C2）。Vercel Preview Deployments 設定は repo から確認不能（C1）＝branch push が Preview deployment を作る可能性を否定できない。再開条件：CEO が Dashboard で Preview Deployments OFF（または Ignored Build Step で `master` 以外を skip）を確認・設定 → 一時 branch＋Draft PR で実行 |
+| 5 | RC Gate | **DONE・GO**（`docs/V1_0_RC_GATE.md` §2：11 項目 PASS） |
 | 6 | Production | **未承認**（CEO 判断 4） |
 
-残ブロッカー：**C1 のみ**（Vercel 側の設定確認＝CEO）。
+残ブロッカー：**なし**（残るは CEO ④＝公開の実行。`docs/V1_0_RC_GATE.md` §4）。

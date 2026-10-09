@@ -1,0 +1,80 @@
+{
+  "base": "http://127.0.0.1:4184",
+  "status": "勝利",
+  "before": {
+    "bonuses": "{\"version\":1,\"bonuses\":{\"ebisu\":{\"card_common_attack_01\":1},\"taiyo\":{\"card_taiyo_attack_01\":2}}}",
+    "history": "{\"version\":2,\"gods\":{\"ebisu\":{\"offered\":[\"card_common_guard_01\"],\"declined\":\"x\"}}}",
+    "records": "{\"version\":1,\"records\":{\"ebisu\":{\"bestScore\":0,\"bestScoreDifficulty\":null,\"bestBattleScore\":620,\"bestBattleScoreDifficulty\":\"normal\",\"wins\":3,\"losses\":1,\"finished\":0,\"fastestWinRound\":4}}}",
+    "deckPref": null
+  },
+  "deckPrefAfterStart": "{\"version\":9,\"godId\":\"ebisu\",\"deck\":[\"card_ebisu_attack_01\",\"card_ebisu_attack_01\",\"card_ebisu_attack_02\",\"card_ebisu_attack_02\",\"card_ebisu_support_02\",\"card_ebisu_support_02\",\"card_ebisu_support_01\",\"card_ebisu_support_01\",\"card_common_attack_01\",\"card_common_attack_02\",\"card_common_attack_03\",\"card_common_attack_04\",\"card_common_guard_01\",\"card_common_guard_02\",\"card_common_hinder_02\",\"card_common_resonance_01\",\"card_common_resonance_02\",\"card_common_oracle_01\",\"card_common_oracle_02\",\"card_common_oracle_03\"]}",
+  "reward": [
+    {
+      "id": "card_common_resonance_01",
+      "role": "ready",
+      "now": "いま 1 枚編成中",
+      "limit": "上限 2 → 3"
+    },
+    {
+      "id": "card_ebisu_attack_02",
+      "role": "identity",
+      "now": "いま 2 枚編成中",
+      "limit": "上限 2 → 3"
+    },
+    {
+      "id": "card_common_support_01",
+      "role": "next",
+      "now": "いま 0 枚",
+      "limit": "上限 2 → 3"
+    }
+  ],
+  "after": {
+    "bonuses": "{\"version\":1,\"bonuses\":{\"ebisu\":{\"card_common_attack_01\":1,\"card_common_resonance_01\":1},\"taiyo\":{\"card_taiyo_attack_01\":2}}}",
+    "history": "{\"version\":2,\"gods\":{\"ebisu\":{\"offered\":[\"card_common_guard_01\"],\"declined\":\"x\"}}}",
+    "records": "{\"version\":1,\"records\":{\"ebisu\":{\"bestScore\":0,\"bestScoreDifficulty\":null,\"bestBattleScore\":846,\"bestBattleScoreDifficulty\":\"normal\",\"wins\":4,\"losses\":1,\"finished\":0,\"fastestWinRound\":4}}}",
+    "deckPref": "{\"version\":9,\"godId\":\"ebisu\",\"deck\":[\"card_ebisu_attack_01\",\"card_ebisu_attack_01\",\"card_ebisu_attack_02\",\"card_ebisu_attack_02\",\"card_ebisu_support_02\",\"card_ebisu_support_02\",\"card_ebisu_support_01\",\"card_ebisu_support_01\",\"card_common_attack_01\",\"card_common_attack_02\",\"card_common_attack_03\",\"card_common_attack_04\",\"card_common_guard_01\",\"card_common_guard_02\",\"card_common_hinder_02\",\"card_common_resonance_01\",\"card_common_resonance_02\",\"card_common_oracle_01\",\"card_common_oracle_02\",\"card_common_oracle_03\"]}"
+  },
+  "errors": [],
+  "checks": [
+    {
+      "label": "前提：勝利",
+      "pass": true
+    },
+    {
+      "label": "M1 既存 rewardBonuses v1 を読める（起動時に書き換えない）",
+      "pass": true
+    },
+    {
+      "label": "M1 既存 bonus 保持（taiyo:2・ebisu 一撃:1）＋ 選んだ札 +1",
+      "pass": true
+    },
+    {
+      "label": "M2 壊れた rewardHistory は起動時に消されない",
+      "pass": true
+    },
+    {
+      "label": "M2 3 択は成立（3 枚・重複なし）",
+      "pass": true
+    },
+    {
+      "label": "M2 確定後も未来 version（v2）の rewardHistory は 1 バイトも書き換えられない（RL-01 R3）",
+      "pass": true
+    },
+    {
+      "label": "M3 records 不変（勝利記録以外の形式）",
+      "pass": true
+    },
+    {
+      "label": "M3 deckPreference は編成確定で書かれ、報酬で変わらない",
+      "pass": true
+    },
+    {
+      "label": "M4 余り枠あり（一撃 bonus1・編成 1 枚）は 3 択に出ない",
+      "pass": true
+    },
+    {
+      "label": "console error 0",
+      "pass": true
+    }
+  ]
+}

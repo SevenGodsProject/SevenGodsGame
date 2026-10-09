@@ -33,9 +33,10 @@ row('lockfile neon/pglite entries', (lock.match(/node_modules\/@(neondatabase|el
 const srcFiles = tracked.filter((f) => /^src\/.*\.(ts|tsx)$/.test(f))
 const srcNonTest = srcFiles.filter((f) => !/\.test\./.test(f))
 const netHits = grepLines(/\bfetch\s*\(|XMLHttpRequest|WebSocket|sendBeacon/, srcNonTest)
-const assetOnly = netHits.filter((h) => /\/assets\/|\.wav|\.webm|\.mp3|SE_BASE_PATH/.test(h.line))
+// 同一オリジンの素材 fetch：SE .wav（SE_BASE_PATH）と公式ボイス MP3（VOICE_BASE_PATH='/assets/voice/'・決定275 候補 voice 統合）
+const assetOnly = netHits.filter((h) => /\/assets\/|\.wav|\.webm|\.mp3|SE_BASE_PATH|VOICE_BASE_PATH/.test(h.line))
 row('src: network calls other than same-origin asset loads (non-test)', netHits.length - assetOnly.length)
-console.log('info  src: same-origin asset fetch (SE .wav; identical on master): ' + assetOnly.map((h) => h.where).join(', '))
+console.log('info  src: same-origin asset fetch (SE .wav / voice .mp3): ' + assetOnly.map((h) => h.where).join(', '))
 row('src: /api/ URL literals', grep(/['"`]\/api\//, srcFiles).length)
 row('src: ranking env vars (RANKING_*, DATABASE_URL, NEON_, VITE_RANKING) in non-test source', grep(/RANKING_[A-Z_]+|DATABASE_URL|NEON_|VITE_RANKING/, srcNonTest).length)
 console.log('info  src: same words inside test token lists: ' + grep(/RANKING_[A-Z_]+|DATABASE_URL|NEON_|VITE_RANKING/, srcFiles.filter((f) => /\.test\./.test(f))).join(', '))
@@ -55,9 +56,10 @@ if (existsSync(dist)) {
   row('dist: neon / postgres / pglite', count(/neondatabase|postgres|pglite/gi))
   row('dist: DATABASE_URL / RANKING_ / NEON_', count(/DATABASE_URL|RANKING_[A-Z_]+|NEON_/g))
   const fetchCalls = text.match(/.{0,60}\bfetch\(.{0,60}/g) ?? []
-  const benignFetch = fetchCalls.filter((c) => /fetch\(e\.href,n\)|\.wav|assets/.test(c))
-  row('dist: fetch( calls other than Vite modulepreload polyfill / SE .wav', fetchCalls.length - benignFetch.length)
-  console.log('info  dist: benign fetch( = ' + benignFetch.length + ' (Vite modulepreload polyfill, SE .wav)')
+  // minify 後の素材 fetch は `fetch(`${si}${e}.wav`)`／`fetch(`${vi}${e}`)` のように定数名に潰れるため、直後の `.ok?e.arrayBuffer()`（音声 decode 経路）も素材扱いにする
+  const benignFetch = fetchCalls.filter((c) => /fetch\(e\.href,n\)|\.wav|assets|\.then\(e=>e\.ok\?e\.arrayBuffer\(\)/.test(c))
+  row('dist: fetch( calls other than Vite modulepreload polyfill / SE .wav / voice .mp3', fetchCalls.length - benignFetch.length)
+  console.log('info  dist: benign fetch( = ' + benignFetch.length + ' (Vite modulepreload polyfill, SE .wav, voice .mp3)')
   row('dist: api/ranking or /ranking/ paths', count(/api\/ranking|\/ranking\//g))
   row('dist: submissionEnabled:!0 (=true)', count(/submissionEnabled:!0/g))
   console.log('info  dist: submissionEnabled:!1 (=false) = ' + count(/submissionEnabled:!1/g) + '; word ランキング = ' + count(/ランキング/g) + ' (RecordScreen の「ランキングやオンライン通信はありません」文言のみ想定)')
