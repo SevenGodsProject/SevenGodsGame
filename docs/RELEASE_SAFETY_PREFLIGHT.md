@@ -16,7 +16,7 @@
 | RL-04 | `playwright` を devDependencies に宣言 | **本 branch で実装**（`playwright@1.63.0` exact・lockfile 更新） | §2-2 |
 | RL-07 | docs 系 branch の push | **計画のみ**（origin への push は CEO 確認後） | §4 |
 | RL-01 残り | d267 `migration.mjs` M2 条件 | **本 branch で反転**（R3 に合わせた） | §2-3 |
-| RL-01 残り | `otomo.defId` guard | **別 branch `feat/rl01b-otomo-defid-guard`**（Save 読み取り経路に触れるため別 Gate） | §2-4 |
+| RL-01 残り | `otomo.defId` guard | **別 branch `feat/rl01b-otomo-defid-guard` @ `9b83307` で実装**（Home の Resume 条件に `isKnownOtomoId`・配線テスト・full vitest 1,390 PASS。master merge は CEO 承認後） | §2-4 |
 | RL-01 残り | `save-migration.mjs` 合成 fixture 注入モード | 未着手（`storageCompat.test.ts` が同じ契約を vitest で固定済み。2 ビルド実機方式は現状維持） | — |
 
 ## 2. 本 branch の変更
@@ -83,4 +83,4 @@
 | oxlint | error 0 |
 | full vitest | **1,385 PASS・9 skip・0 fail**（112 files） |
 | vite build | PASS（JS 461.40kB＝RL-01 統合後の master と同一） |
-| 差分 |  +1・ +32/−2・ ±5・ 新規・本書。 0 ファイル・ 0 行 |
+| 差分 | `package.json` +1・`package-lock.json` +32/−2・`scripts/d267-reward-relevance-v1/migration.mjs` ±5・`.github/workflows/ci.yml` 新規・本書。`src` 0 ファイル・`src/core` 0 行 |
