@@ -62,3 +62,58 @@
 - worktree `SevenGodsGame-v1rc`（`release/v1-0-0-rc` = `e09c1f8`）・`SevenGodsGame-prodmaster`（detached `641ea5c`）：残置（削除は `git worktree remove`・CEO 不要なら AI が次回整理）。Gate 用 preview 4184／4185 は停止済み（4180〜4182 の忠次 Pilot は維持）
 - `C:\Users\kimi1\SevenGodsGame-rc` は以前からある **node_modules だけのフォルダ**（git ではない）。触っていない
 - remote `mirror`（integ のみ）：`https://github.com/SevenGodsProject/SevenGodsGame-ci.git`
+
+## 6. Release Preparation（CEO 承認「v1.0 Release Preparation」2026-10-10・AI 実行・公開待機）
+
+### 6-1. version 1.0.0（承認条件 1〜4）
+
+| 項目 | 結果 |
+|---|---|
+| 1 version 更新 | `package.json` `1.0.0-rc.1 → 1.0.0`・`package-lock.json` の 2 箇所（root と `packages[""]`）・`src/publicFace.test.ts` の期待値。**runtime 差分は version 文字列のみ**（`src/buildInfo.ts` が `__APP_VERSION__` 経由で表示＝Home 右下 `v1.0.0 (<sha>)`） |
+| 2 整合性 | `require('package.json').version === package-lock root === packages[""]` ＝ `1.0.0`・`1.0.0-rc.1` の残り 0（tracked・非 docs）。lockfile の依存ツリーは不変（version 以外の差分 0）。private ミラー CI の `npm ci` が lock と package.json の整合を再検証（6-2） |
+| 3 最小差分 commit | `ac126e6`「release: version 1.0.0」＝3 files・+5/−5。本 §6 と DECISIONS 行は別 commit（docs-only） |
+| 4 ミラー CI | 最終 sha（本 docs commit）を `mirror` へ push → run は報告に記載（GREEN 確認後に待機） |
+
+### 6-2. origin/master との差分（承認条件 5）
+
+- origin/master `641ea5c`（Production 決定267）→ master：**46 commit**（version bump と本 docs を含む）。213 files（+24,317／−108）。内訳：`src` 34 files／`public` 7（OG 画像・icons・manifest・voice MP3）／`index.html` 1（meta）／`.github` 1（ci.yml）／`package.json`・lock／`scripts` 9／`docs` 157
+- runtime を変える commit は 13：CM-01 Public Face（`55bbb8a`・`ec102ae`）／RL-01 Save Compatibility Guard（`c7b225b`）／RL-01b otomo.defId guard（`9b83307`・`2bc25ce`）／RL-03 CI＋playwright exact（`39186bf`）／A11y Minimum Pack（`0bff90a`）／Legal・Credits（`4bfff2b`・`7e8e992`・`f2366a6`）／Official Voice（`95125e5`・`e0ea825`）／version（`ac126e6`）。`src/core` の差分は RL-01 の storage version 台帳のみ（engine・rules・カード・敵は不変＝`gameVersion` 不変）
+- 公開時に初めて外部に見えるもの：上記 docs 157（evidence 画像・JSON 含む）。資格情報 0（§1 条件 3）
+
+### 6-3. Production Smoke 手順（公開直後・AI 実測＝read-only・CEO 確認は 1 問）
+
+前提：`git push origin master` → Vercel 自動 deploy（Git 連携）→ Dashboard の Deployments に新 deployment（commit = 最終 sha）が **Ready** になってから。URL `https://seven-gods-game.vercel.app/`。
+
+| # | 項目 | 手段 | 合格 |
+|---|---|---|---|
+| S1 | Home が表示され、右下の version が `v1.0.0 (<最終 sha 7 桁>)`、`<title>`／OGP／favicon が CM-01 のもの | Playwright（`scripts/release-hygiene/screens-smoke.mjs` 相当）＋`curl -I`（200・HTML） | version 一致・console error 0 |
+| S2 | Credits 画面：確定文言（C1 2 文目・F3 括弧・S6・A-1「大耀の音声」）が出て「戻る」で Home | `node scripts/legal-credits/acceptance.mjs <out> https://seven-gods-game.vercel.app`（PC・SP375） | 40/40 |
+| S3 | 公式ボイス：大耀で開戦 → 入口の終わりに 1 回・ミュート時 0・`/assets/voice/taiyo/greeting.mp3` が 200 | `node scripts/official-voice-pilot/acceptance.mjs <out> https://seven-gods-game.vercel.app` | 4/4 |
+| S4 | 通し：Home → 神 → 難易度 → 敵 → デッキ → 戦闘 1 ラウンド → 中断 → 続きから → 決着 → 報酬／神域挑戦 1 回／外部通信・`/api/` 0 | `node scripts/release-audit/qa-flow.mjs <out> https://seven-gods-game.vercel.app`（4 viewport・約 25 分）※短縮時は PC 1508 だけ | external 0・api 0・errors 0 |
+| S5 | 旧版セーブ互換：公開前の端末（CEO iPhone・前版で 1 戦した状態）で開いて「続きから」「戦績」「今日の神域挑戦の残り回数」が欠けない | **CEO 実機 1 問**（RL-01：version 不一致の key は無言初期化ではなく保護される） | 欠け 0 |
+| S6 | A11y：HP 数字のコントラスト・ミュートの aria・Tutorial の Esc | `node scripts/a11y-minimum-pack/acceptance.mjs <out> https://seven-gods-game.vercel.app` | 72/72 |
+
+S1〜S4・S6 は AI が直列で実測し `docs/evidence/v1-0-production-smoke/` に保存。1 つでも不合格なら 6-4 の rollback を CEO に提案（AI は Production を操作しない）。
+
+### 6-4. Rollback 手順（承認条件 5・**演習は CEO 禁止事項のため未実施**）
+
+| 手順 | 内容 | 誰が |
+|---|---|---|
+| 0 | 現 Production＝deployment `6894408979`（決定267・commit `641ea5c`）。v1.0 公開後の **rollback 先はこの deployment** | 記録済み（`RELEASE_STATUS.md` A-1） |
+| 1 | Vercel Dashboard → Project `seven-gods-game` → Deployments → `6894408979` → **Promote to Production**（Instant Rollback 機能があればそれでも可） | **CEO**（§6-3 #8） |
+| 2 | Smoke S1 で version が `v1.0.0-rc.1` 系ではなく**前版の表示（CM-01 以前＝version 表示なし）**に戻ったこと・console 0 を確認 | AI |
+| 3 | セーブ互換：v1.0 で作ったセーブを前版で開く → RL-01 は前版に無いため、前版が知らない key（`rewardHistory` 等）は**前版の挙動どおり**（v1.0 → 前版の後方互換は決定267 時点と同じ。`saveVersion` 9 は共通＝進行中バトルは読める） | AI（記録） |
+| 4 | 戻した後に再公開する場合は、修正 commit → ミラー CI GREEN → `git push origin master`（新 deployment）。Promote で v1.0 deployment を再指定するだけでも可 | CEO |
+
+所要：Promote 1 回 ≈1 分（Vercel の切替は即時・CDN 反映 ≈数十秒）。演習（Promote 2 回）は CEO の指示があるまで行わない。
+
+### 6-5. Known K36〜K39 の最終確認（承認条件 6）
+
+| Known | 事実（最終確認 2026-10-10） | リリース可否への影響 |
+|---|---|---|
+| K36 入口 skip でもボイスが鳴る | `OFFICIAL_VOICE_PILOT_V1.md` §5 #3・`BossEntrance` の `onDone` は skip 時も呼ばれる設計。CEO Human QA Q8 3/3 PASS 時に許容。ミュート時は鳴らない（受入 4/4） | **影響なし**（挙動は 1 回・≤12 秒・ミュートで止まる）。改善は post-v1.0（BF-02 系） |
+| K37 Credits S6 は AI 追加文 | `creditsText.ts` 30 行目。事実のみ・禁止語 0（契約テスト 54 PASS）。CEO が不要なら 1 行削除 → 再 Gate は `creditsScreen.test.ts`＋legal-credits 受入のみ（Fast Gate） | **影響なし**（削除しても権利表示の要件 Kit §4 は満たす） |
+| K38 忠次 Pilot・Card Art Pilot 6 は v1.0 に含まれない | master に `enemy_08`／`shogunate` の参照 0（`git grep` 実測）。Pilot は別 branch `feat/shogunate-pilot-v0.3`・Card Art は docs のみ | **影響なし**（v1.0 の敵 7 体・カード 60 枚は Production と同一データ・`gameVersion` 不変） |
+| K39 公開元 repo の CI は Production 公開と同時に初回実行 | ci.yml は origin/master に無い。master push で `push` トリガー → GREEN／RED に関わらず Vercel は deploy 済み。同一 sha はミラーで GREEN 済み | **影響なし**（同一 sha・同一 lockfile・同一 workflow で GREEN 済み。公開元 RED の場合は環境差＝調査のみで Production 判断には使わない） |
+
+結論：K36〜K39 はいずれも **リリース可否に影響しない**（凍結リストへ追加・CEO 承認＝DoD #10）。
