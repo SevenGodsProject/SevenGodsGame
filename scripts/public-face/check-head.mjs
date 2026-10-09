@@ -44,12 +44,24 @@ const localImg = join(dist, ogImage.replace(/^https?:\/\/[^/]+/, ''))
 need('og:image exists in dist', localImg, existsSync(localImg))
 if (existsSync(localImg)) {
   const b = readFileSync(localImg)
-  const t = b.subarray(12, 16).toString()
+  let t = b.subarray(12, 16).toString()
   let w = 0, h = 0
-  if (t === 'VP8X') { w = 1 + b.readUIntLE(24, 3); h = 1 + b.readUIntLE(27, 3) }
+  if (b[0] === 0xff && b[1] === 0xd8) {
+    // JPEG：SOF0/SOF2 マーカーから寸法を読む
+    t = 'JPEG'
+    let p = 2
+    while (p + 9 < b.length) {
+      if (b[p] !== 0xff) { p++; continue }
+      const m = b[p + 1]
+      if (m === 0xc0 || m === 0xc2) { h = b.readUInt16BE(p + 5); w = b.readUInt16BE(p + 7); break }
+      p += 2 + b.readUInt16BE(p + 2)
+    }
+  } else if (t === 'VP8X') { w = 1 + b.readUIntLE(24, 3); h = 1 + b.readUIntLE(27, 3) }
   else if (t === 'VP8 ') { w = b.readUInt16LE(26) & 0x3fff; h = b.readUInt16LE(28) & 0x3fff }
   else if (t === 'VP8L') { const x = b.readUInt32LE(21); w = (x & 0x3fff) + 1; h = ((x >> 14) & 0x3fff) + 1 }
-  need('og:image is webp', t, ['VP8X', 'VP8 ', 'VP8L'].includes(t))
+  need('og:image is jpeg/webp', t, ['JPEG', 'VP8X', 'VP8 ', 'VP8L'].includes(t))
+  need('og:image:type matches file', attr('meta', 'property', 'og:image:type'), (t === 'JPEG' ? 'image/jpeg' : 'image/webp') === attr('meta', 'property', 'og:image:type'))
+  need('og:image is 1200x630 (1.91:1 for X/Discord/Facebook large card)', `${w}x${h}`, w === 1200 && h === 630)
   need('og:image:width matches', `${w}`, String(w) === attr('meta', 'property', 'og:image:width'))
   need('og:image:height matches', `${h}`, String(h) === attr('meta', 'property', 'og:image:height'))
   need('og:image ≤ 5MB (X limit)', `${b.length}B`, b.length <= 5 * 1024 * 1024)

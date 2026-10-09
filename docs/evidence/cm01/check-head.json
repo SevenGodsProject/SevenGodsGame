@@ -53,31 +53,31 @@
     },
     {
       "name": "og:image",
-      "value": "https://seven-gods-game.vercel.app/assets/gods/ebisu/keyvisual-hero.webp",
+      "value": "https://seven-gods-game.vercel.app/og-image.jpg",
       "pass": true,
       "note": ""
     },
     {
       "name": "og:image:type",
-      "value": "image/webp",
+      "value": "image/jpeg",
       "pass": true,
       "note": ""
     },
     {
       "name": "og:image:width",
-      "value": "1086",
+      "value": "1200",
       "pass": true,
       "note": ""
     },
     {
       "name": "og:image:height",
-      "value": "1448",
+      "value": "630",
       "pass": true,
       "note": ""
     },
     {
       "name": "og:image:alt",
-      "value": "恵比寿のキービジュアル — SEVEN GODS 共鳴カードバトル",
+      "value": "SEVEN GODS：共鳴カードバトル — 恵比寿のキービジュアルと正式名称",
       "pass": true,
       "note": ""
     },
@@ -101,13 +101,13 @@
     },
     {
       "name": "twitter:image",
-      "value": "https://seven-gods-game.vercel.app/assets/gods/ebisu/keyvisual-hero.webp",
+      "value": "https://seven-gods-game.vercel.app/og-image.jpg",
       "pass": true,
       "note": ""
     },
     {
       "name": "twitter:image:alt",
-      "value": "恵比寿のキービジュアル — SEVEN GODS 共鳴カードバトル",
+      "value": "SEVEN GODS：共鳴カードバトル — 恵比寿のキービジュアルと正式名称",
       "pass": true,
       "note": ""
     },
@@ -137,49 +137,61 @@
     },
     {
       "name": "og:image absolute https",
-      "value": "https://seven-gods-game.vercel.app/assets/gods/ebisu/keyvisual-hero.webp",
+      "value": "https://seven-gods-game.vercel.app/og-image.jpg",
       "pass": true,
       "note": ""
     },
     {
       "name": "twitter:image == og:image",
-      "value": "https://seven-gods-game.vercel.app/assets/gods/ebisu/keyvisual-hero.webp",
+      "value": "https://seven-gods-game.vercel.app/og-image.jpg",
       "pass": true,
       "note": ""
     },
     {
       "name": "og:image exists in dist",
-      "value": "dist\\assets\\gods\\ebisu\\keyvisual-hero.webp",
+      "value": "dist\\og-image.jpg",
       "pass": true,
       "note": ""
     },
     {
-      "name": "og:image is webp",
-      "value": "VP8 ",
+      "name": "og:image is jpeg/webp",
+      "value": "JPEG",
+      "pass": true,
+      "note": ""
+    },
+    {
+      "name": "og:image:type matches file",
+      "value": "image/jpeg",
+      "pass": true,
+      "note": ""
+    },
+    {
+      "name": "og:image is 1200x630 (1.91:1 for X/Discord/Facebook large card)",
+      "value": "1200x630",
       "pass": true,
       "note": ""
     },
     {
       "name": "og:image:width matches",
-      "value": "1086",
+      "value": "1200",
       "pass": true,
       "note": ""
     },
     {
       "name": "og:image:height matches",
-      "value": "1448",
+      "value": "630",
       "pass": true,
       "note": ""
     },
     {
       "name": "og:image ≤ 5MB (X limit)",
-      "value": "523108B",
+      "value": "159611B",
       "pass": true,
       "note": ""
     },
     {
       "name": "og:image ≥ 600px wide (X/Discord large card)",
-      "value": "1086",
+      "value": "1200",
       "pass": true,
       "note": ""
     },

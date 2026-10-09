@@ -21,7 +21,7 @@ describe('index.html の <head>', () => {
     for (const n of ['twitter:card', 'twitter:title', 'twitter:description', 'twitter:image', 'theme-color']) expect(meta('name', n), n).toBeTruthy()
     expect(meta('name', 'twitter:card')).toBe('summary_large_image')
     expect(meta('property', 'og:url')).toBe('https://seven-gods-game.vercel.app/')
-    expect(meta('property', 'og:image')).toMatch(/^https:\/\/seven-gods-game\.vercel\.app\/assets\//)
+    expect(meta('property', 'og:image')!.startsWith('https://seven-gods-game.vercel.app/')).toBe(true)
     expect(meta('name', 'twitter:image')).toBe(meta('property', 'og:image'))
     expect(html).toMatch(/<link rel="icon" type="image\/svg\+xml" href="\/favicon\.svg" \/>/)
     expect(html).toMatch(/<link rel="apple-touch-icon" sizes="180x180" href="\/apple-touch-icon\.png" \/>/)
@@ -33,10 +33,13 @@ describe('index.html の <head>', () => {
     expect(meta('name', 'description')).toContain('二次創作')
   })
 
-  it('og:image は既存の配信画像を流用し、新しい画像を増やさない', () => {
-    const shipped = Object.keys(import.meta.glob('../public/assets/gods/*/keyvisual-hero.webp'))
+  it('og:image は 1200×630 の専用画像（既存素材から合成・public 直下）で、宣言寸法と一致する', () => {
     const path = meta('property', 'og:image')!.replace('https://seven-gods-game.vercel.app', '')
-    expect(shipped.some((k) => k.endsWith(path.replace('/assets/', '/assets/')))).toBe(true)
+    expect(path).toBe('/og-image.jpg')
+    expect(Object.keys(import.meta.glob('../public/og-image.jpg'))).toHaveLength(1)
+    expect(meta('property', 'og:image:width')).toBe('1200')
+    expect(meta('property', 'og:image:height')).toBe('630')
+    expect(meta('property', 'og:image:type')).toBe('image/jpeg')
   })
 })
 

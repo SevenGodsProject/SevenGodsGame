@@ -1,7 +1,7 @@
 # CM-01 Public Face Pack v1 — Preflight ＋ 実装 ＋ Fast Gate
 
 - 日付：2026-10-09（Lane 1・**AI 判断**（CLAUDE.md §6-2）・`docs/ROADMAP_TO_RELEASE.md` §2 #1 の実体化。CEO 指示 2026-10-07「NEXT NOW＝Public Face Pack v1」・2026-10-09「未完了なら Preflight → 実装 → Fast Gate まで」）
-- 状態：**IMPLEMENTED ON BRANCH — Fast Gate PASS — master merge は CEO 承認待ち**（push・deploy 0）
+- 状態：**IMPLEMENTED ON BRANCH — Fast Gate PASS（v2：OGP 画像 1200×630 対応済み）— CEO 条件付き承認（2026-10-09 Gate Review）に基づき master 統合**（push・deploy 0）
 - worktree／branch：`SevenGodsGame-cm01`／`feat/cm01-public-face-pack`（基点 integ `master` `6c8b226`）
 - Human QA：**省略可**（ROADMAP「決定247 型」）。Production 反映後に X／Discord で挑戦状 URL のカード表示を CEO が目視する（§5）
 - 不変：`src/core` 差分 0／save 0／Daily 0／Ranking 0／CSS 追加 1 ルール（version 表示のみ）／既存画像の追加・差し替え 0
@@ -23,7 +23,8 @@
 
 | ファイル | 変更 |
 |---|---|
-| `index.html` | `meta description`（160 字以内・「SEVENGODS（SGG）二次創作」を明記＝Kit Guidelines §6 の誤認防止）／`theme-color #141230`／icon（svg＋png 192）／`apple-touch-icon` 180／`manifest`／`canonical`／`og:*` 11 項目（image＝`https://seven-gods-game.vercel.app/assets/gods/ebisu/keyvisual-hero.webp`・1086×1448・alt）／`twitter:*` 5 項目（`summary_large_image`） |
+| `index.html` | `meta description`（160 字以内・「SEVENGODS（SGG）二次創作」を明記＝Kit Guidelines §6 の誤認防止）／`theme-color #141230`／icon（svg＋png 192）／`apple-touch-icon` 180／`manifest`／`canonical`／`og:*` 11 項目（image＝`https://seven-gods-game.vercel.app/og-image.jpg`・**1200×630**・alt）／`twitter:*` 5 項目（`summary_large_image`） |
+| `public/og-image.jpg`（新規・1200×630・159,611B・sha256 `9c38e40fd32863113986e18977ef84742431ff3fb71a560baeb0ea48fd53989f`）・`scripts/public-face/gen-og-image.mjs` | **CEO Gate Review（2026-10-09）「縦長クロップを解消・既存画像で 1200×630・重要部分を切らず正式名称が分かる構図・新規 AI 生成なし」**の実体。右側に既存 `keyvisual-hero.webp` を**切らずに**高さ 630 で全身表示、左側に「SEVEN GODS／共鳴カードバトル／七柱の神と挑む、七日間の物語。／SEVENGODS（SGG）二次創作／URL」を HTML/CSS（OS フォント）で描画し、Chromium（Playwright）で JPEG q86 に書き出す。生成 AI・外部素材 0。OS フォント依存のためバイト決定論は保証せず、sha256 を台帳に記録 |
 | `public/favicon.svg`（置換・467B）・`public/apple-touch-icon.png`（180²・6,971B）・`public/icon-192.png`（7,766B）・`public/icon-512.png`（24,994B）・`public/site.webmanifest` | `gen-icons.mjs` の出力（再実行で sha256 一致＝決定論【実測】） |
 | `scripts/public-face/gen-icons.mjs`・`scripts/public-face/check-head.mjs` | 生成器／OGP バリデータ相当の静的検査（39 項目） |
 | `package.json` | `version` 0.0.0 → **1.0.0-rc.1** |
@@ -38,10 +39,10 @@
 | 項目 | 結果 |
 |---|---|
 | tsc -b | **0 error** |
-| vitest（targeted：feedback・setup・entranceWiring・publicFace） | **90 PASS**（＋publicFace 4・feedback 再実行 14 PASS） |
+| vitest（targeted：feedback・setup・entranceWiring・publicFace） | v1：90 PASS → **v2：95 PASS**（publicFace の og:image 契約を 1200×630／jpeg に更新）。**full vitest（v1 時点）1,335 PASS・9 skip・0 fail** |
 | oxlint | **error 0** |
 | build | PASS。`dist/index.html` 0.50 → **2.74kB**（head 追加分）・JS 460.48kB（gzip 143.10）・CSS 191.03kB（+0.22kB＝version 1 ルール） |
-| `check-head.mjs`（dist） | **39／39 PASS**（必須 meta・og:image 実在・寸法一致 1086×1448・523KB ≤ 5MB・icon／manifest／canonical 実在・apple-touch-icon 180² PNG・manifest JSON／theme_color 一致）→ `docs/evidence/cm01/check-head.json` |
+| `check-head.mjs`（dist） | v1：39／39 PASS → **v2（og-image.jpg）：41／41 PASS**（必須 meta・og:image 実在・JPEG SOF 寸法 1200×630＝宣言と一致・`og:image:type` 一致・159KB ≤ 5MB・icon／manifest／canonical 実在・apple-touch-icon 180² PNG・manifest JSON／theme_color 一致）→ `docs/evidence/cm01/check-head.json` |
 | sha 埋め込み | dist に `1.0.0-rc.1` と HEAD 短 sha（`6c8b226`）を確認（Vercel では `VERCEL_GIT_COMMIT_SHA` に置き換わる） |
 | CLS（`release-hygiene/cls.mjs`・PC 1508×660／SP 390×760・ホーム→戦闘まで） | **Home のみ CLS 0（PC／SP）**。通し（ホーム→神選択→難易度→敵選択→デッキ→戦闘）の非入力 CLS は PC 0.0061／SP 0.059 で、**master `26a3171` runtime の同一計測（`cls-baseline-master.json`）と完全に同値＝Δ0**（発生箇所はデッキ構築のカード画像読込＝本 Pack の変更外）。44px 未満のタップ領域 0・JS error 0 → `docs/evidence/cm01/cls.json` |
 | Home 実表示（PC／SP・version 行・横はみ出し・JS error） | PC 1508×660：`v1.0.0-rc.1 (6c8b226)` を右下（x 1394／y 644・104×10px）に表示・`scrollWidth`＝1508（横はみ出し 0）・JS error 0／SP 390×844：右下（x 276／y 828）・`scrollWidth`＝390・error 0・favicon `/favicon.svg`・title 不変 → `docs/evidence/cm01/home-pc.png`／`home-sp.png` |
@@ -49,10 +50,10 @@
 
 ## 4. 既知の制約・判断
 
-1. **og:image は縦長（1086×1448）**。X の `summary_large_image`（推奨 2:1）と Discord では中央クロップ表示になる。横長の専用 OGP 画像は「新規生成なし」の制約で作らない（Growth で検討）
+1. ~~og:image は縦長（1086×1448）でクロップされる~~ → **v2 で解消**：1200×630 の専用画像 `og-image.jpg`（既存素材の合成・AI 生成 0）。元の縦長画像は Home 用に従来どおり配信
 2. **二次創作表記は description にのみ**（Home UI には出さない。クレジットは任意・Kit §4）。Legal／Credits 画面は CM-02
 3. 旧 `favicon.svg`（出所不明）は git 履歴に残るのみ。配信からは外れる
-4. 台帳：本 Pack の新規 public ファイル 4 本（favicon.svg／apple-touch-icon.png／icon-192.png／icon-512.png）は **自作（数式・zlib・決定論）**。台帳行 `ICON-01` は **統合時に Lane 2 の §3-L の後へ追記**（同時編集禁止のため本 branch では台帳を触らない）。行テキスト：`| ICON-01 | favicon.svg／apple-touch-icon.png／icon-192.png／icon-512.png | scripts/public-face/gen-icons.mjs（決定論） | icon | 自作（幾何＋zlib・素材・AI・フォント 0） | — | 2026-10-09 | — | — | プロジェクト所有 | 可 | — | 不要 | gen-icons.mjs | favicon 4be5dd3c67a67610・ATI 104e9ffc06389e8c・192 50f6f60ceb1d3c69・512 ae743e2128416291 | ◎（KNOWN） |`
+4. 台帳：本 Pack の新規 public ファイル 5 本は統合時に台帳へ追記（同時編集禁止のため本 branch では台帳を触らない）。ICON-01（4 本・**自作**・数式＋zlib・決定論）と OG-01（`og-image.jpg`・**AI 非生成加工**＝既存 `keyvisual-hero.webp`（GOD-K 系・UNKNOWN-ACCEPTED）＋自作 favicon＋OS フォントの文字を Chromium で合成。出所の事実状態は元画像に従い **UNKNOWN-ACCEPTED**・sha256 `9c38e40fd32863113986e18977ef84742431ff3fb71a560baeb0ea48fd53989f`）。ICON-01 の行テキスト：`| ICON-01 | favicon.svg／apple-touch-icon.png／icon-192.png／icon-512.png | scripts/public-face/gen-icons.mjs（決定論） | icon | 自作（幾何＋zlib・素材・AI・フォント 0） | — | 2026-10-09 | — | — | プロジェクト所有 | 可 | — | 不要 | gen-icons.mjs | favicon 4be5dd3c67a67610・ATI 104e9ffc06389e8c・192 50f6f60ceb1d3c69・512 ae743e2128416291 | ◎（KNOWN） |`
 
 ## 5. 完了条件（ROADMAP）と残り
 
