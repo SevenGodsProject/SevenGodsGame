@@ -1,0 +1,117 @@
+{
+  "base": "http://localhost:4177",
+  "at": "2026-10-09T13:09:39.147Z",
+  "emulation": {
+    "device": "iPhone 13 相当（390×844・DPR3・touch・iOS UA）",
+    "cpuThrottle": "4x",
+    "network": "Fast 3G（1.6Mbps↓／750kbps↑／RTT 150ms）",
+    "engine": "Chromium headless（Playwright）＝実 iPhone Safari ではない"
+  },
+  "runs": [
+    {
+      "run": 1,
+      "home": {
+        "ttfb": 34,
+        "dcl": 1553,
+        "load": 1554,
+        "fcp": 2416,
+        "lcp": 2416,
+        "transferBytes": 180209,
+        "requests": 3,
+        "heapMB": 3.4,
+        "longTasks": {
+          "n": 2,
+          "max": 185,
+          "total": 287
+        },
+        "wallMs": 9606
+      },
+      "enemySelectToDeckMs": 619,
+      "battleStart": {
+        "toPlayableMs": 544,
+        "longTasks": {
+          "n": 1,
+          "max": 394,
+          "total": 394
+        },
+        "transferBytesSinceHome": 523378,
+        "heapMB": 5.5
+      },
+      "round": {
+        "cardToEndMs": 417,
+        "endToNextPlayableMs": 790,
+        "longTasks": {
+          "n": 1,
+          "max": 94,
+          "total": 94
+        }
+      },
+      "errors": [],
+      "byType": {
+        "text/html": 1,
+        "text/css": 1,
+        "text/javascript": 1,
+        "image/webp": 8,
+        "video/webm": 1
+      }
+    },
+    {
+      "run": 2,
+      "home": {
+        "ttfb": 5,
+        "dcl": 1321,
+        "load": 1321,
+        "fcp": 1892,
+        "lcp": 1892,
+        "transferBytes": 180209,
+        "requests": 3,
+        "heapMB": 3.4,
+        "longTasks": {
+          "n": 1,
+          "max": 58,
+          "total": 58
+        },
+        "wallMs": 8989
+      },
+      "enemySelectToDeckMs": 575,
+      "battleStart": {
+        "toPlayableMs": 443,
+        "longTasks": {
+          "n": 1,
+          "max": 269,
+          "total": 269
+        },
+        "transferBytesSinceHome": 523378,
+        "heapMB": 5.2
+      },
+      "round": {
+        "cardToEndMs": 466,
+        "endToNextPlayableMs": 809,
+        "longTasks": {
+          "n": 1,
+          "max": 65,
+          "total": 65
+        }
+      },
+      "errors": [],
+      "byType": {
+        "text/html": 1,
+        "text/css": 1,
+        "text/javascript": 1,
+        "image/webp": 7,
+        "video/webm": 1
+      }
+    }
+  ],
+  "median": {
+    "homeLcpMs": 1892,
+    "homeFcpMs": 1892,
+    "homeLoadMs": 1321,
+    "homeTransferKB": 176,
+    "battleStartToPlayableMs": 443,
+    "roundEndToNextMs": 790,
+    "homeLongTaskMax": 58,
+    "battleLongTaskMax": 269,
+    "heapBattleMB": 5.2
+  }
+}
