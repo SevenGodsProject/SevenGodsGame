@@ -164,6 +164,8 @@ NOW の 2〜5 は決定263 Lane と接触しない（docs／git のみ・`src` 0
 
 **2026-10-09 更新（3）**：#4 CI 定義＋playwright 宣言（RL-03／04）と RL-01b は **master 統合済み（`2bc25ce`・決定270 候補）**。ただし **CI は origin 未 push のため未実行（Actions 緑は未確認）**。#5 docs branch push（RL-07）は精査の結果 **branch push 0 本で足りる**（固有文書 4 本を `d8f9e95` で master へ取り込み済み。master の push は CEO 判断）。§3 #2 Rollback 演習は計画のみ（`RELEASE_SAFETY_PREFLIGHT.md` §3）。**NEXT NOW＝#2 A11y Minimum Pack**。
 
+**2026-10-09 更新（4）**：#2 A11y Minimum Pack は **master 統合済み（`b04cc42`・決定271 候補）**。Human QA 1 問（HP pill）は **未実施**で Practical QA v3 に同梱する。**NEXT NOW＝§3 BEFORE RELEASE を 3 Lane 並列**（#1 Legal／Credits 表記案＝文言は CEO 確認待ち・#3 SP perf evidence＝エミュレーション実測＋実機手順・#4 Practical QA v3 設計）。
+
 **「Public Face Pack v1」（CM-01）** — 決定263 クローズアウト完了（2026-10-07 NO-GO）により **着手可（NEXT NOW・CEO 指示 2026-10-07）**。順序：Public Face Pack v1 → Save Compatibility Guard → Release Safety → Practical QA v3 → v1.0。runtime 変更前に Closeout 状態と master／origin 状態を報告する。
 
 理由【AI 判断】：
