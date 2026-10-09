@@ -158,6 +158,8 @@ NOW の 2〜5 は決定263 Lane と接触しない（docs／git のみ・`src` 0
 
 ## 9. 推奨：次に実行するタスク（1 件）
 
+**2026-10-09 更新**：CM-01 Public Face Pack v1 は **完了・master 統合済み（`ec102ae`・決定268 候補・Production 未反映）**。ROADMAP 完了条件「Production で挑戦状 URL がカード表示される」は Production 反映後に CEO が目視する。**NEXT NOW＝#3 Save Compatibility Guard（RL-01）**（CEO 指示 2026-10-09：既存 Save の互換性・移行・消失リスクを調査し、既存データを破壊しない最小実装）。以下は着手時点の記録。
+
 **「Public Face Pack v1」（CM-01）** — 決定263 クローズアウト完了（2026-10-07 NO-GO）により **着手可（NEXT NOW・CEO 指示 2026-10-07）**。順序：Public Face Pack v1 → Save Compatibility Guard → Release Safety → Practical QA v3 → v1.0。runtime 変更前に Closeout 状態と master／origin 状態を報告する。
 
 理由【AI 判断】：

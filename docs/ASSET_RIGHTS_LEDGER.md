@@ -251,6 +251,8 @@ node -e "const c=require('crypto'),f=require('fs');console.log(c.createHash('sha
 | ID | Path | 備考 | Status |
 |---|---|---|---|
 | MISC-01 | `.gitkeep`（305B） | asset ではない（sha `f25a69ce7c163180`） | — |
+| ICON-01 | `favicon.svg`（467B）・`apple-touch-icon.png`（180²・6,971B）・`icon-192.png`（7,766B）・`icon-512.png`（24,994B）【2026-10-09 追加・CM-01】 | **自作**（`scripts/public-face/gen-icons.mjs`：「七」モチーフの幾何＋zlib だけで SVG と PNG を決定論生成。外部素材・生成 AI・フォント 0。再実行で sha256 一致【実測】）／Terms＝プロジェクト所有／Commercial 可／Attribution 不要／sha256（先頭 16）：favicon `4be5dd3c67a67610`・ATI `104e9ffc06389e8c`・192 `50f6f60ceb1d3c69`・512 `ae743e2128416291`。旧 `favicon.svg`（9.5KB・出所不明）は配信から外した（git 履歴のみ） | ◎（KNOWN） |
+| OG-01 | `og-image.jpg`（1200×630・159,611B・OGP／twitter:image）【2026-10-09 追加・CM-01 v2】 | **AI 非生成加工**（`scripts/public-face/gen-og-image.mjs`：既存 `gods/ebisu/keyvisual-hero.webp`（GOD-K 系）を切らずに配置＋自作 favicon＋OS フォントの正式名称・二次創作表記を HTML/CSS で描画し Chromium（Playwright）で JPEG q86 合成。生成 AI・外部素材 0）／出所の事実状態は元画像に従い **UNKNOWN-ACCEPTED**（GOD-K-01 と同じ・2026-10-07 CEO B 条件付き承認の範囲）／sha256 `9c38e40fd32863113986e18977ef84742431ff3fb71a560baeb0ea48fd53989f`（OS フォント依存のため再生成で変わり得る・変えたら更新） | △（UNKNOWN-ACCEPTED） |
 
 ---
 
