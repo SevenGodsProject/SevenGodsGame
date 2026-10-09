@@ -64,6 +64,17 @@ Lighthouse 本体は依存に無い（6GB 機で別途 1 run する案は ROADMA
 
 任意（Mac がある場合のみ）：iPhone を USB 接続 → Mac Safari「開発」メニュー → Web インスペクタ → タイムライン録画で P2 の JS 時間を取る。無ければ上の 3 問で足りる（ROADMAP「CEO iPhone 体感 3 問で代替」）。
 
+### 4-1. 結果（2026-10-10・CEO 実機・`docs/PRACTICAL_QA_V3_RESULT.md` §1）
+
+| # | CEO | 報告文 | 未記録（PASS 扱いにしない） |
+|---|---|---|---|
+| P1 | **YES** | 「Home 3秒以内」 | 機種・iOS 版・cold（履歴消去）の有無 |
+| P2 | **YES** | 「戦闘開始まで滑らか」 | — |
+| P3 | **YES** | 「戦闘中の遅延・異常発熱なし」 | — |
+
+- 評価ビルド：integ master `021795b`（preview 4178・LAN）。本書 §3 のエミュレーション（CPU 4×・Fast 3G）と **実機 3 問 YES** が揃ったため DoD #15 は成立（§5）。Known K01・Enemy Select preload 不要の判定は変更なし
+- 機種・iOS 版は CEO 報告に無いため記録しない（必要になれば次回 QA で追記）
+
 ## 5. 判定（AI）
 
 | 項目 | 判定 | 根拠 |
@@ -71,6 +82,7 @@ Lighthouse 本体は依存に無い（6GB 機で別途 1 run する案は ROADMA
 | Enemy Select preload（UX-05／PF-02） | **不要**（v1.0 では入れない） | Fast 3G でも 敵選択→デッキ 0.6 秒。背景は遅延読込のまま体感に出ない。preload は転送量を増やす |
 | Known K01 | **維持**（C・修正しない） | CPU 4× で 270〜390ms。映像は時刻どおり・ゲーム進行に影響しない |
 | DoD #15「SP 実機 perf evidence が 1 セット存在する」 | **エミュレーション 1 セットで半分**。実機 3 問（§4）が CEO 側で揃えば満たす | — |
+| DoD #15（2026-10-10 更新） | **成立**（エミュレーション 1 セット＋CEO 実機 3 問 YES・§4-1） | `PRACTICAL_QA_V3_RESULT.md` §1・§4。機種・iOS 版は未記録 |
 | Lighthouse 1 run | 任意（本書の条件は Lighthouse mobile と同じ。スコアが要るときだけ別日に単独実行） | 6GB 制約 |
 
 ## 6. 再実行

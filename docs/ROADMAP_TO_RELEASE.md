@@ -166,6 +166,8 @@ NOW の 2〜5 は決定263 Lane と接触しない（docs／git のみ・`src` 0
 
 **2026-10-09 更新（4）**：#2 A11y Minimum Pack は **master 統合済み（`b04cc42`・決定271 候補）**。Human QA 1 問（HP pill）は **未実施**で Practical QA v3 に同梱する。**NEXT NOW＝§3 BEFORE RELEASE を 3 Lane 並列**（#1 Legal／Credits 表記案＝文言は CEO 確認待ち・#3 SP perf evidence＝エミュレーション実測＋実機手順・#4 Practical QA v3 設計）。
 
+**2026-10-10 更新（5）**：Practical QA v3 ＋ iPhone 性能 3 問 ＋ 公式ボイス Q8 ＋ A11y Q9 を **CEO が 1 セッションで実施（`docs/PRACTICAL_QA_V3_RESULT.md`・決定273 候補）**。P1〜P3・Q1〜Q7・Q9 YES・Q8 3／3 PASS → **A 0／B 0**（CEO evidence のみ・初見プレイヤー 0 名・D1 未実施＝PASS 扱いしない）。DoD #14／#15／#16 を CEO evidence で満たす（#1 維持）。Legal／Credits 画面は branch `405a86f` で文言 CEO 確認待ち・公式ボイス Pilot は Human QA PASS＝統合 READY（merge は CEO 承認）。**NEXT NOW＝RC-2 束ね**（同書 §8：文言確定 → Credits／Voice 統合 → CI 初回実行（一時 branch）→ RC Gate → push＝Production → Rollback 演習 → 凍結／tag）。CEO 判断は 4 件（同書 §9）。
+
 **「Public Face Pack v1」（CM-01）** — 決定263 クローズアウト完了（2026-10-07 NO-GO）により **着手可（NEXT NOW・CEO 指示 2026-10-07）**。順序：Public Face Pack v1 → Save Compatibility Guard → Release Safety → Practical QA v3 → v1.0。runtime 変更前に Closeout 状態と master／origin 状態を報告する。
 
 理由【AI 判断】：
