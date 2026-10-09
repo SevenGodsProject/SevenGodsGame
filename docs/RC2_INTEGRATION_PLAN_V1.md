@@ -103,3 +103,16 @@
 | 4 | Release 実行 | 変更なし（§2-2 順 6 の前に順 5 の報告） |
 
 判断 1〜3 は 1 回の返信で同時に可。判断 4 は順 5 の報告後。
+
+## 5. 実行結果（2026-10-10・CEO Decision「RC-2 次工程」）
+
+| 順 | 作業 | 結果 |
+|---|---|---|
+| 1 | credits：確定文言反映（C1・F3・S6）→ rl01 `7e8e992` → master `6ffadbf`（--no-ff） | **DONE**。事実整合性の確認は `LEGAL_CREDITS_SCREEN_V1.md` §2-3 |
+| 2 | voice：master `e0ea825`（--no-ff）→ A-1 `f2366a6` | **DONE**。回帰：tsc 0／oxlint error 0／full vitest 1,431 PASS／build PASS／受入 legal-credits 40/40・official-voice 4/4（`docs/evidence/rc2-integration/`） |
+| 3 | DECISIONS 行 | **DONE**（決定275 候補） |
+| 4 | CI 初回実行 | **STOP**（§3 C1 未成立）。実測：repo **PUBLIC**（C2）。Vercel Preview Deployments 設定は repo から確認不能（C1）＝branch push が Preview deployment を作る可能性を否定できない。再開条件：CEO が Dashboard で Preview Deployments OFF（または Ignored Build Step で `master` 以外を skip）を確認・設定 → 一時 branch＋Draft PR で実行 |
+| 5 | RC Gate | 未着手（CI GREEN 後） |
+| 6 | Production | **未承認**（CEO 判断 4） |
+
+残ブロッカー：**C1 のみ**（Vercel 側の設定確認＝CEO）。
