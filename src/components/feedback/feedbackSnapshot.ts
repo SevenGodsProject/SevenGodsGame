@@ -2,6 +2,7 @@ import type { Difficulty, GameState, GodId } from '../../core/types'
 import { GODS } from '../../core/data/gods'
 import { getFinalScore } from '../../core/engine'
 import { scaleDisplay } from '../displayScale'
+import { buildLabel } from '../../buildInfo'
 
 /**
  * フィードバック機能（実プレイ・フィードバック基盤）が自動添付する
@@ -96,6 +97,8 @@ export function formatFeedbackText(snapshot: FeedbackSnapshot, comment: string):
   return [
     '■ SEVEN GODS フィードバック',
     `状況: ${describeSnapshot(snapshot)}`,
+    // CM-01 Public Face Pack v1：どの配信物で起きたかを 1 行添える（再現性のため）
+    `ビルド: ${buildLabel()}`,
     '',
     'ご感想・不具合:',
     trimmed || '（未入力）',

@@ -2549,6 +2549,21 @@
   display: grid;
   grid-template-columns: minmax(0, 52fr) minmax(0, 48fr);
 }
+/* CM-01 Public Face Pack v1：version 表示。右下の隅・最小サイズ・操作を奪わない・layout に参加しない（CLS 0） */
+.home-screen .home-version {
+  position: absolute;
+  right: 10px;
+  bottom: 6px;
+  margin: 0;
+  font-size: 10px;
+  line-height: 1;
+  letter-spacing: 0.06em;
+  color: #a9adc4;
+  opacity: 0.6;
+  pointer-events: none;
+  user-select: none;
+  z-index: 6;
+}
 
 /* ---- Hero God：絵そのものが場面 ---- */
 .home-hero-art {

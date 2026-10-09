@@ -14,6 +14,7 @@ import { dailyAttemptsLeft, loadDailyDay, loadRecentDailyDays } from '../../hook
 import { todayDailyKey } from '../../hooks/dailyClock'
 import { dailyBossFor } from '../../core/data/dailyBoss'
 import { useMinuteClock } from '../../hooks/useMinuteClock'
+import { buildLabel } from '../../buildInfo'
 import './setup.css'
 
 type HomeScreenProps = {
@@ -184,6 +185,10 @@ export function HomeScreen({
           </button>
         </div>
       </div>
+      {/* CM-01 Public Face Pack v1：配信物の版（package.json の version と短い commit sha）。絶対配置で CLS 0 */}
+      <p className="home-version" data-testid="home-version" aria-label="バージョン">
+        {buildLabel()}
+      </p>
     </div>
   )
 }
