@@ -92,9 +92,12 @@ describe('AC18：Hero の追加で未知 ID の危険な経路を作らない', 
     expect(hero).not.toMatch(/getGodDef/)
   })
 
-  it('Home は OTOMO を描かない（決定192 の Known Risk に触れない）', () => {
+  it('Home は OTOMO を描かない（決定192 の Known Risk に触れない。RL-01b の isKnownOtomoId による Resume 判定だけは許す）', () => {
     for (const file of ['components/setup/HomeScreen.tsx', 'components/setup/HomeTodayPanel.tsx', 'components/setup/heroGod.ts']) {
-      expect(read(file)).not.toMatch(/getOtomoDef|otomo\.defId/)
+      // RL-01b：HomeScreen は未知 otomoId で「続きから」を出さないために isKnownOtomoId(savedBattle.otomo.defId) を 1 回だけ呼ぶ
+      //（try/catch 済みの読み取りヘルパー。描画・getOtomoDef の直接呼び出しは引き続き禁止）
+      const src = read(file).replace(/isKnownOtomoId\(savedBattle\.otomo\.defId\)/g, '')
+      expect(src).not.toMatch(/getOtomoDef|otomo\.defId/)
     }
   })
 })
