@@ -8,6 +8,15 @@
   padding: 20px;
 }
 
+/* A11y Minimum Pack：カード自体が初期フォーカスを受ける。キーボード操作時だけ金の枠（press.css と同じ色） */
+.tutorial-card:focus {
+  outline: none;
+}
+.tutorial-card:focus-visible {
+  outline: 2px solid #ffd166;
+  outline-offset: -2px;
+}
+
 .tutorial-card {
   width: 100%;
   max-width: 480px;

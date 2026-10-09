@@ -57,8 +57,10 @@ function App() {
           type="button"
           className="app-icon-button"
           onClick={toggleMuted}
-          aria-label={muted ? 'ミュート解除' : 'ミュート'}
+          // A11y Minimum Pack：名前は固定「ミュート」、ON/OFF は aria-pressed だけで伝える（名前と状態の二重読み上げを避ける）
+          aria-label="ミュート"
           aria-pressed={muted}
+          title={muted ? 'ミュート中（押すと解除）' : 'ミュート'}
         >
           <SpeakerIcon muted={muted} className="app-icon-glyph" />
         </button>
