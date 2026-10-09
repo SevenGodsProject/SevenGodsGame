@@ -162,6 +162,8 @@ NOW の 2〜5 は決定263 Lane と接触しない（docs／git のみ・`src` 0
 
 **2026-10-09 更新（2）**：#3 Save Compatibility Guard（RL-01）は **完了・master 統合済み（`c7b225b`・決定269 候補・Production 未反映）**。`docs/STORAGE_VERSION_POLICY.md` が正本。**NEXT NOW＝Release Safety**（#4 CI＋playwright 宣言（RL-03／04）→ #5 docs branch push（RL-07・push は CEO 確認後）→ §3 #2 Rollback 演習（Production 操作は ★ #8））。
 
+**2026-10-09 更新（3）**：#4 CI 定義＋playwright 宣言（RL-03／04）と RL-01b は **master 統合済み（`2bc25ce`・決定270 候補）**。ただし **CI は origin 未 push のため未実行（Actions 緑は未確認）**。#5 docs branch push（RL-07）は精査の結果 **branch push 0 本で足りる**（固有文書 4 本を `d8f9e95` で master へ取り込み済み。master の push は CEO 判断）。§3 #2 Rollback 演習は計画のみ（`RELEASE_SAFETY_PREFLIGHT.md` §3）。**NEXT NOW＝#2 A11y Minimum Pack**。
+
 **「Public Face Pack v1」（CM-01）** — 決定263 クローズアウト完了（2026-10-07 NO-GO）により **着手可（NEXT NOW・CEO 指示 2026-10-07）**。順序：Public Face Pack v1 → Save Compatibility Guard → Release Safety → Practical QA v3 → v1.0。runtime 変更前に Closeout 状態と master／origin 状態を報告する。
 
 理由【AI 判断】：
