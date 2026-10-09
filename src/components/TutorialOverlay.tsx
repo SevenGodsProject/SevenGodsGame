@@ -1,3 +1,4 @@
+import { useEffect, useRef, type KeyboardEvent as ReactKeyboardEvent } from 'react'
 import { GlyphIcon, type GlyphKey } from './battle/cardIcon'
 import { HpBar } from './battle/HpBar'
 import { ENEMY_IDS, getEnemyDef } from '../core/data/enemies'
@@ -183,10 +184,58 @@ function renderVisual(visual: Visual) {
  * 「攻略のコツ」へ作り直した。「ラウンドを終える」という具体的な操作手順を
  * 明記したのが最大の変更点。
  */
+/** ダイアログ内で Tab が巡る要素 */
+const FOCUSABLE = 'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])'
+
 export function TutorialOverlay({ onClose }: TutorialOverlayProps) {
+  const cardRef = useRef<HTMLDivElement>(null)
+
+  // A11y Minimum Pack（2026-10-09）：Esc で閉じる。capture で先に受けて止める
+  //（FirstBattleBrief から開いたとき、下の Brief の Esc 受け手まで届いて 2 枚とも閉じないように）
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key !== 'Escape') return
+      e.stopPropagation()
+      e.preventDefault()
+      onClose()
+    }
+    window.addEventListener('keydown', onKey, true)
+    return () => window.removeEventListener('keydown', onKey, true)
+  }, [onClose])
+
+  // 開いたらダイアログ本体へフォーカス（スクロール位置は動かさない。「わかった」へ飛ばすと本文を読む前に末尾へ送られる）。
+  // 閉じたら開く前の要素（本のアイコン／「詳しい遊び方」）へ戻す
+  useEffect(() => {
+    const previous = document.activeElement instanceof HTMLElement ? document.activeElement : null
+    cardRef.current?.focus({ preventScroll: true })
+    return () => previous?.focus({ preventScroll: true })
+  }, [])
+
+  // Tab はダイアログの中で循環させる（focus trap）
+  const onKeyDown = (e: ReactKeyboardEvent<HTMLDivElement>) => {
+    if (e.key !== 'Tab') return
+    const root = cardRef.current
+    if (!root) return
+    const focusables = Array.from(root.querySelectorAll<HTMLElement>(FOCUSABLE))
+    if (focusables.length === 0) {
+      e.preventDefault()
+      return
+    }
+    const first = focusables[0]!
+    const last = focusables[focusables.length - 1]!
+    const active = document.activeElement
+    if (e.shiftKey && (active === first || active === root)) {
+      e.preventDefault()
+      last.focus()
+    } else if (!e.shiftKey && active === last) {
+      e.preventDefault()
+      first.focus()
+    }
+  }
+
   return (
-    <div className="tutorial-overlay" role="dialog" aria-modal="true" aria-label="遊び方">
-      <div className="tutorial-card">
+    <div className="tutorial-overlay" role="dialog" aria-modal="true" aria-label="遊び方" onKeyDown={onKeyDown}>
+      <div className="tutorial-card" ref={cardRef} tabIndex={-1}>
         <h1 className="tutorial-title">SEVEN GODS の遊び方</h1>
         <p className="tutorial-genre">共鳴カードバトル</p>
         <dl className="tutorial-sections">

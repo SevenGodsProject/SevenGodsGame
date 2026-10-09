@@ -482,6 +482,17 @@
   text-shadow: 0 1px 2px #000;
 }
 
+/* A11y Minimum Pack（A11Y-01・2026-10-09）：HP の数字の後ろに暗い pill（#05060b・α0.77）を敷く。
+   白文字 × 緑 fill が 1.96、× 赤 fill が 3.24 で 4.5:1 に届かなかったため（決定264 実測）。
+   pill の上では緑 11.6・赤 13.3・溝 15 以上（src/components/a11y/contrast.ts で算出・a11yMinimum.test.ts で固定）。
+   バーの高さ 18px・数字 11px・pill 14px＝ゲージの形は変えない。hudPlate.css の艶はこの外側（.hp-bar-label）に残る */
+.hp-bar-label-text {
+  padding: 0 7px;
+  border-radius: 999px;
+  line-height: 14px;
+  background: #05060bc4;
+}
+
 .floating-numbers {
   position: absolute;
   inset: 0;

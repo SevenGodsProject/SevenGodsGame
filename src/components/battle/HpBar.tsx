@@ -33,7 +33,10 @@ export function HpBar({ current, max, color, className }: HpBarProps) {
       <div className="hp-bar-fill" style={{ width, background: color, transitionDuration: `${HP_MAIN_MS}ms` }} />
       {/* D2b：表示スケール×10（内部値・ratioは無変更） */}
       <span className="hp-bar-label">
-        {formatScaled(current)} / {formatScaled(max)}
+        {/* A11y Minimum Pack（A11Y-01）：数字の後ろに暗い pill を敷き、fill（緑・赤）や溝の上でも 4.5:1 以上にする */}
+        <span className="hp-bar-label-text">
+          {formatScaled(current)} / {formatScaled(max)}
+        </span>
       </span>
     </div>
   )

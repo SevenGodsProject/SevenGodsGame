@@ -833,7 +833,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 10px;
+  /* A11y Minimum Pack：PC のカード（内側 ≈130px）でも 44＋枚数＋44 が縮まないよう gap 10→4 */
+  gap: 4px;
   margin-top: 4px;
 }
 
@@ -842,8 +843,11 @@
      大きく下回り、デッキ編成で頻繁に操作する主要UIのため拡大。375〜430pxで
      ブラウザ実測し、カード幅（151〜179px）内で他要素と重ならない安全な値として
      40pxを採用（実測時点で左右各10px分の余白が残ることを確認済み）。 */
-  width: 40px;
-  height: 40px;
+  /* A11y Minimum Pack（A11Y-02・2026-10-09）：見た目も 44px に揃える（判定は 2084 行の ::after で既に 44）。
+     カード幅 151〜179px に対し ±（44×2）＋枚数表示（2.4em≈38px）＝126px で収まる */
+  width: 44px;
+  height: 44px;
+  flex: 0 0 44px; /* flex item として縮ませない（PC で 40px に潰れていた） */
   border-radius: 50%;
   border: 1px solid #444a68;
   background: transparent;
@@ -1996,6 +2000,9 @@
   display: flex;
   flex-direction: column;
   gap: 2px;
+  /* A11y Minimum Pack（A11Y-02）：タップ領域 44px を保証（通常は 2 行で超えるが 1 行でも下回らない） */
+  min-height: 44px;
+  box-sizing: border-box;
   padding: 8px 6px;
   border: 1px solid #ffffff1f;
   border-radius: 10px;
