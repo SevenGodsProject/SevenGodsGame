@@ -26,8 +26,68 @@
 
 | # | id | 名前 | 区分・タイプ・希少度・コスト | 実ファイル（`public/assets/cards/`） | 寸法・容量 | 彩度／明度／コントラスト／鮮鋭度 | 画風系統 |
 |---|---|---|---|---|---|---|---|
+| 1 | card_common_attack_01 | 一撃 | 共通・攻撃・common・c1 | `card_common_attack_01.webp` | 512×768・84KB | 0.86／57／61／31.2 | A 共通型 |
+| 2 | card_common_attack_02 | 剛撃 | 共通・攻撃・common・c2 | `card_common_attack_02.webp` | 512×768・115KB | 0.79／86／152／45.1 | A 共通型 |
+| 3 | card_common_guard_01 | 守護 | 共通・防御・common・c1 | `card_common_guard_01.webp` | 512×768・140KB | 0.49／149／148／58.5 | A 共通型 |
+| 4 | card_common_resonance_01 | 共振 | 共通・共鳴・common・c1 | `card_common_resonance_01.webp` | 512×768・125KB | 0.85／156／122／50.4 | A 共通型 |
+| 5 | card_common_support_01 | 癒し | 共通・支援・common・c1 | `card_common_support_01.webp` | 512×768・102KB | 0.39／158／124／43.9 | A 共通型 |
+| 6 | card_common_hinder_01 | 呪縛 | 共通・妨害・common・c2 | `card_common_hinder_01.webp` | 512×768・118KB | 0.76／51／80／45.4 | A 共通型 |
+| 7 | card_common_oracle_01 | 神託 | 共通・神託・rare・c3 | `card_common_oracle_01.webp` | 512×768・91KB | 0.61／104／169／27.9 | A 共通型 |
+| 8 | card_common_attack_03 | 速攻 | 共通・攻撃・common・c1 | `card_common_attack_03.webp` | 512×768・110KB | 0.77／84／104／38.6 | A 共通型 |
+| 9 | card_common_attack_04 | 渾身の一撃 | 共通・攻撃・common・c3 | `card_common_attack_04.webp` | 512×768・124KB | 0.77／87／171／43.3 | A 共通型 |
+| 10 | card_common_guard_02 | 鉄壁の構え | 共通・防御・common・c2 | `card_common_guard_02.webp` | 512×768・142KB | 0.63／129／120／74 | A 共通型 |
+| 11 | card_common_support_02 | 息吹 | 共通・支援・common・c2 | `card_common_support_02.webp` | 512×768・97KB | 0.55／183／119／45.7 | A 共通型 |
+| 12 | card_common_support_03 | 神力の泉 | 共通・支援・common・c1 | `card_common_support_03.webp` | 512×768・98KB | 0.6／162／120／39.7 | A 共通型 |
+| 13 | card_common_hinder_02 | 見切り | 共通・妨害・common・c1 | `card_common_hinder_02.webp` | 512×768・94KB | 0.8／42／50／30.5 | A 共通型 |
+| 14 | card_common_resonance_02 | 神楽舞 | 共通・共鳴・common・c2 | `card_common_resonance_02.webp` | 512×768・128KB | 0.75／151／133／58.2 | A 共通型 |
+| 15 | card_common_oracle_02 | 予言 | 共通・神託・rare・c2 | `card_common_oracle_02.webp` | 512×768・94KB | 0.54／116／154／28.3 | A 共通型 |
+| 16 | card_common_attack_05 | 捨身の一撃 | 共通・攻撃・common・c1 | `card_common_attack_05.webp` | 512×768・100KB | 0.82／62／71／38.7 | A 共通型 |
+| 17 | card_common_attack_06 | 神速 | 共通・攻撃・common・c1 | `card_common_attack_06.webp` | 512×768・131KB | 0.88／66／88／40.2 | A 共通型 |
+| 18 | card_common_attack_07 | 乱舞 | 共通・攻撃・common・c2 | `card_common_attack_07.webp` | 512×768・99KB | 0.74／85／124／40.6 | A 共通型 |
+| 19 | card_common_attack_08 | 大喝 | 共通・攻撃・common・c3 | `card_common_attack_08.webp` | 512×768・109KB | 0.83／52／65／37.4 | A 共通型 |
+| 20 | card_common_guard_03 | 受け流し | 共通・防御・common・c1 | `card_common_guard_03.webp` | 512×768・133KB | 0.55／133／118／54.6 | A 共通型 |
+| 21 | card_common_guard_04 | 守りの陣 | 共通・防御・common・c2 | `card_common_guard_04.webp` | 512×768・123KB | 0.61／134／113／60.5 | A 共通型 |
+| 22 | card_common_resonance_03 | 巫女の舞 | 共通・共鳴・common・c1 | `card_common_resonance_03.webp` | 512×768・112KB | 0.81／157／150／47.9 | A 共通型 |
+| 23 | card_common_resonance_04 | 秘技・満ちる | 共通・共鳴・rare・c3 | `card_common_resonance_04.webp` | 512×768・178KB | 0.69／148／150／70.5 | A 共通型 |
+| 24 | card_common_support_04 | 息継ぎ | 共通・支援・common・c1 | `card_common_support_04.webp` | 512×768・77KB | 0.4／167／87／39.7 | A 共通型 |
+| 25 | card_common_support_05 | 大治癒 | 共通・支援・common・c3 | `card_common_support_05.webp` | 512×768・113KB | 0.6／178／117／40 | A 共通型 |
+| 26 | card_common_hinder_03 | 威嚇 | 共通・妨害・common・c1 | `card_common_hinder_03.webp` | 512×768・117KB | 0.7／67／97／47.5 | A 共通型 |
+| 27 | card_common_hinder_04 | 金縛り | 共通・妨害・common・c3 | `card_common_hinder_04.webp` | 512×768・110KB | 0.71／61／82／46 | A 共通型 |
+| 28 | card_common_oracle_03 | 小さな託宣 | 共通・神託・rare・c1 | `card_common_oracle_03.webp` | 512×768・83KB | 0.57／108／134／26 | A 共通型 |
+| 29 | card_common_support_06 | 闘志 | 共通・支援・common・c1 | `card_common_support_06.webp` | 512×768・129KB | 0.79／93／148／55.6 | A′ 共通（8/16 追加） |
+| 30 | card_common_attack_09 | 連撃 | 共通・攻撃・common・c2 | `card_common_attack_09.webp` | 512×768・104KB | 0.83／55／111／36.4 | A′ 共通（8/16 追加） |
+| 31 | card_common_support_07 | 見通し | 共通・支援・common・c1 | `card_common_support_07.webp` | 512×768・91KB | 0.79／81／124／34.6 | A′ 共通（8/16 追加） |
+| 32 | card_common_hinder_05 | 浄めの光 | 共通・妨害・common・c2 | `card_common_hinder_05.webp` | 512×768・134KB | 0.59／87／154／56.6 | A′ 共通（8/16 追加） |
+| 33 | card_ebisu_attack_01 | 大漁 | 恵比寿専用・攻撃・rare・c2 | `card_ebisu_attack_01.webp` | 512×768・126KB | 0.53／126／153／43.7 | C 絵本調 |
+| 34 | card_ebisu_support_01 | 福授け | 恵比寿専用・支援・rare・c1 | `card_ebisu_support_01.webp` | 512×768・122KB | 0.6／134／153／36.8 | C 絵本調 |
+| 35 | card_ebisu_attack_02 | 潮招き | 恵比寿専用・攻撃・rare・c2 | `card_ebisu_attack_02.webp` | 512×768・132KB | 0.44／134／153／42.7 | C 絵本調 |
+| 36 | card_ebisu_support_02 | 恵比寿顔 | 恵比寿専用・支援・rare・c2 | `card_ebisu_support_02.webp` | 512×768・107KB | 0.65／132／165／35.2 | C 絵本調 |
+| 37 | card_taiyo_attack_01 | 豪快な一撃 | 大耀専用・攻撃・rare・c2 | `card_taiyo_attack_01_v2.webp` | 640×960・90KB | 0.79／61／177／29.1 | D v2 Brief |
+| 38 | card_taiyo_support_01 | 姉御の号令 | 大耀専用・支援・rare・c1 | `card_taiyo_support_01.webp` | 512×768・121KB | 0.67／74／115／38.2 | B 神専用（装飾） |
+| 39 | card_taiyo_attack_02 | 一心不乱 | 大耀専用・攻撃・rare・c1 | `card_taiyo_attack_02.webp` | 512×768・107KB | 0.62／83／160／31 | B 神専用（装飾） |
+| 40 | card_taiyo_support_02 | 後輩想い | 大耀専用・支援・rare・c2 | `card_taiyo_support_02.webp` | 512×768・100KB | 0.68／98／136／29.8 | B 神専用（装飾） |
+| 41 | card_sobi_guard_01 | 不動の構え | 蒼毘専用・防御・rare・c2 | `card_sobi_guard_01.webp` | 512×768・113KB | 0.48／78／105／36.4 | B 神専用（装飾） |
+| 42 | card_sobi_guard_02 | 誓いの盾 | 蒼毘専用・防御・rare・c1 | `card_sobi_guard_02.webp` | 512×768・118KB | 0.54／94／155／35.3 | B 神専用（装飾） |
+| 43 | card_sobi_attack_01 | 反撃の刃 | 蒼毘専用・攻撃・rare・c2 | `card_sobi_attack_01.webp` | 512×768・107KB | 0.4／77／140／34.6 | B 神専用（装飾） |
+| 44 | card_sobi_hinder_01 | 一喝 | 蒼毘専用・妨害・rare・c2 | `card_sobi_hinder_01.webp` | 512×768・92KB | 0.5／62／92／30.9 | B 神専用（装飾） |
+| 45 | card_saika_resonance_01 | 魅惑の舞 | 才華専用・共鳴・rare・c2 | `card_saika_resonance_01.webp` | 512×768・113KB | 0.52／107／149／30.6 | B 神専用（装飾） |
+| 46 | card_saika_support_01 | 喝采 | 才華専用・支援・rare・c1 | `card_saika_support_01.webp` | 512×768・115KB | 0.58／96／135／32 | B 神専用（装飾） |
+| 47 | card_saika_attack_01 | 独奏 | 才華専用・攻撃・rare・c1 | `card_saika_attack_01.webp` | 512×768・116KB | 0.44／106／153／32.6 | B 神専用（装飾） |
+| 48 | card_saika_support_02 | アンコール | 才華専用・支援・rare・c2 | `card_saika_support_02.webp` | 512×768・112KB | 0.52／111／137／30.9 | B 神専用（装飾） |
+| 49 | card_juraku_hinder_01 | 悪戯 | 寿楽専用・妨害・rare・c1 | `card_juraku_hinder_01.webp` | 512×768・116KB | 0.45／120／149／40 | B 神専用（装飾） |
+| 50 | card_juraku_guard_01 | 長生きの知恵 | 寿楽専用・防御・rare・c1 | `card_juraku_guard_01.webp` | 512×768・118KB | 0.52／132／154／40.2 | B 神専用（装飾） |
+| 51 | card_juraku_attack_01 | からかい半分 | 寿楽専用・攻撃・rare・c2 | `card_juraku_attack_01.webp` | 512×768・119KB | 0.35／120／146／42 | B 神専用（装飾） |
+| 52 | card_juraku_resonance_01 | 気まぐれ | 寿楽専用・共鳴・rare・c1 | `card_juraku_resonance_01.webp` | 512×768・119KB | 0.51／123／139／39.9 | B 神専用（装飾） |
+| 53 | card_fukuei_attack_01 | 一攫千金 | 福永専用・攻撃・rare・c2 | `card_fukuei_attack_01.webp` | 512×768・124KB | 0.65／110／165／32.8 | B 神専用（装飾） |
+| 54 | card_fukuei_support_01 | 幸運の女神 | 福永専用・支援・rare・c1 | `card_fukuei_support_01.webp` | 512×768・115KB | 0.65／125／150／34.7 | B 神専用（装飾） |
+| 55 | card_fukuei_resonance_01 | 冒険者の勘 | 福永専用・共鳴・rare・c2 | `card_fukuei_resonance_01.webp` | 512×768・115KB | 0.61／110／148／35 | B 神専用（装飾） |
+| 56 | card_fukuei_attack_02 | 不屈の一歩 | 福永専用・攻撃・rare・c1 | `card_fukuei_attack_02.webp` | 512×768・117KB | 0.61／105／159／34.7 | B 神専用（装飾） |
+| 57 | card_shouren_support_01 | 福袋 | 笑蓮専用・支援・rare・c2 | `card_shouren_support_01.webp` | 512×768・101KB | 0.62／130／160／28.3 | B 神専用（装飾） |
+| 58 | card_shouren_guard_01 | 懐の深さ | 笑蓮専用・防御・rare・c2 | `card_shouren_guard_01.webp` | 512×768・98KB | 0.6／134／155／29 | B 神専用（装飾） |
+| 59 | card_shouren_support_02 | 笑って許す | 笑蓮専用・支援・rare・c1 | `card_shouren_support_02.webp` | 512×768・91KB | 0.56／138／163／28.6 | B 神専用（装飾） |
+| 60 | card_shouren_attack_01 | おおらかな一打 | 笑蓮専用・攻撃・rare・c1 | `card_shouren_attack_01.webp` | 512×768・100KB | 0.55／117／173／29.2 | B 神専用（装飾） |
 
-参照されていないファイル：`card_taiyo_attack_01.webp`（1）。カード定義 0 枚・cardArt 登録 60 枚・実ファイル 61 枚。
+参照されていないファイル：`card_taiyo_attack_01.webp`（1）。カード定義 60 枚・cardArt 登録 60 枚・実ファイル 61 枚。
 
 - 全 60 枚が `cardArt.ts` に登録され、SVG フォールバック（絵なし）は 0 枚。`card_taiyo_attack_01.webp`（旧・362px 系）だけが未参照で残っている（決定243 で v2 に差し替え・旧ファイルは残す方針）
 - 共通 32 枚のうち 28 枚＝決定37（2026-08-05／06・2×2 シート生成→4 分割→拡大）、4 枚＝決定84（2026-08-16・単体生成）。神専用 28 枚＝決定37 バッチ 8〜14。大耀 v2 1 枚＝決定243（2026-09-28・1536×2304 ネイティブ→640×960）
