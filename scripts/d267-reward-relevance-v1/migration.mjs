@@ -4,7 +4,8 @@
 //
 // 旧データを持つ端末を再現し、通常勝利 → 報酬 3 択 → 1 枚選択 まで進めて確認する：
 //   M1 既存 `sevengods.rewardBonuses`（version 1）は形式不変のまま読まれ、選んだ札だけ +1 される（既存 bonus は保持）
-//   M2 壊れた／version 違いの `sevengods.rewardHistory` は空として扱われ（3 択は成立）、確定時に version 1 で書き直される
+//   M2 未来 version（v2）の `sevengods.rewardHistory` は空として扱われ（3 択は成立）、確定時にも**書き換えられない**
+//      （RL-01 Save Compatibility Guard R3・docs/STORAGE_VERSION_POLICY.md。2026-10-09 以前は「version 1 で書き直される」を PASS 条件にしていた）
 //   M3 `sevengods.deckPreference`・`sevengods.records` など他 key は触られない（内容一致）
 //   M4 bonus>0 かつ編成が上限未満の札（余り枠あり）は 3 択に出ない（D4）
 import { mkdirSync, writeFileSync } from 'node:fs'
@@ -123,7 +124,7 @@ const checks = [
   { label: 'M1 既存 bonus 保持（taiyo:2・ebisu 一撃:1）＋ 選んだ札 +1', pass: !!ab && ab.version === 1 && ab.bonuses.taiyo.card_taiyo_attack_01 === 2 && ab.bonuses.ebisu.card_common_attack_01 === 1 + (picked === 'card_common_attack_01' ? 1 : 0) && ab.bonuses.ebisu[picked] >= 1 },
   { label: 'M2 壊れた rewardHistory は起動時に消されない', pass: before.history === BROKEN_HISTORY },
   { label: 'M2 3 択は成立（3 枚・重複なし）', pass: !!reward && reward.length === 3 && new Set(reward.map((c) => c.id)).size === 3 },
-  { label: 'M2 確定時に version 1 で書き直され offered に 3 枚', pass: !!ah && ah.version === 1 && JSON.stringify(ah.gods.ebisu.offered) === JSON.stringify(reward?.map((c) => c.id)) && ah.gods.ebisu.declined.length === 0 },
+  { label: 'M2 確定後も未来 version（v2）の rewardHistory は 1 バイトも書き換えられない（RL-01 R3）', pass: !!after && after.history === BROKEN_HISTORY && !!ah && ah.version === 2 },
   { label: 'M3 records 不変（勝利記録以外の形式）', pass: !!after && j(after.records)?.version === 1 && j(after.records)?.records?.ebisu?.wins === 4 },
   { label: 'M3 deckPreference は編成確定で書かれ、報酬で変わらない', pass: !!after && after.deckPref === deckPrefAfterStart },
   { label: 'M4 余り枠あり（一撃 bonus1・編成 1 枚）は 3 択に出ない', pass: !!reward && !reward.some((c) => c.id === 'card_common_attack_01') },
