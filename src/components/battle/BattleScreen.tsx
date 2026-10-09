@@ -29,7 +29,9 @@ import { deriveDefeatCause } from './defeatCause'
 import { useDecisionCallout } from './useDecisionCallout'
 import { BattleCallout } from './BattleCallout'
 import { buildBattleRecap } from './battleRecap'
-import { preloadSe } from './sound'
+import { playVoice, preloadSe, preloadVoice, stopVoice } from './sound'
+import { duckBgm } from './bgm'
+import { VOICE_LAYER } from './feelTier'
 import { useBattleSound } from './useBattleSound'
 import { useFloatingNumbers } from './useFloatingNumbers'
 import { CAST_FX, getEnemyDamagePowerTier, TYPE_STYLE } from './cardStyle'
@@ -269,11 +271,23 @@ export function BattleScreen({
     if (battleStartKey > seenStartKeyRef.current) {
       seenStartKeyRef.current = battleStartKey
       preloadSe()
+      // Official Voice Pilot v1：入口の間に神の「あいさつ」（公式ボイス）を取得・デコードしておく（配信していない神は何もしない）
+      if (state) preloadVoice(state.godId, 'greeting')
       setEntranceVariant(takeBattleEntranceVariant())
       setEntranceKey(battleStartKey)
     }
   }, [battleStartKey])
-  const handleEntranceDone = useCallback(() => setEntranceKey(0), [])
+  // Official Voice Pilot v1：入口が終わった（操作できるようになった）瞬間に神の「あいさつ」を 1 戦 1 回鳴らし、
+  // その間だけ BGM を下げる（決定257 の duck 経路）。新規開始の入口でしか呼ばれないので「続きから」では鳴らない。
+  const voiceGodIdRef = useRef(state?.godId ?? null)
+  voiceGodIdRef.current = state?.godId ?? null
+  const handleEntranceDone = useCallback(() => {
+    setEntranceKey(0)
+    const godId = voiceGodIdRef.current
+    if (godId) playVoice(godId, 'greeting', { onStart: (ms) => duckBgm(ms + VOICE_LAYER.duckTailMs) })
+  }, [])
+  // 戦闘画面を離れる（Retry／もう一度／Home）ときに鳴り続けない
+  useEffect(() => () => stopVoice(), [])
 
   // 決定128 → Phase 6-A（決定162）：撃破の順序。最後の一撃 → 表示HP 0 → 敵フラッシュ・崩壊 →
   // 「撃破」→ 報酬 → 結果（決定43の報酬→結果の順序は変えない）。時刻は useCombatPresentation が

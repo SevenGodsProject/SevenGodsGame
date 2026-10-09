@@ -1,0 +1,91 @@
+{
+  "base": "http://localhost:4173",
+  "at": "2026-10-09T11:33:55.033Z",
+  "allPass": true,
+  "results": [
+    {
+      "viewport": "pc",
+      "muted": false,
+      "inBattle": true,
+      "voiceRequests": [
+        {
+          "url": "/assets/voice/taiyo/greeting.mp3",
+          "afterStartMs": 3076
+        }
+      ],
+      "voiceStarts": [
+        {
+          "duration": 11.783,
+          "atMs": 6867,
+          "rate": 1
+        }
+      ],
+      "seStartsCount": 2,
+      "duck": {
+        "down": {
+          "value": 0.343,
+          "atMs": 6867
+        },
+        "up": {
+          "value": 1,
+          "atMs": 6867
+        }
+      },
+      "errors": [],
+      "pass": true
+    },
+    {
+      "viewport": "pc",
+      "muted": true,
+      "inBattle": true,
+      "voiceRequests": [],
+      "voiceStarts": [],
+      "seStartsCount": 0,
+      "duck": null,
+      "errors": [],
+      "pass": true
+    },
+    {
+      "viewport": "sp",
+      "muted": false,
+      "inBattle": true,
+      "voiceRequests": [
+        {
+          "url": "/assets/voice/taiyo/greeting.mp3",
+          "afterStartMs": 1502
+        }
+      ],
+      "voiceStarts": [
+        {
+          "duration": 11.783,
+          "atMs": 5168,
+          "rate": 1
+        }
+      ],
+      "seStartsCount": 3,
+      "duck": {
+        "down": {
+          "value": 0.343,
+          "atMs": 5168
+        },
+        "up": {
+          "value": 1,
+          "atMs": 5168
+        }
+      },
+      "errors": [],
+      "pass": true
+    },
+    {
+      "viewport": "sp",
+      "muted": true,
+      "inBattle": true,
+      "voiceRequests": [],
+      "voiceStarts": [],
+      "seStartsCount": 0,
+      "duck": null,
+      "errors": [],
+      "pass": true
+    }
+  ]
+}
