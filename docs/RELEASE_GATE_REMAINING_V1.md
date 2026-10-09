@@ -1,6 +1,8 @@
 > **状態（2026-10-09・Lane 3・AI 整理）：DoD の状態表と CI 初回実行の安全手順。CI の実行・master の push・Production 反映はいずれも CEO 承認後。本書は何も PASS 扱いにしない。** 
 > **2026-10-10 更新：Practical QA v3 ＋ 実機 perf 3 問 ＋ Voice Q8 ＋ A11y Q9 を CEO が実施（A 0／B 0・CEO evidence・初見 0 名・D1 未実施）→ DoD #14／#15／#16 DONE・Voice Human QA PASS（統合 READY）。残項目の優先度順と CEO 判断 4 件は integ master の `docs/PRACTICAL_QA_V3_RESULT.md` §7・§9 を正とする。本書 §A の該当行だけ更新し、§C の CI 手順は不変。**
 
+> **2026-10-10 追記（Lane 1）：RC-2 束ねの残項目三分（CEO 判断待ち／AI 完了可能／完了済み）・credits → voice の統合順序（merge-tree conflict 0・重複 0 実測）・CI 初回実行の安全条件 C1〜C8（UNVERIFIED 2 件＝Vercel Preview 設定・repo 可視性）は `docs/RC2_INTEGRATION_PLAN_V1.md`。Legal 文言の確定候補全文は `docs/LEGAL_CREDITS_SCREEN_V1.md` §2-2。本書 §C の手順は不変。**
+
 # v1.0.0 Release Gate — 残作業と CI 初回実行の安全手順（read-only 調査・2026-10-09）
 
 - 対象：`C:\Users\kimi1\SevenGodsGame-integ`（master `021795b`）。origin/master＝`641ea5c`（Production HEAD・`RELEASE_STATUS.md:12`）。**master は origin より 22 commit 先行・origin 側の新規 0**（`git rev-list --count`）。
