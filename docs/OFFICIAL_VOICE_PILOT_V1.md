@@ -88,3 +88,17 @@
 - 技術：`src/core` 0・save 0・UI 0・+189KB 遅延。Release Gate の回帰リスクは低
 - 順序：**Public Face Pack v1（CM-01）→ Save Compatibility Guard → Release Safety → Practical QA v3 → v1.0** は変えない。本 Pilot は **CEO Human QA PASS 後に master へ merge**（CEO 承認）し、v1.0 の Practical QA v3 に「大耀の声」1 問を同梱する案を推奨（別 Human QA Lane を増やさない）
 - 権利：Kit §5 で明文化済み（KNOWN）。CEO 判断事項なし（§6-3 #5 は「可否認定」であり、本件は Kit 規約の範囲内の利用。CEO が念のため SGG 運営へ相談する選択は可）
+
+## 9. CEO Human QA 手順（2026-10-09 Gate Review：一問ずつ・master 統合しない）
+
+| 手順 | 内容 |
+|---|---|
+| 配信 | 本 worktree（`SevenGodsGame-voice-pilot`・`95125e5` のビルド）を `vite preview --host 0.0.0.0 --port 4173` で配信中。PC：`http://127.0.0.1:4173/`／iPhone（同じ Wi-Fi）：`http://192.168.11.6:4173/`（AI が LAN から 200 を確認） |
+| 止まっていたら | PowerShell で `cd C:\Users\kimi1\SevenGodsGame-voice-pilot; npx vite preview --host 0.0.0.0 --port 4173` |
+| iPhone から開けないとき | Windows Firewall が 4173 を遮断している。管理者 PowerShell で 1 回：`New-NetFirewallRule -DisplayName "SEVEN GODS preview 4173" -Direction Inbound -Protocol TCP -LocalPort 4173 -Profile Private -Action Allow`（QA 後に `Remove-NetFirewallRule -DisplayName "SEVEN GODS preview 4173"`）。Wi-Fi が「パブリック」プロファイルなら Private を Public に |
+| 準備 | 画面右上のスピーカーが**ミュートでない**こと（iPhone はサイレントスイッチ OFF・音量 50% 程度）。ホームで「神を選ぶ」→ **大耀** → 構成を決めて敵を選び「この構成でバトル開始」 |
+| 起きること | 入口「降臨の間」（初回 2.8 秒）が終わって操作できる瞬間に大耀の声（11.8 秒）。その間 BGM が下がり、終わると戻る |
+| **Q1** | 大耀の声で「自分の神が目の前にいる」と感じたか → **YES／NO**（NO なら Q2 以降は不要・撤去） |
+| **Q2** | 11.8 秒は長すぎないか（R1 でカードを読む邪魔になったか） → **YES（長い）／NO**（長いなら §5-1 の a「セッション 1 回」／b「冒頭だけ」のどちらを試すか） |
+| **Q3** | iPhone で BGM が下がり、ミュートボタンで声が止まるか → **YES／NO** |
+| 補足確認 | 「続きから」再開では鳴らない／入口を skip しても鳴る（鳴らない方が良ければ記入） |
