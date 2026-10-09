@@ -1,4 +1,4 @@
-import { SE_DEDUP_WINDOW_MS, SE_GAIN, SOUND_LAYER, TAP_END_ROUND_RATE, type FeelTier } from './feelTier'
+import { SE_DEDUP_WINDOW_MS, SE_GAIN, SOUND_LAYER, TAP_END_ROUND_RATE, VOICE_LAYER, type FeelTier } from './feelTier'
 
 /**
  * 決定128（Game Feel Phase）：効果音エンジン。
@@ -33,6 +33,8 @@ export function getAudioContext(): AudioContext | null {
 
 export function setSoundMuted(value: boolean): void {
   muted = value
+  // Official Voice Pilot v1：数秒続くボイスはミュートした瞬間に止める（SE は短いので従来どおり新規再生だけ止める）
+  if (value) stopVoice()
 }
 
 export function isSoundMuted(): boolean {
@@ -330,4 +332,131 @@ export const sfx = {
   reward: () => playBuffer('reward', { gain: SE_GAIN.reward }),
   victory: () => playBuffer('victory_sting', { gain: SE_GAIN.bigMoment * 0.8 }),
   defeat: () => playBuffer('defeat_sting', { gain: SE_GAIN.stateChange }),
+}
+
+// ---- Official Voice Pilot v1：SGG Creator Kit v1.1 の公式ボイス（神の声） ----
+/**
+ * 公式ボイスの経路。SE と同じ AudioContext・同じミュートフラグ・同じ fetch→decode キャッシュだが、
+ * 以下が SE と違う：
+ * - 音源は Kit 配布の MP3 を**無改変**で配信する（`public/assets/voice/<god>/<scene>.mp3`。原本は
+ *   `audio-source/voice/`・sha256 は Kit MCP `get_voice` と一致。台帳 VOICE-KIT-01）
+ * - 同時に鳴るボイスは常に 1 本（新しく鳴らすときは前のボイスを止める＝連続再生防止）
+ * - fallback の合成トーンは持たない（取得・デコードに失敗したら無音）
+ * - 入口の終わりから `VOICE_LAYER.lateDropMs` 以上遅れて届いたら鳴らさない
+ * 権利：`docs/assets-kit/SGG-CREATOR-KIT-RIGHTS.md` §5（Updated 2026-10-08）。公式の声は Kit 配布分のみ。
+ * 本作に自作ボイスは無く、ここに載せる音源は Kit 原本だけ（自作音源を「公式」と表示しない）。
+ */
+export const VOICE_BASE_PATH = '/assets/voice/'
+
+export type VoiceScene = 'greeting' | 'crisis' | 'fatigue' | 'success'
+
+/**
+ * 配信中の公式ボイス（神 id → 場面 → `VOICE_BASE_PATH` からの相対パス）。
+ * Pilot v1＝大耀「あいさつ」1 本。7 神展開は別 Gate（docs/OFFICIAL_VOICE_PILOT_V1.md §7）。
+ */
+export const OFFICIAL_VOICES: Readonly<Record<string, Readonly<Partial<Record<VoiceScene, string>>>>> = {
+  taiyo: { greeting: 'taiyo/greeting.mp3' },
+}
+
+export function hasOfficialVoice(godId: string, scene: VoiceScene): boolean {
+  return typeof OFFICIAL_VOICES[godId]?.[scene] === 'string'
+}
+
+const voiceBuffers = new Map<string, AudioBuffer | null>()
+const voiceLoading = new Map<string, Promise<AudioBuffer | null>>()
+let activeVoice: { src: AudioBufferSourceNode; gain: GainNode } | null = null
+
+function loadVoice(path: string): Promise<AudioBuffer | null> {
+  const cached = voiceBuffers.get(path)
+  if (cached !== undefined) return Promise.resolve(cached)
+  const pending = voiceLoading.get(path)
+  if (pending) return pending
+  const audioCtx = getCtx()
+  if (!audioCtx || typeof fetch !== 'function') return Promise.resolve(null)
+  const p = fetch(`${VOICE_BASE_PATH}${path}`)
+    .then((r) => (r.ok ? r.arrayBuffer() : Promise.reject(new Error(String(r.status)))))
+    .then((ab) => audioCtx.decodeAudioData(ab))
+    .then((buf) => {
+      voiceBuffers.set(path, buf)
+      return buf
+    })
+    .catch(() => {
+      voiceBuffers.set(path, null)
+      return null
+    })
+    .finally(() => voiceLoading.delete(path))
+  voiceLoading.set(path, p)
+  return p
+}
+
+/** 入口（降臨の間）の間に取得・デコードしておく。配信していない神・場面・ミュート中は何もしない */
+export function preloadVoice(godId: string, scene: VoiceScene): void {
+  if (muted) return
+  const path = OFFICIAL_VOICES[godId]?.[scene]
+  if (path) void loadVoice(path)
+}
+
+/** 鳴っているボイスを止める（ミュート・画面離脱・次のボイス）。鳴っていなければ何もしない */
+export function stopVoice(): void {
+  const v = activeVoice
+  activeVoice = null
+  if (!v) return
+  try {
+    v.src.onended = null
+    v.src.stop()
+  } catch {
+    /* 既に止まっている */
+  }
+  v.src.disconnect()
+  v.gain.disconnect()
+}
+
+type VoiceOptions = {
+  /** 実際に鳴り始めるときに 1 回だけ呼ぶ（ボイスの長さ ms を渡す。BGM duck の長さに使う） */
+  onStart?: (durationMs: number) => void
+}
+
+/**
+ * 公式ボイスを 1 本鳴らす。配信していない神・場面、ミュート中、AudioContext 不可なら false。
+ * true は「鳴らす手続きを始めた」の意味で、取得失敗・遅延 drop では結果的に無音になる。
+ */
+export function playVoice(godId: string, scene: VoiceScene, opts: VoiceOptions = {}): boolean {
+  if (muted) return false
+  const path = OFFICIAL_VOICES[godId]?.[scene]
+  if (!path) return false
+  const audioCtx = getCtx()
+  if (!audioCtx) return false
+  const requestedAt = audioCtx.currentTime
+  const start = (buf: AudioBuffer) => {
+    if (muted) return
+    stopVoice()
+    const src = audioCtx.createBufferSource()
+    src.buffer = buf
+    const gain = audioCtx.createGain()
+    gain.gain.value = Math.max(0, Math.min(1, VOICE_LAYER.gain * SE_GAIN.master))
+    src.connect(gain)
+    gain.connect(audioCtx.destination)
+    const handle = { src, gain }
+    activeVoice = handle
+    src.onended = () => {
+      if (activeVoice === handle) activeVoice = null
+      src.disconnect()
+      gain.disconnect()
+    }
+    opts.onStart?.(buf.duration * 1000)
+    src.start(audioCtx.currentTime)
+  }
+  const cached = voiceBuffers.get(path)
+  if (cached) {
+    start(cached)
+    return true
+  }
+  if (cached === null) return false
+  void loadVoice(path).then((buf) => {
+    if (!buf) return
+    const late = (audioCtx.currentTime - requestedAt) * 1000
+    if (late > VOICE_LAYER.lateDropMs) return
+    start(buf)
+  })
+  return true
 }

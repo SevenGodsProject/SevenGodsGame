@@ -316,6 +316,16 @@ CEO INPUT が不要なもの：SE（自作）、Kit 公式ファイルの sha256
 
 本表（2026-09-27）は保持。SE-02（2026-10-02 追加）・CARD-TAIYO-02（§2-3）・VID-01（§3-K）を含む最新の行数と**事実状態**の集計は §7-4。
 
+### 3-L. 公式ボイス（1 行・2026-10-09 追加・Official Voice Pilot v1）
+
+共通：Creator＝**Kit 公式**（SGG Creator Kit v1.1・公式ボイス。SGG が 2026-10-08 に公開）／Model-Service＝—（本作側で生成・収録・加工 0）／Source＝`audio-source/voice/<god>/<god>-<scene>.mp3`（Kit 配布 MP3 の原本・無改変）／配信＝同じバイト列を `public/assets/voice/<god>/<scene>.mp3` に置く（再エンコード・トリミング 0＝配信 sha256 ＝ 原本 sha256 ＝ Kit MCP `get_voice` の sha256）／Prompt reference＝—／Reference inputs＝—／**Terms＝`SGG-FAN-CREATION-GUIDELINES-1.0.0`（Updated 2026-10-08・§5「キャラクターの声」追加。termsId は据え置きのため本台帳では「1.0.0（Updated 2026-10-08）」と書く。AI 確認 2026-10-09・`docs/assets-kit/SGG-CREATOR-KIT-RIGHTS.md` を同日版へ更新）**／Commercial＝可（§1・§2「SGG Creator Kit など SGG が利用を許可した公式配布素材の加工と作品への組み込み」）／Attribution＝任意（§4）／**公式表示＝可**（§5「SEVEN GODS の公式の声は、SGG Creator Kit で配布している音声だけです」＝本行の音源はその配布分そのもの。本作に自作ボイスは 0 本。将来 OTOMO・敵に自作音声を足す場合は「公式」「公式ボイス」「公認」と表示しない）／Canonical＝Kit MCP `get_voice`（`https://sgg-creator-kit.svc-manage-2020.workers.dev/mcp`）の `key`＋`sha256`。2D manifest（v1.1.0）にはボイス項目が無い。Status＝◎（**KNOWN**）。
+
+| ID | Path（配信） | Source（原本） | Category | Creator | Kit key（Canonical） | 尺・形式【実測 2026-10-09】 | Terms | Evidence（sha256） | Status |
+|---|---|---|---|---|---|---|---|---|---|
+| VOICE-KIT-01 | `voice/taiyo/greeting.mp3`（189,357B・戦闘開始の入口直後に 1 戦 1 回・`src/components/battle/sound.ts` `OFFICIAL_VOICES`） | `audio-source/voice/taiyo/taiyo-greeting.mp3`（同一バイト列・tracked） | voice | Kit 公式 | `voice/v1/taiyo/taiyo-greeting.mp3`（character `taiyo-god`・scene `greeting`・label「あいさつ」） | **11.78 秒**（Chromium `decodeAudioData` の実測 11.783s・gapless トリム後。フレーム数からの素の長さ 493×1152／48,000＝11.83s）・MP3 CBR 128kbps・**48kHz**・493 frames・ID3v2.4（TSSE `Lavf62.12.100`）・Xing/Info ヘッダあり | 1.0.0（Updated 2026-10-08）・AI 確認 2026-10-09 | `cdb5d44c6b0c48d7a676f11b2d69a4d4dbb69e0f90abb1efd143ba2264aba3cc`（原本＝配信＝MCP の 3 者一致【実測】。`officialVoice.test.ts` が配信ファイルの sha256 をこの値で固定） | ◎（KNOWN） |
+
+予約（未配置・7 神展開 Gate 用。配置前に行を埋める §1-4）：VOICE-KIT-02〜07＝ebisu／sobi／saika／juraku／fukuei／shouren の greeting（Kit MCP の bytes：122,925／139,821／170,541／125,229／128,685／150,957）。crisis／fatigue／success は Pilot の対象外。
+
 ## 6. 参照
 
 - `docs/PREMIUM_PHASE_JUDGMENT_2026-09-27.md` §2（棚卸し・画風系統 A〜F）・§2-3（権利整理）・§5-3・§6（CEO 確認事項）

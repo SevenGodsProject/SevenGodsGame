@@ -54,6 +54,21 @@ export const TAP_END_ROUND_RATE = 0.85
  */
 export const SE_DEDUP_WINDOW_MS = 30
 
+/**
+ * Official Voice Pilot v1（SGG Creator Kit v1.1 公式ボイス）：神の「あいさつ」を入口（降臨の間）が
+ * 終わった瞬間に 1 戦 1 回だけ鳴らす。音だけの値で、ゲーム規則・時刻表には関与しない。
+ * - gain：master を掛けて 0.68＝神の一撃の着弾（impact[4]＝0.85）未満・State Change（0.55）以上
+ * - duckTailMs：ボイスが終わってから BGM を戻すまでの余韻（決定257 の duck 経路を流用）
+ * - lateDropMs：入口の終わりからこれ以上遅れて届いた（取得・デコードが遅い）ボイスは鳴らさない
+ *   （R1 の思考中に唐突に始まるのを防ぐ。入口中に preload するので通常は遅れない）
+ * 詳細 docs/OFFICIAL_VOICE_PILOT_V1.md §2。
+ */
+export const VOICE_LAYER = {
+  gain: 0.8,
+  duckTailMs: 300,
+  lateDropMs: 1500,
+} as const
+
 /** CSS クラス名（EnemyPanel／FloatingNumbers が使う） */
 export function feelTierClass(prefix: string, tier: FeelTier): string {
   return `${prefix}-l${tier}`
