@@ -20,17 +20,18 @@
 | 順 | 操作 | 誰が | 確認 |
 |---|---|---|---|
 | 1 | Vercel Dashboard → Project `seven-gods-game` → Settings → Git → **Ignored Build Step** → Behavior「Custom」→ Command に下を貼る → Save | **CEO** | 保存後の画面を 1 枚 |
-| 2 | ローカルで事前確認：`git diff --quiet origin/master master -- . ':!docs' ':!*.md'` が **exit 0**（docs 以外の差分なし）であること | AI | 実測（F6 で 0 を確認済み） |
+| 2 | ローカルで事前確認：`git diff --quiet origin/master master -- . ':!docs' ':!scripts' ':!*.md'` が **exit 0**（docs 以外の差分なし）であること | AI | 実測（F6 で 0 を確認済み） |
 | 3 | `git push origin master`（docs-only 3 commit） | **CEO の明示指示**を受けて AI、または CEO | push 直前に 2 を再実行 |
 | 4 | 検証：GitHub Deployments API で新 deployment の state が **`canceled`／`error` ではなく「Ignored」相当**（Vercel 側では Canceled 表示）・Production の配信 JS が `index-Da5QBYVM.js` のまま・`https://seven-gods-game.vercel.app/` の右下が `v1.0.0 (d2135d2)` のまま | AI（read-only） | 変わっていたら即報告（rollback は CEO） |
 
 Ignored Build Step のコマンド（**docs／Markdown だけの push なら build しない**。runtime を含む push は従来どおり build）：
 
 ```
-git diff --quiet "${VERCEL_GIT_PREVIOUS_SHA:-HEAD^}" HEAD -- . ':!docs' ':!*.md'
+git diff --quiet "${VERCEL_GIT_PREVIOUS_SHA:-HEAD^}" HEAD -- . ':!docs' ':!scripts' ':!*.md'
 ```
 
 - `git diff --quiet` は差分が無ければ exit 0（＝無視）、あれば exit 1（＝build）。`VERCEL_GIT_PREVIOUS_SHA`（前回成功 deployment の sha）を使うと、複数 commit をまとめて push したときも**前回 deploy 以降の全差分**で判定する（`HEAD^` だけだと最後の 1 commit しか見ない）。変数が無い環境では `HEAD^` にフォールバック
+- `scripts/` も除外する理由：未 push 3 commit には S1 用 `home-version-smoke.mjs`（新規）と `qa-flow.mjs`（オプション追加）が含まれる。`scripts/` は vite build の入力ではない（CI でも実行されない）ので runtime に影響しない
 - 副作用：以後、docs だけの push は常に build されない（意図どおり）。runtime を含む push は build される（v1.0.x の Release 時はこれまでどおり）
 
 却下した案：**`vercel.json` の `ignoreCommand` を先に commit**（`vercel.json` 自体が docs 以外の差分なので、その push で 1 回 build が走り Production の deployment id が変わる＝「確実に抑止」にならない。Dashboard 設定の後なら file 化は可）／**docs を別 branch に push**（Preview deployment が作られうる・master の docs が古いまま）／**push しない**（RELEASE_STATUS と DECISIONS が Production と食い違ったまま）。
