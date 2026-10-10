@@ -4,7 +4,23 @@ Production の「確定状態」を一目で確認するための要約です。
 
 ## A. 現在の Production 状態（2026-10-07・決定267 PRODUCTION LIVE / CLOSED）
 
-### A-1. Release Summary
+### A-0. v1.0.0 正式公開（2026-10-10・CEO 決定「維持」2026-10-10・凍結 2026-10-11）
+
+| 項目 | 状態 |
+|---|---|
+| **Release** | **SEVEN GODS：共鳴カードバトル v1.0.0**（決定277 候補 Release Preparation → 決定278 候補 Production Smoke）。内容：CM-01 Public Face・RL-01／01b Save Compatibility・RL-03 CI・A11y Minimum Pack・Legal／Credits（確定文言）・Official Voice Pilot（大耀「あいさつ」）・version 1.0.0。engine・rules・カード・敵は決定267 から不変（`gameVersion` 不変） |
+| **Production HEAD** | master = origin/master **`d2135d2`**（version bump `ac126e6`＋docs）。runtime を最後に変更した commit＝`f2366a6`（Credits A-1） |
+| **Vercel deployment** | **`6973326943`**（sha `d2135d2`）／Production bundle `index-Da5QBYVM.js`（467.28kB）。Production URL https://seven-gods-game.vercel.app/ |
+| **Rollback 先** | deployment **`6894630098`**（sha `641ea5c`＝決定267 Release の Production）。Promote は CEO のみ・演習は未実施 |
+| **公開の経緯** | **AI の誤操作による CEO 未承認の `git push origin master`**（2026-10-09 23:48Z・DECISIONS「INCIDENT」行）→ Vercel 自動 deploy → CEO が 2026-10-10 に「維持」を決定。再発防止＝§A-5 と `docs/RELEASE_PROTECTION_V1.md` |
+| **CI** | private ミラー `SevenGodsGame-ci` run 38005977044 GREEN（`d2135d2`）／公開元 run 38006192084 GREEN（push と同時） |
+| **Release Gate** | `docs/V1_0_RC_GATE.md`：Ranking Absence 18/18・Secret Audit・通し QA 4 viewport・Save Migration（641ea5c → RC）・storage 10/10・A11y 72/72・Credits 40/40・Voice 4/4 |
+| **Production Smoke** | `docs/V1_0_PRODUCTION_SMOKE.md`：S1〜S6 **全 PASS**（headless Chromium・PC 1366／1508・SP 390×760／844・外部通信 0・console error 0）。**未実施（PASS 扱いにしない）**：①CEO 実機（iPhone Safari・PC ブラウザ）の目視 ②神託（託宣）の実使用（表示のみ確認） ③BGM／SE の聴感（API 記録で確認） |
+| **Known 凍結** | A-4 の K01〜K35 に **K36〜K39 を追加して凍結（CEO 承認 2026-10-11）** |
+| **tag** | `v1.0.0` **未作成**（CEO のみ・docs の公開方法確定後） |
+| **docs の未 push** | 本記録を含む docs-only commit（INCIDENT 行・Smoke 結果・本行）は **ローカルのみ**。origin への push は Vercel の再 deploy 抑止が確定してから（`docs/RELEASE_PROTECTION_V1.md` §2） |
+
+### A-1. Release Summary（決定267 時点の記録・履歴）
 
 | 項目 | 状態 |
 |---|---|
@@ -55,6 +71,13 @@ BURST 任意発動（127）／Ranking 統合（152・256 NO-GO・READY-DORMANT�
 | K34 | Character Integration／Duel HUD | **決定264 で主要 4 点 PASS → 残りは接地・枠**（C） | AR-02 |
 | 新 | battleSave 以外 13 storage が version 不一致で無言初期化 | **B 相当（version を上げる変更の前に必須）** | **RL-01** |
 | 新 | OGP／description／favicon／version 表示なし・Legal／Credits なし | 公開面 | CM-01〜03 |
+
+| **K36** | 公式ボイス：入口を skip しても鳴る（`OFFICIAL_VOICE_PILOT_V1.md` §5 #3・1 回・≤12 秒・ミュートで止まる。CEO Q8 PASS 時に許容） | C | BF-02 系（post-v1.0） |
+| **K37** | Credits S6「生成記録が揃っていない素材を制作者の責任で使用」は AI 追加文（事実のみ・禁止語 0。CEO が不要なら 1 行削除＝Fast Gate） | 文言 | CM-02 |
+| **K38** | 忠次 Pilot（v0.1〜v0.3）・Card Art Pilot 6 は v1.0 に含まれない（master に `enemy_08`／`shogunate` 参照 0・別 branch） | — | AR-04／将軍家 Pilot |
+| **K39** | 公開元 repo の CI は Production 公開と同時に初回実行された（同一 sha はミラーで GREEN 済み・公開元も GREEN）。以後は `docs/RELEASE_PROTECTION_V1.md` の経路で push 前に GREEN を取る | 運用 | RL-03 |
+
+**凍結（2026-10-11・CEO 承認）**：v1.0.0 時点の生存 Known は K01〜K39（CLOSED を除く）。新規の Known は v1.0.x の Decision 行で追加する。
 
 CLOSED（記録のみ）：K02 iOS 割り込み後 BGM 再開（CEO 実機 PASS 2026-10-03）。
 
