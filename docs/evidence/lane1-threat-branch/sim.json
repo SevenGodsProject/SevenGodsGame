@@ -1,0 +1,1921 @@
+{
+  "at": "2026-10-16T17:17:33.462Z",
+  "seeds": 40,
+  "gods": 7,
+  "ratio": 0.5,
+  "enemy09": {
+    "id": "enemy_09",
+    "name": "業斧の鬼将・軍略",
+    "maxHp": 94,
+    "threshold": 47
+  },
+  "baseline": {
+    "id": "enemy_02",
+    "name": "業斧の鬼将"
+  },
+  "policies": [
+    "greedy",
+    "raceAware",
+    "reader"
+  ],
+  "difficulties": [
+    "normal",
+    "hard"
+  ],
+  "gates": {
+    "G1": {
+      "pass": true,
+      "value": 0.418,
+      "range": [
+        0.35,
+        0.65
+      ],
+      "note": "then 率（enemy_09・normal・greedy・全神 pooled）",
+      "byPolicy": {
+        "greedy": 0.418,
+        "raceAware": 0.589,
+        "reader": 0.418
+      }
+    },
+    "G2": {
+      "pass": true,
+      "raceAware": {
+        "winRate": 1,
+        "meanScore": 630.1
+      },
+      "greedy": {
+        "winRate": 1,
+        "meanScore": 627
+      },
+      "reader": {
+        "winRate": 1,
+        "meanScore": 628.7
+      }
+    },
+    "G3": {
+      "pass": true,
+      "enemy09Reader": 1,
+      "enemy02Reader": 1,
+      "diffPt": 0,
+      "hard": {
+        "enemy09Reader": 1,
+        "enemy02Reader": 0.986
+      }
+    },
+    "G4": {
+      "informational": true,
+      "eitherFlipRate": 0.219,
+      "branchFlipRate": 0.219,
+      "statusFlipRate": 0,
+      "withChoiceRate": 0.489
+    }
+  },
+  "total": {
+    "enemy_02:normal:greedy": {
+      "n": 280,
+      "winRate": 1,
+      "status": {
+        "won": 280
+      },
+      "reachedR4": 280,
+      "thenRate": null,
+      "hpRatioAtR4Mean": 0.542,
+      "thenRateByCandidateRatio": {
+        "0.45": 0.289,
+        "0.5": 0.418,
+        "0.55": 0.586
+      },
+      "meanScore": 621.6,
+      "meanRound": 5.69,
+      "oracleAtR4Rate": 0.532
+    },
+    "enemy_02:normal:raceAware": {
+      "n": 280,
+      "winRate": 1,
+      "status": {
+        "won": 280
+      },
+      "reachedR4": 280,
+      "thenRate": null,
+      "hpRatioAtR4Mean": 0.542,
+      "thenRateByCandidateRatio": {
+        "0.45": 0.289,
+        "0.5": 0.418,
+        "0.55": 0.586
+      },
+      "meanScore": 624,
+      "meanRound": 5.67,
+      "oracleAtR4Rate": 0.982
+    },
+    "enemy_02:normal:reader": {
+      "n": 280,
+      "winRate": 1,
+      "status": {
+        "won": 280
+      },
+      "reachedR4": 280,
+      "thenRate": null,
+      "hpRatioAtR4Mean": 0.542,
+      "thenRateByCandidateRatio": {
+        "0.45": 0.289,
+        "0.5": 0.418,
+        "0.55": 0.586
+      },
+      "meanScore": 624,
+      "meanRound": 5.67,
+      "oracleAtR4Rate": 0.982
+    },
+    "enemy_02:hard:greedy": {
+      "n": 280,
+      "winRate": 0.986,
+      "status": {
+        "won": 276,
+        "lost": 4
+      },
+      "reachedR4": 280,
+      "thenRate": null,
+      "hpRatioAtR4Mean": 0.615,
+      "thenRateByCandidateRatio": {
+        "0.45": 0.061,
+        "0.5": 0.179,
+        "0.55": 0.325
+      },
+      "meanScore": 635.6,
+      "meanRound": 6.11,
+      "oracleAtR4Rate": 0.818
+    },
+    "enemy_02:hard:raceAware": {
+      "n": 280,
+      "winRate": 0.986,
+      "status": {
+        "won": 276,
+        "lost": 4
+      },
+      "reachedR4": 280,
+      "thenRate": null,
+      "hpRatioAtR4Mean": 0.615,
+      "thenRateByCandidateRatio": {
+        "0.45": 0.061,
+        "0.5": 0.179,
+        "0.55": 0.325
+      },
+      "meanScore": 636.5,
+      "meanRound": 6.1,
+      "oracleAtR4Rate": 1
+    },
+    "enemy_02:hard:reader": {
+      "n": 280,
+      "winRate": 0.986,
+      "status": {
+        "won": 276,
+        "lost": 4
+      },
+      "reachedR4": 280,
+      "thenRate": null,
+      "hpRatioAtR4Mean": 0.615,
+      "thenRateByCandidateRatio": {
+        "0.45": 0.061,
+        "0.5": 0.179,
+        "0.55": 0.325
+      },
+      "meanScore": 636.5,
+      "meanRound": 6.1,
+      "oracleAtR4Rate": 1
+    },
+    "enemy_09:normal:greedy": {
+      "n": 280,
+      "winRate": 1,
+      "status": {
+        "won": 280
+      },
+      "reachedR4": 280,
+      "thenRate": 0.418,
+      "hpRatioAtR4Mean": 0.542,
+      "thenRateByCandidateRatio": {
+        "0.45": 0.289,
+        "0.5": 0.418,
+        "0.55": 0.586
+      },
+      "meanScore": 627,
+      "meanRound": 5.62,
+      "oracleAtR4Rate": 0.336
+    },
+    "enemy_09:normal:raceAware": {
+      "n": 280,
+      "winRate": 1,
+      "status": {
+        "won": 280
+      },
+      "reachedR4": 280,
+      "thenRate": 0.589,
+      "hpRatioAtR4Mean": 0.542,
+      "thenRateByCandidateRatio": {
+        "0.45": 0.304,
+        "0.5": 0.589,
+        "0.55": 0.589
+      },
+      "meanScore": 630.1,
+      "meanRound": 5.6,
+      "oracleAtR4Rate": 0.446
+    },
+    "enemy_09:normal:reader": {
+      "n": 280,
+      "winRate": 1,
+      "status": {
+        "won": 280
+      },
+      "reachedR4": 280,
+      "thenRate": 0.418,
+      "hpRatioAtR4Mean": 0.542,
+      "thenRateByCandidateRatio": {
+        "0.45": 0.289,
+        "0.5": 0.418,
+        "0.55": 0.586
+      },
+      "meanScore": 628.7,
+      "meanRound": 5.6,
+      "oracleAtR4Rate": 0.6
+    },
+    "enemy_09:hard:greedy": {
+      "n": 280,
+      "winRate": 1,
+      "status": {
+        "won": 280
+      },
+      "reachedR4": 280,
+      "thenRate": 0.179,
+      "hpRatioAtR4Mean": 0.615,
+      "thenRateByCandidateRatio": {
+        "0.45": 0.061,
+        "0.5": 0.179,
+        "0.55": 0.325
+      },
+      "meanScore": 644,
+      "meanRound": 6.13,
+      "oracleAtR4Rate": 0.721
+    },
+    "enemy_09:hard:raceAware": {
+      "n": 280,
+      "winRate": 0.996,
+      "status": {
+        "won": 279,
+        "finished": 1
+      },
+      "reachedR4": 280,
+      "thenRate": 0.271,
+      "hpRatioAtR4Mean": 0.631,
+      "thenRateByCandidateRatio": {
+        "0.45": 0.075,
+        "0.5": 0.271,
+        "0.55": 0.311
+      },
+      "meanScore": 642.7,
+      "meanRound": 6.13,
+      "oracleAtR4Rate": 0.796
+    },
+    "enemy_09:hard:reader": {
+      "n": 280,
+      "winRate": 1,
+      "status": {
+        "won": 280
+      },
+      "reachedR4": 280,
+      "thenRate": 0.179,
+      "hpRatioAtR4Mean": 0.615,
+      "thenRateByCandidateRatio": {
+        "0.45": 0.061,
+        "0.5": 0.179,
+        "0.55": 0.325
+      },
+      "meanScore": 644.3,
+      "meanRound": 6.12,
+      "oracleAtR4Rate": 0.871
+    }
+  },
+  "g4": {
+    "normal": {
+      "games": 280,
+      "reachedR3": 280,
+      "withChoice": 137,
+      "withChoiceRate": 0.489,
+      "branchFlip": 30,
+      "branchFlipRate": 0.219,
+      "statusFlip": 0,
+      "statusFlipRate": 0,
+      "eitherFlip": 30,
+      "eitherFlipRate": 0.219,
+      "scoreDiffRate": 0.949,
+      "perGod": {
+        "ebisu": {
+          "withChoice": 18,
+          "eitherFlip": 2
+        },
+        "taiyo": {
+          "withChoice": 16,
+          "eitherFlip": 2
+        },
+        "sobi": {
+          "withChoice": 34,
+          "eitherFlip": 14
+        },
+        "saika": {
+          "withChoice": 0,
+          "eitherFlip": 0
+        },
+        "juraku": {
+          "withChoice": 36,
+          "eitherFlip": 7
+        },
+        "fukuei": {
+          "withChoice": 17,
+          "eitherFlip": 1
+        },
+        "shouren": {
+          "withChoice": 16,
+          "eitherFlip": 4
+        }
+      }
+    },
+    "hard": {
+      "games": 280,
+      "reachedR3": 280,
+      "withChoice": 140,
+      "withChoiceRate": 0.5,
+      "branchFlip": 15,
+      "branchFlipRate": 0.107,
+      "statusFlip": 1,
+      "statusFlipRate": 0.007,
+      "eitherFlip": 16,
+      "eitherFlipRate": 0.114,
+      "scoreDiffRate": 0.979,
+      "perGod": {
+        "ebisu": {
+          "withChoice": 18,
+          "eitherFlip": 1
+        },
+        "taiyo": {
+          "withChoice": 18,
+          "eitherFlip": 3
+        },
+        "sobi": {
+          "withChoice": 34,
+          "eitherFlip": 6
+        },
+        "saika": {
+          "withChoice": 0,
+          "eitherFlip": 0
+        },
+        "juraku": {
+          "withChoice": 36,
+          "eitherFlip": 1
+        },
+        "fukuei": {
+          "withChoice": 18,
+          "eitherFlip": 3
+        },
+        "shouren": {
+          "withChoice": 16,
+          "eitherFlip": 2
+        }
+      }
+    }
+  },
+  "perGod": {
+    "ebisu": {
+      "enemy_02:normal:greedy": {
+        "n": 40,
+        "winRate": 1,
+        "status": {
+          "won": 40
+        },
+        "reachedR4": 40,
+        "thenRate": null,
+        "hpRatioAtR4Mean": 0.485,
+        "thenRateByCandidateRatio": {
+          "0.45": 0.4,
+          "0.5": 0.625,
+          "0.55": 0.775
+        },
+        "meanScore": 645.5,
+        "meanRound": 5.2,
+        "oracleAtR4Rate": 0.525
+      },
+      "enemy_02:normal:raceAware": {
+        "n": 40,
+        "winRate": 1,
+        "status": {
+          "won": 40
+        },
+        "reachedR4": 40,
+        "thenRate": null,
+        "hpRatioAtR4Mean": 0.485,
+        "thenRateByCandidateRatio": {
+          "0.45": 0.4,
+          "0.5": 0.625,
+          "0.55": 0.775
+        },
+        "meanScore": 646.3,
+        "meanRound": 5.22,
+        "oracleAtR4Rate": 0.95
+      },
+      "enemy_02:normal:reader": {
+        "n": 40,
+        "winRate": 1,
+        "status": {
+          "won": 40
+        },
+        "reachedR4": 40,
+        "thenRate": null,
+        "hpRatioAtR4Mean": 0.485,
+        "thenRateByCandidateRatio": {
+          "0.45": 0.4,
+          "0.5": 0.625,
+          "0.55": 0.775
+        },
+        "meanScore": 646.3,
+        "meanRound": 5.22,
+        "oracleAtR4Rate": 0.95
+      },
+      "enemy_02:hard:greedy": {
+        "n": 40,
+        "winRate": 0.95,
+        "status": {
+          "won": 38,
+          "lost": 2
+        },
+        "reachedR4": 40,
+        "thenRate": null,
+        "hpRatioAtR4Mean": 0.553,
+        "thenRateByCandidateRatio": {
+          "0.45": 0.1,
+          "0.5": 0.325,
+          "0.55": 0.55
+        },
+        "meanScore": 640.7,
+        "meanRound": 5.55,
+        "oracleAtR4Rate": 0.925
+      },
+      "enemy_02:hard:raceAware": {
+        "n": 40,
+        "winRate": 0.95,
+        "status": {
+          "won": 38,
+          "lost": 2
+        },
+        "reachedR4": 40,
+        "thenRate": null,
+        "hpRatioAtR4Mean": 0.553,
+        "thenRateByCandidateRatio": {
+          "0.45": 0.1,
+          "0.5": 0.325,
+          "0.55": 0.55
+        },
+        "meanScore": 641,
+        "meanRound": 5.55,
+        "oracleAtR4Rate": 1
+      },
+      "enemy_02:hard:reader": {
+        "n": 40,
+        "winRate": 0.95,
+        "status": {
+          "won": 38,
+          "lost": 2
+        },
+        "reachedR4": 40,
+        "thenRate": null,
+        "hpRatioAtR4Mean": 0.553,
+        "thenRateByCandidateRatio": {
+          "0.45": 0.1,
+          "0.5": 0.325,
+          "0.55": 0.55
+        },
+        "meanScore": 641,
+        "meanRound": 5.55,
+        "oracleAtR4Rate": 1
+      },
+      "enemy_09:normal:greedy": {
+        "n": 40,
+        "winRate": 1,
+        "status": {
+          "won": 40
+        },
+        "reachedR4": 40,
+        "thenRate": 0.625,
+        "hpRatioAtR4Mean": 0.485,
+        "thenRateByCandidateRatio": {
+          "0.45": 0.4,
+          "0.5": 0.625,
+          "0.55": 0.775
+        },
+        "meanScore": 649.7,
+        "meanRound": 5.17,
+        "oracleAtR4Rate": 0.225
+      },
+      "enemy_09:normal:raceAware": {
+        "n": 40,
+        "winRate": 1,
+        "status": {
+          "won": 40
+        },
+        "reachedR4": 40,
+        "thenRate": 0.8,
+        "hpRatioAtR4Mean": 0.466,
+        "thenRateByCandidateRatio": {
+          "0.45": 0.425,
+          "0.5": 0.8,
+          "0.55": 0.8
+        },
+        "meanScore": 645.8,
+        "meanRound": 5.25,
+        "oracleAtR4Rate": 0.3
+      },
+      "enemy_09:normal:reader": {
+        "n": 40,
+        "winRate": 1,
+        "status": {
+          "won": 40
+        },
+        "reachedR4": 40,
+        "thenRate": 0.625,
+        "hpRatioAtR4Mean": 0.485,
+        "thenRateByCandidateRatio": {
+          "0.45": 0.4,
+          "0.5": 0.625,
+          "0.55": 0.775
+        },
+        "meanScore": 648.9,
+        "meanRound": 5.2,
+        "oracleAtR4Rate": 0.45
+      },
+      "enemy_09:hard:greedy": {
+        "n": 40,
+        "winRate": 1,
+        "status": {
+          "won": 40
+        },
+        "reachedR4": 40,
+        "thenRate": 0.325,
+        "hpRatioAtR4Mean": 0.553,
+        "thenRateByCandidateRatio": {
+          "0.45": 0.1,
+          "0.5": 0.325,
+          "0.55": 0.55
+        },
+        "meanScore": 668.5,
+        "meanRound": 5.6,
+        "oracleAtR4Rate": 0.725
+      },
+      "enemy_09:hard:raceAware": {
+        "n": 40,
+        "winRate": 1,
+        "status": {
+          "won": 40
+        },
+        "reachedR4": 40,
+        "thenRate": 0.475,
+        "hpRatioAtR4Mean": 0.539,
+        "thenRateByCandidateRatio": {
+          "0.45": 0.125,
+          "0.5": 0.475,
+          "0.55": 0.55
+        },
+        "meanScore": 666.2,
+        "meanRound": 5.63,
+        "oracleAtR4Rate": 0.7
+      },
+      "enemy_09:hard:reader": {
+        "n": 40,
+        "winRate": 1,
+        "status": {
+          "won": 40
+        },
+        "reachedR4": 40,
+        "thenRate": 0.325,
+        "hpRatioAtR4Mean": 0.553,
+        "thenRateByCandidateRatio": {
+          "0.45": 0.1,
+          "0.5": 0.325,
+          "0.55": 0.55
+        },
+        "meanScore": 668.8,
+        "meanRound": 5.6,
+        "oracleAtR4Rate": 0.8
+      }
+    },
+    "taiyo": {
+      "enemy_02:normal:greedy": {
+        "n": 40,
+        "winRate": 1,
+        "status": {
+          "won": 40
+        },
+        "reachedR4": 40,
+        "thenRate": null,
+        "hpRatioAtR4Mean": 0.576,
+        "thenRateByCandidateRatio": {
+          "0.45": 0.25,
+          "0.5": 0.375,
+          "0.55": 0.425
+        },
+        "meanScore": 632.1,
+        "meanRound": 5.55,
+        "oracleAtR4Rate": 0.6
+      },
+      "enemy_02:normal:raceAware": {
+        "n": 40,
+        "winRate": 1,
+        "status": {
+          "won": 40
+        },
+        "reachedR4": 40,
+        "thenRate": null,
+        "hpRatioAtR4Mean": 0.576,
+        "thenRateByCandidateRatio": {
+          "0.45": 0.25,
+          "0.5": 0.375,
+          "0.55": 0.425
+        },
+        "meanScore": 632.9,
+        "meanRound": 5.55,
+        "oracleAtR4Rate": 0.975
+      },
+      "enemy_02:normal:reader": {
+        "n": 40,
+        "winRate": 1,
+        "status": {
+          "won": 40
+        },
+        "reachedR4": 40,
+        "thenRate": null,
+        "hpRatioAtR4Mean": 0.576,
+        "thenRateByCandidateRatio": {
+          "0.45": 0.25,
+          "0.5": 0.375,
+          "0.55": 0.425
+        },
+        "meanScore": 632.9,
+        "meanRound": 5.55,
+        "oracleAtR4Rate": 0.975
+      },
+      "enemy_02:hard:greedy": {
+        "n": 40,
+        "winRate": 0.975,
+        "status": {
+          "won": 39,
+          "lost": 1
+        },
+        "reachedR4": 40,
+        "thenRate": null,
+        "hpRatioAtR4Mean": 0.642,
+        "thenRateByCandidateRatio": {
+          "0.45": 0.025,
+          "0.5": 0.15,
+          "0.55": 0.275
+        },
+        "meanScore": 643.3,
+        "meanRound": 5.85,
+        "oracleAtR4Rate": 0.925
+      },
+      "enemy_02:hard:raceAware": {
+        "n": 40,
+        "winRate": 0.975,
+        "status": {
+          "won": 39,
+          "lost": 1
+        },
+        "reachedR4": 40,
+        "thenRate": null,
+        "hpRatioAtR4Mean": 0.642,
+        "thenRateByCandidateRatio": {
+          "0.45": 0.025,
+          "0.5": 0.15,
+          "0.55": 0.275
+        },
+        "meanScore": 643.7,
+        "meanRound": 5.85,
+        "oracleAtR4Rate": 1
+      },
+      "enemy_02:hard:reader": {
+        "n": 40,
+        "winRate": 0.975,
+        "status": {
+          "won": 39,
+          "lost": 1
+        },
+        "reachedR4": 40,
+        "thenRate": null,
+        "hpRatioAtR4Mean": 0.642,
+        "thenRateByCandidateRatio": {
+          "0.45": 0.025,
+          "0.5": 0.15,
+          "0.55": 0.275
+        },
+        "meanScore": 643.7,
+        "meanRound": 5.85,
+        "oracleAtR4Rate": 1
+      },
+      "enemy_09:normal:greedy": {
+        "n": 40,
+        "winRate": 1,
+        "status": {
+          "won": 40
+        },
+        "reachedR4": 40,
+        "thenRate": 0.375,
+        "hpRatioAtR4Mean": 0.576,
+        "thenRateByCandidateRatio": {
+          "0.45": 0.25,
+          "0.5": 0.375,
+          "0.55": 0.425
+        },
+        "meanScore": 637.3,
+        "meanRound": 5.47,
+        "oracleAtR4Rate": 0.35
+      },
+      "enemy_09:normal:raceAware": {
+        "n": 40,
+        "winRate": 1,
+        "status": {
+          "won": 40
+        },
+        "reachedR4": 40,
+        "thenRate": 0.475,
+        "hpRatioAtR4Mean": 0.566,
+        "thenRateByCandidateRatio": {
+          "0.45": 0.25,
+          "0.5": 0.475,
+          "0.55": 0.475
+        },
+        "meanScore": 639,
+        "meanRound": 5.5,
+        "oracleAtR4Rate": 0.55
+      },
+      "enemy_09:normal:reader": {
+        "n": 40,
+        "winRate": 1,
+        "status": {
+          "won": 40
+        },
+        "reachedR4": 40,
+        "thenRate": 0.375,
+        "hpRatioAtR4Mean": 0.576,
+        "thenRateByCandidateRatio": {
+          "0.45": 0.25,
+          "0.5": 0.375,
+          "0.55": 0.425
+        },
+        "meanScore": 637.7,
+        "meanRound": 5.47,
+        "oracleAtR4Rate": 0.625
+      },
+      "enemy_09:hard:greedy": {
+        "n": 40,
+        "winRate": 1,
+        "status": {
+          "won": 40
+        },
+        "reachedR4": 40,
+        "thenRate": 0.15,
+        "hpRatioAtR4Mean": 0.642,
+        "thenRateByCandidateRatio": {
+          "0.45": 0.025,
+          "0.5": 0.15,
+          "0.55": 0.275
+        },
+        "meanScore": 655.3,
+        "meanRound": 5.9,
+        "oracleAtR4Rate": 0.825
+      },
+      "enemy_09:hard:raceAware": {
+        "n": 40,
+        "winRate": 1,
+        "status": {
+          "won": 40
+        },
+        "reachedR4": 40,
+        "thenRate": 0.275,
+        "hpRatioAtR4Mean": 0.648,
+        "thenRateByCandidateRatio": {
+          "0.45": 0.075,
+          "0.5": 0.275,
+          "0.55": 0.275
+        },
+        "meanScore": 646.9,
+        "meanRound": 6.05,
+        "oracleAtR4Rate": 0.8
+      },
+      "enemy_09:hard:reader": {
+        "n": 40,
+        "winRate": 1,
+        "status": {
+          "won": 40
+        },
+        "reachedR4": 40,
+        "thenRate": 0.15,
+        "hpRatioAtR4Mean": 0.642,
+        "thenRateByCandidateRatio": {
+          "0.45": 0.025,
+          "0.5": 0.15,
+          "0.55": 0.275
+        },
+        "meanScore": 655.8,
+        "meanRound": 5.9,
+        "oracleAtR4Rate": 0.9
+      }
+    },
+    "sobi": {
+      "enemy_02:normal:greedy": {
+        "n": 40,
+        "winRate": 1,
+        "status": {
+          "won": 40
+        },
+        "reachedR4": 40,
+        "thenRate": null,
+        "hpRatioAtR4Mean": 0.544,
+        "thenRateByCandidateRatio": {
+          "0.45": 0.3,
+          "0.5": 0.475,
+          "0.55": 0.575
+        },
+        "meanScore": 619.2,
+        "meanRound": 5.65,
+        "oracleAtR4Rate": 0.075
+      },
+      "enemy_02:normal:raceAware": {
+        "n": 40,
+        "winRate": 1,
+        "status": {
+          "won": 40
+        },
+        "reachedR4": 40,
+        "thenRate": null,
+        "hpRatioAtR4Mean": 0.544,
+        "thenRateByCandidateRatio": {
+          "0.45": 0.3,
+          "0.5": 0.475,
+          "0.55": 0.575
+        },
+        "meanScore": 628.9,
+        "meanRound": 5.55,
+        "oracleAtR4Rate": 1
+      },
+      "enemy_02:normal:reader": {
+        "n": 40,
+        "winRate": 1,
+        "status": {
+          "won": 40
+        },
+        "reachedR4": 40,
+        "thenRate": null,
+        "hpRatioAtR4Mean": 0.544,
+        "thenRateByCandidateRatio": {
+          "0.45": 0.3,
+          "0.5": 0.475,
+          "0.55": 0.575
+        },
+        "meanScore": 628.9,
+        "meanRound": 5.55,
+        "oracleAtR4Rate": 1
+      },
+      "enemy_02:hard:greedy": {
+        "n": 40,
+        "winRate": 1,
+        "status": {
+          "won": 40
+        },
+        "reachedR4": 40,
+        "thenRate": null,
+        "hpRatioAtR4Mean": 0.605,
+        "thenRateByCandidateRatio": {
+          "0.45": 0.05,
+          "0.5": 0.225,
+          "0.55": 0.375
+        },
+        "meanScore": 637.6,
+        "meanRound": 6.13,
+        "oracleAtR4Rate": 0.275
+      },
+      "enemy_02:hard:raceAware": {
+        "n": 40,
+        "winRate": 1,
+        "status": {
+          "won": 40
+        },
+        "reachedR4": 40,
+        "thenRate": null,
+        "hpRatioAtR4Mean": 0.605,
+        "thenRateByCandidateRatio": {
+          "0.45": 0.05,
+          "0.5": 0.225,
+          "0.55": 0.375
+        },
+        "meanScore": 648.3,
+        "meanRound": 5.97,
+        "oracleAtR4Rate": 1
+      },
+      "enemy_02:hard:reader": {
+        "n": 40,
+        "winRate": 1,
+        "status": {
+          "won": 40
+        },
+        "reachedR4": 40,
+        "thenRate": null,
+        "hpRatioAtR4Mean": 0.605,
+        "thenRateByCandidateRatio": {
+          "0.45": 0.05,
+          "0.5": 0.225,
+          "0.55": 0.375
+        },
+        "meanScore": 648.3,
+        "meanRound": 5.97,
+        "oracleAtR4Rate": 1
+      },
+      "enemy_09:normal:greedy": {
+        "n": 40,
+        "winRate": 1,
+        "status": {
+          "won": 40
+        },
+        "reachedR4": 40,
+        "thenRate": 0.475,
+        "hpRatioAtR4Mean": 0.544,
+        "thenRateByCandidateRatio": {
+          "0.45": 0.3,
+          "0.5": 0.475,
+          "0.55": 0.575
+        },
+        "meanScore": 627.4,
+        "meanRound": 5.53,
+        "oracleAtR4Rate": 0.025
+      },
+      "enemy_09:normal:raceAware": {
+        "n": 40,
+        "winRate": 1,
+        "status": {
+          "won": 40
+        },
+        "reachedR4": 40,
+        "thenRate": 0.525,
+        "hpRatioAtR4Mean": 0.577,
+        "thenRateByCandidateRatio": {
+          "0.45": 0.4,
+          "0.5": 0.525,
+          "0.55": 0.525
+        },
+        "meanScore": 639.4,
+        "meanRound": 5.4,
+        "oracleAtR4Rate": 0.475
+      },
+      "enemy_09:normal:reader": {
+        "n": 40,
+        "winRate": 1,
+        "status": {
+          "won": 40
+        },
+        "reachedR4": 40,
+        "thenRate": 0.475,
+        "hpRatioAtR4Mean": 0.544,
+        "thenRateByCandidateRatio": {
+          "0.45": 0.3,
+          "0.5": 0.475,
+          "0.55": 0.575
+        },
+        "meanScore": 637,
+        "meanRound": 5.42,
+        "oracleAtR4Rate": 0.525
+      },
+      "enemy_09:hard:greedy": {
+        "n": 40,
+        "winRate": 1,
+        "status": {
+          "won": 40
+        },
+        "reachedR4": 40,
+        "thenRate": 0.225,
+        "hpRatioAtR4Mean": 0.605,
+        "thenRateByCandidateRatio": {
+          "0.45": 0.05,
+          "0.5": 0.225,
+          "0.55": 0.375
+        },
+        "meanScore": 640.3,
+        "meanRound": 6.1,
+        "oracleAtR4Rate": 0.25
+      },
+      "enemy_09:hard:raceAware": {
+        "n": 40,
+        "winRate": 1,
+        "status": {
+          "won": 40
+        },
+        "reachedR4": 40,
+        "thenRate": 0.2,
+        "hpRatioAtR4Mean": 0.666,
+        "thenRateByCandidateRatio": {
+          "0.45": 0.075,
+          "0.5": 0.2,
+          "0.55": 0.3
+        },
+        "meanScore": 658.3,
+        "meanRound": 5.85,
+        "oracleAtR4Rate": 0.8
+      },
+      "enemy_09:hard:reader": {
+        "n": 40,
+        "winRate": 1,
+        "status": {
+          "won": 40
+        },
+        "reachedR4": 40,
+        "thenRate": 0.225,
+        "hpRatioAtR4Mean": 0.605,
+        "thenRateByCandidateRatio": {
+          "0.45": 0.05,
+          "0.5": 0.225,
+          "0.55": 0.375
+        },
+        "meanScore": 646.5,
+        "meanRound": 6,
+        "oracleAtR4Rate": 0.775
+      }
+    },
+    "saika": {
+      "enemy_02:normal:greedy": {
+        "n": 40,
+        "winRate": 1,
+        "status": {
+          "won": 40
+        },
+        "reachedR4": 40,
+        "thenRate": null,
+        "hpRatioAtR4Mean": 0.555,
+        "thenRateByCandidateRatio": {
+          "0.45": 0.25,
+          "0.5": 0.325,
+          "0.55": 0.5
+        },
+        "meanScore": 634.2,
+        "meanRound": 5.7,
+        "oracleAtR4Rate": 0.825
+      },
+      "enemy_02:normal:raceAware": {
+        "n": 40,
+        "winRate": 1,
+        "status": {
+          "won": 40
+        },
+        "reachedR4": 40,
+        "thenRate": null,
+        "hpRatioAtR4Mean": 0.555,
+        "thenRateByCandidateRatio": {
+          "0.45": 0.25,
+          "0.5": 0.325,
+          "0.55": 0.5
+        },
+        "meanScore": 634.8,
+        "meanRound": 5.7,
+        "oracleAtR4Rate": 1
+      },
+      "enemy_02:normal:reader": {
+        "n": 40,
+        "winRate": 1,
+        "status": {
+          "won": 40
+        },
+        "reachedR4": 40,
+        "thenRate": null,
+        "hpRatioAtR4Mean": 0.555,
+        "thenRateByCandidateRatio": {
+          "0.45": 0.25,
+          "0.5": 0.325,
+          "0.55": 0.5
+        },
+        "meanScore": 634.8,
+        "meanRound": 5.7,
+        "oracleAtR4Rate": 1
+      },
+      "enemy_02:hard:greedy": {
+        "n": 40,
+        "winRate": 1,
+        "status": {
+          "won": 40
+        },
+        "reachedR4": 40,
+        "thenRate": null,
+        "hpRatioAtR4Mean": 0.617,
+        "thenRateByCandidateRatio": {
+          "0.45": 0.075,
+          "0.5": 0.2,
+          "0.55": 0.3
+        },
+        "meanScore": 664.1,
+        "meanRound": 6.05,
+        "oracleAtR4Rate": 1
+      },
+      "enemy_02:hard:raceAware": {
+        "n": 40,
+        "winRate": 1,
+        "status": {
+          "won": 40
+        },
+        "reachedR4": 40,
+        "thenRate": null,
+        "hpRatioAtR4Mean": 0.617,
+        "thenRateByCandidateRatio": {
+          "0.45": 0.075,
+          "0.5": 0.2,
+          "0.55": 0.3
+        },
+        "meanScore": 664.1,
+        "meanRound": 6.05,
+        "oracleAtR4Rate": 1
+      },
+      "enemy_02:hard:reader": {
+        "n": 40,
+        "winRate": 1,
+        "status": {
+          "won": 40
+        },
+        "reachedR4": 40,
+        "thenRate": null,
+        "hpRatioAtR4Mean": 0.617,
+        "thenRateByCandidateRatio": {
+          "0.45": 0.075,
+          "0.5": 0.2,
+          "0.55": 0.3
+        },
+        "meanScore": 664.1,
+        "meanRound": 6.05,
+        "oracleAtR4Rate": 1
+      },
+      "enemy_09:normal:greedy": {
+        "n": 40,
+        "winRate": 1,
+        "status": {
+          "won": 40
+        },
+        "reachedR4": 40,
+        "thenRate": 0.325,
+        "hpRatioAtR4Mean": 0.555,
+        "thenRateByCandidateRatio": {
+          "0.45": 0.25,
+          "0.5": 0.325,
+          "0.55": 0.5
+        },
+        "meanScore": 646.1,
+        "meanRound": 5.55,
+        "oracleAtR4Rate": 0.625
+      },
+      "enemy_09:normal:raceAware": {
+        "n": 40,
+        "winRate": 1,
+        "status": {
+          "won": 40
+        },
+        "reachedR4": 40,
+        "thenRate": 0.525,
+        "hpRatioAtR4Mean": 0.538,
+        "thenRateByCandidateRatio": {
+          "0.45": 0.25,
+          "0.5": 0.525,
+          "0.55": 0.525
+        },
+        "meanScore": 650.6,
+        "meanRound": 5.5,
+        "oracleAtR4Rate": 0.5
+      },
+      "enemy_09:normal:reader": {
+        "n": 40,
+        "winRate": 1,
+        "status": {
+          "won": 40
+        },
+        "reachedR4": 40,
+        "thenRate": 0.325,
+        "hpRatioAtR4Mean": 0.555,
+        "thenRateByCandidateRatio": {
+          "0.45": 0.25,
+          "0.5": 0.325,
+          "0.55": 0.5
+        },
+        "meanScore": 646.7,
+        "meanRound": 5.55,
+        "oracleAtR4Rate": 0.7
+      },
+      "enemy_09:hard:greedy": {
+        "n": 40,
+        "winRate": 1,
+        "status": {
+          "won": 40
+        },
+        "reachedR4": 40,
+        "thenRate": 0.2,
+        "hpRatioAtR4Mean": 0.617,
+        "thenRateByCandidateRatio": {
+          "0.45": 0.075,
+          "0.5": 0.2,
+          "0.55": 0.3
+        },
+        "meanScore": 664.3,
+        "meanRound": 6.05,
+        "oracleAtR4Rate": 0.85
+      },
+      "enemy_09:hard:raceAware": {
+        "n": 40,
+        "winRate": 1,
+        "status": {
+          "won": 40
+        },
+        "reachedR4": 40,
+        "thenRate": 0.225,
+        "hpRatioAtR4Mean": 0.607,
+        "thenRateByCandidateRatio": {
+          "0.45": 0.075,
+          "0.5": 0.225,
+          "0.55": 0.3
+        },
+        "meanScore": 664.5,
+        "meanRound": 6.05,
+        "oracleAtR4Rate": 0.825
+      },
+      "enemy_09:hard:reader": {
+        "n": 40,
+        "winRate": 1,
+        "status": {
+          "won": 40
+        },
+        "reachedR4": 40,
+        "thenRate": 0.2,
+        "hpRatioAtR4Mean": 0.617,
+        "thenRateByCandidateRatio": {
+          "0.45": 0.075,
+          "0.5": 0.2,
+          "0.55": 0.3
+        },
+        "meanScore": 664.3,
+        "meanRound": 6.05,
+        "oracleAtR4Rate": 0.85
+      }
+    },
+    "juraku": {
+      "enemy_02:normal:greedy": {
+        "n": 40,
+        "winRate": 1,
+        "status": {
+          "won": 40
+        },
+        "reachedR4": 40,
+        "thenRate": null,
+        "hpRatioAtR4Mean": 0.578,
+        "thenRateByCandidateRatio": {
+          "0.45": 0.075,
+          "0.5": 0.2,
+          "0.55": 0.625
+        },
+        "meanScore": 609.5,
+        "meanRound": 5.7,
+        "oracleAtR4Rate": 0.775
+      },
+      "enemy_02:normal:raceAware": {
+        "n": 40,
+        "winRate": 1,
+        "status": {
+          "won": 40
+        },
+        "reachedR4": 40,
+        "thenRate": null,
+        "hpRatioAtR4Mean": 0.578,
+        "thenRateByCandidateRatio": {
+          "0.45": 0.075,
+          "0.5": 0.2,
+          "0.55": 0.625
+        },
+        "meanScore": 612.5,
+        "meanRound": 5.67,
+        "oracleAtR4Rate": 0.975
+      },
+      "enemy_02:normal:reader": {
+        "n": 40,
+        "winRate": 1,
+        "status": {
+          "won": 40
+        },
+        "reachedR4": 40,
+        "thenRate": null,
+        "hpRatioAtR4Mean": 0.578,
+        "thenRateByCandidateRatio": {
+          "0.45": 0.075,
+          "0.5": 0.2,
+          "0.55": 0.625
+        },
+        "meanScore": 612.5,
+        "meanRound": 5.67,
+        "oracleAtR4Rate": 0.975
+      },
+      "enemy_02:hard:greedy": {
+        "n": 40,
+        "winRate": 1,
+        "status": {
+          "won": 40
+        },
+        "reachedR4": 40,
+        "thenRate": null,
+        "hpRatioAtR4Mean": 0.632,
+        "thenRateByCandidateRatio": {
+          "0.45": 0,
+          "0.5": 0.025,
+          "0.55": 0.175
+        },
+        "meanScore": 620,
+        "meanRound": 6.28,
+        "oracleAtR4Rate": 1
+      },
+      "enemy_02:hard:raceAware": {
+        "n": 40,
+        "winRate": 1,
+        "status": {
+          "won": 40
+        },
+        "reachedR4": 40,
+        "thenRate": null,
+        "hpRatioAtR4Mean": 0.632,
+        "thenRateByCandidateRatio": {
+          "0.45": 0,
+          "0.5": 0.025,
+          "0.55": 0.175
+        },
+        "meanScore": 620,
+        "meanRound": 6.28,
+        "oracleAtR4Rate": 1
+      },
+      "enemy_02:hard:reader": {
+        "n": 40,
+        "winRate": 1,
+        "status": {
+          "won": 40
+        },
+        "reachedR4": 40,
+        "thenRate": null,
+        "hpRatioAtR4Mean": 0.632,
+        "thenRateByCandidateRatio": {
+          "0.45": 0,
+          "0.5": 0.025,
+          "0.55": 0.175
+        },
+        "meanScore": 620,
+        "meanRound": 6.28,
+        "oracleAtR4Rate": 1
+      },
+      "enemy_09:normal:greedy": {
+        "n": 40,
+        "winRate": 1,
+        "status": {
+          "won": 40
+        },
+        "reachedR4": 40,
+        "thenRate": 0.2,
+        "hpRatioAtR4Mean": 0.578,
+        "thenRateByCandidateRatio": {
+          "0.45": 0.075,
+          "0.5": 0.2,
+          "0.55": 0.625
+        },
+        "meanScore": 607,
+        "meanRound": 5.72,
+        "oracleAtR4Rate": 0.6
+      },
+      "enemy_09:normal:raceAware": {
+        "n": 40,
+        "winRate": 1,
+        "status": {
+          "won": 40
+        },
+        "reachedR4": 40,
+        "thenRate": 0.6,
+        "hpRatioAtR4Mean": 0.587,
+        "thenRateByCandidateRatio": {
+          "0.45": 0.05,
+          "0.5": 0.6,
+          "0.55": 0.6
+        },
+        "meanScore": 610.8,
+        "meanRound": 5.7,
+        "oracleAtR4Rate": 0.425
+      },
+      "enemy_09:normal:reader": {
+        "n": 40,
+        "winRate": 1,
+        "status": {
+          "won": 40
+        },
+        "reachedR4": 40,
+        "thenRate": 0.2,
+        "hpRatioAtR4Mean": 0.578,
+        "thenRateByCandidateRatio": {
+          "0.45": 0.075,
+          "0.5": 0.2,
+          "0.55": 0.625
+        },
+        "meanScore": 610,
+        "meanRound": 5.7,
+        "oracleAtR4Rate": 0.775
+      },
+      "enemy_09:hard:greedy": {
+        "n": 40,
+        "winRate": 1,
+        "status": {
+          "won": 40
+        },
+        "reachedR4": 40,
+        "thenRate": 0.025,
+        "hpRatioAtR4Mean": 0.632,
+        "thenRateByCandidateRatio": {
+          "0.45": 0,
+          "0.5": 0.025,
+          "0.55": 0.175
+        },
+        "meanScore": 620,
+        "meanRound": 6.28,
+        "oracleAtR4Rate": 1
+      },
+      "enemy_09:hard:raceAware": {
+        "n": 40,
+        "winRate": 0.975,
+        "status": {
+          "won": 39,
+          "finished": 1
+        },
+        "reachedR4": 40,
+        "thenRate": 0.15,
+        "hpRatioAtR4Mean": 0.677,
+        "thenRateByCandidateRatio": {
+          "0.45": 0,
+          "0.5": 0.15,
+          "0.55": 0.15
+        },
+        "meanScore": 608.3,
+        "meanRound": 6.33,
+        "oracleAtR4Rate": 0.875
+      },
+      "enemy_09:hard:reader": {
+        "n": 40,
+        "winRate": 1,
+        "status": {
+          "won": 40
+        },
+        "reachedR4": 40,
+        "thenRate": 0.025,
+        "hpRatioAtR4Mean": 0.632,
+        "thenRateByCandidateRatio": {
+          "0.45": 0,
+          "0.5": 0.025,
+          "0.55": 0.175
+        },
+        "meanScore": 620,
+        "meanRound": 6.28,
+        "oracleAtR4Rate": 1
+      }
+    },
+    "fukuei": {
+      "enemy_02:normal:greedy": {
+        "n": 40,
+        "winRate": 1,
+        "status": {
+          "won": 40
+        },
+        "reachedR4": 40,
+        "thenRate": null,
+        "hpRatioAtR4Mean": 0.562,
+        "thenRateByCandidateRatio": {
+          "0.45": 0.375,
+          "0.5": 0.375,
+          "0.55": 0.475
+        },
+        "meanScore": 594.4,
+        "meanRound": 6.2,
+        "oracleAtR4Rate": 0.675
+      },
+      "enemy_02:normal:raceAware": {
+        "n": 40,
+        "winRate": 1,
+        "status": {
+          "won": 40
+        },
+        "reachedR4": 40,
+        "thenRate": null,
+        "hpRatioAtR4Mean": 0.562,
+        "thenRateByCandidateRatio": {
+          "0.45": 0.375,
+          "0.5": 0.375,
+          "0.55": 0.475
+        },
+        "meanScore": 593.3,
+        "meanRound": 6.22,
+        "oracleAtR4Rate": 1
+      },
+      "enemy_02:normal:reader": {
+        "n": 40,
+        "winRate": 1,
+        "status": {
+          "won": 40
+        },
+        "reachedR4": 40,
+        "thenRate": null,
+        "hpRatioAtR4Mean": 0.562,
+        "thenRateByCandidateRatio": {
+          "0.45": 0.375,
+          "0.5": 0.375,
+          "0.55": 0.475
+        },
+        "meanScore": 593.3,
+        "meanRound": 6.22,
+        "oracleAtR4Rate": 1
+      },
+      "enemy_02:hard:greedy": {
+        "n": 40,
+        "winRate": 0.975,
+        "status": {
+          "won": 39,
+          "lost": 1
+        },
+        "reachedR4": 40,
+        "thenRate": null,
+        "hpRatioAtR4Mean": 0.634,
+        "thenRateByCandidateRatio": {
+          "0.45": 0.075,
+          "0.5": 0.175,
+          "0.55": 0.325
+        },
+        "meanScore": 616.3,
+        "meanRound": 6.47,
+        "oracleAtR4Rate": 0.95
+      },
+      "enemy_02:hard:raceAware": {
+        "n": 40,
+        "winRate": 0.975,
+        "status": {
+          "won": 39,
+          "lost": 1
+        },
+        "reachedR4": 40,
+        "thenRate": null,
+        "hpRatioAtR4Mean": 0.634,
+        "thenRateByCandidateRatio": {
+          "0.45": 0.075,
+          "0.5": 0.175,
+          "0.55": 0.325
+        },
+        "meanScore": 614,
+        "meanRound": 6.5,
+        "oracleAtR4Rate": 1
+      },
+      "enemy_02:hard:reader": {
+        "n": 40,
+        "winRate": 0.975,
+        "status": {
+          "won": 39,
+          "lost": 1
+        },
+        "reachedR4": 40,
+        "thenRate": null,
+        "hpRatioAtR4Mean": 0.634,
+        "thenRateByCandidateRatio": {
+          "0.45": 0.075,
+          "0.5": 0.175,
+          "0.55": 0.325
+        },
+        "meanScore": 614,
+        "meanRound": 6.5,
+        "oracleAtR4Rate": 1
+      },
+      "enemy_09:normal:greedy": {
+        "n": 40,
+        "winRate": 1,
+        "status": {
+          "won": 40
+        },
+        "reachedR4": 40,
+        "thenRate": 0.375,
+        "hpRatioAtR4Mean": 0.562,
+        "thenRateByCandidateRatio": {
+          "0.45": 0.375,
+          "0.5": 0.375,
+          "0.55": 0.475
+        },
+        "meanScore": 595.4,
+        "meanRound": 6.17,
+        "oracleAtR4Rate": 0.45
+      },
+      "enemy_09:normal:raceAware": {
+        "n": 40,
+        "winRate": 1,
+        "status": {
+          "won": 40
+        },
+        "reachedR4": 40,
+        "thenRate": 0.5,
+        "hpRatioAtR4Mean": 0.553,
+        "thenRateByCandidateRatio": {
+          "0.45": 0.375,
+          "0.5": 0.5,
+          "0.55": 0.5
+        },
+        "meanScore": 597.5,
+        "meanRound": 6.17,
+        "oracleAtR4Rate": 0.575
+      },
+      "enemy_09:normal:reader": {
+        "n": 40,
+        "winRate": 1,
+        "status": {
+          "won": 40
+        },
+        "reachedR4": 40,
+        "thenRate": 0.375,
+        "hpRatioAtR4Mean": 0.562,
+        "thenRateByCandidateRatio": {
+          "0.45": 0.375,
+          "0.5": 0.375,
+          "0.55": 0.475
+        },
+        "meanScore": 593.6,
+        "meanRound": 6.2,
+        "oracleAtR4Rate": 0.675
+      },
+      "enemy_09:hard:greedy": {
+        "n": 40,
+        "winRate": 1,
+        "status": {
+          "won": 40
+        },
+        "reachedR4": 40,
+        "thenRate": 0.175,
+        "hpRatioAtR4Mean": 0.634,
+        "thenRateByCandidateRatio": {
+          "0.45": 0.075,
+          "0.5": 0.175,
+          "0.55": 0.325
+        },
+        "meanScore": 631,
+        "meanRound": 6.5,
+        "oracleAtR4Rate": 0.875
+      },
+      "enemy_09:hard:raceAware": {
+        "n": 40,
+        "winRate": 1,
+        "status": {
+          "won": 40
+        },
+        "reachedR4": 40,
+        "thenRate": 0.3,
+        "hpRatioAtR4Mean": 0.641,
+        "thenRateByCandidateRatio": {
+          "0.45": 0.075,
+          "0.5": 0.3,
+          "0.55": 0.325
+        },
+        "meanScore": 628.4,
+        "meanRound": 6.53,
+        "oracleAtR4Rate": 0.85
+      },
+      "enemy_09:hard:reader": {
+        "n": 40,
+        "winRate": 1,
+        "status": {
+          "won": 40
+        },
+        "reachedR4": 40,
+        "thenRate": 0.175,
+        "hpRatioAtR4Mean": 0.634,
+        "thenRateByCandidateRatio": {
+          "0.45": 0.075,
+          "0.5": 0.175,
+          "0.55": 0.325
+        },
+        "meanScore": 628.7,
+        "meanRound": 6.53,
+        "oracleAtR4Rate": 0.925
+      }
+    },
+    "shouren": {
+      "enemy_02:normal:greedy": {
+        "n": 40,
+        "winRate": 1,
+        "status": {
+          "won": 40
+        },
+        "reachedR4": 40,
+        "thenRate": null,
+        "hpRatioAtR4Mean": 0.492,
+        "thenRateByCandidateRatio": {
+          "0.45": 0.375,
+          "0.5": 0.55,
+          "0.55": 0.725
+        },
+        "meanScore": 615.8,
+        "meanRound": 5.85,
+        "oracleAtR4Rate": 0.25
+      },
+      "enemy_02:normal:raceAware": {
+        "n": 40,
+        "winRate": 1,
+        "status": {
+          "won": 40
+        },
+        "reachedR4": 40,
+        "thenRate": null,
+        "hpRatioAtR4Mean": 0.492,
+        "thenRateByCandidateRatio": {
+          "0.45": 0.375,
+          "0.5": 0.55,
+          "0.55": 0.725
+        },
+        "meanScore": 619.2,
+        "meanRound": 5.78,
+        "oracleAtR4Rate": 0.975
+      },
+      "enemy_02:normal:reader": {
+        "n": 40,
+        "winRate": 1,
+        "status": {
+          "won": 40
+        },
+        "reachedR4": 40,
+        "thenRate": null,
+        "hpRatioAtR4Mean": 0.492,
+        "thenRateByCandidateRatio": {
+          "0.45": 0.375,
+          "0.5": 0.55,
+          "0.55": 0.725
+        },
+        "meanScore": 619.2,
+        "meanRound": 5.78,
+        "oracleAtR4Rate": 0.975
+      },
+      "enemy_02:hard:greedy": {
+        "n": 40,
+        "winRate": 1,
+        "status": {
+          "won": 40
+        },
+        "reachedR4": 40,
+        "thenRate": null,
+        "hpRatioAtR4Mean": 0.619,
+        "thenRateByCandidateRatio": {
+          "0.45": 0.1,
+          "0.5": 0.15,
+          "0.55": 0.275
+        },
+        "meanScore": 627.4,
+        "meanRound": 6.47,
+        "oracleAtR4Rate": 0.65
+      },
+      "enemy_02:hard:raceAware": {
+        "n": 40,
+        "winRate": 1,
+        "status": {
+          "won": 40
+        },
+        "reachedR4": 40,
+        "thenRate": null,
+        "hpRatioAtR4Mean": 0.619,
+        "thenRateByCandidateRatio": {
+          "0.45": 0.1,
+          "0.5": 0.15,
+          "0.55": 0.275
+        },
+        "meanScore": 624.5,
+        "meanRound": 6.5,
+        "oracleAtR4Rate": 1
+      },
+      "enemy_02:hard:reader": {
+        "n": 40,
+        "winRate": 1,
+        "status": {
+          "won": 40
+        },
+        "reachedR4": 40,
+        "thenRate": null,
+        "hpRatioAtR4Mean": 0.619,
+        "thenRateByCandidateRatio": {
+          "0.45": 0.1,
+          "0.5": 0.15,
+          "0.55": 0.275
+        },
+        "meanScore": 624.5,
+        "meanRound": 6.5,
+        "oracleAtR4Rate": 1
+      },
+      "enemy_09:normal:greedy": {
+        "n": 40,
+        "winRate": 1,
+        "status": {
+          "won": 40
+        },
+        "reachedR4": 40,
+        "thenRate": 0.55,
+        "hpRatioAtR4Mean": 0.492,
+        "thenRateByCandidateRatio": {
+          "0.45": 0.375,
+          "0.5": 0.55,
+          "0.55": 0.725
+        },
+        "meanScore": 625.9,
+        "meanRound": 5.7,
+        "oracleAtR4Rate": 0.075
+      },
+      "enemy_09:normal:raceAware": {
+        "n": 40,
+        "winRate": 1,
+        "status": {
+          "won": 40
+        },
+        "reachedR4": 40,
+        "thenRate": 0.7,
+        "hpRatioAtR4Mean": 0.507,
+        "thenRateByCandidateRatio": {
+          "0.45": 0.375,
+          "0.5": 0.7,
+          "0.55": 0.7
+        },
+        "meanScore": 627.2,
+        "meanRound": 5.7,
+        "oracleAtR4Rate": 0.3
+      },
+      "enemy_09:normal:reader": {
+        "n": 40,
+        "winRate": 1,
+        "status": {
+          "won": 40
+        },
+        "reachedR4": 40,
+        "thenRate": 0.55,
+        "hpRatioAtR4Mean": 0.492,
+        "thenRateByCandidateRatio": {
+          "0.45": 0.375,
+          "0.5": 0.55,
+          "0.55": 0.725
+        },
+        "meanScore": 626.6,
+        "meanRound": 5.67,
+        "oracleAtR4Rate": 0.45
+      },
+      "enemy_09:hard:greedy": {
+        "n": 40,
+        "winRate": 1,
+        "status": {
+          "won": 40
+        },
+        "reachedR4": 40,
+        "thenRate": 0.15,
+        "hpRatioAtR4Mean": 0.619,
+        "thenRateByCandidateRatio": {
+          "0.45": 0.1,
+          "0.5": 0.15,
+          "0.55": 0.275
+        },
+        "meanScore": 628.7,
+        "meanRound": 6.45,
+        "oracleAtR4Rate": 0.525
+      },
+      "enemy_09:hard:raceAware": {
+        "n": 40,
+        "winRate": 1,
+        "status": {
+          "won": 40
+        },
+        "reachedR4": 40,
+        "thenRate": 0.275,
+        "hpRatioAtR4Mean": 0.638,
+        "thenRateByCandidateRatio": {
+          "0.45": 0.1,
+          "0.5": 0.275,
+          "0.55": 0.275
+        },
+        "meanScore": 626.1,
+        "meanRound": 6.47,
+        "oracleAtR4Rate": 0.725
+      },
+      "enemy_09:hard:reader": {
+        "n": 40,
+        "winRate": 1,
+        "status": {
+          "won": 40
+        },
+        "reachedR4": 40,
+        "thenRate": 0.15,
+        "hpRatioAtR4Mean": 0.619,
+        "thenRateByCandidateRatio": {
+          "0.45": 0.1,
+          "0.5": 0.15,
+          "0.55": 0.275
+        },
+        "meanScore": 625.7,
+        "meanRound": 6.47,
+        "oracleAtR4Rate": 0.85
+      }
+    }
+  }
+}
