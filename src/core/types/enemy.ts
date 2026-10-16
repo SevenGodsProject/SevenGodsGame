@@ -1,5 +1,6 @@
 import type { EnemyId } from './ids.js'
 import type { Buff } from './effect.js'
+import type { Difficulty } from './difficulty.js'
 
 /**
  * 敵の行動。
@@ -31,10 +32,13 @@ export type EnemyActionDef =
  * そうでなければ `else` へ解決する（`engine/tactic.ts`）。
  * `EnemyState.intent` には解決後の既存 4 kind だけが入る（save v9 不変・新しい敵 kind ではない）。
  * 乱数 0・予告 1 手先・正解表示なし・敵ブロックなし（決定216／263 の境界を越えない）。
+ * Pilot v1.1：`cond.ratioByDifficulty`（任意）があれば、その難易度の値を `ratio` より優先する
+ * （`RULES.enemyTactic.hpRatioByDifficulty` をデータ側で埋め込む。engine は RULES を直接読まない）。
+ * 無い難易度は `ratio` にフォールバック。
  */
 export type EnemyTacticDef = {
   kind: 'tactic'
-  cond: { type: 'enemyHpRatioAtMost'; ratio: number }
+  cond: { type: 'enemyHpRatioAtMost'; ratio: number; ratioByDifficulty?: Readonly<Partial<Record<Difficulty, number>>> }
   then: EnemyActionDef
   else: EnemyActionDef
 }

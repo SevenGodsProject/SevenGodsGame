@@ -88,6 +88,8 @@ describe('seed・Daily・49 攻略盤・gameVersion は既存 7 体だけを見�
     const snapshot = rankingImpactSnapshot()
     expect(snapshot).not.toContain('enemy_09')
     expect(snapshot).not.toContain('enemyTactic')
+    expect(snapshot).not.toContain('hpRatioByDifficulty')
+    expect(snapshot).not.toContain('ratioByDifficulty')
     expect(snapshot).not.toContain('tactic')
     // 既存 7 体は入っている
     expect(snapshot).toContain('enemy_01')
@@ -97,7 +99,10 @@ describe('seed・Daily・49 攻略盤・gameVersion は既存 7 体だけを見�
     const r4 = getEnemyDef(PILOT_ENEMY_IDS.oniTactic).actions[3]
     if (r4.kind !== 'tactic') throw new Error('R4 must be tactic')
     expect(r4.cond.ratio).toBe(RULES.enemyTactic.defaultHpRatio)
+    expect(r4.cond.ratioByDifficulty).toEqual(RULES.enemyTactic.hpRatioByDifficulty)
     expect(JSON.stringify(PILOT_ENEMIES)).toContain(`"ratio":${RULES.enemyTactic.defaultHpRatio}`)
+    // v1.1：難易度別しきい値も行動表に埋め込まれている（CORE が使えば指紋に入る）。指紋そのものには入らない（下の gameVersion テスト）
+    expect(JSON.stringify(PILOT_ENEMIES)).toContain(`"ratioByDifficulty":${JSON.stringify(RULES.enemyTactic.hpRatioByDifficulty)}`)
   })
 })
 
@@ -139,7 +144,7 @@ describe('Pilot 敵（enemy_09 業斧の鬼将・軍略）', () => {
     expect(def.actions).toHaveLength(7)
     const r4 = def.actions[3]
     if (r4.kind !== 'tactic') throw new Error('R4 must be tactic')
-    expect(r4.cond).toEqual({ type: 'enemyHpRatioAtMost', ratio: RULES.enemyTactic.defaultHpRatio })
+    expect(r4.cond).toEqual({ type: 'enemyHpRatioAtMost', ratio: RULES.enemyTactic.defaultHpRatio, ratioByDifficulty: RULES.enemyTactic.hpRatioByDifficulty })
     expect(r4.then).toEqual({ kind: 'attack', amount: 13 })
     expect(r4.else).toEqual({ kind: 'special', amount: 26, name: '業斧・断岩' })
     const resolved = (branch: 'then' | 'else') => def.actions.map((a) => (a.kind === 'tactic' ? a[branch] : a))

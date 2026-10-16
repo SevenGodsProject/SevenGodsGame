@@ -84,7 +84,8 @@ describe('配線（既存の導線・記録に影響させない）', () => {
 
   it('engine：軍略の解決は startRound の予告時（nextEnemyAction）で 1 回、実行は intent をそのまま使う', () => {
     const round = read('../../core/engine/round.ts')
-    expect(round).toMatch(/const raw = resolveEnemyTactic\(actionForRound\(enemyDef\.actions, state\.round\), state\.enemy\.hp, state\.enemy\.maxHp\)/)
+    // Pilot v1.1：難易度別しきい値のため state.difficulty を渡す（解決は従来どおり予告時 1 回）
+    expect(round).toMatch(/const raw = resolveEnemyTactic\(actionForRound\(enemyDef\.actions, state\.round\), state\.enemy\.hp, state\.enemy\.maxHp, state\.difficulty\)/)
     expect(round).toMatch(/const action = state\.enemy\.intent \?\? nextEnemyAction\(state\)/)
   })
 

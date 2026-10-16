@@ -64,7 +64,8 @@ const TENKEI = 2
 const tenkeiDamage = DIVINATION_CHOICES[TENKEI].effects.reduce((s, e) => s + (e.kind === 'damage' ? e.amount : 0), 0)
 const canOracle = (s: GameState) => s.divination.remaining > 0 && !s.divination.usedThisRound
 const hasTacticAtR4 = (enemyId: EnemyId) => getEnemyDef(enemyId).actions[3]?.kind === 'tactic'
-const thresholdOf = (s: GameState) => Math.floor(s.enemy.maxHp * RULES.enemyTactic.defaultHpRatio)
+// v1.1：しきい値は難易度別（RULES.enemyTactic.hpRatioByDifficulty。normal は defaultHpRatio と同値）
+const thresholdOf = (s: GameState) => Math.floor(s.enemy.maxHp * (RULES.enemyTactic.hpRatioByDifficulty[s.difficulty] ?? RULES.enemyTactic.defaultHpRatio))
 
 const affordable = (s: GameState) => s.hand.filter((c) => costOf(c) <= s.ap.current)
 const bestAttack = (cards: CardInstance[]) => cards.filter((c) => damageOf(c) > 0).sort((a, b) => damageOf(b) - damageOf(a))[0] ?? null

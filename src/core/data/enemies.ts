@@ -355,13 +355,18 @@ export const PILOT_ENEMIES: EnemyDef[] = [
     // then（追い込めた・HP ≤ 47）：attack 13 ／ else（追い込めなかった）：鬼将と同じ名前つき必殺 26「業斧・断岩」。
     // 7R 合計 then 60／else 73（else は鬼将 enemy_02 と完全に同じ行動表＝「追い込めなければ鬼将そのもの」）。
     // then を 0 にしない＝追い込んでも受けは要る（一択化の防止）。R1・R2・R5〜R7 は鬼将と同一
+    // Pilot v1.1：しきい値は難易度別（normal 0.5＝≤47・hard 0.6＝≤64／108。`RULES.enemyTactic.hpRatioByDifficulty`）
     actions: [
       { kind: 'attack', amount: 5 },
       { kind: 'attack', amount: 9 },
       { kind: 'charge', label: '⚠ 傷が浅ければ次は断岩' },
       {
         kind: 'tactic',
-        cond: { type: 'enemyHpRatioAtMost', ratio: RULES.enemyTactic.defaultHpRatio },
+        cond: {
+          type: 'enemyHpRatioAtMost',
+          ratio: RULES.enemyTactic.defaultHpRatio,
+          ratioByDifficulty: RULES.enemyTactic.hpRatioByDifficulty,
+        },
         then: { kind: 'attack', amount: 13 },
         else: { kind: 'special', amount: 26, name: '業斧・断岩' },
       },

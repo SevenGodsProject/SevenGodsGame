@@ -457,6 +457,15 @@ export const RULES = {
    */
   enemyTactic: {
     defaultHpRatio: 0.5,
+    /**
+     * Pilot v1.1（`docs/LANE1_THREAT_BRANCH_PILOT_V1_1.md` §2〜§3・AI 判断）：難易度別のしきい値。
+     * hard は `difficulty.hard.enemyHpMultiplier 1.15` で「then に必要なダメージ」が 47→54 に増え、then 率が
+     * 41.8%（normal）→17.9% に偏る（寄与 76%・engine 差し替えと与ダメ分布の 2 法で一致）。0.6（≤64／必要 44）で
+     * 48.2%・迷う局面 59.6%・到達不能 7.5% と normal と同帯に戻る（0.55 は 32.5% で Gate G1 の帯 35〜65% に届かず、
+     * 0.65 は normal を超える）。easy／normal は defaultHpRatio と同値＝挙動不変（golden：normal then 41.8%）。
+     * engine（`tactic.ts`）はこの表を直接読まず、敵データが `cond.ratioByDifficulty` として埋め込んだ値を難易度で引く。
+     */
+    hpRatioByDifficulty: { easy: 0.5, normal: 0.5, hard: 0.6 },
   },
   saveVersion: 9,
 } as const
