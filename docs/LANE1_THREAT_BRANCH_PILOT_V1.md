@@ -101,6 +101,16 @@ hard では then 率 17.9%（HP ×1.15 で 54 以下が必要）。G1 は normal
 
 新規テスト：`coreRoster.test.ts`（12）・`enemyTactic.test.ts`（11）・`pilotFlag.test.ts`（9）＝32 件通過・`threatBranch.sim.test.ts`（1・既定 skip）。
 
+### 7-2. PM 独立検証（2026-10-17・Dev 報告の再現）
+
+- `npx vitest run`（full）を PM が再実行 → **119 files passed / 7 skipped・1463 passed / 10 skipped**（Dev 報告と一致・41.8s）
+- headless 受入 `scripts/lane1-threat-branch/acceptance.mjs`（忠次 Pilot の受入スクリプトを本 Pilot 向けに書き換え）を `vite preview`（dist・port 4190）に対して実行 → **74/74 PASS**（PC 1508×660・SP 375×667 × 通常／Pilot URL）
+  - 通常 URL：敵カード 8（7 体＋神に委ねる）・Pilot 敵／印／案内が**出ない**
+  - Pilot URL：敵カード 9・『業斧の鬼将・軍略』＋印「Pilot・記録に残らない」＋案内が出る・横スクロール 0
+  - 開戦後：鬼将の画像を再利用（`/assets/enemies/oni/` 200）・対局中 `sevengods.battleSave` 無し・R1 ⚔50・R2 ⚔90・**R3「⚠ 傷が浅ければ次は断岩」・R4「業斧・断岩 260」**（カード不使用＝HP 比 1.0 → else）・決着後の localStorage キー集合が開戦直後と同一・JS error 0
+  - evidence：`docs/evidence/lane1-threat-branch/acceptance/`（acceptance.json・enemy-select／battle-r3／battle-r4／result の PNG）
+- then 分岐（R4 開始時 HP ≤47 → attack 13）は UI 経路では未実測（カード操作の自動化は本受入の範囲外）。engine 単体テスト（`enemyTactic.test.ts`）と sim（then 率 41.8%）で確認済み。人間が then を踏むのは CEO 実プレイが初
+
 ## 8. CEO 実プレイ QA の手順
 
 1. worktree `C:\Users\kimi1\SevenGodsGame-lane1` で `npm run dev` → 表示された port で **`http://localhost:<port>/?pilot=threat`** を開く（`?pilot=threat` が無いと Pilot 敵は出ない）
