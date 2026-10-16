@@ -33,6 +33,8 @@ export const FIRST_BATTLE_PRESET: FirstBattlePreset = {
  */
 export const FIRST_BATTLE_BRIEF_LINES: readonly string[] = [
   '敵は次の行動を予告します。⚔ の数字が、次に受ける攻撃です。',
-  'カード左上の数字が必要な神力です。余った神力は次のラウンドへ持ち越せません。',
+  // v1.0.1 語彙補完（`docs/FIRST_PLAYER_UX_IMPROVEMENT_PROPOSAL_V1.md` 案 B）：防御（ブロック）もラウンド末に消える事実を
+  // 神力と対で伝える（+4 字・3 行合計 112／120）。「ブロック」は UI に出ない語なので「防御」（遊び方 ③ と同じ語）
+  'カード左上の数字が必要な神力です。余った神力と防御は、次のラウンドへ持ち越せません。',
   `出し終えたら「ラウンドを終える」。${RULES.totalRounds}ラウンド以内に敵のHPを0にすれば勝利です。`,
 ]
