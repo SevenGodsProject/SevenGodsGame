@@ -1,0 +1,19 @@
+# G8 Save Migration — 本 RC では『統合後（PM Gate）』に分類
+実行：PLAYWRIGHT_MODULE=... node scripts/release-audit/save-migration.mjs <out> http://localhost:4198(master 7ba447f build) http://localhost:4197(RC build)
+結果：master 側 fixture 作成（通常戦を決着まで自動プレイ → sevengods.records 保存）が完了せず、script 114 行で TypeError（normalDump['sevengods.records'] が undefined）。RC 側へ注入する前の段階の失敗＝RC 由来ではない。原因未特定（playToEnd 150 秒 timeout の疑い・master build は scratchpad で vite build（tsc 無し）・VITE_COMMIT_SHA=7ba447f）。
+
+## 静的根拠：セーブ・storage・リプレイ再開のコードは RC で 1 行も変わらない（saveVersion 9 不変）
+(空＝差分 0)
+
+## RC で変わった src ファイル一覧
+ M src/components/TutorialOverlay.tsx
+ M src/components/setup/EnemySelectScreen.tsx
+ M src/components/setup/firstBattle.test.ts
+ M src/components/setup/firstBattle.ts
+ M src/core/data/enemies.test.ts
+ M src/core/data/enemies.ts
+ M src/core/replay/gameVersion.test.ts
+ M src/core/replay/gameVersion.ts
+?? src/components/setup/enemySelectNote.test.ts
+?? src/components/tutorialContent.ts
+?? src/components/tutorialWording.test.ts
