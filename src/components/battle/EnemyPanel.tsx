@@ -11,6 +11,8 @@ import type { FloatingNumber } from './useFloatingNumbers'
 import type { BatchPlan, ReactionPlan } from './combatTimeline'
 import { hpBand } from './visualHp'
 import { DEFEAT_COLLAPSE_MS, DEFEAT_COLLAPSE_REDUCED_MS } from './enemyVfxTiming'
+import { enemyBreakClass, enemyBreakVars, useEnemyBreak } from './enemyBreak'
+import './enemyBreak.css'
 
 type EnemyPanelProps = {
   enemy: EnemyState
@@ -127,9 +129,14 @@ export function EnemyPanel({
   const reactions = plan?.enemyReactions ?? []
   const band = hpBand(hpShown, enemy.maxHp)
   const collapseStyle = { '--collapse': `${reduced ? DEFEAT_COLLAPSE_REDUCED_MS : DEFEAT_COLLAPSE_MS}ms` } as CSSProperties
+  // Combat Feel v2（Enemy Break v1）：表示 HP が 50%／25% の帯をまたいで下がった瞬間の一回性反応（表示専用）。
+  // 撃破の一撃（表示 HP 0・outcome won）と崩壊中は再生しない（決定226 の崩壊と重ねない）
+  // クラスは panel の根だけに付け、名札・舞台・体は enemyBreak.css が子孫セレクタで受ける（既存の markup は不変）
+  const brk = useEnemyBreak(hpShown, enemy.maxHp, defeated || hpShown <= 0 || plan?.outcome === 'won')
+  const breakVars = enemyBreakVars(brk.level) as CSSProperties
 
   return (
-    <div className={`panel enemy-panel enemy-band-${band}`} data-enemy={enemy.defId}>
+    <div className={`panel enemy-panel enemy-band-${band}${enemyBreakClass('cf2-break', brk.level)}`} data-enemy={enemy.defId} style={breakVars}>
       {/* Phase 6-B（決定164）：名前・HP・予告・状態を立ち絵の「上」に1枚の名札としてまとめる。
           こうすると、どの画面高でも予告と HP が立ち絵と一緒に必ず見える（旧：立ち絵の下にあり、
           手札を触る位置までスクロールすると画面外になっていた）。 */}
