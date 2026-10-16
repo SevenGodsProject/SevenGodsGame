@@ -1,0 +1,2540 @@
+{
+  "at": "2026-10-16T23:45:46.426Z",
+  "seeds": 40,
+  "gods": 7,
+  "runtime": {
+    "ratioByDifficulty": {
+      "easy": 0.5,
+      "normal": 0.5,
+      "hard": 0.6
+    },
+    "threshold": {
+      "easy": 40,
+      "normal": 47,
+      "hard": 64
+    },
+    "thenRate": {
+      "normal:greedy": 0.418,
+      "normal:raceAware": 0.589,
+      "normal:reader": 0.418,
+      "hard:greedy": 0.482,
+      "hard:raceAware": 0.596,
+      "hard:reader": 0.482
+    }
+  },
+  "decomposition": {
+    "normalThen": {
+      "greedy": 0.418,
+      "raceAware": 0.589,
+      "reader": 0.418
+    },
+    "variants": {
+      "hard（3 要素すべて）": {
+        "patch": {
+          "enemyHpMultiplier": 1.15,
+          "enemyAtkMultiplier": 1.15,
+          "playerMaxHpBonus": -3
+        },
+        "thenRate": {
+          "greedy": 0.179,
+          "raceAware": 0.271,
+          "reader": 0.179
+        },
+        "contribution": {
+          "greedy": 1,
+          "raceAware": 1,
+          "reader": 1
+        }
+      },
+      "HP ×1.15 のみ": {
+        "patch": {
+          "enemyHpMultiplier": 1.15,
+          "enemyAtkMultiplier": 1,
+          "playerMaxHpBonus": 0
+        },
+        "thenRate": {
+          "greedy": 0.236,
+          "raceAware": 0.318,
+          "reader": 0.236
+        },
+        "contribution": {
+          "greedy": 0.762,
+          "raceAware": 0.852,
+          "reader": 0.762
+        }
+      },
+      "ATK ×1.15 のみ": {
+        "patch": {
+          "enemyHpMultiplier": 1,
+          "enemyAtkMultiplier": 1.15,
+          "playerMaxHpBonus": 0
+        },
+        "thenRate": {
+          "greedy": 0.421,
+          "raceAware": 0.568,
+          "reader": 0.421
+        },
+        "contribution": {
+          "greedy": -0.013,
+          "raceAware": 0.066,
+          "reader": -0.013
+        }
+      },
+      "自 HP −3 のみ": {
+        "patch": {
+          "enemyHpMultiplier": 1,
+          "enemyAtkMultiplier": 1,
+          "playerMaxHpBonus": -3
+        },
+        "thenRate": {
+          "greedy": 0.425,
+          "raceAware": 0.579,
+          "reader": 0.425
+        },
+        "contribution": {
+          "greedy": -0.029,
+          "raceAware": 0.031,
+          "reader": -0.029
+        }
+      },
+      "HP ×1.15 ＋ ATK ×1.15": {
+        "patch": {
+          "enemyHpMultiplier": 1.15,
+          "enemyAtkMultiplier": 1.15,
+          "playerMaxHpBonus": 0
+        },
+        "thenRate": {
+          "greedy": 0.232,
+          "raceAware": 0.321,
+          "reader": 0.232
+        },
+        "contribution": {
+          "greedy": 0.778,
+          "raceAware": 0.843,
+          "reader": 0.778
+        }
+      },
+      "ATK ×1.15 ＋ 自 HP −3": {
+        "patch": {
+          "enemyHpMultiplier": 1,
+          "enemyAtkMultiplier": 1.15,
+          "playerMaxHpBonus": -3
+        },
+        "thenRate": {
+          "greedy": 0.361,
+          "raceAware": 0.514,
+          "reader": 0.361
+        },
+        "contribution": {
+          "greedy": 0.238,
+          "raceAware": 0.236,
+          "reader": 0.238
+        }
+      }
+    },
+    "byDistribution": {
+      "hpMultiplierOnly": 0.236,
+      "atkPressureOnly": 0.361,
+      "thenNormal": 0.418,
+      "thenHard": 0.179
+    }
+  },
+  "sweep": {
+    "0.5": {
+      "normal": {
+        "threshold": 47,
+        "need": 47,
+        "cells": {
+          "greedy": {
+            "n": 280,
+            "winRate": 1,
+            "status": {
+              "won": 280
+            },
+            "reachedR4": 280,
+            "thenRate": 0.418,
+            "hpRatioAtR4Mean": 0.542,
+            "meanScore": 627,
+            "meanPlayerHpEnd": 21.32,
+            "meanRound": 5.62,
+            "oracleAtR4Rate": 0.336
+          },
+          "raceAware": {
+            "n": 280,
+            "winRate": 1,
+            "status": {
+              "won": 280
+            },
+            "reachedR4": 280,
+            "thenRate": 0.589,
+            "hpRatioAtR4Mean": 0.542,
+            "meanScore": 630.1,
+            "meanPlayerHpEnd": 22.67,
+            "meanRound": 5.6,
+            "oracleAtR4Rate": 0.446
+          },
+          "reader": {
+            "n": 280,
+            "winRate": 1,
+            "status": {
+              "won": 280
+            },
+            "reachedR4": 280,
+            "thenRate": 0.418,
+            "hpRatioAtR4Mean": 0.542,
+            "meanScore": 628.7,
+            "meanPlayerHpEnd": 22.2,
+            "meanRound": 5.6,
+            "oracleAtR4Rate": 0.6
+          }
+        },
+        "perGodThen": {
+          "ebisu": 0.625,
+          "taiyo": 0.375,
+          "sobi": 0.475,
+          "saika": 0.325,
+          "juraku": 0.2,
+          "fukuei": 0.375,
+          "shouren": 0.55
+        },
+        "search": {
+          "n": 280,
+          "counts": {
+            "tight": {
+              "alreadyThen": 8,
+              "thenInfeasible": 32,
+              "attackDominant": 78,
+              "guardDominant": 73,
+              "contested": 89
+            },
+            "main": {
+              "alreadyThen": 8,
+              "thenInfeasible": 32,
+              "attackDominant": 76,
+              "guardDominant": 45,
+              "contested": 119
+            },
+            "loose": {
+              "alreadyThen": 8,
+              "thenInfeasible": 32,
+              "attackDominant": 71,
+              "guardDominant": 19,
+              "contested": 150
+            }
+          },
+          "rates": {
+            "contestedOfAll": {
+              "tight": 0.318,
+              "main": 0.425,
+              "loose": 0.536
+            },
+            "contestedOfDecidable": {
+              "tight": 0.371,
+              "main": 0.496,
+              "loose": 0.625
+            },
+            "answerFixedOfAll": {
+              "main": 0.575
+            },
+            "alreadyThenOfAll": 0.029,
+            "thenInfeasibleOfAll": 0.114,
+            "decidableOfAll": 0.857,
+            "optimalAttackOfDecidable": 0.404,
+            "optimalGuardOfDecidable": 0.467,
+            "tieOfDecidable": 0.129,
+            "overallOptimalThenOrKill": 0.446
+          },
+          "delta": {
+            "mean": 6.6,
+            "meanAbs": 21,
+            "hist": {
+              "(-20,-10]": 27,
+              ">=20": 71,
+              "[-5,5]": 89,
+              "(-10,-5)": 25,
+              "[10,20)": 6,
+              "<=-20": 21,
+              "(5,10)": 1
+            }
+          },
+          "meanLeavesPerState": 1201.9,
+          "meanNeed": 19.4,
+          "meanPotential": 37.5,
+          "byNeed": {
+            "31-40": {
+              "n": 25,
+              "optimalAttack": 6,
+              "contested": 7,
+              "thenInfeasible": 10
+            },
+            "21-30": {
+              "n": 91,
+              "optimalAttack": 22,
+              "contested": 37,
+              "thenInfeasible": 13
+            },
+            "11-20": {
+              "n": 96,
+              "optimalAttack": 36,
+              "contested": 51,
+              "thenInfeasible": 3
+            },
+            "1-10": {
+              "n": 50,
+              "optimalAttack": 32,
+              "contested": 21,
+              "thenInfeasible": 1
+            },
+            ">40": {
+              "n": 10,
+              "optimalAttack": 1,
+              "contested": 3,
+              "thenInfeasible": 5
+            },
+            "<=0": {
+              "n": 8,
+              "optimalAttack": 8,
+              "contested": 0,
+              "thenInfeasible": 0
+            }
+          },
+          "features": {
+            "contested": {
+              "n": 119,
+              "bestGuardUsesHinder": 0.462,
+              "bestGuardUsesGuardCard": 0.529,
+              "bestGuardUsesOracleR3": 0.849,
+              "bestGuardPlaysZeroCards": 0,
+              "bestAttackUsesOracleR3": 0.84,
+              "bestAttackKillsInR3": 0,
+              "meanCardsBestAttack": 3.65,
+              "meanCardsBestGuard": 3.55,
+              "meanAttackCardsBestAttack": 1.29,
+              "meanAttackCardsBestGuard": 0.76,
+              "oracleChoiceBestAttack": [
+                0.017,
+                0.739,
+                0.084
+              ],
+              "oracleChoiceBestGuard": [
+                0.017,
+                0.756,
+                0.076
+              ]
+            },
+            "decidable": {
+              "n": 240,
+              "bestGuardUsesHinder": 0.383,
+              "bestGuardUsesGuardCard": 0.625,
+              "bestGuardUsesOracleR3": 0.85,
+              "bestGuardPlaysZeroCards": 0,
+              "bestAttackUsesOracleR3": 0.9,
+              "bestAttackKillsInR3": 0.067,
+              "meanCardsBestAttack": 3.86,
+              "meanCardsBestGuard": 3.73,
+              "meanAttackCardsBestAttack": 1.38,
+              "meanAttackCardsBestGuard": 0.69,
+              "oracleChoiceBestAttack": [
+                0.008,
+                0.771,
+                0.121
+              ],
+              "oracleChoiceBestGuard": [
+                0.008,
+                0.787,
+                0.054
+              ]
+            }
+          },
+          "perGod": {
+            "ebisu": {
+              "n": 40,
+              "alreadyThen": 0,
+              "thenInfeasible": 1,
+              "attackDominant": 10,
+              "guardDominant": 4,
+              "contested": 25,
+              "contestedRateOfDecidable": 0.641,
+              "optimalAttackRateOfDecidable": 0.359,
+              "meanNeed": 18.4,
+              "meanPotential": 44.8
+            },
+            "taiyo": {
+              "n": 40,
+              "alreadyThen": 0,
+              "thenInfeasible": 5,
+              "attackDominant": 17,
+              "guardDominant": 2,
+              "contested": 16,
+              "contestedRateOfDecidable": 0.457,
+              "optimalAttackRateOfDecidable": 0.6,
+              "meanNeed": 18.2,
+              "meanPotential": 41.9
+            },
+            "sobi": {
+              "n": 40,
+              "alreadyThen": 0,
+              "thenInfeasible": 5,
+              "attackDominant": 15,
+              "guardDominant": 5,
+              "contested": 15,
+              "contestedRateOfDecidable": 0.429,
+              "optimalAttackRateOfDecidable": 0.429,
+              "meanNeed": 21.6,
+              "meanPotential": 43.5
+            },
+            "saika": {
+              "n": 40,
+              "alreadyThen": 0,
+              "thenInfeasible": 0,
+              "attackDominant": 16,
+              "guardDominant": 9,
+              "contested": 15,
+              "contestedRateOfDecidable": 0.375,
+              "optimalAttackRateOfDecidable": 0.475,
+              "meanNeed": 21.7,
+              "meanPotential": 48.4
+            },
+            "juraku": {
+              "n": 40,
+              "alreadyThen": 0,
+              "thenInfeasible": 6,
+              "attackDominant": 0,
+              "guardDominant": 12,
+              "contested": 22,
+              "contestedRateOfDecidable": 0.647,
+              "optimalAttackRateOfDecidable": 0.118,
+              "meanNeed": 23.7,
+              "meanPotential": 29.4
+            },
+            "fukuei": {
+              "n": 40,
+              "alreadyThen": 0,
+              "thenInfeasible": 8,
+              "attackDominant": 8,
+              "guardDominant": 10,
+              "contested": 14,
+              "contestedRateOfDecidable": 0.438,
+              "optimalAttackRateOfDecidable": 0.406,
+              "meanNeed": 19,
+              "meanPotential": 28.1
+            },
+            "shouren": {
+              "n": 40,
+              "alreadyThen": 8,
+              "thenInfeasible": 7,
+              "attackDominant": 10,
+              "guardDominant": 3,
+              "contested": 12,
+              "contestedRateOfDecidable": 0.48,
+              "optimalAttackRateOfDecidable": 0.44,
+              "meanNeed": 13.3,
+              "meanPotential": 26.5
+            }
+          }
+        },
+        "bothReachableRate": 0.857,
+        "flip": {
+          "pairs": 272,
+          "flips": 104,
+          "flipRate": 0.382,
+          "decidablePairs": 217,
+          "decidableFlips": 92,
+          "flipRateAmongBothDecidable": 0.424
+        }
+      },
+      "hard": {
+        "threshold": 54,
+        "need": 54,
+        "cells": {
+          "greedy": {
+            "n": 280,
+            "winRate": 1,
+            "status": {
+              "won": 280
+            },
+            "reachedR4": 280,
+            "thenRate": 0.179,
+            "hpRatioAtR4Mean": 0.615,
+            "meanScore": 644,
+            "meanPlayerHpEnd": 19.07,
+            "meanRound": 6.13,
+            "oracleAtR4Rate": 0.721
+          },
+          "raceAware": {
+            "n": 280,
+            "winRate": 0.996,
+            "status": {
+              "won": 279,
+              "finished": 1
+            },
+            "reachedR4": 280,
+            "thenRate": 0.271,
+            "hpRatioAtR4Mean": 0.631,
+            "meanScore": 642.7,
+            "meanPlayerHpEnd": 19.48,
+            "meanRound": 6.13,
+            "oracleAtR4Rate": 0.796
+          },
+          "reader": {
+            "n": 280,
+            "winRate": 1,
+            "status": {
+              "won": 280
+            },
+            "reachedR4": 280,
+            "thenRate": 0.179,
+            "hpRatioAtR4Mean": 0.615,
+            "meanScore": 644.3,
+            "meanPlayerHpEnd": 19.19,
+            "meanRound": 6.12,
+            "oracleAtR4Rate": 0.871
+          }
+        },
+        "perGodThen": {
+          "ebisu": 0.325,
+          "taiyo": 0.15,
+          "sobi": 0.225,
+          "saika": 0.2,
+          "juraku": 0.025,
+          "fukuei": 0.175,
+          "shouren": 0.15
+        },
+        "search": {
+          "n": 280,
+          "counts": {
+            "tight": {
+              "alreadyThen": 0,
+              "thenInfeasible": 71,
+              "attackDominant": 27,
+              "guardDominant": 98,
+              "contested": 84
+            },
+            "main": {
+              "alreadyThen": 0,
+              "thenInfeasible": 71,
+              "attackDominant": 23,
+              "guardDominant": 62,
+              "contested": 124
+            },
+            "loose": {
+              "alreadyThen": 0,
+              "thenInfeasible": 71,
+              "attackDominant": 20,
+              "guardDominant": 35,
+              "contested": 154
+            }
+          },
+          "rates": {
+            "contestedOfAll": {
+              "tight": 0.3,
+              "main": 0.443,
+              "loose": 0.55
+            },
+            "contestedOfDecidable": {
+              "tight": 0.402,
+              "main": 0.593,
+              "loose": 0.737
+            },
+            "answerFixedOfAll": {
+              "main": 0.557
+            },
+            "alreadyThenOfAll": 0,
+            "thenInfeasibleOfAll": 0.254,
+            "decidableOfAll": 0.746,
+            "optimalAttackOfDecidable": 0.191,
+            "optimalGuardOfDecidable": 0.713,
+            "tieOfDecidable": 0.096,
+            "overallOptimalThenOrKill": 0.171
+          },
+          "delta": {
+            "mean": -8.3,
+            "meanAbs": 18.3,
+            "hist": {
+              "[-5,5]": 84,
+              "(-20,-10]": 35,
+              "[10,20)": 3,
+              "(5,10)": 4,
+              "<=-20": 37,
+              ">=20": 20,
+              "(-10,-5)": 26
+            }
+          },
+          "meanLeavesPerState": 1080.8,
+          "meanNeed": 29.4,
+          "meanPotential": 39,
+          "byNeed": {
+            "31-40": {
+              "n": 92,
+              "optimalAttack": 9,
+              "contested": 31,
+              "thenInfeasible": 35
+            },
+            "11-20": {
+              "n": 51,
+              "optimalAttack": 12,
+              "contested": 34,
+              "thenInfeasible": 4
+            },
+            "21-30": {
+              "n": 112,
+              "optimalAttack": 15,
+              "contested": 55,
+              "thenInfeasible": 18
+            },
+            ">40": {
+              "n": 25,
+              "optimalAttack": 4,
+              "contested": 4,
+              "thenInfeasible": 14
+            }
+          },
+          "features": {
+            "contested": {
+              "n": 124,
+              "bestGuardUsesHinder": 0.379,
+              "bestGuardUsesGuardCard": 0.484,
+              "bestGuardUsesOracleR3": 0.815,
+              "bestGuardPlaysZeroCards": 0,
+              "bestAttackUsesOracleR3": 0.871,
+              "bestAttackKillsInR3": 0,
+              "meanCardsBestAttack": 3.67,
+              "meanCardsBestGuard": 3.83,
+              "meanAttackCardsBestAttack": 1.65,
+              "meanAttackCardsBestGuard": 1.03,
+              "oracleChoiceBestAttack": [
+                0.024,
+                0.774,
+                0.073
+              ],
+              "oracleChoiceBestGuard": [
+                0,
+                0.766,
+                0.048
+              ]
+            },
+            "decidable": {
+              "n": 209,
+              "bestGuardUsesHinder": 0.383,
+              "bestGuardUsesGuardCard": 0.498,
+              "bestGuardUsesOracleR3": 0.828,
+              "bestGuardPlaysZeroCards": 0.005,
+              "bestAttackUsesOracleR3": 0.909,
+              "bestAttackKillsInR3": 0.005,
+              "meanCardsBestAttack": 3.82,
+              "meanCardsBestGuard": 3.95,
+              "meanAttackCardsBestAttack": 1.68,
+              "meanAttackCardsBestGuard": 1,
+              "oracleChoiceBestAttack": [
+                0.019,
+                0.78,
+                0.11
+              ],
+              "oracleChoiceBestGuard": [
+                0,
+                0.78,
+                0.048
+              ]
+            }
+          },
+          "perGod": {
+            "ebisu": {
+              "n": 40,
+              "alreadyThen": 0,
+              "thenInfeasible": 2,
+              "attackDominant": 6,
+              "guardDominant": 7,
+              "contested": 25,
+              "contestedRateOfDecidable": 0.658,
+              "optimalAttackRateOfDecidable": 0.289,
+              "meanNeed": 25.5,
+              "meanPotential": 44.8
+            },
+            "taiyo": {
+              "n": 40,
+              "alreadyThen": 0,
+              "thenInfeasible": 6,
+              "attackDominant": 3,
+              "guardDominant": 9,
+              "contested": 22,
+              "contestedRateOfDecidable": 0.647,
+              "optimalAttackRateOfDecidable": 0.206,
+              "meanNeed": 32.6,
+              "meanPotential": 46.9
+            },
+            "sobi": {
+              "n": 40,
+              "alreadyThen": 0,
+              "thenInfeasible": 7,
+              "attackDominant": 5,
+              "guardDominant": 6,
+              "contested": 22,
+              "contestedRateOfDecidable": 0.667,
+              "optimalAttackRateOfDecidable": 0.212,
+              "meanNeed": 28.8,
+              "meanPotential": 44.6
+            },
+            "saika": {
+              "n": 40,
+              "alreadyThen": 0,
+              "thenInfeasible": 1,
+              "attackDominant": 4,
+              "guardDominant": 14,
+              "contested": 21,
+              "contestedRateOfDecidable": 0.538,
+              "optimalAttackRateOfDecidable": 0.179,
+              "meanNeed": 29.1,
+              "meanPotential": 47.7
+            },
+            "juraku": {
+              "n": 40,
+              "alreadyThen": 0,
+              "thenInfeasible": 18,
+              "attackDominant": 0,
+              "guardDominant": 12,
+              "contested": 10,
+              "contestedRateOfDecidable": 0.455,
+              "optimalAttackRateOfDecidable": 0,
+              "meanNeed": 30.7,
+              "meanPotential": 29.4
+            },
+            "fukuei": {
+              "n": 40,
+              "alreadyThen": 0,
+              "thenInfeasible": 20,
+              "attackDominant": 2,
+              "guardDominant": 6,
+              "contested": 12,
+              "contestedRateOfDecidable": 0.6,
+              "optimalAttackRateOfDecidable": 0.2,
+              "meanNeed": 31.9,
+              "meanPotential": 31.7
+            },
+            "shouren": {
+              "n": 40,
+              "alreadyThen": 0,
+              "thenInfeasible": 17,
+              "attackDominant": 3,
+              "guardDominant": 8,
+              "contested": 12,
+              "contestedRateOfDecidable": 0.522,
+              "optimalAttackRateOfDecidable": 0.174,
+              "meanNeed": 27.1,
+              "meanPotential": 28.2
+            }
+          }
+        },
+        "bothReachableRate": 0.746,
+        "flip": {
+          "pairs": 280,
+          "flips": 73,
+          "flipRate": 0.261,
+          "decidablePairs": 166,
+          "decidableFlips": 62,
+          "flipRateAmongBothDecidable": 0.373
+        }
+      }
+    },
+    "0.55": {
+      "normal": {
+        "threshold": 51,
+        "need": 43,
+        "cells": {
+          "greedy": {
+            "n": 280,
+            "winRate": 1,
+            "status": {
+              "won": 280
+            },
+            "reachedR4": 280,
+            "thenRate": 0.586,
+            "hpRatioAtR4Mean": 0.542,
+            "meanScore": 628.9,
+            "meanPlayerHpEnd": 21.54,
+            "meanRound": 5.59,
+            "oracleAtR4Rate": 0.254
+          },
+          "raceAware": {
+            "n": 280,
+            "winRate": 1,
+            "status": {
+              "won": 280
+            },
+            "reachedR4": 280,
+            "thenRate": 0.657,
+            "hpRatioAtR4Mean": 0.546,
+            "meanScore": 630.9,
+            "meanPlayerHpEnd": 22.84,
+            "meanRound": 5.59,
+            "oracleAtR4Rate": 0.382
+          },
+          "reader": {
+            "n": 280,
+            "winRate": 1,
+            "status": {
+              "won": 280
+            },
+            "reachedR4": 280,
+            "thenRate": 0.586,
+            "hpRatioAtR4Mean": 0.542,
+            "meanScore": 629.6,
+            "meanPlayerHpEnd": 22.13,
+            "meanRound": 5.59,
+            "oracleAtR4Rate": 0.446
+          }
+        },
+        "perGodThen": {
+          "ebisu": 0.775,
+          "taiyo": 0.425,
+          "sobi": 0.575,
+          "saika": 0.5,
+          "juraku": 0.625,
+          "fukuei": 0.475,
+          "shouren": 0.725
+        },
+        "search": {
+          "n": 280,
+          "counts": {
+            "tight": {
+              "alreadyThen": 13,
+              "thenInfeasible": 17,
+              "attackDominant": 94,
+              "guardDominant": 60,
+              "contested": 96
+            },
+            "main": {
+              "alreadyThen": 13,
+              "thenInfeasible": 17,
+              "attackDominant": 88,
+              "guardDominant": 34,
+              "contested": 128
+            },
+            "loose": {
+              "alreadyThen": 13,
+              "thenInfeasible": 17,
+              "attackDominant": 83,
+              "guardDominant": 12,
+              "contested": 155
+            }
+          },
+          "rates": {
+            "contestedOfAll": {
+              "tight": 0.343,
+              "main": 0.457,
+              "loose": 0.554
+            },
+            "contestedOfDecidable": {
+              "tight": 0.384,
+              "main": 0.512,
+              "loose": 0.62
+            },
+            "answerFixedOfAll": {
+              "main": 0.543
+            },
+            "alreadyThenOfAll": 0.046,
+            "thenInfeasibleOfAll": 0.061,
+            "decidableOfAll": 0.893,
+            "optimalAttackOfDecidable": 0.464,
+            "optimalGuardOfDecidable": 0.42,
+            "tieOfDecidable": 0.116,
+            "overallOptimalThenOrKill": 0.521
+          },
+          "delta": {
+            "mean": 11.6,
+            "meanAbs": 21.5,
+            "hist": {
+              "(-20,-10]": 19,
+              ">=20": 83,
+              "[-5,5]": 96,
+              "(-10,-5)": 25,
+              "[10,20)": 7,
+              "<=-20": 16,
+              "(5,10)": 4
+            }
+          },
+          "meanLeavesPerState": 1201.9,
+          "meanNeed": 15.4,
+          "meanPotential": 37.5,
+          "byNeed": {
+            "21-30": {
+              "n": 54,
+              "optimalAttack": 16,
+              "contested": 22,
+              "thenInfeasible": 7
+            },
+            "1-10": {
+              "n": 78,
+              "optimalAttack": 50,
+              "contested": 33,
+              "thenInfeasible": 2
+            },
+            "11-20": {
+              "n": 112,
+              "optimalAttack": 44,
+              "contested": 64,
+              "thenInfeasible": 1
+            },
+            "31-40": {
+              "n": 18,
+              "optimalAttack": 6,
+              "contested": 7,
+              "thenInfeasible": 5
+            },
+            ">40": {
+              "n": 5,
+              "optimalAttack": 0,
+              "contested": 2,
+              "thenInfeasible": 2
+            },
+            "<=0": {
+              "n": 13,
+              "optimalAttack": 13,
+              "contested": 0,
+              "thenInfeasible": 0
+            }
+          },
+          "features": {
+            "contested": {
+              "n": 128,
+              "bestGuardUsesHinder": 0.484,
+              "bestGuardUsesGuardCard": 0.547,
+              "bestGuardUsesOracleR3": 0.844,
+              "bestGuardPlaysZeroCards": 0,
+              "bestAttackUsesOracleR3": 0.828,
+              "bestAttackKillsInR3": 0,
+              "meanCardsBestAttack": 3.45,
+              "meanCardsBestGuard": 3.34,
+              "meanAttackCardsBestAttack": 1.22,
+              "meanAttackCardsBestGuard": 0.58,
+              "oracleChoiceBestAttack": [
+                0.008,
+                0.75,
+                0.07
+              ],
+              "oracleChoiceBestGuard": [
+                0.016,
+                0.75,
+                0.078
+              ]
+            },
+            "decidable": {
+              "n": 250,
+              "bestGuardUsesHinder": 0.44,
+              "bestGuardUsesGuardCard": 0.604,
+              "bestGuardUsesOracleR3": 0.848,
+              "bestGuardPlaysZeroCards": 0,
+              "bestAttackUsesOracleR3": 0.896,
+              "bestAttackKillsInR3": 0.064,
+              "meanCardsBestAttack": 3.79,
+              "meanCardsBestGuard": 3.52,
+              "meanAttackCardsBestAttack": 1.32,
+              "meanAttackCardsBestGuard": 0.51,
+              "oracleChoiceBestAttack": [
+                0.008,
+                0.792,
+                0.096
+              ],
+              "oracleChoiceBestGuard": [
+                0.008,
+                0.784,
+                0.056
+              ]
+            }
+          },
+          "perGod": {
+            "ebisu": {
+              "n": 40,
+              "alreadyThen": 0,
+              "thenInfeasible": 0,
+              "attackDominant": 12,
+              "guardDominant": 2,
+              "contested": 26,
+              "contestedRateOfDecidable": 0.65,
+              "optimalAttackRateOfDecidable": 0.425,
+              "meanNeed": 14.4,
+              "meanPotential": 44.8
+            },
+            "taiyo": {
+              "n": 40,
+              "alreadyThen": 0,
+              "thenInfeasible": 2,
+              "attackDominant": 20,
+              "guardDominant": 1,
+              "contested": 17,
+              "contestedRateOfDecidable": 0.447,
+              "optimalAttackRateOfDecidable": 0.605,
+              "meanNeed": 14.2,
+              "meanPotential": 41.9
+            },
+            "sobi": {
+              "n": 40,
+              "alreadyThen": 0,
+              "thenInfeasible": 1,
+              "attackDominant": 16,
+              "guardDominant": 5,
+              "contested": 18,
+              "contestedRateOfDecidable": 0.462,
+              "optimalAttackRateOfDecidable": 0.436,
+              "meanNeed": 17.6,
+              "meanPotential": 43.5
+            },
+            "saika": {
+              "n": 40,
+              "alreadyThen": 0,
+              "thenInfeasible": 0,
+              "attackDominant": 20,
+              "guardDominant": 5,
+              "contested": 15,
+              "contestedRateOfDecidable": 0.375,
+              "optimalAttackRateOfDecidable": 0.625,
+              "meanNeed": 17.7,
+              "meanPotential": 48.4
+            },
+            "juraku": {
+              "n": 40,
+              "alreadyThen": 0,
+              "thenInfeasible": 4,
+              "attackDominant": 1,
+              "guardDominant": 8,
+              "contested": 27,
+              "contestedRateOfDecidable": 0.75,
+              "optimalAttackRateOfDecidable": 0.194,
+              "meanNeed": 19.7,
+              "meanPotential": 29.4
+            },
+            "fukuei": {
+              "n": 40,
+              "alreadyThen": 0,
+              "thenInfeasible": 5,
+              "attackDominant": 11,
+              "guardDominant": 10,
+              "contested": 14,
+              "contestedRateOfDecidable": 0.4,
+              "optimalAttackRateOfDecidable": 0.457,
+              "meanNeed": 15,
+              "meanPotential": 28.1
+            },
+            "shouren": {
+              "n": 40,
+              "alreadyThen": 13,
+              "thenInfeasible": 5,
+              "attackDominant": 8,
+              "guardDominant": 3,
+              "contested": 11,
+              "contestedRateOfDecidable": 0.5,
+              "optimalAttackRateOfDecidable": 0.5,
+              "meanNeed": 9.3,
+              "meanPotential": 26.5
+            }
+          }
+        },
+        "bothReachableRate": 0.893,
+        "flip": {
+          "pairs": 267,
+          "flips": 108,
+          "flipRate": 0.404,
+          "decidablePairs": 227,
+          "decidableFlips": 99,
+          "flipRateAmongBothDecidable": 0.436
+        }
+      },
+      "hard": {
+        "threshold": 59,
+        "need": 49,
+        "cells": {
+          "greedy": {
+            "n": 280,
+            "winRate": 1,
+            "status": {
+              "won": 280
+            },
+            "reachedR4": 280,
+            "thenRate": 0.325,
+            "hpRatioAtR4Mean": 0.615,
+            "meanScore": 645.1,
+            "meanPlayerHpEnd": 19.3,
+            "meanRound": 6.11,
+            "oracleAtR4Rate": 0.629
+          },
+          "raceAware": {
+            "n": 280,
+            "winRate": 0.996,
+            "status": {
+              "won": 279,
+              "finished": 1
+            },
+            "reachedR4": 280,
+            "thenRate": 0.439,
+            "hpRatioAtR4Mean": 0.625,
+            "meanScore": 643.3,
+            "meanPlayerHpEnd": 19.57,
+            "meanRound": 6.12,
+            "oracleAtR4Rate": 0.65
+          },
+          "reader": {
+            "n": 280,
+            "winRate": 1,
+            "status": {
+              "won": 280
+            },
+            "reachedR4": 280,
+            "thenRate": 0.325,
+            "hpRatioAtR4Mean": 0.615,
+            "meanScore": 644.8,
+            "meanPlayerHpEnd": 19.32,
+            "meanRound": 6.11,
+            "oracleAtR4Rate": 0.757
+          }
+        },
+        "perGodThen": {
+          "ebisu": 0.55,
+          "taiyo": 0.275,
+          "sobi": 0.375,
+          "saika": 0.3,
+          "juraku": 0.175,
+          "fukuei": 0.325,
+          "shouren": 0.275
+        },
+        "search": {
+          "n": 280,
+          "counts": {
+            "tight": {
+              "alreadyThen": 0,
+              "thenInfeasible": 40,
+              "attackDominant": 42,
+              "guardDominant": 96,
+              "contested": 102
+            },
+            "main": {
+              "alreadyThen": 0,
+              "thenInfeasible": 40,
+              "attackDominant": 33,
+              "guardDominant": 52,
+              "contested": 155
+            },
+            "loose": {
+              "alreadyThen": 0,
+              "thenInfeasible": 40,
+              "attackDominant": 30,
+              "guardDominant": 31,
+              "contested": 179
+            }
+          },
+          "rates": {
+            "contestedOfAll": {
+              "tight": 0.364,
+              "main": 0.554,
+              "loose": 0.639
+            },
+            "contestedOfDecidable": {
+              "tight": 0.425,
+              "main": 0.646,
+              "loose": 0.746
+            },
+            "answerFixedOfAll": {
+              "main": 0.446
+            },
+            "alreadyThenOfAll": 0,
+            "thenInfeasibleOfAll": 0.143,
+            "decidableOfAll": 0.857,
+            "optimalAttackOfDecidable": 0.267,
+            "optimalGuardOfDecidable": 0.621,
+            "tieOfDecidable": 0.113,
+            "overallOptimalThenOrKill": 0.279
+          },
+          "delta": {
+            "mean": -3.2,
+            "meanAbs": 17.8,
+            "hist": {
+              "[-5,5]": 102,
+              "(-20,-10]": 32,
+              "[10,20)": 3,
+              "(5,10)": 9,
+              "(-10,-5)": 33,
+              "<=-20": 31,
+              ">=20": 30
+            }
+          },
+          "meanLeavesPerState": 1080.8,
+          "meanNeed": 24.4,
+          "meanPotential": 39,
+          "byNeed": {
+            "31-40": {
+              "n": 47,
+              "optimalAttack": 6,
+              "contested": 18,
+              "thenInfeasible": 13
+            },
+            "21-30": {
+              "n": 121,
+              "optimalAttack": 23,
+              "contested": 71,
+              "thenInfeasible": 16
+            },
+            "11-20": {
+              "n": 80,
+              "optimalAttack": 27,
+              "contested": 51,
+              "thenInfeasible": 4
+            },
+            ">40": {
+              "n": 17,
+              "optimalAttack": 3,
+              "contested": 4,
+              "thenInfeasible": 7
+            },
+            "1-10": {
+              "n": 15,
+              "optimalAttack": 5,
+              "contested": 11,
+              "thenInfeasible": 0
+            }
+          },
+          "features": {
+            "contested": {
+              "n": 155,
+              "bestGuardUsesHinder": 0.387,
+              "bestGuardUsesGuardCard": 0.458,
+              "bestGuardUsesOracleR3": 0.787,
+              "bestGuardPlaysZeroCards": 0,
+              "bestAttackUsesOracleR3": 0.852,
+              "bestAttackKillsInR3": 0,
+              "meanCardsBestAttack": 3.6,
+              "meanCardsBestGuard": 3.6,
+              "meanAttackCardsBestAttack": 1.45,
+              "meanAttackCardsBestGuard": 0.85,
+              "oracleChoiceBestAttack": [
+                0.026,
+                0.768,
+                0.058
+              ],
+              "oracleChoiceBestGuard": [
+                0.013,
+                0.735,
+                0.039
+              ]
+            },
+            "decidable": {
+              "n": 240,
+              "bestGuardUsesHinder": 0.367,
+              "bestGuardUsesGuardCard": 0.496,
+              "bestGuardUsesOracleR3": 0.813,
+              "bestGuardPlaysZeroCards": 0.004,
+              "bestAttackUsesOracleR3": 0.883,
+              "bestAttackKillsInR3": 0.004,
+              "meanCardsBestAttack": 3.71,
+              "meanCardsBestGuard": 3.69,
+              "meanAttackCardsBestAttack": 1.51,
+              "meanAttackCardsBestGuard": 0.83,
+              "oracleChoiceBestAttack": [
+                0.021,
+                0.792,
+                0.071
+              ],
+              "oracleChoiceBestGuard": [
+                0.017,
+                0.733,
+                0.063
+              ]
+            }
+          },
+          "perGod": {
+            "ebisu": {
+              "n": 40,
+              "alreadyThen": 0,
+              "thenInfeasible": 1,
+              "attackDominant": 7,
+              "guardDominant": 5,
+              "contested": 27,
+              "contestedRateOfDecidable": 0.692,
+              "optimalAttackRateOfDecidable": 0.359,
+              "meanNeed": 20.5,
+              "meanPotential": 44.8
+            },
+            "taiyo": {
+              "n": 40,
+              "alreadyThen": 0,
+              "thenInfeasible": 5,
+              "attackDominant": 4,
+              "guardDominant": 5,
+              "contested": 26,
+              "contestedRateOfDecidable": 0.743,
+              "optimalAttackRateOfDecidable": 0.286,
+              "meanNeed": 27.6,
+              "meanPotential": 46.9
+            },
+            "sobi": {
+              "n": 40,
+              "alreadyThen": 0,
+              "thenInfeasible": 5,
+              "attackDominant": 6,
+              "guardDominant": 5,
+              "contested": 24,
+              "contestedRateOfDecidable": 0.686,
+              "optimalAttackRateOfDecidable": 0.257,
+              "meanNeed": 23.8,
+              "meanPotential": 44.6
+            },
+            "saika": {
+              "n": 40,
+              "alreadyThen": 0,
+              "thenInfeasible": 0,
+              "attackDominant": 5,
+              "guardDominant": 10,
+              "contested": 25,
+              "contestedRateOfDecidable": 0.625,
+              "optimalAttackRateOfDecidable": 0.25,
+              "meanNeed": 24.1,
+              "meanPotential": 47.7
+            },
+            "juraku": {
+              "n": 40,
+              "alreadyThen": 0,
+              "thenInfeasible": 6,
+              "attackDominant": 5,
+              "guardDominant": 6,
+              "contested": 23,
+              "contestedRateOfDecidable": 0.676,
+              "optimalAttackRateOfDecidable": 0.294,
+              "meanNeed": 25.7,
+              "meanPotential": 29.4
+            },
+            "fukuei": {
+              "n": 40,
+              "alreadyThen": 0,
+              "thenInfeasible": 12,
+              "attackDominant": 3,
+              "guardDominant": 12,
+              "contested": 13,
+              "contestedRateOfDecidable": 0.464,
+              "optimalAttackRateOfDecidable": 0.143,
+              "meanNeed": 26.9,
+              "meanPotential": 31.7
+            },
+            "shouren": {
+              "n": 40,
+              "alreadyThen": 0,
+              "thenInfeasible": 11,
+              "attackDominant": 3,
+              "guardDominant": 9,
+              "contested": 17,
+              "contestedRateOfDecidable": 0.586,
+              "optimalAttackRateOfDecidable": 0.241,
+              "meanNeed": 22.1,
+              "meanPotential": 28.2
+            }
+          }
+        },
+        "bothReachableRate": 0.857,
+        "flip": {
+          "pairs": 280,
+          "flips": 101,
+          "flipRate": 0.361,
+          "decidablePairs": 206,
+          "decidableFlips": 88,
+          "flipRateAmongBothDecidable": 0.427
+        }
+      }
+    },
+    "0.6": {
+      "normal": {
+        "threshold": 56,
+        "need": 38,
+        "cells": {
+          "greedy": {
+            "n": 280,
+            "winRate": 1,
+            "status": {
+              "won": 280
+            },
+            "reachedR4": 280,
+            "thenRate": 0.682,
+            "hpRatioAtR4Mean": 0.542,
+            "meanScore": 629.6,
+            "meanPlayerHpEnd": 21.85,
+            "meanRound": 5.59,
+            "oracleAtR4Rate": 0.2
+          },
+          "raceAware": {
+            "n": 280,
+            "winRate": 1,
+            "status": {
+              "won": 280
+            },
+            "reachedR4": 280,
+            "thenRate": 0.757,
+            "hpRatioAtR4Mean": 0.543,
+            "meanScore": 631.1,
+            "meanPlayerHpEnd": 22.82,
+            "meanRound": 5.59,
+            "oracleAtR4Rate": 0.286
+          },
+          "reader": {
+            "n": 280,
+            "winRate": 1,
+            "status": {
+              "won": 280
+            },
+            "reachedR4": 280,
+            "thenRate": 0.682,
+            "hpRatioAtR4Mean": 0.542,
+            "meanScore": 630.1,
+            "meanPlayerHpEnd": 22.2,
+            "meanRound": 5.58,
+            "oracleAtR4Rate": 0.35
+          }
+        },
+        "perGodThen": {
+          "ebisu": 0.875,
+          "taiyo": 0.55,
+          "sobi": 0.7,
+          "saika": 0.65,
+          "juraku": 0.725,
+          "fukuei": 0.55,
+          "shouren": 0.725
+        },
+        "search": {
+          "n": 280,
+          "counts": {
+            "tight": {
+              "alreadyThen": 44,
+              "thenInfeasible": 13,
+              "attackDominant": 83,
+              "guardDominant": 48,
+              "contested": 92
+            },
+            "main": {
+              "alreadyThen": 44,
+              "thenInfeasible": 13,
+              "attackDominant": 78,
+              "guardDominant": 25,
+              "contested": 120
+            },
+            "loose": {
+              "alreadyThen": 44,
+              "thenInfeasible": 13,
+              "attackDominant": 76,
+              "guardDominant": 12,
+              "contested": 135
+            }
+          },
+          "rates": {
+            "contestedOfAll": {
+              "tight": 0.329,
+              "main": 0.429,
+              "loose": 0.482
+            },
+            "contestedOfDecidable": {
+              "tight": 0.413,
+              "main": 0.538,
+              "loose": 0.605
+            },
+            "answerFixedOfAll": {
+              "main": 0.571
+            },
+            "alreadyThenOfAll": 0.157,
+            "thenInfeasibleOfAll": 0.046,
+            "decidableOfAll": 0.796,
+            "optimalAttackOfDecidable": 0.502,
+            "optimalGuardOfDecidable": 0.372,
+            "tieOfDecidable": 0.126,
+            "overallOptimalThenOrKill": 0.621
+          },
+          "delta": {
+            "mean": 12.8,
+            "meanAbs": 22.4,
+            "hist": {
+              "[-5,5]": 92,
+              ">=20": 76,
+              "(-10,-5)": 21,
+              "(5,10)": 4,
+              "[10,20)": 3,
+              "(-20,-10]": 14,
+              "<=-20": 13
+            }
+          },
+          "meanLeavesPerState": 1201.9,
+          "meanNeed": 10.4,
+          "meanPotential": 37.5,
+          "byNeed": {
+            "21-30": {
+              "n": 23,
+              "optimalAttack": 7,
+              "contested": 10,
+              "thenInfeasible": 4
+            },
+            "11-20": {
+              "n": 106,
+              "optimalAttack": 47,
+              "contested": 56,
+              "thenInfeasible": 4
+            },
+            "1-10": {
+              "n": 95,
+              "optimalAttack": 56,
+              "contested": 49,
+              "thenInfeasible": 0
+            },
+            "31-40": {
+              "n": 12,
+              "optimalAttack": 2,
+              "contested": 5,
+              "thenInfeasible": 5
+            },
+            "<=0": {
+              "n": 44,
+              "optimalAttack": 44,
+              "contested": 0,
+              "thenInfeasible": 0
+            }
+          },
+          "features": {
+            "contested": {
+              "n": 120,
+              "bestGuardUsesHinder": 0.525,
+              "bestGuardUsesGuardCard": 0.625,
+              "bestGuardUsesOracleR3": 0.85,
+              "bestGuardPlaysZeroCards": 0,
+              "bestAttackUsesOracleR3": 0.825,
+              "bestAttackKillsInR3": 0,
+              "meanCardsBestAttack": 3.28,
+              "meanCardsBestGuard": 3.24,
+              "meanAttackCardsBestAttack": 1.12,
+              "meanAttackCardsBestGuard": 0.43,
+              "oracleChoiceBestAttack": [
+                0.017,
+                0.758,
+                0.05
+              ],
+              "oracleChoiceBestGuard": [
+                0.017,
+                0.775,
+                0.058
+              ]
+            },
+            "decidable": {
+              "n": 223,
+              "bestGuardUsesHinder": 0.475,
+              "bestGuardUsesGuardCard": 0.601,
+              "bestGuardUsesOracleR3": 0.848,
+              "bestGuardPlaysZeroCards": 0,
+              "bestAttackUsesOracleR3": 0.879,
+              "bestAttackKillsInR3": 0.045,
+              "meanCardsBestAttack": 3.75,
+              "meanCardsBestGuard": 3.44,
+              "meanAttackCardsBestAttack": 1.26,
+              "meanAttackCardsBestGuard": 0.44,
+              "oracleChoiceBestAttack": [
+                0.013,
+                0.794,
+                0.072
+              ],
+              "oracleChoiceBestGuard": [
+                0.013,
+                0.789,
+                0.045
+              ]
+            }
+          },
+          "perGod": {
+            "ebisu": {
+              "n": 40,
+              "alreadyThen": 0,
+              "thenInfeasible": 0,
+              "attackDominant": 16,
+              "guardDominant": 0,
+              "contested": 24,
+              "contestedRateOfDecidable": 0.6,
+              "optimalAttackRateOfDecidable": 0.55,
+              "meanNeed": 9.4,
+              "meanPotential": 44.8
+            },
+            "taiyo": {
+              "n": 40,
+              "alreadyThen": 11,
+              "thenInfeasible": 2,
+              "attackDominant": 12,
+              "guardDominant": 0,
+              "contested": 15,
+              "contestedRateOfDecidable": 0.556,
+              "optimalAttackRateOfDecidable": 0.593,
+              "meanNeed": 9.2,
+              "meanPotential": 41.9
+            },
+            "sobi": {
+              "n": 40,
+              "alreadyThen": 5,
+              "thenInfeasible": 1,
+              "attackDominant": 12,
+              "guardDominant": 5,
+              "contested": 17,
+              "contestedRateOfDecidable": 0.5,
+              "optimalAttackRateOfDecidable": 0.441,
+              "meanNeed": 12.6,
+              "meanPotential": 43.5
+            },
+            "saika": {
+              "n": 40,
+              "alreadyThen": 1,
+              "thenInfeasible": 0,
+              "attackDominant": 21,
+              "guardDominant": 3,
+              "contested": 15,
+              "contestedRateOfDecidable": 0.385,
+              "optimalAttackRateOfDecidable": 0.718,
+              "meanNeed": 12.7,
+              "meanPotential": 48.4
+            },
+            "juraku": {
+              "n": 40,
+              "alreadyThen": 0,
+              "thenInfeasible": 3,
+              "attackDominant": 1,
+              "guardDominant": 7,
+              "contested": 29,
+              "contestedRateOfDecidable": 0.784,
+              "optimalAttackRateOfDecidable": 0.189,
+              "meanNeed": 14.7,
+              "meanPotential": 29.4
+            },
+            "fukuei": {
+              "n": 40,
+              "alreadyThen": 11,
+              "thenInfeasible": 5,
+              "attackDominant": 8,
+              "guardDominant": 8,
+              "contested": 8,
+              "contestedRateOfDecidable": 0.333,
+              "optimalAttackRateOfDecidable": 0.375,
+              "meanNeed": 10,
+              "meanPotential": 28.1
+            },
+            "shouren": {
+              "n": 40,
+              "alreadyThen": 16,
+              "thenInfeasible": 2,
+              "attackDominant": 8,
+              "guardDominant": 2,
+              "contested": 12,
+              "contestedRateOfDecidable": 0.545,
+              "optimalAttackRateOfDecidable": 0.682,
+              "meanNeed": 4.3,
+              "meanPotential": 26.5
+            }
+          }
+        },
+        "bothReachableRate": 0.796,
+        "flip": {
+          "pairs": 236,
+          "flips": 102,
+          "flipRate": 0.432,
+          "decidablePairs": 215,
+          "decidableFlips": 97,
+          "flipRateAmongBothDecidable": 0.451
+        }
+      },
+      "hard": {
+        "threshold": 64,
+        "need": 44,
+        "cells": {
+          "greedy": {
+            "n": 280,
+            "winRate": 1,
+            "status": {
+              "won": 280
+            },
+            "reachedR4": 280,
+            "thenRate": 0.482,
+            "hpRatioAtR4Mean": 0.615,
+            "meanScore": 646,
+            "meanPlayerHpEnd": 19.29,
+            "meanRound": 6.1,
+            "oracleAtR4Rate": 0.493
+          },
+          "raceAware": {
+            "n": 280,
+            "winRate": 0.996,
+            "status": {
+              "won": 279,
+              "finished": 1
+            },
+            "reachedR4": 280,
+            "thenRate": 0.596,
+            "hpRatioAtR4Mean": 0.618,
+            "meanScore": 645.5,
+            "meanPlayerHpEnd": 19.77,
+            "meanRound": 6.1,
+            "oracleAtR4Rate": 0.518
+          },
+          "reader": {
+            "n": 280,
+            "winRate": 1,
+            "status": {
+              "won": 280
+            },
+            "reachedR4": 280,
+            "thenRate": 0.482,
+            "hpRatioAtR4Mean": 0.615,
+            "meanScore": 645.5,
+            "meanPlayerHpEnd": 19.37,
+            "meanRound": 6.1,
+            "oracleAtR4Rate": 0.604
+          }
+        },
+        "perGodThen": {
+          "ebisu": 0.75,
+          "taiyo": 0.325,
+          "sobi": 0.525,
+          "saika": 0.45,
+          "juraku": 0.5,
+          "fukuei": 0.45,
+          "shouren": 0.375
+        },
+        "search": {
+          "n": 280,
+          "counts": {
+            "tight": {
+              "alreadyThen": 0,
+              "thenInfeasible": 21,
+              "attackDominant": 63,
+              "guardDominant": 79,
+              "contested": 117
+            },
+            "main": {
+              "alreadyThen": 0,
+              "thenInfeasible": 21,
+              "attackDominant": 52,
+              "guardDominant": 40,
+              "contested": 167
+            },
+            "loose": {
+              "alreadyThen": 0,
+              "thenInfeasible": 21,
+              "attackDominant": 48,
+              "guardDominant": 22,
+              "contested": 189
+            }
+          },
+          "rates": {
+            "contestedOfAll": {
+              "tight": 0.418,
+              "main": 0.596,
+              "loose": 0.675
+            },
+            "contestedOfDecidable": {
+              "tight": 0.452,
+              "main": 0.645,
+              "loose": 0.73
+            },
+            "answerFixedOfAll": {
+              "main": 0.404
+            },
+            "alreadyThenOfAll": 0,
+            "thenInfeasibleOfAll": 0.075,
+            "decidableOfAll": 0.925,
+            "optimalAttackOfDecidable": 0.375,
+            "optimalGuardOfDecidable": 0.498,
+            "tieOfDecidable": 0.127,
+            "overallOptimalThenOrKill": 0.414
+          },
+          "delta": {
+            "mean": 3.5,
+            "meanAbs": 17.8,
+            "hist": {
+              "[-5,5]": 117,
+              "(-20,-10]": 26,
+              "[10,20)": 4,
+              "(5,10)": 11,
+              "(-10,-5)": 31,
+              ">=20": 48,
+              "<=-20": 22
+            }
+          },
+          "meanLeavesPerState": 1080.8,
+          "meanNeed": 19.4,
+          "meanPotential": 39,
+          "byNeed": {
+            "21-30": {
+              "n": 92,
+              "optimalAttack": 27,
+              "contested": 54,
+              "thenInfeasible": 8
+            },
+            "1-10": {
+              "n": 51,
+              "optimalAttack": 31,
+              "contested": 30,
+              "thenInfeasible": 1
+            },
+            "11-20": {
+              "n": 112,
+              "optimalAttack": 35,
+              "contested": 74,
+              "thenInfeasible": 3
+            },
+            "31-40": {
+              "n": 21,
+              "optimalAttack": 4,
+              "contested": 8,
+              "thenInfeasible": 6
+            },
+            ">40": {
+              "n": 4,
+              "optimalAttack": 0,
+              "contested": 1,
+              "thenInfeasible": 3
+            }
+          },
+          "features": {
+            "contested": {
+              "n": 167,
+              "bestGuardUsesHinder": 0.437,
+              "bestGuardUsesGuardCard": 0.485,
+              "bestGuardUsesOracleR3": 0.778,
+              "bestGuardPlaysZeroCards": 0,
+              "bestAttackUsesOracleR3": 0.856,
+              "bestAttackKillsInR3": 0,
+              "meanCardsBestAttack": 3.49,
+              "meanCardsBestGuard": 3.54,
+              "meanAttackCardsBestAttack": 1.35,
+              "meanAttackCardsBestGuard": 0.69,
+              "oracleChoiceBestAttack": [
+                0.03,
+                0.754,
+                0.072
+              ],
+              "oracleChoiceBestGuard": [
+                0.006,
+                0.749,
+                0.024
+              ]
+            },
+            "decidable": {
+              "n": 259,
+              "bestGuardUsesHinder": 0.405,
+              "bestGuardUsesGuardCard": 0.521,
+              "bestGuardUsesOracleR3": 0.803,
+              "bestGuardPlaysZeroCards": 0.004,
+              "bestAttackUsesOracleR3": 0.884,
+              "bestAttackKillsInR3": 0.004,
+              "meanCardsBestAttack": 3.66,
+              "meanCardsBestGuard": 3.58,
+              "meanAttackCardsBestAttack": 1.36,
+              "meanAttackCardsBestGuard": 0.66,
+              "oracleChoiceBestAttack": [
+                0.023,
+                0.792,
+                0.069
+              ],
+              "oracleChoiceBestGuard": [
+                0.012,
+                0.745,
+                0.046
+              ]
+            }
+          },
+          "perGod": {
+            "ebisu": {
+              "n": 40,
+              "alreadyThen": 0,
+              "thenInfeasible": 0,
+              "attackDominant": 13,
+              "guardDominant": 4,
+              "contested": 23,
+              "contestedRateOfDecidable": 0.575,
+              "optimalAttackRateOfDecidable": 0.45,
+              "meanNeed": 15.5,
+              "meanPotential": 44.8
+            },
+            "taiyo": {
+              "n": 40,
+              "alreadyThen": 0,
+              "thenInfeasible": 4,
+              "attackDominant": 5,
+              "guardDominant": 2,
+              "contested": 29,
+              "contestedRateOfDecidable": 0.806,
+              "optimalAttackRateOfDecidable": 0.361,
+              "meanNeed": 22.6,
+              "meanPotential": 46.9
+            },
+            "sobi": {
+              "n": 40,
+              "alreadyThen": 0,
+              "thenInfeasible": 1,
+              "attackDominant": 10,
+              "guardDominant": 4,
+              "contested": 25,
+              "contestedRateOfDecidable": 0.641,
+              "optimalAttackRateOfDecidable": 0.385,
+              "meanNeed": 18.8,
+              "meanPotential": 44.6
+            },
+            "saika": {
+              "n": 40,
+              "alreadyThen": 0,
+              "thenInfeasible": 0,
+              "attackDominant": 9,
+              "guardDominant": 6,
+              "contested": 25,
+              "contestedRateOfDecidable": 0.625,
+              "optimalAttackRateOfDecidable": 0.4,
+              "meanNeed": 19.1,
+              "meanPotential": 47.7
+            },
+            "juraku": {
+              "n": 40,
+              "alreadyThen": 0,
+              "thenInfeasible": 4,
+              "attackDominant": 6,
+              "guardDominant": 5,
+              "contested": 25,
+              "contestedRateOfDecidable": 0.694,
+              "optimalAttackRateOfDecidable": 0.361,
+              "meanNeed": 20.7,
+              "meanPotential": 29.4
+            },
+            "fukuei": {
+              "n": 40,
+              "alreadyThen": 0,
+              "thenInfeasible": 5,
+              "attackDominant": 4,
+              "guardDominant": 12,
+              "contested": 19,
+              "contestedRateOfDecidable": 0.543,
+              "optimalAttackRateOfDecidable": 0.286,
+              "meanNeed": 21.9,
+              "meanPotential": 31.7
+            },
+            "shouren": {
+              "n": 40,
+              "alreadyThen": 0,
+              "thenInfeasible": 7,
+              "attackDominant": 5,
+              "guardDominant": 7,
+              "contested": 21,
+              "contestedRateOfDecidable": 0.636,
+              "optimalAttackRateOfDecidable": 0.364,
+              "meanNeed": 17.1,
+              "meanPotential": 28.2
+            }
+          }
+        },
+        "bothReachableRate": 0.925,
+        "flip": {
+          "pairs": 280,
+          "flips": 115,
+          "flipRate": 0.411,
+          "decidablePairs": 233,
+          "decidableFlips": 106,
+          "flipRateAmongBothDecidable": 0.455
+        }
+      }
+    },
+    "0.65": {
+      "normal": {
+        "threshold": 61,
+        "need": 33,
+        "cells": {
+          "greedy": {
+            "n": 280,
+            "winRate": 1,
+            "status": {
+              "won": 280
+            },
+            "reachedR4": 280,
+            "thenRate": 0.789,
+            "hpRatioAtR4Mean": 0.542,
+            "meanScore": 631.3,
+            "meanPlayerHpEnd": 21.97,
+            "meanRound": 5.56,
+            "oracleAtR4Rate": 0.157
+          },
+          "raceAware": {
+            "n": 280,
+            "winRate": 1,
+            "status": {
+              "won": 280
+            },
+            "reachedR4": 280,
+            "thenRate": 0.843,
+            "hpRatioAtR4Mean": 0.539,
+            "meanScore": 632,
+            "meanPlayerHpEnd": 22.82,
+            "meanRound": 5.58,
+            "oracleAtR4Rate": 0.2
+          },
+          "reader": {
+            "n": 280,
+            "winRate": 1,
+            "status": {
+              "won": 280
+            },
+            "reachedR4": 280,
+            "thenRate": 0.789,
+            "hpRatioAtR4Mean": 0.542,
+            "meanScore": 631.5,
+            "meanPlayerHpEnd": 22.22,
+            "meanRound": 5.56,
+            "oracleAtR4Rate": 0.25
+          }
+        },
+        "perGodThen": {
+          "ebisu": 0.95,
+          "taiyo": 0.7,
+          "sobi": 0.775,
+          "saika": 0.775,
+          "juraku": 0.75,
+          "fukuei": 0.675,
+          "shouren": 0.9
+        },
+        "search": {
+          "n": 280,
+          "counts": {
+            "tight": {
+              "alreadyThen": 91,
+              "thenInfeasible": 10,
+              "attackDominant": 75,
+              "guardDominant": 33,
+              "contested": 71
+            },
+            "main": {
+              "alreadyThen": 91,
+              "thenInfeasible": 10,
+              "attackDominant": 65,
+              "guardDominant": 18,
+              "contested": 96
+            },
+            "loose": {
+              "alreadyThen": 91,
+              "thenInfeasible": 10,
+              "attackDominant": 63,
+              "guardDominant": 7,
+              "contested": 109
+            }
+          },
+          "rates": {
+            "contestedOfAll": {
+              "tight": 0.254,
+              "main": 0.343,
+              "loose": 0.389
+            },
+            "contestedOfDecidable": {
+              "tight": 0.397,
+              "main": 0.536,
+              "loose": 0.609
+            },
+            "answerFixedOfAll": {
+              "main": 0.657
+            },
+            "alreadyThenOfAll": 0.325,
+            "thenInfeasibleOfAll": 0.036,
+            "decidableOfAll": 0.639,
+            "optimalAttackOfDecidable": 0.559,
+            "optimalGuardOfDecidable": 0.307,
+            "tieOfDecidable": 0.134,
+            "overallOptimalThenOrKill": 0.743
+          },
+          "delta": {
+            "mean": 15.2,
+            "meanAbs": 23.1,
+            "hist": {
+              "(5,10)": 10,
+              ">=20": 63,
+              "[-5,5]": 71,
+              "[10,20)": 2,
+              "(-10,-5)": 15,
+              "(-20,-10]": 11,
+              "<=-20": 7
+            }
+          },
+          "meanLeavesPerState": 1201.9,
+          "meanNeed": 5.4,
+          "meanPotential": 37.5,
+          "byNeed": {
+            "11-20": {
+              "n": 54,
+              "optimalAttack": 26,
+              "contested": 23,
+              "thenInfeasible": 5
+            },
+            "<=0": {
+              "n": 91,
+              "optimalAttack": 91,
+              "contested": 0,
+              "thenInfeasible": 0
+            },
+            "1-10": {
+              "n": 112,
+              "optimalAttack": 66,
+              "contested": 65,
+              "thenInfeasible": 0
+            },
+            "21-30": {
+              "n": 18,
+              "optimalAttack": 8,
+              "contested": 6,
+              "thenInfeasible": 3
+            },
+            "31-40": {
+              "n": 5,
+              "optimalAttack": 0,
+              "contested": 2,
+              "thenInfeasible": 2
+            }
+          },
+          "features": {
+            "contested": {
+              "n": 96,
+              "bestGuardUsesHinder": 0.615,
+              "bestGuardUsesGuardCard": 0.625,
+              "bestGuardUsesOracleR3": 0.844,
+              "bestGuardPlaysZeroCards": 0,
+              "bestAttackUsesOracleR3": 0.823,
+              "bestAttackKillsInR3": 0,
+              "meanCardsBestAttack": 3.18,
+              "meanCardsBestGuard": 3.17,
+              "meanAttackCardsBestAttack": 1.14,
+              "meanAttackCardsBestGuard": 0.34,
+              "oracleChoiceBestAttack": [
+                0,
+                0.771,
+                0.052
+              ],
+              "oracleChoiceBestGuard": [
+                0.01,
+                0.771,
+                0.063
+              ]
+            },
+            "decidable": {
+              "n": 179,
+              "bestGuardUsesHinder": 0.531,
+              "bestGuardUsesGuardCard": 0.609,
+              "bestGuardUsesOracleR3": 0.855,
+              "bestGuardPlaysZeroCards": 0.006,
+              "bestAttackUsesOracleR3": 0.883,
+              "bestAttackKillsInR3": 0.045,
+              "meanCardsBestAttack": 3.77,
+              "meanCardsBestGuard": 3.35,
+              "meanAttackCardsBestAttack": 1.24,
+              "meanAttackCardsBestGuard": 0.36,
+              "oracleChoiceBestAttack": [
+                0.006,
+                0.793,
+                0.084
+              ],
+              "oracleChoiceBestGuard": [
+                0.006,
+                0.793,
+                0.056
+              ]
+            }
+          },
+          "perGod": {
+            "ebisu": {
+              "n": 40,
+              "alreadyThen": 15,
+              "thenInfeasible": 0,
+              "attackDominant": 13,
+              "guardDominant": 0,
+              "contested": 12,
+              "contestedRateOfDecidable": 0.48,
+              "optimalAttackRateOfDecidable": 0.72,
+              "meanNeed": 4.4,
+              "meanPotential": 44.8
+            },
+            "taiyo": {
+              "n": 40,
+              "alreadyThen": 17,
+              "thenInfeasible": 2,
+              "attackDominant": 11,
+              "guardDominant": 0,
+              "contested": 10,
+              "contestedRateOfDecidable": 0.476,
+              "optimalAttackRateOfDecidable": 0.667,
+              "meanNeed": 4.2,
+              "meanPotential": 41.9
+            },
+            "sobi": {
+              "n": 40,
+              "alreadyThen": 11,
+              "thenInfeasible": 0,
+              "attackDominant": 10,
+              "guardDominant": 3,
+              "contested": 16,
+              "contestedRateOfDecidable": 0.552,
+              "optimalAttackRateOfDecidable": 0.517,
+              "meanNeed": 7.6,
+              "meanPotential": 43.5
+            },
+            "saika": {
+              "n": 40,
+              "alreadyThen": 10,
+              "thenInfeasible": 0,
+              "attackDominant": 20,
+              "guardDominant": 1,
+              "contested": 9,
+              "contestedRateOfDecidable": 0.3,
+              "optimalAttackRateOfDecidable": 0.833,
+              "meanNeed": 7.7,
+              "meanPotential": 48.4
+            },
+            "juraku": {
+              "n": 40,
+              "alreadyThen": 0,
+              "thenInfeasible": 2,
+              "attackDominant": 1,
+              "guardDominant": 7,
+              "contested": 30,
+              "contestedRateOfDecidable": 0.789,
+              "optimalAttackRateOfDecidable": 0.237,
+              "meanNeed": 9.7,
+              "meanPotential": 29.4
+            },
+            "fukuei": {
+              "n": 40,
+              "alreadyThen": 15,
+              "thenInfeasible": 4,
+              "attackDominant": 4,
+              "guardDominant": 6,
+              "contested": 11,
+              "contestedRateOfDecidable": 0.524,
+              "optimalAttackRateOfDecidable": 0.381,
+              "meanNeed": 5,
+              "meanPotential": 28.1
+            },
+            "shouren": {
+              "n": 40,
+              "alreadyThen": 23,
+              "thenInfeasible": 2,
+              "attackDominant": 6,
+              "guardDominant": 1,
+              "contested": 8,
+              "contestedRateOfDecidable": 0.533,
+              "optimalAttackRateOfDecidable": 0.733,
+              "meanNeed": -0.7,
+              "meanPotential": 26.5
+            }
+          }
+        },
+        "bothReachableRate": 0.639,
+        "flip": {
+          "pairs": 189,
+          "flips": 74,
+          "flipRate": 0.392,
+          "decidablePairs": 177,
+          "decidableFlips": 70,
+          "flipRateAmongBothDecidable": 0.395
+        }
+      },
+      "hard": {
+        "threshold": 70,
+        "need": 38,
+        "cells": {
+          "greedy": {
+            "n": 280,
+            "winRate": 1,
+            "status": {
+              "won": 280
+            },
+            "reachedR4": 280,
+            "thenRate": 0.661,
+            "hpRatioAtR4Mean": 0.615,
+            "meanScore": 647.6,
+            "meanPlayerHpEnd": 19.59,
+            "meanRound": 6.08,
+            "oracleAtR4Rate": 0.4
+          },
+          "raceAware": {
+            "n": 280,
+            "winRate": 1,
+            "status": {
+              "won": 280
+            },
+            "reachedR4": 280,
+            "thenRate": 0.746,
+            "hpRatioAtR4Mean": 0.616,
+            "meanScore": 648.4,
+            "meanPlayerHpEnd": 19.8,
+            "meanRound": 6.08,
+            "oracleAtR4Rate": 0.407
+          },
+          "reader": {
+            "n": 280,
+            "winRate": 1,
+            "status": {
+              "won": 280
+            },
+            "reachedR4": 280,
+            "thenRate": 0.661,
+            "hpRatioAtR4Mean": 0.615,
+            "meanScore": 647.1,
+            "meanPlayerHpEnd": 19.62,
+            "meanRound": 6.09,
+            "oracleAtR4Rate": 0.464
+          }
+        },
+        "perGodThen": {
+          "ebisu": 0.875,
+          "taiyo": 0.55,
+          "sobi": 0.7,
+          "saika": 0.625,
+          "juraku": 0.725,
+          "fukuei": 0.525,
+          "shouren": 0.625
+        },
+        "search": {
+          "n": 280,
+          "counts": {
+            "tight": {
+              "alreadyThen": 16,
+              "thenInfeasible": 14,
+              "attackDominant": 78,
+              "guardDominant": 52,
+              "contested": 120
+            },
+            "main": {
+              "alreadyThen": 16,
+              "thenInfeasible": 14,
+              "attackDominant": 64,
+              "guardDominant": 25,
+              "contested": 161
+            },
+            "loose": {
+              "alreadyThen": 16,
+              "thenInfeasible": 14,
+              "attackDominant": 57,
+              "guardDominant": 14,
+              "contested": 179
+            }
+          },
+          "rates": {
+            "contestedOfAll": {
+              "tight": 0.429,
+              "main": 0.575,
+              "loose": 0.639
+            },
+            "contestedOfDecidable": {
+              "tight": 0.48,
+              "main": 0.644,
+              "loose": 0.716
+            },
+            "answerFixedOfAll": {
+              "main": 0.425
+            },
+            "alreadyThenOfAll": 0.057,
+            "thenInfeasibleOfAll": 0.05,
+            "decidableOfAll": 0.893,
+            "optimalAttackOfDecidable": 0.452,
+            "optimalGuardOfDecidable": 0.432,
+            "tieOfDecidable": 0.116,
+            "overallOptimalThenOrKill": 0.518
+          },
+          "delta": {
+            "mean": 7.4,
+            "meanAbs": 18.5,
+            "hist": {
+              ">=20": 57,
+              "(-10,-5)": 20,
+              "[-5,5]": 120,
+              "(-20,-10]": 18,
+              "<=-20": 14,
+              "(5,10)": 13,
+              "[10,20)": 8
+            }
+          },
+          "meanLeavesPerState": 1080.8,
+          "meanNeed": 13.4,
+          "meanPotential": 39,
+          "byNeed": {
+            "21-30": {
+              "n": 32,
+              "optimalAttack": 12,
+              "contested": 18,
+              "thenInfeasible": 5
+            },
+            "11-20": {
+              "n": 132,
+              "optimalAttack": 47,
+              "contested": 91,
+              "thenInfeasible": 3
+            },
+            "1-10": {
+              "n": 86,
+              "optimalAttack": 51,
+              "contested": 47,
+              "thenInfeasible": 1
+            },
+            "31-40": {
+              "n": 14,
+              "optimalAttack": 3,
+              "contested": 5,
+              "thenInfeasible": 5
+            },
+            "<=0": {
+              "n": 16,
+              "optimalAttack": 16,
+              "contested": 0,
+              "thenInfeasible": 0
+            }
+          },
+          "features": {
+            "contested": {
+              "n": 161,
+              "bestGuardUsesHinder": 0.453,
+              "bestGuardUsesGuardCard": 0.478,
+              "bestGuardUsesOracleR3": 0.752,
+              "bestGuardPlaysZeroCards": 0,
+              "bestAttackUsesOracleR3": 0.839,
+              "bestAttackKillsInR3": 0,
+              "meanCardsBestAttack": 3.54,
+              "meanCardsBestGuard": 3.48,
+              "meanAttackCardsBestAttack": 1.34,
+              "meanAttackCardsBestGuard": 0.57,
+              "oracleChoiceBestAttack": [
+                0.043,
+                0.758,
+                0.037
+              ],
+              "oracleChoiceBestGuard": [
+                0.012,
+                0.714,
+                0.025
+              ]
+            },
+            "decidable": {
+              "n": 250,
+              "bestGuardUsesHinder": 0.428,
+              "bestGuardUsesGuardCard": 0.528,
+              "bestGuardUsesOracleR3": 0.772,
+              "bestGuardPlaysZeroCards": 0.008,
+              "bestAttackUsesOracleR3": 0.86,
+              "bestAttackKillsInR3": 0.004,
+              "meanCardsBestAttack": 3.67,
+              "meanCardsBestGuard": 3.42,
+              "meanAttackCardsBestAttack": 1.33,
+              "meanAttackCardsBestGuard": 0.52,
+              "oracleChoiceBestAttack": [
+                0.032,
+                0.796,
+                0.032
+              ],
+              "oracleChoiceBestGuard": [
+                0.008,
+                0.708,
+                0.056
+              ]
+            }
+          },
+          "perGod": {
+            "ebisu": {
+              "n": 40,
+              "alreadyThen": 0,
+              "thenInfeasible": 0,
+              "attackDominant": 15,
+              "guardDominant": 2,
+              "contested": 23,
+              "contestedRateOfDecidable": 0.575,
+              "optimalAttackRateOfDecidable": 0.5,
+              "meanNeed": 9.5,
+              "meanPotential": 44.8
+            },
+            "taiyo": {
+              "n": 40,
+              "alreadyThen": 1,
+              "thenInfeasible": 2,
+              "attackDominant": 7,
+              "guardDominant": 4,
+              "contested": 26,
+              "contestedRateOfDecidable": 0.703,
+              "optimalAttackRateOfDecidable": 0.432,
+              "meanNeed": 16.6,
+              "meanPotential": 46.9
+            },
+            "sobi": {
+              "n": 40,
+              "alreadyThen": 5,
+              "thenInfeasible": 1,
+              "attackDominant": 10,
+              "guardDominant": 1,
+              "contested": 23,
+              "contestedRateOfDecidable": 0.676,
+              "optimalAttackRateOfDecidable": 0.412,
+              "meanNeed": 12.8,
+              "meanPotential": 44.6
+            },
+            "saika": {
+              "n": 40,
+              "alreadyThen": 1,
+              "thenInfeasible": 0,
+              "attackDominant": 15,
+              "guardDominant": 0,
+              "contested": 24,
+              "contestedRateOfDecidable": 0.615,
+              "optimalAttackRateOfDecidable": 0.667,
+              "meanNeed": 13.2,
+              "meanPotential": 47.7
+            },
+            "juraku": {
+              "n": 40,
+              "alreadyThen": 0,
+              "thenInfeasible": 3,
+              "attackDominant": 7,
+              "guardDominant": 3,
+              "contested": 27,
+              "contestedRateOfDecidable": 0.73,
+              "optimalAttackRateOfDecidable": 0.378,
+              "meanNeed": 14.7,
+              "meanPotential": 29.4
+            },
+            "fukuei": {
+              "n": 40,
+              "alreadyThen": 1,
+              "thenInfeasible": 5,
+              "attackDominant": 6,
+              "guardDominant": 10,
+              "contested": 18,
+              "contestedRateOfDecidable": 0.529,
+              "optimalAttackRateOfDecidable": 0.382,
+              "meanNeed": 15.9,
+              "meanPotential": 31.7
+            },
+            "shouren": {
+              "n": 40,
+              "alreadyThen": 8,
+              "thenInfeasible": 3,
+              "attackDominant": 4,
+              "guardDominant": 5,
+              "contested": 20,
+              "contestedRateOfDecidable": 0.69,
+              "optimalAttackRateOfDecidable": 0.345,
+              "meanNeed": 11.2,
+              "meanPotential": 28.2
+            }
+          }
+        },
+        "bothReachableRate": 0.893,
+        "flip": {
+          "pairs": 264,
+          "flips": 121,
+          "flipRate": 0.458,
+          "decidablePairs": 236,
+          "decidableFlips": 113,
+          "flipRateAmongBothDecidable": 0.479
+        }
+      }
+    }
+  },
+  "ratios": [
+    0.5,
+    0.55,
+    0.6,
+    0.65
+  ],
+  "timingsSec": {
+    "runtime": 1,
+    "decomposition": 2.4,
+    "sweep": 984.9
+  }
+}

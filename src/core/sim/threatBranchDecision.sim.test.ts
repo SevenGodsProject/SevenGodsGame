@@ -37,25 +37,55 @@ const seedName = (i: number) => `threat-branch-${i}`
 const GOD_FILTER = (process.env.SIM_GODS ?? '').split(',').filter(Boolean)
 const godsOf = <T extends { id: string }>(gods: readonly T[]) => (GOD_FILTER.length ? gods.filter((g) => GOD_FILTER.includes(g.id)) : [...gods])
 
-/** engine 一式を（必要なら `RULES.enemyTactic.defaultHpRatio` だけ差し替えて）読み直す。ratio null＝本番値そのまま */
-async function loadEngine(ratio: number | null) {
-  vi.resetModules()
-  vi.doUnmock('../data/rules')
-  if (ratio !== null) {
-    vi.doMock('../data/rules', async (importOriginal) => {
-      const mod = await importOriginal<typeof import('../data/rules')>()
-      const patched = { ...mod.RULES, enemyTactic: { defaultHpRatio: ratio } }
-      return { RULES: patched as unknown as typeof mod.RULES }
-    })
+/** v1.1：`RULES.difficulty.hard` を部分的に差し替えるための形（寄与分解で 3 要素を 1 つずつ入れる） */
+type HardPatch = { enemyHpMultiplier: number; enemyAtkMultiplier: number; playerMaxHpBonus: number }
+
+/**
+ * engine 一式を（必要なら `RULES.enemyTactic` のしきい値／`RULES.difficulty.hard` を差し替えて）読み直す。
+ * ratio null＝本番値そのまま。ratio を渡すと defaultHpRatio と難易度別（v1.1 `hpRatioByDifficulty`）の全難易度を同じ値にする
+ * ＝「難易度で同じしきい値」の engine（v1 の実走と同条件）。hardPatch は hard の 3 要素を差し替える（v1.1 寄与分解）
+ */
+async function loadEngine(ratio: number | null, hardPatch: HardPatch | null = null) {
+  // v1.1 で判明：`vi.doMock` 直後の動的 import は稀に mock 解決より先に走り、元の rules を掴んだ enemies が返る
+  // （12 回目の読み直しで ratio 0.65 → 0.5 のまま）。patch が行動表と RULES に届いたことを検証し、届くまで読み直す
+  for (let attempt = 0; attempt < 5; attempt++) {
+    vi.resetModules()
+    vi.doUnmock('../data/rules')
+    if (ratio !== null || hardPatch) {
+      vi.doMock('../data/rules', async (importOriginal) => {
+        const mod = await importOriginal<typeof import('../data/rules')>()
+        const enemyTactic =
+          ratio === null
+            ? mod.RULES.enemyTactic
+            : { ...mod.RULES.enemyTactic, defaultHpRatio: ratio, hpRatioByDifficulty: { easy: ratio, normal: ratio, hard: ratio } }
+        const difficulty = hardPatch ? { ...mod.RULES.difficulty, hard: hardPatch } : mod.RULES.difficulty
+        const patched = { ...mod.RULES, enemyTactic, difficulty }
+        return { RULES: patched as unknown as typeof mod.RULES }
+      })
+    }
+    const rules = await import('../data/rules')
+    const enemies = await import('../data/enemies')
+    const r4 = enemies.getEnemyDef(enemies.PILOT_ENEMY_IDS.oniTactic).actions[3]
+    const condRatio = r4.kind === 'tactic' ? r4.cond.ratio : NaN
+    const ratioOk = ratio === null || (rules.RULES.enemyTactic.defaultHpRatio === ratio && condRatio === ratio)
+    const hardOk = !hardPatch || JSON.stringify(rules.RULES.difficulty.hard) === JSON.stringify(hardPatch)
+    if (!ratioOk || !hardOk) {
+      console.warn(`[loadEngine] patch not applied (attempt ${attempt + 1}): ratio=${ratio} cond=${condRatio} hard=${JSON.stringify(rules.RULES.difficulty.hard)} → retry`)
+      await new Promise((r) => setTimeout(r, 50))
+      continue
+    }
+    return buildEngine(rules, enemies)
   }
-  const [reducer, gods, enemies, cards, deckBuilder, divination, rules, intent] = await Promise.all([
+  throw new Error(`loadEngine: RULES の差し替えが 5 回とも反映されなかった（ratio=${ratio}）`)
+}
+
+async function buildEngine(rules: typeof import('../data/rules'), enemies: typeof import('../data/enemies')) {
+  const [reducer, gods, cards, deckBuilder, divination, intent] = await Promise.all([
     import('../engine/reducer'),
     import('../data/gods'),
-    import('../data/enemies'),
     import('../data/cards'),
     import('../data/deckBuilder'),
     import('../data/divination'),
-    import('../data/rules'),
     import('../engine/intent'),
   ])
   return {
@@ -71,7 +101,7 @@ async function loadEngine(ratio: number | null) {
     enemyActionTotal: intent.enemyActionTotal,
   }
 }
-type Engine = Awaited<ReturnType<typeof loadEngine>>
+type Engine = Awaited<ReturnType<typeof buildEngine>>
 
 type Policy = 'greedy' | 'raceAware' | 'reader'
 const POLICIES: Policy[] = ['greedy', 'raceAware', 'reader']
@@ -128,7 +158,14 @@ function makeSim(E: Engine) {
   const tenkeiDamage = E.DIVINATION_CHOICES[TENKEI].effects.reduce((s, e) => s + (e.kind === 'damage' ? e.amount : 0), 0)
   const canOracle = (s: GameState) => s.divination.remaining > 0 && !s.divination.usedThisRound
   const hasTacticAtR4 = (enemyId: EnemyId) => E.getEnemyDef(enemyId).actions[3]?.kind === 'tactic'
-  const thresholdOf = (s: GameState) => Math.floor(s.enemy.maxHp * E.RULES.enemyTactic.defaultHpRatio)
+  /** R4 tactic の実効しきい値比。v1.1 の難易度別（`cond.ratioByDifficulty`）があればそれ、無ければ `cond.ratio`（engine `tactic.ts` と同じ規則） */
+  const ratioOf = (s: GameState): number => {
+    const t = E.getEnemyDef(s.enemy.defId).actions[3]
+    if (!t || t.kind !== 'tactic') return E.RULES.enemyTactic.defaultHpRatio
+    const c = t.cond as { ratio: number; ratioByDifficulty?: Partial<Record<Difficulty, number>> }
+    return c.ratioByDifficulty?.[s.difficulty] ?? c.ratio
+  }
+  const thresholdOf = (s: GameState) => Math.floor(s.enemy.maxHp * ratioOf(s))
   const affordable = (s: GameState) => s.hand.filter((c) => costOf(c) <= s.ap.current)
   const bestAttackCard = (cards: CardInstance[]) => cards.filter((c) => damageOf(c) > 0).sort((a, b) => damageOf(b) - damageOf(a))[0] ?? null
   const bestGuardCard = (cards: CardInstance[]) => cards.filter((c) => blockOf(c) > 0).sort((a, b) => blockOf(b) - blockOf(a))[0] ?? null
@@ -377,7 +414,7 @@ function makeSim(E: Engine) {
   }
 
   return {
-    ONI_TACTIC, BASELINE, thresholdOf, stateKey, startState, playOne, playOut, toR3Greedy, analyzeR3, searchR3, summarize, outcomeOf,
+    ONI_TACTIC, BASELINE, thresholdOf, ratioOf, stateKey, startState, playOne, playOut, toR3Greedy, analyzeR3, searchR3, summarize, outcomeOf,
     enumerateR3, scoreLeaf, best,
   }
 }
@@ -759,6 +796,300 @@ describe.skipIf(!RUN)('Threat Branch Pilot v1 — 追加検証（R3 攻守の迷
     expect(results.item5).toBeDefined()
   }, 600_000)
 })
+
+/* ============================================================================================================
+ * v1.1（2026-10-17 CEO 条件付き GO 後・`docs/LANE1_THREAT_BRANCH_PILOT_V1_1.md` §2〜§3）
+ *   A. hard の then 率偏りの寄与分解を engine 差し替えで再確認：hard の 3 要素（enemyHpMultiplier 1.15／enemyAtkMultiplier 1.15／
+ *      playerMaxHpBonus −3）を normal に 1 つずつ入れた engine で then 率を測り、低下幅に占める割合を出す（v1 §10-5 の
+ *      「与ダメージ分布の入れ替え」による反実仮想とは独立な方法）
+ *   B. しきい値 {0.5, 0.55, 0.6, 0.65} × normal／hard：then 率（greedy／raceAware／reader）・R3 の迷い率（項目 1 と同じ総当り）・
+ *      反転率 2 種（R3 の手で then／else の両方へ行ける局面率、手札差し替えで最善の側が入れ替わる率）
+ *   C. runtime そのまま（loadEngine(null)）の実効しきい値と then 率＝実装後は normal 0.5／hard 0.6 の値を示す（実装前は 0.5／0.5）
+ *
+ *   SIM_THREAT_BRANCH_V11=1 npx vitest run src/core/sim/threatBranchDecision.sim.test.ts -t v1.1
+ *   （SIM_SEEDS で seed 数・SIM_V11_FLIP=0 で手札差し替えを省略）
+ * 結果：docs/evidence/lane1-threat-branch/ratio-sweep-v1_1.json・RATIO_SWEEP_V1_1.md（表は JSON から生成）
+ * ============================================================================================================ */
+const RUN_V11 = !!process.env.SIM_THREAT_BRANCH_V11
+const RATIOS_V11 = [0.5, 0.55, 0.6, 0.65]
+const FLIP_V11 = process.env.SIM_V11_FLIP !== '0'
+const ALT_HANDS_V11 = 1
+type V11Cell = {
+  threshold: number
+  need: number
+  cells: Record<Policy, Summary>
+  perGodThen: Record<string, number | null>
+  search: Item1Diff
+  bothReachableRate: number
+  flip: { pairs: number; flips: number; flipRate: number; decidablePairs: number; decidableFlips: number; flipRateAmongBothDecidable: number | null } | null
+}
+type V11Decomp = Record<string, { patch: HardPatch | null; thenRate: Record<Policy, number | null>; contribution: Record<Policy, number | null> }>
+type V11Out = {
+  at: string
+  seeds: number
+  gods: number
+  runtime: { ratioByDifficulty: Record<Difficulty, number>; threshold: Record<Difficulty, number>; thenRate: Record<string, number | null> }
+  decomposition: { normalThen: Record<Policy, number | null>; variants: V11Decomp; byDistribution: { hpMultiplierOnly: number; atkPressureOnly: number; thenNormal: number; thenHard: number } }
+  sweep: Record<string, Record<Difficulty, V11Cell>>
+  ratios: number[]
+  timingsSec: Record<string, number>
+}
+const v11: Partial<V11Out> = {}
+const v11Timings: Record<string, number> = {}
+
+describe.skipIf(!RUN_V11)('v1.1 Threat Branch Pilot — hard 偏りの寄与分解（再確認）と難易度別しきい値 0.5／0.55／0.6／0.65 の比較', () => {
+  const seeds = Array.from({ length: SEEDS }, (_, i) => seedName(i))
+  const thenRates = (S: Sim, E: Engine, difficulty: Difficulty): Record<Policy, number | null> => {
+    const out = {} as Record<Policy, number | null>
+    for (const policy of POLICIES) {
+      const outs: Outcome[] = []
+      for (const god of godsOf(E.GODS)) outs.push(...seeds.map((seed) => S.playOne(seed, god.id, S.ONI_TACTIC, difficulty, policy)))
+      out[policy] = S.summarize(outs).thenRate
+    }
+    return out
+  }
+
+  it('C. runtime の実効しきい値（難易度別）と then 率', async () => {
+    const t0 = Date.now()
+    const E = await loadEngine(null)
+    const S = makeSim(E)
+    const ratioByDifficulty = {} as Record<Difficulty, number>
+    const threshold = {} as Record<Difficulty, number>
+    const thenRate: Record<string, number | null> = {}
+    for (const d of ['easy', 'normal', 'hard'] as Difficulty[]) {
+      const probe = S.startState(seedName(0), E.GODS[0].id, S.ONI_TACTIC, d)
+      ratioByDifficulty[d] = S.ratioOf(probe)
+      threshold[d] = S.thresholdOf(probe)
+    }
+    for (const d of DIFFICULTIES) {
+      const r = thenRates(S, E, d)
+      for (const p of POLICIES) thenRate[`${d}:${p}`] = r[p]
+    }
+    v11.runtime = { ratioByDifficulty, threshold, thenRate }
+    v11Timings.runtime = Math.round((Date.now() - t0) / 100) / 10
+    console.log('V11 RUNTIME ' + JSON.stringify(v11.runtime))
+    expect(threshold.normal).toBe(Math.floor(94 * ratioByDifficulty.normal))
+  }, 600_000)
+
+  it('A. 寄与分解：hard の 3 要素を normal に 1 つずつ入れた engine で then 率を測る', async () => {
+    const t0 = Date.now()
+    const E0 = await loadEngine(0.5)
+    const S0 = makeSim(E0)
+    const hard = E0.RULES.difficulty.hard
+    const normal = E0.RULES.difficulty.normal
+    const normalThen = thenRates(S0, E0, 'normal')
+    const variants: Record<string, HardPatch> = {
+      'hard（3 要素すべて）': { ...hard },
+      'HP ×1.15 のみ': { ...normal, enemyHpMultiplier: hard.enemyHpMultiplier },
+      'ATK ×1.15 のみ': { ...normal, enemyAtkMultiplier: hard.enemyAtkMultiplier },
+      '自 HP −3 のみ': { ...normal, playerMaxHpBonus: hard.playerMaxHpBonus },
+      'HP ×1.15 ＋ ATK ×1.15': { ...hard, playerMaxHpBonus: normal.playerMaxHpBonus },
+      'ATK ×1.15 ＋ 自 HP −3': { ...hard, enemyHpMultiplier: normal.enemyHpMultiplier },
+    }
+    const rows: V11Decomp = {}
+    let fullThen: Record<Policy, number | null> | null = null
+    for (const [name, patch] of Object.entries(variants)) {
+      const E = await loadEngine(0.5, patch)
+      const S = makeSim(E)
+      const probe = S.startState(seedName(0), E.GODS[0].id, S.ONI_TACTIC, 'hard')
+      expect(S.ratioOf(probe)).toBe(0.5)
+      const thenRate = thenRates(S, E, 'hard')
+      if (fullThen === null) fullThen = thenRate
+      rows[name] = { patch, thenRate, contribution: {} as Record<Policy, number | null> }
+    }
+    for (const row of Object.values(rows)) for (const p of POLICIES) {
+      const n = normalThen[p]
+      const f = fullThen?.[p] ?? null
+      const v = row.thenRate[p]
+      row.contribution[p] = n === null || f === null || v === null || n - f === 0 ? null : r3((n - v) / (n - f))
+    }
+    // v1 §10-5 と同じ「与ダメージ分布の入れ替え」の反実仮想（greedy）を同条件で再計算して並べる
+    const dealt: Record<Difficulty, number[]> = { easy: [], normal: [], hard: [] }
+    const need: Record<Difficulty, number> = { easy: 0, normal: 0, hard: 0 }
+    for (const difficulty of DIFFICULTIES) {
+      const probe = S0.startState(seedName(0), E0.GODS[0].id, S0.ONI_TACTIC, difficulty)
+      need[difficulty] = probe.enemy.maxHp - S0.thresholdOf(probe)
+      for (const god of godsOf(E0.GODS)) for (const seed of seeds) {
+        const o = S0.playOne(seed, god.id, S0.ONI_TACTIC, difficulty, 'greedy')
+        const hp4 = o.enemyHpAtRound[4]
+        dealt[difficulty].push(hp4 === undefined ? probe.enemy.maxHp : probe.enemy.maxHp - hp4)
+      }
+    }
+    const rate = (xs: number[], nd: number) => r3(xs.filter((x) => x >= nd).length / xs.length)
+    v11.decomposition = {
+      normalThen,
+      variants: rows,
+      byDistribution: { hpMultiplierOnly: rate(dealt.normal, need.hard), atkPressureOnly: rate(dealt.hard, need.normal), thenNormal: rate(dealt.normal, need.normal), thenHard: rate(dealt.hard, need.hard) },
+    }
+    v11Timings.decomposition = Math.round((Date.now() - t0) / 100) / 10
+    console.log('V11 DECOMP ' + JSON.stringify(Object.fromEntries(Object.entries(rows).map(([k, v]) => [k, v.thenRate.greedy]))))
+    expect(fullThen).not.toBeNull()
+  }, 1_200_000)
+
+  it('B. しきい値 × 難易度：then 率・R3 迷い率・反転率（両分岐到達可／手札差し替え）', async () => {
+    const t0 = Date.now()
+    const sweep: Record<string, Record<Difficulty, V11Cell>> = {}
+    for (const ratio of RATIOS_V11) {
+      const E = await loadEngine(ratio)
+      const S = makeSim(E)
+      const perRatio = {} as Record<Difficulty, V11Cell>
+      for (const difficulty of DIFFICULTIES) {
+        const probe = S.startState(seedName(0), E.GODS[0].id, S.ONI_TACTIC, difficulty)
+        expect(S.ratioOf(probe)).toBe(ratio)
+        const cells = {} as Record<Policy, Summary>
+        const perGodThen: Record<string, number | null> = {}
+        for (const policy of POLICIES) {
+          const outs: Outcome[] = []
+          for (const god of godsOf(E.GODS)) {
+            const godOuts = seeds.map((seed) => S.playOne(seed, god.id, S.ONI_TACTIC, difficulty, policy))
+            outs.push(...godOuts)
+            if (policy === 'greedy') perGodThen[god.id] = S.summarize(godOuts).thenRate
+          }
+          cells[policy] = S.summarize(outs)
+        }
+        // R3 総当り（項目 1 と同じ）
+        type Case = { god: string; state: GameState; a: Analysis }
+        const cases: Case[] = []
+        for (const god of godsOf(E.GODS)) for (const seed of seeds) {
+          const st = S.toR3Greedy(seed, god.id, S.ONI_TACTIC, difficulty)
+          if (st) cases.push({ god: god.id, state: st, a: S.analyzeR3(st) })
+        }
+        const search = aggregateAnalyses(cases.map((c) => ({ god: c.god, a: c.a })))
+        const bothReachable = cases.filter((c) => c.a.thenReachable > 0 && c.a.leaves - c.a.thenReachable > 0).length
+        // 手札差し替え（項目 2 と同じ・ALT_HANDS 1）
+        let flip: V11Cell['flip'] = null
+        if (FLIP_V11) {
+          let pairs = 0
+          let flips = 0
+          let decidablePairs = 0
+          let decidableFlips = 0
+          const side = (a: Analysis): Side => (a.optimal === 'tie' ? 'guard' : a.optimal)
+          for (const god of godsOf(E.GODS)) {
+            const cs = cases.filter((c) => c.god === god.id)
+            for (let i = 0; i < cs.length; i++) {
+              if (cs[i].a.category.main === 'alreadyThen') continue
+              for (let k = 1; k <= ALT_HANDS_V11 && k < cs.length; k++) {
+                const j = (i + k) % cs.length
+                const altHand = cs[j].state.hand.map((c, idx) => ({ ...c, uid: `alt${k}-${idx}` as CardUid }))
+                const a1 = S.analyzeR3({ ...cs[i].state, hand: altHand })
+                pairs++
+                const flipped = side(cs[i].a) !== side(a1)
+                if (flipped) flips++
+                if (cs[i].a.delta !== null && a1.delta !== null) {
+                  decidablePairs++
+                  if (flipped) decidableFlips++
+                }
+              }
+            }
+          }
+          flip = { pairs, flips, flipRate: r3(flips / Math.max(1, pairs)), decidablePairs, decidableFlips, flipRateAmongBothDecidable: decidablePairs ? r3(decidableFlips / decidablePairs) : null }
+        }
+        perRatio[difficulty] = {
+          threshold: S.thresholdOf(probe),
+          need: probe.enemy.maxHp - S.thresholdOf(probe),
+          cells,
+          perGodThen,
+          search,
+          bothReachableRate: r3(bothReachable / Math.max(1, cases.length)),
+          flip,
+        }
+        console.log(`V11 SWEEP ratio=${ratio} ${difficulty} then=${pct(cells.greedy.thenRate)} contested=${pct(search.rates.contestedOfAll.main)} both=${pct(bothReachable / Math.max(1, cases.length))} flip=${pct(flip?.flipRate ?? null)} (${Math.round((Date.now() - t0) / 1000)}s)`)
+      }
+      sweep[String(ratio)] = perRatio
+    }
+    v11.sweep = sweep
+    v11.ratios = RATIOS_V11
+    v11Timings.sweep = Math.round((Date.now() - t0) / 100) / 10
+    expect(Object.keys(sweep)).toHaveLength(RATIOS_V11.length)
+  }, 3_600_000)
+
+  it('v1.1 の結果を docs/evidence/lane1-threat-branch/ratio-sweep-v1_1.json と RATIO_SWEEP_V1_1.md へ書く', async () => {
+    const E = await loadEngine(null)
+    const out: V11Out = {
+      at: new Date().toISOString(),
+      seeds: SEEDS,
+      gods: godsOf(E.GODS).length,
+      runtime: v11.runtime as V11Out['runtime'],
+      decomposition: v11.decomposition as V11Out['decomposition'],
+      sweep: v11.sweep as V11Out['sweep'],
+      ratios: RATIOS_V11,
+      timingsSec: v11Timings,
+    }
+    expect(out.runtime).toBeDefined()
+    expect(out.decomposition).toBeDefined()
+    expect(out.sweep).toBeDefined()
+    mkdirSync(OUT_DIR, { recursive: true })
+    writeFileSync(`${OUT_DIR}/ratio-sweep-v1_1.json`, JSON.stringify(out, null, 2))
+    writeFileSync(`${OUT_DIR}/RATIO_SWEEP_V1_1.md`, renderV11(out))
+  }, 600_000)
+})
+
+/** RATIO_SWEEP_V1_1.md を ratio-sweep-v1_1.json と同じデータから生成する（手書きの表を置かない） */
+function renderV11(o: V11Out): string {
+  const L: string[] = []
+  const pp = (v: number | null | undefined) => (v === null || v === undefined ? null : v * 100)
+  L.push('# Threat Branch Pilot v1.1 — hard 偏りの寄与分解（再確認）と難易度別しきい値の比較')
+  L.push('')
+  L.push(`生成：${o.at}（\`SIM_THREAT_BRANCH_V11=1 npx vitest run src/core/sim/threatBranchDecision.sim.test.ts -t v1.1\`。この表は \`ratio-sweep-v1_1.json\` から生成）`)
+  L.push('')
+  L.push(`- enemy_09・${o.gods} 神 × seed ${o.seeds} × normal／hard。R3 開始局面は greedy で到達。乱数は seed のみ。所要秒：${JSON.stringify(o.timingsSec)}`)
+  L.push('')
+  L.push('## C. runtime の実効しきい値（難易度別）と then 率')
+  L.push('')
+  L.push(`- 実効 ratio：easy ${o.runtime.ratioByDifficulty.easy}／normal ${o.runtime.ratioByDifficulty.normal}／hard ${o.runtime.ratioByDifficulty.hard}、then の HP 上限：easy ≤${o.runtime.threshold.easy}／normal ≤${o.runtime.threshold.normal}／hard ≤${o.runtime.threshold.hard}`)
+  L.push(`- then 率：` + Object.entries(o.runtime.thenRate).map(([k, v]) => `${k} ${pct(v)}`).join('・'))
+  L.push('')
+  L.push('## A. 寄与分解（hard の 3 要素を normal に 1 つずつ入れた engine・ratio 0.5 固定）')
+  L.push('')
+  L.push(`normal の then 率：greedy ${pct(o.decomposition.normalThen.greedy)}／raceAware ${pct(o.decomposition.normalThen.raceAware)}／reader ${pct(o.decomposition.normalThen.reader)}`)
+  L.push('')
+  L.push('| 変種（hard 側） | HP 倍率 | ATK 倍率 | 自 HP | then greedy | then raceAware | then reader | 低下幅に占める割合 greedy | 同 raceAware | 同 reader |')
+  L.push('|---|---|---|---|---|---|---|---|---|---|')
+  for (const [name, v] of Object.entries(o.decomposition.variants)) {
+    L.push(`| ${name} | ${v.patch?.enemyHpMultiplier ?? '—'} | ${v.patch?.enemyAtkMultiplier ?? '—'} | ${v.patch?.playerMaxHpBonus ?? '—'} | ${pct(v.thenRate.greedy)} | ${pct(v.thenRate.raceAware)} | ${pct(v.thenRate.reader)} | ${pct(v.contribution.greedy)} | ${pct(v.contribution.raceAware)} | ${pct(v.contribution.reader)} |`)
+  }
+  L.push('')
+  const bd = o.decomposition.byDistribution
+  L.push(`参考（v1 §10-5 と同じ「与ダメージ分布の入れ替え」・greedy）：then normal ${pct(bd.thenNormal)}／hard ${pct(bd.thenHard)}／HP 倍率だけ ${pct(bd.hpMultiplierOnly)}／ATK 圧だけ ${pct(bd.atkPressureOnly)}`)
+  L.push('')
+  L.push('## B. しきい値 × 難易度')
+  L.push('')
+  L.push('| ratio | 難易度 | then の HP 上限／必要ダメ | then greedy | then raceAware | then reader | 勝率 greedy | 平均スコア greedy | 残 HP greedy | 迷う（ε10）／全 | 迷う／判断可 | 既に then | then 到達不能 | 判断可で攻め最善 | 両分岐到達可 | 手札差し替えで反転 | 判断可同士の反転 |')
+  L.push('|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|')
+  for (const r of o.ratios) for (const d of DIFFICULTIES) {
+    const c = o.sweep[String(r)][d]
+    const s = c.search
+    L.push(`| ${r} | ${d} | ≤${c.threshold}／${c.need} | ${pct(c.cells.greedy.thenRate)} | ${pct(c.cells.raceAware.thenRate)} | ${pct(c.cells.reader.thenRate)} | ${pct(c.cells.greedy.winRate)} | ${c.cells.greedy.meanScore} | ${c.cells.greedy.meanPlayerHpEnd} | ${pct(s.rates.contestedOfAll.main)} | ${pct(s.rates.contestedOfDecidable.main)} | ${pct(s.rates.alreadyThenOfAll)} | ${pct(s.rates.thenInfeasibleOfAll)} | ${pct(s.rates.optimalAttackOfDecidable)} | ${pct(c.bothReachableRate)} | ${pct(c.flip?.flipRate ?? null)} | ${pct(c.flip?.flipRateAmongBothDecidable ?? null)} |`)
+  }
+  L.push('')
+  L.push('normal 0.5（本番・CEO QA PASS）の profile との距離（pt の絶対差の合計：then greedy・then raceAware・迷う／全・then 到達不能・両分岐到達可）：')
+  L.push('')
+  const ref = o.sweep['0.5'].normal
+  const vec = (c: V11Cell) => [pp(c.cells.greedy.thenRate), pp(c.cells.raceAware.thenRate), pp(c.search.rates.contestedOfAll.main), pp(c.search.rates.thenInfeasibleOfAll), pp(c.bothReachableRate)]
+  L.push('| ratio | 難易度 | then greedy 差 | then raceAware 差 | 迷う差 | 到達不能差 | 両分岐到達可差 | 距離合計 | G1 帯（35〜65%・greedy） |')
+  L.push('|---|---|---|---|---|---|---|---|---|')
+  for (const r of o.ratios) for (const d of DIFFICULTIES) {
+    const c = o.sweep[String(r)][d]
+    const a = vec(c)
+    const b = vec(ref)
+    const diffs = a.map((x, i) => (x === null || b[i] === null ? null : x - (b[i] as number)))
+    const total = diffs.reduce<number>((s, x) => s + (x === null ? 0 : Math.abs(x)), 0)
+    const g = pp(c.cells.greedy.thenRate)
+    L.push(`| ${r} | ${d} | ${diffs.map((x) => (x === null ? '—' : (x >= 0 ? '+' : '') + x.toFixed(1))).join(' | ')} | ${total.toFixed(1)} | ${g !== null && g >= 35 && g <= 65 ? 'PASS' : 'FAIL'} |`)
+  }
+  L.push('')
+  L.push('神別 then 率（greedy）：')
+  L.push('')
+  const gods = Object.keys(o.sweep[String(o.ratios[0])].normal.perGodThen)
+  L.push('| ratio | 難易度 | ' + gods.join(' | ') + ' |')
+  L.push('|---|---|' + gods.map(() => '---').join('|') + '|')
+  for (const r of o.ratios) for (const d of DIFFICULTIES) {
+    const row = o.sweep[String(r)][d].perGodThen
+    L.push(`| ${r} | ${d} | ` + gods.map((g) => pct(row[g])).join(' | ') + ' |')
+  }
+  L.push('')
+  return L.join('\n')
+}
 
 type Item2Diff = { pairs: number; flipRate: number; categoryChangeRate: number; thenFeasibilityChangeRate: number; decidablePairs: number; flipRateAmongBothDecidable: number | null; perGod: Record<string, { pairs: number; flips: number }> }
 type Item3Diff = {
