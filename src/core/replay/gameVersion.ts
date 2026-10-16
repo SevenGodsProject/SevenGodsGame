@@ -1,6 +1,7 @@
 import { RULES } from '../data/rules.js'
 import { ALL_CARDS } from '../data/cards/index.js'
 import { ENEMIES } from '../data/enemies.js'
+import type { EnemyDef } from '../types/index.js'
 import { GODS } from '../data/gods.js'
 import { OTOMOS } from '../data/otomo.js'
 import { DIVINATION_CHOICES } from '../data/divination.js'
@@ -63,6 +64,33 @@ function fnv1a(text: string, offset: number): string {
   return hash.toString(16).padStart(8, '0')
 }
 
+/**
+ * v1.0.1 ★再付番（`docs/V1_0_1_RC_GATE_CHECKLIST.md`・AI 判断）：`EnemyDef.rank`（脅威度★）は敵選択・デッキ構築の
+ * 対戦相手チップ・降臨の間の★表示にだけ読まれ、reducer・敵の行動表・スコア計算のどこにも現れない
+ * （`src/core/engine` に `rank` の参照は無い）。対局結果に影響しないデータなので、指紋の対象から外す。
+ *
+ * ただし `rank` を単に落とすと正規化文字列そのものが変わり、Production v1.0.0 の版 `1.d794038a00b5b53c` が
+ * 一度だけ動く（Daily の day-lock・K26「託宣回数は次ラウンドから新表」が日中に起きる）。それを避けるため、
+ * 指紋入力の `rank` は **v1.0.0 公開時点の値に固定**する。実データの `rank` を何に変えても指紋は変わらない＝
+ * 「rank を指紋から除外した」のと等価で、かつ版は不変（`gameVersion.test.ts` が両方を固定する）。
+ * 表に無い id（将来の敵）は 0。敵の追加は HP・行動表の追加そのもので版が変わるので取りこぼしは無い。
+ * この表は指紋の互換性のためだけに存在し、ゲームのどこからも読まれない。実際の★は `data/enemies.ts` にある。
+ */
+const FINGERPRINT_RANK_V1_0_0: Readonly<Record<string, number>> = {
+  enemy_01: 1,
+  enemy_02: 2,
+  enemy_03: 3,
+  enemy_04: 4,
+  enemy_05: 2,
+  enemy_06: 3,
+  enemy_07: 4,
+}
+
+/** 指紋に乗せる敵データ：`rank` だけを v1.0.0 時点の定数へ置き換えたもの（上の説明を参照） */
+function enemiesForFingerprint(): EnemyDef[] {
+  return ENEMIES.map((enemy) => ({ ...enemy, rank: FINGERPRINT_RANK_V1_0_0[enemy.id] ?? 0 }))
+}
+
 /** ランキングに影響するデータだけを取り出した、正規化済みの入力 */
 export function rankingImpactSnapshot(): string {
   const { ranking: _ranking, replay, ...rest } = RULES
@@ -70,7 +98,7 @@ export function rankingImpactSnapshot(): string {
   return stableStringify({
     rules: { ...rest, replay: replayRest },
     cards: ALL_CARDS,
-    enemies: ENEMIES,
+    enemies: enemiesForFingerprint(),
     gods: GODS,
     otomos: OTOMOS,
     // Phase 5-E（決定158）：神託の3択も対局結果を直接変える。Phase 4.6 の列挙から漏れていたため追加

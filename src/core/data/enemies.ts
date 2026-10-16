@@ -54,8 +54,12 @@ export const ENEMIES: EnemyDef[] = [
     typeDescription: '基本を守れば戦える。R4に攻撃が強まる。',
     // 決定246：攻撃の峰が R4 へ移ったため「終盤の強調（R5〜）」表示をやめる
     visualType: 'standard',
-    // LANE-D：脅威度★・舞台（表示専用、CEO GO済み仕様の叩き台）。数値・AI無変更
-    rank: 1,
+    // 脅威度★（表示専用。reducer・行動表・スコアは読まない）。v1.0.1 で実測に基づき再付番（AI 判断）：
+    // 規則＝normal 全体指数（7 敵×7 神×16 seed×6 打ち筋＝14,112 局・v1.0.0 engine）の降順・同点は hard 指数・
+    // 上位 2 体 ★4／次 2 体 ★3／次 2 体 ★2／最下位 ★1（★5 は Boss 予約）。龍神 4／怨霊 4／魔獣 3／鬼将 3／影 2／機工師 2／道化 1。
+    // 根拠 docs/evidence/v1_0_1-rc/star-reeval.json（matrix 2026-10-10・再集計 2026-10-17）・docs/ENEMY_STAR_REEVAL_PREP_V1.md 案 A。
+    // 旧値（LANE-D 叩き台 2026-08-28）：影 1／鬼将 2／怨霊 3／機工師 4／魔獣 2／龍神 3／道化 4。gameVersion の指紋には乗せない（replay/gameVersion.ts）
+    rank: 2,
     stage: { nameJa: '褪色の神殿', accent: '#6b5b95', bg: '/assets/backgrounds/stages/01-trial-shadow.webp' },
     battleCries: [
       'その力、まことのものか見極めよう',
@@ -95,7 +99,7 @@ export const ENEMIES: EnemyDef[] = [
     typeLabel: '重撃型',
     typeDescription: '溜めの次に断岩。R4を受け切れ。',
     visualType: 'standard',
-    rank: 2,
+    rank: 3,
     stage: { nameJa: '戦火の陣', accent: '#e5484d', bg: '/assets/backgrounds/stages/02-oni-castle.webp' },
     battleCries: [
       '吠えろ、我が斧よ！',
@@ -133,7 +137,7 @@ export const ENEMIES: EnemyDef[] = [
     typeDescription: 'R4に怨嗟の花。峰に備え温存せよ。',
     // 決定246：攻撃の峰が R4 へ移ったため「終盤の強調（R5〜）」表示をやめる
     visualType: 'standard',
-    rank: 3,
+    rank: 4,
     stage: { nameJa: '藍花の廃社', accent: '#7a4fc4', bg: '/assets/backgrounds/stages/03-ghost-hydrangea.webp' },
     battleCries: [
       'まだ…まだ足りぬ…',
@@ -169,7 +173,7 @@ export const ENEMIES: EnemyDef[] = [
     typeLabel: '溜め型',
     typeDescription: '溜めの次に大技。R5の主砲に備えよ。',
     visualType: 'standard',
-    rank: 4,
+    rank: 2,
     stage: { nameJa: '機巧工房', accent: '#9b59b6', bg: '/assets/backgrounds/stages/04-mecha-workshop.webp' },
     battleCries: [
       '照準、完了',
@@ -210,7 +214,7 @@ export const ENEMIES: EnemyDef[] = [
     typeLabel: '連撃型',
     typeDescription: '毎ラウンド連撃。序盤から圧が激しい。',
     visualType: 'fast',
-    rank: 2,
+    rank: 3,
     stage: { nameJa: '月牙の霊峰', accent: '#9fb8e8', bg: '/assets/backgrounds/stages/05-beast-moonpeak.webp' },
     battleCries: [
       'ガアアアッ！',
@@ -246,7 +250,7 @@ export const ENEMIES: EnemyDef[] = [
     typeLabel: '耐久型',
     typeDescription: 'R4の大海嘯。長い波を受け続けろ。',
     visualType: 'heavy',
-    rank: 3,
+    rank: 4,
     stage: { nameJa: '蒼海の宮', accent: '#1a3a6b', bg: '/assets/backgrounds/stages/06-dragon-ocean.webp' },
     battleCries: [
       '小さき者よ、海の重みを知るがいい',
@@ -283,7 +287,7 @@ export const ENEMIES: EnemyDef[] = [
     typeLabel: 'トリック型',
     typeDescription: 'R3に開幕の必殺。託宣を先に切れ。',
     visualType: 'standard',
-    rank: 4,
+    rank: 1,
     stage: { nameJa: '幻惑の舞台', accent: '#c0122f', bg: '/assets/backgrounds/stages/07-jester-festival.webp' },
     battleCries: [
       'さあ、遊びの時間だ！',

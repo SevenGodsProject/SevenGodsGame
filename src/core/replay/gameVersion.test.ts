@@ -4,6 +4,7 @@ import { runReplay } from './replay'
 import type { ReplayInput } from './types'
 import { dataFingerprint, getGameVersion, rankingImpactSnapshot, resetGameVersionCache, stableStringify } from './gameVersion'
 import { DIVINATION_CHOICES } from '../data/divination'
+import { ENEMIES } from '../data/enemies'
 import type { Effect } from '../types'
 
 /**
@@ -190,6 +191,57 @@ describe('gameVersion の形', () => {
     const base = rankingImpactSnapshot()
     // 実データは変更せず、同じ正規化関数へ「1文字違い」を通して感度だけを確かめる
     expect(base).not.toBe(base.replace('"totalRounds":7', '"totalRounds":8'))
+  })
+})
+
+describe('v1.0.1 ★再付番：EnemyDef.rank（表示専用）は版に影響しない', () => {
+  // Production v1.0.0（d2135d2）の版。★を 7 体すべて付け直しても、この値が動かないことを固定する
+  // （Daily の day-lock・K26 の託宣表が日中に切り替わらない＝「Daily 不変」）。`useReactionLanguage.test.ts` の golden と同じ値
+  const V1_0_0_GAME_VERSION = '1.d794038a00b5b53c'
+
+  it('版は v1.0.0 と同じ 1.d794038a00b5b53c（★再付番後も不変）', () => {
+    resetGameVersionCache()
+    expect(getGameVersion()).toBe(V1_0_0_GAME_VERSION)
+  })
+
+  it('rank をどの値に変えても fingerprint は変わらない（指紋から除外されている）', () => {
+    const before = dataFingerprint()
+    const target = ENEMIES[5] as { rank: number }
+    const original = target.rank
+    try {
+      for (const next of [1, 5, 99]) {
+        target.rank = next
+        resetGameVersionCache()
+        expect(dataFingerprint()).toBe(before)
+        expect(getGameVersion()).toBe(V1_0_0_GAME_VERSION)
+      }
+    } finally {
+      target.rank = original
+      resetGameVersionCache()
+    }
+  })
+
+  it('対照：同じ敵の maxHp を変えると fingerprint は変わる（除外は rank だけ）', () => {
+    const before = dataFingerprint()
+    const target = ENEMIES[5] as { maxHp: number }
+    const original = target.maxHp
+    try {
+      target.maxHp = original + 1
+      resetGameVersionCache()
+      expect(dataFingerprint()).not.toBe(before)
+    } finally {
+      target.maxHp = original
+      resetGameVersionCache()
+    }
+    expect(dataFingerprint()).toBe(before)
+  })
+
+  it('指紋入力の enemies は 7 体とも実データと同じ id・HP・行動表を持つ（rank 以外は落としていない）', () => {
+    const snapshot = rankingImpactSnapshot()
+    for (const enemy of ENEMIES) {
+      expect(snapshot).toContain(`"id":"${enemy.id}"`)
+      expect(snapshot).toContain(`"maxHp":${enemy.maxHp}`)
+    }
   })
 })
 
