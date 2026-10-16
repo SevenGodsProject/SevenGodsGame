@@ -130,6 +130,22 @@ hard では then 率 17.9%（HP ×1.15 で 54 以下が必要）。G1 は normal
 
 合否：Q1・Q2・Q4 が YES かつ Q3 が NO で **PASS**。Q3 が YES なら文言（`⚠ 傷が浅ければ次は断岩`）の見直しが先。Q1 が NO なら then 13／else 26 の差か、しきい値 0.5 の調整候補（0.55）を sim で再評価。
 
+### 8-1. CEO QA 結果（2026-10-17・CEO 判断）
+
+| 項目 | 内容 |
+|---|---|
+| 日付 | 2026-10-17 |
+| 神 | 大耀 または 寿楽（§8 手順 2 の推奨どおり） |
+| 敵 | 業斧の鬼将・軍略（enemy_09・`?pilot=threat`・難易度 normal） |
+| Q1 R3 で攻守を自分で選んだ | **YES**（合格） |
+| Q2 手札の数字を数えて決めた | **YES**（合格） |
+| Q3 正解を教えられている感じ | **NO**（合格） |
+| Q4 もう一度戦いたい | **YES**（合格） |
+| 判定 | **4／4 PASS → 条件付き GO**（Pilot として継続採用） |
+| 未承認の範囲 | **Production 公開**・**既存 7 体への展開**（いずれも別途 CEO 承認が必要。本 branch は push 0・merge 0） |
+
+Q2 YES・Q3 NO のため、§10-4 の規則どおり R3 文言は**現状維持**（文言案 A／B／C は採用しない）。hard の分岐偏り（§10-5 P1）の採否と、7 体展開の設計は `docs/LANE1_THREAT_BRANCH_PILOT_V1_1.md` に続く。
+
 ## 9. 未完了・UNKNOWN・CEO 判断が必要な点
 
 - **未完了**：CEO 実プレイ QA（§8）。`docs/DECISIONS.md`・`RELEASE_STATUS.md` への記録（PM）。Production への公開判断（Pilot 経路は URL フラグ隔離だが、runtime 変更を含む＝公開時は Gate 再実行と CEO 承認が必要）。
