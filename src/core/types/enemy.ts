@@ -26,6 +26,23 @@ export type EnemyActionDef =
   | { kind: 'special'; amount: number; name: string }
 
 /**
+ * Threat Branch Pilot v1（軍略・`docs/LANE1_THREAT_BRANCH_PILOT_V1.md`。機構は決定274 忠次「軍略」から移植）：
+ * 行動表にだけ置ける条件分岐。ラウンド開始時の敵 HP 比が `cond.ratio` 以下なら `then`、
+ * そうでなければ `else` へ解決する（`engine/tactic.ts`）。
+ * `EnemyState.intent` には解決後の既存 4 kind だけが入る（save v9 不変・新しい敵 kind ではない）。
+ * 乱数 0・予告 1 手先・正解表示なし・敵ブロックなし（決定216／263 の境界を越えない）。
+ */
+export type EnemyTacticDef = {
+  kind: 'tactic'
+  cond: { type: 'enemyHpRatioAtMost'; ratio: number }
+  then: EnemyActionDef
+  else: EnemyActionDef
+}
+
+/** 行動表（`EnemyDef.actions`）の 1 要素。確定行動か、軍略の条件分岐 */
+export type EnemyActionScript = EnemyActionDef | EnemyTacticDef
+
+/**
  * STEP3-A：敵タイプ別の軽量CSS演出を出し分けるための表示専用タグ。
  * GameStateではなく`EnemyDef`（静的データ）にのみ持たせる。新しい行動種別・
  * AIロジック・数値には一切関与しない（`enemy-lunge`のanimation-duration違いと、
@@ -66,7 +83,7 @@ export type EnemyDef = {
    * 計算式ではなく表で持つことで、「ラウンド3だけ少し楽にしたい」といった
    * 微調整が数字1つの書き換えで済みます。
    */
-  actions: EnemyActionDef[]
+  actions: EnemyActionScript[]
   /** 立ち絵（決定32。神・OTOMOと違い1枚のみ） */
   art: string
   /**

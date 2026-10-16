@@ -12,7 +12,7 @@ import type {
 import type { EnemyId, StakeChoiceId } from '../core/types'
 import { isStakeLevel } from '../core/data/stakes'
 import { recordStakeResult, type StakeResultOutcome } from './stakeStorage'
-import { ENEMY_IDS } from '../core/data/enemies'
+import { ENEMY_IDS, isPilotEnemyId } from '../core/data/enemies'
 import { resolveStartEnemyId } from './startEnemy'
 import { clearBattleSave, saveBattle } from './battleSaveStorage'
 import { recordGameResult } from './recordStorage'
@@ -210,10 +210,25 @@ export function useGameEngine(): UseGameEngine {
     setDailyRunLogAvailable(runLog !== null)
     // 決定29：毎アクション後に自動保存する。決着がついた瞬間は保存済みデータを消す
     // （決着済みの状態を「続きから」で開いてもゲームオーバー画面が出るだけのため）。
+    // Threat Branch Pilot v1：Pilot 敵との対局は端末に何も残さない（battleSave・runLog・戦績・攻略盤・神階・絆・Daily・
+    // 送信待ち・自己ベスト）。「続きから」に Pilot 敵の盤面が現れず、既存の Records／Save／Daily を一切動かさないための一括ガード
+    const pilotBattle = isPilotEnemyId(result.state.enemy.defId)
     if (result.state.status === 'playing') {
-      saveBattle(result.state)
-      // 中断・再開でログを失わないよう、盤面と同じタイミングで永続化する
-      if (runLog) saveRunLog(runLog)
+      if (!pilotBattle) {
+        saveBattle(result.state)
+        // 中断・再開でログを失わないよう、盤面と同じタイミングで永続化する
+        if (runLog) saveRunLog(runLog)
+      }
+    } else if (pilotBattle) {
+      clearBattleSave()
+      runLogRef.current = null
+      setDailyRunLogAvailable(false)
+      setMatchupClear(null)
+      setDailyResult(null)
+      setNewBest(false)
+      setPrevBest(0)
+      setStakeResult(null)
+      setOtomoBondChange(null)
     } else {
       clearBattleSave()
       // Phase 7 P2（決定189）：神×敵の攻略記録（勝利のときだけ点灯。通常・神域挑戦の共通点）。

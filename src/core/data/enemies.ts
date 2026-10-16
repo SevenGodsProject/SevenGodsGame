@@ -1,5 +1,6 @@
 import { enemyId } from '../types/ids.js'
 import type { EnemyDef, EnemyId } from '../types/index.js'
+import { RULES } from './rules.js'
 
 export const ENEMY_IDS = {
   trial: enemyId('enemy_01'),
@@ -40,7 +41,7 @@ export const ENEMY_IDS = {
  * `charge`（溜め。次のラウンドに大技）を使うのは`karakuri`と`doukeshi`の
  * 2体が初採用（決定4の「行動予告を読む」を最も色濃く体験できるタイプ）。
  */
-export const ENEMIES: EnemyDef[] = [
+export const CORE_ENEMIES: EnemyDef[] = [
   {
     id: ENEMY_IDS.trial,
     name: '試練の影',
@@ -311,6 +312,74 @@ export const ENEMIES: EnemyDef[] = [
   },
 ]
 
+/**
+ * Threat Branch Pilot v1（Lane 1・`docs/LANE1_THREAT_BRANCH_PILOT_V1.md`・2026-10-17）：
+ * 「手札で考える」が成立していない問題（K33 OPEN：託宣の時機だけで勝敗が決まり、カードをランダムに出しても
+ * 加護を読めば勝率 99.6%＝reader と同じ。1 択率 41%）に対し、決定274 忠次「軍略」（CEO 評価＝戦略性 PASS・再戦意欲 PASS）
+ * の **機構だけ** を既存敵の変種 1 体で試す。忠次本体（enemy_08・画像・舞台・台詞・将軍家）は持ち込まない。
+ *
+ * - 既存 7 体（`CORE_ENEMIES`）は 1 文字も変更しない（`coreRoster.test.ts` が master 時点の JSON sha256 で固定）
+ * - `pickEnemyId`（seed → 敵）・Daily の巡回（`DAILY_BOSS_POOL`）・49 攻略盤（`MATCHUP_ENEMIES`）は
+ *   `ENEMY_IDS`／`CORE_ENEMIES` だけを見る＝既存の seed・Daily・Records は一切動かない
+ * - gameVersion の指紋も `CORE_ENEMIES` だけ（`replay/gameVersion.ts`）＝既存プレイヤーの版は不変
+ * - Enemy Select には `?pilot=threat` のときだけ並ぶ（`components/pilot/pilotFlag.ts`）。戦績・セーブ・報酬にも残さない
+ * - enemy_08 は決定274 忠次のために予約（`feat/shogunate-pilot-v0.3`）。Pilot 敵は 09 から
+ * - 新規素材 0：画像・舞台・visualType・rank・battleCries は鬼将（enemy_02）と同一
+ */
+export const PILOT_ENEMY_IDS = {
+  oniTactic: enemyId('enemy_09'),
+} as const
+
+export const PILOT_ENEMIES: EnemyDef[] = [
+  {
+    id: PILOT_ENEMY_IDS.oniTactic,
+    name: '業斧の鬼将・軍略',
+    // 鬼将（決定252）と同じ 94。then のしきい値（0.5）＝47 以下
+    maxHp: 94,
+    art: '/assets/enemies/oni/art_hq.webp',
+    typeLabel: '重撃型（軍略）',
+    typeDescription: 'R4は傷が深ければ斧が鈍る。R3までに追い込め。',
+    visualType: 'standard',
+    rank: 2,
+    stage: { nameJa: '戦火の陣', accent: '#e5484d', bg: '/assets/backgrounds/stages/02-oni-castle.webp' },
+    battleCries: [
+      '吠えろ、我が斧よ！',
+      '一撃で仕留めてくれる！',
+      'これしきの傷、何ほどのことか！',
+      '力こそ全てよ！',
+      '退くことなど知らぬ！',
+      'その盾、叩き割ってくれる！',
+      '我が斧の前に、膝をつけ！',
+    ],
+    // 軍略（tactic）：R3 の溜めで「次は傷の深さで手が変わる」と 1 手先に告げ、R4 の行動は R4 開始時の敵 HP で分岐する。
+    // then（追い込めた・HP ≤ 47）：attack 13 ／ else（追い込めなかった）：鬼将と同じ名前つき必殺 26「業斧・断岩」。
+    // 7R 合計 then 60／else 73（else は鬼将 enemy_02 と完全に同じ行動表＝「追い込めなければ鬼将そのもの」）。
+    // then を 0 にしない＝追い込んでも受けは要る（一択化の防止）。R1・R2・R5〜R7 は鬼将と同一
+    actions: [
+      { kind: 'attack', amount: 5 },
+      { kind: 'attack', amount: 9 },
+      { kind: 'charge', label: '⚠ 傷が浅ければ次は断岩' },
+      {
+        kind: 'tactic',
+        cond: { type: 'enemyHpRatioAtMost', ratio: RULES.enemyTactic.defaultHpRatio },
+        then: { kind: 'attack', amount: 13 },
+        else: { kind: 'special', amount: 26, name: '業斧・断岩' },
+      },
+      { kind: 'attack', amount: 15 },
+      { kind: 'attack', amount: 11 },
+      { kind: 'attack', amount: 7 },
+    ],
+  },
+]
+
+/** 全敵（既存 7 体＋Pilot）。`getEnemyDef`・Enemy Select（Pilot 時）の走査はこちら。seed 選出・Daily・攻略盤・gameVersion は CORE のみ */
+export const ENEMIES: EnemyDef[] = [...CORE_ENEMIES, ...PILOT_ENEMIES]
+
+/** Pilot 敵か（戦績・セーブ・報酬・攻略盤に残さない判定に使う） */
+export function isPilotEnemyId(id: EnemyId | null | undefined): boolean {
+  return id !== null && id !== undefined && PILOT_ENEMIES.some((e) => e.id === id)
+}
+
 const ENEMY_BY_ID = new Map<EnemyId, EnemyDef>(ENEMIES.map((e) => [e.id, e]))
 
 export function getEnemyDef(id: EnemyId): EnemyDef {
@@ -331,5 +400,6 @@ export function pickEnemyId(seed: string): EnemyId {
   for (let i = 0; i < seed.length; i++) {
     hash = (hash * 31 + seed.charCodeAt(i)) >>> 0
   }
-  return ENEMIES[hash % ENEMIES.length].id
+  // Threat Branch Pilot v1：既存 7 体の配列だけを参照する（Pilot 敵を足しても既存 seed の敵は変わらない）
+  return CORE_ENEMIES[hash % CORE_ENEMIES.length].id
 }
