@@ -1,0 +1,46 @@
+# G0 clean worktree（統合 RC・merge 直後・2026-10-17）
+branch: feat/combat-pilots-integ-rc  HEAD: 25aead4
+起点 master 7ba447f → merge ① 26adc19（Lane 1 06e3bba）→ merge ② 25aead4（Lane 2 41748e9）・conflict 0
+
+## git status --short（tracked 差分 0。未追跡＝Lane 2 が意図して未追跡のまま置いた PNG 22 枚＋本 Gate の scripts/evidence のみ）
+?? docs/evidence/combat-feel-v2/threat-combo/pc-cf2-threat-01-end.png
+?? docs/evidence/combat-feel-v2/threat-combo/pc-cf2-threat-01-r3-start.png
+?? docs/evidence/combat-feel-v2/threat-combo/pc-cf2-threat-01-r4-break.png
+?? docs/evidence/combat-feel-v2/threat-combo/pc-cf2-threat-01-r4-start.png
+?? docs/evidence/combat-feel-v2/threat-combo/pc-cf2-threat-02-end.png
+?? docs/evidence/combat-feel-v2/threat-combo/pc-cf2-threat-02-r3-start.png
+?? docs/evidence/combat-feel-v2/threat-combo/pc-cf2-threat-02-r4-start.png
+?? docs/evidence/combat-feel-v2/threat-combo/pc-cf2-threat-03-end.png
+?? docs/evidence/combat-feel-v2/threat-combo/pc-cf2-threat-03-r3-break.png
+?? docs/evidence/combat-feel-v2/threat-combo/pc-cf2-threat-03-r3-start.png
+?? docs/evidence/combat-feel-v2/threat-combo/pc-cf2-threat-03-r4-start.png
+?? docs/evidence/combat-feel-v2/threat-combo/sp375-cf2-threat-01-end.png
+?? docs/evidence/combat-feel-v2/threat-combo/sp375-cf2-threat-01-r3-start.png
+?? docs/evidence/combat-feel-v2/threat-combo/sp375-cf2-threat-01-r4-break.png
+?? docs/evidence/combat-feel-v2/threat-combo/sp375-cf2-threat-01-r4-start.png
+?? docs/evidence/combat-feel-v2/threat-combo/sp375-cf2-threat-02-end.png
+?? docs/evidence/combat-feel-v2/threat-combo/sp375-cf2-threat-02-r3-start.png
+?? docs/evidence/combat-feel-v2/threat-combo/sp375-cf2-threat-02-r4-start.png
+?? docs/evidence/combat-feel-v2/threat-combo/sp375-cf2-threat-03-end.png
+?? docs/evidence/combat-feel-v2/threat-combo/sp375-cf2-threat-03-r3-break.png
+?? docs/evidence/combat-feel-v2/threat-combo/sp375-cf2-threat-03-r3-start.png
+?? docs/evidence/combat-feel-v2/threat-combo/sp375-cf2-threat-03-r4-start.png
+?? docs/evidence/combat-pilots-rc/
+?? scripts/combat-pilots-rc/
+
+## git log --oneline 7ba447f..HEAD
+25aead4 merge(integ-rc): Lane 2 Enemy Break v1（feat/lane2-combat-feel-v2-1 41748e9）を統合 RC へ取り込み。runtime 変更あり（表示専用 enemyBreak.ts／.css・EnemyPanel.tsx）・src/core 0 行・conflict 0・push 0
+26adc19 merge(integ-rc): Lane 1 Threat Branch Pilot v1.1（feat/lane1-threat-pilot-v1-1 06e3bba）を統合 RC へ取り込み。runtime 変更あり（Lane 1 の Pilot 機構・難易度別しきい値）・conflict 0・push 0
+41748e9 docs(lane2): CEO 実プレイ QA 結果 — Enemy Break v1 × 軍略 Pilot 6/6 PASS（Q1 YES／Q2 YES／Q3 NO／Q4 YES／Q5 NO／Q6 NO）＝条件付き GO（Pilot 継続採用・Production 公開と 7 体展開は未承認）。CEO 訂正の経緯を記録（訂正前の NO-GO 記録は存在せず）。次工程＝統合 Gate 準備・hard 演出ずれ確認。docs-only・runtime 変更 0・push 0
+06e3bba docs(pilot): Threat Branch Pilot v1.1 — CEO QA 4/4 PASS（条件付き GO）の記録、hard しきい値の寄与分解・ratio 比較、文言静的監査、7 体展開の設計、決定282（候補）行ドラフト。docs-only・runtime 変更 0・push 0
+f5bcb4d test(sim): Threat Branch Pilot v1.1 — hard 偏りの寄与分解（engine 差し替え）＋しきい値 {0.5,0.55,0.6,0.65}×難易度の sweep と evidence。runtime 変更 0・push 0
+b42b8d6 docs(lane2): Enemy Break v1 × 軍略 Pilot 組み合わせ監査 — 完成済み成果の再検証（一致）・tmp merge conflict 0・同時発生の時刻表／視認性／操作遅延／engine 差分 0・境界一致（HP 47）・改善 Pilot 不要・CEO QA 6 問。runtime 変更 0・push 0
+68a691c test(lane2): Enemy Break v1 × 軍略 Pilot の組み合わせ実測プローブ probe-threat.mjs ＋ 証跡（threat-combo）。runtime 変更 0・push 0
+916daa4 feat(pilot): Threat Branch Pilot v1.1 — 軍略しきい値を難易度別に（normal 0.5 不変／hard 0.6）。runtime 変更あり・push 0
+f21d77e docs(lane2): Combat Feel Premium v2 Pilot — 6 観点監査・3 案比較・Enemy Break v1 の実装記録・Gate 結果・SP375 実測・Before/After/reduced 証跡
+f972931 feat(battle): Lane2 Combat Feel Premium v2 Pilot — Enemy Break v1「追い詰めた」の一回性反応（表示専用）
+699c59c docs(pilot): Threat Branch Pilot v1 §10 追加検証（2026-10-17 CEO 指示）— 5 項目の数表・判定・限界・PM 提案。docs-only・runtime 変更 0・push 0
+e240724 test(sim): Threat Branch Pilot v1 — 追加検証 sim（R3 攻守の迷い・手札依存・読む価値・hard 偏り）。runtime 変更 0・push 0
+2c7d6b5 test(pilot): Threat Branch Pilot v1 — PM 独立検証：vitest full 1463 PASS 再現＋headless 受入 74/74 PASS（PC/SP375 × 通常/Pilot URL・R3 予兆→R4 else 必殺・記録 0・JS error 0）。acceptance.mjs と evidence を追加・docs §7-2。runtime 0・push 0
+1b28bb4 docs(pilot): Threat Branch Pilot v1 — 決定論 sim（7 神×40 seed×normal/hard×greedy/raceAware/reader×enemy_02/09）と Pilot 文書。G1 then 率 41.8% PASS・G2 PASS（形式上）・G3 0pt PASS・G4 分岐反転 21.9%（局面あり）。しきい値 0.5 据え置き。push 0
+ae5baf7 feat(pilot): Threat Branch Pilot v1 — 鬼将・軍略変種（enemy_09・?pilot=threat 隔離・既存 7 体不変・gameVersion 不変）＋ tactic 機構移植・テスト。push 0

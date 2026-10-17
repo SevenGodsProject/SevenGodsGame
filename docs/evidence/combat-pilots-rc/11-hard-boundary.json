@@ -1,0 +1,2389 @@
+{
+  "head": "25aead4",
+  "date": "2026-10-17T00:10:30.191Z",
+  "enemy": {
+    "id": "enemy_09",
+    "name": "業斧の鬼将・軍略",
+    "maxHp": 94,
+    "tacticRound": 4,
+    "then": {
+      "kind": "attack",
+      "amount": 13
+    },
+    "else": {
+      "kind": "special",
+      "amount": 26,
+      "name": "業斧・断岩"
+    },
+    "cond": {
+      "type": "enemyHpRatioAtMost",
+      "ratio": 0.5,
+      "ratioByDifficulty": {
+        "easy": 0.5,
+        "normal": 0.5,
+        "hard": 0.6
+      }
+    }
+  },
+  "maxHpFormula": "Math.round(enemyDef.maxHp * preset.enemyHpMultiplier * (modifier?.enemyHpMul ?? 1) * stakeRules.enemyHpMul)",
+  "hpBandThresholds": {
+    "half": 0.5,
+    "quarter": 0.25
+  },
+  "summary": {
+    "easy": {
+      "enemyHpMultiplier": 0.85,
+      "maxHp": 80,
+      "ratio": 0.5,
+      "thenMaxHp": 40,
+      "halfMaxHp": 40,
+      "quarterMaxHp": 20,
+      "scanned": 81,
+      "mismatchA_then_noGlow": 0,
+      "mismatchA_range": "—",
+      "mismatchB_glow_else": 0,
+      "mismatchB_range": "—",
+      "resolveAtThenMax": {
+        "kind": "attack",
+        "amount": 13
+      },
+      "resolveAtThenMaxPlus1": {
+        "kind": "special",
+        "amount": 26,
+        "name": "業斧・断岩"
+      },
+      "firstThenHp": 40,
+      "firstHalfHp": 40
+    },
+    "normal": {
+      "enemyHpMultiplier": 1,
+      "maxHp": 94,
+      "ratio": 0.5,
+      "thenMaxHp": 47,
+      "halfMaxHp": 47,
+      "quarterMaxHp": 23,
+      "scanned": 95,
+      "mismatchA_then_noGlow": 0,
+      "mismatchA_range": "—",
+      "mismatchB_glow_else": 0,
+      "mismatchB_range": "—",
+      "resolveAtThenMax": {
+        "kind": "attack",
+        "amount": 13
+      },
+      "resolveAtThenMaxPlus1": {
+        "kind": "special",
+        "amount": 26,
+        "name": "業斧・断岩"
+      },
+      "firstThenHp": 47,
+      "firstHalfHp": 47
+    },
+    "hard": {
+      "enemyHpMultiplier": 1.15,
+      "maxHp": 108,
+      "ratio": 0.6,
+      "thenMaxHp": 64,
+      "halfMaxHp": 54,
+      "quarterMaxHp": 27,
+      "scanned": 109,
+      "mismatchA_then_noGlow": 10,
+      "mismatchA_range": "55〜64",
+      "mismatchB_glow_else": 0,
+      "mismatchB_range": "—",
+      "resolveAtThenMax": {
+        "kind": "attack",
+        "amount": 13
+      },
+      "resolveAtThenMaxPlus1": {
+        "kind": "special",
+        "amount": 26,
+        "name": "業斧・断岩"
+      },
+      "firstThenHp": 64,
+      "firstHalfHp": 54
+    }
+  },
+  "rows": [
+    {
+      "difficulty": "easy",
+      "maxHp": 80,
+      "hp": 80,
+      "band": "high",
+      "branch": "else",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "easy",
+      "maxHp": 80,
+      "hp": 79,
+      "band": "high",
+      "branch": "else",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "easy",
+      "maxHp": 80,
+      "hp": 78,
+      "band": "high",
+      "branch": "else",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "easy",
+      "maxHp": 80,
+      "hp": 77,
+      "band": "high",
+      "branch": "else",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "easy",
+      "maxHp": 80,
+      "hp": 76,
+      "band": "high",
+      "branch": "else",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "easy",
+      "maxHp": 80,
+      "hp": 75,
+      "band": "high",
+      "branch": "else",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "easy",
+      "maxHp": 80,
+      "hp": 74,
+      "band": "high",
+      "branch": "else",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "easy",
+      "maxHp": 80,
+      "hp": 73,
+      "band": "high",
+      "branch": "else",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "easy",
+      "maxHp": 80,
+      "hp": 72,
+      "band": "high",
+      "branch": "else",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "easy",
+      "maxHp": 80,
+      "hp": 71,
+      "band": "high",
+      "branch": "else",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "easy",
+      "maxHp": 80,
+      "hp": 70,
+      "band": "high",
+      "branch": "else",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "easy",
+      "maxHp": 80,
+      "hp": 69,
+      "band": "high",
+      "branch": "else",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "easy",
+      "maxHp": 80,
+      "hp": 68,
+      "band": "high",
+      "branch": "else",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "easy",
+      "maxHp": 80,
+      "hp": 67,
+      "band": "high",
+      "branch": "else",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "easy",
+      "maxHp": 80,
+      "hp": 66,
+      "band": "high",
+      "branch": "else",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "easy",
+      "maxHp": 80,
+      "hp": 65,
+      "band": "high",
+      "branch": "else",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "easy",
+      "maxHp": 80,
+      "hp": 64,
+      "band": "high",
+      "branch": "else",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "easy",
+      "maxHp": 80,
+      "hp": 63,
+      "band": "high",
+      "branch": "else",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "easy",
+      "maxHp": 80,
+      "hp": 62,
+      "band": "high",
+      "branch": "else",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "easy",
+      "maxHp": 80,
+      "hp": 61,
+      "band": "high",
+      "branch": "else",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "easy",
+      "maxHp": 80,
+      "hp": 60,
+      "band": "high",
+      "branch": "else",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "easy",
+      "maxHp": 80,
+      "hp": 59,
+      "band": "high",
+      "branch": "else",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "easy",
+      "maxHp": 80,
+      "hp": 58,
+      "band": "high",
+      "branch": "else",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "easy",
+      "maxHp": 80,
+      "hp": 57,
+      "band": "high",
+      "branch": "else",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "easy",
+      "maxHp": 80,
+      "hp": 56,
+      "band": "high",
+      "branch": "else",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "easy",
+      "maxHp": 80,
+      "hp": 55,
+      "band": "high",
+      "branch": "else",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "easy",
+      "maxHp": 80,
+      "hp": 54,
+      "band": "high",
+      "branch": "else",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "easy",
+      "maxHp": 80,
+      "hp": 53,
+      "band": "high",
+      "branch": "else",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "easy",
+      "maxHp": 80,
+      "hp": 52,
+      "band": "high",
+      "branch": "else",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "easy",
+      "maxHp": 80,
+      "hp": 51,
+      "band": "high",
+      "branch": "else",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "easy",
+      "maxHp": 80,
+      "hp": 50,
+      "band": "high",
+      "branch": "else",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "easy",
+      "maxHp": 80,
+      "hp": 49,
+      "band": "high",
+      "branch": "else",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "easy",
+      "maxHp": 80,
+      "hp": 48,
+      "band": "high",
+      "branch": "else",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "easy",
+      "maxHp": 80,
+      "hp": 47,
+      "band": "high",
+      "branch": "else",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "easy",
+      "maxHp": 80,
+      "hp": 46,
+      "band": "high",
+      "branch": "else",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "easy",
+      "maxHp": 80,
+      "hp": 45,
+      "band": "high",
+      "branch": "else",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "easy",
+      "maxHp": 80,
+      "hp": 44,
+      "band": "high",
+      "branch": "else",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "easy",
+      "maxHp": 80,
+      "hp": 43,
+      "band": "high",
+      "branch": "else",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "easy",
+      "maxHp": 80,
+      "hp": 42,
+      "band": "high",
+      "branch": "else",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "easy",
+      "maxHp": 80,
+      "hp": 41,
+      "band": "high",
+      "branch": "else",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "easy",
+      "maxHp": 80,
+      "hp": 40,
+      "band": "half",
+      "branch": "then",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "easy",
+      "maxHp": 80,
+      "hp": 39,
+      "band": "half",
+      "branch": "then",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "easy",
+      "maxHp": 80,
+      "hp": 38,
+      "band": "half",
+      "branch": "then",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "easy",
+      "maxHp": 80,
+      "hp": 37,
+      "band": "half",
+      "branch": "then",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "easy",
+      "maxHp": 80,
+      "hp": 36,
+      "band": "half",
+      "branch": "then",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "easy",
+      "maxHp": 80,
+      "hp": 35,
+      "band": "half",
+      "branch": "then",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "easy",
+      "maxHp": 80,
+      "hp": 34,
+      "band": "half",
+      "branch": "then",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "easy",
+      "maxHp": 80,
+      "hp": 33,
+      "band": "half",
+      "branch": "then",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "easy",
+      "maxHp": 80,
+      "hp": 32,
+      "band": "half",
+      "branch": "then",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "easy",
+      "maxHp": 80,
+      "hp": 31,
+      "band": "half",
+      "branch": "then",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "easy",
+      "maxHp": 80,
+      "hp": 30,
+      "band": "half",
+      "branch": "then",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "easy",
+      "maxHp": 80,
+      "hp": 29,
+      "band": "half",
+      "branch": "then",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "easy",
+      "maxHp": 80,
+      "hp": 28,
+      "band": "half",
+      "branch": "then",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "easy",
+      "maxHp": 80,
+      "hp": 27,
+      "band": "half",
+      "branch": "then",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "easy",
+      "maxHp": 80,
+      "hp": 26,
+      "band": "half",
+      "branch": "then",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "easy",
+      "maxHp": 80,
+      "hp": 25,
+      "band": "half",
+      "branch": "then",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "easy",
+      "maxHp": 80,
+      "hp": 24,
+      "band": "half",
+      "branch": "then",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "easy",
+      "maxHp": 80,
+      "hp": 23,
+      "band": "half",
+      "branch": "then",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "easy",
+      "maxHp": 80,
+      "hp": 22,
+      "band": "half",
+      "branch": "then",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "easy",
+      "maxHp": 80,
+      "hp": 21,
+      "band": "half",
+      "branch": "then",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "easy",
+      "maxHp": 80,
+      "hp": 20,
+      "band": "quarter",
+      "branch": "then",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "easy",
+      "maxHp": 80,
+      "hp": 19,
+      "band": "quarter",
+      "branch": "then",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "easy",
+      "maxHp": 80,
+      "hp": 18,
+      "band": "quarter",
+      "branch": "then",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "easy",
+      "maxHp": 80,
+      "hp": 17,
+      "band": "quarter",
+      "branch": "then",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "easy",
+      "maxHp": 80,
+      "hp": 16,
+      "band": "quarter",
+      "branch": "then",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "easy",
+      "maxHp": 80,
+      "hp": 15,
+      "band": "quarter",
+      "branch": "then",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "easy",
+      "maxHp": 80,
+      "hp": 14,
+      "band": "quarter",
+      "branch": "then",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "easy",
+      "maxHp": 80,
+      "hp": 13,
+      "band": "quarter",
+      "branch": "then",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "easy",
+      "maxHp": 80,
+      "hp": 12,
+      "band": "quarter",
+      "branch": "then",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "easy",
+      "maxHp": 80,
+      "hp": 11,
+      "band": "quarter",
+      "branch": "then",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "easy",
+      "maxHp": 80,
+      "hp": 10,
+      "band": "quarter",
+      "branch": "then",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "easy",
+      "maxHp": 80,
+      "hp": 9,
+      "band": "quarter",
+      "branch": "then",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "easy",
+      "maxHp": 80,
+      "hp": 8,
+      "band": "quarter",
+      "branch": "then",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "easy",
+      "maxHp": 80,
+      "hp": 7,
+      "band": "quarter",
+      "branch": "then",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "easy",
+      "maxHp": 80,
+      "hp": 6,
+      "band": "quarter",
+      "branch": "then",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "easy",
+      "maxHp": 80,
+      "hp": 5,
+      "band": "quarter",
+      "branch": "then",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "easy",
+      "maxHp": 80,
+      "hp": 4,
+      "band": "quarter",
+      "branch": "then",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "easy",
+      "maxHp": 80,
+      "hp": 3,
+      "band": "quarter",
+      "branch": "then",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "easy",
+      "maxHp": 80,
+      "hp": 2,
+      "band": "quarter",
+      "branch": "then",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "easy",
+      "maxHp": 80,
+      "hp": 1,
+      "band": "quarter",
+      "branch": "then",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "easy",
+      "maxHp": 80,
+      "hp": 0,
+      "band": "quarter",
+      "branch": "then",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "normal",
+      "maxHp": 94,
+      "hp": 94,
+      "band": "high",
+      "branch": "else",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "normal",
+      "maxHp": 94,
+      "hp": 93,
+      "band": "high",
+      "branch": "else",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "normal",
+      "maxHp": 94,
+      "hp": 92,
+      "band": "high",
+      "branch": "else",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "normal",
+      "maxHp": 94,
+      "hp": 91,
+      "band": "high",
+      "branch": "else",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "normal",
+      "maxHp": 94,
+      "hp": 90,
+      "band": "high",
+      "branch": "else",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "normal",
+      "maxHp": 94,
+      "hp": 89,
+      "band": "high",
+      "branch": "else",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "normal",
+      "maxHp": 94,
+      "hp": 88,
+      "band": "high",
+      "branch": "else",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "normal",
+      "maxHp": 94,
+      "hp": 87,
+      "band": "high",
+      "branch": "else",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "normal",
+      "maxHp": 94,
+      "hp": 86,
+      "band": "high",
+      "branch": "else",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "normal",
+      "maxHp": 94,
+      "hp": 85,
+      "band": "high",
+      "branch": "else",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "normal",
+      "maxHp": 94,
+      "hp": 84,
+      "band": "high",
+      "branch": "else",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "normal",
+      "maxHp": 94,
+      "hp": 83,
+      "band": "high",
+      "branch": "else",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "normal",
+      "maxHp": 94,
+      "hp": 82,
+      "band": "high",
+      "branch": "else",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "normal",
+      "maxHp": 94,
+      "hp": 81,
+      "band": "high",
+      "branch": "else",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "normal",
+      "maxHp": 94,
+      "hp": 80,
+      "band": "high",
+      "branch": "else",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "normal",
+      "maxHp": 94,
+      "hp": 79,
+      "band": "high",
+      "branch": "else",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "normal",
+      "maxHp": 94,
+      "hp": 78,
+      "band": "high",
+      "branch": "else",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "normal",
+      "maxHp": 94,
+      "hp": 77,
+      "band": "high",
+      "branch": "else",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "normal",
+      "maxHp": 94,
+      "hp": 76,
+      "band": "high",
+      "branch": "else",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "normal",
+      "maxHp": 94,
+      "hp": 75,
+      "band": "high",
+      "branch": "else",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "normal",
+      "maxHp": 94,
+      "hp": 74,
+      "band": "high",
+      "branch": "else",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "normal",
+      "maxHp": 94,
+      "hp": 73,
+      "band": "high",
+      "branch": "else",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "normal",
+      "maxHp": 94,
+      "hp": 72,
+      "band": "high",
+      "branch": "else",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "normal",
+      "maxHp": 94,
+      "hp": 71,
+      "band": "high",
+      "branch": "else",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "normal",
+      "maxHp": 94,
+      "hp": 70,
+      "band": "high",
+      "branch": "else",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "normal",
+      "maxHp": 94,
+      "hp": 69,
+      "band": "high",
+      "branch": "else",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "normal",
+      "maxHp": 94,
+      "hp": 68,
+      "band": "high",
+      "branch": "else",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "normal",
+      "maxHp": 94,
+      "hp": 67,
+      "band": "high",
+      "branch": "else",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "normal",
+      "maxHp": 94,
+      "hp": 66,
+      "band": "high",
+      "branch": "else",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "normal",
+      "maxHp": 94,
+      "hp": 65,
+      "band": "high",
+      "branch": "else",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "normal",
+      "maxHp": 94,
+      "hp": 64,
+      "band": "high",
+      "branch": "else",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "normal",
+      "maxHp": 94,
+      "hp": 63,
+      "band": "high",
+      "branch": "else",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "normal",
+      "maxHp": 94,
+      "hp": 62,
+      "band": "high",
+      "branch": "else",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "normal",
+      "maxHp": 94,
+      "hp": 61,
+      "band": "high",
+      "branch": "else",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "normal",
+      "maxHp": 94,
+      "hp": 60,
+      "band": "high",
+      "branch": "else",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "normal",
+      "maxHp": 94,
+      "hp": 59,
+      "band": "high",
+      "branch": "else",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "normal",
+      "maxHp": 94,
+      "hp": 58,
+      "band": "high",
+      "branch": "else",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "normal",
+      "maxHp": 94,
+      "hp": 57,
+      "band": "high",
+      "branch": "else",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "normal",
+      "maxHp": 94,
+      "hp": 56,
+      "band": "high",
+      "branch": "else",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "normal",
+      "maxHp": 94,
+      "hp": 55,
+      "band": "high",
+      "branch": "else",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "normal",
+      "maxHp": 94,
+      "hp": 54,
+      "band": "high",
+      "branch": "else",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "normal",
+      "maxHp": 94,
+      "hp": 53,
+      "band": "high",
+      "branch": "else",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "normal",
+      "maxHp": 94,
+      "hp": 52,
+      "band": "high",
+      "branch": "else",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "normal",
+      "maxHp": 94,
+      "hp": 51,
+      "band": "high",
+      "branch": "else",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "normal",
+      "maxHp": 94,
+      "hp": 50,
+      "band": "high",
+      "branch": "else",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "normal",
+      "maxHp": 94,
+      "hp": 49,
+      "band": "high",
+      "branch": "else",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "normal",
+      "maxHp": 94,
+      "hp": 48,
+      "band": "high",
+      "branch": "else",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "normal",
+      "maxHp": 94,
+      "hp": 47,
+      "band": "half",
+      "branch": "then",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "normal",
+      "maxHp": 94,
+      "hp": 46,
+      "band": "half",
+      "branch": "then",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "normal",
+      "maxHp": 94,
+      "hp": 45,
+      "band": "half",
+      "branch": "then",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "normal",
+      "maxHp": 94,
+      "hp": 44,
+      "band": "half",
+      "branch": "then",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "normal",
+      "maxHp": 94,
+      "hp": 43,
+      "band": "half",
+      "branch": "then",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "normal",
+      "maxHp": 94,
+      "hp": 42,
+      "band": "half",
+      "branch": "then",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "normal",
+      "maxHp": 94,
+      "hp": 41,
+      "band": "half",
+      "branch": "then",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "normal",
+      "maxHp": 94,
+      "hp": 40,
+      "band": "half",
+      "branch": "then",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "normal",
+      "maxHp": 94,
+      "hp": 39,
+      "band": "half",
+      "branch": "then",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "normal",
+      "maxHp": 94,
+      "hp": 38,
+      "band": "half",
+      "branch": "then",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "normal",
+      "maxHp": 94,
+      "hp": 37,
+      "band": "half",
+      "branch": "then",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "normal",
+      "maxHp": 94,
+      "hp": 36,
+      "band": "half",
+      "branch": "then",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "normal",
+      "maxHp": 94,
+      "hp": 35,
+      "band": "half",
+      "branch": "then",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "normal",
+      "maxHp": 94,
+      "hp": 34,
+      "band": "half",
+      "branch": "then",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "normal",
+      "maxHp": 94,
+      "hp": 33,
+      "band": "half",
+      "branch": "then",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "normal",
+      "maxHp": 94,
+      "hp": 32,
+      "band": "half",
+      "branch": "then",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "normal",
+      "maxHp": 94,
+      "hp": 31,
+      "band": "half",
+      "branch": "then",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "normal",
+      "maxHp": 94,
+      "hp": 30,
+      "band": "half",
+      "branch": "then",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "normal",
+      "maxHp": 94,
+      "hp": 29,
+      "band": "half",
+      "branch": "then",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "normal",
+      "maxHp": 94,
+      "hp": 28,
+      "band": "half",
+      "branch": "then",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "normal",
+      "maxHp": 94,
+      "hp": 27,
+      "band": "half",
+      "branch": "then",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "normal",
+      "maxHp": 94,
+      "hp": 26,
+      "band": "half",
+      "branch": "then",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "normal",
+      "maxHp": 94,
+      "hp": 25,
+      "band": "half",
+      "branch": "then",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "normal",
+      "maxHp": 94,
+      "hp": 24,
+      "band": "half",
+      "branch": "then",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "normal",
+      "maxHp": 94,
+      "hp": 23,
+      "band": "quarter",
+      "branch": "then",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "normal",
+      "maxHp": 94,
+      "hp": 22,
+      "band": "quarter",
+      "branch": "then",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "normal",
+      "maxHp": 94,
+      "hp": 21,
+      "band": "quarter",
+      "branch": "then",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "normal",
+      "maxHp": 94,
+      "hp": 20,
+      "band": "quarter",
+      "branch": "then",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "normal",
+      "maxHp": 94,
+      "hp": 19,
+      "band": "quarter",
+      "branch": "then",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "normal",
+      "maxHp": 94,
+      "hp": 18,
+      "band": "quarter",
+      "branch": "then",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "normal",
+      "maxHp": 94,
+      "hp": 17,
+      "band": "quarter",
+      "branch": "then",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "normal",
+      "maxHp": 94,
+      "hp": 16,
+      "band": "quarter",
+      "branch": "then",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "normal",
+      "maxHp": 94,
+      "hp": 15,
+      "band": "quarter",
+      "branch": "then",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "normal",
+      "maxHp": 94,
+      "hp": 14,
+      "band": "quarter",
+      "branch": "then",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "normal",
+      "maxHp": 94,
+      "hp": 13,
+      "band": "quarter",
+      "branch": "then",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "normal",
+      "maxHp": 94,
+      "hp": 12,
+      "band": "quarter",
+      "branch": "then",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "normal",
+      "maxHp": 94,
+      "hp": 11,
+      "band": "quarter",
+      "branch": "then",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "normal",
+      "maxHp": 94,
+      "hp": 10,
+      "band": "quarter",
+      "branch": "then",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "normal",
+      "maxHp": 94,
+      "hp": 9,
+      "band": "quarter",
+      "branch": "then",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "normal",
+      "maxHp": 94,
+      "hp": 8,
+      "band": "quarter",
+      "branch": "then",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "normal",
+      "maxHp": 94,
+      "hp": 7,
+      "band": "quarter",
+      "branch": "then",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "normal",
+      "maxHp": 94,
+      "hp": 6,
+      "band": "quarter",
+      "branch": "then",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "normal",
+      "maxHp": 94,
+      "hp": 5,
+      "band": "quarter",
+      "branch": "then",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "normal",
+      "maxHp": 94,
+      "hp": 4,
+      "band": "quarter",
+      "branch": "then",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "normal",
+      "maxHp": 94,
+      "hp": 3,
+      "band": "quarter",
+      "branch": "then",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "normal",
+      "maxHp": 94,
+      "hp": 2,
+      "band": "quarter",
+      "branch": "then",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "normal",
+      "maxHp": 94,
+      "hp": 1,
+      "band": "quarter",
+      "branch": "then",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "normal",
+      "maxHp": 94,
+      "hp": 0,
+      "band": "quarter",
+      "branch": "then",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "hard",
+      "maxHp": 108,
+      "hp": 108,
+      "band": "high",
+      "branch": "else",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "hard",
+      "maxHp": 108,
+      "hp": 107,
+      "band": "high",
+      "branch": "else",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "hard",
+      "maxHp": 108,
+      "hp": 106,
+      "band": "high",
+      "branch": "else",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "hard",
+      "maxHp": 108,
+      "hp": 105,
+      "band": "high",
+      "branch": "else",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "hard",
+      "maxHp": 108,
+      "hp": 104,
+      "band": "high",
+      "branch": "else",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "hard",
+      "maxHp": 108,
+      "hp": 103,
+      "band": "high",
+      "branch": "else",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "hard",
+      "maxHp": 108,
+      "hp": 102,
+      "band": "high",
+      "branch": "else",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "hard",
+      "maxHp": 108,
+      "hp": 101,
+      "band": "high",
+      "branch": "else",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "hard",
+      "maxHp": 108,
+      "hp": 100,
+      "band": "high",
+      "branch": "else",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "hard",
+      "maxHp": 108,
+      "hp": 99,
+      "band": "high",
+      "branch": "else",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "hard",
+      "maxHp": 108,
+      "hp": 98,
+      "band": "high",
+      "branch": "else",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "hard",
+      "maxHp": 108,
+      "hp": 97,
+      "band": "high",
+      "branch": "else",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "hard",
+      "maxHp": 108,
+      "hp": 96,
+      "band": "high",
+      "branch": "else",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "hard",
+      "maxHp": 108,
+      "hp": 95,
+      "band": "high",
+      "branch": "else",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "hard",
+      "maxHp": 108,
+      "hp": 94,
+      "band": "high",
+      "branch": "else",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "hard",
+      "maxHp": 108,
+      "hp": 93,
+      "band": "high",
+      "branch": "else",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "hard",
+      "maxHp": 108,
+      "hp": 92,
+      "band": "high",
+      "branch": "else",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "hard",
+      "maxHp": 108,
+      "hp": 91,
+      "band": "high",
+      "branch": "else",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "hard",
+      "maxHp": 108,
+      "hp": 90,
+      "band": "high",
+      "branch": "else",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "hard",
+      "maxHp": 108,
+      "hp": 89,
+      "band": "high",
+      "branch": "else",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "hard",
+      "maxHp": 108,
+      "hp": 88,
+      "band": "high",
+      "branch": "else",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "hard",
+      "maxHp": 108,
+      "hp": 87,
+      "band": "high",
+      "branch": "else",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "hard",
+      "maxHp": 108,
+      "hp": 86,
+      "band": "high",
+      "branch": "else",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "hard",
+      "maxHp": 108,
+      "hp": 85,
+      "band": "high",
+      "branch": "else",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "hard",
+      "maxHp": 108,
+      "hp": 84,
+      "band": "high",
+      "branch": "else",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "hard",
+      "maxHp": 108,
+      "hp": 83,
+      "band": "high",
+      "branch": "else",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "hard",
+      "maxHp": 108,
+      "hp": 82,
+      "band": "high",
+      "branch": "else",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "hard",
+      "maxHp": 108,
+      "hp": 81,
+      "band": "high",
+      "branch": "else",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "hard",
+      "maxHp": 108,
+      "hp": 80,
+      "band": "high",
+      "branch": "else",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "hard",
+      "maxHp": 108,
+      "hp": 79,
+      "band": "high",
+      "branch": "else",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "hard",
+      "maxHp": 108,
+      "hp": 78,
+      "band": "high",
+      "branch": "else",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "hard",
+      "maxHp": 108,
+      "hp": 77,
+      "band": "high",
+      "branch": "else",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "hard",
+      "maxHp": 108,
+      "hp": 76,
+      "band": "high",
+      "branch": "else",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "hard",
+      "maxHp": 108,
+      "hp": 75,
+      "band": "high",
+      "branch": "else",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "hard",
+      "maxHp": 108,
+      "hp": 74,
+      "band": "high",
+      "branch": "else",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "hard",
+      "maxHp": 108,
+      "hp": 73,
+      "band": "high",
+      "branch": "else",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "hard",
+      "maxHp": 108,
+      "hp": 72,
+      "band": "high",
+      "branch": "else",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "hard",
+      "maxHp": 108,
+      "hp": 71,
+      "band": "high",
+      "branch": "else",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "hard",
+      "maxHp": 108,
+      "hp": 70,
+      "band": "high",
+      "branch": "else",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "hard",
+      "maxHp": 108,
+      "hp": 69,
+      "band": "high",
+      "branch": "else",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "hard",
+      "maxHp": 108,
+      "hp": 68,
+      "band": "high",
+      "branch": "else",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "hard",
+      "maxHp": 108,
+      "hp": 67,
+      "band": "high",
+      "branch": "else",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "hard",
+      "maxHp": 108,
+      "hp": 66,
+      "band": "high",
+      "branch": "else",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "hard",
+      "maxHp": 108,
+      "hp": 65,
+      "band": "high",
+      "branch": "else",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "hard",
+      "maxHp": 108,
+      "hp": 64,
+      "band": "high",
+      "branch": "then",
+      "mismatch": "A(then,no-glow)"
+    },
+    {
+      "difficulty": "hard",
+      "maxHp": 108,
+      "hp": 63,
+      "band": "high",
+      "branch": "then",
+      "mismatch": "A(then,no-glow)"
+    },
+    {
+      "difficulty": "hard",
+      "maxHp": 108,
+      "hp": 62,
+      "band": "high",
+      "branch": "then",
+      "mismatch": "A(then,no-glow)"
+    },
+    {
+      "difficulty": "hard",
+      "maxHp": 108,
+      "hp": 61,
+      "band": "high",
+      "branch": "then",
+      "mismatch": "A(then,no-glow)"
+    },
+    {
+      "difficulty": "hard",
+      "maxHp": 108,
+      "hp": 60,
+      "band": "high",
+      "branch": "then",
+      "mismatch": "A(then,no-glow)"
+    },
+    {
+      "difficulty": "hard",
+      "maxHp": 108,
+      "hp": 59,
+      "band": "high",
+      "branch": "then",
+      "mismatch": "A(then,no-glow)"
+    },
+    {
+      "difficulty": "hard",
+      "maxHp": 108,
+      "hp": 58,
+      "band": "high",
+      "branch": "then",
+      "mismatch": "A(then,no-glow)"
+    },
+    {
+      "difficulty": "hard",
+      "maxHp": 108,
+      "hp": 57,
+      "band": "high",
+      "branch": "then",
+      "mismatch": "A(then,no-glow)"
+    },
+    {
+      "difficulty": "hard",
+      "maxHp": 108,
+      "hp": 56,
+      "band": "high",
+      "branch": "then",
+      "mismatch": "A(then,no-glow)"
+    },
+    {
+      "difficulty": "hard",
+      "maxHp": 108,
+      "hp": 55,
+      "band": "high",
+      "branch": "then",
+      "mismatch": "A(then,no-glow)"
+    },
+    {
+      "difficulty": "hard",
+      "maxHp": 108,
+      "hp": 54,
+      "band": "half",
+      "branch": "then",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "hard",
+      "maxHp": 108,
+      "hp": 53,
+      "band": "half",
+      "branch": "then",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "hard",
+      "maxHp": 108,
+      "hp": 52,
+      "band": "half",
+      "branch": "then",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "hard",
+      "maxHp": 108,
+      "hp": 51,
+      "band": "half",
+      "branch": "then",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "hard",
+      "maxHp": 108,
+      "hp": 50,
+      "band": "half",
+      "branch": "then",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "hard",
+      "maxHp": 108,
+      "hp": 49,
+      "band": "half",
+      "branch": "then",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "hard",
+      "maxHp": 108,
+      "hp": 48,
+      "band": "half",
+      "branch": "then",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "hard",
+      "maxHp": 108,
+      "hp": 47,
+      "band": "half",
+      "branch": "then",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "hard",
+      "maxHp": 108,
+      "hp": 46,
+      "band": "half",
+      "branch": "then",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "hard",
+      "maxHp": 108,
+      "hp": 45,
+      "band": "half",
+      "branch": "then",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "hard",
+      "maxHp": 108,
+      "hp": 44,
+      "band": "half",
+      "branch": "then",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "hard",
+      "maxHp": 108,
+      "hp": 43,
+      "band": "half",
+      "branch": "then",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "hard",
+      "maxHp": 108,
+      "hp": 42,
+      "band": "half",
+      "branch": "then",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "hard",
+      "maxHp": 108,
+      "hp": 41,
+      "band": "half",
+      "branch": "then",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "hard",
+      "maxHp": 108,
+      "hp": 40,
+      "band": "half",
+      "branch": "then",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "hard",
+      "maxHp": 108,
+      "hp": 39,
+      "band": "half",
+      "branch": "then",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "hard",
+      "maxHp": 108,
+      "hp": 38,
+      "band": "half",
+      "branch": "then",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "hard",
+      "maxHp": 108,
+      "hp": 37,
+      "band": "half",
+      "branch": "then",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "hard",
+      "maxHp": 108,
+      "hp": 36,
+      "band": "half",
+      "branch": "then",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "hard",
+      "maxHp": 108,
+      "hp": 35,
+      "band": "half",
+      "branch": "then",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "hard",
+      "maxHp": 108,
+      "hp": 34,
+      "band": "half",
+      "branch": "then",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "hard",
+      "maxHp": 108,
+      "hp": 33,
+      "band": "half",
+      "branch": "then",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "hard",
+      "maxHp": 108,
+      "hp": 32,
+      "band": "half",
+      "branch": "then",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "hard",
+      "maxHp": 108,
+      "hp": 31,
+      "band": "half",
+      "branch": "then",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "hard",
+      "maxHp": 108,
+      "hp": 30,
+      "band": "half",
+      "branch": "then",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "hard",
+      "maxHp": 108,
+      "hp": 29,
+      "band": "half",
+      "branch": "then",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "hard",
+      "maxHp": 108,
+      "hp": 28,
+      "band": "half",
+      "branch": "then",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "hard",
+      "maxHp": 108,
+      "hp": 27,
+      "band": "quarter",
+      "branch": "then",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "hard",
+      "maxHp": 108,
+      "hp": 26,
+      "band": "quarter",
+      "branch": "then",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "hard",
+      "maxHp": 108,
+      "hp": 25,
+      "band": "quarter",
+      "branch": "then",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "hard",
+      "maxHp": 108,
+      "hp": 24,
+      "band": "quarter",
+      "branch": "then",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "hard",
+      "maxHp": 108,
+      "hp": 23,
+      "band": "quarter",
+      "branch": "then",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "hard",
+      "maxHp": 108,
+      "hp": 22,
+      "band": "quarter",
+      "branch": "then",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "hard",
+      "maxHp": 108,
+      "hp": 21,
+      "band": "quarter",
+      "branch": "then",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "hard",
+      "maxHp": 108,
+      "hp": 20,
+      "band": "quarter",
+      "branch": "then",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "hard",
+      "maxHp": 108,
+      "hp": 19,
+      "band": "quarter",
+      "branch": "then",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "hard",
+      "maxHp": 108,
+      "hp": 18,
+      "band": "quarter",
+      "branch": "then",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "hard",
+      "maxHp": 108,
+      "hp": 17,
+      "band": "quarter",
+      "branch": "then",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "hard",
+      "maxHp": 108,
+      "hp": 16,
+      "band": "quarter",
+      "branch": "then",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "hard",
+      "maxHp": 108,
+      "hp": 15,
+      "band": "quarter",
+      "branch": "then",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "hard",
+      "maxHp": 108,
+      "hp": 14,
+      "band": "quarter",
+      "branch": "then",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "hard",
+      "maxHp": 108,
+      "hp": 13,
+      "band": "quarter",
+      "branch": "then",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "hard",
+      "maxHp": 108,
+      "hp": 12,
+      "band": "quarter",
+      "branch": "then",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "hard",
+      "maxHp": 108,
+      "hp": 11,
+      "band": "quarter",
+      "branch": "then",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "hard",
+      "maxHp": 108,
+      "hp": 10,
+      "band": "quarter",
+      "branch": "then",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "hard",
+      "maxHp": 108,
+      "hp": 9,
+      "band": "quarter",
+      "branch": "then",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "hard",
+      "maxHp": 108,
+      "hp": 8,
+      "band": "quarter",
+      "branch": "then",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "hard",
+      "maxHp": 108,
+      "hp": 7,
+      "band": "quarter",
+      "branch": "then",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "hard",
+      "maxHp": 108,
+      "hp": 6,
+      "band": "quarter",
+      "branch": "then",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "hard",
+      "maxHp": 108,
+      "hp": 5,
+      "band": "quarter",
+      "branch": "then",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "hard",
+      "maxHp": 108,
+      "hp": 4,
+      "band": "quarter",
+      "branch": "then",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "hard",
+      "maxHp": 108,
+      "hp": 3,
+      "band": "quarter",
+      "branch": "then",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "hard",
+      "maxHp": 108,
+      "hp": 2,
+      "band": "quarter",
+      "branch": "then",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "hard",
+      "maxHp": 108,
+      "hp": 1,
+      "band": "quarter",
+      "branch": "then",
+      "mismatch": ""
+    },
+    {
+      "difficulty": "hard",
+      "maxHp": 108,
+      "hp": 0,
+      "band": "quarter",
+      "branch": "then",
+      "mismatch": ""
+    }
+  ]
+}

@@ -1,0 +1,92 @@
+{
+  "head": "25aead4",
+  "date": "2026-10-17T00:09:34.731Z",
+  "coreSha": "b4ce1e3165e408d73762bc131bccab1dc0905919c3f3b18dd539f54421f9cdd4",
+  "version": "1.d794038a00b5b53c",
+  "saveVersion": 9,
+  "checks": [
+    {
+      "name": "CORE_ENEMIES count = 7",
+      "pass": true,
+      "detail": 7
+    },
+    {
+      "name": "CORE_ENEMIES sha256 = golden",
+      "pass": true,
+      "detail": "b4ce1e3165e408d73762bc131bccab1dc0905919c3f3b18dd539f54421f9cdd4"
+    },
+    {
+      "name": "getGameVersion() = golden",
+      "pass": true,
+      "detail": "1.d794038a00b5b53c"
+    },
+    {
+      "name": "RULES.saveVersion = 9",
+      "pass": true,
+      "detail": 9
+    },
+    {
+      "name": "PILOT_ENEMIES = [enemy_09]",
+      "pass": true,
+      "detail": [
+        "enemy_09"
+      ]
+    },
+    {
+      "name": "ENEMIES = CORE + PILOT (8)",
+      "pass": true,
+      "detail": 8
+    },
+    {
+      "name": "fingerprint excludes enemy_09",
+      "pass": true,
+      "detail": false
+    },
+    {
+      "name": "fingerprint excludes tactic",
+      "pass": true,
+      "detail": false
+    },
+    {
+      "name": "fingerprint excludes ratioByDifficulty",
+      "pass": true,
+      "detail": false
+    },
+    {
+      "name": "fingerprint excludes hpRatioByDifficulty",
+      "pass": true,
+      "detail": false
+    },
+    {
+      "name": "enemyTactic.hpRatioByDifficulty = {easy 0.5, normal 0.5, hard 0.6}",
+      "pass": true,
+      "detail": {
+        "easy": 0.5,
+        "normal": 0.5,
+        "hard": 0.6
+      }
+    },
+    {
+      "name": "enemy_09 cond.ratioByDifficulty embedded",
+      "pass": true,
+      "detail": [
+        {
+          "type": "enemyHpRatioAtMost",
+          "ratio": 0.5,
+          "ratioByDifficulty": {
+            "easy": 0.5,
+            "normal": 0.5,
+            "hard": 0.6
+          }
+        }
+      ]
+    },
+    {
+      "name": "CORE enemies have no tactic",
+      "pass": true,
+      "detail": null
+    }
+  ],
+  "pass": 13,
+  "total": 13
+}

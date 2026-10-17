@@ -26,7 +26,11 @@ const VIEWPORTS = [
 ]
   .filter((v) => ONLY.includes(v.id))
   .map((v) => (REDUCED ? { ...v, reducedMotion: 'reduce' } : v))
-const URL_Q = '/?enemy=ryujin&seed=cf2-pilot-01'
+// 統合 RC Gate（docs/COMBAT_PILOTS_INTEG_GATE_V1.md G8）：CF2_ENEMY=<slug>（ENEMY_IDS のキー）・CF2_ENEMY_NAME=<敵選択の表示名> で
+// 通常 7 体を順に走査できるようにした。未指定なら従来どおり ryujin／蒼海の龍神（Lane 2 の Before／After 証跡と同条件）
+const ENEMY_SLUG = process.env.CF2_ENEMY ?? 'ryujin'
+const ENEMY_NAME = process.env.CF2_ENEMY_NAME ?? '蒼海の龍神'
+const URL_Q = `/?enemy=${ENEMY_SLUG}&seed=cf2-pilot-01`
 
 async function clickText(page, text, timeout = 8000) {
   await page.getByRole('button', { name: text }).first().click({ timeout })
@@ -203,7 +207,7 @@ for (const vp of VIEWPORTS) {
   await clickText(page, '大耀')
   await clickText(page, 'この構成で始める')
   if (await page.getByText('挑む敵を選ぼう').first().isVisible({ timeout: 4000 }).catch(() => false)) {
-    await page.getByRole('button', { name: /蒼海の龍神/ }).first().click({ timeout: 8000 })
+    await page.getByRole('button', { name: new RegExp(ENEMY_NAME) }).first().click({ timeout: 8000 })
     await clickText(page, 'この構成でバトル開始')
   }
   // 降臨の間（決定254）：Escape で skip できる。HUD が操作可能になるまで待つ
