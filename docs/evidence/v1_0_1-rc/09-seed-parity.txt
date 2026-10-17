@@ -1,0 +1,37 @@
+# G10 同 seed 一致（engine 不変の機械証明）
+## Production d2135d2 → master 7ba447f（RC 起点）の runtime 差分
+(空＝runtime 差分 0。docs-only 5 commit)
+
+## RC 作業ツリー（7ba447f → RC）の src/core 差分
+ src/core/data/enemies.test.ts       | 39 ++++++++++++++++++++++------
+ src/core/data/enemies.ts            | 20 ++++++++------
+ src/core/replay/gameVersion.test.ts | 52 +++++++++++++++++++++++++++++++++++++
+ src/core/replay/gameVersion.ts      | 30 ++++++++++++++++++++-
+ 4 files changed, 124 insertions(+), 17 deletions(-)
+
+## engine・rules・cards・gods・otomo・divination・replay(reducer側) は 1 行も変わらない
+(空＝差分 0)
+
+## enemies.ts の差分は rank 7 行＋コメントのみ（maxHp・actions・battleCries 不変）
+-    // LANE-D：脅威度★・舞台（表示専用、CEO GO済み仕様の叩き台）。数値・AI無変更
+-    rank: 1,
++    // 脅威度★（表示専用。reducer・行動表・スコアは読まない）。v1.0.1 で実測に基づき再付番（AI 判断）：
++    // 規則＝normal 全体指数（7 敵×7 神×16 seed×6 打ち筋＝14,112 局・v1.0.0 engine）の降順・同点は hard 指数・
++    // 上位 2 体 ★4／次 2 体 ★3／次 2 体 ★2／最下位 ★1（★5 は Boss 予約）。龍神 4／怨霊 4／魔獣 3／鬼将 3／影 2／機工師 2／道化 1。
++    // 根拠 docs/evidence/v1_0_1-rc/star-reeval.json（matrix 2026-10-10・再集計 2026-10-17）・docs/ENEMY_STAR_REEVAL_PREP_V1.md 案 A。
++    // 旧値（LANE-D 叩き台 2026-08-28）：影 1／鬼将 2／怨霊 3／機工師 4／魔獣 2／龍神 3／道化 4。gameVersion の指紋には乗せない（replay/gameVersion.ts）
++    rank: 2,
+-    rank: 2,
++    rank: 3,
+-    rank: 3,
++    rank: 4,
+-    rank: 4,
++    rank: 2,
+-    rank: 2,
++    rank: 3,
+-    rank: 3,
++    rank: 4,
+-    rank: 4,
++    rank: 1,
+
+## vitest 全件（03-vitest.txt）に含まれる決定論・リプレイ golden：determinism.test.ts／replay.test.ts／gameVersion.test.ts（golden replay 再生 OK・★結果が変わったなら版も変わる）／useReactionLanguage.test.ts（同 seed 同 state・gameVersion 1.d794038a00b5b53c）

@@ -15,6 +15,9 @@ const args = process.argv.slice(2)
 const outJson = args[0] ?? 'release-audit-qa.json'
 const base = args.find((a) => a.startsWith('http')) ?? 'http://localhost:4181'
 const shots = args.includes('--shots') ? args[args.indexOf('--shots') + 1] : null
+// --only pc1508,sp844：viewport を絞る／--play-timeout 400000：自動プレイの予算（ms・既定 150000）。PC は screenshot が重く既定では決着前に切れることがある
+const only = args.includes('--only') ? args[args.indexOf('--only') + 1].split(',') : null
+const playTimeoutMs = args.includes('--play-timeout') ? Number(args[args.indexOf('--play-timeout') + 1]) : undefined
 if (shots) mkdirSync(shots, { recursive: true })
 const chromium = await loadChromium()
 const browser = await chromium.launch()
@@ -37,6 +40,7 @@ const startNormal = async (page, seed) => {
 }
 
 for (const [id, vp] of Object.entries(VIEWPORTS)) {
+  if (only && !only.includes(id)) continue
   const ctx = await browser.newContext({ viewport: vp.viewport, isMobile: vp.isMobile, hasTouch: vp.isMobile })
   const page = await ctx.newPage()
   const net = watch(page, base)
@@ -78,7 +82,7 @@ for (const [id, vp] of Object.entries(VIEWPORTS)) {
   await page.waitForTimeout(800)
   R.A.resumed = await page.evaluate('(' + BATTLE_METRICS + ')()')
   await shot('a08-resumed')
-  R.A.play = await playToEnd(page, { onStrike: () => shot('a09-god-strike'), pumpPath: outJson + '.pump.png' })
+  R.A.play = await playToEnd(page, { onStrike: () => shot('a09-god-strike'), pumpPath: outJson + '.pump.png', timeoutMs: playTimeoutMs })
   R.A.result = await page.evaluate('(' + RESULT_METRICS + ')()')
   await shot('a10-result')
   if (await clickText(page, '報酬カードを選ぶ')) {
@@ -118,7 +122,7 @@ for (const [id, vp] of Object.entries(VIEWPORTS)) {
     save: dailySave ? { mode: dailySave.mode, dailyKey: dailySave.dailyKey, seed: dailySave.seed ?? null } : null,
   }
   await shot('b03-daily-battle')
-  R.B.play = await playToEnd(page, { pumpPath: outJson + '.pump.png' })
+  R.B.play = await playToEnd(page, { pumpPath: outJson + '.pump.png', timeoutMs: playTimeoutMs })
   R.B.result = await page.evaluate('(' + RESULT_METRICS + ')()')
   await shot('b04-daily-result')
   await gotoHome(page, base)

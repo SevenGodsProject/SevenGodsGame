@@ -59,7 +59,9 @@ export function EnemySelectScreen({ onSelect, onBack, godId = null }: EnemySelec
       <h1 className="setup-title">挑む敵を選ぼう</h1>
       <p className="setup-subtitle">
         <span className="threat-stars-inline">★</span>
-        は<strong>脅威度</strong>（敵の手強さの目安、最大5）。難易度の★とは別物です。
+        {/* v1.0.1 ★再付番と同時に注記を「実測の手強さ」へ（`FIRST_PLAYER_UX_IMPROVEMENT_PROPOSAL_V1.md` §4-4）。
+            再付番前にこの文にすると実測と負相関の★を「実測」と称することになるため、rank の更新と同じ commit で変える */}
+        は<strong>脅威度</strong>（実測の手強さ：負けやすさ・受けるダメージ・倒すまでの長さ。最大5）。難易度の★とは別物です。
         <br />
         迷ったら「神に委ねる」で、神々があなたの相手を選びます。
       </p>

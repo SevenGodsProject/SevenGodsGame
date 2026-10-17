@@ -1,0 +1,312 @@
+{
+  "base": "https://seven-gods-game.vercel.app",
+  "at": "2026-10-10T00:32:00.134Z",
+  "viewports": {
+    "pc1366": {
+      "A": {
+        "battle": {
+          "scrollY": 0,
+          "overflowX": 0,
+          "overflowY": 0,
+          "enemy": {
+            "top": 204,
+            "bottom": 488,
+            "left": 377,
+            "right": 717,
+            "w": 340,
+            "h": 285,
+            "inView": true
+          },
+          "intent": {
+            "top": 167,
+            "bottom": 192,
+            "left": 93,
+            "right": 136,
+            "w": 43,
+            "h": 25,
+            "inView": true
+          },
+          "intentText": "50",
+          "hp": {
+            "top": 145,
+            "bottom": 163,
+            "left": 93,
+            "right": 708,
+            "w": 615,
+            "h": 18,
+            "inView": true
+          },
+          "hpGhost": true,
+          "handCards": 5,
+          "handEnabled": 5,
+          "hand": {
+            "top": 598,
+            "bottom": 762,
+            "left": 63,
+            "right": 1181,
+            "w": 1118,
+            "h": 164,
+            "inView": true
+          },
+          "endRound": {
+            "top": 632,
+            "bottom": 694,
+            "left": 1191,
+            "right": 1303,
+            "w": 112,
+            "h": 62,
+            "inView": true
+          },
+          "endRoundEnabled": true,
+          "dailyTag": false,
+          "round": "1"
+        },
+        "saveBeforeReload": {
+          "round": "2",
+          "hand": 6,
+          "savedVersion": 9,
+          "savedRound": 2
+        },
+        "resumeButton": "続きから大耀 vs 業斧の鬼将・ラウンド2",
+        "resumed": {
+          "scrollY": 0,
+          "overflowX": 0,
+          "overflowY": 0,
+          "enemy": {
+            "top": 204,
+            "bottom": 488,
+            "left": 377,
+            "right": 717,
+            "w": 340,
+            "h": 285,
+            "inView": true
+          },
+          "intent": {
+            "top": 167,
+            "bottom": 192,
+            "left": 93,
+            "right": 136,
+            "w": 43,
+            "h": 25,
+            "inView": true
+          },
+          "intentText": "90",
+          "hp": {
+            "top": 145,
+            "bottom": 163,
+            "left": 93,
+            "right": 708,
+            "w": 615,
+            "h": 18,
+            "inView": true
+          },
+          "hpGhost": true,
+          "handCards": 6,
+          "handEnabled": 6,
+          "hand": {
+            "top": 598,
+            "bottom": 762,
+            "left": 63,
+            "right": 1181,
+            "w": 1118,
+            "h": 164,
+            "inView": true
+          },
+          "endRound": {
+            "top": 632,
+            "bottom": 694,
+            "left": 1191,
+            "right": 1303,
+            "w": 112,
+            "h": 62,
+            "inView": true
+          },
+          "endRoundEnabled": true,
+          "dailyTag": false,
+          "round": "2"
+        },
+        "play": {
+          "godStrike": 1,
+          "callout": [],
+          "finalBlow": true,
+          "hpGhost": true,
+          "rounds": 4,
+          "cardsPlayed": 15,
+          "timedOut": false
+        },
+        "result": {
+          "gameOver": true,
+          "reward": false,
+          "status": "勝利",
+          "score": "スコア 7,770",
+          "recap": [
+            "ラウンド6で撃破しました"
+          ],
+          "defeatCause": "",
+          "daily": "",
+          "buttons": [
+            "報酬カードを選ぶ ›"
+          ],
+          "hasRankingUi": false,
+          "rankingText": false
+        },
+        "reward": {
+          "overlay": true,
+          "cards": [
+            "剛撃",
+            "後輩想い",
+            "乱舞"
+          ]
+        },
+        "afterReward": {
+          "gameOver": false,
+          "reward": true,
+          "status": "",
+          "score": "",
+          "recap": [],
+          "defeatCause": "",
+          "daily": "",
+          "buttons": [
+            "即戦力剛撃敵に120ダメージを与える。＋ 共鳴が4以上なら、敵に40ダメージ。いま 1 枚編成中上限 2 → 32 枚目を足してから 3 枚目",
+            "神の個性専用後輩想いブロックを60得て、HPを40回復する。いま 2 枚編成中上限 2 → 3",
+            "次の構築乱舞敵に100ダメージを与え、共鳴ゲージを1上昇させる。＋ 共鳴が4以上なら、共鳴ゲージ+1。いま 0 枚上限 2 → 3まず 1〜2 枚入れてみよう"
+          ],
+          "hasRankingUi": false,
+          "rankingText": false
+        },
+        "homeAfter": {
+          "home": true,
+          "resume": null
+        }
+      },
+      "B": {
+        "screen": {
+          "startLabel": "挑戦開始（残り3回）",
+          "text": " SEVEN GODS今日の神域挑戦毎日ひとつの敵が「神域強化」されて現れます。今日は全員が同じ敵・同じ運（Seed）に挑み、 神・OTOMO・デッキ・プレイングの工夫でその日の最高スコアを競います。TODAY'S BOSS ・ 2026-10-10藍花の怨霊★★★★★神域強化藍花の廃社【遅咲き型】R4に怨嗟の花。峰に備え温存せよ。SEED IDPZK9QI全員この値です（共通条件）今日の自己ベスト—まだ挑戦していません残り挑戦回数3 / 33回のうち最高スコアが「今日のベスト」全員共通の条件：敵・Seed・神域強化（敵HP ×1.25・攻撃 ×1.15、難易度は「ふつう」基準）。編成ルールも全員同じで、同じカードは2枚まで（通常モードの報酬ボーナスは使いません）。自由に選べるもの：神・OTOMOの絆・デッキ。敵選択と難易度選択はありません。スコアの計算は通常と同じです。日付は日本時間の0",
+          "rankingUi": false,
+          "rankingWord": false
+        },
+        "battle": {
+          "scrollY": 0,
+          "overflowX": 0,
+          "overflowY": 0,
+          "enemy": {
+            "top": 204,
+            "bottom": 488,
+            "left": 377,
+            "right": 717,
+            "w": 340,
+            "h": 285,
+            "inView": true
+          },
+          "intent": {
+            "top": 167,
+            "bottom": 192,
+            "left": 93,
+            "right": 136,
+            "w": 43,
+            "h": 25,
+            "inView": true
+          },
+          "intentText": "30",
+          "hp": {
+            "top": 145,
+            "bottom": 163,
+            "left": 93,
+            "right": 708,
+            "w": 615,
+            "h": 18,
+            "inView": true
+          },
+          "hpGhost": true,
+          "handCards": 5,
+          "handEnabled": 5,
+          "hand": {
+            "top": 598,
+            "bottom": 762,
+            "left": 63,
+            "right": 1181,
+            "w": 1118,
+            "h": 164,
+            "inView": true
+          },
+          "endRound": {
+            "top": 632,
+            "bottom": 694,
+            "left": 1191,
+            "right": 1303,
+            "w": 112,
+            "h": 62,
+            "inView": true
+          },
+          "endRoundEnabled": true,
+          "dailyTag": true,
+          "round": "1"
+        },
+        "storage": {
+          "daily": [
+            {
+              "dateKey": "2026-10-10",
+              "enemyId": "enemy_03",
+              "seed": "daily-2026-10-10-enemy_03",
+              "attemptsUsed": 1
+            }
+          ],
+          "save": {
+            "mode": "daily",
+            "dailyKey": "2026-10-10",
+            "seed": "daily-2026-10-10-enemy_03"
+          }
+        },
+        "play": {
+          "godStrike": 1,
+          "callout": [],
+          "finalBlow": false,
+          "hpGhost": true,
+          "rounds": 5,
+          "cardsPlayed": 14,
+          "timedOut": false
+        },
+        "result": {
+          "gameOver": true,
+          "reward": false,
+          "status": "敗北",
+          "score": "スコア 2,380",
+          "recap": [
+            "予告された攻撃5回のうち、1回を無傷で受け切りました（盾で防いだ量 320）",
+            "R5：210の大技に対し、盾は90でした。加護や防御札で予告ぶんの盾を用意すると受け切れます"
+          ],
+          "defeatCause": "敗因：R5：藍花の怨霊の「攻撃」で 120 ダメージ",
+          "daily": "今日のベスト 2,380（1回目）残り 2 回",
+          "buttons": [
+            "もう一度挑戦（残り2回）",
+            "デッキを調整",
+            "神・デッキを選び直す",
+            "ホームへ",
+            "挑戦状をコピー"
+          ],
+          "hasRankingUi": false,
+          "rankingText": false
+        },
+        "after": {
+          "startLabel": "挑戦開始（残り2回）"
+        },
+        "records": {
+          "dailyEmpty": false,
+          "text": "神域挑戦（直近7日）日付今日の敵今日のベスト勝敗使用神挑戦2026-10-10藍花の怨霊2,380敗北大耀1 / 3"
+        }
+      },
+      "C": null,
+      "network": {
+        "total": 293,
+        "external": [],
+        "api": [],
+        "failed": [],
+        "errors": [],
+        "hosts": [
+          "seven-gods-game.vercel.app"
+        ]
+      }
+    }
+  }
+}
