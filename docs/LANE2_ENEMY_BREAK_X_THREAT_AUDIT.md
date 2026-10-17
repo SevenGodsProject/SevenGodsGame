@@ -172,6 +172,16 @@ R3 の間、軍略の予告 `⚡ ⚠ 傷が浅ければ次は断岩` は `.enemy
 
 成功条件：Q1 YES・Q2 YES・Q3 NO・Q4 YES・Q5 NO・Q6 NO。NO／YES が逆の設問があれば自動調整せず停止し、§3 の調整案（定数 1 か所）または `COMBAT_FEEL_PREMIUM_V2_PILOT.md` §8 R1／R3／R4 から 1 つを提示する。
 
+### 4-4. CEO 実プレイ QA 結果（2026-10-17・PM 記録）
+
+| 項目 | 内容 |
+|---|---|
+| 実施 | 2026-10-17 午前。PM が lane2b を `tmp/lane2-x-lane1-combo`（60234a7＝Enemy Break v1 ＋ 軍略 Pilot v1 699c59c）に checkout し port 5182 を 1 本起動（空き RAM 1.2GB・dev サーバー他 0 本）。URL `http://127.0.0.1:5182/?pilot=threat` |
+| 回答 | **Q1 YES／Q2 YES／Q3 NO／Q4 YES／Q5 NO／Q6 NO ＝ 6/6 PASS**（CEO「すべて OK」） |
+| 判定 | **条件付き GO**：Enemy Break v1 と軍略 Pilot の組み合わせを Pilot として継続採用。Production 公開・既存 7 体への軍略展開は未承認（軍略 Pilot v1 と同じ条件）。追加の演出改修は CEO 指示により現時点では不要 |
+| 判断履歴（訂正） | CEO から、最初の回答は設問の意図を誤解していたため無効とし「すべて OK」に訂正する旨の指示があった。PM が記録した QA 結果は本表の 1 件のみで、無効となった最初の回答・NO-GO 判定はどの文書にも記録していない（訂正前の記録は存在しない）。公式記録は本表とする |
+| 次工程（CEO 指示） | ① 軍略 Pilot v1.1（lane1 916daa4／f5bcb4d／06e3bba）と Enemy Break v1 の統合 Gate を準備 ② hard の演出条件のずれ（傷の光 ≤0.5 と hard しきい値 0.6）を確認 ③ v1.0.1 の独立リリース方針は維持（本組み合わせは v1.0.1 に含めない） ④ push・merge・deploy は CEO 別途承認まで禁止 |
+
 ## 5. 自動 Gate（本監査で実行したもの・RAM 制約下）
 
 | 項目 | 結果 |
