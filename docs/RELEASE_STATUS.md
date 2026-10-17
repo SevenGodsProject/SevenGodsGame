@@ -4,7 +4,23 @@ Production の「確定状態」を一目で確認するための要約です。
 
 ## A. 現在の Production 状態（2026-10-07・決定267 PRODUCTION LIVE / CLOSED）
 
-### A-0. v1.0.0 正式公開（2026-10-10・CEO 決定「維持」2026-10-10・凍結 2026-10-11）
+### A-0. v1.0.1 Fast Gate 公開（2026-10-17・CEO 正式承認「v1.0.1 Fast Gate 単独 Production Release」・決定281 PRODUCTION LIVE）
+
+| 項目 | 状態 |
+|---|---|
+| **Release** | **SEVEN GODS v1.0.1**（決定281）：★再付番（表示専用）＋語彙補完 案 B＋敵選択注記。engine・rules・カード・敵の行動表は v1.0.0 から不変（gameVersion `1.d794038a00b5b53c` 不変・rank は指紋から除外）。Lane 1 軍略 Pilot／Lane 2 Enemy Break／統合 RC は**含まない**（別 Release・CEO 未承認） |
+| **Production HEAD** | master = origin/master **`1ce9876`**（PR #1 merge commit）／RC `feat/v1_0_1-fast-gate-rc` `ccbb664`／runtime を最後に変更した commit＝`c11afa0`（version bump。機能 runtime は `ffea356`） |
+| **Vercel deployment** | **`7133236766`**（sha `1ce9876`）／Production bundle `index-B6IYVkjL.js`（467.58 kB）・`index-Cpk4tFE6.css`／Home 表示 `v1.0.1 (1ce9876)`。Production URL https://seven-gods-game.vercel.app/ |
+| **Rollback 先** | deployment **`6973326943`**（v1.0.0・`d2135d2`・`index-Da5QBYVM.js`）。Promote は CEO のみ・**演習は未実施**（G15・RL-02） |
+| **公開の経緯** | Ruleset `protect-master` 下の正規経路：RC push（CEO）→ PR #1 → CI run 38990577985 GREEN → **CEO merge**（`gh pr merge 1 --merge`）→ Vercel 自動 deploy。AI の `git push`／`gh pr merge` は deny で拒否（決定280）。同梱 docs 5 commit（`dfb8f71`〜`7ba447f`・INCIDENT 記録等）はこの PR で公開 |
+| **CI** | PR #1 run 38990577985 GREEN（必須 check `tsc / oxlint / vitest / build`・1m1s） |
+| **Release Gate** | `docs/V1_0_1_RC_GATE_CHECKLIST.md` §4 G0〜G10 RC PASS（G6 18/18・G8 44/44）・G11 `c11afa0`・G4/G5 再実行 1,450 PASS／build OK・G12 CI GREEN（evidence `docs/evidence/v1_0_1-rc/`） |
+| **Production Smoke** | `docs/V1_0_1_PRODUCTION_SMOKE.md`：S1〜S6 **全 PASS**（S1 11/11×2・S1' 44/44・S2〜S4 PC1508/SP844 勝利＋Resume・S5 4/4・S6 allPass・外部通信 0・console error 0）＋bundle 一致＋混入 0＋S7 旧セーブ互換 **PASS 44/44**（headless shell＋pump・v1.0.0 build 7ba447f の実セーブ 2 種 → Production・PC／SP375 × 通常／神域：Home「続きから」文言一致・残り回数「挑戦する（残り2回）」一致・戦績一致・復元盤面 ラウンド 2／手札 6 一致・battleSave 差分 0・他キー改変 0・外部通信 0・JS error 0・s7-old-save-migration.json＋画像 17）。**未実施（PASS 扱いにしない）**：G14 CEO Human QA 10 分・G15 Rollback 演習・CEO 実機目視 |
+| **Known** | 変更なし（K01〜K39 据え置き・新規 0）。K26 の注記：v1.0.1 では gameVersion が変わらないため託宣表の切替は起きない |
+| **tag** | `v1.0.1` **未作成**・`v1.0.0` も未作成（CEO のみ・任意） |
+| **次 Release 候補** | 軍略 Pilot v1.1 × Enemy Break v1 統合 RC（`feat/combat-pilots-integ-rc`・Gate 11/11 PASS・CEO 公開承認待ち・v1.0.1 の master を merge で追従してから）／v1.0.2 候補＝語彙整合ホットフィックス（初心者監査・保留） |
+
+### A-0a. v1.0.0 正式公開（2026-10-10・CEO 決定「維持」2026-10-10・凍結 2026-10-11・履歴）
 
 | 項目 | 状態 |
 |---|---|
@@ -83,7 +99,8 @@ CLOSED（記録のみ）：K02 iOS 割り込み後 BGM 再開（CEO 実機 PASS 
 
 ### A-5. 運用メモ（現行）
 
-- Release 手順：clean RC worktree（`release/<decision>-rc`）で Gate 全項を 1 browser 直列 → master fast-forward → `git push origin master` → Vercel 自動 deploy → Production Smoke → DECISIONS.md に LIVE 行。rollback 先 deployment id を必ず同じ行に記録
+- Release 手順（Ruleset 下・2026-10-17 v1.0.1 で実地確認）：clean RC worktree（master 起点）で Gate 全項を直列 → RC branch を origin へ push（**CEO 実行**・作業 branch のみ・`--no-verify` 不使用）→ PR（本文に Gate 結果・Rollback 先）→ CI GREEN（必須 check）→ **CEO merge**（merge commit のみ）→ Vercel 自動 deploy → Production Smoke（AI）→ Human QA（CEO）→ DECISIONS／RELEASE_STATUS に LIVE 行（docs PR → CEO merge）。直接 push・fast-forward は Ruleset＋pre-push hook＋Claude deny で不可。rollback 先 deployment id を必ず同じ行に記録
+- （旧手順・2026-10-10 まで）clean RC worktree で Gate → master fast-forward → `git push origin master` → Vercel 自動 deploy。INCIDENT（2026-10-10）を受けて廃止
 - 6GB RAM：Gate と cleanup／simulation を同時に走らせない。worktree は ACTIVE のみ保持（2026-10-07 時点 16 本・内訳は `WORKTREE_BRANCH_CLEANUP_AUDIT.md` §7-5）
 - main repo `C:\Users\kimi1\SevenGodsGame` は `feat/d224` で dirty（決定213／224 作業コピー＋CEO 生成 raw 25MB）。**触らない**（救出手順＝同監査 §4-3）
 - 除外ローカルファイル（`.claude/settings.local.json`・`敵画像`）は commit しない（本書末尾「Excluded Local Files」参照）
