@@ -5,7 +5,7 @@ import { previewBonusTrigger } from '../../core/engine/cardBonus'
 import { isGodPassiveArmed } from '../../core/engine/godPassive'
 import { formatScaled } from '../displayScale'
 import { getCardDef } from '../../core/data/cards'
-import { getEnemyDef } from '../../core/data/enemies'
+import { getEnemyDef, isPilotEnemyId } from '../../core/data/enemies'
 import { getGodDef } from '../../core/data/gods'
 import { getOtomoDef } from '../../core/data/otomo'
 import { stakeLabel } from '../../core/data/stakes'
@@ -335,7 +335,7 @@ export function BattleScreen({
 
   // 決定43：報酬カードは勝利1回につき1回だけ提示する。新しいバトル（seedが変わる）
   // のたびにリセットする（再開・「もう一度」でも新しいseedが発行されるため）。
-  const [rewardDone, setRewardDone] = useState(false)
+  const [rewardDoneState, setRewardDone] = useState(false)
   // Phase 6-C（決定166）：認知順序を「勝利 → 振り返り → スコア／神技評価 → 報酬」にする。
   // 結果画面を先に出し、その「報酬カードを選ぶ」から報酬へ進む（報酬の中身・ルールは不変。
   // 勝利1回につき報酬の判断は必ず1回＝報酬が未確定の間は他のボタンを出さない）。
@@ -398,6 +398,10 @@ export function BattleScreen({
   //   将来のstage演出＝カード縁・グロー等で使う想定）
   // 表示専用でロジック・数値には一切関与しない。
   const stage = getEnemyDef(state.enemy.defId).stage
+  // Threat Branch Pilot v1：Pilot 敵との対局は報酬カードを提示しない（報酬・提示履歴も端末に残さない）。
+  // 最初から「報酬済み」扱い＝RewardOverlay も rewardPending も出ない（既存の表示条件・rewardDailyWiring の契約はそのまま）
+  const pilotBattle = isPilotEnemyId(state.enemy.defId)
+  const rewardDone = rewardDoneState || pilotBattle
   const stageVars = {
     ['--stage-accent' as string]: stage.accent,
     ...(stage.bg ? { ['--stage-bg' as string]: `url('${stage.bg}')` } : {}),

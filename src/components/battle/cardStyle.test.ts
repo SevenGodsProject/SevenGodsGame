@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import { getCardDef } from '../../core/data/cards'
 import { CARD_IDS } from '../../core/data/cards/common'
-import { ENEMIES } from '../../core/data/enemies'
+import { CORE_ENEMIES } from '../../core/data/enemies'
 import type { EnemyActionDef } from '../../core/types'
 import {
   formatEnemyIntent,
@@ -153,9 +153,11 @@ describe('決定240 getIntentDangerLevel／getIntentGlyph／formatEnemyIntentTex
   it('台帳（通常難度・修正子なし）：7 敵 × 7 行動＝49、normal 22／strong 8／huge 8／special 6／charge 5（危険 27）', () => {
     const counts: Record<IntentDangerLevel, number> = { none: 0, strong: 0, huge: 0, special: 0, charge: 0 }
     let total = 0
-    for (const def of ENEMIES) {
+    // Threat Branch Pilot v1：台帳は既存 7 体（CORE）。Pilot 敵の行動表には解決前の tactic が含まれ、危険度は解決後の行動で決まる
+    for (const def of CORE_ENEMIES) {
       expect(def.actions.length).toBe(7)
       for (const a of def.actions) {
+        if (a.kind === 'tactic') throw new Error('CORE_ENEMIES に tactic は無い')
         total++
         const level = getIntentDangerLevel(a)
         counts[level]++

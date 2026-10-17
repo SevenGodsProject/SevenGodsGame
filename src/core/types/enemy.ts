@@ -1,5 +1,6 @@
 import type { EnemyId } from './ids.js'
 import type { Buff } from './effect.js'
+import type { Difficulty } from './difficulty.js'
 
 /**
  * 敵の行動。
@@ -24,6 +25,26 @@ export type EnemyActionDef =
   | { kind: 'multiAttack'; hits: number[]; name?: string; special?: boolean }
   /** 必殺技（単発）。charge予告の次ラウンドに撃つ大技。nameを🔥表示に使う */
   | { kind: 'special'; amount: number; name: string }
+
+/**
+ * Threat Branch Pilot v1（軍略・`docs/LANE1_THREAT_BRANCH_PILOT_V1.md`。機構は決定274 忠次「軍略」から移植）：
+ * 行動表にだけ置ける条件分岐。ラウンド開始時の敵 HP 比が `cond.ratio` 以下なら `then`、
+ * そうでなければ `else` へ解決する（`engine/tactic.ts`）。
+ * `EnemyState.intent` には解決後の既存 4 kind だけが入る（save v9 不変・新しい敵 kind ではない）。
+ * 乱数 0・予告 1 手先・正解表示なし・敵ブロックなし（決定216／263 の境界を越えない）。
+ * Pilot v1.1：`cond.ratioByDifficulty`（任意）があれば、その難易度の値を `ratio` より優先する
+ * （`RULES.enemyTactic.hpRatioByDifficulty` をデータ側で埋め込む。engine は RULES を直接読まない）。
+ * 無い難易度は `ratio` にフォールバック。
+ */
+export type EnemyTacticDef = {
+  kind: 'tactic'
+  cond: { type: 'enemyHpRatioAtMost'; ratio: number; ratioByDifficulty?: Readonly<Partial<Record<Difficulty, number>>> }
+  then: EnemyActionDef
+  else: EnemyActionDef
+}
+
+/** 行動表（`EnemyDef.actions`）の 1 要素。確定行動か、軍略の条件分岐 */
+export type EnemyActionScript = EnemyActionDef | EnemyTacticDef
 
 /**
  * STEP3-A：敵タイプ別の軽量CSS演出を出し分けるための表示専用タグ。
@@ -66,7 +87,7 @@ export type EnemyDef = {
    * 計算式ではなく表で持つことで、「ラウンド3だけ少し楽にしたい」といった
    * 微調整が数字1つの書き換えで済みます。
    */
-  actions: EnemyActionDef[]
+  actions: EnemyActionScript[]
   /** 立ち絵（決定32。神・OTOMOと違い1枚のみ） */
   art: string
   /**

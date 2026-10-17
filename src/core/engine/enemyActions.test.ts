@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { GOD_IDS } from '../data/gods'
-import { ENEMIES, ENEMY_IDS, getEnemyDef } from '../data/enemies'
+import { CORE_ENEMIES, ENEMY_IDS, getEnemyDef } from '../data/enemies'
 import { getRecommendedDeck } from '../data/deckBuilder'
 import { RULES } from '../data/rules'
 import type { Difficulty, EnemyActionDef, GameState, GodId } from '../types'
@@ -90,7 +90,7 @@ describe('K-C2/M-G 敵データ（CEO GO仕様）', () => {
     expect(douk.actions.map((a) => enemyActionTotal(a)).reduce((s, t) => s + t, 0)).toBe(65)
     for (const a of getEnemyDef(ENEMY_IDS.trial).actions) expect(a.kind).toBe('attack')
     // 名前つき必殺は 6 行動（機工師 1・魔獣 1・鬼将 1・怨霊 1・龍神 1・道化 1）
-    const specials = ENEMIES.flatMap((e) => e.actions.filter((a) => a.kind === 'special' || (a.kind === 'multiAttack' && a.special)))
+    const specials = CORE_ENEMIES.flatMap((e) => e.actions.filter((a) => a.kind === 'special' || (a.kind === 'multiAttack' && a.special)))
     expect(specials.length).toBe(6)
   })
 })

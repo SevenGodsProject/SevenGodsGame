@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import type { EnemyId, GodId } from '../../core/types'
-import { ENEMIES } from '../../core/data/enemies'
+import { CORE_ENEMIES, PILOT_ENEMIES, isPilotEnemyId } from '../../core/data/enemies'
+import { isPilotEnabled } from '../pilot/pilotFlag'
 import { GODS } from '../../core/data/gods'
 import { isMatchupCleared, loadMatchups } from '../../hooks/matchupStorage'
 import { EARLY_READ_TARGET_ENEMY_ID } from '../battle/nextGoal'
@@ -54,6 +55,9 @@ export function EnemySelectScreen({ onSelect, onBack, godId = null }: EnemySelec
   // Phase 7 P2（決定189）：神×敵の攻略状況はマウント時に 1 回だけ読む（読めない環境では印を出さない）
   const [matchups] = useState(() => (godId ? loadMatchups() : null))
   const godName = godId ? (GODS.find((g) => g.id === godId)?.nameJa ?? '') : ''
+  // Threat Branch Pilot v1：`?pilot=threat` のときだけ Pilot 敵を末尾に並べる。通常は既存 7 体のまま
+  const pilot = isPilotEnabled()
+  const roster = pilot ? [...CORE_ENEMIES, ...PILOT_ENEMIES] : CORE_ENEMIES
   return (
     <div className="setup-screen">
       <h1 className="setup-title">挑む敵を選ぼう</h1>
@@ -63,9 +67,14 @@ export function EnemySelectScreen({ onSelect, onBack, godId = null }: EnemySelec
         <br />
         迷ったら「神に委ねる」で、神々があなたの相手を選びます。
       </p>
+      {pilot && (
+        <p className="setup-subtitle" data-testid="enemy-pilot-notice">
+          Threat Branch Pilot v1：この敵との戦いは戦績・セーブ・報酬に残りません
+        </p>
+      )}
 
       <div className="enemy-select-grid">
-        {ENEMIES.map((enemy) => (
+        {roster.map((enemy) => (
           <button
             key={enemy.id}
             type="button"
@@ -81,7 +90,7 @@ export function EnemySelectScreen({ onSelect, onBack, godId = null }: EnemySelec
             onClick={() => onSelect(enemy.id)}
           >
             {/* Phase 7 P2（決定189）：この神でこの敵を倒したか。✓ と文字で示す（色だけにしない）。表示のみ */}
-            {godId && matchups?.available && (
+            {godId && matchups?.available && !isPilotEnemyId(enemy.id) && (
               isMatchupCleared(matchups.data, godId, enemy.id) ? (
                 <span className="enemy-select-matchup enemy-select-matchup-cleared" data-testid="enemy-matchup" data-cleared="true">
                   ✓ {godName}で撃破済み
@@ -112,6 +121,12 @@ export function EnemySelectScreen({ onSelect, onBack, godId = null }: EnemySelec
               {enemy.id === EARLY_READ_TARGET_ENEMY_ID && (
                 <span className="enemy-select-read-chip" data-testid="enemy-read-chip">
                   予告を読む戦い
+                </span>
+              )}
+              {/* Threat Branch Pilot v1：Pilot 敵の印（表示のみ・既存の chip クラスを再利用。新規 CSS 0）。記録に残らないことを選ぶ前に伝える */}
+              {isPilotEnemyId(enemy.id) && (
+                <span className="enemy-select-read-chip" data-testid="enemy-pilot-chip">
+                  Pilot・記録に残らない
                 </span>
               )}
               <span className="enemy-select-hint">{enemy.typeDescription}</span>

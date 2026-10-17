@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { GODS } from '../../core/data/gods'
-import { ENEMIES } from '../../core/data/enemies'
+import { CORE_ENEMIES } from '../../core/data/enemies'
 import { dailyKeyOf } from '../../core/data/dailyBoss'
 import {
   countMatchupsByEnemy,
@@ -51,7 +51,8 @@ export function MatchupBoard() {
         </p>
       )}
       <div className="matchup-rows">
-        {ENEMIES.map((enemy) => {
+        {/* Threat Branch Pilot v1：49 盤は既存 7 体だけ（Pilot 敵は攻略盤の対象外） */}
+        {CORE_ENEMIES.map((enemy) => {
           const count = countMatchupsByEnemy(data, enemy.id)
           return (
             <section className="matchup-row" key={enemy.id} data-testid="matchup-row" data-enemy={enemy.id} aria-label={`${enemy.name}：${count} / ${GODS.length} 神で撃破`}>

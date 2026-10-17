@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { ENEMIES, ENEMY_IDS, pickEnemyId } from './enemies'
+import { CORE_ENEMIES, ENEMIES, ENEMY_IDS, pickEnemyId } from './enemies'
 
 describe('ENEMIES', () => {
   it('has a unique id per enemy', () => {
@@ -67,12 +67,13 @@ describe('ENEMIES', () => {
   it('gives every enemy its own stage background under /assets/backgrounds/stages/ (決定124)', () => {
     // 7ボス専用Stage Background。BattleScreenが`--stage-bg`として注入し、Enemy Selectも
     // `--enemy-stage-bg`として同じ値を使う（表示専用。ロジック・数値には不関与）。
+    // Threat Branch Pilot v1：舞台の一意性は既存 7 体（CORE）の性質。Pilot 敵（enemy_09）は鬼将の舞台を共有する（新規素材 0）
     const bgs = ENEMIES.map((e) => e.stage.bg)
     for (const bg of bgs) {
       expect(bg).toBeDefined()
       expect(bg).toMatch(/^\/assets\/backgrounds\/stages\/[0-9]{2}-[a-z-]+\.webp$/)
     }
-    expect(new Set(bgs).size).toBe(ENEMIES.length)
+    expect(new Set(CORE_ENEMIES.map((e) => e.stage.bg)).size).toBe(CORE_ENEMIES.length)
   })
 
   it('ships the referenced stage background asset for every enemy', () => {

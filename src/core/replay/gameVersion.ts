@@ -1,6 +1,6 @@
 import { RULES } from '../data/rules.js'
 import { ALL_CARDS } from '../data/cards/index.js'
-import { ENEMIES } from '../data/enemies.js'
+import { CORE_ENEMIES } from '../data/enemies.js'
 import { GODS } from '../data/gods.js'
 import { OTOMOS } from '../data/otomo.js'
 import { DIVINATION_CHOICES } from '../data/divination.js'
@@ -65,12 +65,20 @@ function fnv1a(text: string, offset: number): string {
 
 /** ランキングに影響するデータだけを取り出した、正規化済みの入力 */
 export function rankingImpactSnapshot(): string {
-  const { ranking: _ranking, replay, ...rest } = RULES
+  // Threat Branch Pilot v1（`docs/LANE1_THREAT_BRANCH_PILOT_V1.md`）：`RULES.enemyTactic` も除く。
+  // この値は Pilot 敵（`PILOT_ENEMIES`）の行動表にだけ埋め込まれ、ランキング対象（Daily＝CORE 7 体）の対局には
+  // 一切現れない。CORE 敵が将来 tactic を使えば `cond.ratio` として CORE_ENEMIES の指紋に自動で入るので、取りこぼしは無い
+  const { ranking: _ranking, replay, enemyTactic: _enemyTactic, ...rest } = RULES
   const { pendingRuns: _pendingRuns, ...replayRest } = replay
   return stableStringify({
     rules: { ...rest, replay: replayRest },
     cards: ALL_CARDS,
-    enemies: ENEMIES,
+    // Threat Branch Pilot v1：指紋に入れるのは **既存 7 体（CORE_ENEMIES）だけ**。
+    // Pilot 敵は Daily（ランキング）の pool に入らず、`?pilot=threat` の URL でしか選べない。
+    // ここを `ENEMIES`（CORE＋Pilot）のままにすると、Pilot 敵を 1 体足すだけで既存プレイヤーの
+    // gameVersion（Daily 表・K26 の day-lock）が変わってしまう。master の版 `1.d794038a00b5b53c` を
+    // 据え置くための変更で、golden（`useReactionLanguage.test.ts`・`coreRoster.test.ts`）が不変を確認する
+    enemies: CORE_ENEMIES,
     gods: GODS,
     otomos: OTOMOS,
     // Phase 5-E（決定158）：神託の3択も対局結果を直接変える。Phase 4.6 の列挙から漏れていたため追加
