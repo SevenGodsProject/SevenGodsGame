@@ -1,6 +1,6 @@
 # v1.0.1 Fast Gate — ★再付番（表示専用）＋語彙補完 案 B＋敵選択注記（engine 0・gameVersion 不変）
 
-> PR 本文ドラフト（2026-10-17・Infra／PM 補佐・AI 判断）。`<>` は PM が PR 作成時に実測値で埋める。本文は `gh pr create --base master --head feat/v1_0_1-fast-gate-rc --title "release: v1.0.1 Fast Gate（★再付番＋語彙補完＋敵選択注記・engine 0）" --body-file docs/evidence/v1_0_1-rc/11-pr-body.md` でそのまま使う。
+> 2026-10-17 CEO 正式承認「v1.0.1 Fast Gate 単独 Production Release」に基づき PM が作成。RC HEAD `c11afa0`（`f0c5001` ＋ docs `df27177` ＋ version bump）。
 
 ## 変更点（runtime 3 束・engine 0）
 
@@ -31,8 +31,8 @@
 | G8 Save Migration（master `7ba447f` 実セーブ → RC・PC／SP375） | **44/44 PASS** | `07-save-migration/save-migration.json`＋画像 17 |
 | G9 acceptance（PC 1508×660／SP 375×667） | **44/44 PASS**・JS error 0・外部通信 0 | `08-acceptance/acceptance.json`＋画像 10 |
 | G10 同 seed 一致（engine 差分 0 の機械証明） | PASS | `09-seed-parity.txt` |
-| G11 version 1.0.1 | <統合 commit sha・vitest `publicFace.test.ts` PASS> | `10-version-bump.patch` |
-| G12 CI（必須 check `tsc / oxlint / vitest / build`） | <run URL> | 本 PR の Checks |
+| G11 version 1.0.1 | `c11afa0`・`publicFace.test.ts` 5/5 PASS・vitest full 再実行 **1,450 PASS・9 skip**（`12-release/g4-vitest.txt`）・build 再実行 `index-DuX83cAZ.js` 467.58 kB（gzip 145.48）／`index-Cpk4tFE6.css`（`12-release/g5-build.txt`） | `10-version-bump.patch` |
+| G12 CI（必須 check `tsc / oxlint / vitest / build`） | 本 PR の Checks（必須 check `tsc / oxlint / vitest / build`） | 本 PR の Checks |
 
 ## Known
 
@@ -43,7 +43,7 @@
 
 1. Vercel → Deployments → **`6973326943`**（v1.0.0・`d2135d2`・`index-Da5QBYVM.js`）→ Promote to Production（CEO）
 2. S1：`home-version-smoke.mjs` で `v1.0.0 (d2135d2)`・console 0 を確認（AI）
-3. `<id-101>` を Promote で v1.0.1 に戻す → S1 で `v1.0.1 (<merge sha>)` を確認
+3. `<merge 後の deployment id>` を Promote で v1.0.1 に戻す → S1 で `v1.0.1 (<merge 後の sha>)` を確認
 4. `docs/evidence/release-safety/rollback-drill-<date>.md` に記録 → DoD #11 DONE
 - セーブ互換：saveVersion 9 共通・gameVersion 不変＝v1.0.1 ⇄ v1.0.0 でセーブ・託宣表・Daily はそのまま（★は表示のみ戻る）
 
