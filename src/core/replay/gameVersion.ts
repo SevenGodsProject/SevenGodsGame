@@ -1,6 +1,7 @@
 import { RULES } from '../data/rules.js'
 import { ALL_CARDS } from '../data/cards/index.js'
 import { CORE_ENEMIES } from '../data/enemies.js'
+import type { EnemyDef } from '../types/index.js'
 import { GODS } from '../data/gods.js'
 import { OTOMOS } from '../data/otomo.js'
 import { DIVINATION_CHOICES } from '../data/divination.js'
@@ -63,6 +64,39 @@ function fnv1a(text: string, offset: number): string {
   return hash.toString(16).padStart(8, '0')
 }
 
+/**
+ * v1.0.1 ★再付番（`docs/V1_0_1_RC_GATE_CHECKLIST.md`・AI 判断）：`EnemyDef.rank`（脅威度★）は敵選択・デッキ構築の
+ * 対戦相手チップ・降臨の間の★表示にだけ読まれ、reducer・敵の行動表・スコア計算のどこにも現れない
+ * （`src/core/engine` に `rank` の参照は無い）。対局結果に影響しないデータなので、指紋の対象から外す。
+ *
+ * ただし `rank` を単に落とすと正規化文字列そのものが変わり、Production v1.0.0 の版 `1.d794038a00b5b53c` が
+ * 一度だけ動く（Daily の day-lock・K26「託宣回数は次ラウンドから新表」が日中に起きる）。それを避けるため、
+ * 指紋入力の `rank` は **v1.0.0 公開時点の値に固定**する。実データの `rank` を何に変えても指紋は変わらない＝
+ * 「rank を指紋から除外した」のと等価で、かつ版は不変（`gameVersion.test.ts` が両方を固定する）。
+ * 表に無い id（将来の敵）は 0。敵の追加は HP・行動表の追加そのもので版が変わるので取りこぼしは無い。
+ * この表は指紋の互換性のためだけに存在し、ゲームのどこからも読まれない。実際の★は `data/enemies.ts` にある。
+ */
+const FINGERPRINT_RANK_V1_0_0: Readonly<Record<string, number>> = {
+  enemy_01: 1,
+  enemy_02: 2,
+  enemy_03: 3,
+  enemy_04: 4,
+  enemy_05: 2,
+  enemy_06: 3,
+  enemy_07: 4,
+}
+
+/**
+ * 指紋に乗せる敵データ：**CORE 7 体（`CORE_ENEMIES`）**の `rank` だけを v1.0.0 時点の定数へ置き換えたもの。
+ * Threat Branch Pilot v1（Lane 1）の Pilot 敵（`PILOT_ENEMIES`）は Daily の pool に入らず `?pilot=threat` でしか
+ * 選べないため指紋に入れない（1 体足すだけで版が動くのを防ぐ）。v1.0.1 の ★再付番は `rank` を v1.0.0 の値に固定して
+ * 吸収する。両方の意図は同じ「版 `1.d794038a00b5b53c` を据え置く」で、golden（`gameVersion.test.ts`・
+ * `useReactionLanguage.test.ts`・`coreRoster.test.ts`）が不変を確認する。
+ */
+function enemiesForFingerprint(): EnemyDef[] {
+  return CORE_ENEMIES.map((enemy) => ({ ...enemy, rank: FINGERPRINT_RANK_V1_0_0[enemy.id] ?? 0 }))
+}
+
 /** ランキングに影響するデータだけを取り出した、正規化済みの入力 */
 export function rankingImpactSnapshot(): string {
   // Threat Branch Pilot v1（`docs/LANE1_THREAT_BRANCH_PILOT_V1.md`）：`RULES.enemyTactic` も除く。
@@ -73,12 +107,8 @@ export function rankingImpactSnapshot(): string {
   return stableStringify({
     rules: { ...rest, replay: replayRest },
     cards: ALL_CARDS,
-    // Threat Branch Pilot v1：指紋に入れるのは **既存 7 体（CORE_ENEMIES）だけ**。
-    // Pilot 敵は Daily（ランキング）の pool に入らず、`?pilot=threat` の URL でしか選べない。
-    // ここを `ENEMIES`（CORE＋Pilot）のままにすると、Pilot 敵を 1 体足すだけで既存プレイヤーの
-    // gameVersion（Daily 表・K26 の day-lock）が変わってしまう。master の版 `1.d794038a00b5b53c` を
-    // 据え置くための変更で、golden（`useReactionLanguage.test.ts`・`coreRoster.test.ts`）が不変を確認する
-    enemies: CORE_ENEMIES,
+    // v1.0.1 ★再付番（rank を v1.0.0 値に固定）＋ Threat Branch Pilot v1（CORE 7 体のみ）。上の enemiesForFingerprint() を参照
+    enemies: enemiesForFingerprint(),
     gods: GODS,
     otomos: OTOMOS,
     // Phase 5-E（決定158）：神託の3択も対局結果を直接変える。Phase 4.6 の列挙から漏れていたため追加

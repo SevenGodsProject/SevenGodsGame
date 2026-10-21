@@ -1,0 +1,373 @@
+{
+  "meta": {
+    "generatedAt": "2026-10-16T20:41:32.025Z",
+    "source": "C:/Users/kimi1/SevenGodsGame-enemy-audit/docs/evidence/enemy-star-audit/matrix.json",
+    "sourceEngine": "v1.0.0 (d2135d2 runtime)",
+    "sourceGeneratedAt": "2026-10-10T22:05:45.971Z",
+    "engineRuns": 14112,
+    "seeds": 16,
+    "lines": [
+      "h-balanced",
+      "h-aggressive",
+      "h-defensive",
+      "s-balanced",
+      "s-rush",
+      "s-score"
+    ],
+    "indexFormula": "0.5*(1-win)+0.3*min(1,hpLost/maxHp)+0.2*((killRound-1)/6) ×100",
+    "rule": "案 A：normal 全体指数（6 打ち筋平均）降順・同点は hard 指数・4/4/3/3/2/2/1（★5 は Boss 予約）",
+    "playerMaxHp": {
+      "easy": 35,
+      "normal": 30,
+      "hard": 27
+    }
+  },
+  "orderNormalDesc": [
+    "enemy_06",
+    "enemy_03",
+    "enemy_05",
+    "enemy_02",
+    "enemy_01",
+    "enemy_04",
+    "enemy_07"
+  ],
+  "rankById": {
+    "enemy_01": 2,
+    "enemy_02": 3,
+    "enemy_03": 4,
+    "enemy_04": 2,
+    "enemy_05": 3,
+    "enemy_06": 4,
+    "enemy_07": 1
+  },
+  "matchesPlanA": true,
+  "tiesInNormalIndex": [],
+  "rows": [
+    {
+      "id": "enemy_06",
+      "name": "蒼海の龍神",
+      "orderNormal": 1,
+      "currentRank": 3,
+      "newRank": 4,
+      "planA": 4,
+      "matchesPlanA": true,
+      "normalIndex": 37.7,
+      "hardIndex": 56.7,
+      "easyIndex": 23.1,
+      "all6Lines": {
+        "normal": {
+          "winPct": 91.4,
+          "lossPct": 8.6,
+          "avgHpAll": 19.7,
+          "avgKillRound": 4.98
+        },
+        "hard": {
+          "winPct": 74.7,
+          "lossPct": 24.7,
+          "avgHpAll": 12.8,
+          "avgKillRound": 5.39
+        }
+      },
+      "hBalanced": {
+        "normal": {
+          "winPct": 96.4,
+          "lossPct": 3.6,
+          "avgHpAll": 18.5,
+          "remainRatio": 0.617
+        },
+        "hard": {
+          "winPct": 55.4,
+          "lossPct": 43.8,
+          "avgHpAll": 8.7,
+          "remainRatio": 0.322
+        }
+      }
+    },
+    {
+      "id": "enemy_03",
+      "name": "藍花の怨霊",
+      "orderNormal": 2,
+      "currentRank": 3,
+      "newRank": 4,
+      "planA": 4,
+      "matchesPlanA": true,
+      "normalIndex": 36.5,
+      "hardIndex": 57.3,
+      "easyIndex": 22.1,
+      "all6Lines": {
+        "normal": {
+          "winPct": 90.6,
+          "lossPct": 9.4,
+          "avgHpAll": 19.4,
+          "avgKillRound": 4.68
+        },
+        "hard": {
+          "winPct": 69.2,
+          "lossPct": 30.8,
+          "avgHpAll": 11.9,
+          "avgKillRound": 5.02
+        }
+      },
+      "hBalanced": {
+        "normal": {
+          "winPct": 93.8,
+          "lossPct": 6.3,
+          "avgHpAll": 16.8,
+          "remainRatio": 0.56
+        },
+        "hard": {
+          "winPct": 47.3,
+          "lossPct": 52.7,
+          "avgHpAll": 7.1,
+          "remainRatio": 0.263
+        }
+      }
+    },
+    {
+      "id": "enemy_05",
+      "name": "双牙の魔獣",
+      "orderNormal": 3,
+      "currentRank": 2,
+      "newRank": 3,
+      "planA": 3,
+      "matchesPlanA": true,
+      "normalIndex": 34,
+      "hardIndex": 50.8,
+      "easyIndex": 22.7,
+      "all6Lines": {
+        "normal": {
+          "winPct": 95.5,
+          "lossPct": 4.5,
+          "avgHpAll": 19.7,
+          "avgKillRound": 4.49
+        },
+        "hard": {
+          "winPct": 79.3,
+          "lossPct": 20.7,
+          "avgHpAll": 13.4,
+          "avgKillRound": 4.86
+        }
+      },
+      "hBalanced": {
+        "normal": {
+          "winPct": 100,
+          "lossPct": 0,
+          "avgHpAll": 18.2,
+          "remainRatio": 0.607
+        },
+        "hard": {
+          "winPct": 69.6,
+          "lossPct": 30.4,
+          "avgHpAll": 11.2,
+          "remainRatio": 0.415
+        }
+      }
+    },
+    {
+      "id": "enemy_02",
+      "name": "業斧の鬼将",
+      "orderNormal": 4,
+      "currentRank": 2,
+      "newRank": 3,
+      "planA": 3,
+      "matchesPlanA": true,
+      "normalIndex": 33.9,
+      "hardIndex": 53.5,
+      "easyIndex": 21.1,
+      "all6Lines": {
+        "normal": {
+          "winPct": 93.5,
+          "lossPct": 6.5,
+          "avgHpAll": 20.2,
+          "avgKillRound": 4.7
+        },
+        "hard": {
+          "winPct": 74.3,
+          "lossPct": 25.3,
+          "avgHpAll": 13,
+          "avgKillRound": 5.09
+        }
+      },
+      "hBalanced": {
+        "normal": {
+          "winPct": 97.3,
+          "lossPct": 2.7,
+          "avgHpAll": 18.2,
+          "remainRatio": 0.607
+        },
+        "hard": {
+          "winPct": 64.3,
+          "lossPct": 34.8,
+          "avgHpAll": 9.9,
+          "remainRatio": 0.367
+        }
+      }
+    },
+    {
+      "id": "enemy_01",
+      "name": "試練の影",
+      "orderNormal": 5,
+      "currentRank": 1,
+      "newRank": 2,
+      "planA": 2,
+      "matchesPlanA": true,
+      "normalIndex": 33.8,
+      "hardIndex": 48.5,
+      "easyIndex": 22.9,
+      "all6Lines": {
+        "normal": {
+          "winPct": 95.2,
+          "lossPct": 4.8,
+          "avgHpAll": 21.6,
+          "avgKillRound": 5.02
+        },
+        "hard": {
+          "winPct": 85.1,
+          "lossPct": 14.1,
+          "avgHpAll": 15.9,
+          "avgKillRound": 5.47
+        }
+      },
+      "hBalanced": {
+        "normal": {
+          "winPct": 98.2,
+          "lossPct": 1.8,
+          "avgHpAll": 20.7,
+          "remainRatio": 0.69
+        },
+        "hard": {
+          "winPct": 85.7,
+          "lossPct": 14.3,
+          "avgHpAll": 14.9,
+          "remainRatio": 0.552
+        }
+      }
+    },
+    {
+      "id": "enemy_04",
+      "name": "銀甲の機工師",
+      "orderNormal": 6,
+      "currentRank": 4,
+      "newRank": 2,
+      "planA": 2,
+      "matchesPlanA": true,
+      "normalIndex": 31.4,
+      "hardIndex": 48.5,
+      "easyIndex": 22,
+      "all6Lines": {
+        "normal": {
+          "winPct": 98.4,
+          "lossPct": 1.6,
+          "avgHpAll": 21.1,
+          "avgKillRound": 4.97
+        },
+        "hard": {
+          "winPct": 82.7,
+          "lossPct": 16.4,
+          "avgHpAll": 15.2,
+          "avgKillRound": 5.41
+        }
+      },
+      "hBalanced": {
+        "normal": {
+          "winPct": 99.1,
+          "lossPct": 0.9,
+          "avgHpAll": 20.5,
+          "remainRatio": 0.683
+        },
+        "hard": {
+          "winPct": 83,
+          "lossPct": 16.1,
+          "avgHpAll": 15.5,
+          "remainRatio": 0.574
+        }
+      }
+    },
+    {
+      "id": "enemy_07",
+      "name": "乱舞の道化",
+      "orderNormal": 7,
+      "currentRank": 4,
+      "newRank": 1,
+      "planA": 1,
+      "matchesPlanA": true,
+      "normalIndex": 28.6,
+      "hardIndex": 40.6,
+      "easyIndex": 19.3,
+      "all6Lines": {
+        "normal": {
+          "winPct": 97.8,
+          "lossPct": 2.2,
+          "avgHpAll": 21.3,
+          "avgKillRound": 4.66
+        },
+        "hard": {
+          "winPct": 87.6,
+          "lossPct": 12.4,
+          "avgHpAll": 17.2,
+          "avgKillRound": 5.19
+        }
+      },
+      "hBalanced": {
+        "normal": {
+          "winPct": 100,
+          "lossPct": 0,
+          "avgHpAll": 20.6,
+          "remainRatio": 0.687
+        },
+        "hard": {
+          "winPct": 99.1,
+          "lossPct": 0.9,
+          "avgHpAll": 19.4,
+          "remainRatio": 0.719
+        }
+      }
+    }
+  ],
+  "eval": {
+    "current": {
+      "spearmanVsIndex": {
+        "easy": -0.48,
+        "normal": -0.31,
+        "hard": -0.21
+      },
+      "spearmanVsHBalancedLoss": {
+        "normal": -0.15,
+        "hard": -0.11
+      },
+      "pairAgreement": {
+        "normal": "8/18",
+        "hard": "8/18"
+      },
+      "distribution": [
+        1,
+        2,
+        2,
+        2,
+        0
+      ]
+    },
+    "new": {
+      "spearmanVsIndex": {
+        "easy": 0.53,
+        "normal": 0.97,
+        "hard": 0.98
+      },
+      "spearmanVsHBalancedLoss": {
+        "normal": 0.77,
+        "hard": 0.97
+      },
+      "pairAgreement": {
+        "normal": "18/18",
+        "hard": "18/18"
+      },
+      "distribution": [
+        1,
+        2,
+        2,
+        2,
+        0
+      ]
+    }
+  }
+}

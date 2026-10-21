@@ -46,15 +46,39 @@ describe('ENEMIES', () => {
     }
   })
 
-  it('assigns the CEO-approved threat ranks (影1/鬼将2/魔獣2/怨霊3/龍神3/機工師4/道化4) (LANE-D)', () => {
-    const rankById = new Map(ENEMIES.map((e) => [e.id, e.rank]))
-    expect(rankById.get(ENEMY_IDS.trial)).toBe(1)
-    expect(rankById.get(ENEMY_IDS.oni)).toBe(2)
-    expect(rankById.get(ENEMY_IDS.juuma)).toBe(2)
-    expect(rankById.get(ENEMY_IDS.onryo)).toBe(3)
-    expect(rankById.get(ENEMY_IDS.ryujin)).toBe(3)
-    expect(rankById.get(ENEMY_IDS.karakuri)).toBe(4)
-    expect(rankById.get(ENEMY_IDS.doukeshi)).toBe(4)
+  // v1.0.1 ★再付番（AI 判断・実測）：旧 golden「影1/鬼将2/魔獣2/怨霊3/龍神3/機工師4/道化4」（LANE-D 叩き台）は
+  // 実測難易度と負相関（ρ −0.31）だったため、`docs/evidence/v1_0_1-rc/star-reeval.json`（enemy-audit matrix 14,112 局の再集計）
+  // の規則（normal 全体指数の降順・同点は hard 指数・4/4/3/3/2/2/1）で付け直した。表示専用・HP・actions は無変更
+  it('assigns the measured threat ranks (龍神4/怨霊4/魔獣3/鬼将3/影2/機工師2/道化1) (v1.0.1)', () => {
+    // v1.0.2 統合：★再付番の golden は CORE 7 体の性質。Pilot 敵（enemy_09）は本体 enemy_02 の★を継承するだけ（coreRoster.test.ts）
+    const rankById = new Map(CORE_ENEMIES.map((e) => [e.id, e.rank]))
+    expect(rankById.get(ENEMY_IDS.ryujin)).toBe(4)
+    expect(rankById.get(ENEMY_IDS.onryo)).toBe(4)
+    expect(rankById.get(ENEMY_IDS.juuma)).toBe(3)
+    expect(rankById.get(ENEMY_IDS.oni)).toBe(3)
+    expect(rankById.get(ENEMY_IDS.trial)).toBe(2)
+    expect(rankById.get(ENEMY_IDS.karakuri)).toBe(2)
+    expect(rankById.get(ENEMY_IDS.doukeshi)).toBe(1)
+  })
+
+  it('threat ranks follow the measured normal difficulty index order with a 4/4/3/3/2/2/1 split (v1.0.1)', () => {
+    // enemy-audit matrix.json `index.normal`（6 打ち筋平均・v1.0.0 engine・2026-10-10）。同点なし（再集計で確認）。
+    // 値を変えるときは scripts/v1_0_1-rc/star-reeval.mjs を再実行し、この表と rank を同時に更新する
+    const normalIndex: Record<string, number> = {
+      enemy_01: 33.8,
+      enemy_02: 33.9,
+      enemy_03: 36.5,
+      enemy_04: 31.4,
+      enemy_05: 34.0,
+      enemy_06: 37.7,
+      enemy_07: 28.6,
+    }
+    const split = [4, 4, 3, 3, 2, 2, 1]
+    const ordered = [...CORE_ENEMIES].sort((a, b) => normalIndex[b.id] - normalIndex[a.id])
+    expect(ordered.map((e) => e.rank)).toEqual(split)
+    // 指数が高い敵ほど ★ が高い（単調）。★5 は Boss 予約なので 1〜4 に収まる
+    for (let i = 1; i < ordered.length; i++) expect(ordered[i].rank).toBeLessThanOrEqual(ordered[i - 1].rank)
+    expect([1, 2, 3, 4, 5].map((s) => CORE_ENEMIES.filter((e) => e.rank === s).length)).toEqual([1, 2, 2, 2, 0])
   })
 
   it('gives every enemy a stage with a name and a #rrggbb accent (LANE-D)', () => {

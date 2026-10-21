@@ -143,7 +143,9 @@ export async function playToEnd(page, opts = {}) {
   const t0 = Date.now()
   const limit = opts.timeoutMs ?? 150000
   let strikeVisible = false
-  const pump = async (n) => { for (let i = 0; i < n; i++) { await page.screenshot({ path: opts.pumpPath ?? 'release-audit-pump.png' }).catch(() => {}); await page.waitForTimeout(120) } }
+  // opts.pump === false：新 headless（chromium.launch({ channel: 'chromium' })）では CSS animation が自走するので screenshot pump を省く。
+  // v1.0 FINAL の VFX では headless shell の screenshot 1 枚 ≈2.6 s・cut-in 1 回の pump ≈35 s となり 150 s 内に決着しない（2026-10-17 G8 実測）
+  const pump = opts.pump === false ? async () => {} : async (n) => { for (let i = 0; i < n; i++) { await page.screenshot({ path: opts.pumpPath ?? 'release-audit-pump.png' }).catch(() => {}); await page.waitForTimeout(120) } }
   while (Date.now() - t0 < limit) {
     const s = await page.evaluate(() => ({
       over: !!document.querySelector('.game-over-overlay, .reward-overlay'),

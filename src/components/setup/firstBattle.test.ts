@@ -33,8 +33,18 @@ describe('FIRST_BATTLE_BRIEF_LINES', () => {
   it('敵の予告／神力とカード／ラウンドを終えることと勝利条件 だけを扱う', () => {
     expect(FIRST_BATTLE_BRIEF_LINES[0]).toContain('予告')
     expect(FIRST_BATTLE_BRIEF_LINES[1]).toContain('神力')
+    // v1.0.1 語彙補完（案 B）：防御もラウンド末に消えることを神力と対で伝える
+    expect(FIRST_BATTLE_BRIEF_LINES[1]).toContain('防御')
     expect(FIRST_BATTLE_BRIEF_LINES[2]).toContain('ラウンドを終える')
     expect(FIRST_BATTLE_BRIEF_LINES[2]).toContain('7ラウンド以内')
+  })
+
+  it('v1.0.1 語彙補完（案 B）：② は確定文言そのまま・コードポイント 42 字・3 行合計 112 字', () => {
+    expect(FIRST_BATTLE_BRIEF_LINES[1]).toBe('カード左上の数字が必要な神力です。余った神力と防御は、次のラウンドへ持ち越せません。')
+    expect([...FIRST_BATTLE_BRIEF_LINES[1]].length).toBe(42)
+    expect([...text].length).toBe(112)
+    // 「ブロック」は実戦 UI に出ない語（バッジは 🛡 数値のみ）なので使わない
+    expect(text).not.toContain('ブロック')
   })
 
   it.each(['共鳴', '託宣', '神託', 'OTOMO', 'スコア', '神階', '神域', '攻略'])('初陣前には「%s」を説明しない', (word) => {

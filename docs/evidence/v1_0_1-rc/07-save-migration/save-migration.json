@@ -1,0 +1,1262 @@
+{
+  "masterBase": "http://127.0.0.1:4198",
+  "rcBase": "http://127.0.0.1:4197",
+  "at": "2026-10-16T21:44:36.645Z",
+  "headless": "channel:chromium",
+  "rcVersion": "1.0.0",
+  "checks": [
+    {
+      "id": "master A: 通常戦が決着（records 保存）",
+      "ok": true,
+      "detail": {
+        "status": "勝利",
+        "rounds": 3,
+        "cards": 8,
+        "timedOut": false
+      }
+    },
+    {
+      "id": "master A: 神域挑戦が決着（daily results 1）",
+      "ok": true,
+      "detail": {
+        "status": "勝利",
+        "rounds": 5,
+        "daily": [
+          {
+            "dateKey": "2026-10-17",
+            "enemyId": "enemy_01",
+            "seed": "daily-2026-10-17-enemy_01",
+            "attemptsUsed": 1,
+            "results": 1
+          }
+        ]
+      }
+    },
+    {
+      "id": "master A: 途中セーブ（battleSave round 2・mode normal）",
+      "ok": true,
+      "detail": {
+        "version": 9,
+        "mode": "normal",
+        "dailyKey": null,
+        "godId": "taiyo",
+        "round": 2,
+        "status": "playing",
+        "hand": 6,
+        "deck": 13,
+        "playerHp": 25,
+        "enemyHp": 82,
+        "enemyId": "enemy_02"
+      }
+    },
+    {
+      "id": "master A: JS error 0",
+      "ok": true,
+      "detail": []
+    },
+    {
+      "id": "master B: 神域挑戦の途中セーブ（mode daily・round 2）",
+      "ok": true,
+      "detail": {
+        "version": 9,
+        "mode": "daily",
+        "dailyKey": "2026-10-17",
+        "godId": "taiyo",
+        "round": 2,
+        "status": "playing",
+        "hand": 6,
+        "deck": 13,
+        "playerHp": 24,
+        "enemyHp": 129,
+        "enemyId": "enemy_01"
+      }
+    },
+    {
+      "id": "master B: JS error 0",
+      "ok": true,
+      "detail": []
+    },
+    {
+      "id": "rc pc: Home version 表示が v1.0.0",
+      "ok": true,
+      "detail": "v1.0.0 (9c222a0)"
+    },
+    {
+      "id": "rc-pc-normal: Home version 表示が注入前と同じ",
+      "ok": true,
+      "detail": {
+        "before": "v1.0.0 (9c222a0)",
+        "after": "v1.0.0 (9c222a0)"
+      }
+    },
+    {
+      "id": "rc-pc-normal: Home「続きから」文言が master と同じ",
+      "ok": true,
+      "detail": {
+        "master": "続きから大耀 vs 業斧の鬼将・ラウンド2",
+        "rc": "続きから大耀 vs 業斧の鬼将・ラウンド2"
+      }
+    },
+    {
+      "id": "rc-pc-normal: Home 今日の試練（残り回数）が master と同じ",
+      "ok": true,
+      "detail": {
+        "master": "挑戦する（残り2回）",
+        "rc": "挑戦する（残り2回）"
+      }
+    },
+    {
+      "id": "rc-pc-normal: 戦績画面の神カードが master と同じ",
+      "ok": true,
+      "detail": {
+        "master": [
+          "攻撃型恵比寿まだ記録がありません",
+          "攻撃型大耀自己ベスト 9,270（ふつう）1勝利0敗北0未撃破R4最速撃破",
+          "防御型蒼毘まだ記録がありません",
+          "技巧型才華まだ記録がありません",
+          "バランス型寿楽まだ記録がありません",
+          "攻撃型福永まだ記録がありません",
+          "支援型笑蓮まだ記録がありません"
+        ],
+        "rc": [
+          "攻撃型恵比寿まだ記録がありません",
+          "攻撃型大耀自己ベスト 9,270（ふつう）1勝利0敗北0未撃破R4最速撃破",
+          "防御型蒼毘まだ記録がありません",
+          "技巧型才華まだ記録がありません",
+          "バランス型寿楽まだ記録がありません",
+          "攻撃型福永まだ記録がありません",
+          "支援型笑蓮まだ記録がありません"
+        ]
+      }
+    },
+    {
+      "id": "rc-pc-normal: 戦績画面の神域挑戦（直近7日）行が master と同じ",
+      "ok": true,
+      "detail": {
+        "master": [
+          "2026-10-17試練の影8,250勝利大耀1 / 3"
+        ],
+        "rc": [
+          "2026-10-17試練の影8,250勝利大耀1 / 3"
+        ]
+      }
+    },
+    {
+      "id": "rc-pc-normal: 復元が master と同じ（ラウンド・HP・手札枚数・手札名・topbar・daily タグ）",
+      "ok": true,
+      "detail": {
+        "restore": {
+          "round": true,
+          "hpPairs": true,
+          "handCards": true,
+          "handNames": true,
+          "topbar": true,
+          "dailyTag": true
+        },
+        "master": {
+          "round": "2",
+          "hpPairs": [
+            "2 / 7",
+            "3 / 3",
+            "820 / 94090",
+            "250 / 300",
+            "0 / 7"
+          ],
+          "hand": [
+            "1大耀専用⚔ 一心不乱攻撃敵に40ダメージを与え",
+            "2💀 呪縛妨害敵の攻撃力を3ラウンドのあいだ5",
+            "3🌟 神託神託敵に250ダメージを与える。",
+            "1🛡 守護防御ブロックを50得る。このラウンド",
+            "2大耀専用⚔ 豪快な一撃攻撃敵に140ダメージを",
+            "2✨ 神楽舞共鳴共鳴ゲージを3上昇させ、ブロック"
+          ],
+          "topbar": "ラウンド 2 / 7神力 3 / 3スコア 190"
+        },
+        "rc": {
+          "round": "2",
+          "hpPairs": [
+            "2 / 7",
+            "3 / 3",
+            "820 / 94090",
+            "250 / 300",
+            "0 / 7"
+          ],
+          "hand": [
+            "1大耀専用⚔ 一心不乱攻撃敵に40ダメージを与え",
+            "2💀 呪縛妨害敵の攻撃力を3ラウンドのあいだ5",
+            "3🌟 神託神託敵に250ダメージを与える。",
+            "1🛡 守護防御ブロックを50得る。このラウンド",
+            "2大耀専用⚔ 豪快な一撃攻撃敵に140ダメージを",
+            "2✨ 神楽舞共鳴共鳴ゲージを3上昇させ、ブロック"
+          ],
+          "topbar": "ラウンド 2 / 7神力 3 / 3スコア 190"
+        }
+      }
+    },
+    {
+      "id": "rc-pc-normal: 復元後の battleSave state が fixture と同一（差分キー 0）",
+      "ok": true,
+      "detail": []
+    },
+    {
+      "id": "rc-pc-normal: battleSave 以外の 7 キーが読み込みで不変（欠損 0・改変 0）",
+      "ok": true,
+      "detail": {
+        "keys": [
+          "sevengods.matchups",
+          "sevengods.deckPreference",
+          "sevengods.daily",
+          "sevengods.records",
+          "sevengods.otomoBond",
+          "sevengods.stakes",
+          "sevengods.pendingRuns"
+        ],
+        "changed": [],
+        "missing": []
+      }
+    },
+    {
+      "id": "rc-pc-normal: 復元した対局を RC で決着まで進められる",
+      "ok": true,
+      "detail": {
+        "status": "敗北",
+        "rounds": 4,
+        "timedOut": false
+      }
+    },
+    {
+      "id": "rc-pc-normal: 決着で records が 1 戦ぶん増え、daily は不変",
+      "ok": true,
+      "detail": {
+        "before": {
+          "wins": 1,
+          "losses": 0,
+          "finished": 0,
+          "bestBattleScore": 927
+        },
+        "after": {
+          "wins": 1,
+          "losses": 1,
+          "finished": 0,
+          "bestBattleScore": 927
+        }
+      }
+    },
+    {
+      "id": "rc-pc-normal: JS error 0・外部通信 0・api 0",
+      "ok": true,
+      "detail": {
+        "errors": [],
+        "external": [],
+        "api": []
+      }
+    },
+    {
+      "id": "rc-pc-daily: Home version 表示が注入前と同じ",
+      "ok": true,
+      "detail": {
+        "before": "v1.0.0 (9c222a0)",
+        "after": "v1.0.0 (9c222a0)"
+      }
+    },
+    {
+      "id": "rc-pc-daily: Home「続きから」文言が master と同じ",
+      "ok": true,
+      "detail": {
+        "master": "続きから神域挑戦・大耀 vs 試練の影・ラウンド2",
+        "rc": "続きから神域挑戦・大耀 vs 試練の影・ラウンド2"
+      }
+    },
+    {
+      "id": "rc-pc-daily: Home 今日の試練（残り回数）が master と同じ",
+      "ok": true,
+      "detail": {
+        "master": "挑戦する（残り2回）",
+        "rc": "挑戦する（残り2回）"
+      }
+    },
+    {
+      "id": "rc-pc-daily: 復元が master と同じ（ラウンド・HP・手札枚数・手札名・topbar・daily タグ）",
+      "ok": true,
+      "detail": {
+        "restore": {
+          "round": true,
+          "hpPairs": true,
+          "handCards": true,
+          "handNames": true,
+          "topbar": true,
+          "dailyTag": true
+        },
+        "master": {
+          "round": "2",
+          "hpPairs": [
+            "2 / 7",
+            "3 / 3",
+            "1,290 / 1,29090",
+            "240 / 300",
+            "1 / 7"
+          ],
+          "hand": [
+            "2大耀専用🌿 後輩想い支援ブロックを60得て、",
+            "1🛡 受け流し防御ブロックを30得て、共鳴ゲー",
+            "2🛡 鉄壁の構え防御ブロックを120得る。⚡ ",
+            "2大耀専用⚔ 豪快な一撃攻撃敵に140ダメージを",
+            "1🛡 守護防御ブロックを50得る。このラウンド",
+            "2✨ 神楽舞共鳴共鳴ゲージを3上昇させ、ブロック"
+          ],
+          "topbar": "ラウンド 2 / 7 DAILY ★★★★★ 神域強化神力 3 / 3スコア 0"
+        },
+        "rc": {
+          "round": "2",
+          "hpPairs": [
+            "2 / 7",
+            "3 / 3",
+            "1,290 / 1,29090",
+            "240 / 300",
+            "1 / 7"
+          ],
+          "hand": [
+            "2大耀専用🌿 後輩想い支援ブロックを60得て、",
+            "1🛡 受け流し防御ブロックを30得て、共鳴ゲー",
+            "2🛡 鉄壁の構え防御ブロックを120得る。⚡ ",
+            "2大耀専用⚔ 豪快な一撃攻撃敵に140ダメージを",
+            "1🛡 守護防御ブロックを50得る。このラウンド",
+            "2✨ 神楽舞共鳴共鳴ゲージを3上昇させ、ブロック"
+          ],
+          "topbar": "ラウンド 2 / 7 DAILY ★★★★★ 神域強化神力 3 / 3スコア 0"
+        }
+      }
+    },
+    {
+      "id": "rc-pc-daily: 復元後の battleSave state が fixture と同一（差分キー 0）",
+      "ok": true,
+      "detail": []
+    },
+    {
+      "id": "rc-pc-daily: battleSave 以外の 4 キーが読み込みで不変（欠損 0・改変 0）",
+      "ok": true,
+      "detail": {
+        "keys": [
+          "sevengods.matchups",
+          "sevengods.deckPreference",
+          "sevengods.daily",
+          "sevengods.dailyRunLog"
+        ],
+        "changed": [],
+        "missing": []
+      }
+    },
+    {
+      "id": "rc-pc-daily: 復元した対局を RC で決着まで進められる",
+      "ok": true,
+      "detail": {
+        "status": "敗北",
+        "rounds": 5,
+        "timedOut": false
+      }
+    },
+    {
+      "id": "rc-pc-daily: 決着で daily results 1・attemptsUsed 1（二重消費なし）",
+      "ok": true,
+      "detail": [
+        {
+          "dateKey": "2026-10-17",
+          "enemyId": "enemy_01",
+          "seed": "daily-2026-10-17-enemy_01",
+          "attemptsUsed": 1,
+          "results": 1
+        }
+      ]
+    },
+    {
+      "id": "rc-pc-daily: JS error 0・外部通信 0・api 0",
+      "ok": true,
+      "detail": {
+        "errors": [],
+        "external": [],
+        "api": []
+      }
+    },
+    {
+      "id": "rc sp375: Home version 表示が v1.0.0",
+      "ok": true,
+      "detail": "v1.0.0 (9c222a0)"
+    },
+    {
+      "id": "rc-sp375-normal: Home version 表示が注入前と同じ",
+      "ok": true,
+      "detail": {
+        "before": "v1.0.0 (9c222a0)",
+        "after": "v1.0.0 (9c222a0)"
+      }
+    },
+    {
+      "id": "rc-sp375-normal: Home「続きから」文言が master と同じ",
+      "ok": true,
+      "detail": {
+        "master": "続きから大耀 vs 業斧の鬼将・ラウンド2",
+        "rc": "続きから大耀 vs 業斧の鬼将・ラウンド2"
+      }
+    },
+    {
+      "id": "rc-sp375-normal: Home 今日の試練（残り回数）が master と同じ",
+      "ok": true,
+      "detail": {
+        "master": "挑戦する（残り2回）",
+        "rc": "挑戦する（残り2回）"
+      }
+    },
+    {
+      "id": "rc-sp375-normal: 戦績画面の神カードが master と同じ",
+      "ok": true,
+      "detail": {
+        "master": [
+          "攻撃型恵比寿まだ記録がありません",
+          "攻撃型大耀自己ベスト 9,270（ふつう）1勝利0敗北0未撃破R4最速撃破",
+          "防御型蒼毘まだ記録がありません",
+          "技巧型才華まだ記録がありません",
+          "バランス型寿楽まだ記録がありません",
+          "攻撃型福永まだ記録がありません",
+          "支援型笑蓮まだ記録がありません"
+        ],
+        "rc": [
+          "攻撃型恵比寿まだ記録がありません",
+          "攻撃型大耀自己ベスト 9,270（ふつう）1勝利0敗北0未撃破R4最速撃破",
+          "防御型蒼毘まだ記録がありません",
+          "技巧型才華まだ記録がありません",
+          "バランス型寿楽まだ記録がありません",
+          "攻撃型福永まだ記録がありません",
+          "支援型笑蓮まだ記録がありません"
+        ]
+      }
+    },
+    {
+      "id": "rc-sp375-normal: 戦績画面の神域挑戦（直近7日）行が master と同じ",
+      "ok": true,
+      "detail": {
+        "master": [
+          "2026-10-17試練の影8,250勝利大耀1 / 3"
+        ],
+        "rc": [
+          "2026-10-17試練の影8,250勝利大耀1 / 3"
+        ]
+      }
+    },
+    {
+      "id": "rc-sp375-normal: 復元が master と同じ（ラウンド・HP・手札枚数・手札名・topbar・daily タグ）",
+      "ok": true,
+      "detail": {
+        "restore": {
+          "round": true,
+          "hpPairs": true,
+          "handCards": true,
+          "handNames": true,
+          "topbar": true,
+          "dailyTag": true
+        },
+        "master": {
+          "round": "2",
+          "hpPairs": [
+            "2 / 7",
+            "3 / 3",
+            "820 / 94090",
+            "250 / 300",
+            "0 / 7"
+          ],
+          "hand": [
+            "1大耀専用⚔ 一心不乱攻撃敵に40ダメージを与え",
+            "2💀 呪縛妨害敵の攻撃力を3ラウンドのあいだ5",
+            "3🌟 神託神託敵に250ダメージを与える。",
+            "1🛡 守護防御ブロックを50得る。このラウンド",
+            "2大耀専用⚔ 豪快な一撃攻撃敵に140ダメージを",
+            "2✨ 神楽舞共鳴共鳴ゲージを3上昇させ、ブロック"
+          ],
+          "topbar": "ラウンド 2 / 7神力 3 / 3スコア 190"
+        },
+        "rc": {
+          "round": "2",
+          "hpPairs": [
+            "2 / 7",
+            "3 / 3",
+            "820 / 94090",
+            "250 / 300",
+            "0 / 7"
+          ],
+          "hand": [
+            "1大耀専用⚔ 一心不乱攻撃敵に40ダメージを与え",
+            "2💀 呪縛妨害敵の攻撃力を3ラウンドのあいだ5",
+            "3🌟 神託神託敵に250ダメージを与える。",
+            "1🛡 守護防御ブロックを50得る。このラウンド",
+            "2大耀専用⚔ 豪快な一撃攻撃敵に140ダメージを",
+            "2✨ 神楽舞共鳴共鳴ゲージを3上昇させ、ブロック"
+          ],
+          "topbar": "ラウンド 2 / 7神力 3 / 3スコア 190"
+        }
+      }
+    },
+    {
+      "id": "rc-sp375-normal: 復元後の battleSave state が fixture と同一（差分キー 0）",
+      "ok": true,
+      "detail": []
+    },
+    {
+      "id": "rc-sp375-normal: battleSave 以外の 7 キーが読み込みで不変（欠損 0・改変 0）",
+      "ok": true,
+      "detail": {
+        "keys": [
+          "sevengods.matchups",
+          "sevengods.deckPreference",
+          "sevengods.daily",
+          "sevengods.records",
+          "sevengods.otomoBond",
+          "sevengods.stakes",
+          "sevengods.pendingRuns"
+        ],
+        "changed": [],
+        "missing": []
+      }
+    },
+    {
+      "id": "rc-sp375-normal: JS error 0・外部通信 0・api 0",
+      "ok": true,
+      "detail": {
+        "errors": [],
+        "external": [],
+        "api": []
+      }
+    },
+    {
+      "id": "rc-sp375-daily: Home version 表示が注入前と同じ",
+      "ok": true,
+      "detail": {
+        "before": "v1.0.0 (9c222a0)",
+        "after": "v1.0.0 (9c222a0)"
+      }
+    },
+    {
+      "id": "rc-sp375-daily: Home「続きから」文言が master と同じ",
+      "ok": true,
+      "detail": {
+        "master": "続きから神域挑戦・大耀 vs 試練の影・ラウンド2",
+        "rc": "続きから神域挑戦・大耀 vs 試練の影・ラウンド2"
+      }
+    },
+    {
+      "id": "rc-sp375-daily: Home 今日の試練（残り回数）が master と同じ",
+      "ok": true,
+      "detail": {
+        "master": "挑戦する（残り2回）",
+        "rc": "挑戦する（残り2回）"
+      }
+    },
+    {
+      "id": "rc-sp375-daily: 復元が master と同じ（ラウンド・HP・手札枚数・手札名・topbar・daily タグ）",
+      "ok": true,
+      "detail": {
+        "restore": {
+          "round": true,
+          "hpPairs": true,
+          "handCards": true,
+          "handNames": true,
+          "topbar": true,
+          "dailyTag": true
+        },
+        "master": {
+          "round": "2",
+          "hpPairs": [
+            "2 / 7",
+            "3 / 3",
+            "1,290 / 1,29090",
+            "240 / 300",
+            "1 / 7"
+          ],
+          "hand": [
+            "2大耀専用🌿 後輩想い支援ブロックを60得て、",
+            "1🛡 受け流し防御ブロックを30得て、共鳴ゲー",
+            "2🛡 鉄壁の構え防御ブロックを120得る。⚡ ",
+            "2大耀専用⚔ 豪快な一撃攻撃敵に140ダメージを",
+            "1🛡 守護防御ブロックを50得る。このラウンド",
+            "2✨ 神楽舞共鳴共鳴ゲージを3上昇させ、ブロック"
+          ],
+          "topbar": "ラウンド 2 / 7 DAILY ★★★★★ 神域強化神力 3 / 3スコア 0"
+        },
+        "rc": {
+          "round": "2",
+          "hpPairs": [
+            "2 / 7",
+            "3 / 3",
+            "1,290 / 1,29090",
+            "240 / 300",
+            "1 / 7"
+          ],
+          "hand": [
+            "2大耀専用🌿 後輩想い支援ブロックを60得て、",
+            "1🛡 受け流し防御ブロックを30得て、共鳴ゲー",
+            "2🛡 鉄壁の構え防御ブロックを120得る。⚡ ",
+            "2大耀専用⚔ 豪快な一撃攻撃敵に140ダメージを",
+            "1🛡 守護防御ブロックを50得る。このラウンド",
+            "2✨ 神楽舞共鳴共鳴ゲージを3上昇させ、ブロック"
+          ],
+          "topbar": "ラウンド 2 / 7 DAILY ★★★★★ 神域強化神力 3 / 3スコア 0"
+        }
+      }
+    },
+    {
+      "id": "rc-sp375-daily: 復元後の battleSave state が fixture と同一（差分キー 0）",
+      "ok": true,
+      "detail": []
+    },
+    {
+      "id": "rc-sp375-daily: battleSave 以外の 4 キーが読み込みで不変（欠損 0・改変 0）",
+      "ok": true,
+      "detail": {
+        "keys": [
+          "sevengods.matchups",
+          "sevengods.deckPreference",
+          "sevengods.daily",
+          "sevengods.dailyRunLog"
+        ],
+        "changed": [],
+        "missing": []
+      }
+    },
+    {
+      "id": "rc-sp375-daily: JS error 0・外部通信 0・api 0",
+      "ok": true,
+      "detail": {
+        "errors": [],
+        "external": [],
+        "api": []
+      }
+    }
+  ],
+  "masterNormal": {
+    "finishedNormal": {
+      "play": {
+        "godStrike": 1,
+        "callout": [
+          "⚡ 条件成立",
+          "⚡ 連携！"
+        ],
+        "finalBlow": true,
+        "hpGhost": true,
+        "rounds": 3,
+        "cardsPlayed": 8,
+        "timedOut": false
+      },
+      "status": "勝利",
+      "score": "スコア 1,920",
+      "buttonsAfterReward": [
+        "即戦力鉄壁の構えブロックを120得る。＋ ブロックが敵の予告以上なら、HPを30回復。いま 1 枚編成中上限 2 → 32 枚目を足してから 3 枚目",
+        "神の個性専用姉御の号令自分の攻撃力を2ラウンドのあいだ30上げる。＋ 共鳴が4以上なら、さらに攻撃力+30（1ラウンドのみ）。いま 2 枚編成中上限 2 → 3",
+        "次の構築乱舞敵に100ダメージを与え、共鳴ゲージを1上昇させる。＋ 共鳴が4以上なら、共鳴ゲージ+1。いま 0 枚上限 2 → 3まず 1〜2 枚入れてみよう"
+      ]
+    },
+    "finishedDaily": {
+      "startLabelBefore": "挑戦開始（残り3回）",
+      "play": {
+        "godStrike": 1,
+        "callout": [
+          "⚡ 条件成立"
+        ],
+        "finalBlow": true,
+        "hpGhost": true,
+        "rounds": 5,
+        "cardsPlayed": 14,
+        "timedOut": false
+      },
+      "status": "勝利",
+      "daily": "今日のベスト 8,250（1回目）残り 2 回"
+    },
+    "midBattle": {
+      "round": "2",
+      "hand": 6
+    },
+    "keys": [
+      "sevengods.battleSave",
+      "sevengods.daily",
+      "sevengods.deckPreference",
+      "sevengods.matchups",
+      "sevengods.otomoBond",
+      "sevengods.pendingRuns",
+      "sevengods.records",
+      "sevengods.stakes"
+    ],
+    "save": {
+      "version": 9,
+      "mode": "normal",
+      "dailyKey": null,
+      "godId": "taiyo",
+      "round": 2,
+      "status": "playing",
+      "hand": 6,
+      "deck": 13,
+      "playerHp": 25,
+      "enemyHp": 82,
+      "enemyId": "enemy_02"
+    },
+    "records": {
+      "taiyo": {
+        "wins": 1,
+        "losses": 0,
+        "finished": 0,
+        "bestBattleScore": 927
+      }
+    },
+    "daily": [
+      {
+        "dateKey": "2026-10-17",
+        "enemyId": "enemy_01",
+        "seed": "daily-2026-10-17-enemy_01",
+        "attemptsUsed": 1,
+        "results": 1
+      }
+    ],
+    "home": {
+      "version": "v1.0.0 (7ba447f)",
+      "todayCta": "挑戦する（残り2回）",
+      "resume": "続きから大耀 vs 業斧の鬼将・ラウンド2",
+      "shot": {
+        "file": "master-normal-home.webp",
+        "bytes": 126378,
+        "pngBytes": 1278600
+      }
+    },
+    "records_screen": {
+      "text": "戦績神ごとの自己ベストと対局数です（この端末に保存された記録の表示のみ。ランキングやオンライン通信はありません）。神×敵 攻略2 / 49その神でその敵に1回勝つと ✓ が付きます（難易度・神階・神域挑戦を問いません）。2026-10-17 以降の勝利と、神域挑戦の直近の勝利から記録しています。試練の影【標準・入門型】1 / 7 神恵比寿✓大耀蒼毘才華寿楽福永笑蓮業斧の鬼将【重撃型】1 / 7 神恵比寿✓大耀蒼毘才華寿楽福永笑蓮藍花の怨霊【遅咲き型】0 / 7 神恵比寿大耀蒼毘才華寿楽福永笑蓮銀甲の機工師【溜め型】0 / 7 神恵比寿大耀蒼毘才華寿楽福永笑蓮双牙の魔獣【連撃型】0 / 7 神恵比寿大耀蒼毘才華寿楽福永笑蓮蒼海の龍神【耐久型】0 / 7 神恵比寿大耀蒼毘才華寿楽福永笑蓮乱舞の道化【トリック型】0 / 7 神恵比寿大耀蒼毘才華寿楽福永笑蓮神域挑戦（直近7日）日付今日の敵今日のベスト勝敗使用神挑戦2026-10-17試練の影8,250勝利大耀1 / 3攻撃型恵比寿まだ記録がありません攻撃型大耀自己ベスト 9,270（ふつう）1勝利0敗北0未撃破R4最速撃破防御型蒼毘まだ記録がありません技巧型才華まだ記録がありませんバランス型寿楽まだ記録がありません攻撃型福永まだ記録がありません支援型笑蓮まだ記録がありません‹ ホームへ戻る",
+      "cards": [
+        "攻撃型恵比寿まだ記録がありません",
+        "攻撃型大耀自己ベスト 9,270（ふつう）1勝利0敗北0未撃破R4最速撃破",
+        "防御型蒼毘まだ記録がありません",
+        "技巧型才華まだ記録がありません",
+        "バランス型寿楽まだ記録がありません",
+        "攻撃型福永まだ記録がありません",
+        "支援型笑蓮まだ記録がありません"
+      ],
+      "dailyRows": [
+        "2026-10-17試練の影8,250勝利大耀1 / 3"
+      ],
+      "shot": {
+        "file": "master-normal-records.webp",
+        "bytes": 77062,
+        "pngBytes": 624840
+      }
+    },
+    "resume": {
+      "round": "2",
+      "topbar": "ラウンド 2 / 7神力 3 / 3スコア 190",
+      "hpPairs": [
+        "2 / 7",
+        "3 / 3",
+        "820 / 94090",
+        "250 / 300",
+        "0 / 7"
+      ],
+      "handCards": 6,
+      "handNames": [
+        "1大耀専用⚔ 一心不乱攻撃敵に40ダメージを与え",
+        "2💀 呪縛妨害敵の攻撃力を3ラウンドのあいだ5",
+        "3🌟 神託神託敵に250ダメージを与える。",
+        "1🛡 守護防御ブロックを50得る。このラウンド",
+        "2大耀専用⚔ 豪快な一撃攻撃敵に140ダメージを",
+        "2✨ 神楽舞共鳴共鳴ゲージを3上昇させ、ブロック"
+      ],
+      "dailyTag": false,
+      "clicked": true,
+      "shot": {
+        "file": "master-normal-resume.webp",
+        "bytes": 113496,
+        "pngBytes": 1080215
+      }
+    },
+    "saveRewrittenByMasterResume": [],
+    "errors": []
+  },
+  "masterDaily": {
+    "startLabelBefore": "挑戦開始（残り3回）",
+    "midBattle": {
+      "round": "2",
+      "hand": 6,
+      "dailyTag": true
+    },
+    "keys": [
+      "sevengods.battleSave",
+      "sevengods.daily",
+      "sevengods.dailyRunLog",
+      "sevengods.deckPreference",
+      "sevengods.matchups"
+    ],
+    "save": {
+      "version": 9,
+      "mode": "daily",
+      "dailyKey": "2026-10-17",
+      "godId": "taiyo",
+      "round": 2,
+      "status": "playing",
+      "hand": 6,
+      "deck": 13,
+      "playerHp": 24,
+      "enemyHp": 129,
+      "enemyId": "enemy_01"
+    },
+    "daily": [
+      {
+        "dateKey": "2026-10-17",
+        "enemyId": "enemy_01",
+        "seed": "daily-2026-10-17-enemy_01",
+        "attemptsUsed": 1,
+        "results": 0
+      }
+    ],
+    "home": {
+      "version": "v1.0.0 (7ba447f)",
+      "todayCta": "挑戦する（残り2回）",
+      "resume": "続きから神域挑戦・大耀 vs 試練の影・ラウンド2",
+      "shot": {
+        "file": "master-daily-home.webp",
+        "bytes": 124158,
+        "pngBytes": 1276507
+      }
+    },
+    "resume": {
+      "round": "2",
+      "topbar": "ラウンド 2 / 7 DAILY ★★★★★ 神域強化神力 3 / 3スコア 0",
+      "hpPairs": [
+        "2 / 7",
+        "3 / 3",
+        "1,290 / 1,29090",
+        "240 / 300",
+        "1 / 7"
+      ],
+      "handCards": 6,
+      "handNames": [
+        "2大耀専用🌿 後輩想い支援ブロックを60得て、",
+        "1🛡 受け流し防御ブロックを30得て、共鳴ゲー",
+        "2🛡 鉄壁の構え防御ブロックを120得る。⚡ ",
+        "2大耀専用⚔ 豪快な一撃攻撃敵に140ダメージを",
+        "1🛡 守護防御ブロックを50得る。このラウンド",
+        "2✨ 神楽舞共鳴共鳴ゲージを3上昇させ、ブロック"
+      ],
+      "dailyTag": true,
+      "clicked": true,
+      "shot": {
+        "file": "master-daily-resume.webp",
+        "bytes": 124160,
+        "pngBytes": 1122879
+      }
+    },
+    "errors": []
+  },
+  "rc": {
+    "rc-pc-normal": {
+      "home": {
+        "version": "v1.0.0 (9c222a0)",
+        "todayCta": "挑戦する（残り2回）",
+        "resume": "続きから大耀 vs 業斧の鬼将・ラウンド2",
+        "shot": {
+          "file": "rc-pc-normal-home.webp",
+          "bytes": 126502,
+          "pngBytes": 1278838
+        }
+      },
+      "records": {
+        "text": "戦績神ごとの自己ベストと対局数です（この端末に保存された記録の表示のみ。ランキングやオンライン通信はありません）。神×敵 攻略2 / 49その神でその敵に1回勝つと ✓ が付きます（難易度・神階・神域挑戦を問いません）。2026-10-17 以降の勝利と、神域挑戦の直近の勝利から記録しています。試練の影【標準・入門型】1 / 7 神恵比寿✓大耀蒼毘才華寿楽福永笑蓮業斧の鬼将【重撃型】1 / 7 神恵比寿✓大耀蒼毘才華寿楽福永笑蓮藍花の怨霊【遅咲き型】0 / 7 神恵比寿大耀蒼毘才華寿楽福永笑蓮銀甲の機工師【溜め型】0 / 7 神恵比寿大耀蒼毘才華寿楽福永笑蓮双牙の魔獣【連撃型】0 / 7 神恵比寿大耀蒼毘才華寿楽福永笑蓮蒼海の龍神【耐久型】0 / 7 神恵比寿大耀蒼毘才華寿楽福永笑蓮乱舞の道化【トリック型】0 / 7 神恵比寿大耀蒼毘才華寿楽福永笑蓮神域挑戦（直近7日）日付今日の敵今日のベスト勝敗使用神挑戦2026-10-17試練の影8,250勝利大耀1 / 3攻撃型恵比寿まだ記録がありません攻撃型大耀自己ベスト 9,270（ふつう）1勝利0敗北0未撃破R4最速撃破防御型蒼毘まだ記録がありません技巧型才華まだ記録がありませんバランス型寿楽まだ記録がありません攻撃型福永まだ記録がありません支援型笑蓮まだ記録がありません‹ ホームへ戻る",
+        "cards": [
+          "攻撃型恵比寿まだ記録がありません",
+          "攻撃型大耀自己ベスト 9,270（ふつう）1勝利0敗北0未撃破R4最速撃破",
+          "防御型蒼毘まだ記録がありません",
+          "技巧型才華まだ記録がありません",
+          "バランス型寿楽まだ記録がありません",
+          "攻撃型福永まだ記録がありません",
+          "支援型笑蓮まだ記録がありません"
+        ],
+        "dailyRows": [
+          "2026-10-17試練の影8,250勝利大耀1 / 3"
+        ],
+        "shot": {
+          "file": "rc-pc-normal-records.webp",
+          "bytes": 75162,
+          "pngBytes": 613063
+        }
+      },
+      "resume": {
+        "round": "2",
+        "topbar": "ラウンド 2 / 7神力 3 / 3スコア 190",
+        "hpPairs": [
+          "2 / 7",
+          "3 / 3",
+          "820 / 94090",
+          "250 / 300",
+          "0 / 7"
+        ],
+        "handCards": 6,
+        "handNames": [
+          "1大耀専用⚔ 一心不乱攻撃敵に40ダメージを与え",
+          "2💀 呪縛妨害敵の攻撃力を3ラウンドのあいだ5",
+          "3🌟 神託神託敵に250ダメージを与える。",
+          "1🛡 守護防御ブロックを50得る。このラウンド",
+          "2大耀専用⚔ 豪快な一撃攻撃敵に140ダメージを",
+          "2✨ 神楽舞共鳴共鳴ゲージを3上昇させ、ブロック"
+        ],
+        "dailyTag": false,
+        "clicked": true,
+        "shot": {
+          "file": "rc-pc-normal-resume.webp",
+          "bytes": 103816,
+          "pngBytes": 1028971
+        }
+      },
+      "saveAfterLoad": {
+        "version": 9,
+        "mode": "normal",
+        "dailyKey": null,
+        "godId": "taiyo",
+        "round": 2,
+        "status": "playing",
+        "hand": 6,
+        "deck": 13,
+        "playerHp": 25,
+        "enemyHp": 82,
+        "enemyId": "enemy_02"
+      },
+      "saveDiff": [],
+      "otherKeys": {
+        "keys": [
+          "sevengods.matchups",
+          "sevengods.deckPreference",
+          "sevengods.daily",
+          "sevengods.records",
+          "sevengods.otomoBond",
+          "sevengods.stakes",
+          "sevengods.pendingRuns"
+        ],
+        "changed": [],
+        "missing": []
+      },
+      "played": {
+        "play": {
+          "godStrike": 0,
+          "callout": [
+            "⚡ 条件成立",
+            "⚡ 連携！"
+          ],
+          "finalBlow": false,
+          "hpGhost": true,
+          "rounds": 4,
+          "cardsPlayed": 12,
+          "timedOut": false
+        },
+        "status": "敗北",
+        "daily": "",
+        "keysAfter": [
+          "sevengods.daily",
+          "sevengods.deckPreference",
+          "sevengods.matchups",
+          "sevengods.otomoBond",
+          "sevengods.pendingRuns",
+          "sevengods.records",
+          "sevengods.stakes"
+        ],
+        "records": {
+          "taiyo": {
+            "wins": 1,
+            "losses": 1,
+            "finished": 0,
+            "bestBattleScore": 927
+          }
+        },
+        "dailyAfter": [
+          {
+            "dateKey": "2026-10-17",
+            "enemyId": "enemy_01",
+            "seed": "daily-2026-10-17-enemy_01",
+            "attemptsUsed": 1,
+            "results": 1
+          }
+        ],
+        "shot": {
+          "file": "rc-pc-normal-result.png",
+          "bytes": 322567
+        }
+      },
+      "network": {
+        "api": [],
+        "external": [],
+        "failed": [],
+        "errors": []
+      }
+    },
+    "rc-pc-daily": {
+      "home": {
+        "version": "v1.0.0 (9c222a0)",
+        "todayCta": "挑戦する（残り2回）",
+        "resume": "続きから神域挑戦・大耀 vs 試練の影・ラウンド2",
+        "shot": {
+          "file": "rc-pc-daily-home.webp",
+          "bytes": 124412,
+          "pngBytes": 1277225
+        }
+      },
+      "records": null,
+      "resume": {
+        "round": "2",
+        "topbar": "ラウンド 2 / 7 DAILY ★★★★★ 神域強化神力 3 / 3スコア 0",
+        "hpPairs": [
+          "2 / 7",
+          "3 / 3",
+          "1,290 / 1,29090",
+          "240 / 300",
+          "1 / 7"
+        ],
+        "handCards": 6,
+        "handNames": [
+          "2大耀専用🌿 後輩想い支援ブロックを60得て、",
+          "1🛡 受け流し防御ブロックを30得て、共鳴ゲー",
+          "2🛡 鉄壁の構え防御ブロックを120得る。⚡ ",
+          "2大耀専用⚔ 豪快な一撃攻撃敵に140ダメージを",
+          "1🛡 守護防御ブロックを50得る。このラウンド",
+          "2✨ 神楽舞共鳴共鳴ゲージを3上昇させ、ブロック"
+        ],
+        "dailyTag": true,
+        "clicked": true,
+        "shot": {
+          "file": "rc-pc-daily-resume.webp",
+          "bytes": 121034,
+          "pngBytes": 1099968
+        }
+      },
+      "saveAfterLoad": {
+        "version": 9,
+        "mode": "daily",
+        "dailyKey": "2026-10-17",
+        "godId": "taiyo",
+        "round": 2,
+        "status": "playing",
+        "hand": 6,
+        "deck": 13,
+        "playerHp": 24,
+        "enemyHp": 129,
+        "enemyId": "enemy_01"
+      },
+      "saveDiff": [],
+      "otherKeys": {
+        "keys": [
+          "sevengods.matchups",
+          "sevengods.deckPreference",
+          "sevengods.daily",
+          "sevengods.dailyRunLog"
+        ],
+        "changed": [],
+        "missing": []
+      },
+      "played": {
+        "play": {
+          "godStrike": 1,
+          "callout": [
+            "⚡ 条件成立",
+            "⚡ 連携！"
+          ],
+          "finalBlow": false,
+          "hpGhost": true,
+          "rounds": 5,
+          "cardsPlayed": 14,
+          "timedOut": false
+        },
+        "status": "敗北",
+        "daily": "今日のベスト 3,110（1回目）残り 2 回",
+        "keysAfter": [
+          "sevengods.daily",
+          "sevengods.deckPreference",
+          "sevengods.matchups",
+          "sevengods.otomoBond",
+          "sevengods.pendingRuns"
+        ],
+        "records": {},
+        "dailyAfter": [
+          {
+            "dateKey": "2026-10-17",
+            "enemyId": "enemy_01",
+            "seed": "daily-2026-10-17-enemy_01",
+            "attemptsUsed": 1,
+            "results": 1
+          }
+        ],
+        "shot": {
+          "file": "rc-pc-daily-result.png",
+          "bytes": 388930
+        }
+      },
+      "network": {
+        "api": [],
+        "external": [],
+        "failed": [],
+        "errors": []
+      }
+    },
+    "rc-sp375-normal": {
+      "home": {
+        "version": "v1.0.0 (9c222a0)",
+        "todayCta": "挑戦する（残り2回）",
+        "resume": "続きから大耀 vs 業斧の鬼将・ラウンド2",
+        "shot": {
+          "file": "rc-sp375-normal-home.png",
+          "bytes": 345792
+        }
+      },
+      "records": {
+        "text": "戦績神ごとの自己ベストと対局数です（この端末に保存された記録の表示のみ。ランキングやオンライン通信はありません）。神×敵 攻略2 / 49その神でその敵に1回勝つと ✓ が付きます（難易度・神階・神域挑戦を問いません）。2026-10-17 以降の勝利と、神域挑戦の直近の勝利から記録しています。試練の影【標準・入門型】1 / 7 神恵比寿✓大耀蒼毘才華寿楽福永笑蓮業斧の鬼将【重撃型】1 / 7 神恵比寿✓大耀蒼毘才華寿楽福永笑蓮藍花の怨霊【遅咲き型】0 / 7 神恵比寿大耀蒼毘才華寿楽福永笑蓮銀甲の機工師【溜め型】0 / 7 神恵比寿大耀蒼毘才華寿楽福永笑蓮双牙の魔獣【連撃型】0 / 7 神恵比寿大耀蒼毘才華寿楽福永笑蓮蒼海の龍神【耐久型】0 / 7 神恵比寿大耀蒼毘才華寿楽福永笑蓮乱舞の道化【トリック型】0 / 7 神恵比寿大耀蒼毘才華寿楽福永笑蓮神域挑戦（直近7日）日付今日の敵今日のベスト勝敗使用神挑戦2026-10-17試練の影8,250勝利大耀1 / 3攻撃型恵比寿まだ記録がありません攻撃型大耀自己ベスト 9,270（ふつう）1勝利0敗北0未撃破R4最速撃破防御型蒼毘まだ記録がありません技巧型才華まだ記録がありませんバランス型寿楽まだ記録がありません攻撃型福永まだ記録がありません支援型笑蓮まだ記録がありません‹ ホームへ戻る",
+        "cards": [
+          "攻撃型恵比寿まだ記録がありません",
+          "攻撃型大耀自己ベスト 9,270（ふつう）1勝利0敗北0未撃破R4最速撃破",
+          "防御型蒼毘まだ記録がありません",
+          "技巧型才華まだ記録がありません",
+          "バランス型寿楽まだ記録がありません",
+          "攻撃型福永まだ記録がありません",
+          "支援型笑蓮まだ記録がありません"
+        ],
+        "dailyRows": [
+          "2026-10-17試練の影8,250勝利大耀1 / 3"
+        ],
+        "shot": {
+          "file": "rc-sp375-normal-records.png",
+          "bytes": 418473
+        }
+      },
+      "resume": {
+        "round": "2",
+        "topbar": "ラウンド 2 / 7神力 3 / 3スコア 190",
+        "hpPairs": [
+          "2 / 7",
+          "3 / 3",
+          "820 / 94090",
+          "250 / 300",
+          "0 / 7"
+        ],
+        "handCards": 6,
+        "handNames": [
+          "1大耀専用⚔ 一心不乱攻撃敵に40ダメージを与え",
+          "2💀 呪縛妨害敵の攻撃力を3ラウンドのあいだ5",
+          "3🌟 神託神託敵に250ダメージを与える。",
+          "1🛡 守護防御ブロックを50得る。このラウンド",
+          "2大耀専用⚔ 豪快な一撃攻撃敵に140ダメージを",
+          "2✨ 神楽舞共鳴共鳴ゲージを3上昇させ、ブロック"
+        ],
+        "dailyTag": false,
+        "clicked": true,
+        "shot": {
+          "file": "rc-sp375-normal-resume.png",
+          "bytes": 401335
+        }
+      },
+      "saveAfterLoad": {
+        "version": 9,
+        "mode": "normal",
+        "dailyKey": null,
+        "godId": "taiyo",
+        "round": 2,
+        "status": "playing",
+        "hand": 6,
+        "deck": 13,
+        "playerHp": 25,
+        "enemyHp": 82,
+        "enemyId": "enemy_02"
+      },
+      "saveDiff": [],
+      "otherKeys": {
+        "keys": [
+          "sevengods.matchups",
+          "sevengods.deckPreference",
+          "sevengods.daily",
+          "sevengods.records",
+          "sevengods.otomoBond",
+          "sevengods.stakes",
+          "sevengods.pendingRuns"
+        ],
+        "changed": [],
+        "missing": []
+      },
+      "played": null,
+      "network": {
+        "api": [],
+        "external": [],
+        "failed": [],
+        "errors": []
+      }
+    },
+    "rc-sp375-daily": {
+      "home": {
+        "version": "v1.0.0 (9c222a0)",
+        "todayCta": "挑戦する（残り2回）",
+        "resume": "続きから神域挑戦・大耀 vs 試練の影・ラウンド2",
+        "shot": {
+          "file": "rc-sp375-daily-home.png",
+          "bytes": 345980
+        }
+      },
+      "records": null,
+      "resume": {
+        "round": "2",
+        "topbar": "ラウンド 2 / 7 DAILY ★★★★★ 神域強化神力 3 / 3スコア 0",
+        "hpPairs": [
+          "2 / 7",
+          "3 / 3",
+          "1,290 / 1,29090",
+          "240 / 300",
+          "1 / 7"
+        ],
+        "handCards": 6,
+        "handNames": [
+          "2大耀専用🌿 後輩想い支援ブロックを60得て、",
+          "1🛡 受け流し防御ブロックを30得て、共鳴ゲー",
+          "2🛡 鉄壁の構え防御ブロックを120得る。⚡ ",
+          "2大耀専用⚔ 豪快な一撃攻撃敵に140ダメージを",
+          "1🛡 守護防御ブロックを50得る。このラウンド",
+          "2✨ 神楽舞共鳴共鳴ゲージを3上昇させ、ブロック"
+        ],
+        "dailyTag": true,
+        "clicked": true,
+        "shot": {
+          "file": "rc-sp375-daily-resume.png",
+          "bytes": 397403
+        }
+      },
+      "saveAfterLoad": {
+        "version": 9,
+        "mode": "daily",
+        "dailyKey": "2026-10-17",
+        "godId": "taiyo",
+        "round": 2,
+        "status": "playing",
+        "hand": 6,
+        "deck": 13,
+        "playerHp": 24,
+        "enemyHp": 129,
+        "enemyId": "enemy_01"
+      },
+      "saveDiff": [],
+      "otherKeys": {
+        "keys": [
+          "sevengods.matchups",
+          "sevengods.deckPreference",
+          "sevengods.daily",
+          "sevengods.dailyRunLog"
+        ],
+        "changed": [],
+        "missing": []
+      },
+      "played": null,
+      "network": {
+        "api": [],
+        "external": [],
+        "failed": [],
+        "errors": []
+      }
+    }
+  },
+  "result": "PASS",
+  "summary": {
+    "checks": 44,
+    "pass": 44,
+    "fail": 0
+  }
+}

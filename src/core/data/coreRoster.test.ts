@@ -19,9 +19,11 @@ import { getGameVersion, rankingImpactSnapshot } from '../replay/gameVersion'
  *     createHash('sha256').update(JSON.stringify(ENEMIES)).digest('hex')
  *   を出力する（`git show master:src/core/data/enemies.ts` の `ENEMIES`＝本ブランチの `CORE_ENEMIES`）。
  *   2026-10-17 の実測：b4ce1e31…9cdd4（決定274 忠次 branch の `shogunateRoster.test.ts` と同じ値＝7 体はそれ以来不変）。
+ *   2026-10-21 v1.0.2 統合：v1.0.1（master 1ce9876）で rank 7 値を再付番（Expected Specification Update・HP／行動表は不変＝
+ *   `enemies.ts` の CORE 差分は rank 行のみ）。`JSON.stringify(CORE_ENEMIES)` に `rank` が含まれるため golden を 5678e3e7…0e91 へ更新。
  * ★GAME_VERSION_GOLDEN は master の `useReactionLanguage.test.ts`（決定251 以降）と同じ値。
  */
-const CORE_GOLDEN_SHA256 = 'b4ce1e3165e408d73762bc131bccab1dc0905919c3f3b18dd539f54421f9cdd4'
+const CORE_GOLDEN_SHA256 = '5678e3e757f603ae3b2a1974c772c5480222bea9c7e3e6a78f96d1b49bd70e91'
 const GAME_VERSION_GOLDEN = '1.d794038a00b5b53c'
 const PICK_GOLDEN: Record<string, string> = {
   a: 'enemy_07',
@@ -122,13 +124,14 @@ describe('Pilot 敵（enemy_09 業斧の鬼将・軍略）', () => {
     expect(ENEMIES.some((e) => (e.id as string) === 'enemy_08')).toBe(false)
   })
 
-  it('鬼将のコピー（新規素材 0）：maxHp 94・art・stage・visualType・rank 2・battleCries は同一', () => {
+  it('鬼将のコピー（新規素材 0）：maxHp 94・art・stage・visualType・rank 3（v1.0.1 の★を継承）・battleCries は同一', () => {
     expect(def.maxHp).toBe(oni.maxHp)
     expect(def.maxHp).toBe(94)
     expect(def.art).toBe(oni.art)
     expect(def.stage).toEqual(oni.stage)
     expect(def.visualType).toBe(oni.visualType)
-    expect(def.rank).toBe(2)
+    expect(def.rank).toBe(3)
+    expect(def.rank).toBe(oni.rank)
     expect(def.battleCries).toEqual(oni.battleCries)
   })
 

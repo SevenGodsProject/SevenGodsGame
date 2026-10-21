@@ -1,0 +1,47 @@
+diff --git a/package-lock.json b/package-lock.json
+index a04aec3..a3f5ae6 100644
+--- a/package-lock.json
++++ b/package-lock.json
+@@ -1,12 +1,12 @@
+ {
+   "name": "sevengodsgame",
+-  "version": "1.0.0",
++  "version": "1.0.1",
+   "lockfileVersion": 3,
+   "requires": true,
+   "packages": {
+     "": {
+       "name": "sevengodsgame",
+-      "version": "1.0.0",
++      "version": "1.0.1",
+       "dependencies": {
+         "phaser": "^3.90.0",
+         "react": "^19.2.8",
+diff --git a/package.json b/package.json
+index a2ce7e7..22f7efc 100644
+--- a/package.json
++++ b/package.json
+@@ -1,7 +1,7 @@
+ {
+   "name": "sevengodsgame",
+   "private": true,
+-  "version": "1.0.0",
++  "version": "1.0.1",
+   "type": "module",
+   "scripts": {
+     "dev": "vite",
+diff --git a/src/publicFace.test.ts b/src/publicFace.test.ts
+index d4baf9a..101b3c4 100644
+--- a/src/publicFace.test.ts
++++ b/src/publicFace.test.ts
+@@ -54,8 +54,8 @@ describe('site.webmanifest', () => {
+ })
+ 
+ describe('buildInfo', () => {
+-  it('version は package.json と同じ 1.0.0、sha は 7 桁 hex か local／dev、ラベルは v<version> (<sha>)', () => {
+-    expect(APP_VERSION).toBe('1.0.0')
++  it('version は package.json と同じ 1.0.1、sha は 7 桁 hex か local／dev、ラベルは v<version> (<sha>)', () => {
++    expect(APP_VERSION).toBe('1.0.1')
+     expect(BUILD_SHA).toMatch(/^([0-9a-f]{7}|local|dev)$/)
+     expect(buildLabel()).toBe(`v${APP_VERSION} (${BUILD_SHA})`)
+   })
