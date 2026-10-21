@@ -78,7 +78,10 @@ describe('配線（既存の導線・記録に影響させない）', () => {
     expect(matchup).toMatch(/MATCHUP_ENEMIES: readonly EnemyId\[\] = Object\.values\(ENEMY_IDS\)/)
     const version = read('../../core/replay/gameVersion.ts')
     expect(version).toMatch(/import \{ CORE_ENEMIES \} from '\.\.\/data\/enemies\.js'/)
-    expect(version).toMatch(/enemies: CORE_ENEMIES,/)
+    // v1.0.2 統合：v1.0.1 の ★再付番（rank を v1.0.0 値に固定する enemiesForFingerprint）と合流。入力は引き続き CORE 7 体だけ
+    expect(version).toMatch(/return CORE_ENEMIES\.map\(/)
+    expect(version).toMatch(/enemies: enemiesForFingerprint\(\),/)
+    expect(version).not.toMatch(/enemies: ENEMIES,/)
     expect(version).toMatch(/enemyTactic: _enemyTactic, \.\.\.rest \} = RULES/)
   })
 
