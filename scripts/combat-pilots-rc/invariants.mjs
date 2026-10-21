@@ -14,7 +14,8 @@ import { CORE_ENEMIES, PILOT_ENEMIES, ENEMIES } from '../../src/core/data/enemie
 import { RULES } from '../../src/core/data/rules.ts'
 import { getGameVersion, rankingImpactSnapshot } from '../../src/core/replay/gameVersion.ts'
 
-const CORE_GOLDEN_SHA256 = 'b4ce1e3165e408d73762bc131bccab1dc0905919c3f3b18dd539f54421f9cdd4'
+// v1.0.2 統合（2026-10-21）：v1.0.1 の rank 再付番で CORE 7 体の JSON が変わった（HP・行動表は不変）。coreRoster.test.ts と同じ新 golden
+const CORE_GOLDEN_SHA256 = '5678e3e757f603ae3b2a1974c772c5480222bea9c7e3e6a78f96d1b49bd70e91'
 const GAME_VERSION_GOLDEN = '1.d794038a00b5b53c'
 
 const coreSha = createHash('sha256').update(JSON.stringify(CORE_ENEMIES)).digest('hex')
