@@ -1,0 +1,185 @@
+[gate-preview 2026-10-21T13:06:52.033Z] start vite preview --port 4199 --strictPort
+(node:15820) [DEP0190] DeprecationWarning: Passing args to a child process with shell option true can lead to security vulnerabilities, as the arguments are not escaped, only concatenated.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+[gate-preview 2026-10-21T13:06:55.491Z] [preview] [32m➜[39m  [1mLocal[22m:   [36mhttp://localhost:[1m4199[22m/[39m
+[gate-preview 2026-10-21T13:06:55.492Z] [preview] [2m  [32m➜[39m  [1mNetwork[22m[2m: use [22m[1m--host[22m[2m to expose[22m
+[gate-preview 2026-10-21T13:06:55.740Z] preview ready at http://localhost:4199
+[gate-preview 2026-10-21T13:06:55.740Z] run [v101-acceptance]: node scripts/v1_0_1-rc/acceptance.mjs docs/evidence/v1_0_2-rc/07a-v101-acceptance/result.json http://localhost:4199 --sha 32f7f77 env={}
+PASS [pc] Home version label = v1.0.2 (32f7f77)
+PASS [pc] Home shows 「初陣へ」 for a first-time player
+PASS [pc] Brief has 3 lines
+PASS [pc] Brief ② = 「余った神力と防御は、次のラウンドへ持ち越せません。」
+PASS [pc] Brief card has no horizontal overflow
+PASS [pc] Tutorial ② body = 確定文言（⚡ 溜め→必殺・⚔ 連撃・防御はそのラウンドだけ）
+PASS [pc] Tutorial tips = 6
+PASS [pc] Tutorial tip ③ = 防御は次のラウンドに残りません…
+PASS [pc] Tutorial card has no horizontal overflow
+PASS [pc] Enemy select note ① = 実測の手強さ…
+PASS [pc] Enemy select note ② unchanged
+PASS [pc] enemy cards = 8 (7 + entrust)
+PASS [pc] ★ 試練の影 = 2
+PASS [pc] ★ 業斧の鬼将 = 3
+PASS [pc] ★ 藍花の怨霊 = 4
+PASS [pc] ★ 銀甲の機工師 = 2
+PASS [pc] ★ 双牙の魔獣 = 3
+PASS [pc] ★ 蒼海の龍神 = 4
+PASS [pc] ★ 乱舞の道化 = 1
+PASS [pc] Enemy select has no horizontal page overflow
+PASS [pc] JS error 0
+PASS [pc] external requests 0
+PASS [sp375] Home version label = v1.0.2 (32f7f77)
+PASS [sp375] Home shows 「初陣へ」 for a first-time player
+PASS [sp375] Brief has 3 lines
+PASS [sp375] Brief ② = 「余った神力と防御は、次のラウンドへ持ち越せません。」
+PASS [sp375] Brief card has no horizontal overflow
+PASS [sp375] Tutorial ② body = 確定文言（⚡ 溜め→必殺・⚔ 連撃・防御はそのラウンドだけ）
+PASS [sp375] Tutorial tips = 6
+PASS [sp375] Tutorial tip ③ = 防御は次のラウンドに残りません…
+PASS [sp375] Tutorial card has no horizontal overflow
+PASS [sp375] Enemy select note ① = 実測の手強さ…
+PASS [sp375] Enemy select note ② unchanged
+PASS [sp375] enemy cards = 8 (7 + entrust)
+PASS [sp375] ★ 試練の影 = 2
+PASS [sp375] ★ 業斧の鬼将 = 3
+PASS [sp375] ★ 藍花の怨霊 = 4
+PASS [sp375] ★ 銀甲の機工師 = 2
+PASS [sp375] ★ 双牙の魔獣 = 3
+PASS [sp375] ★ 蒼海の龍神 = 4
+PASS [sp375] ★ 乱舞の道化 = 1
+PASS [sp375] Enemy select has no horizontal page overflow
+PASS [sp375] JS error 0
+PASS [sp375] external requests 0
+[pc] measures {"brief2":{"text":"カード左上の数字が必要な神力です。余った神力と防御は、次のラウンドへ持ち越せません。","scrollWidth":409,"clientWidth":409,"width":409,"height":48,"lineHeight":24,"lines":2},"tutorial2":{"text":"毎ラウンド、敵は次の行動を事前に見せます。⚡「溜め」は次のラウンドに大技（必殺）が来る合図、⚔ 連撃は複数回当たります。防御はそのラウンドだけ有効です。","scrollWidth":304,"clientWidth":304,"width":304,"height":62,"lineHeight":20.8,"lines":3},"note":{"text":"★は脅威度（実測の手強さ：負けやすさ・受けるダメージ・倒すまでの長さ。最大5）。難易度の★とは別物です。迷ったら「神に委ねる」で、神々があなたの相手を選びます。","scrollWidth":960,"clientWidth":960,"width":960,"height":42,"lineHeight":21,"lines":2}}
+[sp375] measures {"brief2":{"text":"カード左上の数字が必要な神力です。余った神力と防御は、次のラウンドへ持ち越せません。","scrollWidth":264,"clientWidth":264,"width":264,"height":72,"lineHeight":24,"lines":3},"tutorial2":{"text":"毎ラウンド、敵は次の行動を事前に見せます。⚡「溜め」は次のラウンドに大技（必殺）が来る合図、⚔ 連撃は複数回当たります。防御はそのラウンドだけ有効です。","scrollWidth":159,"clientWidth":159,"width":159,"height":125,"lineHeight":20.8,"lines":6},"note":{"text":"★は脅威度（実測の手強さ：負けやすさ・受けるダメージ・倒すまでの長さ。最大5）。難易度の★とは別物です。迷ったら「神に委ねる」で、神々があなたの相手を選びます。","scrollWidth":335,"clientWidth":335,"width":335,"height":63,"lineHeight":21,"lines":3}}
+
+44/44 PASS
+[gate-preview 2026-10-21T13:07:22.511Z] exit 0 (27s) [v101-acceptance]
+[gate-preview 2026-10-21T13:07:22.512Z] run [lane1-acceptance]: node scripts/lane1-threat-branch/acceptance.mjs docs/evidence/v1_0_2-rc/07b-lane1-acceptance/result.json http://localhost:4199 env={}
+PASS [pc] enemy cards = 8 (7 + entrust)
+PASS [pc] core enemy listed: 試練の影
+PASS [pc] core enemy listed: 業斧の鬼将
+PASS [pc] core enemy listed: 藍花の怨霊
+PASS [pc] core enemy listed: 銀甲の機工師
+PASS [pc] core enemy listed: 双牙の魔獣
+PASS [pc] core enemy listed: 蒼海の龍神
+PASS [pc] core enemy listed: 乱舞の道化
+PASS [pc] pilot card hidden
+PASS [pc] pilot chip hidden
+PASS [pc] pilot notice hidden
+PASS [pc] JS error 0
+PASS [pc/pilot] enemy cards = 9 (7 + entrust + pilot)
+PASS [pc/pilot] core enemy listed: 試練の影
+PASS [pc/pilot] core enemy listed: 業斧の鬼将
+PASS [pc/pilot] core enemy listed: 藍花の怨霊
+PASS [pc/pilot] core enemy listed: 銀甲の機工師
+PASS [pc/pilot] core enemy listed: 双牙の魔獣
+PASS [pc/pilot] core enemy listed: 蒼海の龍神
+PASS [pc/pilot] core enemy listed: 乱舞の道化
+PASS [pc/pilot] pilot card shown
+PASS [pc/pilot] pilot chip shown
+PASS [pc/pilot] pilot notice shown
+PASS [pc/pilot] no horizontal overflow on enemy select
+PASS [pc/pilot] battle started (round end button visible)
+PASS [pc/pilot] enemy name shown
+PASS [pc/pilot] oni art reused as avatar
+PASS [pc/pilot] oni art served 200
+PASS [pc/pilot] no battleSave while playing a pilot battle
+PASS [pc/pilot] R1 intent = ⚔ 50
+PASS [pc/pilot] R2 intent = ⚔ 90
+PASS [pc/pilot] R3 intent = charge「⚠ 傷が浅ければ次は断岩」
+PASS [pc/pilot] R4 intent = 業斧・断岩 260 (no damage dealt → else branch)
+PASS [pc/pilot] battle finished (result shown)
+PASS [pc/pilot] pilot battle wrote nothing (keys after = keys before)
+PASS [pc/pilot] no record keys after a pilot battle
+PASS [pc/pilot] JS error 0
+PASS [sp375] enemy cards = 8 (7 + entrust)
+PASS [sp375] core enemy listed: 試練の影
+PASS [sp375] core enemy listed: 業斧の鬼将
+PASS [sp375] core enemy listed: 藍花の怨霊
+PASS [sp375] core enemy listed: 銀甲の機工師
+PASS [sp375] core enemy listed: 双牙の魔獣
+PASS [sp375] core enemy listed: 蒼海の龍神
+PASS [sp375] core enemy listed: 乱舞の道化
+PASS [sp375] pilot card hidden
+PASS [sp375] pilot chip hidden
+PASS [sp375] pilot notice hidden
+PASS [sp375] JS error 0
+PASS [sp375/pilot] enemy cards = 9 (7 + entrust + pilot)
+PASS [sp375/pilot] core enemy listed: 試練の影
+PASS [sp375/pilot] core enemy listed: 業斧の鬼将
+PASS [sp375/pilot] core enemy listed: 藍花の怨霊
+PASS [sp375/pilot] core enemy listed: 銀甲の機工師
+PASS [sp375/pilot] core enemy listed: 双牙の魔獣
+PASS [sp375/pilot] core enemy listed: 蒼海の龍神
+PASS [sp375/pilot] core enemy listed: 乱舞の道化
+PASS [sp375/pilot] pilot card shown
+PASS [sp375/pilot] pilot chip shown
+PASS [sp375/pilot] pilot notice shown
+PASS [sp375/pilot] no horizontal overflow on enemy select
+PASS [sp375/pilot] battle started (round end button visible)
+PASS [sp375/pilot] enemy name shown
+PASS [sp375/pilot] oni art reused as avatar
+PASS [sp375/pilot] oni art served 200
+PASS [sp375/pilot] no battleSave while playing a pilot battle
+PASS [sp375/pilot] R1 intent = ⚔ 50
+PASS [sp375/pilot] R2 intent = ⚔ 90
+PASS [sp375/pilot] R3 intent = charge「⚠ 傷が浅ければ次は断岩」
+PASS [sp375/pilot] R4 intent = 業斧・断岩 260 (no damage dealt → else branch)
+PASS [sp375/pilot] battle finished (result shown)
+PASS [sp375/pilot] pilot battle wrote nothing (keys after = keys before)
+PASS [sp375/pilot] no record keys after a pilot battle
+PASS [sp375/pilot] JS error 0
+
+74/74 PASS
+[gate-preview 2026-10-21T13:09:10.668Z] exit 0 (108s) [lane1-acceptance]
+[gate-preview 2026-10-21T13:09:10.670Z] run [vocab-check]: node scripts/v1_0_2-rc/vocab-check.mjs docs/evidence/v1_0_2-rc/07c-vocab/result.json http://localhost:4199 env={}
+vocab-check: 20/20 PASS
+[gate-preview 2026-10-21T13:09:30.597Z] exit 0 (20s) [vocab-check]
+[gate-preview 2026-10-21T13:09:30.598Z] run [home-version]: node scripts/release-audit/home-version-smoke.mjs docs/evidence/v1_0_2-rc/10-home-version.json http://localhost:4199 1.0.2 32f7f77 env={}
+node:url:1024
+  validateString(path, 'path');
+  ^
+
+TypeError [ERR_INVALID_ARG_TYPE]: The "path" argument must be of type string. Received undefined
+    at pathToFileURL (node:url:1024:3)
+    at file:///C:/Users/kimi1/SevenGodsGame-lane2b/scripts/release-audit/home-version-smoke.mjs:10:35
+    at ModuleJob.run (node:internal/modules/esm/module_job:439:25)
+    at async node:internal/modules/esm/loader:643:26
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5) {
+  code: 'ERR_INVALID_ARG_TYPE'
+}
+
+Node.js v24.18.1
+[gate-preview 2026-10-21T13:09:30.807Z] exit 1 (0s) [home-version]
+[gate-preview 2026-10-21T13:09:30.808Z] run [probe-ryujin]: node scripts/lane2-combat-feel-v2/probe.mjs docs/evidence/v1_0_2-rc/08-probe/ryujin http://localhost:4199 env={"CF2_VIEWPORTS":"pc,sp375"}
+[pc] 蒼海の龍神 turns=22 plays=16 heavy=4 fx=31 offViewport=0 overPlate=0 overBubble=0 overDock=0 centerInAvatar=18/18 bands=[{"turn":17,"t":1194,"band":"half"},{"turn":21,"t":699,"band":"quarter"}] cf2=["cf2-break cf2-break-half@DIV","cf2-break cf2-break-quarter@DIV"] finished=true errors=0
+[sp375] 蒼海の龍神 turns=22 plays=16 heavy=4 fx=46 offViewport=2 overPlate=0 overBubble=0 overDock=0 centerInAvatar=21/21 bands=[{"turn":17,"t":1910,"band":"half"},{"turn":21,"t":656,"band":"quarter"}] cf2=["cf2-break cf2-break-half@DIV","cf2-break cf2-break-quarter@DIV"] finished=true errors=0
+[gate-preview 2026-10-21T13:15:15.414Z] exit 0 (345s) [probe-ryujin]
+[gate-preview 2026-10-21T13:15:15.418Z] run [probe-trial]: node scripts/lane2-combat-feel-v2/probe.mjs docs/evidence/v1_0_2-rc/08-probe/trial http://localhost:4199 env={"CF2_VIEWPORTS":"pc","CF2_ENEMY":"trial","CF2_ENEMY_NAME":"試練の影"}
+[pc] 試練の影 turns=23 plays=17 heavy=5 fx=46 offViewport=0 overPlate=0 overBubble=0 overDock=0 centerInAvatar=22/22 bands=[{"turn":17,"t":958,"band":"half"},{"turn":21,"t":712,"band":"quarter"}] cf2=["cf2-break cf2-break-half@DIV","cf2-break cf2-break-quarter@DIV"] finished=true errors=0
+[gate-preview 2026-10-21T13:17:47.175Z] exit 0 (152s) [probe-trial]
+[gate-preview 2026-10-21T13:17:47.176Z] run [probe-oni]: node scripts/lane2-combat-feel-v2/probe.mjs docs/evidence/v1_0_2-rc/08-probe/oni http://localhost:4199 env={"CF2_VIEWPORTS":"pc","CF2_ENEMY":"oni","CF2_ENEMY_NAME":"業斧の鬼将"}
+[pc] 業斧の鬼将 turns=23 plays=17 heavy=5 fx=36 offViewport=0 overPlate=0 overBubble=0 overDock=0 centerInAvatar=19/19 bands=[{"turn":17,"t":2878,"band":"half"},{"turn":21,"t":915,"band":"quarter"}] cf2=["cf2-break cf2-break-half@DIV","cf2-break cf2-break-quarter@DIV"] finished=true errors=0
+[gate-preview 2026-10-21T13:20:40.379Z] exit 0 (173s) [probe-oni]
+[gate-preview 2026-10-21T13:20:40.380Z] run [probe-onryo]: node scripts/lane2-combat-feel-v2/probe.mjs docs/evidence/v1_0_2-rc/08-probe/onryo http://localhost:4199 env={"CF2_VIEWPORTS":"pc","CF2_ENEMY":"onryo","CF2_ENEMY_NAME":"藍花の怨霊"}
+[pc] 藍花の怨霊 turns=18 plays=13 heavy=2 fx=21 offViewport=0 overPlate=0 overBubble=0 overDock=0 centerInAvatar=13/13 bands=[{"turn":17,"t":1919,"band":"half"}] cf2=["cf2-break cf2-break-half@DIV"] finished=true errors=0
+[gate-preview 2026-10-21T13:22:59.490Z] exit 0 (139s) [probe-onryo]
+[gate-preview 2026-10-21T13:22:59.491Z] run [probe-karakuri]: node scripts/lane2-combat-feel-v2/probe.mjs docs/evidence/v1_0_2-rc/08-probe/karakuri http://localhost:4199 env={"CF2_VIEWPORTS":"pc","CF2_ENEMY":"karakuri","CF2_ENEMY_NAME":"銀甲の機工師"}
+[pc] 銀甲の機工師 turns=19 plays=14 heavy=2 fx=20 offViewport=0 overPlate=0 overBubble=0 overDock=0 centerInAvatar=12/12 bands=[{"turn":17,"t":1672,"band":"half"}] cf2=["cf2-break cf2-break-half@DIV"] finished=true errors=0
+[gate-preview 2026-10-21T13:25:33.152Z] exit 0 (154s) [probe-karakuri]
+[gate-preview 2026-10-21T13:25:33.152Z] run [probe-juuma]: node scripts/lane2-combat-feel-v2/probe.mjs docs/evidence/v1_0_2-rc/08-probe/juuma http://localhost:4199 env={"CF2_VIEWPORTS":"pc","CF2_ENEMY":"juuma","CF2_ENEMY_NAME":"双牙の魔獣"}
+[pc] 双牙の魔獣 turns=21 plays=16 heavy=3 fx=34 offViewport=0 overPlate=0 overBubble=0 overDock=0 centerInAvatar=16/16 bands=[{"turn":16,"t":1494,"band":"half"},{"turn":19,"t":849,"band":"quarter"}] cf2=["cf2-break cf2-break-half@DIV","cf2-break cf2-break-quarter@DIV"] finished=true errors=0
+[gate-preview 2026-10-21T13:27:53.668Z] exit 0 (141s) [probe-juuma]
+[gate-preview 2026-10-21T13:27:53.669Z] run [probe-doukeshi]: node scripts/lane2-combat-feel-v2/probe.mjs docs/evidence/v1_0_2-rc/08-probe/doukeshi http://localhost:4199 env={"CF2_VIEWPORTS":"pc","CF2_ENEMY":"doukeshi","CF2_ENEMY_NAME":"乱舞の道化"}
+[pc] 乱舞の道化 turns=21 plays=16 heavy=3 fx=27 offViewport=0 overPlate=0 overBubble=0 overDock=0 centerInAvatar=16/16 bands=[{"turn":16,"t":606,"band":"half"},{"turn":21,"t":1373,"band":"quarter"}] cf2=["cf2-break cf2-break-half@DIV"] finished=true errors=0
+[gate-preview 2026-10-21T13:30:17.348Z] exit 0 (144s) [probe-doukeshi]
+[gate-preview 2026-10-21T13:30:17.349Z] run [probe-threat]: node scripts/lane2-combat-feel-v2/probe-threat.mjs docs/evidence/v1_0_2-rc/08-probe-threat http://localhost:4199 env={"CF2_VIEWPORTS":"pc,sp375","CF2T_SEEDS":"cf2-threat-01,cf2-threat-02,cf2-threat-03"}
+[pc/cf2-threat-01] 業斧の鬼将・軍略 R3="⚠ 傷が浅ければ次は断岩" R4="業斧・断岩 260" (else) breaks=[{"r":4,"band":"high->half","start":1869,"end":3806,"unlock":1183,"charge":false,"both":0}] immediateEnd=null errors=0
+[pc/cf2-threat-02] 業斧の鬼将・軍略 R3="⚠ 傷が浅ければ次は断岩" R4="強打 130" (then) breaks=[{"r":3,"band":"high->half","start":689,"end":1882,"unlock":367,"charge":true,"both":9}] immediateEnd={"round":3,"card":"⚔ 豪快な一撃","endClickMs":1410,"intentBefore":"⚠ 傷が浅ければ次は断岩","intentChangeMs":2472,"intentAfter":"強打 130","breakEndMs":1882,"breakStillRunningAtIntentChange":false,"breakRunningAtClick":true,"r4Intent":"強打 130","r4Band":"half"} errors=0
+[pc/cf2-threat-03] 業斧の鬼将・軍略 R3="⚠ 傷が浅ければ次は断岩" R4="強打 130" (then) breaks=[{"r":3,"band":"high->half","start":904,"end":3389,"unlock":532,"charge":true,"both":10}] immediateEnd={"round":3,"card":"⚔ 豪快な一撃","endClickMs":2934,"intentBefore":"⚠ 傷が浅ければ次は断岩","intentChangeMs":3763,"intentAfter":"強打 130","breakEndMs":3389,"breakStillRunningAtIntentChange":false,"breakRunningAtClick":true,"r4Intent":"強打 130","r4Band":"half"} errors=0
+[sp375/cf2-threat-01] 業斧の鬼将・軍略 R3="⚠ 傷が浅ければ次は断岩" R4="業斧・断岩 260" (else) breaks=[{"r":4,"band":"high->half","start":2061,"end":5824,"unlock":1597,"charge":false,"both":0}] immediateEnd=null errors=0
+[sp375/cf2-threat-02] 業斧の鬼将・軍略 R3="⚠ 傷が浅ければ次は断岩" R4="強打 130" (then) breaks=[{"r":3,"band":"high->half","start":1319,"end":4239,"unlock":275,"charge":true,"both":23}] immediateEnd={"round":3,"card":"⚔ 豪快な一撃","endClickMs":3783,"intentBefore":"⚠ 傷が浅ければ次は断岩","intentChangeMs":4573,"intentAfter":"強打 130","breakEndMs":4239,"breakStillRunningAtIntentChange":false,"breakRunningAtClick":true,"r4Intent":"強打 130","r4Band":"half"} errors=0
+[sp375/cf2-threat-03] 業斧の鬼将・軍略 R3="⚠ 傷が浅ければ次は断岩" R4="強打 130" (then) breaks=[{"r":3,"band":"high->half","start":656,"end":2913,"unlock":358,"charge":true,"both":15}] immediateEnd={"round":3,"card":"⚔ 豪快な一撃","endClickMs":2400,"intentBefore":"⚠ 傷が浅ければ次は断岩","intentChangeMs":3318,"intentAfter":"強打 130","breakEndMs":2913,"breakStillRunningAtIntentChange":false,"breakRunningAtClick":true,"r4Intent":"強打 130","r4Band":"half"} errors=0
+[gate-preview 2026-10-21T13:37:24.309Z] exit 0 (427s) [probe-threat]
+[gate-preview 2026-10-21T13:37:24.496Z] preview killed
+gate-preview exit 1

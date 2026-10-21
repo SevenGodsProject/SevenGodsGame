@@ -1,0 +1,20 @@
+[
+  {
+    "name": "save-migration",
+    "cmd": "node scripts/release-audit/save-migration.mjs docs/evidence/v1_0_2-rc/09-save-migration/result.json http://localhost:4182 http://localhost:4181",
+    "env": {
+      "PLAYWRIGHT_MODULE": "C:/Users/kimi1/SevenGodsGame-lane2b/node_modules/playwright/index.mjs"
+    }
+  },
+  {
+    "name": "home-version",
+    "cmd": "node scripts/release-audit/home-version-smoke.mjs docs/evidence/v1_0_2-rc/10-home-version.json http://localhost:4181 1.0.2 32f7f77",
+    "env": {
+      "PLAYWRIGHT_MODULE": "C:/Users/kimi1/SevenGodsGame-lane2b/node_modules/playwright/index.mjs"
+    }
+  },
+  {
+    "name": "vocab-check-rerun",
+    "cmd": "node scripts/v1_0_2-rc/vocab-check.mjs docs/evidence/v1_0_2-rc/07c-vocab/result.json http://localhost:4181"
+  }
+]
