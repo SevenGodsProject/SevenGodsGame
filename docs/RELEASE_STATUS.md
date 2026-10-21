@@ -26,7 +26,7 @@ Production の「確定状態」を一目で確認するための要約です。
 |---|---|
 | **RC** | `release/v1_0_2-rc`（worktree `SevenGodsGame-lane2b`・統合 RC `fe1eb37` 起点・master `1ce9876` を merge 済み・conflict 1 解決）。内容＝軍略 Pilot v1.1（`?pilot=threat` 隔離）× Enemy Break v1 ＋ 語彙整合 3 点 ＋ version 1.0.2 ＋ 決定281 記録 docs |
 | **不変** | gameVersion `1.d794038a00b5b53c` 不変・save v9 不変・CORE 7 体の HP／行動表 不変・Daily pool／攻略盤 CORE 7 体のまま |
-| **Gate** | `docs/V1_0_2_RC_GATE.md` G0〜G12 **13/13 PASS**（vitest 1,504／build 470.72 kB／受入 44/44・74/74・20/20／probe 7 体＋threat 6/6／**Save Migration 44/44**／Home `v1.0.2 (32f7f77)`）・evidence `docs/evidence/v1_0_2-rc/` |
+| **Gate** | `docs/V1_0_2_RC_GATE.md` G0〜G12 **13 系統・17 項目すべて PASS**（vitest 1,504／build 470.72 kB／受入 44/44・74/74・20/20／probe 7 体＋threat 6/6／**Save Migration 44/44**／Home `v1.0.2 (32f7f77)`）・evidence `docs/evidence/v1_0_2-rc/` |
 | **公開経路** | CEO：push → PR → CI GREEN → `gh pr merge --merge` → Vercel 自動 deploy → PM：Production Smoke S1〜S7 → 本節を A-0 へ昇格。Rollback 先＝`7133236766`（v1.0.1） |
 | **Known** | 変更なし（K01〜K39 据え置き・新規 0）。統合 RC Gate v1 §4 の hard 演出ずれは据え置き |
 

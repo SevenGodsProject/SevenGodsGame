@@ -1,6 +1,6 @@
 # v1.0.2 RC Gate — 軍略 Pilot v1.1 × Enemy Break v1 ＋ 初心者導線 語彙整合ホットフィックス（決定282 候補）
 
-> **状態（2026-10-21・Lane 1・PM／Dev・AI 判断）：RC `release/v1_0_2-rc`（worktree `SevenGodsGame-lane2b`・起点＝統合 RC `fe1eb37`）に master `1ce9876`（v1.0.1）を merge し、Gate G0〜G12 を**すべて実測で PASS**。**READY FOR CEO PRODUCTION RELEASE APPROVAL**（push／PR／master merge／deploy は未実施・CEO 承認後に Ruleset 下の正規経路で公開）。
+> **状態（2026-10-21・Lane 1・PM／Dev・AI 判断）：RC `release/v1_0_2-rc`（worktree `SevenGodsGame-lane2b`・起点＝統合 RC `fe1eb37`）に master `1ce9876`（v1.0.1）を merge し、Gate G0〜G12（13 系統・細分を含めて 17 項目）を**すべて実測で PASS**。**READY FOR CEO PRODUCTION RELEASE APPROVAL**（push／PR／master merge／deploy は未実施・CEO 承認後に Ruleset 下の正規経路で公開）。
 
 - CEO 指示：2026-10-21「決定282候補：v1.0.2 統合RC制作」（AI-PM 第 1 優先作業の承認）＋同日「5 レーン並列開発体制」Lane 1
 - 入力：`docs/COMBAT_PILOTS_INTEG_GATE_V1.md`（統合 RC `fe1eb37`・Gate 11/11）／`docs/V1_0_1_RELEASE_READINESS.md` §2-3（`gameVersion.ts` conflict の最終形）／`docs/FIRST_PLAYER_TUTORIAL_AUDIT_V1.md` §10-1（語彙整合 (a)(b)(c)）／`docs/V1_0_1_RC_GATE_CHECKLIST.md`（Gate 項目の基準）
@@ -16,7 +16,7 @@
 | 内容 | ① 軍略 Pilot v1.1（Lane 1・enemy_09・`?pilot=threat` 隔離・難易度別しきい値）② Enemy Break v1（Lane 2・表示 HP 50%／25% 帯で敵が 1 回崩れる・表示専用）③ 語彙整合ホットフィックス 3 点（共鳴名札「神技発動」→「神の一撃」／遊び方 ①「神技」→「得意技」／遊び方 ② 図を SVG グリフ＋「50」）④ version 1.0.2 ⑤ 決定281 の公開記録 docs（`fa941e8`）の同梱 |
 | 起点と commit | `fe1eb37`（統合 RC）→ **`3412180`** merge master `1ce9876`（conflict 1＝`gameVersion.ts` を READINESS §2-3 の最終形で解決・enemy_09 rank 2→3・CORE golden 更新）→ **`340f5f7`** 語彙 (a)(b)(c) → **`33fa29f`** version 1.0.2 → **`c46ac22`** `pilotFlag.test.ts` 契約更新 → **`32f7f77`** `invariants.mjs` golden → **`10463c8`** merge `fa941e8`（決定281 記録・docs のみ）→ 本書＋証跡 commit |
 | 不変性（§2） | `getGameVersion()` ＝ **`1.d794038a00b5b53c` 不変**（golden 3 本 PASS）／save v9 不変／CORE 7 体の HP・行動表 不変（差分は v1.0.1 の rank 行のみ＝golden sha256 を `5678e3e7…` に更新）／`src/core` の差分＝Lane 1 v1.1 ＋ v1.0.1 rank のみ／Daily pool・攻略盤は CORE 7 体のまま（`pilotFlag.test.ts`） |
-| 自動 Gate（§3） | **G0〜G12 の 13 項目すべて PASS・FAIL 0・UNRUN 0**：tsc 0／oxlint 11（master 基準・新規 0）／vitest **1,504 PASS・0 fail・17 skip**／build `index-xO5hO-tv.js` 470.72 kB・css 194.85 kB／invariants 13/13／Ranking Absence PASS／Secret PASS／v1.0.1 受入 **44/44**／Lane 1 受入 **74/74**／語彙確認 **20/20**（PC・SP375）／probe 7 体 8 run 決着・JS error 0／probe-threat 6/6／**Save Migration 44/44**（master v1.0.1 build × RC build）／Home version `v1.0.2 (32f7f77)` |
+| 自動 Gate（§3） | **G0〜G12（13 系統・細分を含めて 17 項目）すべて PASS・FAIL 0・UNRUN 0**（内訳：G2b invariants／G7a・G7b・G7c 受入 3 種／G8t probe-threat を細分として数える）：tsc 0／oxlint 11（master 基準・新規 0）／vitest **1,504 PASS・0 fail・17 skip**／build `index-xO5hO-tv.js` 470.72 kB・css 194.85 kB／invariants 13/13／Ranking Absence PASS／Secret PASS／v1.0.1 受入 **44/44**／Lane 1 受入 **74/74**／語彙確認 **20/20**（PC・SP375）／probe 7 体 8 run 決着・JS error 0／probe-threat 6/6／**Save Migration 44/44**（master v1.0.1 build × RC build）／Home version `v1.0.2 (32f7f77)` |
 | Known | 統合 RC Gate v1 §4 の「hard 演出ずれ（HP 55〜64・プレイヤー有利側のみ）」を**据え置き**（表示コード変更 0・AI 推奨＝現状維持）。SP375 龍神の着弾 FX viewport 外 2 件＝Lane 2 After と同数（既知の L4 斬撃）。新規 Known 0 |
 | CEO 判断 | **Production 公開承認 1 件のみ**（CLAUDE.md §6-3 #8）。内容・仕様の新規判断 0（軍略 v1.1 は CEO QA 4/4・Enemy Break は 6/6 PASS 済み・語彙 3 点は §6-2 の軽微な UX 調整） |
 | 公開経路 | CEO：RC branch を push → PR → CI GREEN（`tsc / oxlint / vitest / build`）→ `gh pr merge --merge` → Vercel 自動 deploy → Production Smoke（`docs/V1_0_1_PRODUCTION_SMOKE.md` S1〜S7 を v1.0.2 の値で）。Rollback 先＝deployment `7133236766`（v1.0.1） |
@@ -51,7 +51,7 @@
 
 ---
 
-## 3. 自動 Gate G0〜G12（直列・2026-10-21 12:5x〜13:4x UTC）
+## 3. 自動 Gate G0〜G12（13 系統・細分を含めて 17 項目・直列・2026-10-21 12:5x〜13:4x UTC）
 
 | # | Gate | 結果 | 数値 | 証跡（`docs/evidence/v1_0_2-rc/`） |
 |---|---|---|---|---|
