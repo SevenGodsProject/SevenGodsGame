@@ -1,0 +1,145 @@
+{
+  "base": "http://localhost:4181",
+  "passed": 20,
+  "total": 20,
+  "results": [
+    {
+      "viewport": "pc",
+      "checks": [
+        {
+          "name": "(b) 遊び方 ① に「得意技」がある",
+          "pass": true,
+          "detail": "好きな神と難易度を選び、デッキを組みます。最初は「おすすめデッキ」のままで大丈夫です。神によっては「得意技」があり、神選択画面に表示されます。"
+        },
+        {
+          "name": "(b) 遊び方 ① に「神技」が無い",
+          "pass": true,
+          "detail": "好きな神と難易度を選び、デッキを組みます。最初は「おすすめデッキ」のままで大丈夫です。神によっては「得意技」があり、神選択画面に表示されます。"
+        },
+        {
+          "name": "(b) 遊び方 ① は 71 コードポイント",
+          "pass": true,
+          "detail": 71
+        },
+        {
+          "name": "(c) 遊び方 ② の図 = SVG グリフ 1 個 ＋「50」",
+          "pass": true,
+          "detail": {
+            "text": "50",
+            "svg": 1,
+            "scrollWidth": 94,
+            "clientWidth": 94
+          }
+        },
+        {
+          "name": "(c) 遊び方 ② の図に「次の攻撃」「⚔」が無い",
+          "pass": true,
+          "detail": "50"
+        },
+        {
+          "name": "(c) 図枠に横 overflow 無し",
+          "pass": true,
+          "detail": {
+            "text": "50",
+            "svg": 1,
+            "scrollWidth": 94,
+            "clientWidth": 94
+          }
+        },
+        {
+          "name": "(a) 共鳴名札 = 「あと N で神の一撃」",
+          "pass": true,
+          "detail": "あと7で神の一撃"
+        },
+        {
+          "name": "(a) 共鳴名札に「神技」が無い",
+          "pass": true,
+          "detail": "あと7で神の一撃"
+        },
+        {
+          "name": "(a) 戦闘画面のどこにも「神技発動」が無い",
+          "pass": true
+        },
+        {
+          "name": "JS error 0",
+          "pass": true,
+          "detail": []
+        }
+      ],
+      "shots": [
+        "tutorial-1-pc.png",
+        "tutorial-2-pc.png",
+        "battle-plate-pc.png"
+      ]
+    },
+    {
+      "viewport": "sp375",
+      "checks": [
+        {
+          "name": "(b) 遊び方 ① に「得意技」がある",
+          "pass": true,
+          "detail": "好きな神と難易度を選び、デッキを組みます。最初は「おすすめデッキ」のままで大丈夫です。神によっては「得意技」があり、神選択画面に表示されます。"
+        },
+        {
+          "name": "(b) 遊び方 ① に「神技」が無い",
+          "pass": true,
+          "detail": "好きな神と難易度を選び、デッキを組みます。最初は「おすすめデッキ」のままで大丈夫です。神によっては「得意技」があり、神選択画面に表示されます。"
+        },
+        {
+          "name": "(b) 遊び方 ① は 71 コードポイント",
+          "pass": true,
+          "detail": 71
+        },
+        {
+          "name": "(c) 遊び方 ② の図 = SVG グリフ 1 個 ＋「50」",
+          "pass": true,
+          "detail": {
+            "text": "50",
+            "svg": 1,
+            "scrollWidth": 94,
+            "clientWidth": 94
+          }
+        },
+        {
+          "name": "(c) 遊び方 ② の図に「次の攻撃」「⚔」が無い",
+          "pass": true,
+          "detail": "50"
+        },
+        {
+          "name": "(c) 図枠に横 overflow 無し",
+          "pass": true,
+          "detail": {
+            "text": "50",
+            "svg": 1,
+            "scrollWidth": 94,
+            "clientWidth": 94
+          }
+        },
+        {
+          "name": "(a) 共鳴名札 = 「あと N で神の一撃」",
+          "pass": true,
+          "detail": "あと7で神の一撃"
+        },
+        {
+          "name": "(a) 共鳴名札に「神技」が無い",
+          "pass": true,
+          "detail": "あと7で神の一撃"
+        },
+        {
+          "name": "(a) 戦闘画面のどこにも「神技発動」が無い",
+          "pass": true
+        },
+        {
+          "name": "JS error 0",
+          "pass": true,
+          "detail": []
+        }
+      ],
+      "shots": [
+        "tutorial-1-sp375.png",
+        "tutorial-2-sp375.png",
+        "battle-plate-sp375.png"
+      ]
+    }
+  ]
+}

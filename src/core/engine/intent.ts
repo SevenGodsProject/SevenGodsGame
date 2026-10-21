@@ -1,4 +1,4 @@
-import type { EnemyActionDef } from '../types/index.js'
+import type { EnemyActionScript } from '../types/index.js'
 
 /**
  * 敵の予告の合計値（charge＝溜めは0）。
@@ -16,7 +16,9 @@ import type { EnemyActionDef } from '../types/index.js'
  * `round.ts` は `effects.ts` を import しているため、そのままでは循環する。
  * 依存の無いこの小さなモジュールに置き、`round.ts` からは再エクスポートしている。
  */
-export function enemyActionTotal(action: EnemyActionDef): number {
+// Threat Branch Pilot v1：行動表（解決前の `EnemyActionScript`）を直接読むテスト・UI のために `tactic` も受ける（0＝charge と同じ）。
+// 予告（`EnemyState.intent`）には解決後の行動しか入らないので、実際の予告合計は従来どおり
+export function enemyActionTotal(action: EnemyActionScript): number {
   if (action.kind === 'attack' || action.kind === 'special') return action.amount
   if (action.kind === 'multiAttack') return action.hits.reduce((sum, h) => sum + h, 0)
   return 0

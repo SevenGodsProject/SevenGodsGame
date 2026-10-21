@@ -1,0 +1,7 @@
+enemy enemy_09 maxHp 94 tactic R4  maxHp formula: Math.round(enemyDef.maxHp * preset.enemyHpMultiplier * (modifier?.enemyHpMul ?? 1) * stakeRules.enemyHpMul)
+difficulty | mult | maxHp | ratio | then<= | half<= | A(then,no-glow) | B(glow,else)
+easy | 0.85 | 80 | 0.5 | 40 | 40 | 0 (—) | 0 (—)
+normal | 1 | 94 | 0.5 | 47 | 47 | 0 (—) | 0 (—)
+hard | 1.15 | 108 | 0.6 | 64 | 54 | 10 (55〜64) | 0 (—)
+B(glow,else) = 0 for all difficulties : PASS (player-favorable only)
+hard-boundary exit=0

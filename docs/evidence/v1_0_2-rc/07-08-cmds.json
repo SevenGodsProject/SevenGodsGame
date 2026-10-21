@@ -1,0 +1,87 @@
+[
+  {
+    "name": "v101-acceptance",
+    "cmd": "node scripts/v1_0_1-rc/acceptance.mjs docs/evidence/v1_0_2-rc/07a-v101-acceptance/result.json http://localhost:4199 --sha 32f7f77"
+  },
+  {
+    "name": "lane1-acceptance",
+    "cmd": "node scripts/lane1-threat-branch/acceptance.mjs docs/evidence/v1_0_2-rc/07b-lane1-acceptance/result.json http://localhost:4199"
+  },
+  {
+    "name": "vocab-check",
+    "cmd": "node scripts/v1_0_2-rc/vocab-check.mjs docs/evidence/v1_0_2-rc/07c-vocab/result.json http://localhost:4199"
+  },
+  {
+    "name": "home-version",
+    "cmd": "node scripts/release-audit/home-version-smoke.mjs docs/evidence/v1_0_2-rc/10-home-version.json http://localhost:4199 1.0.2 32f7f77"
+  },
+  {
+    "name": "probe-ryujin",
+    "cmd": "node scripts/lane2-combat-feel-v2/probe.mjs docs/evidence/v1_0_2-rc/08-probe/ryujin http://localhost:4199",
+    "env": {
+      "CF2_VIEWPORTS": "pc,sp375"
+    }
+  },
+  {
+    "name": "probe-trial",
+    "cmd": "node scripts/lane2-combat-feel-v2/probe.mjs docs/evidence/v1_0_2-rc/08-probe/trial http://localhost:4199",
+    "env": {
+      "CF2_VIEWPORTS": "pc",
+      "CF2_ENEMY": "trial",
+      "CF2_ENEMY_NAME": "試練の影"
+    }
+  },
+  {
+    "name": "probe-oni",
+    "cmd": "node scripts/lane2-combat-feel-v2/probe.mjs docs/evidence/v1_0_2-rc/08-probe/oni http://localhost:4199",
+    "env": {
+      "CF2_VIEWPORTS": "pc",
+      "CF2_ENEMY": "oni",
+      "CF2_ENEMY_NAME": "業斧の鬼将"
+    }
+  },
+  {
+    "name": "probe-onryo",
+    "cmd": "node scripts/lane2-combat-feel-v2/probe.mjs docs/evidence/v1_0_2-rc/08-probe/onryo http://localhost:4199",
+    "env": {
+      "CF2_VIEWPORTS": "pc",
+      "CF2_ENEMY": "onryo",
+      "CF2_ENEMY_NAME": "藍花の怨霊"
+    }
+  },
+  {
+    "name": "probe-karakuri",
+    "cmd": "node scripts/lane2-combat-feel-v2/probe.mjs docs/evidence/v1_0_2-rc/08-probe/karakuri http://localhost:4199",
+    "env": {
+      "CF2_VIEWPORTS": "pc",
+      "CF2_ENEMY": "karakuri",
+      "CF2_ENEMY_NAME": "銀甲の機工師"
+    }
+  },
+  {
+    "name": "probe-juuma",
+    "cmd": "node scripts/lane2-combat-feel-v2/probe.mjs docs/evidence/v1_0_2-rc/08-probe/juuma http://localhost:4199",
+    "env": {
+      "CF2_VIEWPORTS": "pc",
+      "CF2_ENEMY": "juuma",
+      "CF2_ENEMY_NAME": "双牙の魔獣"
+    }
+  },
+  {
+    "name": "probe-doukeshi",
+    "cmd": "node scripts/lane2-combat-feel-v2/probe.mjs docs/evidence/v1_0_2-rc/08-probe/doukeshi http://localhost:4199",
+    "env": {
+      "CF2_VIEWPORTS": "pc",
+      "CF2_ENEMY": "doukeshi",
+      "CF2_ENEMY_NAME": "乱舞の道化"
+    }
+  },
+  {
+    "name": "probe-threat",
+    "cmd": "node scripts/lane2-combat-feel-v2/probe-threat.mjs docs/evidence/v1_0_2-rc/08-probe-threat http://localhost:4199",
+    "env": {
+      "CF2_VIEWPORTS": "pc,sp375",
+      "CF2T_SEEDS": "cf2-threat-01,cf2-threat-02,cf2-threat-03"
+    }
+  }
+]

@@ -1,0 +1,43 @@
+# G9 同 seed 一致（engine 差分の機械証明・統合 RC 25aead4）
+## Production d2135d2 → master 7ba447f の src 差分（空＝runtime 差分 0）
+(end)
+
+## 統合 RC の src/core 差分 sha256 ＝ Lane 1 v1.1 単独（7ba447f..06e3bba）の sha256
+integ  : a8dca7c4ba94abe154dc6faa1b8b6cf15d40c1b2833ea8702d21b815a52e9952 *-
+lane1  : a8dca7c4ba94abe154dc6faa1b8b6cf15d40c1b2833ea8702d21b815a52e9952 *-
+git diff 06e3bba HEAD -- src/core | wc -l = 0（0＝Lane 2 は src/core を変えない）
+git diff 7ba447f 41748e9 -- src/core | wc -l = 0
+
+## src 全体の差分統計（7ba447f..HEAD）
+ src/components/battle/BattleScreen.tsx        |    8 +-
+ src/components/battle/EnemyPanel.tsx          |    9 +-
+ src/components/battle/cardStyle.test.ts       |    6 +-
+ src/components/battle/enemyBreak.css          |  108 +++
+ src/components/battle/enemyBreak.test.ts      |  118 +++
+ src/components/battle/enemyBreak.ts           |   93 ++
+ src/components/pilot/pilotFlag.test.ts        |   99 ++
+ src/components/pilot/pilotFlag.ts             |   33 +
+ src/components/setup/EnemySelectScreen.tsx    |   21 +-
+ src/components/setup/MatchupBoard.tsx         |    5 +-
+ src/core/data/coreRoster.test.ts              |  160 ++++
+ src/core/data/enemies.test.ts                 |    5 +-
+ src/core/data/enemies.ts                      |   79 +-
+ src/core/data/rules.ts                        |   21 +
+ src/core/engine/balanceSim.test.ts            |    2 +-
+ src/core/engine/enemyActions.test.ts          |    4 +-
+ src/core/engine/enemyTactic.test.ts           |  249 +++++
+ src/core/engine/intent.ts                     |    6 +-
+ src/core/engine/round.ts                      |   11 +-
+ src/core/engine/tactic.ts                     |   29 +
+ src/core/engine/threatBranch.sim.test.ts      |  394 ++++++++
+ src/core/replay/gameVersion.ts                |   14 +-
+ src/core/sim/threatBranchDecision.sim.test.ts | 1261 +++++++++++++++++++++++++
+ src/core/types/enemy.ts                       |   23 +-
+ src/core/types/index.ts                       |    2 +-
+ src/hooks/useGameEngine.ts                    |   23 +-
+ 26 files changed, 2752 insertions(+), 31 deletions(-)
+
+## rules.ts の saveVersion 行（diff の文脈行として不変）
+30:   saveVersion: 9,
+
+## 決定論テスト：G3 full vitest に含む（determinism.test.ts／replay.test.ts／gameVersion.test.ts／coreRoster.test.ts／enemyTactic.test.ts）

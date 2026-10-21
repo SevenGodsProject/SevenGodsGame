@@ -1,0 +1,108 @@
+/* ============================================================
+   Combat Feel Premium v2 — Enemy Break v1「追い詰めた」の一回性反応（表示専用）
+   ------------------------------------------------------------
+   仕様：docs/COMBAT_FEEL_PREMIUM_V2_PILOT.md ／ 定数：enemyBreak.ts（時間・距離は inline の CSS 変数で受ける）
+   - 起点：表示 HP が 50%／25% の帯をまたいで下がった瞬間。EnemyPanel が根（.enemy-panel）に
+         `cf2-break cf2-break-half|quarter` を付けるだけで、名札・舞台・体の markup は不変
+   - 体：相手から離れる方向（既存 --atk-x／--atk-y）へ崩れて暗くなり戻る。`.enemy-collapse` に掛ける
+         （撃破 `.enemy-defeat` の間は :not で外す。内側 `.enemy-reaction`（決定232）・
+         `.enemy-avatar`（決定240 の構え・決定247 の反転）には触れない）
+   - 名札：`.enemy-plate::after` に赤い閃き（opacity のみ・hudPlate.css の ::before 角金具とは別）
+   - 傷：既存 `.enemy-wound` の出現を「ふくらんで現れる」に（静止時の色・大きさ・位置は不変）
+   - 新しい DOM・文言・SE は足さない。prefers-reduced-motion では動きを止め、閃き（opacity）だけ残す
+   ============================================================ */
+
+.enemy-panel.cf2-break .enemy-collapse {
+  --cf2-kb: var(--cf2-kb-pc, 7px);
+}
+@media (max-width: 899px) {
+  .enemy-panel.cf2-break .enemy-collapse {
+    --cf2-kb: var(--cf2-kb-sp, 5px);
+  }
+}
+
+@keyframes cf2-break-body-half {
+  0%   { transform: translate(0, 0) scale(1); filter: brightness(1) saturate(1); }
+  22%  { transform: translate(calc(var(--atk-x, 1) * -1 * var(--cf2-kb)), calc(var(--atk-y, 0) * -1 * var(--cf2-kb))) scale(0.985); filter: brightness(0.72) saturate(0.7); }
+  60%  { transform: translate(calc(var(--atk-x, 1) * -0.35 * var(--cf2-kb)), calc(var(--atk-y, 0) * -0.35 * var(--cf2-kb))) scale(0.992); filter: brightness(0.9) saturate(0.88); }
+  100% { transform: translate(0, 0) scale(1); filter: brightness(1) saturate(1); }
+}
+@keyframes cf2-break-body-quarter {
+  0%   { transform: translate(0, 0) scale(1); filter: brightness(1) saturate(1); }
+  18%  { transform: translate(calc(var(--atk-x, 1) * -1 * var(--cf2-kb)), calc(var(--atk-y, 0) * -1 * var(--cf2-kb))) scale(0.975); filter: brightness(0.6) saturate(0.55); }
+  38%  { transform: translate(calc(var(--atk-x, 1) * -0.6 * var(--cf2-kb)), calc(var(--atk-y, 0) * -0.6 * var(--cf2-kb))) scale(0.985); filter: brightness(0.95) saturate(0.8); }
+  54%  { transform: translate(calc(var(--atk-x, 1) * -0.8 * var(--cf2-kb)), calc(var(--atk-y, 0) * -0.8 * var(--cf2-kb))) scale(0.98); filter: brightness(0.78) saturate(0.7); }
+  100% { transform: translate(0, 0) scale(1); filter: brightness(1) saturate(1); }
+}
+.enemy-panel.cf2-break-half .enemy-collapse:not(.enemy-defeat) {
+  animation: cf2-break-body-half var(--cf2-body-ms, 420ms) cubic-bezier(0.2, 0.7, 0.3, 1);
+}
+.enemy-panel.cf2-break-quarter .enemy-collapse:not(.enemy-defeat) {
+  animation: cf2-break-body-quarter var(--cf2-body-ms, 560ms) cubic-bezier(0.2, 0.7, 0.3, 1);
+}
+
+/* 名札：赤い閃き（opacity のみ）。plate の角丸・寸法は inherit で追従し、文字の上には乗らない色味（最大 0.7） */
+.enemy-panel.cf2-break .enemy-plate {
+  position: relative;
+}
+.enemy-panel.cf2-break .enemy-plate::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  opacity: 0;
+  background: linear-gradient(90deg, #ff3b3b4d 0%, #ff3b3b1f 55%, transparent 100%);
+  box-shadow:
+    inset 0 0 0 1px #ff5c5ccc,
+    0 0 14px -2px #ff3b3b99;
+}
+@keyframes cf2-plate-flash-half {
+  0%   { opacity: 0; }
+  12%  { opacity: 0.55; }
+  100% { opacity: 0; }
+}
+@keyframes cf2-plate-flash-quarter {
+  0%   { opacity: 0; }
+  10%  { opacity: 0.7; }
+  40%  { opacity: 0.18; }
+  55%  { opacity: 0.6; }
+  100% { opacity: 0; }
+}
+.enemy-panel.cf2-break-half .enemy-plate::after {
+  animation: cf2-plate-flash-half var(--cf2-plate-ms, 520ms) ease-out;
+}
+.enemy-panel.cf2-break-quarter .enemy-plate::after {
+  animation: cf2-plate-flash-quarter var(--cf2-plate-ms, 760ms) ease-out;
+}
+
+/* 傷の円：ふくらんで現れる（終点は既存の静止状態＝色・大きさ・位置は不変）。
+   SP の `.enemy-wound` は translate（独立プロパティ）で足元へ寄せているので、scale も独立プロパティで合成する */
+@keyframes cf2-wound-bloom-half {
+  0%   { opacity: 0; scale: 0.6; }
+  45%  { opacity: 1.6; scale: 1.14; }
+  100% { opacity: 1; scale: 1; }
+}
+@keyframes cf2-wound-bloom-quarter {
+  0%   { opacity: 0.4; scale: 0.8; }
+  35%  { opacity: 1.8; scale: 1.22; }
+  100% { opacity: 1; scale: 1; }
+}
+.enemy-panel.cf2-break-half .enemy-wound {
+  animation: cf2-wound-bloom-half var(--cf2-wound-ms, 600ms) ease-out;
+}
+.enemy-panel.cf2-break-quarter .enemy-wound-quarter {
+  animation: cf2-wound-bloom-quarter var(--cf2-wound-ms, 720ms) ease-out;
+}
+
+/* reduced-motion：動き（体・傷の scale）は止め、閃き（opacity）だけ残す＝情報は失わない */
+@media (prefers-reduced-motion: reduce) {
+  .enemy-panel.cf2-break-half .enemy-collapse:not(.enemy-defeat),
+  .enemy-panel.cf2-break-quarter .enemy-collapse:not(.enemy-defeat) {
+    animation: none;
+  }
+  .enemy-panel.cf2-break-half .enemy-wound,
+  .enemy-panel.cf2-break-quarter .enemy-wound-quarter {
+    animation: none;
+  }
+}

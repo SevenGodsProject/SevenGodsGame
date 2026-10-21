@@ -1,0 +1,540 @@
+{
+  "base": "http://localhost:4197",
+  "generatedAt": "2026-10-16T23:26:49.193Z",
+  "runs": [
+    {
+      "viewport": "pc",
+      "seed": "cf2-threat-01",
+      "enemyName": "業斧の鬼将・軍略",
+      "rounds": [
+        {
+          "round": 1,
+          "intent": "50",
+          "band": "high",
+          "hp": "940 / 940"
+        },
+        {
+          "round": 2,
+          "intent": "90",
+          "band": "high",
+          "hp": "800 / 940"
+        },
+        {
+          "round": 3,
+          "intent": "⚠ 傷が浅ければ次は断岩",
+          "band": "high",
+          "hp": "760 / 940"
+        },
+        {
+          "round": 4,
+          "intent": "業斧・断岩 260",
+          "band": "high",
+          "hp": "720 / 940"
+        }
+      ],
+      "r3Intent": "⚠ 傷が浅ければ次は断岩",
+      "r4Intent": "業斧・断岩 260",
+      "r4Branch": "else",
+      "breaks": [
+        {
+          "round": 4,
+          "card": "🌟 神託",
+          "band": "high->half",
+          "names": [
+            "cf2-plate-flash-half",
+            "cf2-wound-bloom-half",
+            "cf2-break-body-half"
+          ],
+          "breakStartMs": 1950,
+          "breakEndMs": 3698,
+          "unlockBtnMs": 40,
+          "unlockCardsMs": 40,
+          "unlockedBeforeBreakEnd": true,
+          "intentTextsDuringBreak": [
+            "業斧・断岩 260"
+          ],
+          "intentChargeDuringBreak": false,
+          "chargeGlowAndFlashSameFrames": 0,
+          "peakPlateAfterOpacity": 0.55,
+          "intentOffViewportFrames": 0,
+          "handPointerNoneFramesDuringBreak": 0,
+          "horizontalScrollFrames": 0,
+          "shot": {
+            "cf2Animations": [
+              "cf2-plate-flash-half@520",
+              "cf2-wound-bloom-half@600",
+              "cf2-break-body-half@420"
+            ],
+            "plateAfterOpacity": "0.55",
+            "plateAfterBg": "linear-gradient(90deg, rgba(255, 59, 59, 0.3) 0%, rgba(255, 59, 59, 0.12) 55%, rgba(0, 0, 0, 0) 100%)",
+            "intentText": "業斧・断岩 260",
+            "intentColor": "rgb(255, 180, 180)",
+            "intentFontSize": "20px",
+            "intentGlowOpacity": "1",
+            "collapseTransform": "matrix(0.985027, 0, 0, 0.985027, -6.98718, 0)"
+          }
+        }
+      ],
+      "immediateEnd": null,
+      "plays": 9,
+      "errors": 0
+    },
+    {
+      "viewport": "pc",
+      "seed": "cf2-threat-02",
+      "enemyName": "業斧の鬼将・軍略",
+      "rounds": [
+        {
+          "round": 1,
+          "intent": "50",
+          "band": "high",
+          "hp": "940 / 940"
+        },
+        {
+          "round": 2,
+          "intent": "90",
+          "band": "high",
+          "hp": "880 / 940"
+        },
+        {
+          "round": 3,
+          "intent": "⚠ 傷が浅ければ次は断岩",
+          "band": "high",
+          "hp": "600 / 940"
+        },
+        {
+          "round": 4,
+          "intent": "強打 130",
+          "band": "half",
+          "hp": "460 / 940"
+        }
+      ],
+      "r3Intent": "⚠ 傷が浅ければ次は断岩",
+      "r4Intent": "強打 130",
+      "r4Branch": "then",
+      "breaks": [
+        {
+          "round": 3,
+          "card": {
+            "_apiName": "Locator",
+            "_frame": {
+              "_type": "Frame",
+              "_guid": "frame@cf5ba51d3957cdc05506d5a2664c81c9"
+            },
+            "_selector": ".hand .card-view:not([disabled]) >> nth=0"
+          },
+          "band": "high->half",
+          "names": [
+            "cf2-plate-flash-half",
+            "cf2-wound-bloom-half",
+            "cf2-break-body-half"
+          ],
+          "breakStartMs": 667,
+          "breakEndMs": 1967,
+          "unlockBtnMs": 368,
+          "unlockCardsMs": 368,
+          "unlockedBeforeBreakEnd": true,
+          "intentTextsDuringBreak": [
+            "⚠ 傷が浅ければ次は断岩"
+          ],
+          "intentChargeDuringBreak": true,
+          "chargeGlowAndFlashSameFrames": 10,
+          "peakPlateAfterOpacity": 0.55,
+          "intentOffViewportFrames": 0,
+          "handPointerNoneFramesDuringBreak": 0,
+          "horizontalScrollFrames": 0,
+          "shot": {
+            "cf2Animations": [
+              "cf2-plate-flash-half@520",
+              "cf2-wound-bloom-half@600",
+              "cf2-break-body-half@420"
+            ],
+            "plateAfterOpacity": "0.55",
+            "plateAfterBg": "linear-gradient(90deg, rgba(255, 59, 59, 0.3) 0%, rgba(255, 59, 59, 0.12) 55%, rgba(0, 0, 0, 0) 100%)",
+            "intentText": "⚠ 傷が浅ければ次は断岩",
+            "intentColor": "rgb(255, 209, 102)",
+            "intentFontSize": "20px",
+            "intentGlowOpacity": "0.513258",
+            "collapseTransform": "matrix(0.985027, 0, 0, 0.985027, -6.98718, 0)"
+          }
+        }
+      ],
+      "immediateEnd": {
+        "round": 3,
+        "card": "⚔ 豪快な一撃",
+        "endClickMs": 1457,
+        "intentBefore": "⚠ 傷が浅ければ次は断岩",
+        "intentChangeMs": 2332,
+        "intentAfter": "強打 130",
+        "breakEndMs": 1967,
+        "breakStillRunningAtIntentChange": false,
+        "r4Intent": "強打 130",
+        "r4Band": "half"
+      },
+      "plays": 7,
+      "errors": 0
+    },
+    {
+      "viewport": "pc",
+      "seed": "cf2-threat-03",
+      "enemyName": "業斧の鬼将・軍略",
+      "rounds": [
+        {
+          "round": 1,
+          "intent": "50",
+          "band": "high",
+          "hp": "940 / 940"
+        },
+        {
+          "round": 2,
+          "intent": "90",
+          "band": "high",
+          "hp": "940 / 940"
+        },
+        {
+          "round": 3,
+          "intent": "⚠ 傷が浅ければ次は断岩",
+          "band": "high",
+          "hp": "940 / 940"
+        },
+        {
+          "round": 4,
+          "intent": "強打 130",
+          "band": "half",
+          "hp": "340 / 940"
+        }
+      ],
+      "r3Intent": "⚠ 傷が浅ければ次は断岩",
+      "r4Intent": "強打 130",
+      "r4Branch": "then",
+      "breaks": [
+        {
+          "round": 3,
+          "card": {
+            "_apiName": "Locator",
+            "_frame": {
+              "_type": "Frame",
+              "_guid": "frame@2662b86ab31c609b9ac129884b435a31"
+            },
+            "_selector": ".hand .card-view:not([disabled]) >> nth=0"
+          },
+          "band": "high->half",
+          "names": [
+            "cf2-plate-flash-half",
+            "cf2-wound-bloom-half",
+            "cf2-break-body-half"
+          ],
+          "breakStartMs": 750,
+          "breakEndMs": 1894,
+          "unlockBtnMs": 418,
+          "unlockCardsMs": 2431,
+          "unlockedBeforeBreakEnd": true,
+          "intentTextsDuringBreak": [
+            "⚠ 傷が浅ければ次は断岩"
+          ],
+          "intentChargeDuringBreak": true,
+          "chargeGlowAndFlashSameFrames": 8,
+          "peakPlateAfterOpacity": 0.55,
+          "intentOffViewportFrames": 0,
+          "handPointerNoneFramesDuringBreak": 0,
+          "horizontalScrollFrames": 0,
+          "shot": {
+            "cf2Animations": [
+              "cf2-plate-flash-half@520",
+              "cf2-wound-bloom-half@600",
+              "cf2-break-body-half@420"
+            ],
+            "plateAfterOpacity": "0.55",
+            "plateAfterBg": "linear-gradient(90deg, rgba(255, 59, 59, 0.3) 0%, rgba(255, 59, 59, 0.12) 55%, rgba(0, 0, 0, 0) 100%)",
+            "intentText": "⚠ 傷が浅ければ次は断岩",
+            "intentColor": "rgb(255, 209, 102)",
+            "intentFontSize": "20px",
+            "intentGlowOpacity": "0.79",
+            "collapseTransform": "matrix(0.985027, 0, 0, 0.985027, -6.98718, 0)"
+          }
+        }
+      ],
+      "immediateEnd": {
+        "round": 3,
+        "card": "⚔ 豪快な一撃",
+        "endClickMs": 1460,
+        "intentBefore": "⚠ 傷が浅ければ次は断岩",
+        "intentChangeMs": 2431,
+        "intentAfter": "強打 130",
+        "breakEndMs": 1894,
+        "breakStillRunningAtIntentChange": false,
+        "r4Intent": "強打 130",
+        "r4Band": "half"
+      },
+      "plays": 9,
+      "errors": 0
+    },
+    {
+      "viewport": "sp375",
+      "seed": "cf2-threat-01",
+      "enemyName": "業斧の鬼将・軍略",
+      "rounds": [
+        {
+          "round": 1,
+          "intent": "50",
+          "band": "high",
+          "hp": "940 / 940"
+        },
+        {
+          "round": 2,
+          "intent": "90",
+          "band": "high",
+          "hp": "800 / 940"
+        },
+        {
+          "round": 3,
+          "intent": "⚠ 傷が浅ければ次は断岩",
+          "band": "high",
+          "hp": "760 / 940"
+        },
+        {
+          "round": 4,
+          "intent": "業斧・断岩 260",
+          "band": "high",
+          "hp": "720 / 940"
+        }
+      ],
+      "r3Intent": "⚠ 傷が浅ければ次は断岩",
+      "r4Intent": "業斧・断岩 260",
+      "r4Branch": "else",
+      "breaks": [
+        {
+          "round": 4,
+          "card": "🌟 神託",
+          "band": "high->half",
+          "names": [
+            "cf2-plate-flash-half",
+            "cf2-wound-bloom-half",
+            "cf2-break-body-half"
+          ],
+          "breakStartMs": 2937,
+          "breakEndMs": 8353,
+          "unlockBtnMs": 1165,
+          "unlockCardsMs": 1165,
+          "unlockedBeforeBreakEnd": true,
+          "intentTextsDuringBreak": [
+            "業斧・断岩 260"
+          ],
+          "intentChargeDuringBreak": false,
+          "chargeGlowAndFlashSameFrames": 0,
+          "peakPlateAfterOpacity": 0.55,
+          "intentOffViewportFrames": 0,
+          "handPointerNoneFramesDuringBreak": 0,
+          "horizontalScrollFrames": 0,
+          "shot": {
+            "cf2Animations": [
+              "cf2-plate-flash-half@520",
+              "cf2-wound-bloom-half@600",
+              "cf2-break-body-half@420"
+            ],
+            "plateAfterOpacity": "0.55",
+            "plateAfterBg": "linear-gradient(90deg, rgba(255, 59, 59, 0.3) 0%, rgba(255, 59, 59, 0.12) 55%, rgba(0, 0, 0, 0) 100%)",
+            "intentText": "業斧・断岩 260",
+            "intentColor": "rgb(255, 180, 180)",
+            "intentFontSize": "17px",
+            "intentGlowOpacity": "1",
+            "collapseTransform": "matrix(0.985027, 0, 0, 0.985027, -4.99084, 0)"
+          }
+        }
+      ],
+      "immediateEnd": null,
+      "plays": 9,
+      "errors": 0
+    },
+    {
+      "viewport": "sp375",
+      "seed": "cf2-threat-02",
+      "enemyName": "業斧の鬼将・軍略",
+      "rounds": [
+        {
+          "round": 1,
+          "intent": "50",
+          "band": "high",
+          "hp": "940 / 940"
+        },
+        {
+          "round": 2,
+          "intent": "90",
+          "band": "high",
+          "hp": "880 / 940"
+        },
+        {
+          "round": 3,
+          "intent": "⚠ 傷が浅ければ次は断岩",
+          "band": "high",
+          "hp": "600 / 940"
+        },
+        {
+          "round": 4,
+          "intent": "強打 130",
+          "band": "half",
+          "hp": "460 / 940"
+        }
+      ],
+      "r3Intent": "⚠ 傷が浅ければ次は断岩",
+      "r4Intent": "強打 130",
+      "r4Branch": "then",
+      "breaks": [
+        {
+          "round": 3,
+          "card": {
+            "_apiName": "Locator",
+            "_frame": {
+              "_type": "Frame",
+              "_guid": "frame@cc088e6311e2e629a6bce5ebd70bea97"
+            },
+            "_selector": ".hand .card-view:not([disabled]) >> nth=0"
+          },
+          "band": "high->half",
+          "names": [
+            "cf2-plate-flash-half",
+            "cf2-wound-bloom-half",
+            "cf2-break-body-half"
+          ],
+          "breakStartMs": 820,
+          "breakEndMs": 3201,
+          "unlockBtnMs": 81,
+          "unlockCardsMs": 81,
+          "unlockedBeforeBreakEnd": true,
+          "intentTextsDuringBreak": [
+            "⚠ 傷が浅ければ次は断岩"
+          ],
+          "intentChargeDuringBreak": true,
+          "chargeGlowAndFlashSameFrames": 21,
+          "peakPlateAfterOpacity": 0.55,
+          "intentOffViewportFrames": 0,
+          "handPointerNoneFramesDuringBreak": 0,
+          "horizontalScrollFrames": 0,
+          "shot": {
+            "cf2Animations": [
+              "cf2-plate-flash-half@520",
+              "cf2-wound-bloom-half@600",
+              "cf2-break-body-half@420"
+            ],
+            "plateAfterOpacity": "0.55",
+            "plateAfterBg": "linear-gradient(90deg, rgba(255, 59, 59, 0.3) 0%, rgba(255, 59, 59, 0.12) 55%, rgba(0, 0, 0, 0) 100%)",
+            "intentText": "⚠ 傷が浅ければ次は断岩",
+            "intentColor": "rgb(255, 209, 102)",
+            "intentFontSize": "17px",
+            "intentGlowOpacity": "0.611988",
+            "collapseTransform": "matrix(0.985027, 0, 0, 0.985027, -4.99084, 0)"
+          }
+        }
+      ],
+      "immediateEnd": {
+        "round": 3,
+        "card": "⚔ 豪快な一撃",
+        "endClickMs": 2728,
+        "intentBefore": "⚠ 傷が浅ければ次は断岩",
+        "intentChangeMs": 3895,
+        "intentAfter": "強打 130",
+        "breakEndMs": 3201,
+        "breakStillRunningAtIntentChange": false,
+        "r4Intent": "強打 130",
+        "r4Band": "half"
+      },
+      "plays": 7,
+      "errors": 0
+    },
+    {
+      "viewport": "sp375",
+      "seed": "cf2-threat-03",
+      "enemyName": "業斧の鬼将・軍略",
+      "rounds": [
+        {
+          "round": 1,
+          "intent": "50",
+          "band": "high",
+          "hp": "940 / 940"
+        },
+        {
+          "round": 2,
+          "intent": "90",
+          "band": "high",
+          "hp": "940 / 940"
+        },
+        {
+          "round": 3,
+          "intent": "⚠ 傷が浅ければ次は断岩",
+          "band": "high",
+          "hp": "940 / 940"
+        },
+        {
+          "round": 4,
+          "intent": "強打 130",
+          "band": "half",
+          "hp": "340 / 940"
+        }
+      ],
+      "r3Intent": "⚠ 傷が浅ければ次は断岩",
+      "r4Intent": "強打 130",
+      "r4Branch": "then",
+      "breaks": [
+        {
+          "round": 3,
+          "card": {
+            "_apiName": "Locator",
+            "_frame": {
+              "_type": "Frame",
+              "_guid": "frame@02934a84b21ee644e96668213f0251b8"
+            },
+            "_selector": ".hand .card-view:not([disabled]) >> nth=0"
+          },
+          "band": "high->half",
+          "names": [
+            "cf2-plate-flash-half",
+            "cf2-wound-bloom-half",
+            "cf2-break-body-half"
+          ],
+          "breakStartMs": 867,
+          "breakEndMs": 2988,
+          "unlockBtnMs": 49,
+          "unlockCardsMs": 49,
+          "unlockedBeforeBreakEnd": true,
+          "intentTextsDuringBreak": [
+            "⚠ 傷が浅ければ次は断岩"
+          ],
+          "intentChargeDuringBreak": true,
+          "chargeGlowAndFlashSameFrames": 22,
+          "peakPlateAfterOpacity": 0.55,
+          "intentOffViewportFrames": 0,
+          "handPointerNoneFramesDuringBreak": 0,
+          "horizontalScrollFrames": 0,
+          "shot": {
+            "cf2Animations": [
+              "cf2-plate-flash-half@520",
+              "cf2-wound-bloom-half@600",
+              "cf2-break-body-half@420"
+            ],
+            "plateAfterOpacity": "0.55",
+            "plateAfterBg": "linear-gradient(90deg, rgba(255, 59, 59, 0.3) 0%, rgba(255, 59, 59, 0.12) 55%, rgba(0, 0, 0, 0) 100%)",
+            "intentText": "⚠ 傷が浅ければ次は断岩",
+            "intentColor": "rgb(255, 209, 102)",
+            "intentFontSize": "17px",
+            "intentGlowOpacity": "0.577262",
+            "collapseTransform": "matrix(0.985027, 0, 0, 0.985027, -4.99084, 0)"
+          }
+        }
+      ],
+      "immediateEnd": {
+        "round": 3,
+        "card": "⚔ 豪快な一撃",
+        "endClickMs": 2463,
+        "intentBefore": "⚠ 傷が浅ければ次は断岩",
+        "intentChangeMs": 3231,
+        "intentAfter": "強打 130",
+        "breakEndMs": 2988,
+        "breakStillRunningAtIntentChange": false,
+        "r4Intent": "強打 130",
+        "r4Band": "half"
+      },
+      "plays": 9,
+      "errors": 0
+    }
+  ]
+}

@@ -4,7 +4,7 @@ import { runReplay } from './replay'
 import type { ReplayInput } from './types'
 import { dataFingerprint, getGameVersion, rankingImpactSnapshot, resetGameVersionCache, stableStringify } from './gameVersion'
 import { DIVINATION_CHOICES } from '../data/divination'
-import { ENEMIES } from '../data/enemies'
+import { CORE_ENEMIES } from '../data/enemies'
 import type { Effect } from '../types'
 
 /**
@@ -206,7 +206,7 @@ describe('v1.0.1 ★再付番：EnemyDef.rank（表示専用）は版に影響�
 
   it('rank をどの値に変えても fingerprint は変わらない（指紋から除外されている）', () => {
     const before = dataFingerprint()
-    const target = ENEMIES[5] as { rank: number }
+    const target = CORE_ENEMIES[5] as { rank: number }
     const original = target.rank
     try {
       for (const next of [1, 5, 99]) {
@@ -223,7 +223,7 @@ describe('v1.0.1 ★再付番：EnemyDef.rank（表示専用）は版に影響�
 
   it('対照：同じ敵の maxHp を変えると fingerprint は変わる（除外は rank だけ）', () => {
     const before = dataFingerprint()
-    const target = ENEMIES[5] as { maxHp: number }
+    const target = CORE_ENEMIES[5] as { maxHp: number }
     const original = target.maxHp
     try {
       target.maxHp = original + 1
@@ -238,7 +238,8 @@ describe('v1.0.1 ★再付番：EnemyDef.rank（表示専用）は版に影響�
 
   it('指紋入力の enemies は 7 体とも実データと同じ id・HP・行動表を持つ（rank 以外は落としていない）', () => {
     const snapshot = rankingImpactSnapshot()
-    for (const enemy of ENEMIES) {
+    // v1.0.2 統合：指紋に乗るのは CORE 7 体だけ（Pilot 敵 enemy_09 は乗らない＝ gameVersion.ts enemiesForFingerprint）
+    for (const enemy of CORE_ENEMIES) {
       expect(snapshot).toContain(`"id":"${enemy.id}"`)
       expect(snapshot).toContain(`"maxHp":${enemy.maxHp}`)
     }

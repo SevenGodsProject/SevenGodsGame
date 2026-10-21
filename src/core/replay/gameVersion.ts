@@ -1,6 +1,6 @@
 import { RULES } from '../data/rules.js'
 import { ALL_CARDS } from '../data/cards/index.js'
-import { ENEMIES } from '../data/enemies.js'
+import { CORE_ENEMIES } from '../data/enemies.js'
 import type { EnemyDef } from '../types/index.js'
 import { GODS } from '../data/gods.js'
 import { OTOMOS } from '../data/otomo.js'
@@ -86,18 +86,28 @@ const FINGERPRINT_RANK_V1_0_0: Readonly<Record<string, number>> = {
   enemy_07: 4,
 }
 
-/** 指紋に乗せる敵データ：`rank` だけを v1.0.0 時点の定数へ置き換えたもの（上の説明を参照） */
+/**
+ * 指紋に乗せる敵データ：**CORE 7 体（`CORE_ENEMIES`）**の `rank` だけを v1.0.0 時点の定数へ置き換えたもの。
+ * Threat Branch Pilot v1（Lane 1）の Pilot 敵（`PILOT_ENEMIES`）は Daily の pool に入らず `?pilot=threat` でしか
+ * 選べないため指紋に入れない（1 体足すだけで版が動くのを防ぐ）。v1.0.1 の ★再付番は `rank` を v1.0.0 の値に固定して
+ * 吸収する。両方の意図は同じ「版 `1.d794038a00b5b53c` を据え置く」で、golden（`gameVersion.test.ts`・
+ * `useReactionLanguage.test.ts`・`coreRoster.test.ts`）が不変を確認する。
+ */
 function enemiesForFingerprint(): EnemyDef[] {
-  return ENEMIES.map((enemy) => ({ ...enemy, rank: FINGERPRINT_RANK_V1_0_0[enemy.id] ?? 0 }))
+  return CORE_ENEMIES.map((enemy) => ({ ...enemy, rank: FINGERPRINT_RANK_V1_0_0[enemy.id] ?? 0 }))
 }
 
 /** ランキングに影響するデータだけを取り出した、正規化済みの入力 */
 export function rankingImpactSnapshot(): string {
-  const { ranking: _ranking, replay, ...rest } = RULES
+  // Threat Branch Pilot v1（`docs/LANE1_THREAT_BRANCH_PILOT_V1.md`）：`RULES.enemyTactic` も除く。
+  // この値は Pilot 敵（`PILOT_ENEMIES`）の行動表にだけ埋め込まれ、ランキング対象（Daily＝CORE 7 体）の対局には
+  // 一切現れない。CORE 敵が将来 tactic を使えば `cond.ratio` として CORE_ENEMIES の指紋に自動で入るので、取りこぼしは無い
+  const { ranking: _ranking, replay, enemyTactic: _enemyTactic, ...rest } = RULES
   const { pendingRuns: _pendingRuns, ...replayRest } = replay
   return stableStringify({
     rules: { ...rest, replay: replayRest },
     cards: ALL_CARDS,
+    // v1.0.1 ★再付番（rank を v1.0.0 値に固定）＋ Threat Branch Pilot v1（CORE 7 体のみ）。上の enemiesForFingerprint() を参照
     enemies: enemiesForFingerprint(),
     gods: GODS,
     otomos: OTOMOS,

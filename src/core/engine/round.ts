@@ -1,4 +1,4 @@
-import type { EnemyActionDef, GameEvent, GameState } from '../types/index.js'
+import type { EnemyActionDef, EnemyActionScript, GameEvent, GameState } from '../types/index.js'
 import { RULES } from '../data/rules.js'
 import { GOD_IDS } from '../data/gods.js'
 import { getEnemyDef } from '../data/enemies.js'
@@ -8,6 +8,7 @@ import { sumBuff, tickBuffs } from './buffs.js'
 import type { Rng } from '../rng/seededRandom.js'
 import { resolveStakeRules, specialMultiplierFor } from '../data/stakes.js'
 import { enemyActionTotal } from './intent.js'
+import { resolveEnemyTactic } from './tactic.js'
 
 type StepResult = { state: GameState; events: GameEvent[] }
 
@@ -32,7 +33,7 @@ function intentEvent(action: EnemyActionDef): GameEvent {
   }
 }
 
-function actionForRound(actions: EnemyActionDef[], round: number): EnemyActionDef {
+function actionForRound(actions: EnemyActionScript[], round: number): EnemyActionScript {
   return actions[round - 1] ?? actions[actions.length - 1]
 }
 
@@ -65,7 +66,11 @@ function scaleEnemyAction(action: EnemyActionDef, multiplier: number): EnemyActi
 /** そのラウンドの敵の行動を、難易度補正込みで決める（予告表示・実行の両方がこれを使う） */
 function nextEnemyAction(state: GameState): EnemyActionDef {
   const enemyDef = getEnemyDef(state.enemy.defId)
-  const raw = actionForRound(enemyDef.actions, state.round)
+  // Threat Branch Pilot v1：軍略（tactic）はこのラウンド開始時の敵 HP 比で then／else へ解決してから倍率をかける
+  // （解決は `startRound` の予告時に 1 回。`runEnemyTurn` は `state.enemy.intent` をそのまま実行する＝予告と実行は一致。
+  // 既存 7 体の行動表に tactic は無いので、7 体の値は 1 つも変わらない。
+  // Pilot v1.1：しきい値は難易度別（`cond.ratioByDifficulty`・値は RULES.enemyTactic.hpRatioByDifficulty をデータが埋め込む）
+  const raw = resolveEnemyTactic(actionForRound(enemyDef.actions, state.round), state.enemy.hp, state.enemy.maxHp, state.difficulty)
   // DAILY-01：神域強化の攻撃倍率は難易度倍率に乗算し、合計保存丸めを1回だけ行う。
   // 通常モード（modifier無し）は×1で従来と完全に同じ値。
   // 決定126：神階の累積ルール。難易度倍率×Daily修正子×神階ATK×後半激化×必殺・連撃倍率を

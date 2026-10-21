@@ -1,0 +1,440 @@
+{
+  "base": "http://localhost:4199",
+  "generatedAt": "2026-10-21T13:09:10.624Z",
+  "pass": 74,
+  "total": 74,
+  "results": [
+    {
+      "viewport": "pc",
+      "pilot": false,
+      "checks": [
+        {
+          "name": "enemy cards = 8 (7 + entrust)",
+          "pass": true,
+          "detail": 8
+        },
+        {
+          "name": "core enemy listed: 試練の影",
+          "pass": true,
+          "detail": 1
+        },
+        {
+          "name": "core enemy listed: 業斧の鬼将",
+          "pass": true,
+          "detail": 1
+        },
+        {
+          "name": "core enemy listed: 藍花の怨霊",
+          "pass": true,
+          "detail": 1
+        },
+        {
+          "name": "core enemy listed: 銀甲の機工師",
+          "pass": true,
+          "detail": 1
+        },
+        {
+          "name": "core enemy listed: 双牙の魔獣",
+          "pass": true,
+          "detail": 1
+        },
+        {
+          "name": "core enemy listed: 蒼海の龍神",
+          "pass": true,
+          "detail": 1
+        },
+        {
+          "name": "core enemy listed: 乱舞の道化",
+          "pass": true,
+          "detail": 1
+        },
+        {
+          "name": "pilot card hidden",
+          "pass": true
+        },
+        {
+          "name": "pilot chip hidden",
+          "pass": true
+        },
+        {
+          "name": "pilot notice hidden",
+          "pass": true
+        },
+        {
+          "name": "JS error 0",
+          "pass": true,
+          "detail": []
+        }
+      ]
+    },
+    {
+      "viewport": "pc",
+      "pilot": true,
+      "checks": [
+        {
+          "name": "enemy cards = 9 (7 + entrust + pilot)",
+          "pass": true,
+          "detail": 9
+        },
+        {
+          "name": "core enemy listed: 試練の影",
+          "pass": true,
+          "detail": 1
+        },
+        {
+          "name": "core enemy listed: 業斧の鬼将",
+          "pass": true,
+          "detail": 2
+        },
+        {
+          "name": "core enemy listed: 藍花の怨霊",
+          "pass": true,
+          "detail": 1
+        },
+        {
+          "name": "core enemy listed: 銀甲の機工師",
+          "pass": true,
+          "detail": 1
+        },
+        {
+          "name": "core enemy listed: 双牙の魔獣",
+          "pass": true,
+          "detail": 1
+        },
+        {
+          "name": "core enemy listed: 蒼海の龍神",
+          "pass": true,
+          "detail": 1
+        },
+        {
+          "name": "core enemy listed: 乱舞の道化",
+          "pass": true,
+          "detail": 1
+        },
+        {
+          "name": "pilot card shown",
+          "pass": true
+        },
+        {
+          "name": "pilot chip shown",
+          "pass": true
+        },
+        {
+          "name": "pilot notice shown",
+          "pass": true
+        },
+        {
+          "name": "no horizontal overflow on enemy select",
+          "pass": true,
+          "detail": {
+            "scrollWidth": 1508,
+            "innerWidth": 1508
+          }
+        },
+        {
+          "name": "battle started (round end button visible)",
+          "pass": true
+        },
+        {
+          "name": "enemy name shown",
+          "pass": true
+        },
+        {
+          "name": "oni art reused as avatar",
+          "pass": true,
+          "detail": "url(\"http://localhost:4199/assets/enemies/oni/art_hq.webp\")"
+        },
+        {
+          "name": "oni art served 200",
+          "pass": true,
+          "detail": {
+            "/assets/backgrounds/stages/02-oni-castle.webp": 200,
+            "/assets/enemies/oni/art_hq.webp": 200
+          }
+        },
+        {
+          "name": "no battleSave while playing a pilot battle",
+          "pass": true,
+          "detail": [
+            "sevengods.deckPreference",
+            "sevengods.matchups"
+          ]
+        },
+        {
+          "name": "R1 intent = ⚔ 50",
+          "pass": true,
+          "detail": "50"
+        },
+        {
+          "name": "R2 intent = ⚔ 90",
+          "pass": true,
+          "detail": "90"
+        },
+        {
+          "name": "R3 intent = charge「⚠ 傷が浅ければ次は断岩」",
+          "pass": true,
+          "detail": "⚠ 傷が浅ければ次は断岩"
+        },
+        {
+          "name": "R4 intent = 業斧・断岩 260 (no damage dealt → else branch)",
+          "pass": true,
+          "detail": "業斧・断岩 260"
+        },
+        {
+          "name": "battle finished (result shown)",
+          "pass": true
+        },
+        {
+          "name": "pilot battle wrote nothing (keys after = keys before)",
+          "pass": true,
+          "detail": {
+            "keysBefore": [
+              "sevengods.deckPreference",
+              "sevengods.matchups"
+            ],
+            "keysAfter": [
+              "sevengods.deckPreference",
+              "sevengods.matchups"
+            ]
+          }
+        },
+        {
+          "name": "no record keys after a pilot battle",
+          "pass": true,
+          "detail": [
+            "sevengods.deckPreference",
+            "sevengods.matchups"
+          ]
+        },
+        {
+          "name": "JS error 0",
+          "pass": true,
+          "detail": []
+        }
+      ],
+      "intents": [
+        "50",
+        "90",
+        "⚠ 傷が浅ければ次は断岩",
+        "業斧・断岩 260",
+        "行動予告なし"
+      ]
+    },
+    {
+      "viewport": "sp375",
+      "pilot": false,
+      "checks": [
+        {
+          "name": "enemy cards = 8 (7 + entrust)",
+          "pass": true,
+          "detail": 8
+        },
+        {
+          "name": "core enemy listed: 試練の影",
+          "pass": true,
+          "detail": 1
+        },
+        {
+          "name": "core enemy listed: 業斧の鬼将",
+          "pass": true,
+          "detail": 1
+        },
+        {
+          "name": "core enemy listed: 藍花の怨霊",
+          "pass": true,
+          "detail": 1
+        },
+        {
+          "name": "core enemy listed: 銀甲の機工師",
+          "pass": true,
+          "detail": 1
+        },
+        {
+          "name": "core enemy listed: 双牙の魔獣",
+          "pass": true,
+          "detail": 1
+        },
+        {
+          "name": "core enemy listed: 蒼海の龍神",
+          "pass": true,
+          "detail": 1
+        },
+        {
+          "name": "core enemy listed: 乱舞の道化",
+          "pass": true,
+          "detail": 1
+        },
+        {
+          "name": "pilot card hidden",
+          "pass": true
+        },
+        {
+          "name": "pilot chip hidden",
+          "pass": true
+        },
+        {
+          "name": "pilot notice hidden",
+          "pass": true
+        },
+        {
+          "name": "JS error 0",
+          "pass": true,
+          "detail": []
+        }
+      ]
+    },
+    {
+      "viewport": "sp375",
+      "pilot": true,
+      "checks": [
+        {
+          "name": "enemy cards = 9 (7 + entrust + pilot)",
+          "pass": true,
+          "detail": 9
+        },
+        {
+          "name": "core enemy listed: 試練の影",
+          "pass": true,
+          "detail": 1
+        },
+        {
+          "name": "core enemy listed: 業斧の鬼将",
+          "pass": true,
+          "detail": 2
+        },
+        {
+          "name": "core enemy listed: 藍花の怨霊",
+          "pass": true,
+          "detail": 1
+        },
+        {
+          "name": "core enemy listed: 銀甲の機工師",
+          "pass": true,
+          "detail": 1
+        },
+        {
+          "name": "core enemy listed: 双牙の魔獣",
+          "pass": true,
+          "detail": 1
+        },
+        {
+          "name": "core enemy listed: 蒼海の龍神",
+          "pass": true,
+          "detail": 1
+        },
+        {
+          "name": "core enemy listed: 乱舞の道化",
+          "pass": true,
+          "detail": 1
+        },
+        {
+          "name": "pilot card shown",
+          "pass": true
+        },
+        {
+          "name": "pilot chip shown",
+          "pass": true
+        },
+        {
+          "name": "pilot notice shown",
+          "pass": true
+        },
+        {
+          "name": "no horizontal overflow on enemy select",
+          "pass": true,
+          "detail": {
+            "scrollWidth": 375,
+            "innerWidth": 375
+          }
+        },
+        {
+          "name": "battle started (round end button visible)",
+          "pass": true
+        },
+        {
+          "name": "enemy name shown",
+          "pass": true
+        },
+        {
+          "name": "oni art reused as avatar",
+          "pass": true,
+          "detail": "url(\"http://localhost:4199/assets/enemies/oni/art_hq.webp\")"
+        },
+        {
+          "name": "oni art served 200",
+          "pass": true,
+          "detail": {
+            "/assets/backgrounds/stages/02-oni-castle.webp": 200,
+            "/assets/enemies/oni/art_hq.webp": 200
+          }
+        },
+        {
+          "name": "no battleSave while playing a pilot battle",
+          "pass": true,
+          "detail": [
+            "sevengods.deckPreference",
+            "sevengods.matchups"
+          ]
+        },
+        {
+          "name": "R1 intent = ⚔ 50",
+          "pass": true,
+          "detail": "50"
+        },
+        {
+          "name": "R2 intent = ⚔ 90",
+          "pass": true,
+          "detail": "90"
+        },
+        {
+          "name": "R3 intent = charge「⚠ 傷が浅ければ次は断岩」",
+          "pass": true,
+          "detail": "⚠ 傷が浅ければ次は断岩"
+        },
+        {
+          "name": "R4 intent = 業斧・断岩 260 (no damage dealt → else branch)",
+          "pass": true,
+          "detail": "業斧・断岩 260"
+        },
+        {
+          "name": "battle finished (result shown)",
+          "pass": true
+        },
+        {
+          "name": "pilot battle wrote nothing (keys after = keys before)",
+          "pass": true,
+          "detail": {
+            "keysBefore": [
+              "sevengods.deckPreference",
+              "sevengods.matchups"
+            ],
+            "keysAfter": [
+              "sevengods.deckPreference",
+              "sevengods.matchups"
+            ]
+          }
+        },
+        {
+          "name": "no record keys after a pilot battle",
+          "pass": true,
+          "detail": [
+            "sevengods.deckPreference",
+            "sevengods.matchups"
+          ]
+        },
+        {
+          "name": "JS error 0",
+          "pass": true,
+          "detail": []
+        }
+      ],
+      "intents": [
+        "50",
+        "90",
+        "⚠ 傷が浅ければ次は断岩",
+        "業斧・断岩 260",
+        "行動予告なし"
+      ]
+    }
+  ]
+}

@@ -13,7 +13,7 @@ export type { CardType, Rarity, CardDef, CardInstance, BonusCond, CardBonus } fr
 export type { GodDef, GodArt, GodArchetype, GodPassive, GodPassiveId } from './god.js'
 export type { OtomoDef, OtomoState, OtomoForm, OtomoArt, GrowthPath } from './otomo.js'
 export { OTOMO_FORM_ORDER } from './otomo.js'
-export type { EnemyActionDef, EnemyDef, EnemyStageDef, EnemyState, EnemyVisualType } from './enemy.js'
+export type { EnemyActionDef, EnemyActionScript, EnemyTacticDef, EnemyDef, EnemyStageDef, EnemyState, EnemyVisualType } from './enemy.js'
 export type {
   RoundPhase,
   GameStatus,

@@ -1,0 +1,30 @@
+# G4 build（npm run build＝tsc -b && vite build・heavy-run --min-mb 900・統合 RC 25aead4・2026-10-17T00:13:29Z）
+
+> sevengodsgame@1.0.0 build
+> tsc -b && vite build
+
+[36mvite v8.2.0 [32mbuilding client environment for production...[36m[39m
+[2Ktransforming...✓ 184 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                   2.76 kB │ gzip:   0.99 kB
+dist/assets/index-o-E1J9Xm.css  194.85 kB │ gzip:  36.28 kB
+dist/assets/index-Co3vECHT.js   470.39 kB │ gzip: 146.40 kB
+
+[32m✓ built in 1.20s[39m
+exit=0
+total 713
+drwxr-xr-x 1 kimi1 197121      0 Oct 17 09:13 .
+drwxr-xr-x 1 kimi1 197121      0 Oct 17 09:13 ..
+-rw-r--r-- 1 kimi1 197121    310 Oct 17 05:31 .gitkeep
+drwxr-xr-x 1 kimi1 197121      0 Oct 17 09:13 backgrounds
+drwxr-xr-x 1 kimi1 197121      0 Oct 17 09:13 bgm
+drwxr-xr-x 1 kimi1 197121      0 Oct 17 09:13 cards
+drwxr-xr-x 1 kimi1 197121      0 Oct 17 09:13 enemies
+drwxr-xr-x 1 kimi1 197121      0 Oct 17 09:13 fx
+drwxr-xr-x 1 kimi1 197121      0 Oct 17 09:13 gods
+-rw-r--r-- 1 kimi1 197121 470391 Oct 17 09:13 index-Co3vECHT.js
+-rw-r--r-- 1 kimi1 197121 194855 Oct 17 09:13 index-o-E1J9Xm.css
+drwxr-xr-x 1 kimi1 197121      0 Oct 17 09:13 otomo
+drwxr-xr-x 1 kimi1 197121      0 Oct 17 09:13 se
+drwxr-xr-x 1 kimi1 197121      0 Oct 17 09:13 voice

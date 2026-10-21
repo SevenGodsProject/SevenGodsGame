@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { ENEMIES, ENEMY_IDS, pickEnemyId } from './enemies'
+import { CORE_ENEMIES, ENEMIES, ENEMY_IDS, pickEnemyId } from './enemies'
 
 describe('ENEMIES', () => {
   it('has a unique id per enemy', () => {
@@ -50,7 +50,8 @@ describe('ENEMIES', () => {
   // 実測難易度と負相関（ρ −0.31）だったため、`docs/evidence/v1_0_1-rc/star-reeval.json`（enemy-audit matrix 14,112 局の再集計）
   // の規則（normal 全体指数の降順・同点は hard 指数・4/4/3/3/2/2/1）で付け直した。表示専用・HP・actions は無変更
   it('assigns the measured threat ranks (龍神4/怨霊4/魔獣3/鬼将3/影2/機工師2/道化1) (v1.0.1)', () => {
-    const rankById = new Map(ENEMIES.map((e) => [e.id, e.rank]))
+    // v1.0.2 統合：★再付番の golden は CORE 7 体の性質。Pilot 敵（enemy_09）は本体 enemy_02 の★を継承するだけ（coreRoster.test.ts）
+    const rankById = new Map(CORE_ENEMIES.map((e) => [e.id, e.rank]))
     expect(rankById.get(ENEMY_IDS.ryujin)).toBe(4)
     expect(rankById.get(ENEMY_IDS.onryo)).toBe(4)
     expect(rankById.get(ENEMY_IDS.juuma)).toBe(3)
@@ -73,11 +74,11 @@ describe('ENEMIES', () => {
       enemy_07: 28.6,
     }
     const split = [4, 4, 3, 3, 2, 2, 1]
-    const ordered = [...ENEMIES].sort((a, b) => normalIndex[b.id] - normalIndex[a.id])
+    const ordered = [...CORE_ENEMIES].sort((a, b) => normalIndex[b.id] - normalIndex[a.id])
     expect(ordered.map((e) => e.rank)).toEqual(split)
     // 指数が高い敵ほど ★ が高い（単調）。★5 は Boss 予約なので 1〜4 に収まる
     for (let i = 1; i < ordered.length; i++) expect(ordered[i].rank).toBeLessThanOrEqual(ordered[i - 1].rank)
-    expect([1, 2, 3, 4, 5].map((s) => ENEMIES.filter((e) => e.rank === s).length)).toEqual([1, 2, 2, 2, 0])
+    expect([1, 2, 3, 4, 5].map((s) => CORE_ENEMIES.filter((e) => e.rank === s).length)).toEqual([1, 2, 2, 2, 0])
   })
 
   it('gives every enemy a stage with a name and a #rrggbb accent (LANE-D)', () => {
@@ -90,12 +91,13 @@ describe('ENEMIES', () => {
   it('gives every enemy its own stage background under /assets/backgrounds/stages/ (決定124)', () => {
     // 7ボス専用Stage Background。BattleScreenが`--stage-bg`として注入し、Enemy Selectも
     // `--enemy-stage-bg`として同じ値を使う（表示専用。ロジック・数値には不関与）。
+    // Threat Branch Pilot v1：舞台の一意性は既存 7 体（CORE）の性質。Pilot 敵（enemy_09）は鬼将の舞台を共有する（新規素材 0）
     const bgs = ENEMIES.map((e) => e.stage.bg)
     for (const bg of bgs) {
       expect(bg).toBeDefined()
       expect(bg).toMatch(/^\/assets\/backgrounds\/stages\/[0-9]{2}-[a-z-]+\.webp$/)
     }
-    expect(new Set(bgs).size).toBe(ENEMIES.length)
+    expect(new Set(CORE_ENEMIES.map((e) => e.stage.bg)).size).toBe(CORE_ENEMIES.length)
   })
 
   it('ships the referenced stage background asset for every enemy', () => {

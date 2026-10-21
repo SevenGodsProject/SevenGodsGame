@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { GODS } from '../data/gods'
-import { ENEMIES, ENEMY_IDS } from '../data/enemies'
+import { CORE_ENEMIES as ENEMIES, ENEMY_IDS } from '../data/enemies'
 import { getCardDef } from '../data/cards'
 import { getRecommendedDeck } from '../data/deckBuilder'
 import type { StakeChoiceId } from '../types'
