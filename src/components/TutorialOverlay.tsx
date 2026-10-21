@@ -4,6 +4,7 @@ import { HpBar } from './battle/HpBar'
 import { ENEMY_IDS, getEnemyDef } from '../core/data/enemies'
 import './tutorial.css'
 import { SECTIONS, TIPS, type Visual } from './tutorialContent'
+import { formatScaled } from './displayScale'
 
 type TutorialOverlayProps = {
   onClose: () => void
@@ -41,7 +42,14 @@ function renderVisual(visual: Visual) {
       // 実戦のEnemyPanelと同じ`.intent`クラス・同じ書式。数値はTRIAL_ENEMYの実データ（R1、攻撃行動）。
       const firstAction = TRIAL_ENEMY.actions[0]
       const amount = firstAction.kind === 'attack' ? firstAction.amount : 0
-      return <div className="intent tutorial-visual-intent">⚔ 次の攻撃：{amount}</div>
+      // v1.0.2 語彙整合（FIRST_PLAYER_TUTORIAL_AUDIT_V1 §10-1 (c)）：実戦の予告と同じ SVG グリフ＋×10 表示値（決定240・displayScale）。
+      // 絵文字・「次の攻撃：」接頭語・内部値 5 は実戦画面に存在しないため、図で見た記号をそのまま実戦で発見できる形に揃える
+      return (
+        <div className="intent tutorial-visual-intent">
+          <GlyphIcon glyph="sword" className="intent-glyph" />
+          {formatScaled(amount)}
+        </div>
+      )
     }
     case 'resonanceAndDivination':
       // 実戦のGodOtomoPanelと同じ`.resonance-gauge`＋DivinationPanelと同じ

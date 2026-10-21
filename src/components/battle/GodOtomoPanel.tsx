@@ -182,7 +182,9 @@ export function GodOtomoPanel({
           </div>
         </div>
         <div className={`burst-preview-head${remaining === 0 ? ' burst-preview-ready' : ''}`}>
-          {remaining > 0 ? `あと${remaining}で神技発動` : '神技発動！'}
+          {/* v1.0.2 語彙整合（FIRST_PLAYER_TUTORIAL_AUDIT_V1 §10-1 (a)）：共鳴 BURST はこの名札の下段・遊び方 ④ と同じ「神の一撃」。
+              「神技」は Mastery 評価（masteryDisplay）と得意技の語に限定する。字数 8→8／5→5 でレイアウト不変 */}
+          {remaining > 0 ? `あと${remaining}で神の一撃` : '神の一撃！'}
         </div>
       </div>
       <div className="god-otomo-portraits">
