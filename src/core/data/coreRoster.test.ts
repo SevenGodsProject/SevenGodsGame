@@ -1,7 +1,7 @@
 /// <reference types="node" />
 import { createHash } from 'node:crypto'
 import { describe, expect, it } from 'vitest'
-import { CORE_ENEMIES, ENEMIES, ENEMY_IDS, PILOT_ENEMIES, PILOT_ENEMY_IDS, getEnemyDef, isPilotEnemyId, pickEnemyId } from './enemies'
+import { CORE_ENEMIES, ENEMIES, ENEMY_IDS, PILOT_ENEMIES, PILOT_ENEMY_IDS, SHOGUNATE_ENEMIES, getEnemyDef, isPilotEnemyId, pickEnemyId } from './enemies'
 import { DAILY_BOSS_POOL, dailyBossFor } from './dailyBoss'
 import { RULES } from './rules'
 import { MATCHUP_ENEMIES, MATCHUP_TOTAL } from '../../hooks/matchupStorage'
@@ -89,6 +89,8 @@ describe('seed・Daily・49 攻略盤・gameVersion は既存 7 体だけを見�
     expect(getGameVersion()).toBe(GAME_VERSION_GOLDEN)
     const snapshot = rankingImpactSnapshot()
     expect(snapshot).not.toContain('enemy_09')
+    // 将軍家 Pilot v0.4：忠次（enemy_08）も指紋に乗らない（版 1.d794038a00b5b53c は不変）
+    expect(snapshot).not.toContain('enemy_08')
     expect(snapshot).not.toContain('enemyTactic')
     expect(snapshot).not.toContain('hpRatioByDifficulty')
     expect(snapshot).not.toContain('ratioByDifficulty')
@@ -112,16 +114,20 @@ describe('Pilot 敵（enemy_09 業斧の鬼将・軍略）', () => {
   const def = getEnemyDef(PILOT_ENEMY_IDS.oniTactic)
   const oni = getEnemyDef(ENEMY_IDS.oni)
 
-  it('ENEMIES は既存 7 体＋Pilot 1 体の順で、Pilot 判定は Pilot 敵にだけ真', () => {
-    expect(ENEMIES).toEqual([...CORE_ENEMIES, ...PILOT_ENEMIES])
+  it('ENEMIES は既存 7 体＋Threat Pilot 1 体＋将軍家 Pilot 1 体の順で、Pilot 判定は Pilot 敵にだけ真', () => {
+    // 将軍家 Pilot v0.4：enemy_08 忠次（SHOGUNATE_ENEMIES）が末尾に同居する（Threat Pilot の配列・順序は不変）
+    expect(ENEMIES).toEqual([...CORE_ENEMIES, ...PILOT_ENEMIES, ...SHOGUNATE_ENEMIES])
     expect(PILOT_ENEMIES).toHaveLength(1)
     expect(PILOT_ENEMY_IDS.oniTactic).toBe('enemy_09')
     expect(isPilotEnemyId(PILOT_ENEMY_IDS.oniTactic)).toBe(true)
     for (const e of CORE_ENEMIES) expect(isPilotEnemyId(e.id)).toBe(false)
     expect(isPilotEnemyId(null)).toBe(false)
     expect(isPilotEnemyId(undefined)).toBe(false)
-    // enemy_08 は決定274 忠次のために予約（この branch では未定義）
-    expect(ENEMIES.some((e) => (e.id as string) === 'enemy_08')).toBe(false)
+    // enemy_08 は決定274 忠次（将軍家 Pilot）。CORE にも PILOT_ENEMIES にも入らない（記録ガードは isPilotEnemyId が両 Pilot を受ける）
+    expect(CORE_ENEMIES.some((e) => (e.id as string) === 'enemy_08')).toBe(false)
+    expect(PILOT_ENEMIES.some((e) => (e.id as string) === 'enemy_08')).toBe(false)
+    expect(SHOGUNATE_ENEMIES.map((e) => e.id as string)).toEqual(['enemy_08'])
+    expect(isPilotEnemyId(SHOGUNATE_ENEMIES[0].id)).toBe(true)
   })
 
   it('鬼将のコピー（新規素材 0）：maxHp 94・art・stage・visualType・rank 3（v1.0.1 の★を継承）・battleCries は同一', () => {

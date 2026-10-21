@@ -58,7 +58,7 @@ export function BattleEnemyCutin({ enemyDefId, specialName, amount, onComplete }
   }
 
   return (
-    <div className="enemy-cutin" onAnimationEnd={handleAnimationEnd}>
+    <div className="enemy-cutin" data-enemy={def.id} onAnimationEnd={handleAnimationEnd}>
       <div className="enemy-cutin-strip">
         <div className="enemy-cutin-portrait-frame">
           <img className="enemy-cutin-image" src={def.art} alt={def.name} />
