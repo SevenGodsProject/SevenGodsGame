@@ -41,6 +41,18 @@ describe('deriveDefeatCause (決定128)', () => {
     expect(describeDefeatCause(deriveDefeatCause(log), '業斧の鬼将')).toBe('R5：業斧の鬼将の「攻撃」で 130 ダメージ')
   })
 
+  it('label の無い必殺（special）は「必殺」1 語に落とす（v1.0.3 C-4：遊び方 ②「大技（必殺）」と同じ語）', () => {
+    const log: GameEvent[] = [
+      ...base,
+      { t: 'ROUND_STARTED', round: 4, apGranted: 5 },
+      { t: 'ENEMY_ACTED', kind: 'special', amount: 26 },
+      { t: 'DAMAGE_DEALT', target: 'self', amount: 26, blocked: 0 },
+      { t: 'GAME_ENDED', status: 'lost', totalScore: 60 },
+    ]
+    expect(deriveDefeatCause(log)).toEqual({ round: 4, label: '必殺', amount: 26, selfInflicted: false })
+    expect(describeDefeatCause(deriveDefeatCause(log), '業斧の鬼将')).toBe('R4：業斧の鬼将の「必殺」で 260 ダメージ')
+  })
+
   it('detects self-inflicted losses (捨身の一撃 etc.)', () => {
     const log: GameEvent[] = [
       ...base,
