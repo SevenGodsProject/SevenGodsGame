@@ -160,12 +160,12 @@ describe('selectNextGoal — 通常モード', () => {
     expect(g).toMatchObject({ id: 'N7', text: '神階Ⅱ 鳥居 のベストまであと 1,000 点' })
   })
 
-  it('N8：絆称号まで 3pt 以内（童子が必要なら併記）', () => {
+  it('N8：絆称号まで 3pt 以内（v1.0.4：童子条件の併記なし）', () => {
     const near = selectNextGoal(base({ bondRecord: { battlesPlayed: 3, resonanceCount: 4, dojiReached: 0 } }))
     expect(near).toMatchObject({ id: 'N8', text: '絆称号「息の合った相棒」まであと2pt' })
     const tier2 = selectNextGoal(base({ bondRecord: { battlesPlayed: 9, resonanceCount: 10, dojiReached: 0 } }))
-    expect(tier2.text).toBe('絆称号「固い絆で結ばれた相棒」まであと2pt（童子形態での対局終了も必要）')
-    // pt は満たしていて童子だけが足りない＝近いとは言えないので採用しない
+    expect(tier2.text).toBe('絆称号「固い絆で結ばれた相棒」まであと2pt')
+    // Lv5 到達済み＝最終称号に到達しているので N8 は出ない
     expect(selectNextGoal(base({ bondRecord: { battlesPlayed: 15, resonanceCount: 13, dojiReached: 0 } })).id).not.toBe('N8')
   })
 

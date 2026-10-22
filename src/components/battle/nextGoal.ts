@@ -198,7 +198,7 @@ function selectNormalGoal(input: NextGoalInput): NextGoal {
     if (bond && bond.pointsNeeded > 0 && bond.pointsNeeded <= NEXT_GOAL_BOND_NEAR_POINTS) {
       return {
         id: 'N8',
-        text: `絆称号「${bond.title}」まであと${bond.pointsNeeded}pt${bond.needsDoji ? '（童子形態での対局終了も必要）' : ''}`,
+        text: `絆称号「${bond.title}」まであと${bond.pointsNeeded}pt`,
         action: 'rematch',
       }
     }
