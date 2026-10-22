@@ -1,0 +1,18 @@
+[
+  {
+    "name": "lane1-acceptance",
+    "cmd": "node scripts/lane1-threat-branch/acceptance.mjs docs/evidence/shogunate-pilot-v04/07a-lane1-acceptance/result.json http://localhost:4183"
+  },
+  {
+    "name": "shogunate-acceptance",
+    "cmd": "node scripts/shogunate-pilot/acceptance.mjs docs/evidence/shogunate-pilot-v04/07b-acceptance/result.json http://localhost:4183"
+  },
+  {
+    "name": "probe-tadatsugu",
+    "cmd": "node scripts/shogunate-pilot/probe.mjs docs/evidence/shogunate-pilot-v04/08-probe http://localhost:4183",
+    "env": {
+      "CF2_VIEWPORTS": "pc,sp375",
+      "SG_SEEDS": "sg-v04-01,sg-v04-02,sg-v04-03,sg-v04-04"
+    }
+  }
+]

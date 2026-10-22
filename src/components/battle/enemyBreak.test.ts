@@ -112,7 +112,13 @@ describe('Enemy Break v1：EnemyPanel の配線（source pin）', () => {
     expect(enemyPanelSrc).toContain('className="enemy-stage"')
     expect(enemyPanelSrc).toMatch(/enemy-collapse\$\{defeated \? ' enemy-defeat' : ''\}/)
   })
-  it('engine には触れない', () => {
-    expect(enemyPanelSrc).not.toMatch(/from '\.\.\/\.\.\/core\/engine/)
+  // 将軍家 Pilot v0.4（docs/SHOGUNATE_PILOT_V0_4.md §0・PM Gate G2 で検出）：忠次 enemy_08 の予告グローを表示 HP で解決するため、
+  // EnemyPanel は engine の純関数 resolveEnemyTactic（tactic.ts・乱数 0・state を読まない）だけを import する。
+  // Enemy Break 自体（useEnemyBreak・hpBand）は引き続き engine に触れない。reducer／round／endRound／playCard 等の
+  // state を進める module は import しない（この 1 行以外の engine import が増えたら本テストが落ちる）。
+  it('engine には触れない（例外＝純関数 resolveEnemyTactic の 1 行だけ。reducer・round 等の state 遷移には触れない）', () => {
+    const engineImports = enemyPanelSrc.split(/\r?\n/).filter((line) => /from '\.\.\/\.\.\/core\/engine/.test(line))
+    expect(engineImports).toEqual(["import { resolveEnemyTactic } from '../../core/engine/tactic'"])
+    expect(enemyPanelSrc).not.toMatch(/core\/engine\/(reducer|round|endRound|playCard|createInitialState|index)/)
   })
 })

@@ -1,0 +1,11 @@
+[
+  {
+    "name": "probe-tadatsugu",
+    "cmd": "node scripts/shogunate-pilot/probe.mjs docs/evidence/shogunate-pilot-v04/08-probe http://localhost:4183",
+    "env": {
+      "CF2_VIEWPORTS": "pc,sp375",
+      "SG_SEEDS": "sg-v04-01,sg-v04-02,sg-v04-03,sg-v04-04",
+      "SG_STRATEGY": "damage"
+    }
+  }
+]
