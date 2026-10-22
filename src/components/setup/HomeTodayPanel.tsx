@@ -3,13 +3,14 @@ import { getEnemyDef } from '../../core/data/enemies'
 import { dailyBossFor } from '../../core/data/dailyBoss'
 import { RULES } from '../../core/data/rules'
 import { stakeLabel } from '../../core/data/stakes'
-import { formatDailyCountdown, msUntilNextDailyKey, todayDailyKey } from '../../hooks/dailyClock'
+import { formatDailyCountdown, msUntilNextDailyKey, todayDailyKey, tomorrowDailyTypeLabel } from '../../hooks/dailyClock'
 import { bestResultOf, dailyAttemptsLeft, loadDailyDay } from '../../hooks/dailyStorage'
 import { loadGodRecord } from '../../hooks/recordStorage'
 import { isStakeUnlocked, loadGodStakeRecord } from '../../hooks/stakeStorage'
 import { loadOtomoBond } from '../../hooks/otomoBondStorage'
 import { useMinuteClock } from '../../hooks/useMinuteClock'
 import { formatScaled } from '../displayScale'
+import { describeDailyDayVerdict } from '../battle/dailyDiff'
 import { DailyStatusBadge } from './DailyStatusBadge'
 import { DAILY_THREAT_STARS } from './DailyChallengeScreen'
 import { computeSevenBondSummary } from './otomoGrowthDisplay'
@@ -110,9 +111,13 @@ export function HomeTodayPanel({
                 <span data-testid="home-today-best">まだ挑戦していません</span>
               )}
             </p>
+            {/* v1.0.4 Retention 束 ③：今日の問いの状態 1 行（保存済みの結果を読むだけ） */}
+            <p className="home-today-verdict" data-testid="home-today-verdict">
+              {describeDailyDayVerdict(day)}
+            </p>
             {exhausted && (
               <p className="home-today-countdown" data-testid="home-today-countdown">
-                次の敵まで {formatDailyCountdown(msUntilNextDailyKey(now))}
+                明日の問いは【{tomorrowDailyTypeLabel(now)}】・次の敵まで {formatDailyCountdown(msUntilNextDailyKey(now))}
               </p>
             )}
           </div>

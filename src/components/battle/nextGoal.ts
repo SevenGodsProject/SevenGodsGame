@@ -80,7 +80,8 @@ export type NextGoalInput = {
   /** v1.0.4 Retention 束 ②：この勝利の 49 攻略記録（初撃破か・その敵を撃破した神の数）。無ければ NM1 は出ない */
   matchup?: { isFirstClear: boolean; enemyClearedCount: number } | null
   // ---- 神域挑戦 ----
-  daily?: { isNewBest: boolean; prevBest: number; attemptsLeft: number } | null
+  /** `tomorrowTypeLabel`（v1.0.4 Retention 束 ③）：明日の問いの型。あれば D4 に添える */
+  daily?: { isNewBest: boolean; prevBest: number; attemptsLeft: number; tomorrowTypeLabel?: string } | null
 }
 
 /** 自己ベストとの差が「近い」とみなす割合（仕様 §6-2 N6） */
@@ -100,9 +101,10 @@ function selectDailyGoal(input: NextGoalInput): NextGoal {
   const daily = input.daily ?? { isNewBest: false, prevBest: 0, attemptsLeft: 0 }
   const left = daily.attemptsLeft
   if (left <= 0) {
+    const tomorrow = input.daily?.tomorrowTypeLabel
     return {
       id: 'D4',
-      text: `今日の挑戦は終了。次の敵まで ${formatDailyCountdown(msUntilNextDailyKey(new Date(input.nowMs)))}`,
+      text: `今日の挑戦は終了。${tomorrow ? `明日の問いは【${tomorrow}】・` : ''}次の敵まで ${formatDailyCountdown(msUntilNextDailyKey(new Date(input.nowMs)))}`,
       action: 'home',
     }
   }

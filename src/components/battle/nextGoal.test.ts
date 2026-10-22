@@ -250,6 +250,11 @@ describe('selectNextGoal — 神域挑戦', () => {
     }
   })
 
+  it('D4（v1.0.4 ③）：明日の問いの型があれば添える（無ければ従来文）', () => {
+    const g = selectNextGoal(daily({ daily: { isNewBest: false, prevBest: 900, attemptsLeft: 0, tomorrowTypeLabel: '重撃型' } }))
+    expect(g).toMatchObject({ id: 'D4', action: 'home', text: '今日の挑戦は終了。明日の問いは【重撃型】・次の敵まで 12:00' })
+  })
+
   it('神域挑戦では通常モードの目標（神階・今日の神域挑戦・絆）を出さない', () => {
     const g = selectNextGoal(daily({ stakeResult: stake({ hardClearedNow: true }), bondRecord: { battlesPlayed: 3, resonanceCount: 4, dojiReached: 0 }, daily: { isNewBest: true, prevBest: 0, attemptsLeft: 2 } }))
     expect(g.id).toBe('D3')

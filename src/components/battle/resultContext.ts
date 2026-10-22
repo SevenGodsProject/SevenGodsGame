@@ -2,7 +2,7 @@ import type { GameState } from '../../core/types'
 import { getFinalScore, getMastery } from '../../core/engine'
 import { getEnemyDef } from '../../core/data/enemies'
 import { dailyBossFor } from '../../core/data/dailyBoss'
-import { todayDailyKey } from '../../hooks/dailyClock'
+import { todayDailyKey, tomorrowDailyTypeLabel } from '../../hooks/dailyClock'
 import { dailyAttemptsLeft, loadDailyDay, type DailyDay, type DailyRecordResult } from '../../hooks/dailyStorage'
 import { isStakeUnlocked, type StakeResultOutcome } from '../../hooks/stakeStorage'
 import type { OtomoBondRecord } from '../../hooks/otomoBondStorage'
@@ -79,9 +79,12 @@ export function collectResultContext(state: GameState, engine: ResultEngineSnaps
       goalInput: {
         ...common,
         mode: 'daily',
-        daily: result
-          ? { isNewBest: result.isNewBest, prevBest: result.prevBest, attemptsLeft: result.attemptsLeft }
-          : { isNewBest: false, prevBest: 0, attemptsLeft: state.dailyKey ? dailyAttemptsLeft(state.dailyKey) : 0 },
+        daily: {
+          ...(result
+            ? { isNewBest: result.isNewBest, prevBest: result.prevBest, attemptsLeft: result.attemptsLeft }
+            : { isNewBest: false, prevBest: 0, attemptsLeft: state.dailyKey ? dailyAttemptsLeft(state.dailyKey) : 0 }),
+          tomorrowTypeLabel: tomorrowDailyTypeLabel(now),
+        },
       },
       dailyDay,
       dailyCurrent: { godId: state.godId, score: getFinalScore(state.score), status: state.status, round: state.round },

@@ -1,7 +1,8 @@
 import { beforeEach, describe, expect, it } from 'vitest'
 import type { GameState } from '../../core/types'
 import { GOD_IDS } from '../../core/data/gods'
-import { ENEMY_IDS } from '../../core/data/enemies'
+import { ENEMY_IDS, getEnemyDef } from '../../core/data/enemies'
+import { dailyBossFor } from '../../core/data/dailyBoss'
 import { startTestGame } from '../../core/engine/testUtils'
 import { recordGameResult } from '../../hooks/recordStorage'
 import { recordMatchupClear } from '../../hooks/matchupStorage'
@@ -124,6 +125,11 @@ describe('collectEarlyRead（読むだけ）', () => {
     const fake = { godId: lost.godId, enemyId: lost.enemy.defId, isFirstClear: true, godClearedCount: 1, enemyClearedCount: 1, totalCleared: 1 }
     expect(collectResultContext(lost, { newBest: false, prevBest: 0, stakeResult: null, dailyResult: null, otomoBondChange: null, matchupClear: fake }, NOW)!.goalInput.matchup).toBeNull()
     expect(settle(settled()).goalInput.matchup).toBeNull()
+  })
+
+  it('v1.0.4 ③：神域挑戦の入力に明日の問いの型が入る（翌日キーの敵の typeLabel）', () => {
+    const ctx = settle(settled({ mode: 'daily', dailyKey: '2026-09-19' }))
+    expect(ctx.goalInput.daily?.tomorrowTypeLabel).toBe(getEnemyDef(dailyBossFor('2026-09-20').enemyId).typeLabel)
   })
 
   it('読むだけ：入力集めの前後で storage の内容が変わらない', () => {
