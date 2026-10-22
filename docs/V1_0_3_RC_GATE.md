@@ -57,7 +57,9 @@
 | G9 | 418a387 取り込み | PASS | ancestor 真・docs のみ・A-0＝v1.0.2 LIVE | §0 |
 | G10 | 結果 mount +200ms | PASS（単体） | `combatTimeline.test.ts` で `planResultGate`＝`visualHpEndMs + 200` を固定。ブラウザ実測は省略（表示層の定数 1 つ） | `03-vitest.txt` |
 
-UNRUN：旧セーブ互換（save-migration）は `src/core`・storage 差分 0 のため RC では省略し、**Production Smoke S7 で実施**（v1.0.2 と同手順・`production-smoke.cjs --version 1.0.3 --acceptance scripts/v1_0_3-rc/acceptance.mjs`）。
+| G11 | 旧セーブ互換（v1.0.2 build `index-xO5hO-tv.js`＝Production と byte 一致の RC build × v1.0.3 RC build・`save-migration.mjs`・channel:chromium） | PASS | **44/44**（Lane 6 監査の条件 C2・2026-10-23 実測） | `09-save-migration/` |
+
+UNRUN：なし。Production Smoke S7 でも同手順を再実施する。
 
 ---
 
@@ -65,8 +67,8 @@ UNRUN：旧セーブ互換（save-migration）は `src/core`・storage 差分 0 
 
 | # | 内容 | 実測 | 扱い |
 |---|---|---|---|
-| 1 | 神の一撃札（READY 枠）の `.card-view` が scrollWidth +2／scrollHeight +2（本文・文字は収まる） | RC：PC・SP375／Production v1.0.2：PC・SP375 で同一 | 枠の装飾（outline／box-shadow の内側要素）由来と推定。表示上の欠けは目視で未確認（スクショ `07c-sp-text/hand-*.webp`）。v1.0.4 で `overflow` の扱いを Preflight |
-| 2 | 同札の高さが他札より +6px（140→146・158→164） | 同上 | 同上 |
+| 1 | 一部の札（PC＝神の一撃札「豪快な一撃」・SP375＝同札または「姉御の号令」）の `.card-view` 外枠が scrollWidth +2／scrollHeight +2（本文 `.card-view-body`・`.card-view-text`・条件行の overflow は 0） | RC：PC・SP375／Production v1.0.2：PC・SP375 で同型（独立監査 DELTA で確認） | 枠の装飾（outline／box-shadow の内側要素）由来と推定。表示上の欠けは目視で未確認（スクショ `07c-sp-text/hand-*.webp`）。v1.0.4 で `overflow` の扱いを Preflight |
+| 2 | 札の高さが 140→146・158→164 になる札がある | 実体は READY／hover の `scale(1.04)`（レイアウト高さではなく変形） | 判定基準側の問題。次回の sp-text-check では scale を除いた高さで判定する |
 
 ---
 
@@ -74,9 +76,11 @@ UNRUN：旧セーブ互換（save-migration）は `src/core`・storage 差分 0 
 
 1. CEO：公開承認（§6-4 は DECISIONS 決定283 候補行）
 2. CEO：`release/v1_0_3-rc` を push（pack は §5 の分割計画を参照）→ PR → CI GREEN → `gh pr merge --merge`
-3. PM：Production Smoke S1〜S7＋bundle 一致（`scripts/v1_0_2-rc/production-smoke.cjs --sha <merge> --version 1.0.3 --acceptance scripts/v1_0_3-rc/acceptance.mjs --out docs/evidence/v1_0_3-production-smoke`）→ RELEASE_STATUS A-0 昇格・決定283 LIVE
+3. PM：Production Smoke S1〜S7＋bundle 一致。lane3 worktree（RC build `374e7c0` の dist を保持）で実行：
+   `node scripts/v1_0_2-rc/production-smoke.cjs --sha <merge 7hex> --version 1.0.3 --rc-build-sha 374e7c0 --master-dir C:/Users/kimi1/SevenGodsGame-lane2b --acceptance scripts/v1_0_3-rc/acceptance.mjs --out docs/evidence/v1_0_3-production-smoke`
+   （`--master-dir` は S7 用の旧版 dist＝v1.0.2 を持つ worktree。省略すると integ の v1.0.1 になる）→ RELEASE_STATUS A-0 昇格・決定283 LIVE
 4. Rollback 先＝deployment `7228912965`（v1.0.2）
 
 ## 5. push サイズ（70 MB 事故の再発防止）
 
-`git pack-objects` 推定は Lane 6 監査（§7）に委ねる。RC の証跡は PNG を WebP 化済み（`docs/evidence/v1_0_3-rc/`）。418a387 の v1.0.2 Smoke 証跡（22 MB・WebP 化済み）も同梱されるため、25 MB を超える場合は fast-forward 連鎖で 2〜3 段階に分割して push する。
+pack（HEAD ^origin/master）は **約 29.7 MB**（独立監査 DELTA 実測）。500KB 超の PNG は 0（400KB 級は残る）・`06-secret-audit.txt` 3.1 MB。25 MB を超えるため **2 段階の fast-forward push** とする：段階 1＝`1343024`（Lane 5 束＋418a387 記録・21.8 MB）→ 段階 2＝RC HEAD（7.5 MB）。いずれも force 不要・master 不変。
