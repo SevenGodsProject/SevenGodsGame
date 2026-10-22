@@ -5636,7 +5636,9 @@ body.battle-viewport .player-panel {
   }
 
   body.battle-viewport .card-view-text {
-    font-size: 9px;
+    /* v1.0.3 RC（Lane 8 MOBILE_UX_AUDIT_V1 §4 案 F）：SP 158px 札の本文 9px → 9.5px（可読性 +5.5%）。
+       条件行（.card-view-bonus 9px）と 140px 札（下の max-height: 720px 側で 9px に据え置き）は変えない */
+    font-size: 9.5px;
   }
 
   /* 効果文は託宣ボタンの title に同じ文が入っている（DivinationPanel.tsx）。
@@ -5703,6 +5705,15 @@ body.battle-viewport .player-panel {
 
   body.battle-viewport .battle-dock-row .hand {
     padding-top: 26px;
+  }
+}
+
+/* v1.0.3 RC（Lane 8 §4 案 F）：140px 札（低い SP）の本文は 9px に据え置く。決定238 の実測（360×640 で『姉御の号令』が
+   140px から 12.1px はみ出し・非専用札の最悪余裕 −5.5px）のとおり余白が無いため、9.5px は 158px 札だけに当てる。
+   決定238 候補の media block（上）はそのテスト（cardGodLabelLowscreen.test.ts＝規則 3 つ）を変えないよう別 block にする */
+@media (max-width: 899px) and (max-height: 720px) {
+  body.battle-viewport .card-view-text {
+    font-size: 9px;
   }
 }
 
