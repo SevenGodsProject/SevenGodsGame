@@ -2,9 +2,23 @@
 
 Production の「確定状態」を一目で確認するための要約です。新しい仕様判断は含みません（根拠は `docs/DECISIONS.md`）。**§A が現在の正本**。§B 以降は 8/31 Public Beta〜Phase 3（2026-09-06）時点の履歴として残します（当時の Known Non-blockers 1〜16 は §A-4 の生存 Known に統合済み）。
 
-## A. 現在の Production 状態（2026-10-21・決定282 v1.0.2 PRODUCTION LIVE）
+## A. 現在の Production 状態（2026-10-23・決定283 v1.0.3 PRODUCTION LIVE）
 
-### A-0. v1.0.2 公開（2026-10-21・CEO 決定282 承認 → CEO push／merge・決定282 PRODUCTION LIVE）
+### A-0. v1.0.3 公開（2026-10-22〜23・決定283 PRODUCTION LIVE）
+
+| 項目 | 状態 |
+|---|---|
+| **Release** | **SEVEN GODS v1.0.3**（決定283）：初心者語彙 完結・Home 2 戦目導線＋C-4・敗北画面の事実行・RETURN TO CALM（小 +200ms）・SP 手札本文 9.5px。`src/core` 差分 0（gameVersion `1.d794038a00b5b53c`・save v9 不変） |
+| **Production HEAD** | master = origin/master **`1f713d6`**（PR #3 merge）／RC `release/v1_0_3-rc` `bbc2263`／runtime 最終変更 `374e7c0`（version） |
+| **Vercel deployment** | **`7256475048`**（sha `1f713d6`）／bundle `index-CAKmzlrW.js`（472,846 B）・`index-bwEHtD6x.css`／Home `v1.0.3 (1f713d6)` |
+| **Rollback 先** | deployment **`7228912965`**（v1.0.2・`0d38c05`）。Promote は CEO のみ |
+| **公開の経緯** | CEO 2 段階 push → PR #3 → CI 39805676129 GREEN → CEO merge → master CI 39806163745 success → Vercel 自動 deploy |
+| **Release Gate** | `docs/V1_0_3_RC_GATE.md`（vitest 1,528・受入 44/44・語彙 20/20・敗北 18/18・旧セーブ 44/44）＋独立 Release 監査 2 段（FAIL 0） |
+| **Production Smoke** | `docs/V1_0_3_PRODUCTION_SMOKE.md`：S1〜S9 PASS（S7 旧セーブ 44/44・S8 敗北画面 18/18・S9 SP 本文 overflow 0）＋bundle byte 一致＋混入 0 |
+| **Known** | K01〜K39 据え置き＋札の外枠 2px／scale(1.04)（v1.0.2 から存在） |
+| **tag** | 未作成（CEO のみ・任意） |
+
+### A-0prev. v1.0.2 公開（2026-10-21・CEO 決定282 承認 → CEO push／merge・決定282 PRODUCTION LIVE）
 
 | 項目 | 状態 |
 |---|---|
@@ -19,16 +33,6 @@ Production の「確定状態」を一目で確認するための要約です。
 | **Known** | 変更なし（K01〜K39 据え置き・新規 0）。統合 RC Gate v1 §4 の hard 演出ずれ（有利側のみ）据え置き |
 | **tag** | `v1.0.2` **未作成**（`v1.0.1`・`v1.0.0` も未作成・CEO のみ・任意） |
 | **次 Release 候補（v1.0.3）** | Lane 5 UX 束 #1・#3（`feat/v1_0_3-ux-bundle` 2654aed）／Lane 3 大耀 crisis Pilot v1（`feat/official-voice-crisis-pilot-v1` 6dba810）／Lane 4 忠次 v0.4（`feat/shogunate-pilot-v0.4` f0daa46）／Lane 6・7・8・9 監査の TOP 候補。いずれも master `0d38c05` へ merge 追従してから Fast Gate |
-
-### A-0x. v1.0.3 RC（2026-10-22・決定283 候補・**READY FOR CEO PRODUCTION RELEASE APPROVAL**・公開 0）
-
-| 項目 | 状態 |
-|---|---|
-| **RC** | `release/v1_0_3-rc`（worktree `SevenGodsGame-lane3`・起点 master `0d38c05`）。内容＝初心者語彙 完結・Home 2 戦目導線＋C-4・敗北画面の事実行・RETURN TO CALM（小 +200ms）・SP 手札本文 9.5px・version 1.0.3。公開記録 418a387 同梱 |
-| **不変** | `src/core` 差分 0（gameVersion `1.d794038a00b5b53c`・save v9・CORE 7 体・rules 不変）。storage 書き込み 0 |
-| **Gate** | `docs/V1_0_3_RC_GATE.md`：tsc 0／oxlint 新規 0／vitest 1,528 PASS／build 472.84 kB／Ranking Absence・Secret PASS／受入 44/44・語彙 20/20・敗北画面 18/18・SP 本文 25/29（FAIL 4＝v1.0.2 と同一の Known）／Home `v1.0.3 (374e7c0)`。evidence `docs/evidence/v1_0_3-rc/` |
-| **公開経路** | CEO：push（必要なら分割）→ PR → CI GREEN → `gh pr merge --merge` → PM：Production Smoke S1〜S7（`production-smoke.cjs --version 1.0.3 --acceptance scripts/v1_0_3-rc/acceptance.mjs`）→ 本節を A-0 へ昇格。Rollback 先＝`7228912965`（v1.0.2） |
-| **Known** | 変更なし（K01〜K39 据え置き）＋候補 1 件＝神の一撃札の `.card-view` 2px overflow／+6px（v1.0.2 から存在・表示上の欠けは未確認） |
 
 ### A-0a. v1.0.1 Fast Gate 公開（2026-10-17・CEO 正式承認「v1.0.1 Fast Gate 単独 Production Release」・決定281 PRODUCTION LIVE・履歴）
 
