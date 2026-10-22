@@ -15,9 +15,10 @@ const sha = arg('--sha', null)
 const base = arg('--base', 'https://seven-gods-game.vercel.app')
 const masterDir = arg('--master-dir', 'C:/Users/kimi1/SevenGodsGame-integ')
 const rcBuildSha = arg('--rc-build-sha', '32f7f77')
+const version = arg('--version', JSON.parse(fs.readFileSync('package.json', 'utf8')).version)
 if (!sha) { console.error('usage: --sha <merge 7hex>'); process.exit(2) }
 const PW = path.resolve('node_modules/playwright/index.mjs')
-const OUT = 'docs/evidence/v1_0_2-production-smoke'
+const OUT = arg('--out', 'docs/evidence/v1_0_2-production-smoke')
 fs.mkdirSync(OUT, { recursive: true })
 const results = []
 const log = (s) => process.stdout.write(`[smoke ${new Date().toISOString()}] ${s}\n`)
@@ -66,7 +67,7 @@ async function bundleMatch() {
   out.rcJsBytes = rcJs.length
   check('JS byte-equal after normalizing the embedded build sha', a === b, { prodBytes: prodJs.length, rcBytes: rcJs.length, prodSha256: crypto.createHash('sha256').update(prodJs).digest('hex').slice(0, 16), rcSha256: crypto.createHash('sha256').update(rcJs).digest('hex').slice(0, 16) })
   check('CSS sha256 equal', crypto.createHash('sha256').update(prodCss).digest('hex') === crypto.createHash('sha256').update(rcCss).digest('hex'), { prodCss: css, rcCss: rcCssName })
-  check('Production JS contains version 1.0.2', a.includes('1.0.2'))
+  check(`Production JS contains version ${version}`, a.includes(version))
   check('Production JS contains merge sha label', prodJs.toString('utf8').includes(sha))
   for (const token of ['/api/ranking', 'RANKING_DATABASE_URL', 'tadatsugu', 'card_common_guard_01_v2', 'voice/taiyo/crisis']) {
     check(`Production JS has no 混入 token: ${token}`, !a.includes(token))
@@ -84,8 +85,8 @@ function ready(url, cb, tries = 0) {
 }
 
 ;(async () => {
-  run('s1', `node scripts/release-audit/home-version-smoke.mjs ${OUT}/s1-home.json ${base} 1.0.2 ${sha}`)
-  run('s1b', `node scripts/v1_0_1-rc/acceptance.mjs ${OUT}/s1b-v101-acceptance.json ${base} --sha ${sha}`)
+  run('s1', `node scripts/release-audit/home-version-smoke.mjs ${OUT}/s1-home.json ${base} ${version} ${sha}`)
+  run('s1b', `node ${arg('--acceptance', 'scripts/v1_0_1-rc/acceptance.mjs')} ${OUT}/s1b-acceptance.json ${base} --sha ${sha} --version ${version}`)
   run('s1c', `node scripts/v1_0_2-rc/vocab-check.mjs ${OUT}/s1c-vocab/result.json ${base}`)
   run('s24', `node scripts/release-audit/qa-flow.mjs ${OUT}/s2-s4-qa-flow.json ${base} --shots ${OUT}/qa-flow-shots`)
   run('s5', `node scripts/official-voice-pilot/acceptance.mjs ${OUT}/s5-official-voice.json ${base}`)

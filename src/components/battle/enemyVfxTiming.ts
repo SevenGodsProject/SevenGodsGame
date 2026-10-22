@@ -174,3 +174,10 @@ export const VICTORY_BEAT_MS = 850
 /** reduced-motion 時の崩壊・撃破表示 */
 export const DEFEAT_COLLAPSE_REDUCED_MS = 250
 export const VICTORY_BEAT_REDUCED_MS = 600
+
+/**
+ * 敗北・未撃破：表示 HP の変化が終わってから結果画面（＋敗北 sting／ジングル）を出すまでの間（RETURN TO CALM・小）。
+ * v1.0.3 RC：120 → 200（BF-03 の 150〜300ms 帯の中央・Lane 5 `NEXT_QUALITY_IMPROVEMENT_PLAN_V1.md` 予備 #6）。
+ * 勝利経路（planVictory）とは無関係。安全弁 PRESENTATION_SAFETY_MS は不変
+ */
+export const RESULT_GATE_AFTER_HP_MS = 200

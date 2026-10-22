@@ -12,6 +12,7 @@ import { buildShareText, copyToClipboard } from './shareText'
 import type { BattleRecap } from './battleRecap'
 import { useEffect, useState } from 'react'
 import { describeDefeatCause, type DefeatCause } from './defeatCause'
+import { describeDefeatGuardFact, type DefeatGuardFact } from './defeatFacts'
 import { getEnemyDef } from '../../core/data/enemies'
 import { useMinuteClock } from '../../hooks/useMinuteClock'
 import type { ResultContext } from './resultContext'
@@ -112,6 +113,11 @@ type GameOverOverlayProps = {
   shareState?: GameState | null
   /** 決定128：敗北理由（lost のときだけ表示）。BattleScreen がログから導出して渡す */
   defeatCause?: DefeatCause | null
+  /**
+   * v1.0.3 RC（Lane 6 §7 #1）：敗北の事実行「◯◯ N を加護で受けていれば残 HP X」（lost のときだけ・計算できたときだけ）。
+   * BattleScreen がログから導出して渡す。「敵の残り HP」は既存の game-over-enemy-hp が担う（重複させない）
+   */
+  defeatFact?: DefeatGuardFact | null
   /** Phase 6-C（決定166）：この1戦の振り返り（最大3行）。BattleScreen がログから生成する */
   recap?: BattleRecap | null
   /** Phase 6-C：勝利で報酬がまだ確定していない（「報酬カードを選ぶ」だけを出す） */
@@ -145,6 +151,7 @@ export function GameOverOverlay({
   stakeResult = null,
   shareState = null,
   defeatCause = null,
+  defeatFact = null,
   recap = null,
   rewardPending = false,
   onOpenReward,
@@ -182,6 +189,8 @@ export function GameOverOverlay({
     return () => window.cancelAnimationFrame(raf)
   }, [status, finalScore, reduced, stagedSkip])
   const defeatText = status === 'lost' ? describeDefeatCause(defeatCause, getEnemyDef(enemy.defId).name) : null
+  // v1.0.3 RC（Lane 6 §7 #1）：事後の事実 1 行（正解・未来情報ではない）。敗因の枠の中に続けて出す
+  const defeatFactText = status === 'lost' && defeatText ? describeDefeatGuardFact(defeatFact) : null
   // 決定126（Seed共有）：コピー結果の表示（idle→copied/failed、数秒で戻す）
   const [copyState, setCopyState] = useState<'idle' | 'copied' | 'failed'>('idle')
   const handleShare = async () => {
@@ -276,6 +285,14 @@ export function GameOverOverlay({
         {defeatText && (
           <div className="game-over-defeat-cause">
             敗因：<strong>{defeatText}</strong>
+            {defeatFactText && (
+              <>
+                <br />
+                <span className="game-over-defeat-fact" data-testid="defeat-fact">
+                  {defeatFactText}
+                </span>
+              </>
+            )}
             {/* Phase 6-C：状況固有の助言（recap）があるときは定型文を出さない */}
             {!(recap && recap.lines.length > 0) && (
               <>

@@ -21,6 +21,7 @@ import {
   HP_LAG_MS,
   MULTI_CUTIN_LEAD_MS,
   PASSIVE_AFTER_ENEMY_MS,
+  RESULT_GATE_AFTER_HP_MS,
   SPECIAL_IMPACT_MS,
   VICTORY_BEAT_MS,
   VICTORY_BEAT_REDUCED_MS,
@@ -302,7 +303,7 @@ export function planVictory(finalStep: Pick<ImpactStep, 'atMs' | 'stopMs'> | nul
 export function planResultGate(plan: Pick<BatchPlan, 'finalStep' | 'lastImpactMs' | 'steps'>): number {
   const anchor = plan.finalStep ?? plan.steps.reduce<ImpactStep | null>((a, s) => (a === null || s.atMs > a.atMs ? s : a), null)
   if (!anchor) return 0
-  return visualHpEndMs(anchor) + 120
+  return visualHpEndMs(anchor) + RESULT_GATE_AFTER_HP_MS
 }
 
 /** そのバッチで対象が受ける表示HPの変化（visualHp.ts へ渡す） */

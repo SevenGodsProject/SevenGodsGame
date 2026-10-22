@@ -2,9 +2,35 @@
 
 Production の「確定状態」を一目で確認するための要約です。新しい仕様判断は含みません（根拠は `docs/DECISIONS.md`）。**§A が現在の正本**。§B 以降は 8/31 Public Beta〜Phase 3（2026-09-06）時点の履歴として残します（当時の Known Non-blockers 1〜16 は §A-4 の生存 Known に統合済み）。
 
-## A. 現在の Production 状態（2026-10-07・決定267 PRODUCTION LIVE / CLOSED）
+## A. 現在の Production 状態（2026-10-21・決定282 v1.0.2 PRODUCTION LIVE）
 
-### A-0. v1.0.1 Fast Gate 公開（2026-10-17・CEO 正式承認「v1.0.1 Fast Gate 単独 Production Release」・決定281 PRODUCTION LIVE）
+### A-0. v1.0.2 公開（2026-10-21・CEO 決定282 承認 → CEO push／merge・決定282 PRODUCTION LIVE）
+
+| 項目 | 状態 |
+|---|---|
+| **Release** | **SEVEN GODS v1.0.2**（決定282）：軍略 Pilot v1.1（`?pilot=threat` 隔離・enemy_09）× Enemy Break v1（表示専用）＋ 初心者導線 語彙整合 3 点（共鳴名札「神の一撃」・遊び方 ①「得意技」・② 図 SVG グリフ＋「50」）。engine・rules（CORE）・カード・CORE 7 体の行動表は v1.0.1 から不変（gameVersion `1.d794038a00b5b53c` 不変・save v9 不変・Daily pool／攻略盤 CORE 7 体） |
+| **Production HEAD** | master = origin/master **`0d38c05`**（PR #2 merge commit）／RC `release/v1_0_2-rc` `4b1a59c`／runtime を最後に変更した commit＝`33fa29f`（version bump。機能 runtime は `340f5f7`・`3412180`） |
+| **Vercel deployment** | **`7228912965`**（sha `0d38c05`・success 14:41:18Z）／Production bundle `index-v2yVENya.js`（470,721 B）・`index-o-E1J9Xm.css`／Home 表示 `v1.0.2 (0d38c05)`。Production URL https://seven-gods-game.vercel.app/ |
+| **Rollback 先** | deployment **`7133236766`**（v1.0.1・`1ce9876`・`index-B6IYVkjL.js`）。Promote は CEO のみ・演習は未実施（RL-02） |
+| **公開の経緯** | RC を CEO が 5 段階 push（pack 70.6 MB の HTTP 408 を回避・各段 fast-forward・force 0）→ PM が PR #2 → CI run 39616005998 GREEN → **CEO merge**（`gh pr merge 2 --merge`）→ CI run 39617291567 GREEN → Vercel 自動 deploy（merge から約 11.5 分） |
+| **CI** | PR #2 run 39616005998 GREEN（必須 check `tsc / oxlint / vitest / build`・50s）／master run 39617291567 GREEN |
+| **Release Gate** | `docs/V1_0_2_RC_GATE.md` G0〜G12（13 系統・17 項目）すべて PASS（vitest 1,504・build 470.72 kB・受入 44/44・74/74・語彙 20/20・probe 7 体＋threat 6/6・Save Migration 44/44）・evidence `docs/evidence/v1_0_2-rc/` |
+| **Production Smoke** | `docs/V1_0_2_PRODUCTION_SMOKE.md`：S1〜S7 **全 PASS**（S1 allPass×2・S1' 44/44・S1'' 語彙 20/20・S2〜S4 4 viewport 勝利＋敗北＋Resume・S5 allPass・S6 19/19×2・S7 44/44）＋ bundle byte 一致（sha 正規化）＋ 混入 0 ＋ 外部通信 0 ＋ console error 0 |
+| **Known** | 変更なし（K01〜K39 据え置き・新規 0）。統合 RC Gate v1 §4 の hard 演出ずれ（有利側のみ）据え置き |
+| **tag** | `v1.0.2` **未作成**（`v1.0.1`・`v1.0.0` も未作成・CEO のみ・任意） |
+| **次 Release 候補（v1.0.3）** | Lane 5 UX 束 #1・#3（`feat/v1_0_3-ux-bundle` 2654aed）／Lane 3 大耀 crisis Pilot v1（`feat/official-voice-crisis-pilot-v1` 6dba810）／Lane 4 忠次 v0.4（`feat/shogunate-pilot-v0.4` f0daa46）／Lane 6・7・8・9 監査の TOP 候補。いずれも master `0d38c05` へ merge 追従してから Fast Gate |
+
+### A-0x. v1.0.3 RC（2026-10-22・決定283 候補・**READY FOR CEO PRODUCTION RELEASE APPROVAL**・公開 0）
+
+| 項目 | 状態 |
+|---|---|
+| **RC** | `release/v1_0_3-rc`（worktree `SevenGodsGame-lane3`・起点 master `0d38c05`）。内容＝初心者語彙 完結・Home 2 戦目導線＋C-4・敗北画面の事実行・RETURN TO CALM（小 +200ms）・SP 手札本文 9.5px・version 1.0.3。公開記録 418a387 同梱 |
+| **不変** | `src/core` 差分 0（gameVersion `1.d794038a00b5b53c`・save v9・CORE 7 体・rules 不変）。storage 書き込み 0 |
+| **Gate** | `docs/V1_0_3_RC_GATE.md`：tsc 0／oxlint 新規 0／vitest 1,528 PASS／build 472.84 kB／Ranking Absence・Secret PASS／受入 44/44・語彙 20/20・敗北画面 18/18・SP 本文 25/29（FAIL 4＝v1.0.2 と同一の Known）／Home `v1.0.3 (374e7c0)`。evidence `docs/evidence/v1_0_3-rc/` |
+| **公開経路** | CEO：push（必要なら分割）→ PR → CI GREEN → `gh pr merge --merge` → PM：Production Smoke S1〜S7（`production-smoke.cjs --version 1.0.3 --acceptance scripts/v1_0_3-rc/acceptance.mjs`）→ 本節を A-0 へ昇格。Rollback 先＝`7228912965`（v1.0.2） |
+| **Known** | 変更なし（K01〜K39 据え置き）＋候補 1 件＝神の一撃札の `.card-view` 2px overflow／+6px（v1.0.2 から存在・表示上の欠けは未確認） |
+
+### A-0a. v1.0.1 Fast Gate 公開（2026-10-17・CEO 正式承認「v1.0.1 Fast Gate 単独 Production Release」・決定281 PRODUCTION LIVE・履歴）
 
 | 項目 | 状態 |
 |---|---|
@@ -20,17 +46,7 @@ Production の「確定状態」を一目で確認するための要約です。
 | **tag** | `v1.0.1` **未作成**・`v1.0.0` も未作成（CEO のみ・任意） |
 | **次 Release 候補** | 軍略 Pilot v1.1 × Enemy Break v1 統合 RC（`feat/combat-pilots-integ-rc`・Gate 11/11 PASS・CEO 公開承認待ち・v1.0.1 の master を merge で追従してから）／v1.0.2 候補＝語彙整合ホットフィックス（初心者監査・保留） |
 
-### A-0b. v1.0.2 統合 RC（2026-10-21・決定282 候補・**READY FOR CEO PRODUCTION RELEASE APPROVAL**・公開 0）
-
-| 項目 | 状態 |
-|---|---|
-| **RC** | `release/v1_0_2-rc`（worktree `SevenGodsGame-lane2b`・統合 RC `fe1eb37` 起点・master `1ce9876` を merge 済み・conflict 1 解決）。内容＝軍略 Pilot v1.1（`?pilot=threat` 隔離）× Enemy Break v1 ＋ 語彙整合 3 点 ＋ version 1.0.2 ＋ 決定281 記録 docs |
-| **不変** | gameVersion `1.d794038a00b5b53c` 不変・save v9 不変・CORE 7 体の HP／行動表 不変・Daily pool／攻略盤 CORE 7 体のまま |
-| **Gate** | `docs/V1_0_2_RC_GATE.md` G0〜G12 **13 系統・17 項目すべて PASS**（vitest 1,504／build 470.72 kB／受入 44/44・74/74・20/20／probe 7 体＋threat 6/6／**Save Migration 44/44**／Home `v1.0.2 (32f7f77)`）・evidence `docs/evidence/v1_0_2-rc/` |
-| **公開経路** | CEO：push → PR → CI GREEN → `gh pr merge --merge` → Vercel 自動 deploy → PM：Production Smoke S1〜S7 → 本節を A-0 へ昇格。Rollback 先＝`7133236766`（v1.0.1） |
-| **Known** | 変更なし（K01〜K39 据え置き・新規 0）。統合 RC Gate v1 §4 の hard 演出ずれは据え置き |
-
-### A-0a. v1.0.0 正式公開（2026-10-10・CEO 決定「維持」2026-10-10・凍結 2026-10-11・履歴）
+### A-0b. v1.0.0 正式公開（2026-10-10・CEO 決定「維持」2026-10-10・凍結 2026-10-11・履歴）
 
 | 項目 | 状態 |
 |---|---|
