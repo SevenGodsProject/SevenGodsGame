@@ -26,6 +26,7 @@ import { prefersReducedMotion } from './reducedMotion'
 import { BossEntrance } from './BossEntrance'
 import { takeBattleEntranceVariant, type BattleEntranceVariant } from './battleEntrance'
 import { deriveDefeatCause } from './defeatCause'
+import { deriveDefeatGuardFact } from './defeatFacts'
 import { useDecisionCallout } from './useDecisionCallout'
 import { BattleCallout } from './BattleCallout'
 import { buildBattleRecap } from './battleRecap'
@@ -721,6 +722,7 @@ export function BattleScreen({
           stakeResult={stakeResult}
           shareState={state}
           defeatCause={state.status === 'lost' ? deriveDefeatCause(log, state.round) : null}
+          defeatFact={state.status === 'lost' ? deriveDefeatGuardFact(log, state) : null}
           rematchLabel={rematchLabel}
           rematchDisabled={rematchDisabled}
         />
