@@ -35,7 +35,8 @@ async function maybeClick(page, text) {
 }
 
 /** 画面内のカードを全枚測る（ブラウザ側で実行） */
-function measureCards(cardSel, bodySel, textSel, bonusSel, nameSel) {
+// Playwright の page.evaluate は引数 1 つまで＝セレクタはオブジェクトで渡す
+function measureCards({ cardSel, bodySel, textSel, bonusSel, nameSel }) {
   const px = (v) => Number.parseFloat(v) || 0
   const box = (el) => (el ? { sw: el.scrollWidth, cw: el.clientWidth, sh: el.scrollHeight, ch: el.clientHeight, w: el.getBoundingClientRect().width, h: el.getBoundingClientRect().height } : null)
   const fits = (b) => !b || (b.sw <= b.cw && b.sh <= b.ch)
@@ -96,7 +97,7 @@ for (const vp of VIEWPORTS) {
   await page.waitForSelector('.deck-builder-card', { timeout: 8000 })
   await page.waitForTimeout(400)
 
-  r.deck = await page.evaluate(measureCards, '.deck-builder-card', '.deck-builder-card-body', '.deck-builder-card-text', '.deck-builder-card-effect-bonus', '.deck-builder-card-name')
+  r.deck = await page.evaluate(measureCards, { cardSel: '.deck-builder-card', bodySel: '.deck-builder-card-body', textSel: '.deck-builder-card-text', bonusSel: '.deck-builder-card-effect-bonus', nameSel: '.deck-builder-card-name' })
   const deckBad = r.deck.filter((c) => !c.fits).map((c) => c.name)
   check(`デッキ編成：カード ${r.deck.length} 枚すべて overflow 無し（.deck-builder-card／body／text）`, r.deck.length > 0 && deckBad.length === 0, deckBad)
   check('デッキ編成：本文 font-size を記録（12px 既定）', r.deck.every((c) => c.fontSize !== null), [...new Set(r.deck.map((c) => c.fontSize))])
@@ -113,7 +114,7 @@ for (const vp of VIEWPORTS) {
   await page.waitForSelector('.hand .card-view', { timeout: 8000 })
   await page.waitForTimeout(1200)
 
-  r.hand = await page.evaluate(measureCards, '.hand .card-view', '.card-view-body', '.card-view-text', '.card-view-bonus', '.card-view-name')
+  r.hand = await page.evaluate(measureCards, { cardSel: '.hand .card-view', bodySel: '.card-view-body', textSel: '.card-view-text', bonusSel: '.card-view-bonus', nameSel: '.card-view-name' })
   const handBad = r.hand.filter((c) => !c.fits).map((c) => ({ name: c.name, card: c.card, body: c.body, text: c.textBox }))
   check('戦闘：手札 5 枚', r.hand.length === 5, r.hand.length)
   check('戦闘：手札すべて overflow 無し（.card-view／body／text）', r.hand.length > 0 && handBad.length === 0, handBad)

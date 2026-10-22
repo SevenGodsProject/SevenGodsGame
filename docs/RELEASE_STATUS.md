@@ -20,6 +20,16 @@ Production の「確定状態」を一目で確認するための要約です。
 | **tag** | `v1.0.2` **未作成**（`v1.0.1`・`v1.0.0` も未作成・CEO のみ・任意） |
 | **次 Release 候補（v1.0.3）** | Lane 5 UX 束 #1・#3（`feat/v1_0_3-ux-bundle` 2654aed）／Lane 3 大耀 crisis Pilot v1（`feat/official-voice-crisis-pilot-v1` 6dba810）／Lane 4 忠次 v0.4（`feat/shogunate-pilot-v0.4` f0daa46）／Lane 6・7・8・9 監査の TOP 候補。いずれも master `0d38c05` へ merge 追従してから Fast Gate |
 
+### A-0x. v1.0.3 RC（2026-10-22・決定283 候補・**READY FOR CEO PRODUCTION RELEASE APPROVAL**・公開 0）
+
+| 項目 | 状態 |
+|---|---|
+| **RC** | `release/v1_0_3-rc`（worktree `SevenGodsGame-lane3`・起点 master `0d38c05`）。内容＝初心者語彙 完結・Home 2 戦目導線＋C-4・敗北画面の事実行・RETURN TO CALM（小 +200ms）・SP 手札本文 9.5px・version 1.0.3。公開記録 418a387 同梱 |
+| **不変** | `src/core` 差分 0（gameVersion `1.d794038a00b5b53c`・save v9・CORE 7 体・rules 不変）。storage 書き込み 0 |
+| **Gate** | `docs/V1_0_3_RC_GATE.md`：tsc 0／oxlint 新規 0／vitest 1,528 PASS／build 472.84 kB／Ranking Absence・Secret PASS／受入 44/44・語彙 20/20・敗北画面 18/18・SP 本文 25/29（FAIL 4＝v1.0.2 と同一の Known）／Home `v1.0.3 (374e7c0)`。evidence `docs/evidence/v1_0_3-rc/` |
+| **公開経路** | CEO：push（必要なら分割）→ PR → CI GREEN → `gh pr merge --merge` → PM：Production Smoke S1〜S7（`production-smoke.cjs --version 1.0.3 --acceptance scripts/v1_0_3-rc/acceptance.mjs`）→ 本節を A-0 へ昇格。Rollback 先＝`7228912965`（v1.0.2） |
+| **Known** | 変更なし（K01〜K39 据え置き）＋候補 1 件＝神の一撃札の `.card-view` 2px overflow／+6px（v1.0.2 から存在・表示上の欠けは未確認） |
+
 ### A-0a. v1.0.1 Fast Gate 公開（2026-10-17・CEO 正式承認「v1.0.1 Fast Gate 単独 Production Release」・決定281 PRODUCTION LIVE・履歴）
 
 | 項目 | 状態 |
