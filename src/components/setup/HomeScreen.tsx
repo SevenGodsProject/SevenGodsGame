@@ -7,7 +7,7 @@ import { isKnownOtomoId } from '../otomoLookup'
 import { HomeProgressRow, HomeTodayPanel } from './HomeTodayPanel'
 import { ARCHETYPE_LABEL } from './godStyle'
 import { heroImageOf, selectHeroGod } from './heroGod'
-import { hasPlayTrace, selectHomePrimary } from './homePrimary'
+import { hasPlayTrace, isFirstBattleOnly, selectHomePrimary } from './homePrimary'
 import { HeartIcon, InfoIcon, TrophyIcon } from '../icons'
 import { CREDITS_LINK_LABEL } from './creditsText'
 import { loadLastUsedGodId } from '../../hooks/deckPreferenceStorage'
@@ -88,15 +88,18 @@ export function HomeScreen({
   const heroImage = heroImageOf(heroGod)
   const todayKey = todayDailyKey(new Date(nowMs))
   const today = loadDailyDay(todayKey)
-  const playTrace = hasPlayTrace({
+  const trace = {
     hasSavedBattle: savedBattle !== null,
     godRecords: GODS.map((god) => loadGodRecord(god.id)),
     lastUsedGodId,
     dailyAttemptsUsed: loadRecentDailyDays(RULES.daily.retentionDays).map((day) => day.attemptsUsed),
-  })
+  }
+  const playTrace = hasPlayTrace(trace)
   const primary = selectHomePrimary({
     canResume,
     playTrace,
+    // v1.0.3 束 #3：初陣 1 戦までは Daily を Primary にしない（同じ読み取り結果から判定・書き込み 0）
+    firstBattleOnly: isFirstBattleOnly(trace),
     todayAttemptsUsed: today.attemptsUsed,
     todayAttemptsLeft: dailyAttemptsLeft(todayKey),
   })
