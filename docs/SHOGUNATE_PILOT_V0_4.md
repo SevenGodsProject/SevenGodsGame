@@ -1,3 +1,5 @@
+> **更新（2026-10-22・PM Gate・Lane 2）：G0〜G6 を直列で実測しすべて PASS（`docs/SHOGUNATE_PILOT_V0_4_GATE.md`）。CEO iPhone QA は §5（確定版・seed 固定 2 戦・8 問・5 分）へ。**
+>
 > **状態（2026-10-21・Lane 4「将軍家・新敵キャラクター」・Dev＋Planner・AI 判断・CEO 決定282 に基づく次期開発）：IMPLEMENTED ON BRANCH `feat/shogunate-pilot-v0.4`（起点＝v1.0.2 RC `release/v1_0_2-rc` @ `ba0af34`）— Narrow Gate PASS（tsc 0・対象 vitest 6 file 72/72・CORE golden `5678e3e7…` 不変・`gameVersion` `1.d794038a00b5b53c` 不変・save v9 不変・`src/core/engine` 変更 0）— full vitest／build／Preview／Playwright（Gate G2・G4・G6）は PM の直列実行待ち — CEO iPhone QA（§5・8 問）READY AFTER PM GATE。push・merge・tag・deploy・画像生成・将軍家の他 9 体の取得はいずれも行っていない。**
 
 # 将軍家 Pilot v0.4 — 忠次を v1.0.2 RC へ追従（engine は RC 版）＋ Enemy Break v1 と併用 ＋ 予告グローの表示 HP 同期（enemy_08 限定）
@@ -85,7 +87,9 @@
 
 ## 4. Gate（監査 §5-2 の G0〜G6 案に対する本 Lane の状態）
 
-| Gate | 条件 | 本 Lane | 残り（PM 直列実行） |
+> **PM Gate 結果（2026-10-22・Lane 2・`docs/SHOGUNATE_PILOT_V0_4_GATE.md`）**：下表の「残り」はすべて実行済み。G0 master `0d38c05` × HEAD conflict 0／G1 tsc 0・oxlint 11（RC 基準と同一）／G2 full vitest **1,528 passed・0 fail・17 skip**（`enemyBreak.test.ts` の source-pin 1 件を v0.4 の例外＝純関数 `resolveEnemyTactic` の 1 行だけ許す形へ締め直して再実行・runtime 変更 0）／G3 invariants 20/20／G4 Lane 1 受入 74/74 不変・忠次受入 138/138（`?pilot=all` 10 枚）／G6 probe 8/8 run・seed `sg-v04-01` で崩れと赤い輪の除去が**同一フレーム（差 0ms・PC／SP375）**→ then、seed 02〜04 → else。rAF p95 は headless で計測不能（UNRUN・CEO QA Q6 で代替）。
+
+| Gate | 条件 | 本 Lane | 残り（PM 直列実行）→ **結果** |
 |---|---|---|---|
 | G0 | RC HEAD × v0.4 merge-tree conflict 0 | **PASS**（起点が RC HEAD `ba0af34`。RC に docs-only commit が乗った場合は `git merge-tree` で再確認） | RC が動いたら再確認 |
 | G1 | tsc 0・oxlint 新規 0 | **PASS**（`npx tsc -b --noEmit` 0 error／`npx oxlint <変更 13 file>`：warning 1 ＝ `BattleScreen.tsx:275` exhaustive-deps・RC 既存・本 Lane の変更行ではない） | — |
@@ -97,22 +101,29 @@
 
 ---
 
-## 5. CEO iPhone 実機 QA（5 分・YES／NO・PM の Gate PASS 後）
+## 5. CEO iPhone 実機 QA（5 分・YES／NO・**確定版 2026-10-22・PM Gate G0〜G6 PASS 後**）
 
-前提（PM）：`vite build --outDir dist-v04` → `npx vite preview --outDir dist-v04 --host 0.0.0.0 --port 4183 --strictPort`（4182 の v0.3 と並べて比べられる）・同一 Wi-Fi・Firewall 4183。URL：`http://192.168.11.6:4183/?pilot=shogunate`（**`?pilot=shogunate` が無いと忠次は出ない**）。操作：大耀 → normal → Enemy Select 末尾「将軍四天王・忠次」（印「幕府 Pilot・記録に残らない」）→ おすすめデッキ → 入口 → **R1・R2 はカードを出さずに「ラウンドを終える」** → R3 の溜めを見る → R3 でまとめて殴って表示 HP 490 以下へ追い込めれば R4 は ⚔120、追い込めなければ 🔥 軍略・総攻め 240。
+> **確定（PM・2026-10-22）**：設問 8 問は下表のとおり確定。手順は PM Gate の probe 実測（`docs/SHOGUNATE_PILOT_V0_4_GATE.md` §3 G6(d)）に合わせて **seed 固定・2 戦（then／else）** に改めた。当初案の「R1・R2 を素通しして R3 だけで 490 以下へ」は、R3 の神力が 4（持ち越しなし・攻撃札 ≈50／神力）のため **490 に届かず then を見られない**（probe で 4 seed すべて確認）ので採用しない。
+
+**前提（PM が用意）**：本 branch を `npm run build`（通常 `dist`）→ `npx vite preview --host 0.0.0.0 --port 4183 --strictPort`（LAN Preview・4182 は v1.0.2 RC build の比較用に温存）・同一 Wi-Fi・Firewall 4183。所要 **5 分**（2 戦・各 R4 開始まで＋1 戦は決着まで）。
+
+| 戦 | URL（**`?pilot=shogunate` が無いと忠次は出ない**） | 手順 | 期待する R4 の予告 |
+|---|---|---|---|
+| A（then・追い込めた） | `http://192.168.11.6:4183/?pilot=shogunate&seed=sg-v04-01` | 大耀 → normal → Enemy Select 末尾「将軍四天王・忠次」（印「幕府 Pilot・記録に残らない」）→ おすすめデッキ → 入口 → **各ラウンドで「敵に N ダメージ」の N が最大の札から順に出す**（probe の進行：R1 一心不乱 ×2 → R2 神託 → R3 豪快な一撃 ×2。表示 HP 980 → 900 → 650 → **370**）→ R3 の 2 枚目で **490 を割った瞬間に崩れ＋赤い輪が消える**（Q8）→ R4 は **⚔ 強打 120**（Q4）。そのまま決着まで（Q7） |
+| B（else・追い込めなかった） | 同じ URL（もう一度「もう一度」から、または同 URL を再読込） | 入口 → **R1・R2・R3 はカードを出さずに「ラウンドを終える」**（表示 HP 980 のまま）→ R3 の溜め「⚠ 傷が浅ければ次は総攻め」と赤い輪（Q1）→ R4 は **🔥 軍略・総攻め 240**（Q4）。R4 開始を見たら終了してよい |
 
 | # | 設問 | 見るところ | 期待 | NO のときの読み |
 |---|---|---|---|---|
-| Q1 | R3 の溜め（「⚠ 傷が浅ければ次は総攻め」）で、忠次の周りの**赤い光が鎧の輪郭に沿って**見えた（角丸の「箱」に見えなかった）か | R3・立ち絵の周囲 | **YES** | iPhone の 192×184 では形の変化が小さい → PC 目視で補う |
-| Q2 | 「忠次が舞台の中にいる」感じが**増した**か（v0.1／v0.2 の記憶と比べて） | R1〜R4 全体 | **YES** | v0.2 の色調層を外して v0.1＋v0.3 だけへ（CSS ブロック内で閉じる） |
-| Q3 | R3 の予告を読んで、「R3 までに追い込む」か「R4 の総攻めに備える」かを**自分で決めた**か（どちらでも YES） | R3 の手札選択 | **YES** | 文言・しきい値の再評価 |
-| Q4 | R4 の予告（⚔120 か 🔥240）が、R3 で自分がやったことの**答え合わせ**に感じられたか | R4 開始時 | **YES** | 1 手先予告の因果が伝わっていない → 文言案 1 つ |
-| Q5 | 入口・必殺カットイン・戦闘中で、忠次の**色味や光が食い違って**見えたか | 入口／カットイン／R1 | **NO** | v0.2 の filter 値の再調整 1 回 |
-| Q6 | 画面の**カクつき・遅れ・崩れ**（文字のはみ出し・横スクロール・立ち絵の欠け）があったか。特に R3 で崩れた瞬間 | 全体・R3〜R4 | **NO** | drop-shadow ×5 ＋ Enemy Break の filter 入れ子（監査 §4-4）→ 輪の段数 5→3（CSS 1 行） |
-| Q7 | **もう一度忠次と戦いたい**か | 決着後 | **YES** | 再戦意欲の低下要因を 1 行で聞き取り |
-| **Q8** | **R3 で忠次が崩れた瞬間（体が沈み・名札が閃き・赤い輪が消えて金の溜め光に変わる）、「追い込めた」と分かったか** | R3・表示 HP が 490 を割る瞬間 | **YES** | 合図が 2 回に見える（赤→金と崩れがずれる）なら G6 の同フレーム計測を見直す。分からなければ Enemy Break と予告グローのどちらかを強める（別 Decision） |
+| Q1 | R3 の溜め（「⚠ 傷が浅ければ次は総攻め」）で、忠次の周りの**赤い光が鎧の輪郭に沿って**見えた（角丸の「箱」に見えなかった）か | 戦 B・R3・立ち絵の周囲（PM 実測：`box-shadow none`・`drop-shadow` ×5・PC／SP375） | **YES** | iPhone の 192×184 では形の変化が小さい → PC 目視で補う |
+| Q2 | 「忠次が舞台の中にいる」感じが**増した**か（v0.1／v0.2 の記憶と比べて） | 戦 A・R1〜R4 全体 | **YES** | v0.2 の色調層を外して v0.1＋v0.3 だけへ（CSS ブロック内で閉じる） |
+| Q3 | R3 の予告を読んで、「R3 までに追い込む」か「R4 の総攻めに備える」かを**自分で決めた**か（どちらでも YES） | 戦 A・R3 の手札選択 | **YES** | 文言・しきい値の再評価 |
+| Q4 | R4 の予告（戦 A＝⚔ 強打 120／戦 B＝🔥 軍略・総攻め 240）が、R3 までに自分がやったことの**答え合わせ**に感じられたか | 戦 A・B・R4 開始時 | **YES** | 1 手先予告の因果が伝わっていない → 文言案 1 つ |
+| Q5 | 入口・必殺カットイン・戦闘中で、忠次の**色味や光が食い違って**見えたか | 戦 B の入口／R4 の必殺カットイン／R1 | **NO** | v0.2 の filter 値の再調整 1 回 |
+| Q6 | 画面の**カクつき・遅れ・崩れ**（文字のはみ出し・横スクロール・立ち絵の欠け）があったか。特に R3 で崩れた瞬間 | 戦 A・全体・R3〜R4（PM 実測：横スクロール 0・予告の viewport 外 0。rAF 間隔は headless で測れないため **本問が実機の唯一の計測**） | **NO** | drop-shadow ×5 ＋ Enemy Break の filter 入れ子（監査 §4-4）→ 輪の段数 5→3（CSS 1 行） |
+| Q7 | **もう一度忠次と戦いたい**か | 戦 A・決着後 | **YES** | 再戦意欲の低下要因を 1 行で聞き取り |
+| **Q8** | **R3 で忠次が崩れた瞬間（体が沈み・名札が閃き・赤い輪が消えて金の溜め光に変わる）、「追い込めた」と分かったか** | 戦 A・R3 の 2 枚目（豪快な一撃）で表示 HP 650 → 370 と 490 を割る瞬間（PM 実測：崩れの開始と赤い輪の除去は **同一 rAF フレーム・差 0ms**・PC／SP375） | **YES** | 合図が 2 回に見える（赤→金と崩れがずれる）なら G6 の同フレーム計測を見直す。分からなければ Enemy Break と予告グローのどちらかを強める（別 Decision） |
 
-合否（AI 案）：Q1・Q2・Q3・Q4・Q7・**Q8** が YES、Q5・Q6 が NO で v0.4 を Pilot の正式版とし、以後の将軍家 9 体（監査 §3：次は直政）をこの経路に乗せる。
+合否（AI 案）：Q1・Q2・Q3・Q4・Q7・**Q8** が YES、Q5・Q6 が NO で v0.4 を Pilot の正式版とし、以後の将軍家 9 体（監査 §3：次は直政）をこの経路に乗せる。回答は「Q1 YES／Q2 YES／…」の 8 語で足りる（自由記述は NO の設問だけ）。
 
 ---
 
