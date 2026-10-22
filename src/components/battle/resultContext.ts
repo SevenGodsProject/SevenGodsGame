@@ -7,7 +7,7 @@ import { dailyAttemptsLeft, loadDailyDay, type DailyDay, type DailyRecordResult 
 import { isStakeUnlocked, type StakeResultOutcome } from '../../hooks/stakeStorage'
 import type { OtomoBondRecord } from '../../hooks/otomoBondStorage'
 import { loadGodRecord } from '../../hooks/recordStorage'
-import { countMatchupsByEnemy, loadMatchups } from '../../hooks/matchupStorage'
+import { countMatchupsByEnemy, loadMatchups, type MatchupClearResult } from '../../hooks/matchupStorage'
 import { FIRST_BATTLE_PRESET } from '../setup/firstBattle'
 import { EARLY_READ_TARGET_ENEMY_ID, type EarlyReadInput, type NextGoalInput } from './nextGoal'
 import type { DailyDiffCurrent } from './dailyDiff'
@@ -26,6 +26,8 @@ export type ResultEngineSnapshot = {
   stakeResult: StakeResultOutcome | null
   dailyResult: DailyRecordResult | null
   otomoBondChange: { prevRecord: OtomoBondRecord; nextRecord: OtomoBondRecord } | null
+  /** v1.0.4 Retention 束 ②：決着時に 1 回だけ記録された 49 攻略の結果（読むだけ） */
+  matchupClear?: MatchupClearResult | null
 }
 
 export type ResultContext = {
@@ -104,6 +106,10 @@ export function collectResultContext(state: GameState, engine: ResultEngineSnaps
         attemptsLeft: dailyAttemptsLeft(todayKey),
       },
       earlyRead: state.status === 'won' ? collectEarlyRead(state, now) : null,
+      matchup:
+        state.status === 'won' && engine.matchupClear
+          ? { isFirstClear: engine.matchupClear.isFirstClear, enemyClearedCount: engine.matchupClear.enemyClearedCount }
+          : null,
     },
     dailyDay: null,
     dailyCurrent: null,

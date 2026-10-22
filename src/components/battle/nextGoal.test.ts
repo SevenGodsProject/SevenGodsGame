@@ -192,6 +192,33 @@ describe('selectNextGoal — 通常モード', () => {
   })
 })
 
+describe('NM1（v1.0.4 Retention 束 ②）：49 攻略の初撃破の直後だけ「別の神でも攻略する」', () => {
+  const daily0 = { enemyName: '蒼海の龍神', attemptsUsed: 0, attemptsLeft: 3 }
+
+  it('初撃破 → NM1（k/7 神・選び直し）。今日の神域挑戦が手つかずでも N4 より先', () => {
+    const g = selectNextGoal(base({ matchup: { isFirstClear: true, enemyClearedCount: 2 }, todayDaily: daily0 }))
+    expect(g).toMatchObject({
+      id: 'NM1',
+      text: '業斧の鬼将を別の神でも攻略する（この敵 2/7 神）',
+      action: 'reselect',
+      primaryLabel: '別の神で挑む（神を選び直す）',
+    })
+  })
+
+  it('初撃破でない／7 神すべて撃破済み／記録なしでは出ない', () => {
+    expect(selectNextGoal(base({ matchup: { isFirstClear: false, enemyClearedCount: 2 }, todayDaily: daily0 })).id).toBe('N4')
+    expect(selectNextGoal(base({ matchup: { isFirstClear: true, enemyClearedCount: 7 }, todayDaily: daily0 })).id).toBe('N4')
+    expect(selectNextGoal(base({ matchup: null, todayDaily: daily0 })).id).toBe('N4')
+  })
+
+  it('NR1・N2 が成立するときはそちらが優先、敗北では出ない', () => {
+    const earlyRead = { isFirstBattleSetup: true, godWinsAfterThis: 1, targetCleared: false }
+    expect(selectNextGoal(base({ matchup: { isFirstClear: true, enemyClearedCount: 1 }, earlyRead })).id).toBe('NR1')
+    expect(selectNextGoal(base({ matchup: { isFirstClear: true, enemyClearedCount: 1 }, stakeResult: stake({ hardClearedNow: true }) })).id).toBe('N2')
+    expect(selectNextGoal(base({ status: 'lost', enemyHpRatio: 0.3, matchup: { isFirstClear: true, enemyClearedCount: 1 } })).id).toBe('N1')
+  })
+})
+
 describe('selectNextGoal — 神域挑戦', () => {
   const daily = (over: Partial<NextGoalInput> = {}) =>
     base({ mode: 'daily', todayDaily: null, stakeUnlocked: undefined, prevBest: 0, ...over })

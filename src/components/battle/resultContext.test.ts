@@ -109,6 +109,23 @@ describe('collectEarlyRead（読むだけ）', () => {
     expect(r).toEqual({ isFirstBattleSetup: true, godWinsAfterThis: 0, targetCleared: false })
   })
 
+  it('v1.0.4 ②：勝利時は matchupClear を goalInput.matchup に写す（初撃破なら NM1）', () => {
+    const state = settled({ godId: GOD_IDS.taiyo })
+    recordGameResult(state)
+    const clear = recordMatchupClear(state, NOW.getTime())
+    expect(clear).not.toBeNull()
+    const ctx = collectResultContext(state, { newBest: true, prevBest: 0, stakeResult: null, dailyResult: null, otomoBondChange: null, matchupClear: clear }, NOW)!
+    expect(ctx.goalInput.matchup).toEqual({ isFirstClear: true, enemyClearedCount: 1 })
+    expect(selectNextGoal({ ...ctx.goalInput, nowMs: NOW.getTime() }).id).toBe('NM1')
+  })
+
+  it('v1.0.4 ②：敗北・記録なしでは matchup は null', () => {
+    const lost = settled({ status: 'lost' })
+    const fake = { godId: lost.godId, enemyId: lost.enemy.defId, isFirstClear: true, godClearedCount: 1, enemyClearedCount: 1, totalCleared: 1 }
+    expect(collectResultContext(lost, { newBest: false, prevBest: 0, stakeResult: null, dailyResult: null, otomoBondChange: null, matchupClear: fake }, NOW)!.goalInput.matchup).toBeNull()
+    expect(settle(settled()).goalInput.matchup).toBeNull()
+  })
+
   it('読むだけ：入力集めの前後で storage の内容が変わらない', () => {
     const state = settled()
     recordGameResult(state)
