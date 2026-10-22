@@ -52,7 +52,6 @@ describe('P1 の判断（Home・Next Goal・Result Hub の出口）は神×敵�
   it.each([
     'components/setup/HomeScreen.tsx',
     'components/setup/HomeTodayPanel.tsx',
-    'components/battle/nextGoal.ts',
     'components/battle/resultHub.ts',
     'components/battle/dailyDiff.ts',
     'components/resultTransitions.ts',
@@ -60,12 +59,22 @@ describe('P1 の判断（Home・Next Goal・Result Hub の出口）は神×敵�
     expect(read(file)).not.toMatch(/matchup/i)
   })
 
+  // v1.0.4 Retention 束 ②（NM1・決定284 候補・AI 判断）：AC19 の 2 つ目の例外。nextGoal.ts は「初撃破か・この敵の撃破神数」を
+  // **入力として受け取るだけ**（matchupStorage の import・読み込み・書き込みは無い）。判定材料の取得は resultContext.ts に閉じる（決定206 と同じ型）
+  it('components/battle/nextGoal.ts は matchup を入力として受け取るだけ（matchupStorage を import しない・保存 API を呼ばない）', () => {
+    const src = read('components/battle/nextGoal.ts')
+    expect(src).not.toMatch(/matchupStorage/)
+    expect(src).not.toMatch(/\b(loadMatchups|countMatchupsByEnemy|recordMatchupClear)\b/)
+    expect(src).not.toMatch(/localStorage|\.setItem\s*\(/)
+  })
+
   // 決定206（Solve Legibility v1）：resultContext だけは「魔獣を既に倒しているか」を **読むだけ** で参照してよい
   // （NR1 の判定材料。書き込み・49 の一般接続はしない。nextGoal.ts 自体は上の検査どおり matchup を知らない）
   it('components/battle/resultContext.ts は matchup を読むだけ（countMatchupsByEnemy／loadMatchups のみ・書き込み無し）', () => {
     const src = read('components/battle/resultContext.ts')
     const refs = [...new Set([...src.matchAll(/\b\w*[mM]atchup\w*\b/g)].map((m) => m[0]))].sort()
-    expect(refs).toEqual(['countMatchupsByEnemy', 'loadMatchups', 'matchupStorage', 'matchups'])
+    // v1.0.4 NM1：BattleScreen が渡す初撃破結果（MatchupClearResult・型のみ）と、nextGoal へ渡す入力名 matchup／matchupClear を追加
+    expect(refs).toEqual(['MatchupClearResult', 'countMatchupsByEnemy', 'loadMatchups', 'matchup', 'matchupClear', 'matchupStorage', 'matchups'])
     // 書き込み関数の **呼び出し** が無い（コメントでの言及は可）
     expect(src).not.toMatch(/\b(recordMatchupClear|recordGameResult|saveBattle|recordOtomoBond|recordDailyResult)\s*\(|\.setItem\s*\(/)
   })
