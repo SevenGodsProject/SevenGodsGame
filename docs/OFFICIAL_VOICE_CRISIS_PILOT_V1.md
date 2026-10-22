@@ -1,7 +1,7 @@
 # Official Voice Crisis Pilot v1 — 大耀「ピンチ」（SGG Creator Kit v1.1 公式ボイス・2 本目）
 
 - 日付：2026-10-21（Lane 3「公式ボイス」・Infra＋Dev・**AI 判断**（CLAUDE.md §6-2）・CEO 決定282 に基づく次期開発。設計は `docs/OFFICIAL_VOICE_EXPANSION_AUDIT_V1.md` §5・§6 のとおり）
-- 状態：**IMPLEMENTED ON BRANCH — targeted vitest 48／48 PASS・tsc 0 — Automated Gate（build／Playwright）は PM 直列待ち — CEO Human QA READY（Gate 後）**（master／RC merge・push・tag・deploy は未実施）
+- 状態：**IMPLEMENTED ON BRANCH — targeted vitest 48／48 PASS・tsc 0 — G-B スクリプト READY（§5-1・2026-10-22・未実行）— Automated Gate（build／Playwright）は PM 直列待ち — CEO Human QA READY（Gate 後）**（master／RC merge・push・tag・deploy は未実施）
 - worktree／branch：`SevenGodsGame-voice-pilot`／`feat/official-voice-crisis-pilot-v1`（基点 `release/v1_0_2-rc` **`ba0af34`**）
 - 前提：`docs/OFFICIAL_VOICE_PILOT_V1.md`（大耀「あいさつ」・CEO Q8 3／3 PASS）／`docs/OFFICIAL_VOICE_EXPANSION_AUDIT_V1.md`（本 branch へ同一バイトでコピー・lane3v 側は未変更）／`docs/DECISION257_SOUND_LAYER_V1_PILOT.md`（duck 経路）
 - 不変：**`src/core` 差分 0**（`git diff --stat release/v1_0_2-rc -- src/core`＝空。ゲーム規則・ダメージ・AP・敵・神・スコア・Seed・PRNG・save 不変）／既存 22 SE・BGM 音源・既存 greeting の時刻と挙動 不変／`docs/DECISIONS.md` 未編集（統合時に PM が 1 行追記）
@@ -90,6 +90,48 @@
 | G-C 実機 | iPhone（Safari）：BGM が下がる・ミュートで止まる・サイレントスイッチ ON 時の挙動（greeting と同じはず） | Human QA Q3 |
 | G-D Human QA | §7 の 3 問 | Q1 YES ∧ Q2 YES ∧ Q3 YES → Production 候補（CEO §6-3 #8） |
 
+### 5-1. G-B の実行コマンドと期待値（2026-10-22・Lane 3 Infra・スクリプト作成のみ。実行は PM が直列で）
+
+**固定 seed の選定（engine 純関数・node 単体・200 seed ≈ 1.4 秒）**
+
+```
+node --import ./scripts/official-voice-pilot/ts-loader.mjs scripts/official-voice-pilot/crisis-seed.mjs <outJson> [--scan 200] [--seed crisis-003]
+```
+
+- `scripts/official-voice-pilot/ts-loader.mjs`（新規）：`combat-pilots-rc/ts-loader.mjs` の `.js→.ts` に加えて拡張子なしの相対 import（vite 流儀）を `.ts/.tsx/index.ts` へ振り替える resolve hook。Gate 専用・runtime 無関係
+- `scripts/official-voice-pilot/crisis-seed.mjs`（新規）：大耀 × 蒼海の龍神（`?enemy=ryujin`）・UI 既定（おすすめデッキ・ふつう・guardian・報酬ボーナス無し）・方策「使える札を左から使う → 無くなったらラウンドを終える（託宣なし）」で 1 戦を回し、`planBatch`（visualType `heavy`）＋ `planCrisisVoice`（`crisisVoice.ts` を直接 import・同じ関数）でピンチの時刻を出す
+- 走査結果（`crisis-001`〜`crisis-200`）：ピンチ発生 177／200・R3 69・R4 88・R5 17・R6 3。「R3〜R4 のラウンド終了で発生 ∧ その後にも決着でない HP 低下あり」の候補 87（R4 必殺 48・R3 通常 39）
+
+| 候補 | 経路（ラウンド終了後 HP） | ピンチ | 後の低下 | 結果 | 採否 |
+|---|---|---|---|---|---|
+| **`crisis-003`（採用）** | R1 26 → R2 26 → R3 30 → **R4 大海嘯 20・ブロック 0・30→10** → R5 10→7 → R6 撃破 | R4 endRound・special・着弾 1,260 → **1,560** | R5 敵通常攻撃 3（10→7・playing） | won R6 | 閾値 15 を HP 満タンから一撃で割る＝台詞の文脈どおり。後の低下が敵攻撃（2 回目が鳴らないことの検証に最適） |
+| `crisis-001`（代替 1） | R1 24 → R2 29 → R3 29 → R4 29→14 → R5 4 | R4 special → 1,560 | R5 自傷 14→12・敵 16 | won R6 | 同型。ブロック 5 で 15 ダメージ |
+| `crisis-002`（代替 2） | R1 30 → R2 23 → R3 23→11 → R4 6 | R3 endRound・通常攻撃・着弾 228 → **528** | R4 敵 11→6 | won R6 | 通常攻撃（heavy 突進 228）側の時刻を見たいとき |
+
+**受入（Playwright・PM が実行。preview 4173・Chromium headless・autoplay 許可）**
+
+```
+cd C:\Users\kimi1\SevenGodsGame-voice-pilot
+npx vite build && npx vite preview --host 0.0.0.0 --port 4173        # 既存どおり（別ターミナル）
+PLAYWRIGHT_MODULE=<playwright/index.mjs> node scripts/official-voice-pilot/acceptance.mjs <outJson> http://127.0.0.1:4173 [--only greeting|crisis]
+```
+
+- 既定は greeting 4 ＋ crisis 4 ＝ **8 ケース**（終了コード 0 ＝ allPass）。greeting 4 ケースの手順・計測フック・PASS 条件は Pilot v1 と**同一**（`HOOK` 不変。crisis は別フック `CRISIS_HOOK`）
+- crisis の URL：`/?enemy=ryujin&seed=crisis-003`。神選択 → 大耀 → この構成で始める → **蒼海の龍神** → この構成でバトル開始。入口後、各ラウンド「押せる左端のカードを押す → 無くなったらラウンドを終える」を R5 まで。**R4 のラウンド終了だけは「あいさつ」が鳴り終わるのを待ってから押す**（Human play の間合い。二重再生の有無は別途 stop 記録から判定）
+- 着弾時刻の標本：自分側の浮遊数字 `.player-panel .floating-number` の `animationstart`（`animation-delay`＝`planBatch` の着弾時刻 1,260）＝ 主判定。HP ラベル `.player-panel .hp-bar-label-text` の変化（MutationObserver。着弾＋hit stop 40＋HP_LAG 90）＝ 参考値 `deltaFromHpLabelMs`
+
+| 判定 | crisis × 音あり（PC／SP） | crisis × ミュート（PC／SP） |
+|---|---|---|
+| (a) 取得・開始 | `taiyo/crisis.mp3` 要求 **1 回**（入口の先読み）・5 秒超 buffer start は greeting 1 ＋ crisis 1 ＝ **2**（crisis の duration 8.858±0.05s） | 要求 0・start 0（`/assets/voice/` 要求 0） |
+| (b) 開始時刻 | `deltaFromFloatMs`＝声の start − "-200" の animationstart ＝ **300 ± 50ms** | — |
+| (c) duck | 声の start の −50〜+200ms に `linearRamp` 値 < 1 → その後 1 へ。**合流**＝その再 duck の `ctxNow` が、必殺の duck が予約済みの「復帰 1.0」の `t` より前 | — |
+| (d) 二重なし | 5 秒超 source の区間（start〜min(自然終了, stop)）の重なり **0ms** | — |
+| (e) 1 戦 1 回 | R5 終了で HP 100→70（表示 ×10）まで進んで crisis start が **1 のまま** | 同じ HP 経路（音は engine に無関係） |
+| 共通 | JS error 0・敵名「蒼海の龍神」・HP 経路 R1 260／R2 260／R3 300／R4 **100**／R5 70 が一致 | 同左 |
+
+- 結果 json：`crisisMeasuredDurationSec`（Chromium `AudioBuffer.duration` 実測）を最上位に出す → 台帳 **VOICE-KIT-08** の実測欄へ転記。各ケースに `timing`（主／参考の両 delta）・`duck`（down／up／prevUp／merged）・`voiceIntervals`・`rounds`（押したカード名・HP ラベル）・浮遊数字／HP ラベル／ramp の全記録を残す
+- 既知のリスク：Chromium の `setTimeout` 遅延（決定254 で ≈230ms の実測あり）が ±50 を超えた場合は (b) だけ FAIL する。その時は `deltaFromHpLabelMs` と `playerFloats` を見て「声が遅い」のか「標本が遅い」のかを切り分ける（声側の遅延なら `performance.now()` 基準への 1 行修正を検討＝決定254 の NEXT と同じ）
+
 ## 6. 既知の注意点
 
 1. **台詞の内容は AI 未試聴**（文字起こしはしていない）。「ピンチ」の文脈と合うかは CEO が公式ページ（`https://sevengodsgames.com/creator-kit/`）で試聴して判断（コスト 0）
@@ -110,6 +152,6 @@
 
 ## 8. 次の作業（AI 案）
 
-1. PM：G-A（full vitest／build）→ G-B（`acceptance.mjs` crisis 拡張・Chromium 実測尺を台帳 VOICE-KIT-08 へ追記）→ preview 起動 → CEO Human QA
+1. PM：G-A（full vitest／build）→ G-B（`acceptance.mjs` 8 ケース＝§5-1 のコマンド。json の `crisisMeasuredDurationSec` を台帳 VOICE-KIT-08 の実測欄へ追記）→ preview 起動 → CEO Human QA
 2. PASS 後：`docs/DECISIONS.md` に AI 判断 1 行（台帳 ID VOICE-KIT-08 のみ引用）・RC への統合順序は PM
 3. その後：7 神 greeting 展開（data-only・VOICE-KIT-02〜07）→ C5 ジングル GainNode 化 → success → fatigue（CEO 試聴後）
