@@ -22,6 +22,9 @@ import {
   MULTI_CUTIN_LEAD_MS,
   PASSIVE_AFTER_ENEMY_MS,
   RESULT_GATE_AFTER_HP_MS,
+  SELF_SHAKE_FINAL_PX,
+  SELF_SHAKE_MS,
+  SELF_SHAKE_SPECIAL_PX,
   SPECIAL_IMPACT_MS,
   VICTORY_BEAT_MS,
   VICTORY_BEAT_REDUCED_MS,
@@ -64,6 +67,9 @@ export type ImpactStep = {
 
 export type ReactionPlan = { atMs: number; stopMs: number; tier: FeelTier; final: boolean; burst: boolean; minor: boolean }
 
+/** 戦闘エリアの揺れ 1 本（開始＝atMs＋stopMs） */
+export type ShakePlan = { atMs: number; stopMs: number; amp: number; durMs: number }
+
 export type BatchPlan = {
   steps: ImpactStep[]
   /** 敵立ち絵のリアクション（最大2つ：本体＋神の一撃 or ⚡） */
@@ -83,6 +89,11 @@ export type BatchPlan = {
    * card 役の敵ダメージが無ければ null。撃破による tier 4 上書きより前の生 tier で決める（撃破だから重い、にはしない）
    */
   strike: 'light' | 'heavy' | null
+  /**
+   * v1.0.5：自分側の揺れ。敵の必殺（最後の 1 発）と敗北の決着被弾（role enemy）だけ。両方が同じ着弾なら決着の 1 本。
+   * 同バッチに敵側の大きな揺れ（L4・神の一撃・撃破）があれば敵側を優先して null。reduced でも値は出す（再生側でガード）
+   */
+  selfShake: ShakePlan | null
 }
 
 export type PlanContext = {
@@ -235,6 +246,12 @@ export function planBatch(events: readonly GameEvent[], ctx: PlanContext = {}): 
   }
 
   const selfSteps = steps.filter((s) => s.target === 'self' && s.role === 'enemy')
+  const enemyShakes = enemyReactions.some((r) => r.tier >= 4 || r.burst || r.final)
+  const finalHit = outcome === 'lost' && finalStep?.role === 'enemy' ? finalStep : null
+  const specialHit = isSpecial && selfSteps.length > 0 ? selfSteps[selfSteps.length - 1] : null
+  let selfShake: ShakePlan | null = null
+  if (!enemyShakes && finalHit) selfShake = { atMs: finalHit.atMs, stopMs: finalHit.stopMs, amp: SELF_SHAKE_FINAL_PX, durMs: SELF_SHAKE_MS.final }
+  else if (!enemyShakes && specialHit) selfShake = { atMs: specialHit.atMs, stopMs: specialHit.stopMs, amp: SELF_SHAKE_SPECIAL_PX, durMs: SELF_SHAKE_MS.special }
   const burst = events.some((e) => e.t === 'RESONANCE_BURST')
   const impacts = steps.map((s) => s.atMs)
   return {
@@ -247,6 +264,7 @@ export function planBatch(events: readonly GameEvent[], ctx: PlanContext = {}): 
     finalStep,
     lastImpactMs: impacts.length > 0 ? Math.max(...impacts) : null,
     strike,
+    selfShake,
   }
 }
 

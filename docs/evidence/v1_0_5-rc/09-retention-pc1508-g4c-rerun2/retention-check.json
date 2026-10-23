@@ -1,0 +1,176 @@
+{
+  "base": "http://localhost:4208",
+  "startedAt": "2026-10-23T23:11:09.961Z",
+  "viewports": {
+    "pc1508": {
+      "secondWin": null,
+      "dailyWin": null,
+      "firstBattle": {
+        "result": {
+          "vw": 1508,
+          "vh": 660,
+          "status": "敗北",
+          "score": "スコア 2,010",
+          "rewardPending": false,
+          "goal": {
+            "id": "N1",
+            "text": "試練の影を撃破する（残りHP 11%）",
+            "textHeight": 20,
+            "lineHeight": 20.3,
+            "lines": 1,
+            "inView": true
+          },
+          "primary": {
+            "text": "同じ盤面でもう一度",
+            "exit": "rematch",
+            "testid": "result-primary",
+            "top": 402,
+            "height": 49,
+            "width": 420,
+            "area": 20580,
+            "inView": true,
+            "disabled": false
+          },
+          "secondary": [
+            {
+              "text": "デッキを調整",
+              "exit": "adjustDeck",
+              "testid": "result-secondary",
+              "top": 459,
+              "height": 44,
+              "width": 206,
+              "area": 9064,
+              "inView": true,
+              "disabled": false
+            },
+            {
+              "text": "神・デッキを選び直す",
+              "exit": "reselect",
+              "testid": "result-secondary",
+              "top": 459,
+              "height": 44,
+              "width": 206,
+              "area": 9064,
+              "inView": true,
+              "disabled": false
+            }
+          ],
+          "tertiary": [
+            {
+              "text": "ホームへ",
+              "exit": "home",
+              "testid": "result-tertiary-link",
+              "top": 819,
+              "height": 44,
+              "width": 72,
+              "area": 3168,
+              "inView": false,
+              "disabled": false
+            },
+            {
+              "text": "今日の神域挑戦へ",
+              "exit": "goDaily",
+              "testid": "result-tertiary-link",
+              "top": 819,
+              "height": 44,
+              "width": 124,
+              "area": 5456,
+              "inView": false,
+              "disabled": false
+            },
+            {
+              "text": "挑戦状をコピー",
+              "exit": "share",
+              "testid": "result-share",
+              "top": 819,
+              "height": 44,
+              "width": 111,
+              "area": 4884,
+              "inView": false,
+              "disabled": false
+            }
+          ],
+          "share": {
+            "text": "挑戦状をコピー",
+            "exit": "share",
+            "testid": "result-share",
+            "top": 819,
+            "height": 44,
+            "width": 111,
+            "area": 4884,
+            "inView": false,
+            "disabled": false
+          },
+          "shareAfterPrimary": true,
+          "buttonsInView": [
+            {
+              "text": "同じ盤面でもう一度",
+              "exit": "rematch"
+            },
+            {
+              "text": "デッキを調整",
+              "exit": "adjustDeck"
+            },
+            {
+              "text": "神・デッキを選び直す",
+              "exit": "reselect"
+            }
+          ],
+          "dailyDiff": null,
+          "breakdownOpen": true,
+          "scoreInView": true,
+          "card": {
+            "scrollHeight": 829,
+            "clientHeight": 559,
+            "overflowX": false
+          },
+          "pageOverflowX": false,
+          "scrollX": 0
+        },
+        "matchupClear": null,
+        "errors": []
+      },
+      "dailyGod": "大耀",
+      "dailyStrategy": "win"
+    }
+  },
+  "errors": [],
+  "checks": [
+    {
+      "id": "G4c",
+      "name": "pc1508/初陣：勝利",
+      "ok": false,
+      "detail": {
+        "status": "敗北"
+      }
+    },
+    {
+      "id": "G4c",
+      "name": "pc1508/初陣：初撃破の 1 行が出る（初撃破の経路を通った）",
+      "ok": false,
+      "detail": null
+    },
+    {
+      "id": "G4c",
+      "name": "pc1508/初陣：次の目標は NR1（NM1 ではない）",
+      "ok": false,
+      "detail": {
+        "id": "N1",
+        "text": "試練の影を撃破する（残りHP 11%）",
+        "textHeight": 20,
+        "lineHeight": 20.3,
+        "lines": 1,
+        "inView": true
+      }
+    },
+    {
+      "id": "G4c",
+      "name": "pc1508/JS error 0",
+      "ok": true,
+      "detail": []
+    }
+  ],
+  "pass": 1,
+  "total": 4,
+  "finishedAt": "2026-10-23T23:11:40.603Z"
+}

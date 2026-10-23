@@ -128,6 +128,11 @@ type GameOverOverlayProps = {
    * 内容・計算・順序は変えない
    */
   bridged?: boolean
+  /**
+   * v1.0.5 Stage B：同じ盤面の前回比 1 行（`describeSameBoardDiff`）。同じ盤面と確かめられたときだけ非 null。
+   * 過去の事実だけ（正解・推奨手は出さない＝決定263）
+   */
+  sameBoardLine?: string | null
 }
 
 export function GameOverOverlay({
@@ -154,6 +159,7 @@ export function GameOverOverlay({
   defeatFact = null,
   recap = null,
   rewardPending = false,
+  sameBoardLine = null,
   onOpenReward,
   bridged = false,
 }: GameOverOverlayProps) {
@@ -300,6 +306,12 @@ export function GameOverOverlay({
                 予告を見て、その一撃の前に守るか、先に倒し切ろう。
               </>
             )}
+          </div>
+        )}
+        {/* v1.0.5 Stage B：同じ盤面で何回目か・前回 → 今回（敗因の直後。Primary より上・G8 で余白 140px 以上を実測済み） */}
+        {sameBoardLine && (
+          <div className="game-over-same-board" data-testid="same-board-diff">
+            {sameBoardLine}
           </div>
         )}
         {otomoLevelUp && (

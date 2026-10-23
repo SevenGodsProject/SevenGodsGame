@@ -1,0 +1,840 @@
+{
+  "base": "http://localhost:4208",
+  "baselineUrl": "http://localhost:4206",
+  "at": "2026-10-23T23:23:04.075Z",
+  "expect": {
+    "special": {
+      "px": 3,
+      "ms": 240,
+      "startMs": 1300
+    },
+    "final": {
+      "px": 4,
+      "ms": 280,
+      "startMs": 1350
+    },
+    "tolMs": 30,
+    "breakRate": {
+      "half": 0.7,
+      "quarter": 0.6
+    },
+    "breakSyncMs": 16,
+    "resultVsBaselineMs": 50
+  },
+  "viewports": {
+    "sp375": {
+      "s1": {
+        "battles": [
+          {
+            "enemy": "業斧の鬼将",
+            "breaks": [],
+            "breakSe": 0,
+            "expected": 0,
+            "pairs": [],
+            "suppressed": [],
+            "soundSummary": {
+              "card_draw@1": 6,
+              "resonance_gain@0.8": 1,
+              "boss_entrance@1": 1,
+              "greeting@1": 1,
+              "card_play@1": 11,
+              "hit_l1@1": 2,
+              "card_play@0.85": 5,
+              "self_hit@1": 2,
+              "enemy_turn@1": 4,
+              "hit_l3@1": 1,
+              "resonance_gain@1": 4,
+              "block@1": 4,
+              "heal@1": 3,
+              "enemy_charge@1": 1,
+              "self_hit_heavy@1": 2,
+              "enemy_rise@1": 1,
+              "defeat_sting@1": 1
+            },
+            "errors": []
+          },
+          {
+            "enemy": "蒼海の龍神",
+            "breaks": [
+              "half"
+            ],
+            "breakSe": 1,
+            "expected": 1,
+            "pairs": [
+              {
+                "level": "half",
+                "charging": false,
+                "deltaMs": 0
+              }
+            ],
+            "suppressed": [],
+            "soundSummary": {
+              "card_draw@1": 5,
+              "resonance_gain@0.8": 1,
+              "boss_entrance@1": 1,
+              "greeting@1": 1,
+              "card_play@1": 8,
+              "hit_l1@1": 2,
+              "resonance_gain@1": 2,
+              "card_play@0.85": 4,
+              "self_hit@1": 4,
+              "enemy_turn@1": 4,
+              "hit_l4@1": 1,
+              "reward@1.5": 1,
+              "hit_l2@1": 2,
+              "enemy_charge@0.7": 1,
+              "self_hit_heavy@1": 1,
+              "enemy_rise@1": 1,
+              "defeat_sting@1": 1
+            },
+            "errors": []
+          },
+          {
+            "enemy": "藍花の怨霊",
+            "breaks": [
+              "half"
+            ],
+            "breakSe": 1,
+            "expected": 1,
+            "pairs": [
+              {
+                "level": "half",
+                "charging": false,
+                "deltaMs": 0
+              }
+            ],
+            "suppressed": [],
+            "soundSummary": {
+              "card_draw@1": 5,
+              "resonance_gain@0.8": 1,
+              "boss_entrance@1": 1,
+              "greeting@1": 1,
+              "card_play@1": 9,
+              "hit_l1@1": 2,
+              "resonance_gain@1": 3,
+              "reward@1.5": 1,
+              "block@1": 3,
+              "card_play@0.85": 4,
+              "enemy_turn@1": 4,
+              "self_hit@1": 3,
+              "hit_l4@1": 1,
+              "hit_l2@1": 1,
+              "enemy_charge@0.7": 1,
+              "heal@1": 1,
+              "self_hit_heavy@1": 1,
+              "enemy_rise@1": 1,
+              "defeat_sting@1": 1
+            },
+            "errors": []
+          },
+          {
+            "enemy": "双牙の魔獣",
+            "breaks": [
+              "half",
+              "quarter"
+            ],
+            "breakSe": 2,
+            "expected": 2,
+            "pairs": [
+              {
+                "level": "half",
+                "charging": false,
+                "deltaMs": 0
+              },
+              {
+                "level": "quarter",
+                "charging": false,
+                "deltaMs": 0
+              }
+            ],
+            "suppressed": [],
+            "soundSummary": {
+              "card_draw@1": 7,
+              "resonance_gain@0.8": 1,
+              "boss_entrance@1": 1,
+              "greeting@1": 1,
+              "card_play@1": 16,
+              "card_play@0.85": 5,
+              "self_hit@1": 5,
+              "enemy_turn@1": 5,
+              "hit_l1@1": 3,
+              "hit_l2@1": 1,
+              "block@1": 6,
+              "heal@1": 3,
+              "resonance_gain@1": 4,
+              "enemy_rise@1": 1,
+              "hit_l3@1": 1,
+              "reward@1.5": 1,
+              "enemy_charge@0.7": 1,
+              "self_hit@1.06": 2,
+              "hit_l4@1": 2,
+              "enemy_charge@0.6": 1,
+              "victory_sting@1": 1
+            },
+            "errors": []
+          }
+        ]
+      },
+      "s5": {
+        "tries": [
+          {
+            "plan": {
+              "seed": "probe-supp-1",
+              "skip": [
+                2
+              ]
+            },
+            "breaks": [
+              "half",
+              "quarter"
+            ],
+            "suppressed": [],
+            "breakSe": 2,
+            "errors": []
+          },
+          {
+            "plan": {
+              "seed": "probe-supp-2",
+              "skip": [
+                2
+              ]
+            },
+            "breaks": [
+              "half"
+            ],
+            "suppressed": [],
+            "breakSe": 1,
+            "errors": []
+          },
+          {
+            "plan": {
+              "seed": "probe-supp-3",
+              "skip": [
+                2,
+                3
+              ]
+            },
+            "breaks": [],
+            "suppressed": [],
+            "breakSe": 0,
+            "errors": []
+          }
+        ]
+      },
+      "s2": {
+        "first": {
+          "status": "敗北",
+          "defeatFact": true,
+          "primary": "同じ盤面でもう一度",
+          "primaryInView": true,
+          "sameBoard": null,
+          "arenaTransform": "none"
+        },
+        "second": {
+          "status": "敗北",
+          "defeatFact": true,
+          "primary": "同じ盤面でもう一度",
+          "primaryInView": true,
+          "sameBoard": {
+            "text": "同じ盤面 2 回目：前回 R4で敗北・敵HP 100% → 今回 R4で敗北・敵HP 100%",
+            "overflowX": false
+          },
+          "arenaTransform": "none"
+        },
+        "res1": 2868,
+        "res2": 2815,
+        "anims1": [
+          {
+            "amp": 4,
+            "plannedStartMs": 1350,
+            "plannedDurMs": 280,
+            "visibleStartMs": 1735,
+            "visibleEndMs": 1826,
+            "finishedAfterMs": 2002,
+            "restAfterMs": 2003,
+            "cancelled": false,
+            "pipelineLagMs": 358,
+            "effectiveStartMs": 1708,
+            "maxFrameGapMs": 28,
+            "framesInWindow": 36,
+            "vsHit": {
+              "name": "hit-shake-huge",
+              "cls": "hit-shake-flash hit-tier-huge hit-delay-beam",
+              "offsetMs": 90
+            }
+          }
+        ],
+        "anims2": [
+          {
+            "amp": 4,
+            "plannedStartMs": 1350,
+            "plannedDurMs": 280,
+            "visibleStartMs": 1703,
+            "visibleEndMs": 1820,
+            "finishedAfterMs": 1979,
+            "restAfterMs": 1980,
+            "cancelled": false,
+            "pipelineLagMs": 335,
+            "effectiveStartMs": 1685,
+            "maxFrameGapMs": 49,
+            "framesInWindow": 36,
+            "vsHit": {
+              "name": "hit-shake-huge",
+              "cls": "hit-shake-flash hit-tier-huge hit-delay-beam",
+              "offsetMs": 90
+            }
+          }
+        ],
+        "errors": []
+      },
+      "s2wall": {
+        "startErr": 358,
+        "durErr": 14,
+        "pipelineLagMs": 358,
+        "maxFrameGapMs": 28,
+        "framesInWindow": 36,
+        "vsHit": {
+          "name": "hit-shake-huge",
+          "cls": "hit-shake-flash hit-tier-huge hit-delay-beam",
+          "offsetMs": 90
+        }
+      },
+      "s2base": {
+        "first": {
+          "status": "敗北",
+          "defeatFact": true,
+          "primary": "同じ盤面でもう一度",
+          "primaryInView": true,
+          "sameBoard": null,
+          "arenaTransform": "none"
+        },
+        "second": {
+          "status": "敗北",
+          "defeatFact": true,
+          "primary": "同じ盤面でもう一度",
+          "primaryInView": true,
+          "sameBoard": null,
+          "arenaTransform": "none"
+        },
+        "res1": 2847,
+        "res2": 2890,
+        "anims1": [],
+        "anims2": [],
+        "errors": []
+      },
+      "resultTiming": {
+        "rc": [
+          2868,
+          2815,
+          2957,
+          2889
+        ],
+        "v104": [
+          2847,
+          2890,
+          2868,
+          2823
+        ],
+        "medianRc": 2868,
+        "medianV104": 2847,
+        "medianDelta": 21
+      },
+      "s3": {
+        "log": [
+          {
+            "round": 1,
+            "over": false,
+            "anims": []
+          },
+          {
+            "round": 2,
+            "over": false,
+            "anims": []
+          },
+          {
+            "round": 3,
+            "over": false,
+            "anims": [
+              {
+                "amp": 3,
+                "plannedStartMs": 1300,
+                "plannedDurMs": 240,
+                "visibleStartMs": 1737,
+                "visibleEndMs": 1737,
+                "finishedAfterMs": 1973,
+                "restAfterMs": 1974,
+                "cancelled": false,
+                "pipelineLagMs": 419,
+                "effectiveStartMs": 1719,
+                "maxFrameGapMs": 32,
+                "framesInWindow": 33,
+                "vsHit": {
+                  "name": "hit-shake-huge",
+                  "cls": "hit-shake-flash hit-tier-huge hit-delay-beam",
+                  "offsetMs": 40
+                }
+              }
+            ]
+          },
+          {
+            "round": 4,
+            "over": true,
+            "anims": [
+              {
+                "amp": 4,
+                "plannedStartMs": 248,
+                "plannedDurMs": 280,
+                "visibleStartMs": 303,
+                "visibleEndMs": 566,
+                "finishedAfterMs": 590,
+                "restAfterMs": 591,
+                "cancelled": false,
+                "pipelineLagMs": 52,
+                "effectiveStartMs": 300,
+                "maxFrameGapMs": 87,
+                "framesInWindow": 30,
+                "vsHit": {
+                  "name": "hit-shake",
+                  "cls": "hit-shake-flash juice-delayed",
+                  "offsetMs": 90
+                }
+              }
+            ]
+          }
+        ],
+        "errors": []
+      },
+      "s3wall": {
+        "startErr": 419,
+        "durErr": 14,
+        "pipelineLagMs": 419,
+        "maxFrameGapMs": 32,
+        "framesInWindow": 33,
+        "vsHit": {
+          "name": "hit-shake-huge",
+          "cls": "hit-shake-flash hit-tier-huge hit-delay-beam",
+          "offsetMs": 40
+        }
+      },
+      "s4": {
+        "anims": 0,
+        "meta": {
+          "status": "敗北",
+          "defeatFact": true,
+          "primary": "同じ盤面でもう一度",
+          "primaryInView": true,
+          "sameBoard": null,
+          "arenaTransform": "none"
+        },
+        "errors": []
+      }
+    }
+  },
+  "checks": [
+    {
+      "id": "SE",
+      "name": "sp375/崩しを half・quarter とも観測（4 戦）",
+      "ok": true,
+      "detail": [
+        [
+          "業斧の鬼将",
+          []
+        ],
+        [
+          "蒼海の龍神",
+          [
+            "half"
+          ]
+        ],
+        [
+          "藍花の怨霊",
+          [
+            "half"
+          ]
+        ],
+        [
+          "双牙の魔獣",
+          [
+            "half",
+            "quarter"
+          ]
+        ]
+      ]
+    },
+    {
+      "id": "SE",
+      "name": "sp375/崩しの SE の回数＝鳴らすべき崩しの回数（各戦で一致・余分 0）",
+      "ok": true,
+      "detail": [
+        [
+          "業斧の鬼将",
+          0,
+          0
+        ],
+        [
+          "蒼海の龍神",
+          1,
+          1
+        ],
+        [
+          "藍花の怨霊",
+          1,
+          1
+        ],
+        [
+          "双牙の魔獣",
+          2,
+          2
+        ]
+      ]
+    },
+    {
+      "id": "SE",
+      "name": "sp375/各崩しで帯どおりの rate（half 0.7・quarter 0.6）で鳴る",
+      "ok": true,
+      "detail": [
+        {
+          "level": "half",
+          "charging": false,
+          "deltaMs": 0
+        },
+        {
+          "level": "half",
+          "charging": false,
+          "deltaMs": 0
+        },
+        {
+          "level": "half",
+          "charging": false,
+          "deltaMs": 0
+        },
+        {
+          "level": "quarter",
+          "charging": false,
+          "deltaMs": 0
+        }
+      ]
+    },
+    {
+      "id": "SE",
+      "name": "sp375/崩しの表示と SE の予約時刻の差 ≤ 16ms",
+      "ok": true,
+      "detail": [
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "id": "SE",
+      "name": "sp375/JS error 0（S1）",
+      "ok": true,
+      "detail": [
+        [],
+        [],
+        [],
+        []
+      ]
+    },
+    {
+      "id": "SE",
+      "name": "sp375/JS error 0（S5）",
+      "ok": true,
+      "detail": [
+        [],
+        [],
+        []
+      ]
+    },
+    {
+      "id": "SHAKE",
+      "name": "sp375/敗北 1 回目：揺れは 1 本だけ（R1〜R3 の通常攻撃・溜めでは揺れない）",
+      "ok": true,
+      "detail": [
+        {
+          "amp": 4,
+          "plannedStartMs": 1350,
+          "plannedDurMs": 280,
+          "visibleStartMs": 1735,
+          "visibleEndMs": 1826,
+          "finishedAfterMs": 2002,
+          "restAfterMs": 2003,
+          "cancelled": false,
+          "pipelineLagMs": 358,
+          "effectiveStartMs": 1708,
+          "maxFrameGapMs": 28,
+          "framesInWindow": 36,
+          "vsHit": {
+            "name": "hit-shake-huge",
+            "cls": "hit-shake-flash hit-tier-huge hit-delay-beam",
+            "offsetMs": 90
+          }
+        }
+      ]
+    },
+    {
+      "id": "SHAKE",
+      "name": "sp375/敗北の決着被弾の計画値：4px／280ms／開始 1350ms",
+      "ok": true,
+      "detail": {
+        "amp": 4,
+        "plannedStartMs": 1350,
+        "plannedDurMs": 280,
+        "visibleStartMs": 1735,
+        "visibleEndMs": 1826,
+        "finishedAfterMs": 2002,
+        "restAfterMs": 2003,
+        "cancelled": false,
+        "pipelineLagMs": 358,
+        "effectiveStartMs": 1708,
+        "maxFrameGapMs": 28,
+        "framesInWindow": 36,
+        "vsHit": {
+          "name": "hit-shake-huge",
+          "cls": "hit-shake-flash hit-tier-huge hit-delay-beam",
+          "offsetMs": 90
+        }
+      }
+    },
+    {
+      "id": "SHAKE",
+      "name": "sp375/揺れは最後まで再生されて終わり（cancel なし）、終了後は静止（transform なし）",
+      "ok": true,
+      "detail": {
+        "a": {
+          "amp": 4,
+          "plannedStartMs": 1350,
+          "plannedDurMs": 280,
+          "visibleStartMs": 1735,
+          "visibleEndMs": 1826,
+          "finishedAfterMs": 2002,
+          "restAfterMs": 2003,
+          "cancelled": false,
+          "pipelineLagMs": 358,
+          "effectiveStartMs": 1708,
+          "maxFrameGapMs": 28,
+          "framesInWindow": 36,
+          "vsHit": {
+            "name": "hit-shake-huge",
+            "cls": "hit-shake-flash hit-tier-huge hit-delay-beam",
+            "offsetMs": 90
+          }
+        },
+        "arenaAtResult": "none"
+      }
+    },
+    {
+      "id": "SHAKE",
+      "name": "sp375/揺れは結果画面が出る前に終わる",
+      "ok": true,
+      "detail": {
+        "finishedAfterMs": 2002,
+        "resultMs": 2868
+      }
+    },
+    {
+      "id": "SHAKE",
+      "name": "sp375/揺れは被弾の演出の開始から 90ms で始まる（同じ timeline 上・0〜150ms）",
+      "ok": true,
+      "detail": {
+        "name": "hit-shake-huge",
+        "cls": "hit-shake-flash hit-tier-huge hit-delay-beam",
+        "offsetMs": 90
+      }
+    },
+    {
+      "id": "UI",
+      "name": "sp375/敗北画面：敗北・事実行・Primary「同じ盤面でもう一度」が初期可視",
+      "ok": true,
+      "detail": {
+        "status": "敗北",
+        "defeatFact": true,
+        "primary": "同じ盤面でもう一度",
+        "primaryInView": true,
+        "sameBoard": null,
+        "arenaTransform": "none"
+      }
+    },
+    {
+      "id": "UI",
+      "name": "sp375/2 回目の敗北：Stage B の前回比が出る・横はみ出し 0・Primary 初期可視",
+      "ok": true,
+      "detail": {
+        "status": "敗北",
+        "defeatFact": true,
+        "primary": "同じ盤面でもう一度",
+        "primaryInView": true,
+        "sameBoard": {
+          "text": "同じ盤面 2 回目：前回 R4で敗北・敵HP 100% → 今回 R4で敗北・敵HP 100%",
+          "overflowX": false
+        },
+        "arenaTransform": "none"
+      }
+    },
+    {
+      "id": "SHAKE",
+      "name": "sp375/2 回目の敗北でも揺れは 1 本・同じ値",
+      "ok": true,
+      "detail": [
+        {
+          "amp": 4,
+          "plannedStartMs": 1350,
+          "plannedDurMs": 280,
+          "visibleStartMs": 1703,
+          "visibleEndMs": 1820,
+          "finishedAfterMs": 1979,
+          "restAfterMs": 1980,
+          "cancelled": false,
+          "pipelineLagMs": 335,
+          "effectiveStartMs": 1685,
+          "maxFrameGapMs": 49,
+          "framesInWindow": 36,
+          "vsHit": {
+            "name": "hit-shake-huge",
+            "cls": "hit-shake-flash hit-tier-huge hit-delay-beam",
+            "offsetMs": 90
+          }
+        }
+      ]
+    },
+    {
+      "id": "UI",
+      "name": "sp375/JS error 0（S2）",
+      "ok": true,
+      "detail": []
+    },
+    {
+      "id": "UI",
+      "name": "sp375/結果画面の出現時刻の中央値が v1.0.4 と ±50ms 以内",
+      "ok": true,
+      "detail": {
+        "rc": [
+          2868,
+          2815,
+          2957,
+          2889
+        ],
+        "v104": [
+          2847,
+          2890,
+          2868,
+          2823
+        ],
+        "medianRc": 2868,
+        "medianV104": 2847,
+        "medianDelta": 21
+      }
+    },
+    {
+      "id": "SHAKE",
+      "name": "sp375/v1.0.4 の同じ経路では揺れ 0 本（新しい揺れであることの対照）",
+      "ok": true,
+      "detail": [
+        [],
+        []
+      ]
+    },
+    {
+      "id": "UI",
+      "name": "sp375/v1.0.4 の 2 回目の敗北には前回比の行が無い（Stage B は新規）",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "id": "SHAKE",
+      "name": "sp375/致命でない必殺の計画値：3px／240ms／開始 1300ms",
+      "ok": true,
+      "detail": {
+        "amp": 3,
+        "plannedStartMs": 1300,
+        "plannedDurMs": 240,
+        "visibleStartMs": 1737,
+        "visibleEndMs": 1737,
+        "finishedAfterMs": 1973,
+        "restAfterMs": 1974,
+        "cancelled": false,
+        "pipelineLagMs": 419,
+        "effectiveStartMs": 1719,
+        "maxFrameGapMs": 32,
+        "framesInWindow": 33,
+        "vsHit": {
+          "name": "hit-shake-huge",
+          "cls": "hit-shake-flash hit-tier-huge hit-delay-beam",
+          "offsetMs": 40
+        }
+      }
+    },
+    {
+      "id": "SHAKE",
+      "name": "sp375/必殺の揺れは最後まで再生されて終わり、終了後は静止",
+      "ok": true,
+      "detail": {
+        "amp": 3,
+        "plannedStartMs": 1300,
+        "plannedDurMs": 240,
+        "visibleStartMs": 1737,
+        "visibleEndMs": 1737,
+        "finishedAfterMs": 1973,
+        "restAfterMs": 1974,
+        "cancelled": false,
+        "pipelineLagMs": 419,
+        "effectiveStartMs": 1719,
+        "maxFrameGapMs": 32,
+        "framesInWindow": 33,
+        "vsHit": {
+          "name": "hit-shake-huge",
+          "cls": "hit-shake-flash hit-tier-huge hit-delay-beam",
+          "offsetMs": 40
+        }
+      }
+    },
+    {
+      "id": "SHAKE",
+      "name": "sp375/必殺の揺れは被弾の演出の開始から 40ms で始まる（同じ timeline 上・0〜150ms）",
+      "ok": true,
+      "detail": {
+        "name": "hit-shake-huge",
+        "cls": "hit-shake-flash hit-tier-huge hit-delay-beam",
+        "offsetMs": 40
+      }
+    },
+    {
+      "id": "SHAKE",
+      "name": "sp375/通常攻撃・溜めのラウンドでは揺れない（敵側の揺れ以外の値 0 本）",
+      "ok": true,
+      "detail": []
+    },
+    {
+      "id": "SHAKE",
+      "name": "sp375/JS error 0（S3）",
+      "ok": true,
+      "detail": []
+    },
+    {
+      "id": "SHAKE",
+      "name": "sp375/reduced-motion：.battle-main の揺れ 0 本・敗北画面は出る",
+      "ok": true,
+      "detail": {
+        "anims": 0,
+        "meta": {
+          "status": "敗北",
+          "defeatFact": true,
+          "primary": "同じ盤面でもう一度",
+          "primaryInView": true,
+          "sameBoard": null,
+          "arenaTransform": "none"
+        },
+        "errors": []
+      }
+    }
+  ],
+  "warns": [
+    "sp375/S1：溜め予告中に half の崩しが起きなかった＝抑止条件は実画面では未観測（単体テスト breakSe.test.ts で固定済み）",
+    "sp375/S5：3 通り試しても溜め予告中の half を作れなかった（[[\"half\",\"quarter\"],[\"half\"],[]]）＝抑止条件は単体テストのみ",
+    "sp375/S2 揺れの実時間：開始のずれ 358ms・継続のずれ 14ms（animate()→開始の遅れ 358ms・揺れの区間の最大フレーム間隔 28ms・区間内フレーム 36 本）＝headless の描画の遅れ。実機で確認",
+    "sp375/S3 必殺の揺れの実時間：開始のずれ 419ms・継続のずれ 14ms（animate()→開始の遅れ 419ms・最大フレーム間隔 32ms・区間内フレーム 33 本）＝headless の描画の遅れ。実機で確認"
+  ],
+  "pass": 24,
+  "total": 24
+}

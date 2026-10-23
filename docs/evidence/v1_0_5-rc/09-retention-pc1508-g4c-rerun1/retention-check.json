@@ -1,0 +1,176 @@
+{
+  "base": "http://localhost:4208",
+  "startedAt": "2026-10-23T23:10:31.544Z",
+  "viewports": {
+    "pc1508": {
+      "secondWin": null,
+      "dailyWin": null,
+      "firstBattle": {
+        "result": {
+          "vw": 1508,
+          "vh": 660,
+          "status": "勝利",
+          "score": "スコア 9,670",
+          "rewardPending": false,
+          "goal": {
+            "id": "NR1",
+            "text": "次は連撃型「双牙の魔獣」に挑む — 予告を読む戦い",
+            "textHeight": 20,
+            "lineHeight": 20.3,
+            "lines": 1,
+            "inView": true
+          },
+          "primary": {
+            "text": "魔獣に挑む（神を選ぶ）",
+            "exit": "reselect",
+            "testid": "result-primary",
+            "top": 447,
+            "height": 49,
+            "width": 420,
+            "area": 20580,
+            "inView": true,
+            "disabled": false
+          },
+          "secondary": [
+            {
+              "text": "デッキを調整",
+              "exit": "adjustDeck",
+              "testid": "result-secondary",
+              "top": 504,
+              "height": 44,
+              "width": 206,
+              "area": 9064,
+              "inView": true,
+              "disabled": false
+            },
+            {
+              "text": "今日の神域挑戦へ",
+              "exit": "goDaily",
+              "testid": "result-secondary",
+              "top": 504,
+              "height": 44,
+              "width": 206,
+              "area": 9064,
+              "inView": true,
+              "disabled": false
+            }
+          ],
+          "tertiary": [
+            {
+              "text": "ホームへ",
+              "exit": "home",
+              "testid": "result-tertiary-link",
+              "top": 865,
+              "height": 44,
+              "width": 72,
+              "area": 3168,
+              "inView": false,
+              "disabled": false
+            },
+            {
+              "text": "同じ構成でもう一度",
+              "exit": "rematch",
+              "testid": "result-tertiary-link",
+              "top": 865,
+              "height": 44,
+              "width": 137,
+              "area": 6028,
+              "inView": false,
+              "disabled": false
+            },
+            {
+              "text": "挑戦状をコピー",
+              "exit": "share",
+              "testid": "result-share",
+              "top": 865,
+              "height": 44,
+              "width": 111,
+              "area": 4884,
+              "inView": false,
+              "disabled": false
+            }
+          ],
+          "share": {
+            "text": "挑戦状をコピー",
+            "exit": "share",
+            "testid": "result-share",
+            "top": 865,
+            "height": 44,
+            "width": 111,
+            "area": 4884,
+            "inView": false,
+            "disabled": false
+          },
+          "shareAfterPrimary": true,
+          "buttonsInView": [
+            {
+              "text": "魔獣に挑む（神を選ぶ）",
+              "exit": "reselect"
+            },
+            {
+              "text": "デッキを調整",
+              "exit": "adjustDeck"
+            },
+            {
+              "text": "今日の神域挑戦へ",
+              "exit": "goDaily"
+            }
+          ],
+          "dailyDiff": null,
+          "breakdownOpen": true,
+          "scoreInView": true,
+          "card": {
+            "scrollHeight": 874,
+            "clientHeight": 559,
+            "overflowX": false
+          },
+          "pageOverflowX": false,
+          "scrollX": 0
+        },
+        "matchupClear": "✨ 初撃破：恵比寿 × 試練の影（この敵 1/7 神）",
+        "errors": []
+      },
+      "dailyGod": "大耀",
+      "dailyStrategy": "win"
+    }
+  },
+  "errors": [],
+  "checks": [
+    {
+      "id": "G4c",
+      "name": "pc1508/初陣：勝利",
+      "ok": true,
+      "detail": {
+        "status": "勝利"
+      }
+    },
+    {
+      "id": "G4c",
+      "name": "pc1508/初陣：初撃破の 1 行が出る（初撃破の経路を通った）",
+      "ok": true,
+      "detail": "✨ 初撃破：恵比寿 × 試練の影（この敵 1/7 神）"
+    },
+    {
+      "id": "G4c",
+      "name": "pc1508/初陣：次の目標は NR1（NM1 ではない）",
+      "ok": true,
+      "detail": {
+        "id": "NR1",
+        "text": "次は連撃型「双牙の魔獣」に挑む — 予告を読む戦い",
+        "textHeight": 20,
+        "lineHeight": 20.3,
+        "lines": 1,
+        "inView": true
+      }
+    },
+    {
+      "id": "G4c",
+      "name": "pc1508/JS error 0",
+      "ok": true,
+      "detail": []
+    }
+  ],
+  "pass": 4,
+  "total": 4,
+  "finishedAt": "2026-10-23T23:11:08.962Z"
+}

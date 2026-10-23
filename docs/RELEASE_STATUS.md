@@ -2,19 +2,24 @@
 
 Production の「確定状態」を一目で確認するための要約です。新しい仕様判断は含みません（根拠は `docs/DECISIONS.md`）。**§A が現在の正本**。§B 以降は 8/31 Public Beta〜Phase 3（2026-09-06）時点の履歴として残します（当時の Known Non-blockers 1〜16 は §A-4 の生存 Known に統合済み）。
 
-## A. 現在の Production 状態（2026-10-23・決定283 v1.0.3 PRODUCTION LIVE）
+## A. 現在の Production 状態（2026-10-24・決定284 v1.0.4 PRODUCTION LIVE）
 
-### A-0x. v1.0.4 RC（2026-10-24・決定284 候補・READY FOR CEO PRODUCTION RELEASE APPROVAL・未公開）
+### A-0. v1.0.4 公開（2026-10-24・決定284 PRODUCTION LIVE）
 
 | 項目 | 状態 |
 |---|---|
-| **Release 候補** | **SEVEN GODS v1.0.4**（決定284 候補）：Retention 束 v1＝①OTOMO 絆 ★3 を Lv5 で到達可能に ②49 攻略の初撃破直後の次の目標 NM1 ③Daily「今日の問い」。`src/core` 差分 0（gameVersion・save v9 不変）・storage 書き込み 0 |
-| **RC** | `release/v1_0_4-rc`（worktree `SevenGodsGame-v104rc`・起点 master `1f713d6`）・Gate HEAD `6a84e36`・**未 push** |
-| **Release Gate** | `docs/V1_0_4_RC_GATE.md`（vitest 1,544・build `index-_60cvbl_.js` 473.99 kB・受入 44/44・敗北 18/18・旧セーブ 44/44・Home `v1.0.4 (6a84e36)`）＋`docs/V1_0_4_PREVIEW_GATE.md`（G1〜G8・AC6）＋独立監査 `docs/V1_0_4_INDEPENDENT_RELEASE_AUDIT.md`（BLOCKER 0・M1〜M7 充足） |
-| **Rollback 先（公開後）** | deployment **`7256475048`**（v1.0.3・`1f713d6`）。NM1 単独撤回は RC Gate §4 |
-| **CEO 判断** | Production 公開承認 1 件（2 段階 push・新規 branch `release/v1_0_4-rc` のみ：段階 1＝`57584ad` 約 25.5 MB、段階 2＝RC HEAD 約 7.4 MB。既存リモート branch は変更しない＝RC Gate §5） |
+| **Release** | **SEVEN GODS v1.0.4**（決定284）：Retention 束 v1＝①OTOMO 絆 ★3 を Lv5 で到達可能に ②49 攻略の初撃破直後の次の目標 NM1 ③Daily「今日の問い」。`src/core` 差分 0（gameVersion `1.d794038a00b5b53c`・save v9 不変）・storage 書き込み 0 |
+| **Production HEAD** | master = origin/master **`35a7f91`**（PR #4 merge）／RC `release/v1_0_4-rc` `1ff5f68`／runtime 最終変更 `8b6e884`（version）・機能 `bf683b4` |
+| **Vercel deployment** | **`7283378458`**（sha `35a7f91`）／bundle `index-Dk5s3eSl.js`（473,996 B）・`index-DIaR-qlF.css`／Home `v1.0.4 (35a7f91)` |
+| **Rollback 先** | deployment **`7256475048`**（v1.0.3・`1f713d6`）。Promote は CEO のみ。NM1 単独撤回は `docs/V1_0_4_RC_GATE.md` §4 |
+| **公開の経緯** | CEO が新規 branch へ 2 段階 push（25.5 MB → 7.4 MB・既存 branch 不変）→ PR #4 → CI 39986577889 GREEN・Preview 7283296539 → CEO merge → master CI 39987032805 success → Vercel 自動 deploy |
+| **Release Gate** | `docs/V1_0_4_RC_GATE.md`（M1〜M7）＋`docs/V1_0_4_PREVIEW_GATE.md`（G1〜G8・AC6）＋独立監査 `docs/V1_0_4_INDEPENDENT_RELEASE_AUDIT.md`（BLOCKER 0） |
+| **Production Smoke** | `docs/V1_0_4_PRODUCTION_SMOKE.md`：S1〜S7 PASS（S3 ★3 12/12・S5 旧セーブ 44/44・S6 NM1／今日の問い／NR1 15/15×2・S7a SP 本文 overflow 0）＋bundle byte 一致＋混入 0 |
+| **Known** | K01〜K39 据え置き＋札の外枠 2〜4px／scale(1.04)（v1.0.2 から存在）＋旧 phase7 AC12 の本数決め打ち（スクリプト側・v1.0.5 で修正） |
+| **tag** | 未作成（CEO のみ・任意） |
+| **次 Release 候補（v1.0.5）** | Stage B「同じ盤面 Retry の前回比」（別 branch・GO 提案）／AC12 スクリプト修正／Lane 6 Premium v3 TOP2（Break SE・敵必殺の揺れ）ほか。忠次 v0.4・crisis ボイス・カード画像 Pilot6 は CEO 実機 QA／画像生成待ち |
 
-### A-0. v1.0.3 公開（2026-10-22〜23・決定283 PRODUCTION LIVE）
+### A-0p. v1.0.3 公開（2026-10-22〜23・決定283 PRODUCTION LIVE・履歴）
 
 | 項目 | 状態 |
 |---|---|
