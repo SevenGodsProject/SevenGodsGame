@@ -1,0 +1,438 @@
+{
+  "base": "https://seven-gods-game.vercel.app",
+  "expectVersion": "1.0.4",
+  "expectSha": "35a7f91",
+  "generatedAt": "2026-10-23T16:32:36.507Z",
+  "pass": 44,
+  "total": 44,
+  "results": [
+    {
+      "viewport": "pc",
+      "checks": [
+        {
+          "name": "Home version label = v1.0.4 (35a7f91)",
+          "pass": true,
+          "detail": "v1.0.4 (35a7f91)"
+        },
+        {
+          "name": "Home shows 「初陣へ」 for a first-time player",
+          "pass": true
+        },
+        {
+          "name": "Brief has 3 lines",
+          "pass": true,
+          "detail": [
+            "敵は次の行動を予告します。⚔ の数字が、次に受ける攻撃です。",
+            "カード左上の数字が必要な神力です。余った神力と防御は、次のラウンドへ持ち越せません。",
+            "出し終えたら「ラウンドを終える」。7ラウンド以内に敵のHPを0にすれば勝利です。"
+          ]
+        },
+        {
+          "name": "Brief ② = 「余った神力と防御は、次のラウンドへ持ち越せません。」",
+          "pass": true,
+          "detail": "カード左上の数字が必要な神力です。余った神力と防御は、次のラウンドへ持ち越せません。"
+        },
+        {
+          "name": "Brief card has no horizontal overflow",
+          "pass": true,
+          "detail": {
+            "scrollWidth": 478,
+            "clientWidth": 478
+          }
+        },
+        {
+          "name": "Tutorial ② body = 確定文言（v1.0.3 束 #1：⚔ 絵文字なし・74 字）",
+          "pass": true,
+          "detail": "毎ラウンド、敵は次の行動を事前に見せます。⚡「溜め」は次のラウンドに大技（必殺）が来る合図、連撃は複数回当たります。防御はそのラウンドだけ有効です。"
+        },
+        {
+          "name": "Tutorial tips = 7（v1.0.3 束 #1：強打・特大のコツを追加）",
+          "pass": true,
+          "detail": 7
+        },
+        {
+          "name": "Tutorial tip ③ = 防御（ブロック）は次のラウンドに残りません…（v1.0.3 束 #1・46 字）",
+          "pass": true,
+          "detail": "防御（ブロック）は次のラウンドに残りません。大技が予告されたラウンドに合わせて出しましょう。"
+        },
+        {
+          "name": "Tutorial card has no horizontal overflow",
+          "pass": true,
+          "detail": {
+            "scrollWidth": 478,
+            "clientWidth": 478
+          }
+        },
+        {
+          "name": "Enemy select note ① = 実測の手強さ…",
+          "pass": true,
+          "detail": "★は脅威度（実測の手強さ：負けやすさ・受けるダメージ・倒すまでの長さ。最大5）。難易度の★とは別物です。\n迷ったら「神に委ねる」で、神々があなたの相手を選びます。"
+        },
+        {
+          "name": "Enemy select note ② unchanged",
+          "pass": true
+        },
+        {
+          "name": "enemy cards = 8 (7 + entrust)",
+          "pass": true,
+          "detail": 8
+        },
+        {
+          "name": "★ 試練の影 = 2",
+          "pass": true,
+          "detail": {
+            "name": "試練の影",
+            "aria": "脅威度 2 / 5",
+            "filled": 2,
+            "total": 5
+          }
+        },
+        {
+          "name": "★ 業斧の鬼将 = 3",
+          "pass": true,
+          "detail": {
+            "name": "業斧の鬼将",
+            "aria": "脅威度 3 / 5",
+            "filled": 3,
+            "total": 5
+          }
+        },
+        {
+          "name": "★ 藍花の怨霊 = 4",
+          "pass": true,
+          "detail": {
+            "name": "藍花の怨霊",
+            "aria": "脅威度 4 / 5",
+            "filled": 4,
+            "total": 5
+          }
+        },
+        {
+          "name": "★ 銀甲の機工師 = 2",
+          "pass": true,
+          "detail": {
+            "name": "銀甲の機工師",
+            "aria": "脅威度 2 / 5",
+            "filled": 2,
+            "total": 5
+          }
+        },
+        {
+          "name": "★ 双牙の魔獣 = 3",
+          "pass": true,
+          "detail": {
+            "name": "双牙の魔獣",
+            "aria": "脅威度 3 / 5",
+            "filled": 3,
+            "total": 5
+          }
+        },
+        {
+          "name": "★ 蒼海の龍神 = 4",
+          "pass": true,
+          "detail": {
+            "name": "蒼海の龍神",
+            "aria": "脅威度 4 / 5",
+            "filled": 4,
+            "total": 5
+          }
+        },
+        {
+          "name": "★ 乱舞の道化 = 1",
+          "pass": true,
+          "detail": {
+            "name": "乱舞の道化",
+            "aria": "脅威度 1 / 5",
+            "filled": 1,
+            "total": 5
+          }
+        },
+        {
+          "name": "Enemy select has no horizontal page overflow",
+          "pass": true,
+          "detail": {
+            "scrollWidth": 1508,
+            "innerWidth": 1508
+          }
+        },
+        {
+          "name": "JS error 0",
+          "pass": true,
+          "detail": []
+        },
+        {
+          "name": "external requests 0",
+          "pass": true,
+          "detail": []
+        }
+      ],
+      "shots": [
+        {
+          "file": "home-pc.webp",
+          "bytes": 128050,
+          "pngBytes": 1307294
+        },
+        {
+          "file": "brief-pc.webp",
+          "bytes": 40094,
+          "pngBytes": 632588
+        },
+        {
+          "file": "tutorial-2-pc.png",
+          "bytes": 378469
+        },
+        {
+          "file": "tutorial-tips-pc.png",
+          "bytes": 375702
+        },
+        {
+          "file": "enemy-select-pc.webp",
+          "bytes": 122176,
+          "pngBytes": 1148587
+        }
+      ],
+      "measures": {
+        "brief2": {
+          "text": "カード左上の数字が必要な神力です。余った神力と防御は、次のラウンドへ持ち越せません。",
+          "scrollWidth": 409,
+          "clientWidth": 409,
+          "width": 409,
+          "height": 48,
+          "lineHeight": 24,
+          "lines": 2
+        },
+        "tutorial2": {
+          "text": "毎ラウンド、敵は次の行動を事前に見せます。⚡「溜め」は次のラウンドに大技（必殺）が来る合図、連撃は複数回当たります。防御はそのラウンドだけ有効です。",
+          "scrollWidth": 304,
+          "clientWidth": 304,
+          "width": 304,
+          "height": 62,
+          "lineHeight": 20.8,
+          "lines": 3
+        },
+        "note": {
+          "text": "★は脅威度（実測の手強さ：負けやすさ・受けるダメージ・倒すまでの長さ。最大5）。難易度の★とは別物です。迷ったら「神に委ねる」で、神々があなたの相手を選びます。",
+          "scrollWidth": 960,
+          "clientWidth": 960,
+          "width": 960,
+          "height": 42,
+          "lineHeight": 21,
+          "lines": 2
+        }
+      }
+    },
+    {
+      "viewport": "sp375",
+      "checks": [
+        {
+          "name": "Home version label = v1.0.4 (35a7f91)",
+          "pass": true,
+          "detail": "v1.0.4 (35a7f91)"
+        },
+        {
+          "name": "Home shows 「初陣へ」 for a first-time player",
+          "pass": true
+        },
+        {
+          "name": "Brief has 3 lines",
+          "pass": true,
+          "detail": [
+            "敵は次の行動を予告します。⚔ の数字が、次に受ける攻撃です。",
+            "カード左上の数字が必要な神力です。余った神力と防御は、次のラウンドへ持ち越せません。",
+            "出し終えたら「ラウンドを終える」。7ラウンド以内に敵のHPを0にすれば勝利です。"
+          ]
+        },
+        {
+          "name": "Brief ② = 「余った神力と防御は、次のラウンドへ持ち越せません。」",
+          "pass": true,
+          "detail": "カード左上の数字が必要な神力です。余った神力と防御は、次のラウンドへ持ち越せません。"
+        },
+        {
+          "name": "Brief card has no horizontal overflow",
+          "pass": true,
+          "detail": {
+            "scrollWidth": 333,
+            "clientWidth": 333
+          }
+        },
+        {
+          "name": "Tutorial ② body = 確定文言（v1.0.3 束 #1：⚔ 絵文字なし・74 字）",
+          "pass": true,
+          "detail": "毎ラウンド、敵は次の行動を事前に見せます。⚡「溜め」は次のラウンドに大技（必殺）が来る合図、連撃は複数回当たります。防御はそのラウンドだけ有効です。"
+        },
+        {
+          "name": "Tutorial tips = 7（v1.0.3 束 #1：強打・特大のコツを追加）",
+          "pass": true,
+          "detail": 7
+        },
+        {
+          "name": "Tutorial tip ③ = 防御（ブロック）は次のラウンドに残りません…（v1.0.3 束 #1・46 字）",
+          "pass": true,
+          "detail": "防御（ブロック）は次のラウンドに残りません。大技が予告されたラウンドに合わせて出しましょう。"
+        },
+        {
+          "name": "Tutorial card has no horizontal overflow",
+          "pass": true,
+          "detail": {
+            "scrollWidth": 333,
+            "clientWidth": 333
+          }
+        },
+        {
+          "name": "Enemy select note ① = 実測の手強さ…",
+          "pass": true,
+          "detail": "★は脅威度（実測の手強さ：負けやすさ・受けるダメージ・倒すまでの長さ。最大5）。難易度の★とは別物です。\n迷ったら「神に委ねる」で、神々があなたの相手を選びます。"
+        },
+        {
+          "name": "Enemy select note ② unchanged",
+          "pass": true
+        },
+        {
+          "name": "enemy cards = 8 (7 + entrust)",
+          "pass": true,
+          "detail": 8
+        },
+        {
+          "name": "★ 試練の影 = 2",
+          "pass": true,
+          "detail": {
+            "name": "試練の影",
+            "aria": "脅威度 2 / 5",
+            "filled": 2,
+            "total": 5
+          }
+        },
+        {
+          "name": "★ 業斧の鬼将 = 3",
+          "pass": true,
+          "detail": {
+            "name": "業斧の鬼将",
+            "aria": "脅威度 3 / 5",
+            "filled": 3,
+            "total": 5
+          }
+        },
+        {
+          "name": "★ 藍花の怨霊 = 4",
+          "pass": true,
+          "detail": {
+            "name": "藍花の怨霊",
+            "aria": "脅威度 4 / 5",
+            "filled": 4,
+            "total": 5
+          }
+        },
+        {
+          "name": "★ 銀甲の機工師 = 2",
+          "pass": true,
+          "detail": {
+            "name": "銀甲の機工師",
+            "aria": "脅威度 2 / 5",
+            "filled": 2,
+            "total": 5
+          }
+        },
+        {
+          "name": "★ 双牙の魔獣 = 3",
+          "pass": true,
+          "detail": {
+            "name": "双牙の魔獣",
+            "aria": "脅威度 3 / 5",
+            "filled": 3,
+            "total": 5
+          }
+        },
+        {
+          "name": "★ 蒼海の龍神 = 4",
+          "pass": true,
+          "detail": {
+            "name": "蒼海の龍神",
+            "aria": "脅威度 4 / 5",
+            "filled": 4,
+            "total": 5
+          }
+        },
+        {
+          "name": "★ 乱舞の道化 = 1",
+          "pass": true,
+          "detail": {
+            "name": "乱舞の道化",
+            "aria": "脅威度 1 / 5",
+            "filled": 1,
+            "total": 5
+          }
+        },
+        {
+          "name": "Enemy select has no horizontal page overflow",
+          "pass": true,
+          "detail": {
+            "scrollWidth": 375,
+            "innerWidth": 375
+          }
+        },
+        {
+          "name": "JS error 0",
+          "pass": true,
+          "detail": []
+        },
+        {
+          "name": "external requests 0",
+          "pass": true,
+          "detail": []
+        }
+      ],
+      "shots": [
+        {
+          "file": "home-sp375.png",
+          "bytes": 343886
+        },
+        {
+          "file": "brief-sp375.png",
+          "bytes": 182433
+        },
+        {
+          "file": "tutorial-2-sp375.png",
+          "bytes": 156616
+        },
+        {
+          "file": "tutorial-tips-sp375.png",
+          "bytes": 165809
+        },
+        {
+          "file": "enemy-select-sp375.webp",
+          "bytes": 85214,
+          "pngBytes": 606150
+        }
+      ],
+      "measures": {
+        "brief2": {
+          "text": "カード左上の数字が必要な神力です。余った神力と防御は、次のラウンドへ持ち越せません。",
+          "scrollWidth": 264,
+          "clientWidth": 264,
+          "width": 264,
+          "height": 72,
+          "lineHeight": 24,
+          "lines": 3
+        },
+        "tutorial2": {
+          "text": "毎ラウンド、敵は次の行動を事前に見せます。⚡「溜め」は次のラウンドに大技（必殺）が来る合図、連撃は複数回当たります。防御はそのラウンドだけ有効です。",
+          "scrollWidth": 159,
+          "clientWidth": 159,
+          "width": 159,
+          "height": 125,
+          "lineHeight": 20.8,
+          "lines": 6
+        },
+        "note": {
+          "text": "★は脅威度（実測の手強さ：負けやすさ・受けるダメージ・倒すまでの長さ。最大5）。難易度の★とは別物です。迷ったら「神に委ねる」で、神々があなたの相手を選びます。",
+          "scrollWidth": 335,
+          "clientWidth": 335,
+          "width": 335,
+          "height": 63,
+          "lineHeight": 21,
+          "lines": 3
+        }
+      }
+    }
+  ]
+}
