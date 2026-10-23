@@ -716,7 +716,7 @@ export function BattleScreen({
           onRematch={onRematch}
           onReselect={onReselect}
           onResultExit={onResultExit}
-          context={collectResultContext(state, { newBest, prevBest, stakeResult, dailyResult, otomoBondChange })}
+          context={collectResultContext(state, { newBest, prevBest, stakeResult, dailyResult, otomoBondChange, matchupClear })}
           matchupClear={matchupClear}
           daily={state.mode === 'daily' ? dailyResult : null}
           stakeResult={stakeResult}

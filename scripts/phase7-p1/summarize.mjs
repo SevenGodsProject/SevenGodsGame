@@ -49,16 +49,27 @@ add('AC1', '通常勝利後、Result だけで次の行動候補（Primary 1＋S
   return check(`${vp}/normal-win`, m && m.goal?.text && m.primary && m.secondary.length === 2 && m.primary.inView && m.secondary.every((b) => b.inView), m && { goal: m.goal?.text, primary: m.primary?.text, secondary: m.secondary.map((b) => b.text) })
 }))
 
+// v1.0.4 Retention 束 ③：daily-diff の先頭に「今日の問い：…」の verdict 行が 1 行だけ入る（RETENTION_BUNDLE_V1 §3「best 行の上に 1 行」）。
+// ベスト行・前回行の契約（verdict の直後がベスト行、2 回目以降はその次が前回行）は変えない。verdict 行の無い v1.0.3 以前の build も同じ判定で通る
+const VERDICT = /^今日の問い：(解けた（R\d 撃破）|未解（(R\d 敗北|7R 未撃破)）)$/
+const diffBody = (lines) => {
+  if (!lines) return { ok: false, body: [] }
+  const verdicts = lines.filter((l) => l.startsWith('今日の問い：'))
+  if (verdicts.length === 0) return { ok: true, body: lines }
+  return { ok: verdicts.length === 1 && VERDICT.test(lines[0]), body: lines.slice(1) }
+}
 add('AC2', 'Daily 終了後、今日のベストとの関係が分かる（2 回目以降は前回も）', Object.entries(vps).flatMap(([vp, v]) => {
   const list = []
+  const best = (lines) => { const { ok, body } = diffBody(lines); return ok && body[0]?.includes('今日のベスト') }
+  const bestAndPrev = (lines) => { const { ok, body } = diffBody(lines); return ok && body[0]?.includes('今日のベスト') && body[1]?.startsWith('前回') }
   const d = v.dailySequence
   if (d) {
-    list.push(check(`${vp}/daily-1`, d.r1?.metrics?.dailyDiff?.[0]?.includes('今日のベスト'), d.r1?.metrics?.dailyDiff))
-    list.push(check(`${vp}/daily-2`, d.r2?.metrics?.dailyDiff?.[0]?.includes('今日のベスト') && d.r2?.metrics?.dailyDiff?.[1]?.startsWith('前回'), d.r2?.metrics?.dailyDiff))
-    list.push(check(`${vp}/daily-3`, d.r3?.metrics?.dailyDiff?.[0]?.includes('今日のベスト') && d.r3?.metrics?.dailyDiff?.[1]?.startsWith('前回'), d.r3?.metrics?.dailyDiff))
+    list.push(check(`${vp}/daily-1`, best(d.r1?.metrics?.dailyDiff), d.r1?.metrics?.dailyDiff))
+    list.push(check(`${vp}/daily-2`, bestAndPrev(d.r2?.metrics?.dailyDiff), d.r2?.metrics?.dailyDiff))
+    list.push(check(`${vp}/daily-3`, bestAndPrev(d.r3?.metrics?.dailyDiff), d.r3?.metrics?.dailyDiff))
   }
   const f = v.dailyLoseFirst?.metrics
-  if (f) list.push(check(`${vp}/daily-lose-first`, f.dailyDiff?.[0]?.includes('今日のベスト'), f.dailyDiff))
+  if (f) list.push(check(`${vp}/daily-lose-first`, best(f.dailyDiff), f.dailyDiff))
   return list
 }))
 

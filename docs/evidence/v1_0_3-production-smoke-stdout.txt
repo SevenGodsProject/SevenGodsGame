@@ -1,0 +1,20 @@
+[smoke 2026-10-22T15:45:56.985Z] run [s1]: node scripts/release-audit/home-version-smoke.mjs docs/evidence/v1_0_3-production-smoke/s1-home.json https://seven-gods-game.vercel.app 1.0.3 1f713d6
+[smoke 2026-10-22T15:46:06.090Z] exit 0 [s1]
+[smoke 2026-10-22T15:46:06.091Z] run [s1b]: node scripts/v1_0_3-rc/acceptance.mjs docs/evidence/v1_0_3-production-smoke/s1b-acceptance.json https://seven-gods-game.vercel.app --sha 1f713d6 --version 1.0.3
+[smoke 2026-10-22T15:46:24.923Z] exit 0 [s1b]
+[smoke 2026-10-22T15:46:24.923Z] run [s1c]: node scripts/v1_0_2-rc/vocab-check.mjs docs/evidence/v1_0_3-production-smoke/s1c-vocab/result.json https://seven-gods-game.vercel.app
+[smoke 2026-10-22T15:46:49.275Z] exit 0 [s1c]
+[smoke 2026-10-22T15:46:49.275Z] run [s24]: node scripts/release-audit/qa-flow.mjs docs/evidence/v1_0_3-production-smoke/s2-s4-qa-flow.json https://seven-gods-game.vercel.app --shots docs/evidence/v1_0_3-production-smoke/qa-flow-shots
+[smoke 2026-10-22T16:00:32.844Z] exit 0 [s24]
+[smoke 2026-10-22T16:00:32.845Z] run [s5]: node scripts/official-voice-pilot/acceptance.mjs docs/evidence/v1_0_3-production-smoke/s5-official-voice.json https://seven-gods-game.vercel.app
+[smoke 2026-10-22T16:01:23.597Z] exit 0 [s5]
+[smoke 2026-10-22T16:01:23.597Z] run [s6]: node scripts/legal-credits/acceptance.mjs docs/evidence/v1_0_3-production-smoke/s6-legal-credits.json https://seven-gods-game.vercel.app
+[smoke 2026-10-22T16:01:36.514Z] exit 0 [s6]
+[smoke 2026-10-22T16:01:37.470Z] bundle-match PASS: all
+[smoke 2026-10-22T16:01:37.470Z] start master preview :4182 for S7
+(node:6180) [DEP0190] DeprecationWarning: Passing args to a child process with shell option true can lead to security vulnerabilities, as the arguments are not escaped, only concatenated.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+[smoke 2026-10-22T16:01:41.295Z] run [s7]: node scripts/release-audit/save-migration.mjs docs/evidence/v1_0_3-production-smoke/s7-old-save-migration.json http://localhost:4182 https://seven-gods-game.vercel.app
+[smoke 2026-10-22T16:04:32.422Z] exit 0 [s7]
+[smoke 2026-10-22T16:04:32.747Z] done worst exit 0
+smoke exit 0

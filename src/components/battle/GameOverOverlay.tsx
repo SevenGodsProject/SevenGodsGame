@@ -17,7 +17,7 @@ import { getEnemyDef } from '../../core/data/enemies'
 import { useMinuteClock } from '../../hooks/useMinuteClock'
 import type { ResultContext } from './resultContext'
 import { selectNextGoal, type NextGoal } from './nextGoal'
-import { describeDailyDiff } from './dailyDiff'
+import { describeDailyDiff, describeDailyVerdict } from './dailyDiff'
 import { exitLabel, planResultExits, type ResultExit } from './resultHub'
 import type { ResultTransitionAction } from '../resultTransitions'
 import type { MatchupClearResult } from '../../hooks/matchupStorage'
@@ -338,6 +338,10 @@ export function GameOverOverlay({
             旧表示の「ベスト未記録なのに同点」は describeDailyDiff 側で出さない */}
         {daily && (
           <div className="game-over-daily" data-testid="daily-diff">
+            {/* v1.0.4 Retention 束 ③：今日の問いの verdict（今回の status／round だけ）。best 行の上に 1 行 */}
+            {context?.dailyCurrent && (
+              <p className="game-over-daily-verdict" data-testid="daily-verdict">{describeDailyVerdict(context.dailyCurrent)}</p>
+            )}
             {dailyDiff ? (
               <>
                 <p className={`game-over-daily-best game-over-daily-best-${dailyDiff.best.kind}`}>{dailyDiff.best.text}</p>
