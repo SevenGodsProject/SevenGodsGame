@@ -148,6 +148,8 @@ PLAYWRIGHT_MODULE=<playwright/index.mjs> node scripts/official-voice-pilot/accep
 | Q2 | 次のラウンドの思考を邪魔しなかったか | crisis を「敵必殺の直後だけ」（`planBatch` の `isSpecial` 相当）に限定して再 QA 1 回 |
 | Q3 | iPhone で BGM が下がり、ミュートで止まり、あいさつの後に自然につながったか | `VOICE_LAYER` の係数調整（gain／afterImpactMs） |
 
+**2026-10-23 追記（Lane 4 独立 QA）**：開始方法（`?enemy=ryujin&seed=crisis-003`）・観察点・回答形式は `docs/OFFICIAL_VOICE_CRISIS_PILOT_V1_QA.md` §3。同書 §1 で seed 再現性・発火時刻・duck・二重再生防止を PASS（WARN 3・FAIL 0）、フック本体テスト `crisisVoiceHook.test.ts` 12 件を追加（runtime 変更 0）。
+
 手順は `docs/OFFICIAL_VOICE_PILOT_V1.md` §9 と同じ（preview の起動は PM）。大耀 × **蒼海の龍神** を選び、R4「大海嘯」（20）を受けると「ふつう」なら HP 30→≤15 でほぼ確実に鳴る（決定246 sim：最低 HP ≤ 50% は 63〜64%／戦）。
 
 ## 8. 次の作業（AI 案）
