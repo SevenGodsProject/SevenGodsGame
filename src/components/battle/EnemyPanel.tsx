@@ -11,7 +11,7 @@ import type { FloatingNumber } from './useFloatingNumbers'
 import type { BatchPlan, ReactionPlan } from './combatTimeline'
 import { hpBand } from './visualHp'
 import { DEFEAT_COLLAPSE_MS, DEFEAT_COLLAPSE_REDUCED_MS } from './enemyVfxTiming'
-import { enemyBreakClass, enemyBreakVars, useEnemyBreak } from './enemyBreak'
+import { enemyBreakClass, enemyBreakVars, useEnemyBreak, useEnemyBreakSe } from './enemyBreak'
 import './enemyBreak.css'
 
 type EnemyPanelProps = {
@@ -110,8 +110,9 @@ export function EnemyPanel({
   const nextAction = def.actions[round] ?? def.actions[def.actions.length - 1]
   const nextIsSpecial =
     nextAction.kind === 'special' || (nextAction.kind === 'multiAttack' && !!nextAction.special)
+  const charging = enemy.intent?.kind === 'charge'
   const chargingClass =
-    enemy.intent?.kind === 'charge'
+    charging
       ? nextIsSpecial
         ? ' enemy-avatar-charging enemy-avatar-charging-super'
         : ' enemy-avatar-charging'
@@ -134,6 +135,8 @@ export function EnemyPanel({
   // クラスは panel の根だけに付け、名札・舞台・体は enemyBreak.css が子孫セレクタで受ける（既存の markup は不変）
   const brk = useEnemyBreak(hpShown, enemy.maxHp, defeated || hpShown <= 0 || plan?.outcome === 'won')
   const breakVars = enemyBreakVars(brk.level) as CSSProperties
+  // Enemy Break SE v1（v1.0.5）：崩しと同じ描画サイクルで 1 回だけ鳴らす（溜め予告中の half は鳴らさない）
+  useEnemyBreakSe(brk, charging)
 
   return (
     <div className={`panel enemy-panel enemy-band-${band}${enemyBreakClass('cf2-break', brk.level)}`} data-enemy={enemy.defId} style={breakVars}>
