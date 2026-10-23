@@ -6,6 +6,7 @@ import { createVisualHpTracker, type TimerApi, type VisualHpTracker } from './vi
 import { sfx } from './sound'
 import { playJingle } from './bgm'
 import { prefersReducedMotion } from './reducedMotion'
+import { ARENA_SHAKE_MS, ARENA_SHAKE_PX } from './enemyVfxTiming'
 
 /**
  * Phase 6-A Combat Juice（決定162）：戦闘の「見せ方」の司令塔（表示専用）。
@@ -15,6 +16,7 @@ import { prefersReducedMotion } from './reducedMotion'
  * - 撃破：最後の一撃 → 敵の崩壊 → 「撃破」 → 報酬、の順序をタイマーで保証する
  * - 敗北・未撃破：最後の着弾と表示HPの変化を見せてから結果画面
  * - 大きな一撃（L4・神の一撃・最後の一撃）だけ、戦闘エリアを短く揺らす（WAAPI、reduced-motion では無し）
+ *   v1.0.5：敵の必殺と敗北の決着被弾も小さく揺らす（plan.selfShake・神の一撃より小さい）
  *
  * すべて setTimeout 起点で animationend に依存しない。背景タブで遅れても必ず先へ進み、
  * 各段階に安全弁（上限時刻）を持つ。
@@ -124,10 +126,15 @@ export function useCombatPresentation(log: GameEvent[], state: GameState | null,
     setPlanKey((k) => k + 1)
 
     // 大きな一撃だけ戦闘エリアを短く揺らす（対象要素のみ・WAAPI。ページ全体は止めない）
+    // v1.0.5：敵側の揺れが無いバッチだけ、敵の必殺・敗北の決着被弾（plan.selfShake）で揺らす
     const big = next.enemyReactions.find((r) => r.tier >= 4 || r.burst || r.final)
+    const heavyBig = !!big && (big.final || big.burst)
+    const shake = big
+      ? { atMs: big.atMs, stopMs: big.stopMs, amp: heavyBig ? ARENA_SHAKE_PX.big : ARENA_SHAKE_PX.tier4, durMs: heavyBig ? ARENA_SHAKE_MS.big : ARENA_SHAKE_MS.tier4 }
+      : next.selfShake
     const arena = arenaRef.current
-    if (big && arena && !reduced && typeof arena.animate === 'function') {
-      const amp = big.final || big.burst ? 5 : 3
+    if (shake && arena && !reduced && typeof arena.animate === 'function') {
+      const amp = shake.amp
       arena.animate(
         [
           { transform: 'translate(0, 0)' },
@@ -136,7 +143,7 @@ export function useCombatPresentation(log: GameEvent[], state: GameState | null,
           { transform: `translate(${-amp * 0.4}px, ${amp * 0.3}px)` },
           { transform: 'translate(0, 0)' },
         ],
-        { duration: big.final || big.burst ? 320 : 240, delay: big.atMs + big.stopMs, easing: 'ease-out' },
+        { duration: shake.durMs, delay: shake.atMs + shake.stopMs, easing: 'ease-out' },
       )
     }
 

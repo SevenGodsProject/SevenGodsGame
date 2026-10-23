@@ -181,3 +181,18 @@ export const VICTORY_BEAT_REDUCED_MS = 600
  * 勝利経路（planVictory）とは無関係。安全弁 PRESENTATION_SAFETY_MS は不変
  */
 export const RESULT_GATE_AFTER_HP_MS = 200
+
+/**
+ * 戦闘エリア（.battle-main）の揺れ（WAAPI・useCombatPresentation。reduced-motion では無し）。
+ * 敵側：L4 着弾 3px／240ms、神の一撃・撃破 5px／320ms（決定162 から値は不変・v1.0.5 で定数化）
+ */
+export const ARENA_SHAKE_PX = { tier4: 3, big: 5 } as const
+export const ARENA_SHAKE_MS = { tier4: 240, big: 320 } as const
+/**
+ * v1.0.5（Combat Premium v3 TOP2）：自分側の揺れ＝敵の必殺（special・技名付き連撃）と敗北の決着被弾。
+ * 常に神の一撃・撃破（5px）より小さく、神の一撃が最上段の単調性を保つ（必殺 3 ≤ 決着 4 < 5）。
+ * 揺れ終わりは planResultGate（表示HP終了＋RESULT_GATE_AFTER_HP_MS）より前＝結果ゲートの値は不変
+ */
+export const SELF_SHAKE_SPECIAL_PX = 3
+export const SELF_SHAKE_FINAL_PX = 4
+export const SELF_SHAKE_MS = { special: 240, final: 280 } as const
