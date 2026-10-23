@@ -54,8 +54,8 @@ describe('site.webmanifest', () => {
 })
 
 describe('buildInfo', () => {
-  it('version は package.json と同じ 1.0.4、sha は 7 桁 hex か local／dev、ラベルは v<version> (<sha>)', () => {
-    expect(APP_VERSION).toBe('1.0.4')
+  it('version は package.json と同じ 1.0.5、sha は 7 桁 hex か local／dev、ラベルは v<version> (<sha>)', () => {
+    expect(APP_VERSION).toBe('1.0.5')
     expect(BUILD_SHA).toMatch(/^([0-9a-f]{7}|local|dev)$/)
     expect(buildLabel()).toBe(`v${APP_VERSION} (${BUILD_SHA})`)
   })
