@@ -15,6 +15,11 @@ const args = process.argv.slice(2)
 const outDir = args[0]
 const base = args.find((a, i) => i > 0 && a.startsWith('http')) ?? 'http://localhost:4173'
 const only = args.includes('--only') ? args[args.indexOf('--only') + 1].split(',') : null
+/** --daily-god 恵比寿 --daily-strategy win2：神域挑戦（日替わりの敵）で勝てる組み合わせを探すための指定（既定 大耀・win） */
+const DAILY_GOD = args.includes('--daily-god') ? args[args.indexOf('--daily-god') + 1] : '大耀'
+const DAILY_STRATEGY = args.includes('--daily-strategy') ? args[args.indexOf('--daily-strategy') + 1] : 'win'
+/** --scenarios daily：G3w だけ（G4b を飛ばす） */
+const scenarios = args.includes('--scenarios') ? args[args.indexOf('--scenarios') + 1].split(',') : ['secondWin', 'daily', 'firstBattle']
 if (!outDir) {
   console.error('usage: node scripts/v1_0_4-rc/retention-check.mjs <outDir> <baseUrl> [--only pc1508,sp844]')
   process.exit(2)
@@ -23,7 +28,7 @@ mkdirSync(outDir, { recursive: true })
 
 const chromium = await loadChromium()
 const browser = await chromium.launch({ headless: true })
-const report = { base, baselineUrl, startedAt: new Date().toISOString(), viewports: {}, layout: null, errors: [] }
+const report = { base, startedAt: new Date().toISOString(), viewports: {}, errors: [] }
 
 // ---------- ブラウザ内で評価する計測関数 ----------
 const HOME_METRICS = () => {
@@ -333,14 +338,31 @@ async function scenarioSecondWin(vpName) {
   return { win1: win1.metrics, win2: win2.metrics, rematchClicked, matchups, errors: p.errors }
 }
 
+/** G4c：新規プレイヤーの初陣（恵比寿×試練の影×ふつう）に勝つ → 初撃破でもあるが、次の目標は NR1（決定206）が NM1 より優先 */
+async function scenarioFirstBattle(vpName) {
+  const p = await openPage(vpName)
+  const shot = shooter(vpName, 'g4c-first', p.page)
+  await p.page.goto(p.url + '/')
+  await p.page.waitForSelector('[data-testid="home-first-battle"]', { timeout: 30000 })
+  await clickSel(p.page, '[data-testid="home-first-battle"]')
+  await p.page.waitForSelector('[data-testid="first-battle-brief"]', { timeout: 10000 })
+  await clickText(p.page, '出陣する')
+  await waitBattleReady(p.page)
+  await playToEnd(p.page, 'win')
+  const r = await settleResult(p.page, shot)
+  const matchupClear = await p.page.evaluate(() => document.querySelector('[data-testid="matchup-clear"]')?.textContent.trim() ?? null)
+  await p.ctx.close()
+  return { result: r.metrics, matchupClear, errors: p.errors }
+}
+
 /** G3w：Home（未着手）→ 神域挑戦 1 回目を勝ちに行く → 結果の verdict → ホームへ → Home の verdict */
 async function scenarioDailyWin(vpName) {
   const p = await openPage(vpName)
   const shot = shooter(vpName, 'g3w-daily', p.page)
   await gotoHome(p)
   const homeBefore = await p.page.evaluate(() => document.querySelector('[data-testid="home-today-verdict"]')?.textContent.trim() ?? null)
-  await startDailyFromHome(p.page)
-  await playToEnd(p.page, 'win')
+  await startDailyFromHome(p.page, { god: DAILY_GOD })
+  await playToEnd(p.page, DAILY_STRATEGY)
   const r = await settleResult(p.page, shot)
   const exitHome = (await clickSel(p.page, '.game-over-card [data-exit="home"]')) || (await clickText(p.page, 'ホームへ'))
   await waitHome(p.page)
@@ -373,18 +395,32 @@ const run = async (name, fn) => {
 for (const vp of ['pc1508', 'sp844']) {
   if (only && !only.includes(vp)) continue
   console.log(vp)
-  const sw = await run(`${vp} G4b second win`, () => scenarioSecondWin(vp))
-  const dw = await run(`${vp} G3w daily win`, () => scenarioDailyWin(vp))
-  report.viewports[vp] = { secondWin: sw, dailyWin: dw }
+  const sw = scenarios.includes('secondWin') ? await run(`${vp} G4b second win`, () => scenarioSecondWin(vp)) : null
+  const dw = scenarios.includes('daily') ? await run(`${vp} G3w daily win（${DAILY_GOD}・${DAILY_STRATEGY}）`, () => scenarioDailyWin(vp)) : null
+  const fb = scenarios.includes('firstBattle') ? await run(`${vp} G4c first battle`, () => scenarioFirstBattle(vp)) : null
+  report.viewports[vp] = { secondWin: sw, dailyWin: dw, firstBattle: fb, dailyGod: DAILY_GOD, dailyStrategy: DAILY_STRATEGY }
 
+  if (fb) {
+    check('G4c', `${vp}/初陣：勝利`, fb.result?.status === '勝利', { status: fb.result?.status })
+    check('G4c', `${vp}/初陣：初撃破の 1 行が出る（初撃破の経路を通った）`, !!fb.matchupClear, fb.matchupClear)
+    check('G4c', `${vp}/初陣：次の目標は NR1（NM1 ではない）`, fb.result?.goal?.id === 'NR1', fb.result?.goal)
+    check('G4c', `${vp}/JS error 0`, (fb.errors ?? ['?']).length === 0, fb.errors)
+  }
+
+  if (sw) {
   check('G4b', `${vp}/1 勝目：勝利かつ NM1`, sw.win1?.status === '勝利' && sw.win1?.goal?.id === 'NM1', { status: sw.win1?.status, goal: sw.win1?.goal })
   check('G4b', `${vp}/もう一度が押せた`, sw.rematchClicked, sw.rematchClicked)
   check('G4b', `${vp}/2 勝目：勝利かつ NM1 なし`, sw.win2?.status === '勝利' && sw.win2?.goal?.id !== 'NM1', { status: sw.win2?.status, goal: sw.win2?.goal })
   check('G4b', `${vp}/JS error 0`, (sw.errors ?? ['?']).length === 0, sw.errors)
+  }
+  if (!dw) continue
 
   const lines = dw.result?.dailyDiff ?? []
   const st = dw.result?.status
   const expectVerdict = st === '勝利' ? /^今日の問い：解けた（R\d 撃破）$/ : /^今日の問い：未解（(R\d 敗北|7R 未撃破)）$/
+  // 勝利経路の verdict を見るのが目的。敗北なら INFO として残し、PASS 数には数えない（--daily-god／--daily-strategy を変えて再実行）
+  if (st !== '勝利') console.log(`INFO  G3w  ${vp}：勝利せず（${st}・${dw.result?.score}）＝勝利経路は未確認`)
+  check('G3w', `${vp}/勝利経路を通った`, st === '勝利', { status: st, score: dw.result?.score })
   check('G3w', `${vp}/Home 未挑戦：今日の問い：未着手`, dw.homeBefore === '今日の問い：未着手', dw.homeBefore)
   check('G3w', `${vp}/結果画面 1 行目が status と一致する verdict（${st}）`, expectVerdict.test(lines[0] ?? ''), lines)
   check('G3w', `${vp}/verdict の下にベスト行が残る`, (lines[1] ?? '').includes('今日のベスト'), lines)
