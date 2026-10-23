@@ -63,13 +63,17 @@ describe('P1 の判断（Home・Next Goal・Result Hub の出口）は神×敵�
   // **入力として受け取るだけ**（matchupStorage の import・読み込み・書き込みは無い）。判定材料の取得は resultContext.ts に閉じる（決定206 と同じ型）
   it('components/battle/nextGoal.ts は matchup を入力として受け取るだけ（matchupStorage を import しない・保存 API を呼ばない）', () => {
     const src = read('components/battle/nextGoal.ts')
+    // v1.0.4 RC（決定284・AI 判断）：resultContext と同じ「参照語の完全一致」に強める。許すのは入力名 matchup の 1 語だけで、
+    // matchupStorage・matchups・MatchupClearResult などの語が 1 つでも増えたら赤になる（将来の import 追加を構造的に検出する）
+    const refs = [...new Set([...src.matchAll(/\b\w*[mM]atchup\w*\b/g)].map((m) => m[0]))].sort()
+    expect(refs).toEqual(['matchup'])
     expect(src).not.toMatch(/matchupStorage/)
     expect(src).not.toMatch(/\b(loadMatchups|countMatchupsByEnemy|recordMatchupClear)\b/)
     expect(src).not.toMatch(/localStorage|\.setItem\s*\(/)
   })
 
   // 決定206（Solve Legibility v1）：resultContext だけは「魔獣を既に倒しているか」を **読むだけ** で参照してよい
-  // （NR1 の判定材料。書き込み・49 の一般接続はしない。nextGoal.ts 自体は上の検査どおり matchup を知らない）
+  // （NR1 の判定材料。書き込み・49 の一般接続はしない。nextGoal.ts は上の検査どおり入力名 matchup を受け取るだけで、保存には触れない）
   it('components/battle/resultContext.ts は matchup を読むだけ（countMatchupsByEnemy／loadMatchups のみ・書き込み無し）', () => {
     const src = read('components/battle/resultContext.ts')
     const refs = [...new Set([...src.matchAll(/\b\w*[mM]atchup\w*\b/g)].map((m) => m[0]))].sort()
