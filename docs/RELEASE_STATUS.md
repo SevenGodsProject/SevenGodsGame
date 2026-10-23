@@ -4,6 +4,16 @@ Production の「確定状態」を一目で確認するための要約です。
 
 ## A. 現在の Production 状態（2026-10-23・決定283 v1.0.3 PRODUCTION LIVE）
 
+### A-0x. v1.0.4 RC（2026-10-24・決定284 候補・READY FOR CEO PRODUCTION RELEASE APPROVAL・未公開）
+
+| 項目 | 状態 |
+|---|---|
+| **Release 候補** | **SEVEN GODS v1.0.4**（決定284 候補）：Retention 束 v1＝①OTOMO 絆 ★3 を Lv5 で到達可能に ②49 攻略の初撃破直後の次の目標 NM1 ③Daily「今日の問い」。`src/core` 差分 0（gameVersion・save v9 不変）・storage 書き込み 0 |
+| **RC** | `release/v1_0_4-rc`（worktree `SevenGodsGame-v104rc`・起点 master `1f713d6`）・Gate HEAD `6a84e36`・**未 push** |
+| **Release Gate** | `docs/V1_0_4_RC_GATE.md`（vitest 1,544・build `index-_60cvbl_.js` 473.99 kB・受入 44/44・敗北 18/18・旧セーブ 44/44・Home `v1.0.4 (6a84e36)`）＋`docs/V1_0_4_PREVIEW_GATE.md`（G1〜G8・AC6）＋独立監査 `docs/V1_0_4_INDEPENDENT_RELEASE_AUDIT.md`（BLOCKER 0・M1〜M7 充足） |
+| **Rollback 先（公開後）** | deployment **`7256475048`**（v1.0.3・`1f713d6`）。NM1 単独撤回は RC Gate §4 |
+| **CEO 判断** | Production 公開承認 1 件（2 段階 push：`57584ad`→`release/v1_0_3-rc` 約 25.5 MB、RC 約 0.2 MB） |
+
 ### A-0. v1.0.3 公開（2026-10-22〜23・決定283 PRODUCTION LIVE）
 
 | 項目 | 状態 |
