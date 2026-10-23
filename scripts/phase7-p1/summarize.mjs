@@ -119,8 +119,17 @@ add('AC10', 'Result 初期表示に別アクティビティへの CTA が 2 つ�
 add('AC11', '挑戦状のコピーは Primary より小さく、DOM 上も後ろ', allResults.map(({ name, m }) => check(name, m.share && m.primary && m.share.area < m.primary.area && m.shareAfterPrimary, m.share && { share: m.share.area, primary: m.primary?.area })))
 
 // Phase 7 Entrance E1（決定193・仕様 §10・§15）：Home の「遊び方を見る」はヘッダーの本のアイコン（同じ機能）へ一本化したため、
-// Home のリンクは「戦績を見る」「OTOMOとの絆を見る」の 2 本（機能の削除ではない）
-add('AC12', 'PC 1508×660 で Home のリンク（E1 以降は 2 本：戦績・OTOMO）が viewport 内', homes.filter((h) => h.name.startsWith('pc1508/')).map(({ name, m }) => check(name, m.linksInView.length === 2 && m.linksInView.every(Boolean), m.linkRects)))
+// Home のリンクは「戦績を見る」「OTOMOとの絆を見る」の 2 本（機能の削除ではない）。
+// v1.0.5（AI 判断）：4bfff2b（Legal／Credits 画面 v1・CM-02／03）で 3 本目「クレジット・権利表記」が加わったのに本数を 2 と決め打ちしていたため、
+// v1.0.0 以降ずっと FAIL していた（v1.0.4 RC Gate §7）。本数ではなく**ラベルの並びの完全一致**＋全本 viewport 内で判定する。
+// リンクが減る・増える・順序やラベルが変わる・1 本でも画面外に出る、のいずれでも FAIL。ラベルを測っていない旧 JSON も FAIL（再計測が必要）
+const HOME_LINK_LABELS = ['戦績を見る', 'OTOMOとの絆を見る', 'クレジット・権利表記']
+const homeLinksOk = (m) =>
+  Array.isArray(m.linkLabels) &&
+  JSON.stringify(m.linkLabels) === JSON.stringify(HOME_LINK_LABELS) &&
+  m.linksInView.length === HOME_LINK_LABELS.length &&
+  m.linksInView.every(Boolean)
+add('AC12', 'PC 1508×660 で Home のリンク（戦績・OTOMO・クレジット）がすべて viewport 内', homes.filter((h) => h.name.startsWith('pc1508/')).map(({ name, m }) => check(name, homeLinksOk(m), { labels: m.linkLabels ?? null, rects: m.linkRects })))
 
 add('AC13', 'Home CLS ≤ 0.1・Home のボタンはすべて 44px 以上', [
   ...Object.entries(vps).map(([vp, v]) => check(`${vp}/cls`, v.homeNoResume && v.homeNoResume.clsAfterTutorial <= 0.1, { load: v.homeNoResume?.clsLoad, afterTutorial: v.homeNoResume?.clsAfterTutorial })),
