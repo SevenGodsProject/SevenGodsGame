@@ -1,0 +1,22 @@
+PASS  AC1      通常勝利後、Result だけで次の行動候補（Primary 1＋Secondary 2）が分かる  (4/4)
+PASS  AC2      Daily 終了後、今日のベストとの関係が分かる（2 回目以降は前回も）  (10/10)
+PASS  AC3      Home 起動後、Daily の敵と残り回数がスクロールなしで読める  (6/6)
+PASS  AC4      続きがあるとき「続きから」が Today より上の Primary  (2/2)
+PASS  AC5      390×844 で主要 CTA（Primary）が viewport 内・44px 以上  (9/9)
+PASS  AC5+     （参考）他の viewport でも Primary が viewport 内  (11/11)
+FAIL  AC6      Result/Home 変更で戦闘画面のレイアウトが変化しない（変更前ビルドと offset 箱が一致）  (0/0)
+PASS  AC7      Daily：開始ごとに回数 +1（Home 経由／もう一度／デッキ調整経由）・seed 不変・残り 0 で開始不可  (20/20)
+PASS  AC9      次の目標は 1 行（SP で最大 2 行）・空でない  (18/18)
+PASS  AC10     Result 初期表示に別アクティビティへの CTA が 2 つ以上（報酬未確定は除外）  (18/18)
+PASS  AC11     挑戦状のコピーは Primary より小さく、DOM 上も後ろ  (18/18)
+FAIL  AC12     PC 1508×660 で Home のリンク（E1 以降は 2 本：戦績・OTOMO）が viewport 内  (0/2)
+        ✗ pc1508/home-noresume [{"top":504,"bottom":548,"height":44,"width":99},{"top":504,"bottom":548,"height":44,"width":166},{"top":504,"bottom":548,"height":44,"width":169}]
+        ✗ pc1508/home-resume [{"top":521,"bottom":565,"height":44,"width":99},{"top":521,"bottom":565,"height":44,"width":166},{"top":521,"bottom":565,"height":44,"width":169}]
+PASS  AC13     Home CLS ≤ 0.1・Home のボタンはすべて 44px 以上  (10/10)
+PASS  AC14     すべてのシナリオで JS error 0  (16/16)
+PASS  AC16     Daily 敗北＋今日のベスト未記録で「同点」を出さない  (4/4)
+PASS  EXTRA-1  横スクロール・横はみ出しなし（Home・Result）  (24/24)
+PASS  EXTRA-2  結果→デッキ調整で直前の敵を引き継ぎ、決着後にホームへ戻っても幽霊の「続きから」が出ない  (6/6)
+PASS  EXTRA-3  報酬未確定（勝利直後）は「報酬カードを選ぶ」だけ  (4/4)
+PASS  EXTRA-4  通常戦の「同じ構成でもう一度」（既存の再戦経路）が同じ敵・通常モードで始まる  (4/4)
+SOME FAILED → C:\Users\kimi1\AppData\Local\Temp\claude\C--Users-kimi1-SevenGodsGame\cb664bad-f5be-482e-96d0-36227d1a0b56\scratchpad\g104\p7\summary.json

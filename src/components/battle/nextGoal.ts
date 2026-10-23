@@ -23,7 +23,7 @@ import { formatMasteryPercent, nextMasteryStep } from './masteryDisplay'
 
 export type ResultAction = 'rematch' | 'adjustDeck' | 'goDaily' | 'home' | 'reselect' | 'startNormal' | 'record'
 
-export type NextGoalId = 'N1' | 'N2' | 'N3' | 'NR1' | 'N4' | 'N5' | 'N6' | 'N7' | 'N8' | 'N9' | 'N10' | 'D1' | 'D2' | 'D3' | 'D4'
+export type NextGoalId = 'N1' | 'N2' | 'N3' | 'NR1' | 'NM1' | 'N4' | 'N5' | 'N6' | 'N7' | 'N8' | 'N9' | 'N10' | 'D1' | 'D2' | 'D3' | 'D4'
 
 /**
  * 決定206（Solve Legibility v1・A）：初陣の勝利直後に 1 回だけ「予告を読む戦い」へ誘導するための入力。
@@ -77,8 +77,11 @@ export type NextGoalInput = {
   todayDaily?: TodayDailyStatus | null
   /** 決定206：初陣勝利→「予告を読む戦い」誘導の判定材料（通常モードの決着時に読む。無ければ NR1 は出ない） */
   earlyRead?: EarlyReadInput | null
+  /** v1.0.4 Retention 束 ②：この勝利の 49 攻略記録（初撃破か・その敵を撃破した神の数）。無ければ NM1 は出ない */
+  matchup?: { isFirstClear: boolean; enemyClearedCount: number } | null
   // ---- 神域挑戦 ----
-  daily?: { isNewBest: boolean; prevBest: number; attemptsLeft: number } | null
+  /** `tomorrowTypeLabel`（v1.0.4 Retention 束 ③）：明日の問いの型。あれば D4 に添える */
+  daily?: { isNewBest: boolean; prevBest: number; attemptsLeft: number; tomorrowTypeLabel?: string } | null
 }
 
 /** 自己ベストとの差が「近い」とみなす割合（仕様 §6-2 N6） */
@@ -98,9 +101,10 @@ function selectDailyGoal(input: NextGoalInput): NextGoal {
   const daily = input.daily ?? { isNewBest: false, prevBest: 0, attemptsLeft: 0 }
   const left = daily.attemptsLeft
   if (left <= 0) {
+    const tomorrow = input.daily?.tomorrowTypeLabel
     return {
       id: 'D4',
-      text: `今日の挑戦は終了。次の敵まで ${formatDailyCountdown(msUntilNextDailyKey(new Date(input.nowMs)))}`,
+      text: `今日の挑戦は終了。${tomorrow ? `明日の問いは【${tomorrow}】・` : ''}次の敵まで ${formatDailyCountdown(msUntilNextDailyKey(new Date(input.nowMs)))}`,
       action: 'home',
     }
   }
@@ -162,6 +166,17 @@ function selectNormalGoal(input: NextGoalInput): NextGoal {
       primaryLabel: '魔獣に挑む（神を選ぶ）',
     }
   }
+  // NM1（v1.0.4 Retention 束 ②・AI 判断）：49 攻略の初撃破の直後だけ、同じ敵を別の神で解き直す目標を示す。
+  // 初撃破は通算 ≤48 回の瞬間で、N4 には Home 等の代替経路があるため N4 より先に評価する。母数 49 は出さない
+  const matchup = input.matchup ?? null
+  if (matchup && matchup.isFirstClear && matchup.enemyClearedCount < 7) {
+    return {
+      id: 'NM1',
+      text: `${input.enemyName}を別の神でも攻略する（この敵 ${matchup.enemyClearedCount}/7 神）`,
+      action: 'reselect',
+      primaryLabel: '別の神で挑む（神を選び直す）',
+    }
+  }
   // N4：今日の神域挑戦がまだ手つかず（1 日 1 回しか成立しない「翌日に戻る理由」）
   const today = input.todayDaily ?? null
   if (today && today.attemptsUsed === 0 && today.attemptsLeft > 0) {
@@ -198,7 +213,7 @@ function selectNormalGoal(input: NextGoalInput): NextGoal {
     if (bond && bond.pointsNeeded > 0 && bond.pointsNeeded <= NEXT_GOAL_BOND_NEAR_POINTS) {
       return {
         id: 'N8',
-        text: `絆称号「${bond.title}」まであと${bond.pointsNeeded}pt${bond.needsDoji ? '（童子形態での対局終了も必要）' : ''}`,
+        text: `絆称号「${bond.title}」まであと${bond.pointsNeeded}pt`,
         action: 'rematch',
       }
     }
