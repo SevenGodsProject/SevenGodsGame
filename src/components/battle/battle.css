@@ -4325,6 +4325,8 @@ body.battle-viewport .card-view > .card-view-cost {
   line-height: 1.5;
 }
 .game-over-defeat-cause strong { color: #fff; }
+/* v1.0.5 Stage B：同じ盤面の前回比（事実 1 行・既存の事実行と同じ大きさ。新色 0） */
+.game-over-same-board { margin: 2px 0 4px; font-size: 12px; line-height: 1.5; color: #f3e6c4; }
 
 /* --- prefers-reduced-motion：揺れ・斬撃・登場・一拍・ステージングを最小化（内容は全て表示） --- */
 @media (prefers-reduced-motion: reduce) {
