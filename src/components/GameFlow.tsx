@@ -9,7 +9,7 @@ import { dailyAttemptsLeft } from '../hooks/dailyStorage'
 import { getRecommendedDeck } from '../core/data/deckBuilder'
 import { dailyBossFor } from '../core/data/dailyBoss'
 import { playTrack } from './battle/bgm'
-import { resolveRematchSeed } from './battle/retrySemantics'
+import { nextSameBoardMemo, resolveRematchSeed, type SameBoardMemo } from './battle/retrySemantics'
 import { computeSnapshot, type FeedbackSnapshot } from './feedback/feedbackSnapshot'
 import { HomeScreen } from './setup/HomeScreen'
 import { GodSelectScreen } from './setup/GodSelectScreen'
@@ -84,6 +84,9 @@ export function GameFlow({ onShowTutorial, onSnapshotChange }: GameFlowProps) {
   const [selectedEnemyId, setSelectedEnemyId] = useState<EnemyId | null>(null)
   // DAILY-01：神域挑戦の日付キー。null＝通常モード
   const [dailyKey, setDailyKey] = useState<string | null>(null)
+  // v1.0.5 Stage B：同じ盤面で直前に負けた結果（前回比の 1 行用）。保存しない＝更新で消える。
+  // 「同じ盤面でもう一度」でだけ作り、選び直し・結果画面の他の出口で捨てる（`retrySemantics.ts`）
+  const [sameBoard, setSameBoard] = useState<SameBoardMemo | null>(null)
   /**
    * Phase 4.6：神域挑戦の開始処理中フラグ。
    *
@@ -160,6 +163,7 @@ export function GameFlow({ onShowTutorial, onSnapshotChange }: GameFlowProps) {
   }
 
   const backToGodSelect = () => {
+    setSameBoard(null)
     engine.resetGame()
     setSetupScreen('godSelect')
     setGodId(null)
@@ -228,6 +232,7 @@ export function GameFlow({ onShowTutorial, onSnapshotChange }: GameFlowProps) {
   const exitResult = (action: ResultTransitionAction) => {
     const finished = engine.state
     if (!finished) return
+    setSameBoard(null)
     const plan = planResultTransition(action, {
       mode: finished.mode === 'daily' ? 'daily' : 'normal',
       dailyKey,
@@ -393,6 +398,7 @@ export function GameFlow({ onShowTutorial, onSnapshotChange }: GameFlowProps) {
     return (
       <BattleScreen
         engine={engine}
+        sameBoard={inDaily ? null : sameBoard}
         rematchLabel={inDaily ? `もう一度挑戦（残り${attemptsLeft ?? 0}回）` : undefined}
         rematchDisabled={inDaily ? (attemptsLeft ?? 0) <= 0 : false}
         onRematch={() => {
@@ -411,6 +417,8 @@ export function GameFlow({ onShowTutorial, onSnapshotChange }: GameFlowProps) {
           // 決定126：「もう一度」は同じ神階・同じ最終試練で再戦する（state側の値を優先）
           // 決定196（Solve Loop v1）：敗北・未撃破なら同じ盤面（同じ seed）で始め直す。
           // 勝利なら seed を渡さず、従来どおり新しい盤面になる（`retrySemantics.ts`）
+          // v1.0.5 Stage B：敗北・未撃破からの再戦だけ「前回」を覚える（勝利なら null に戻す）
+          setSameBoard(engine.state ? nextSameBoardMemo(engine.state, sameBoard) : null)
           engine.startGame(
             godId,
             deck,

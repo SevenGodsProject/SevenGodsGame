@@ -77,6 +77,13 @@ const MEASURE = (oneLine) => {
     cardScrolls: card.scrollHeight > card.clientHeight + 1,
     lineCountAbovePrimary: lineCount,
     defeatFact: document.querySelector('[data-testid="defeat-fact"]')?.textContent.trim() ?? null,
+    // v1.0.5 Stage B：同じ盤面の前回比 1 行（無ければ null）と、その行の折り返し数・横はみ出し
+    sameBoard: (() => {
+      const el = document.querySelector('[data-testid="same-board-diff"]')
+      if (!el) return null
+      const r = el.getBoundingClientRect()
+      return { text: el.textContent.trim(), lines: Math.round(r.height / (parseFloat(getComputedStyle(el).lineHeight) || 18)), overflowX: el.scrollWidth > el.clientWidth + 1, bottom: Math.round(r.bottom) }
+    })(),
     slackPx: slack,
     fitsOneMoreLine: slack >= oneLine,
     overflowX: card.scrollWidth > card.clientWidth + 1,
@@ -126,7 +133,7 @@ writeFileSync(out, JSON.stringify(report, null, 2))
 for (const [id, r] of Object.entries(results)) {
   for (const k of ['defeat1', 'defeat2']) {
     const m = r[k]
-    console.log(`${id} ${k}: ${m ? `primary「${m.primaryText}」 inView=${m.primaryInView} lines=${m.lineCountAbovePrimary} slack=${m.slackPx}px fits+1=${m.fitsOneMoreLine}` : 'n/a'}`)
+    console.log(`${id} ${k}: ${m ? `primary「${m.primaryText}」 inView=${m.primaryInView} lines=${m.lineCountAbovePrimary} slack=${m.slackPx}px fits+1=${m.fitsOneMoreLine} sameBoard=${m.sameBoard ? `「${m.sameBoard.text}」(${m.sameBoard.lines}行・overflowX=${m.sameBoard.overflowX})` : 'なし'}` : 'n/a'}`)
   }
   if (r.error) console.log(`${id} ERROR ${r.error.slice(0, 200)}`)
   console.log(`${id} errors=${r.errors.length}`)

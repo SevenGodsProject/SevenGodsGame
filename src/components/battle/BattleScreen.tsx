@@ -54,6 +54,7 @@ import { formatEvent } from './formatEvent'
 import { READY_MATERIAL_PILOT, readyIgniteDelays } from './readyMaterial'
 import { VictoryStage } from './VictoryStage'
 import { describeMatchupClear } from './matchupCelebration'
+import { describeSameBoardDiff, type SameBoardMemo } from './retrySemantics'
 import './battle.css'
 
 type BattleScreenProps = {
@@ -68,6 +69,8 @@ type BattleScreenProps = {
   /** DAILY-01：神域挑戦時の「もう一度」ボタンの文言・無効化（残り回数）。通常モードでは省略 */
   rematchLabel?: string
   rematchDisabled?: boolean
+  /** v1.0.5 Stage B：同じ盤面で直前に負けた結果（GameFlow が保持）。同じ盤面と確かめられたときだけ前回比 1 行を出す */
+  sameBoard?: SameBoardMemo | null
 }
 
 /**
@@ -84,6 +87,7 @@ export function BattleScreen({
   onResultExit,
   rematchLabel,
   rematchDisabled,
+  sameBoard = null,
 }: BattleScreenProps) {
   const {
     state,
@@ -725,6 +729,7 @@ export function BattleScreen({
           defeatFact={state.status === 'lost' ? deriveDefeatGuardFact(log, state) : null}
           rematchLabel={rematchLabel}
           rematchDisabled={rematchDisabled}
+          sameBoardLine={describeSameBoardDiff(sameBoard, state)}
         />
       )}
     </div>
