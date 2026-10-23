@@ -50,7 +50,7 @@
 | # | 内容 | 扱い |
 |---|---|---|
 | W1 | AC19 の 2 つ目の例外（nextGoal.ts が入力名 `matchup` を持つ）は、決定206 の境界より一段広い | 契約テストを参照語の完全一致に強めた（`7de2a05`）。matchupStorage の語が 1 つでも混ざると赤になることを変異で確認した。決定284 に AI 判断として記録 |
-| W2 | 旧 phase7-p1 受入の AC12 は v1.0.3 でも FAIL（Home のリンク 3 本を 2 本と想定している） | Known（スクリプトの前提が古い・今回の退行ではない）。根拠は `preview-gate/ac12-links.json` |
+| W2 | 旧 phase7-p1 受入の AC12 は v1.0.3 でも FAIL（Home のリンク 3 本を 2 本と想定している） | Known（スクリプトの前提が古い・今回の退行ではない）。根拠は `preview-gate/ac12-links.json`。**今回の Production Gate で許容する根拠と、v1.0.5 での修正は §7** |
 
 ## 4. Rollback 計画（M7）
 
@@ -64,9 +64,16 @@
 ## 5. 公開手順（CEO／PM）
 
 1. CEO：この RC と決定284 を承認する。
-2. CEO：2 段階で push する（pack はローカルの実測。force 不要・master は変わらない）。
-   - 段階 1：`git push origin 57584ad:release/v1_0_3-rc`（v1.0.3 公開記録。`bbc2263` からの fast-forward・**約 25.5 MB**。v1.0.3 では 21.8 MB を 1 段で成功している。408 が出た場合は時間をおいて再試行する）
-   - 段階 2：`git push origin release/v1_0_4-rc`（残り約 0.2 MB）
+2. CEO：2 段階で push する（2026-10-24 再検証・訂正済み。force 不要・master は変わらない・**既存のリモート branch は 1 つも変えない**）。
+   - **段階 1**：`57584ad` を**新しい branch `release/v1_0_4-rc` として**送る（`git push origin 57584ad…:refs/heads/release/v1_0_4-rc`）。**約 25.5 MB**（25,453,108 B）。v1.0.3 で 1 段目に途中の commit `1343024` を新しい RC branch 名で送ったのと同じ形
+   - **段階 2**：同じ branch を RC HEAD へ fast-forward する（`git push origin <RC HEAD>:refs/heads/release/v1_0_4-rc`）。**約 7.4 MB**（7,408,018 B）
+   - **訂正**：初版の手順（段階 1 で `57584ad` を既存の `release/v1_0_3-rc` へ push する）は、既存のリモート branch を `bbc2263` から動かすため取り下げた。`57584ad` を `release/v1_0_3-rc` に置く必要はない。理由は次のとおり
+     - `57584ad` は v1.0.3 の公開「記録」だけで、138 files すべてが docs・evidence（src 0）。内訳は Production Smoke 証跡 135 と `DECISIONS.md`・`RELEASE_STATUS.md`・`V1_0_3_PRODUCTION_SMOKE.md`
+     - `bbc2263` はすでに master `1f713d6` に含まれている
+     - `57584ad` は v1.0.4 RC に merge 済み（`15afa34`）なので、v1.0.4 の PR を merge すれば master に入る
+   - **初版のサイズの訂正**：「残り約 0.2 MB」は 2 つの pack の差を引き算で求めた誤りだった。段階 2 は単独で測ると 7.4 MB
+   - **自動で動くもの**：CI（`.github/workflows/ci.yml`）は master への push／PR だけが対象なので、どちらの段階でも動かない。`vercel.json` は無い（Vercel の Git 連携が既定の設定なら Preview deploy が作られうるが、Production は master の merge だけ。v1.0.3 の RC push と同じ条件）
+   - 408 が出た場合は時間をおいて同じコマンドを再試行する（どちらも fast-forward か新規作成なので、再試行しても安全）
 3. PM：PR `release/v1_0_4-rc` → master を作成。必須 check（tsc／oxlint／vitest／build）が GREEN であることを確認する。
 4. CEO：merge する → Vercel が自動で deploy。
 5. PM：Production Smoke を実施する（v1.0.3 の S1〜S9 に準じる。S1 `v1.0.4 (<merge sha>)`・旧セーブ 44/44・敗北画面 18/18・bundle は sha を正規化して byte 一致）。加えて Retention の G4a（NM1）と G3（今日の問い）を 1 回ずつ確認する。
@@ -84,5 +91,21 @@ node scripts/v1_0_3-rc/defeat-check.mjs docs/evidence/v1_0_4-rc/07d-defeat/defea
 npx vite preview --port 4205 --strictPort   # lane3 = v1.0.3 build
 PLAYWRIGHT_MODULE=<playwright/index.mjs> node scripts/release-audit/save-migration.mjs docs/evidence/v1_0_4-rc/09-save-migration/result.json http://localhost:4205 http://localhost:4206
 ```
+
+## 7. AC12（旧 phase7-p1 受入）の既存 FAIL — 今回の Production Gate で許容する根拠と v1.0.5 の修正候補
+
+### 7-1. 許容する根拠（AI 判断）
+
+1. **退行ではない**：v1.0.3 の build（Production と同じ runtime）でも同じく 0/2 FAIL（`preview-gate/phase7-summary-v103.txt`）。FAIL は `4bfff2b`（Legal／Credits 画面 v1・v1.0.0 系）で Home のリンクが 3 本（戦績・OTOMO・クレジット）になって以来、毎回出ている。
+2. **AC12 が守りたいもの自体は満たしている**：判定は「PC 1508×660 で Home のリンクが viewport 内」。実測で 3 本とも viewport 内にある：v1.0.3 は top 495・bottom 539、v1.0.4 は top 504・bottom 548（vh 660・余白 112px）。FAIL の原因は `linksInView.length === 2` という**本数の決め打ち**だけ。v1.0.4 でリンクが 9px 下がったのは Home Today の 1 行追加によるもので、G6（高さ増 ≤1 行・CTA と Primary は画面内）で PASS。
+3. **Production Gate の必須項目ではない**：v1.0.2／v1.0.3 の RC Gate と Production Smoke は、どちらも phase7-p1 受入を必須項目に入れておらず、v1.0.3 はこの FAIL を抱えたまま公開・Smoke PASS している。今回は Retention の変更確認（AC2・AC6・AC7）のために補助で流しただけ。
+4. **v1.0.4 の差分は Home のリンクに触れていない**：`HomeScreen.tsx` の差分 0（変更は `HomeTodayPanel.tsx` だけ）。
+
+### 7-2. v1.0.5 の修正候補（スクリプトのみ・runtime 0）
+
+- `scripts/phase7-p1/summarize.mjs:123` の AC12 を、本数の決め打ち（`=== 2`）から**ラベルの集合の一致**に改める。例：リンクの文言が `['戦績', 'OTOMO', 'クレジット']` と一致し、かつすべて viewport 内。
+- 「本数を変えたら判定も直す」ことが分かるように、判定名の「E1 以降は 2 本」を「Home のリンク（戦績・OTOMO・クレジット）」に直す。
+- リンクが減る・画面外に出る・ラベルが変わる、のいずれでも FAIL になることを、AC2 と同じく誤りのパターンで確認する（期待値を緩めるだけの変更にしない）。
+- 修正後は v1.0.3／v1.0.4 の両 build で PASS、誤りのパターンで FAIL になることを確かめて Known から外す。
 
 実施条件：PC のメモリは空き約 0.8GB。preview・Playwright・build は 1 本ずつ直列で実行し、同時には動かしていない。

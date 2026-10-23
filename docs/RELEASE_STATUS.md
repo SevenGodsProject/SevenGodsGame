@@ -12,7 +12,7 @@ Production の「確定状態」を一目で確認するための要約です。
 | **RC** | `release/v1_0_4-rc`（worktree `SevenGodsGame-v104rc`・起点 master `1f713d6`）・Gate HEAD `6a84e36`・**未 push** |
 | **Release Gate** | `docs/V1_0_4_RC_GATE.md`（vitest 1,544・build `index-_60cvbl_.js` 473.99 kB・受入 44/44・敗北 18/18・旧セーブ 44/44・Home `v1.0.4 (6a84e36)`）＋`docs/V1_0_4_PREVIEW_GATE.md`（G1〜G8・AC6）＋独立監査 `docs/V1_0_4_INDEPENDENT_RELEASE_AUDIT.md`（BLOCKER 0・M1〜M7 充足） |
 | **Rollback 先（公開後）** | deployment **`7256475048`**（v1.0.3・`1f713d6`）。NM1 単独撤回は RC Gate §4 |
-| **CEO 判断** | Production 公開承認 1 件（2 段階 push：`57584ad`→`release/v1_0_3-rc` 約 25.5 MB、RC 約 0.2 MB） |
+| **CEO 判断** | Production 公開承認 1 件（2 段階 push・新規 branch `release/v1_0_4-rc` のみ：段階 1＝`57584ad` 約 25.5 MB、段階 2＝RC HEAD 約 7.4 MB。既存リモート branch は変更しない＝RC Gate §5） |
 
 ### A-0. v1.0.3 公開（2026-10-22〜23・決定283 PRODUCTION LIVE）
 
