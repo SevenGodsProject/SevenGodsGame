@@ -1,5 +1,6 @@
 import { useLayoutEffect, useRef, useState } from 'react'
 import { hpBand } from './visualHp'
+import { sfx } from './sound'
 
 /**
  * Combat Feel Premium v2 — Enemy Break v1「追い詰めた」の一回性反応（表示専用）。
@@ -90,4 +91,36 @@ export function useEnemyBreak(hpShown: number, maxHp: number, suppress: boolean)
     setFx((cur) => nextEnemyBreak(cur, prev, band, suppress))
   }, [band, suppress])
   return fx
+}
+
+/**
+ * Enemy Break SE v1（v1.0.5・docs/V1_0_5_BREAK_SE_V1.md）：敵が溜め予告中（EnemyPanel が
+ * `enemy-avatar-charging` を付けている同じ真偽値）なら half は鳴らさず quarter だけ鳴らす
+ * （溜めの警告音と同じ音源が「敵の予告」と取り違えられないように。quarter は 1 戦 1 回の決め所なので残す）
+ */
+export function shouldPlayBreakSe(level: BreakLevel, charging: boolean): boolean {
+  return !(charging && level === 'half')
+}
+
+/**
+ * この描画で鳴らす崩しの音（純関数）。`playedKey` より key が進んだ崩しだけを 1 回返す
+ * （同じ key の再描画・帯が上がって level が外れた描画・初回 key 0 では null）
+ */
+export function breakSeToPlay(fx: EnemyBreakFx, playedKey: number, charging: boolean): BreakLevel | null {
+  if (fx.key <= playedKey || fx.level === null) return null
+  return shouldPlayBreakSe(fx.level, charging) ? fx.level : null
+}
+
+/**
+ * Enemy Break SE v1：崩し（useEnemyBreak の key）が進んだ同じ描画サイクルで 1 回だけ鳴らす hook。
+ * 起点は崩しのクラスと同じ useLayoutEffect＝着弾 → hit stop → HP_LAG_MS の後。新しい timer は作らない
+ * （着弾時刻表は不変）。ミュートは sound.ts の経路に従う。reduced-motion でも音は鳴らす（決定257 の方針）
+ */
+export function useEnemyBreakSe(fx: EnemyBreakFx, charging: boolean): void {
+  const playedKey = useRef(fx.key)
+  useLayoutEffect(() => {
+    const level = breakSeToPlay(fx, playedKey.current, charging)
+    if (fx.key > playedKey.current) playedKey.current = fx.key
+    if (level) sfx.enemyBreak(level)
+  }, [fx, charging])
 }
