@@ -31,52 +31,6 @@ const browser = await chromium.launch({ headless: true })
 const report = { base, startedAt: new Date().toISOString(), viewports: {}, errors: [] }
 
 // ---------- ブラウザ内で評価する計測関数 ----------
-const HOME_METRICS = () => {
-  const vh = window.innerHeight
-  const vw = window.innerWidth
-  const inView = (el) => {
-    if (!el) return false
-    const r = el.getBoundingClientRect()
-    return r.width > 0 && r.height > 0 && r.top >= 0 && r.bottom <= vh && r.left >= 0 && r.right <= vw
-  }
-  const rect = (el) => {
-    if (!el) return null
-    const r = el.getBoundingClientRect()
-    return { top: Math.round(r.top), bottom: Math.round(r.bottom), height: Math.round(r.height), width: Math.round(r.width) }
-  }
-  const primary = document.querySelector('.home-screen .home-cta-primary')
-  const today = document.querySelector('[data-testid="home-today"]')
-  const links = [...document.querySelectorAll('.home-links .home-howto-button')]
-  const buttons = [...document.querySelectorAll('.home-screen button')].map((b) => ({ text: b.textContent.trim().replace(/\s+/g, ' ').slice(0, 40), height: Math.round(b.getBoundingClientRect().height) }))
-  return {
-    vw,
-    vh,
-    scrollX: window.scrollX,
-    overflowX: document.documentElement.scrollWidth > vw + 1,
-    primaryText: primary?.textContent.trim().replace(/\s+/g, '') ?? null,
-    primaryRect: rect(primary),
-    resume: !!document.querySelector('[data-testid="home-resume"]'),
-    resumeText: document.querySelector('[data-testid="home-resume"]')?.textContent.trim().replace(/\s+/g, ' ') ?? null,
-    todayRect: rect(today),
-    todayEnemy: document.querySelector('[data-testid="home-today-enemy"]')?.textContent.trim() ?? null,
-    todayEnemyInView: inView(document.querySelector('[data-testid="home-today-enemy"]')),
-    todayAttempts: document.querySelector('[data-testid="home-today-attempts"]')?.textContent.trim() ?? null,
-    todayAttemptsInView: inView(document.querySelector('[data-testid="home-today-attempts"]')),
-    todayBest: document.querySelector('[data-testid="home-today-best"]')?.textContent.trim() ?? null,
-    todayCta: document.querySelector('[data-testid="home-today-cta"]')?.textContent.trim() ?? null,
-    todayCtaInView: inView(document.querySelector('[data-testid="home-today-cta"]')),
-    countdown: document.querySelector('[data-testid="home-today-countdown"]')?.textContent.trim() ?? null,
-    progress: [...document.querySelectorAll('[data-testid="home-progress"] li')].map((li) => li.textContent.trim()),
-    primaryAboveToday: primary && today ? primary.getBoundingClientRect().bottom <= today.getBoundingClientRect().top : null,
-    primaryInView: inView(primary),
-    linksInView: links.map(inView),
-    linkRects: links.map(rect),
-    buttons,
-    minButtonHeight: Math.min(...buttons.map((b) => b.height)),
-    hasOldDailyButton: !!document.querySelector('.home-cta-daily'),
-  }
-}
-
 const RESULT_METRICS = () => {
   const vh = window.innerHeight
   const vw = window.innerWidth
@@ -120,35 +74,6 @@ const RESULT_METRICS = () => {
     pageOverflowX: document.documentElement.scrollWidth > vw + 1,
     scrollX: window.scrollX,
   }
-}
-
-const BATTLE_LAYOUT = () => {
-  const root = document.querySelector('.battle')
-  if (!root) return null
-  const out = {}
-  const box = (el) => {
-    let x = 0
-    let y = 0
-    let e = el
-    while (e) {
-      x += e.offsetLeft
-      y += e.offsetTop
-      e = e.offsetParent
-    }
-    return [x, y, el.offsetWidth, el.offsetHeight]
-  }
-  const walk = (el, path, depth) => {
-    if (depth > 5) return
-    ;[...el.children].forEach((c, i) => {
-      if (!(c instanceof HTMLElement)) return
-      const cls = (c.getAttribute('class') ?? '').split(/\s+/).filter((k) => k && !/(active|flash|tier|shake|pop|anim|glow|ready|pulse|hit|burst|cutin|callout|toast|float|enter|leave|show)/i.test(k)).slice(0, 2).join('.')
-      const key = `${path}/${c.tagName.toLowerCase()}${cls ? '.' + cls : ''}[${i}]`
-      out[key] = box(c)
-      walk(c, key, depth + 1)
-    })
-  }
-  walk(root, 'battle', 0)
-  return { vw: window.innerWidth, vh: window.innerHeight, scrollY: window.scrollY, boxes: out }
 }
 
 const STORAGE = () => {
