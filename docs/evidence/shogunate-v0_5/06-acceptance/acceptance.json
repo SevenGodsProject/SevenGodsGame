@@ -1,0 +1,792 @@
+{
+  "base": "http://localhost:4209",
+  "generatedAt": "2026-10-24T13:44:29.269Z",
+  "pass": 138,
+  "total": 138,
+  "results": [
+    {
+      "viewport": "pc",
+      "mode": "normal",
+      "checks": [
+        {
+          "name": "enemy cards = 8 (7 + entrust)",
+          "pass": true,
+          "detail": 8
+        },
+        {
+          "name": "core enemy listed: 試練の影",
+          "pass": true,
+          "detail": 1
+        },
+        {
+          "name": "core enemy listed: 業斧の鬼将",
+          "pass": true,
+          "detail": 1
+        },
+        {
+          "name": "core enemy listed: 藍花の怨霊",
+          "pass": true,
+          "detail": 1
+        },
+        {
+          "name": "core enemy listed: 銀甲の機工師",
+          "pass": true,
+          "detail": 1
+        },
+        {
+          "name": "core enemy listed: 双牙の魔獣",
+          "pass": true,
+          "detail": 1
+        },
+        {
+          "name": "core enemy listed: 蒼海の龍神",
+          "pass": true,
+          "detail": 1
+        },
+        {
+          "name": "core enemy listed: 乱舞の道化",
+          "pass": true,
+          "detail": 1
+        },
+        {
+          "name": "tadatsugu card hidden",
+          "pass": true
+        },
+        {
+          "name": "threat card hidden",
+          "pass": true
+        },
+        {
+          "name": "shogunate chip (enemy-pilot-chip[data-pilot=shogunate]) hidden",
+          "pass": true
+        },
+        {
+          "name": "threat chip (enemy-pilot-chip[data-pilot=threat]) hidden",
+          "pass": true
+        },
+        {
+          "name": "shogunate notice (enemy-shogunate-notice) hidden",
+          "pass": true
+        },
+        {
+          "name": "threat notice (enemy-pilot-notice) hidden",
+          "pass": true
+        },
+        {
+          "name": "JS error 0",
+          "pass": true,
+          "detail": []
+        }
+      ]
+    },
+    {
+      "viewport": "pc",
+      "mode": "shogunate",
+      "checks": [
+        {
+          "name": "enemy cards = 9 (7 + entrust + tadatsugu)",
+          "pass": true,
+          "detail": 9
+        },
+        {
+          "name": "core enemy listed: 試練の影",
+          "pass": true,
+          "detail": 1
+        },
+        {
+          "name": "core enemy listed: 業斧の鬼将",
+          "pass": true,
+          "detail": 1
+        },
+        {
+          "name": "core enemy listed: 藍花の怨霊",
+          "pass": true,
+          "detail": 1
+        },
+        {
+          "name": "core enemy listed: 銀甲の機工師",
+          "pass": true,
+          "detail": 1
+        },
+        {
+          "name": "core enemy listed: 双牙の魔獣",
+          "pass": true,
+          "detail": 1
+        },
+        {
+          "name": "core enemy listed: 蒼海の龍神",
+          "pass": true,
+          "detail": 1
+        },
+        {
+          "name": "core enemy listed: 乱舞の道化",
+          "pass": true,
+          "detail": 1
+        },
+        {
+          "name": "tadatsugu card shown",
+          "pass": true
+        },
+        {
+          "name": "threat card hidden",
+          "pass": true
+        },
+        {
+          "name": "shogunate chip (enemy-pilot-chip[data-pilot=shogunate]) shown 1",
+          "pass": true
+        },
+        {
+          "name": "threat chip (enemy-pilot-chip[data-pilot=threat]) hidden",
+          "pass": true
+        },
+        {
+          "name": "shogunate notice (enemy-shogunate-notice) shown",
+          "pass": true
+        },
+        {
+          "name": "threat notice (enemy-pilot-notice) hidden",
+          "pass": true
+        },
+        {
+          "name": "shogunate chip text = 幕府 Pilot・記録に残らない",
+          "pass": true,
+          "detail": "幕府 Pilot・記録に残らない"
+        },
+        {
+          "name": "shogunate notice mentions 将軍家 Pilot v0.4 ・ 忠次 ・ 残りません",
+          "pass": true,
+          "detail": "将軍家 Pilot v0.4：忠次との戦いは戦績・セーブ・報酬に残りません。既存 7 体と同じ神・デッキで比べてください。"
+        },
+        {
+          "name": "no horizontal overflow on enemy select",
+          "pass": true,
+          "detail": {
+            "scrollWidth": 1508,
+            "innerWidth": 1508
+          }
+        },
+        {
+          "name": "deck builder shows tadatsugu as opponent",
+          "pass": true
+        },
+        {
+          "name": "battle started (round end button visible)",
+          "pass": true
+        },
+        {
+          "name": "enemy name shown",
+          "pass": true
+        },
+        {
+          "name": "official art is the enemy avatar (.enemy-avatar background-image)",
+          "pass": true,
+          "detail": "url(\"http://localhost:4209/assets/enemies/tadatsugu/art.webp\")"
+        },
+        {
+          "name": "official art served 200",
+          "pass": true,
+          "detail": {
+            "/assets/backgrounds/stages/08-shogunate-camp.webp": 200,
+            "/assets/enemies/tadatsugu/art.webp": 200
+          }
+        },
+        {
+          "name": ".battle[data-enemy=enemy_08] and .enemy-panel[data-enemy=enemy_08]",
+          "pass": true,
+          "detail": {
+            "avatarBg": "url(\"http://localhost:4209/assets/enemies/tadatsugu/art.webp\")",
+            "battleDataEnemy": "enemy_08",
+            "panelDataEnemy": "enemy_08",
+            "stage": true
+          }
+        },
+        {
+          "name": "stage background injected (08-shogunate-camp)",
+          "pass": true
+        },
+        {
+          "name": "stage background served 200",
+          "pass": true,
+          "detail": {
+            "/assets/backgrounds/stages/08-shogunate-camp.webp": 200,
+            "/assets/enemies/tadatsugu/art.webp": 200
+          }
+        },
+        {
+          "name": "no battleSave while playing a pilot battle",
+          "pass": true,
+          "detail": [
+            "sevengods.deckPreference",
+            "sevengods.matchups"
+          ]
+        },
+        {
+          "name": "R1 intent = ⚔ 50",
+          "pass": true,
+          "detail": "50"
+        },
+        {
+          "name": "R2 intent = ⚔ 90",
+          "pass": true,
+          "detail": "90"
+        },
+        {
+          "name": "R3 intent = charge「⚠ 傷が浅ければ次は総攻め」",
+          "pass": true,
+          "detail": "⚠ 傷が浅ければ次は総攻め"
+        },
+        {
+          "name": "R3 avatar has enemy-avatar-charging-super (必殺充填)",
+          "pass": true,
+          "detail": {
+            "className": "enemy-avatar enemy-avatar-charging enemy-avatar-charging-super",
+            "boxShadow": "none",
+            "filter": "drop-shadow(rgba(0, 0, 0, 0.8) 0px 12px 16px) drop-shadow(rgb(255, 92, 92) 0px 0px 3px) drop-shadow(rgba(255, 92, 92, 0.8) 0px 0px 36px) drop-shadow(rgba(255, 217, 161, 0.533) 0px 0px 14px) drop-shado"
+          }
+        },
+        {
+          "name": "R3 glow is drop-shadow (box-shadow none・filter に drop-shadow)",
+          "pass": true,
+          "detail": {
+            "className": "enemy-avatar enemy-avatar-charging enemy-avatar-charging-super",
+            "boxShadow": "none",
+            "filter": "drop-shadow(rgba(0, 0, 0, 0.8) 0px 12px 16px) drop-shadow(rgb(255, 92, 92) 0px 0px 3px) drop-shadow(rgba(255, 92, 92, 0.8) 0px 0px 36px) drop-shadow(rgba(255, 217, 161, 0.533) 0px 0px 14px) drop-shado"
+          }
+        },
+        {
+          "name": "R4 intent = 軍略・総攻め 240 (no damage dealt → else branch)",
+          "pass": true,
+          "detail": "軍略・総攻め 240"
+        },
+        {
+          "name": "battle finished (result shown)",
+          "pass": true
+        },
+        {
+          "name": "pilot battle wrote nothing (keys after = keys before)",
+          "pass": true,
+          "detail": {
+            "keysBefore": [
+              "sevengods.deckPreference",
+              "sevengods.matchups"
+            ],
+            "keysAfter": [
+              "sevengods.deckPreference",
+              "sevengods.matchups"
+            ]
+          }
+        },
+        {
+          "name": "no record keys after a pilot battle",
+          "pass": true,
+          "detail": [
+            "sevengods.deckPreference",
+            "sevengods.matchups"
+          ]
+        },
+        {
+          "name": "JS error 0",
+          "pass": true,
+          "detail": []
+        }
+      ],
+      "intents": [
+        "50",
+        "90",
+        "⚠ 傷が浅ければ次は総攻め",
+        "軍略・総攻め 240",
+        "行動予告なし"
+      ],
+      "r3Glow": {
+        "className": "enemy-avatar enemy-avatar-charging enemy-avatar-charging-super",
+        "boxShadow": "none",
+        "filter": "drop-shadow(rgba(0, 0, 0, 0.8) 0px 12px 16px) drop-shadow(rgb(255, 92, 92) 0px 0px 3px) drop-shadow(rgba(255, 92, 92, 0.8) 0px 0px 36px) drop-shadow(rgba(255, 217, 161, 0.533) 0px 0px 14px) drop-shado"
+      }
+    },
+    {
+      "viewport": "pc",
+      "mode": "all",
+      "checks": [
+        {
+          "name": "enemy cards = 10 (7 + entrust + tadatsugu + threat)",
+          "pass": true,
+          "detail": 10
+        },
+        {
+          "name": "core enemy listed: 試練の影",
+          "pass": true,
+          "detail": 1
+        },
+        {
+          "name": "core enemy listed: 業斧の鬼将",
+          "pass": true,
+          "detail": 2
+        },
+        {
+          "name": "core enemy listed: 藍花の怨霊",
+          "pass": true,
+          "detail": 1
+        },
+        {
+          "name": "core enemy listed: 銀甲の機工師",
+          "pass": true,
+          "detail": 1
+        },
+        {
+          "name": "core enemy listed: 双牙の魔獣",
+          "pass": true,
+          "detail": 1
+        },
+        {
+          "name": "core enemy listed: 蒼海の龍神",
+          "pass": true,
+          "detail": 1
+        },
+        {
+          "name": "core enemy listed: 乱舞の道化",
+          "pass": true,
+          "detail": 1
+        },
+        {
+          "name": "tadatsugu card shown",
+          "pass": true
+        },
+        {
+          "name": "threat card shown",
+          "pass": true
+        },
+        {
+          "name": "shogunate chip (enemy-pilot-chip[data-pilot=shogunate]) shown 1",
+          "pass": true
+        },
+        {
+          "name": "threat chip (enemy-pilot-chip[data-pilot=threat]) shown 1",
+          "pass": true
+        },
+        {
+          "name": "shogunate notice (enemy-shogunate-notice) shown",
+          "pass": true
+        },
+        {
+          "name": "threat notice (enemy-pilot-notice) shown",
+          "pass": true
+        },
+        {
+          "name": "shogunate chip text = 幕府 Pilot・記録に残らない",
+          "pass": true,
+          "detail": "幕府 Pilot・記録に残らない"
+        },
+        {
+          "name": "shogunate notice mentions 将軍家 Pilot v0.4 ・ 忠次 ・ 残りません",
+          "pass": true,
+          "detail": "将軍家 Pilot v0.4：忠次との戦いは戦績・セーブ・報酬に残りません。既存 7 体と同じ神・デッキで比べてください。"
+        },
+        {
+          "name": "no horizontal overflow on enemy select",
+          "pass": true,
+          "detail": {
+            "scrollWidth": 1508,
+            "innerWidth": 1508
+          }
+        },
+        {
+          "name": "JS error 0",
+          "pass": true,
+          "detail": []
+        }
+      ]
+    },
+    {
+      "viewport": "sp375",
+      "mode": "normal",
+      "checks": [
+        {
+          "name": "enemy cards = 8 (7 + entrust)",
+          "pass": true,
+          "detail": 8
+        },
+        {
+          "name": "core enemy listed: 試練の影",
+          "pass": true,
+          "detail": 1
+        },
+        {
+          "name": "core enemy listed: 業斧の鬼将",
+          "pass": true,
+          "detail": 1
+        },
+        {
+          "name": "core enemy listed: 藍花の怨霊",
+          "pass": true,
+          "detail": 1
+        },
+        {
+          "name": "core enemy listed: 銀甲の機工師",
+          "pass": true,
+          "detail": 1
+        },
+        {
+          "name": "core enemy listed: 双牙の魔獣",
+          "pass": true,
+          "detail": 1
+        },
+        {
+          "name": "core enemy listed: 蒼海の龍神",
+          "pass": true,
+          "detail": 1
+        },
+        {
+          "name": "core enemy listed: 乱舞の道化",
+          "pass": true,
+          "detail": 1
+        },
+        {
+          "name": "tadatsugu card hidden",
+          "pass": true
+        },
+        {
+          "name": "threat card hidden",
+          "pass": true
+        },
+        {
+          "name": "shogunate chip (enemy-pilot-chip[data-pilot=shogunate]) hidden",
+          "pass": true
+        },
+        {
+          "name": "threat chip (enemy-pilot-chip[data-pilot=threat]) hidden",
+          "pass": true
+        },
+        {
+          "name": "shogunate notice (enemy-shogunate-notice) hidden",
+          "pass": true
+        },
+        {
+          "name": "threat notice (enemy-pilot-notice) hidden",
+          "pass": true
+        },
+        {
+          "name": "JS error 0",
+          "pass": true,
+          "detail": []
+        }
+      ]
+    },
+    {
+      "viewport": "sp375",
+      "mode": "shogunate",
+      "checks": [
+        {
+          "name": "enemy cards = 9 (7 + entrust + tadatsugu)",
+          "pass": true,
+          "detail": 9
+        },
+        {
+          "name": "core enemy listed: 試練の影",
+          "pass": true,
+          "detail": 1
+        },
+        {
+          "name": "core enemy listed: 業斧の鬼将",
+          "pass": true,
+          "detail": 1
+        },
+        {
+          "name": "core enemy listed: 藍花の怨霊",
+          "pass": true,
+          "detail": 1
+        },
+        {
+          "name": "core enemy listed: 銀甲の機工師",
+          "pass": true,
+          "detail": 1
+        },
+        {
+          "name": "core enemy listed: 双牙の魔獣",
+          "pass": true,
+          "detail": 1
+        },
+        {
+          "name": "core enemy listed: 蒼海の龍神",
+          "pass": true,
+          "detail": 1
+        },
+        {
+          "name": "core enemy listed: 乱舞の道化",
+          "pass": true,
+          "detail": 1
+        },
+        {
+          "name": "tadatsugu card shown",
+          "pass": true
+        },
+        {
+          "name": "threat card hidden",
+          "pass": true
+        },
+        {
+          "name": "shogunate chip (enemy-pilot-chip[data-pilot=shogunate]) shown 1",
+          "pass": true
+        },
+        {
+          "name": "threat chip (enemy-pilot-chip[data-pilot=threat]) hidden",
+          "pass": true
+        },
+        {
+          "name": "shogunate notice (enemy-shogunate-notice) shown",
+          "pass": true
+        },
+        {
+          "name": "threat notice (enemy-pilot-notice) hidden",
+          "pass": true
+        },
+        {
+          "name": "shogunate chip text = 幕府 Pilot・記録に残らない",
+          "pass": true,
+          "detail": "幕府 Pilot・記録に残らない"
+        },
+        {
+          "name": "shogunate notice mentions 将軍家 Pilot v0.4 ・ 忠次 ・ 残りません",
+          "pass": true,
+          "detail": "将軍家 Pilot v0.4：忠次との戦いは戦績・セーブ・報酬に残りません。既存 7 体と同じ神・デッキで比べてください。"
+        },
+        {
+          "name": "no horizontal overflow on enemy select",
+          "pass": true,
+          "detail": {
+            "scrollWidth": 375,
+            "innerWidth": 375
+          }
+        },
+        {
+          "name": "deck builder shows tadatsugu as opponent",
+          "pass": true
+        },
+        {
+          "name": "battle started (round end button visible)",
+          "pass": true
+        },
+        {
+          "name": "enemy name shown",
+          "pass": true
+        },
+        {
+          "name": "official art is the enemy avatar (.enemy-avatar background-image)",
+          "pass": true,
+          "detail": "url(\"http://localhost:4209/assets/enemies/tadatsugu/art.webp\")"
+        },
+        {
+          "name": "official art served 200",
+          "pass": true,
+          "detail": {
+            "/assets/backgrounds/stages/08-shogunate-camp.webp": 200,
+            "/assets/enemies/tadatsugu/art.webp": 200
+          }
+        },
+        {
+          "name": ".battle[data-enemy=enemy_08] and .enemy-panel[data-enemy=enemy_08]",
+          "pass": true,
+          "detail": {
+            "avatarBg": "url(\"http://localhost:4209/assets/enemies/tadatsugu/art.webp\")",
+            "battleDataEnemy": "enemy_08",
+            "panelDataEnemy": "enemy_08",
+            "stage": true
+          }
+        },
+        {
+          "name": "stage background injected (08-shogunate-camp)",
+          "pass": true
+        },
+        {
+          "name": "stage background served 200",
+          "pass": true,
+          "detail": {
+            "/assets/backgrounds/stages/08-shogunate-camp.webp": 200,
+            "/assets/enemies/tadatsugu/art.webp": 200
+          }
+        },
+        {
+          "name": "no battleSave while playing a pilot battle",
+          "pass": true,
+          "detail": [
+            "sevengods.deckPreference",
+            "sevengods.matchups"
+          ]
+        },
+        {
+          "name": "R1 intent = ⚔ 50",
+          "pass": true,
+          "detail": "50"
+        },
+        {
+          "name": "R2 intent = ⚔ 90",
+          "pass": true,
+          "detail": "90"
+        },
+        {
+          "name": "R3 intent = charge「⚠ 傷が浅ければ次は総攻め」",
+          "pass": true,
+          "detail": "⚠ 傷が浅ければ次は総攻め"
+        },
+        {
+          "name": "R3 avatar has enemy-avatar-charging-super (必殺充填)",
+          "pass": true,
+          "detail": {
+            "className": "enemy-avatar enemy-avatar-charging enemy-avatar-charging-super",
+            "boxShadow": "none",
+            "filter": "drop-shadow(rgba(0, 0, 0, 0.8) 0px 12px 16px) drop-shadow(rgb(255, 92, 92) 0px 0px 3px) drop-shadow(rgba(255, 92, 92, 0.8) 0px 0px 36px) drop-shadow(rgba(255, 217, 161, 0.533) 0px 0px 14px) drop-shado"
+          }
+        },
+        {
+          "name": "R3 glow is drop-shadow (box-shadow none・filter に drop-shadow)",
+          "pass": true,
+          "detail": {
+            "className": "enemy-avatar enemy-avatar-charging enemy-avatar-charging-super",
+            "boxShadow": "none",
+            "filter": "drop-shadow(rgba(0, 0, 0, 0.8) 0px 12px 16px) drop-shadow(rgb(255, 92, 92) 0px 0px 3px) drop-shadow(rgba(255, 92, 92, 0.8) 0px 0px 36px) drop-shadow(rgba(255, 217, 161, 0.533) 0px 0px 14px) drop-shado"
+          }
+        },
+        {
+          "name": "R4 intent = 軍略・総攻め 240 (no damage dealt → else branch)",
+          "pass": true,
+          "detail": "軍略・総攻め 240"
+        },
+        {
+          "name": "battle finished (result shown)",
+          "pass": true
+        },
+        {
+          "name": "pilot battle wrote nothing (keys after = keys before)",
+          "pass": true,
+          "detail": {
+            "keysBefore": [
+              "sevengods.deckPreference",
+              "sevengods.matchups"
+            ],
+            "keysAfter": [
+              "sevengods.deckPreference",
+              "sevengods.matchups"
+            ]
+          }
+        },
+        {
+          "name": "no record keys after a pilot battle",
+          "pass": true,
+          "detail": [
+            "sevengods.deckPreference",
+            "sevengods.matchups"
+          ]
+        },
+        {
+          "name": "JS error 0",
+          "pass": true,
+          "detail": []
+        }
+      ],
+      "intents": [
+        "50",
+        "90",
+        "⚠ 傷が浅ければ次は総攻め",
+        "軍略・総攻め 240",
+        "行動予告なし"
+      ],
+      "r3Glow": {
+        "className": "enemy-avatar enemy-avatar-charging enemy-avatar-charging-super",
+        "boxShadow": "none",
+        "filter": "drop-shadow(rgba(0, 0, 0, 0.8) 0px 12px 16px) drop-shadow(rgb(255, 92, 92) 0px 0px 3px) drop-shadow(rgba(255, 92, 92, 0.8) 0px 0px 36px) drop-shadow(rgba(255, 217, 161, 0.533) 0px 0px 14px) drop-shado"
+      }
+    },
+    {
+      "viewport": "sp375",
+      "mode": "all",
+      "checks": [
+        {
+          "name": "enemy cards = 10 (7 + entrust + tadatsugu + threat)",
+          "pass": true,
+          "detail": 10
+        },
+        {
+          "name": "core enemy listed: 試練の影",
+          "pass": true,
+          "detail": 1
+        },
+        {
+          "name": "core enemy listed: 業斧の鬼将",
+          "pass": true,
+          "detail": 2
+        },
+        {
+          "name": "core enemy listed: 藍花の怨霊",
+          "pass": true,
+          "detail": 1
+        },
+        {
+          "name": "core enemy listed: 銀甲の機工師",
+          "pass": true,
+          "detail": 1
+        },
+        {
+          "name": "core enemy listed: 双牙の魔獣",
+          "pass": true,
+          "detail": 1
+        },
+        {
+          "name": "core enemy listed: 蒼海の龍神",
+          "pass": true,
+          "detail": 1
+        },
+        {
+          "name": "core enemy listed: 乱舞の道化",
+          "pass": true,
+          "detail": 1
+        },
+        {
+          "name": "tadatsugu card shown",
+          "pass": true
+        },
+        {
+          "name": "threat card shown",
+          "pass": true
+        },
+        {
+          "name": "shogunate chip (enemy-pilot-chip[data-pilot=shogunate]) shown 1",
+          "pass": true
+        },
+        {
+          "name": "threat chip (enemy-pilot-chip[data-pilot=threat]) shown 1",
+          "pass": true
+        },
+        {
+          "name": "shogunate notice (enemy-shogunate-notice) shown",
+          "pass": true
+        },
+        {
+          "name": "threat notice (enemy-pilot-notice) shown",
+          "pass": true
+        },
+        {
+          "name": "shogunate chip text = 幕府 Pilot・記録に残らない",
+          "pass": true,
+          "detail": "幕府 Pilot・記録に残らない"
+        },
+        {
+          "name": "shogunate notice mentions 将軍家 Pilot v0.4 ・ 忠次 ・ 残りません",
+          "pass": true,
+          "detail": "将軍家 Pilot v0.4：忠次との戦いは戦績・セーブ・報酬に残りません。既存 7 体と同じ神・デッキで比べてください。"
+        },
+        {
+          "name": "no horizontal overflow on enemy select",
+          "pass": true,
+          "detail": {
+            "scrollWidth": 375,
+            "innerWidth": 375
+          }
+        },
+        {
+          "name": "JS error 0",
+          "pass": true,
+          "detail": []
+        }
+      ]
+    }
+  ]
+}
