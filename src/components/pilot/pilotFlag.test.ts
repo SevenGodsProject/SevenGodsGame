@@ -2,17 +2,18 @@
 import { readFileSync } from 'node:fs'
 import { fileURLToPath } from 'node:url'
 import { afterEach, describe, expect, it } from 'vitest'
-import { isPilotEnabled, parsePilotFlag, resetPilotFlagForTest } from './pilotFlag'
+import { PILOT_KINDS, isPilotEnabled, parsePilotFlag, parsePilotFlags, resetPilotFlagForTest } from './pilotFlag'
 
 /**
  * Threat Branch Pilot v1：Pilot 専用経路と「既存に影響させない」配線の契約（source-fixed）。
+ * 将軍家 Pilot v0.4：`?pilot=` を集合で読む（`threat`／`shogunate`／`all`／カンマ区切り）。既定（引数なし）は従来どおり threat。
  */
 const read = (rel: string): string => readFileSync(fileURLToPath(new URL(rel, import.meta.url)), 'utf8').replace(/\r\n/g, '\n')
 
 describe('Pilot フラグ（?pilot=threat）', () => {
   afterEach(() => resetPilotFlagForTest())
 
-  it('検索文字列から判定する純関数', () => {
+  it('検索文字列から判定する純関数（既定＝threat。shogunate だけの URL では threat は無効）', () => {
     expect(parsePilotFlag('?pilot=threat')).toBe(true)
     expect(parsePilotFlag('?a=1&pilot=threat&b=2')).toBe(true)
     expect(parsePilotFlag('')).toBe(false)
@@ -23,19 +24,44 @@ describe('Pilot フラグ（?pilot=threat）', () => {
 
   it('window が無い環境（Node）では無効', () => {
     expect(isPilotEnabled()).toBe(false)
+    expect(isPilotEnabled('shogunate')).toBe(false)
+  })
+})
+
+describe('Pilot フラグの集合（v0.4：threat と shogunate の併用）', () => {
+  it('threat／shogunate は互いに独立。all とカンマ区切り・複数指定で両方。不明な値は無視・空白は許容', () => {
+    expect(PILOT_KINDS).toEqual(['threat', 'shogunate'])
+    expect([...parsePilotFlags('?pilot=threat')]).toEqual(['threat'])
+    expect([...parsePilotFlags('?pilot=shogunate')]).toEqual(['shogunate'])
+    expect(parsePilotFlag('?pilot=shogunate', 'shogunate')).toBe(true)
+    expect(parsePilotFlag('?pilot=threat', 'shogunate')).toBe(false)
+    expect([...parsePilotFlags('?pilot=all')].sort()).toEqual(['shogunate', 'threat'])
+    expect([...parsePilotFlags('?pilot=threat,shogunate')].sort()).toEqual(['shogunate', 'threat'])
+    expect([...parsePilotFlags('?pilot=shogunate&pilot=threat')].sort()).toEqual(['shogunate', 'threat'])
+    expect([...parsePilotFlags('?pilot=%20shogunate%20,other')]).toEqual(['shogunate'])
+    expect(parsePilotFlags('?pilot=other').size).toBe(0)
+    expect(parsePilotFlags('').size).toBe(0)
+    expect(parsePilotFlags('?pilot=').size).toBe(0)
   })
 })
 
 describe('配線（既存の導線・記録に影響させない）', () => {
-  it('Enemy Select：通常は CORE_ENEMIES、Pilot 時だけ PILOT_ENEMIES を末尾に足す。Pilot 敵には印と案内（新規 CSS 0）', () => {
+  it('Enemy Select：通常は CORE_ENEMIES、threat 時は PILOT_ENEMIES・shogunate 時は SHOGUNATE_ENEMIES を末尾に足す。Pilot 敵には印と案内（新規 CSS 0）', () => {
     const src = read('../setup/EnemySelectScreen.tsx')
-    expect(src).toMatch(/import \{ CORE_ENEMIES, PILOT_ENEMIES, isPilotEnemyId \} from '\.\.\/\.\.\/core\/data\/enemies'/)
-    expect(src).toMatch(/const roster = pilot \? \[\.\.\.CORE_ENEMIES, \.\.\.PILOT_ENEMIES\] : CORE_ENEMIES/)
+    expect(src).toMatch(/import \{ CORE_ENEMIES, PILOT_ENEMIES, SHOGUNATE_ENEMIES, isPilotEnemyId, isShogunateEnemyId \} from '\.\.\/\.\.\/core\/data\/enemies'/)
+    expect(src).toMatch(/const threatPilot = isPilotEnabled\('threat'\)/)
+    expect(src).toMatch(/const shogunatePilot = isPilotEnabled\('shogunate'\)/)
+    expect(src).toMatch(
+      /const roster = pilot \? \[\.\.\.CORE_ENEMIES, \.\.\.\(threatPilot \? PILOT_ENEMIES : \[\]\), \.\.\.\(shogunatePilot \? SHOGUNATE_ENEMIES : \[\]\)\] : CORE_ENEMIES/,
+    )
     expect(src).toMatch(/\{roster\.map\(\(enemy\) => \(/)
     expect(src).not.toMatch(/\{ENEMIES\.map/)
     expect(src).toMatch(/data-testid="enemy-pilot-chip"/)
-    expect(src).toMatch(/data-testid="enemy-pilot-notice"/)
+    // 案内は Pilot ごとに 1 つ（threat の testid・文言は v1 のまま＝lane1 の受入スクリプトが数える）
+    expect(src).toMatch(/\{threatPilot && \(\n\s+<p className="setup-subtitle" data-testid="enemy-pilot-notice">/)
     expect(src).toContain('Threat Branch Pilot v1：この敵との戦いは戦績・セーブ・報酬に残りません')
+    expect(src).toMatch(/\{shogunatePilot && \(\n\s+<p className="setup-subtitle" data-testid="enemy-shogunate-notice">/)
+    expect(src).toContain('将軍家 Pilot v0.4：忠次との戦いは戦績・セーブ・報酬に残りません')
     // 攻略済みの印は Pilot 敵に出さない（攻略盤の対象外）
     expect(src).toMatch(/matchups\?\.available && !isPilotEnemyId\(enemy\.id\)/)
     // 新しい CSS クラスを作らない（既存の chip／subtitle を再利用）
@@ -71,7 +97,8 @@ describe('配線（既存の導線・記録に影響させない）', () => {
   it('seed → 敵・Daily pool・攻略盤・gameVersion は既存 7 体の配列／ENEMY_IDS から導く', () => {
     const enemies = read('../../core/data/enemies.ts')
     expect(enemies).toMatch(/return CORE_ENEMIES\[hash % CORE_ENEMIES\.length\]\.id/)
-    expect(enemies).toMatch(/export const ENEMIES: EnemyDef\[\] = \[\.\.\.CORE_ENEMIES, \.\.\.PILOT_ENEMIES\]/)
+    // 将軍家 Pilot v0.4：忠次（SHOGUNATE_ENEMIES）も ENEMIES の末尾にだけ現れる
+    expect(enemies).toMatch(/export const ENEMIES: EnemyDef\[\] = \[\.\.\.CORE_ENEMIES, \.\.\.PILOT_ENEMIES, \.\.\.SHOGUNATE_ENEMIES\]/)
     const daily = read('../../core/data/dailyBoss.ts')
     expect(daily).toMatch(/DAILY_BOSS_POOL: readonly EnemyId\[\] = Object\.values\(ENEMY_IDS\)/)
     const matchup = read('../../hooks/matchupStorage.ts')
@@ -92,9 +119,12 @@ describe('配線（既存の導線・記録に影響させない）', () => {
     expect(round).toMatch(/const action = state\.enemy\.intent \?\? nextEnemyAction\(state\)/)
   })
 
-  it('UI：EnemyPanel は tactic を事前に解決して見せない（未来情報の常時表示＝決定263 の境界）。新規 CSS 0', () => {
+  it('UI：EnemyPanel は enemy_09 の tactic を事前に解決して見せない（未来情報の常時表示＝決定263 の境界）。新規 CSS 0', () => {
     const panel = read('../battle/EnemyPanel.tsx')
-    expect(panel).not.toMatch(/resolveEnemyTactic|tactic/)
+    // 将軍家 Pilot v0.4：解決は忠次（isShogunateEnemyId）に限定した 1 か所だけ。enemy_09 は従来どおり nextScript のまま
+    //（忠次側の契約は shogunateVisual.test.ts）
+    expect(panel.match(/resolveEnemyTactic\(/g)).toHaveLength(1)
+    expect(panel).toMatch(/isShogunateEnemyId\(enemy\.defId\) \? resolveEnemyTactic\(nextScript, hpShown, enemy\.maxHp, difficulty\) : nextScript/)
     const css = read('../battle/battle.css')
     // battle.css の既存コメントには決定250 等の『Pilot』が含まれるので、本 Pilot 固有の語だけを見る
     expect(css).not.toMatch(/tactic|threat-branch|enemy-select-pilot|軍略/)

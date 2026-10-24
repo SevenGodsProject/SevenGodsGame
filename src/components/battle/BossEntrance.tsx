@@ -193,6 +193,7 @@ export function BossEntrance({ enemyId, godId, variant, stake = 0, daily = false
       aria-hidden="true"
       data-testid="boss-entrance"
       data-variant={mode}
+      data-enemy={def.id}
       style={{ '--god-accent': GOD_THEME_COLOR[godId].base } as CSSProperties}
       onPointerDown={(e) => {
         e.stopPropagation()

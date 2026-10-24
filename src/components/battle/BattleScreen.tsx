@@ -413,7 +413,8 @@ export function BattleScreen({
   }
 
   return (
-    <div className="battle" style={stageVars}>
+    // 将軍家 Pilot v0.2：data-enemy は battle.css 末尾の enemy_08 限定ブロック（舞台の周辺減光）が読む。表示のみ
+    <div className="battle" style={stageVars} data-enemy={state.enemy.defId}>
       <div className="battle-topbar">
         <span>
           ラウンド {state.round} / {RULES.totalRounds}
@@ -480,6 +481,7 @@ export function BattleScreen({
           defeated={state.status === 'won' && (victoryPhase === 'collapse' || victoryPhase === 'beat' || victoryPhase === 'done')}
           reduced={presentation.reduced}
           staggerKey={staggerKey}
+          difficulty={state.difficulty}
         />
         <div className="ally-row">
           <PlayerPanel

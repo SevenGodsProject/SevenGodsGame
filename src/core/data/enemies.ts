@@ -382,12 +382,82 @@ export const PILOT_ENEMIES: EnemyDef[] = [
   },
 ]
 
-/** 全敵（既存 7 体＋Pilot）。`getEnemyDef`・Enemy Select（Pilot 時）の走査はこちら。seed 選出・Daily・攻略盤・gameVersion は CORE のみ */
-export const ENEMIES: EnemyDef[] = [...CORE_ENEMIES, ...PILOT_ENEMIES]
+/**
+ * 将軍家 Pilot v0.4（決定274・CEO 実装承認 2026-10-10・`docs/SHOGUNATE_PILOT_V0_4.md`・設計 `docs/SHOGUNATE_FACTION_DESIGN_V1.md`）：
+ * SGG Creator Kit「将軍家」（shogunate v1.0.0・releasedAt 2026-10-08）の公式キャラクター 忠次 を 1 体だけ試験導入する。
+ * v0.1〜v0.3（`feat/shogunate-pilot-v0.3` @ 5a357f1）の忠次データを v1.0.2 RC の構造（CORE／PILOT の配列分離・
+ * `tactic.ts` の 4 引数解決）に載せ替えたもの。engine は RC 版をそのまま使う（v0.3 の engine 差分は持ち込まない）。
+ * - 既存 7 体（`CORE_ENEMIES`）は 1 文字も変更しない（`coreRoster.test.ts`／`shogunateRoster.test.ts` が JSON の sha256 で固定）
+ * - `pickEnemyId`・Daily・49 攻略盤・gameVersion の指紋は `ENEMY_IDS`／`CORE_ENEMIES` だけを見る＝seed・Daily・Records・版は不変
+ * - Enemy Select には `?pilot=shogunate`（または `all`）のときだけ並ぶ（`components/pilot/pilotFlag.ts`）。戦績・セーブ・報酬にも残さない
+ *   （記録ガード・報酬畳み込みは `isPilotEnemyId` が Threat Pilot と共通で受ける）
+ * - しきい値は `cond.ratio` 0.5 のみ（`ratioByDifficulty` は埋めない）：Enemy Break の half 帯（表示 HP ≤ 0.5）と全難易度で一致させ、
+ *   「崩れ＝追い込めた（R4 は then）」が嘘をつかないようにする（`SHOGUNATE_NEXT_PILOT_AUDIT_V1.md` §4-1・§4-3）
+ * - 名前は Kit manifest の公式名「忠次」と公式 role「将軍四天王」。二つ名・技名・台詞は非公式のファン創作（Kit 規約 §6・§7。
+ *   「公式」「公認」とは表記しない）。将軍家に公式ボイスは無い
+ */
+export const SHOGUNATE_ENEMY_IDS = {
+  tadatsugu: enemyId('enemy_08'),
+} as const
 
-/** Pilot 敵か（戦績・セーブ・報酬・攻略盤に残さない判定に使う） */
+export const SHOGUNATE_ENEMIES: EnemyDef[] = [
+  {
+    id: SHOGUNATE_ENEMY_IDS.tadatsugu,
+    name: '将軍四天王・忠次',
+    // 設計 §4-2：鬼将 94〜龍神 103 の中間。then 分岐のしきい値（0.5）が 49 と切りの良い値になる
+    maxHp: 98,
+    // Kit FRONT（1600²・透過・sha256 b8d7d894…）→ 余白トリム → 768² webp（既存 7 体と同寸）。原本は art-source/enemies/tadatsugu/
+    art: '/assets/enemies/tadatsugu/art.webp',
+    typeLabel: '軍略型',
+    typeDescription: 'R4は傷が浅ければ総攻め。R3までに追い込め。',
+    // v0.2：重装の軍師＝突進は 'heavy'（0.65s・着弾計画も既存の heavy 経路）。表示専用・数値不変
+    visualType: 'heavy',
+    // 四天王＝中〜高位（v1.0.1 ★再付番後も鬼将・魔獣と同じ ★3 帯。表示専用・CORE 外なので指紋に乗らない）
+    rank: 3,
+    // 舞台背景は CEO 生成の「戦火の陣」（02）を色相・明度だけ非生成加工した派生（台帳 STG-08）。新規生成はしていない
+    stage: { nameJa: '軍議の本陣', accent: '#8c6d1f', bg: '/assets/backgrounds/stages/08-shogunate-camp.webp' },
+    // 非公式のファン創作（Kit の口調本文は配布対象外）。役割「軍師」1 行から AI が起こした仮文・CEO 監修待ち
+    battleCries: [
+      '布陣は整った。まずは小手調べといこう',
+      '焦るな。戦は、数で読む',
+      '……ほう。その手で来るか',
+      '軍略は、相手の傷で決まる',
+      '次の一手は、もう決めてある',
+      '読み切れぬ戦など、ない',
+      'ここまで読めたのは、そなたが初めてだ',
+    ],
+    // 軍略（tactic）：R3 の溜めで「次は戦況で手が変わる」と 1 手先に告げ、R4 の行動は R4 開始時の敵 HP で分岐する。
+    // then（追い込めた・HP ≤ 49）：attack 12 ／ else（追い込めなかった）：名前つき必殺 24「軍略・総攻め」。
+    // 7R 合計 then 57／else 69（既存 65〜77 帯）。then を 0 にしない＝追い込んでも受けは要る（一択化の防止・設計 §3-1）。
+    // しきい値は全難易度 0.5（easy 83→≤41・normal 98→≤49・hard 113→≤56＝Enemy Break の half 帯と同じ境界）
+    actions: [
+      { kind: 'attack', amount: 5 },
+      { kind: 'attack', amount: 9 },
+      { kind: 'charge', label: '⚠ 傷が浅ければ次は総攻め' },
+      {
+        kind: 'tactic',
+        cond: { type: 'enemyHpRatioAtMost', ratio: RULES.enemyTactic.defaultHpRatio },
+        then: { kind: 'attack', amount: 12 },
+        else: { kind: 'special', amount: 24, name: '軍略・総攻め' },
+      },
+      { kind: 'attack', amount: 15 },
+      { kind: 'attack', amount: 10 },
+      { kind: 'attack', amount: 6 },
+    ],
+  },
+]
+
+/** 全敵（既存 7 体＋Threat Pilot＋将軍家 Pilot）。`getEnemyDef`・Enemy Select（Pilot 時）の走査はこちら。seed 選出・Daily・攻略盤・gameVersion は CORE のみ */
+export const ENEMIES: EnemyDef[] = [...CORE_ENEMIES, ...PILOT_ENEMIES, ...SHOGUNATE_ENEMIES]
+
+/** 将軍家 Pilot の敵か（Enemy Select の印の文言分けと EnemyPanel の表示分岐に使う。記録ガードは `isPilotEnemyId` が両 Pilot をまとめて受ける） */
+export function isShogunateEnemyId(id: EnemyId | null | undefined): boolean {
+  return id !== null && id !== undefined && SHOGUNATE_ENEMIES.some((e) => e.id === id)
+}
+
+/** Pilot 敵か（戦績・セーブ・報酬・攻略盤に残さない判定に使う）。Threat Pilot（enemy_09）と将軍家 Pilot（enemy_08）の両方に真 */
 export function isPilotEnemyId(id: EnemyId | null | undefined): boolean {
-  return id !== null && id !== undefined && PILOT_ENEMIES.some((e) => e.id === id)
+  return id !== null && id !== undefined && (PILOT_ENEMIES.some((e) => e.id === id) || isShogunateEnemyId(id))
 }
 
 const ENEMY_BY_ID = new Map<EnemyId, EnemyDef>(ENEMIES.map((e) => [e.id, e]))

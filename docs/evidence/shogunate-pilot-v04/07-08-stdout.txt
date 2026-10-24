@@ -1,0 +1,262 @@
+[gate-preview 2026-10-22T11:50:27.388Z] start vite preview --port 4183 --strictPort
+(node:12500) [DEP0190] DeprecationWarning: Passing args to a child process with shell option true can lead to security vulnerabilities, as the arguments are not escaped, only concatenated.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+[gate-preview 2026-10-22T11:50:30.728Z] [preview] [32m➜[39m  [1mLocal[22m:   [36mhttp://localhost:[1m4183[22m/[39m
+[gate-preview 2026-10-22T11:50:30.730Z] [preview] [2m  [32m➜[39m  [1mNetwork[22m[2m: use [22m[1m--host[22m[2m to expose[22m
+[gate-preview 2026-10-22T11:50:31.118Z] preview ready at http://localhost:4183
+[gate-preview 2026-10-22T11:50:31.118Z] run [lane1-acceptance]: node scripts/lane1-threat-branch/acceptance.mjs docs/evidence/shogunate-pilot-v04/07a-lane1-acceptance/result.json http://localhost:4183 env={}
+PASS [pc] enemy cards = 8 (7 + entrust)
+PASS [pc] core enemy listed: 試練の影
+PASS [pc] core enemy listed: 業斧の鬼将
+PASS [pc] core enemy listed: 藍花の怨霊
+PASS [pc] core enemy listed: 銀甲の機工師
+PASS [pc] core enemy listed: 双牙の魔獣
+PASS [pc] core enemy listed: 蒼海の龍神
+PASS [pc] core enemy listed: 乱舞の道化
+PASS [pc] pilot card hidden
+PASS [pc] pilot chip hidden
+PASS [pc] pilot notice hidden
+PASS [pc] JS error 0
+PASS [pc/pilot] enemy cards = 9 (7 + entrust + pilot)
+PASS [pc/pilot] core enemy listed: 試練の影
+PASS [pc/pilot] core enemy listed: 業斧の鬼将
+PASS [pc/pilot] core enemy listed: 藍花の怨霊
+PASS [pc/pilot] core enemy listed: 銀甲の機工師
+PASS [pc/pilot] core enemy listed: 双牙の魔獣
+PASS [pc/pilot] core enemy listed: 蒼海の龍神
+PASS [pc/pilot] core enemy listed: 乱舞の道化
+PASS [pc/pilot] pilot card shown
+PASS [pc/pilot] pilot chip shown
+PASS [pc/pilot] pilot notice shown
+PASS [pc/pilot] no horizontal overflow on enemy select
+PASS [pc/pilot] battle started (round end button visible)
+PASS [pc/pilot] enemy name shown
+PASS [pc/pilot] oni art reused as avatar
+PASS [pc/pilot] oni art served 200
+PASS [pc/pilot] no battleSave while playing a pilot battle
+PASS [pc/pilot] R1 intent = ⚔ 50
+PASS [pc/pilot] R2 intent = ⚔ 90
+PASS [pc/pilot] R3 intent = charge「⚠ 傷が浅ければ次は断岩」
+PASS [pc/pilot] R4 intent = 業斧・断岩 260 (no damage dealt → else branch)
+PASS [pc/pilot] battle finished (result shown)
+PASS [pc/pilot] pilot battle wrote nothing (keys after = keys before)
+PASS [pc/pilot] no record keys after a pilot battle
+PASS [pc/pilot] JS error 0
+PASS [sp375] enemy cards = 8 (7 + entrust)
+PASS [sp375] core enemy listed: 試練の影
+PASS [sp375] core enemy listed: 業斧の鬼将
+PASS [sp375] core enemy listed: 藍花の怨霊
+PASS [sp375] core enemy listed: 銀甲の機工師
+PASS [sp375] core enemy listed: 双牙の魔獣
+PASS [sp375] core enemy listed: 蒼海の龍神
+PASS [sp375] core enemy listed: 乱舞の道化
+PASS [sp375] pilot card hidden
+PASS [sp375] pilot chip hidden
+PASS [sp375] pilot notice hidden
+PASS [sp375] JS error 0
+PASS [sp375/pilot] enemy cards = 9 (7 + entrust + pilot)
+PASS [sp375/pilot] core enemy listed: 試練の影
+PASS [sp375/pilot] core enemy listed: 業斧の鬼将
+PASS [sp375/pilot] core enemy listed: 藍花の怨霊
+PASS [sp375/pilot] core enemy listed: 銀甲の機工師
+PASS [sp375/pilot] core enemy listed: 双牙の魔獣
+PASS [sp375/pilot] core enemy listed: 蒼海の龍神
+PASS [sp375/pilot] core enemy listed: 乱舞の道化
+PASS [sp375/pilot] pilot card shown
+PASS [sp375/pilot] pilot chip shown
+PASS [sp375/pilot] pilot notice shown
+PASS [sp375/pilot] no horizontal overflow on enemy select
+PASS [sp375/pilot] battle started (round end button visible)
+PASS [sp375/pilot] enemy name shown
+PASS [sp375/pilot] oni art reused as avatar
+PASS [sp375/pilot] oni art served 200
+PASS [sp375/pilot] no battleSave while playing a pilot battle
+PASS [sp375/pilot] R1 intent = ⚔ 50
+PASS [sp375/pilot] R2 intent = ⚔ 90
+PASS [sp375/pilot] R3 intent = charge「⚠ 傷が浅ければ次は断岩」
+PASS [sp375/pilot] R4 intent = 業斧・断岩 260 (no damage dealt → else branch)
+PASS [sp375/pilot] battle finished (result shown)
+PASS [sp375/pilot] pilot battle wrote nothing (keys after = keys before)
+PASS [sp375/pilot] no record keys after a pilot battle
+PASS [sp375/pilot] JS error 0
+
+74/74 PASS
+[gate-preview 2026-10-22T11:52:05.887Z] exit 0 (95s) [lane1-acceptance]
+[gate-preview 2026-10-22T11:52:05.889Z] run [shogunate-acceptance]: node scripts/shogunate-pilot/acceptance.mjs docs/evidence/shogunate-pilot-v04/07b-acceptance/result.json http://localhost:4183 env={}
+PASS [pc/normal] enemy cards = 8 (7 + entrust)
+PASS [pc/normal] core enemy listed: 試練の影
+PASS [pc/normal] core enemy listed: 業斧の鬼将
+PASS [pc/normal] core enemy listed: 藍花の怨霊
+PASS [pc/normal] core enemy listed: 銀甲の機工師
+PASS [pc/normal] core enemy listed: 双牙の魔獣
+PASS [pc/normal] core enemy listed: 蒼海の龍神
+PASS [pc/normal] core enemy listed: 乱舞の道化
+PASS [pc/normal] tadatsugu card hidden
+PASS [pc/normal] threat card hidden
+PASS [pc/normal] shogunate chip (enemy-pilot-chip[data-pilot=shogunate]) hidden
+PASS [pc/normal] threat chip (enemy-pilot-chip[data-pilot=threat]) hidden
+PASS [pc/normal] shogunate notice (enemy-shogunate-notice) hidden
+PASS [pc/normal] threat notice (enemy-pilot-notice) hidden
+PASS [pc/normal] JS error 0
+PASS [pc/shogunate] enemy cards = 9 (7 + entrust + tadatsugu)
+PASS [pc/shogunate] core enemy listed: 試練の影
+PASS [pc/shogunate] core enemy listed: 業斧の鬼将
+PASS [pc/shogunate] core enemy listed: 藍花の怨霊
+PASS [pc/shogunate] core enemy listed: 銀甲の機工師
+PASS [pc/shogunate] core enemy listed: 双牙の魔獣
+PASS [pc/shogunate] core enemy listed: 蒼海の龍神
+PASS [pc/shogunate] core enemy listed: 乱舞の道化
+PASS [pc/shogunate] tadatsugu card shown
+PASS [pc/shogunate] threat card hidden
+PASS [pc/shogunate] shogunate chip (enemy-pilot-chip[data-pilot=shogunate]) shown 1
+PASS [pc/shogunate] threat chip (enemy-pilot-chip[data-pilot=threat]) hidden
+PASS [pc/shogunate] shogunate notice (enemy-shogunate-notice) shown
+PASS [pc/shogunate] threat notice (enemy-pilot-notice) hidden
+PASS [pc/shogunate] shogunate chip text = 幕府 Pilot・記録に残らない
+PASS [pc/shogunate] shogunate notice mentions 将軍家 Pilot v0.4 ・ 忠次 ・ 残りません
+PASS [pc/shogunate] no horizontal overflow on enemy select
+PASS [pc/shogunate] deck builder shows tadatsugu as opponent
+PASS [pc/shogunate] battle started (round end button visible)
+PASS [pc/shogunate] enemy name shown
+PASS [pc/shogunate] official art is the enemy avatar (.enemy-avatar background-image)
+PASS [pc/shogunate] official art served 200
+PASS [pc/shogunate] .battle[data-enemy=enemy_08] and .enemy-panel[data-enemy=enemy_08]
+PASS [pc/shogunate] stage background injected (08-shogunate-camp)
+PASS [pc/shogunate] stage background served 200
+PASS [pc/shogunate] no battleSave while playing a pilot battle
+PASS [pc/shogunate] R1 intent = ⚔ 50
+PASS [pc/shogunate] R2 intent = ⚔ 90
+PASS [pc/shogunate] R3 intent = charge「⚠ 傷が浅ければ次は総攻め」
+PASS [pc/shogunate] R3 avatar has enemy-avatar-charging-super (必殺充填)
+PASS [pc/shogunate] R3 glow is drop-shadow (box-shadow none・filter に drop-shadow)
+PASS [pc/shogunate] R4 intent = 軍略・総攻め 240 (no damage dealt → else branch)
+PASS [pc/shogunate] battle finished (result shown)
+PASS [pc/shogunate] pilot battle wrote nothing (keys after = keys before)
+PASS [pc/shogunate] no record keys after a pilot battle
+PASS [pc/shogunate] JS error 0
+PASS [pc/all] enemy cards = 10 (7 + entrust + tadatsugu + threat)
+PASS [pc/all] core enemy listed: 試練の影
+PASS [pc/all] core enemy listed: 業斧の鬼将
+PASS [pc/all] core enemy listed: 藍花の怨霊
+PASS [pc/all] core enemy listed: 銀甲の機工師
+PASS [pc/all] core enemy listed: 双牙の魔獣
+PASS [pc/all] core enemy listed: 蒼海の龍神
+PASS [pc/all] core enemy listed: 乱舞の道化
+PASS [pc/all] tadatsugu card shown
+PASS [pc/all] threat card shown
+PASS [pc/all] shogunate chip (enemy-pilot-chip[data-pilot=shogunate]) shown 1
+PASS [pc/all] threat chip (enemy-pilot-chip[data-pilot=threat]) shown 1
+PASS [pc/all] shogunate notice (enemy-shogunate-notice) shown
+PASS [pc/all] threat notice (enemy-pilot-notice) shown
+PASS [pc/all] shogunate chip text = 幕府 Pilot・記録に残らない
+PASS [pc/all] shogunate notice mentions 将軍家 Pilot v0.4 ・ 忠次 ・ 残りません
+PASS [pc/all] no horizontal overflow on enemy select
+PASS [pc/all] JS error 0
+PASS [sp375/normal] enemy cards = 8 (7 + entrust)
+PASS [sp375/normal] core enemy listed: 試練の影
+PASS [sp375/normal] core enemy listed: 業斧の鬼将
+PASS [sp375/normal] core enemy listed: 藍花の怨霊
+PASS [sp375/normal] core enemy listed: 銀甲の機工師
+PASS [sp375/normal] core enemy listed: 双牙の魔獣
+PASS [sp375/normal] core enemy listed: 蒼海の龍神
+PASS [sp375/normal] core enemy listed: 乱舞の道化
+PASS [sp375/normal] tadatsugu card hidden
+PASS [sp375/normal] threat card hidden
+PASS [sp375/normal] shogunate chip (enemy-pilot-chip[data-pilot=shogunate]) hidden
+PASS [sp375/normal] threat chip (enemy-pilot-chip[data-pilot=threat]) hidden
+PASS [sp375/normal] shogunate notice (enemy-shogunate-notice) hidden
+PASS [sp375/normal] threat notice (enemy-pilot-notice) hidden
+PASS [sp375/normal] JS error 0
+PASS [sp375/shogunate] enemy cards = 9 (7 + entrust + tadatsugu)
+PASS [sp375/shogunate] core enemy listed: 試練の影
+PASS [sp375/shogunate] core enemy listed: 業斧の鬼将
+PASS [sp375/shogunate] core enemy listed: 藍花の怨霊
+PASS [sp375/shogunate] core enemy listed: 銀甲の機工師
+PASS [sp375/shogunate] core enemy listed: 双牙の魔獣
+PASS [sp375/shogunate] core enemy listed: 蒼海の龍神
+PASS [sp375/shogunate] core enemy listed: 乱舞の道化
+PASS [sp375/shogunate] tadatsugu card shown
+PASS [sp375/shogunate] threat card hidden
+PASS [sp375/shogunate] shogunate chip (enemy-pilot-chip[data-pilot=shogunate]) shown 1
+PASS [sp375/shogunate] threat chip (enemy-pilot-chip[data-pilot=threat]) hidden
+PASS [sp375/shogunate] shogunate notice (enemy-shogunate-notice) shown
+PASS [sp375/shogunate] threat notice (enemy-pilot-notice) hidden
+PASS [sp375/shogunate] shogunate chip text = 幕府 Pilot・記録に残らない
+PASS [sp375/shogunate] shogunate notice mentions 将軍家 Pilot v0.4 ・ 忠次 ・ 残りません
+PASS [sp375/shogunate] no horizontal overflow on enemy select
+PASS [sp375/shogunate] deck builder shows tadatsugu as opponent
+PASS [sp375/shogunate] battle started (round end button visible)
+PASS [sp375/shogunate] enemy name shown
+PASS [sp375/shogunate] official art is the enemy avatar (.enemy-avatar background-image)
+PASS [sp375/shogunate] official art served 200
+PASS [sp375/shogunate] .battle[data-enemy=enemy_08] and .enemy-panel[data-enemy=enemy_08]
+PASS [sp375/shogunate] stage background injected (08-shogunate-camp)
+PASS [sp375/shogunate] stage background served 200
+PASS [sp375/shogunate] no battleSave while playing a pilot battle
+PASS [sp375/shogunate] R1 intent = ⚔ 50
+PASS [sp375/shogunate] R2 intent = ⚔ 90
+PASS [sp375/shogunate] R3 intent = charge「⚠ 傷が浅ければ次は総攻め」
+PASS [sp375/shogunate] R3 avatar has enemy-avatar-charging-super (必殺充填)
+PASS [sp375/shogunate] R3 glow is drop-shadow (box-shadow none・filter に drop-shadow)
+PASS [sp375/shogunate] R4 intent = 軍略・総攻め 240 (no damage dealt → else branch)
+PASS [sp375/shogunate] battle finished (result shown)
+PASS [sp375/shogunate] pilot battle wrote nothing (keys after = keys before)
+PASS [sp375/shogunate] no record keys after a pilot battle
+PASS [sp375/shogunate] JS error 0
+PASS [sp375/all] enemy cards = 10 (7 + entrust + tadatsugu + threat)
+PASS [sp375/all] core enemy listed: 試練の影
+PASS [sp375/all] core enemy listed: 業斧の鬼将
+PASS [sp375/all] core enemy listed: 藍花の怨霊
+PASS [sp375/all] core enemy listed: 銀甲の機工師
+PASS [sp375/all] core enemy listed: 双牙の魔獣
+PASS [sp375/all] core enemy listed: 蒼海の龍神
+PASS [sp375/all] core enemy listed: 乱舞の道化
+PASS [sp375/all] tadatsugu card shown
+PASS [sp375/all] threat card shown
+PASS [sp375/all] shogunate chip (enemy-pilot-chip[data-pilot=shogunate]) shown 1
+PASS [sp375/all] threat chip (enemy-pilot-chip[data-pilot=threat]) shown 1
+PASS [sp375/all] shogunate notice (enemy-shogunate-notice) shown
+PASS [sp375/all] threat notice (enemy-pilot-notice) shown
+PASS [sp375/all] shogunate chip text = 幕府 Pilot・記録に残らない
+PASS [sp375/all] shogunate notice mentions 将軍家 Pilot v0.4 ・ 忠次 ・ 残りません
+PASS [sp375/all] no horizontal overflow on enemy select
+PASS [sp375/all] JS error 0
+
+138/138 PASS
+[gate-preview 2026-10-22T11:54:13.877Z] exit 0 (128s) [shogunate-acceptance]
+[gate-preview 2026-10-22T11:54:13.884Z] run [probe-tadatsugu]: node scripts/shogunate-pilot/probe.mjs docs/evidence/shogunate-pilot-v04/08-probe http://localhost:4183 env={"CF2_VIEWPORTS":"pc,sp375","SG_SEEDS":"sg-v04-01,sg-v04-02,sg-v04-03,sg-v04-04"}
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+locator.click: Timeout 5000ms exceeded.
+Call log:
+[2m  - waiting for locator('.hand .card-view:not([disabled])').first()[22m
+[2m    - locator resolved to <button type="button" class="card-view card-view-has-art">…</button>[22m
+[2m  - attempting click action[22m
+[2m    - scrolling into view if needed[22m
+[2m    - done scrolling[22m
+[2m    - forcing action[22m
+[2m    - performing click action[22m
+[2m    - click action done[22m
+[2m    - waiting for scheduled navigations to finish[22m
+
+    at C:\Users\kimi1\SevenGodsGame-shogunate-pilot\scripts\shogunate-pilot\probe.mjs:249:20 {
+  log: [
+    "  - waiting for locator('.hand .card-view:not([disabled])').first()",
+    '    - locator resolved to <button type="button" class="card-view card-view-has-art">…</button>',
+    '  - attempting click action',
+    '    - scrolling into view if needed',
+    '    - done scrolling',
+    '    - forcing action',
+    '    - performing click action',
+    '    - click action done',
+    '    - waiting for scheduled navigations to finish'
+  ],
+  name: 'TimeoutError'
+}
+
+Node.js v24.18.1
+[gate-preview 2026-10-22T12:03:36.924Z] exit 1 (563s) [probe-tadatsugu]
+[gate-preview 2026-10-22T12:03:37.290Z] preview killed
+gate exit 1
