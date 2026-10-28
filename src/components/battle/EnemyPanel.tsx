@@ -2,6 +2,7 @@ import type { CSSProperties, ReactNode } from 'react'
 import type { Difficulty, EnemyState } from '../../core/types'
 import { getEnemyDef, isShogunateEnemyId } from '../../core/data/enemies'
 import { resolveEnemyTactic } from '../../core/engine/tactic'
+import { tacticLine } from './tacticLine'
 import { STAT_LABEL } from '../setup/godStyle'
 import { formatScaled } from '../displayScale'
 import { formatEnemyIntentText, getIntentGlyph, getIntentStanceClass, getIntentTierClass, type PowerTier } from './cardStyle'
@@ -121,6 +122,9 @@ export function EnemyPanel({
   const nextIsSpecial =
     nextAction.kind === 'special' || (nextAction.kind === 'multiAttack' && !!nextAction.special)
   const charging = enemy.intent?.kind === 'charge'
+  // 将軍家 Pilot v0.6（enemy_08 忠次だけ・`docs/SHOGUNATE_V0_6_DESIGN_AUDIT.md` §1-3）：R3 の溜め中に「あと N で総攻めを止める」。
+  // 上の赤い輪と同じ hpShown・同じ tacticBranch で決まる＝輪の消失と「✓ 総攻めを止めた」は同じ描画。enemy_09 には出さない
+  const tLine = isShogunateEnemyId(enemy.defId) && !defeated ? tacticLine(enemy.intent, nextScript, hpShown, enemy.maxHp, difficulty) : null
   const chargingClass =
     charging
       ? nextIsSpecial
@@ -166,6 +170,11 @@ export function EnemyPanel({
             {intentGlyph && <GlyphIcon glyph={intentGlyph} className="intent-glyph" />}
             {formatEnemyIntentText(enemy.intent)}
           </div>
+          {tLine && (
+            <div className="enemy-assault-line" data-testid="tactic-line" data-state={tLine.cleared ? 'cleared' : 'armed'}>
+              {tLine.cleared ? '✓ 総攻めを止めた' : `あと${formatScaled(tLine.remaining)}で総攻めを止める`}
+            </div>
+          )}
           {enemy.block > 0 && <div className="badge badge-block">🛡 {formatScaled(enemy.block)}</div>}
           {enemy.buffs.length > 0 && (
             <div className="buff-list">

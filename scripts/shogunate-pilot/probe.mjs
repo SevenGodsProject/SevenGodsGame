@@ -20,6 +20,9 @@ const ONLY = (process.env.CF2_VIEWPORTS ?? 'pc,sp375').split(',')
 const SEEDS = (process.env.SG_SEEDS ?? 'sg-v04-01,sg-v04-02,sg-v04-03').split(',')
 const MAX_ROUNDS = Number(process.env.SG_MAX_ROUNDS ?? 4)
 const STRATEGY = process.env.SG_STRATEGY ?? 'damage'
+// v0.6：SG_DIFFICULTY=hard で「むずかしい」を選ぶ（既定は従来どおり normal＝v0.5 と同じ進行）
+const DIFFICULTY = process.env.SG_DIFFICULTY ?? 'normal'
+const DIFFICULTY_LABEL = { easy: 'かんたん', normal: 'ふつう', hard: 'むずかしい' }[DIFFICULTY]
 const VIEWPORTS = [
   { id: 'pc', viewport: { width: 1508, height: 660 } },
   { id: 'sp375', viewport: { width: 375, height: 667 }, isMobile: true, hasTouch: true, deviceScaleFactor: 2 },
@@ -61,7 +64,11 @@ const SAMPLER = () => {
     const paused = anims.some((a) => a.state === 'paused')
     const breathe = anims.filter((a) => a.name === 'arena-glow-breathe' && a.state === 'running' && a.target.includes('intent')).length
     const avCs = avatar ? getComputedStyle(avatar) : null
+    // v0.6：「あと N で総攻めを止める」行（data-state armed／cleared）
+    const tl = document.querySelector('[data-testid="tactic-line"]')
     state.frames.push({
+      tlState: tl?.getAttribute('data-state') ?? null,
+      tlText: tl?.textContent?.trim() ?? null,
       t,
       band: panel ? (panel.className.match(/enemy-band-(\w+)/) || [])[1] ?? null : null,
       breakClass: panel ? (panel.className.match(/cf2-break-(\w+)/) || [])[1] ?? null : null,
@@ -100,6 +107,29 @@ const roundOf = (page) => page.evaluate(() => Number((document.body.innerText.ma
 const intentOf = (page) => page.locator('.enemy-plate .intent').first().innerText().catch(() => '')
 const bandOf = (page) => page.evaluate(() => (document.querySelector('.enemy-panel')?.className.match(/enemy-band-(\w+)/) || [])[1] ?? null)
 const hpOf = (page) => page.locator('.enemy-plate .hp-bar').first().innerText().catch(() => '')
+/** v0.6：あと N 行の有無・文言・欠け（名札・viewport の内側か・横の溢れ・行数）を測る */
+const tacticLineOf = (page) =>
+  page.evaluate(() => {
+    const el = document.querySelector('[data-testid="tactic-line"]')
+    if (!el) return null
+    const r = el.getBoundingClientRect()
+    const p = document.querySelector('.enemy-plate')?.getBoundingClientRect()
+    const cs = getComputedStyle(el)
+    const lh = parseFloat(cs.lineHeight) || 0
+    return {
+      state: el.getAttribute('data-state'),
+      text: el.textContent?.trim() ?? '',
+      rect: { x: Math.round(r.left), y: Math.round(r.top), w: Math.round(r.width), h: Math.round(r.height) },
+      insidePlate: !!p && r.left >= p.left - 0.5 && r.right <= p.right + 0.5 && r.top >= p.top - 0.5 && r.bottom <= p.bottom + 0.5,
+      insideViewport: r.left >= 0 && r.top >= 0 && r.right <= innerWidth && r.bottom <= innerHeight,
+      overflowX: el.scrollWidth > el.clientWidth + 1,
+      lines: lh > 0 ? Math.round((r.height - parseFloat(cs.paddingTop) - parseFloat(cs.paddingBottom) - 2) / lh) : null,
+      fontSize: parseFloat(cs.fontSize),
+      visible: cs.visibility !== 'hidden' && cs.display !== 'none' && Number(cs.opacity) > 0 && r.width > 0 && r.height > 0,
+      pageScrollW: document.documentElement.scrollWidth,
+      vw: innerWidth,
+    }
+  })
 const glowOf = (page) =>
   page.evaluate(() => {
     const av = document.querySelector('.enemy-avatar')
@@ -171,6 +201,9 @@ function summarize(frames) {
   const halfIdx = frames.findIndex((f, i) => f.breakClass === 'half' && (i === 0 || frames[i - 1].breakClass !== 'half'))
   const superOffIdx = frames.findIndex((f, i) => i > 0 && frames[i - 1].chargingSuper && !f.chargingSuper)
   const superOnAtStart = frames[0]?.chargingSuper ?? null
+  // v0.6：あと N 行が armed→cleared に変わった最初のフレーム（赤い輪の消失と同フレームか）
+  const tlClearIdx = frames.findIndex((f, i) => i > 0 && frames[i - 1].tlState === 'armed' && f.tlState === 'cleared')
+  const tlTexts = [...new Set(frames.map((f) => f.tlText).filter((x) => x !== null))]
   const deltas = frames.slice(1).map((f, i) => f.t - frames[i].t).filter((d) => d >= 0)
   // 撮影で animation を止めた区間（paused）は rAF 間隔の統計から外す
   const deltasLive = frames.slice(1).map((f, i) => (f.paused || frames[i].paused ? null : f.t - frames[i].t)).filter((d) => d !== null && d >= 0)
@@ -194,6 +227,10 @@ function summarize(frames) {
     superOffFrame: superOffIdx >= 0 ? superOffIdx : null,
     halfAndSuperOffSameFrame: halfIdx >= 0 && superOffIdx >= 0 ? halfIdx === superOffIdx : null,
     superOffMinusHalfMs: halfIdx >= 0 && superOffIdx >= 0 ? frames[superOffIdx].t - frames[halfIdx].t : null,
+    tacticLineTexts: tlTexts,
+    tacticLineClearMs: tlClearIdx >= 0 ? frames[tlClearIdx].t : null,
+    tacticLineClearAndSuperOffSameFrame: tlClearIdx >= 0 && superOffIdx >= 0 ? tlClearIdx === superOffIdx : null,
+    tacticLineClearAndHalfSameFrame: tlClearIdx >= 0 && halfIdx >= 0 ? tlClearIdx === halfIdx : null,
     dropShadowAtStart: frames[0]?.avatarHasDropShadow ?? null,
     boxShadowAtStart: frames[0]?.avatarBoxShadow ?? null,
     rafP95Ms: p95(deltas),
@@ -227,6 +264,7 @@ for (const vp of VIEWPORTS) {
     await clickText(page, '神を選ぶ')
     await maybeClick(page, '新しく始める')
     await clickText(page, '大耀')
+    if (DIFFICULTY !== 'normal') await page.getByRole('button', { name: new RegExp(DIFFICULTY_LABEL) }).first().click({ timeout: 5000 })
     await clickText(page, 'この構成で始める')
     await page.getByText('挑む敵を選ぼう').first().waitFor({ timeout: 8000 })
     await page.getByRole('button', { name: new RegExp(PILOT_NAME) }).first().click({ timeout: 8000 })
@@ -241,7 +279,7 @@ for (const vp of VIEWPORTS) {
       if (round > MAX_ROUNDS || round === 0) break
       if (!rounds.some((r) => r.round === round)) {
         if (round === 3) await page.waitForTimeout(500)
-        rounds.push({ round, intent: await intentOf(page), band: await bandOf(page), hp: await hpOf(page), glow: await glowOf(page) })
+        rounds.push({ round, intent: await intentOf(page), band: await bandOf(page), hp: await hpOf(page), glow: await glowOf(page), tacticLine: await tacticLineOf(page) })
         if (round === 3 || round === 4) await page.screenshot({ path: `${outDir}/${vp.id}-${seed}-r${round}-start.png` })
       }
       // 札の選び方（SG_STRATEGY）：damage＝使える札のうち「敵に N ダメージ」の N が最大の札（R3 までに 50% 帯をまたぐ経路を作る）／
@@ -315,7 +353,7 @@ for (const vp of VIEWPORTS) {
     }
     if (!rounds.some((r) => r.round === 4)) {
       const round = await roundOf(page)
-      if (round === 4) rounds.push({ round, intent: await intentOf(page), band: await bandOf(page), hp: await hpOf(page), glow: await glowOf(page) })
+      if (round === 4) rounds.push({ round, intent: await intentOf(page), band: await bandOf(page), hp: await hpOf(page), glow: await glowOf(page), tacticLine: await tacticLineOf(page) })
     }
     await page.screenshot({ path: `${outDir}/${vp.id}-${seed}-end.png` })
     } catch (e) {
@@ -392,6 +430,11 @@ const summary = {
         superOffMinusHalfMs: p.superOffMinusHalfMs,
         shot: p.shot,
       })),
+      difficulty: DIFFICULTY,
+      // v0.6：ラウンド開始時の「あと N」行（R3 だけに出るか・欠けないか）と、armed→cleared の同フレーム性
+      tacticLineByRound: r.rounds.map((x) => ({ round: x.round, line: x.tacticLine ?? null })),
+      tacticLineClears: r.plays.filter((p) => p.tacticLineClearMs !== null).map((p) => ({ round: p.round, card: p.card, clearMs: p.tacticLineClearMs, superOffMs: p.superOffMs, halfStartMs: p.halfStartMs, sameFrameAsSuperOff: p.tacticLineClearAndSuperOffSameFrame, sameFrameAsHalf: p.tacticLineClearAndHalfSameFrame, texts: p.tacticLineTexts })),
+      tacticLineTextsR3: [...new Set(r.plays.filter((p) => p.round === 3).flatMap((p) => p.tacticLineTexts))],
       rafP95LiveMsMax: liveP95.length ? Math.max(...liveP95) : null,
       immediateEnd: r.immediateEnd,
       plays: r.plays.length,

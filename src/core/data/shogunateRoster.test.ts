@@ -128,9 +128,10 @@ describe('将軍家 Pilot 敵（忠次）', () => {
     expect(def.actions[2]).toEqual({ kind: 'charge', label: '⚠ 傷が浅ければ次は総攻め' })
     const r4 = def.actions[3]
     if (r4.kind !== 'tactic') throw new Error('R4 must be tactic')
-    expect(r4.cond).toEqual({ type: 'enemyHpRatioAtMost', ratio: RULES.enemyTactic.defaultHpRatio })
-    // v0.4：難易度別しきい値は埋めない（Enemy Break の half 帯と全難易度で一致させる。監査 §4-3）
-    expect(r4.cond.ratioByDifficulty).toBeUndefined()
+    // v0.6（Expected Specification Update・CEO 承認 2026-10-29）：hard だけ 0.6 の難易度別しきい値を既存の RULES から引く。
+    // v0.4 では Enemy Break の half 帯と全難易度で一致させるため埋めていなかった（監査 §4-3）。easy／normal は 0.5 のまま
+    expect(r4.cond).toEqual({ type: 'enemyHpRatioAtMost', ratio: RULES.enemyTactic.defaultHpRatio, ratioByDifficulty: RULES.enemyTactic.hpRatioByDifficulty })
+    expect(r4.cond.ratioByDifficulty).toEqual({ easy: 0.5, normal: 0.5, hard: 0.6 })
     expect(r4.then).toEqual({ kind: 'attack', amount: 12 })
     expect(r4.else).toEqual({ kind: 'special', amount: 24, name: '軍略・総攻め' })
     const totals = (branch: 'then' | 'else') => def.actions.map((a) => (a.kind === 'tactic' ? enemyActionTotal(a[branch]) : enemyActionTotal(a)))
@@ -154,10 +155,14 @@ describe('将軍家 Pilot 敵（忠次）', () => {
     expect(new Set(coreAndTadatsugu.map((e) => e.art)).size).toBe(coreAndTadatsugu.length)
   })
 
-  it('Gate G5：軍略 then（engine・実 HP）と Enemy Break half 帯（表示 HP）の境界が easy／normal／hard の全 HP で一致する（A＝0・B＝0）', () => {
+  // v0.6（Expected Specification Update・CEO 承認 2026-10-29）：easy／normal は境界一致（A＝0・B＝0）のまま。
+  // hard は 0.6（≤67）で then になり、Enemy Break の half 帯（≤56）より 11 HP 手前で「総攻めを止めた」になる（A＝11・B＝0）。
+  // ＝hard だけ「赤い輪の消失・成功表示」と「崩れ」が別の瞬間（`docs/SHOGUNATE_V0_6_GATE.md` 残リスク）
+  it('Gate G5：軍略 then（engine・実 HP）と Enemy Break half 帯（表示 HP）の境界：easy／normal は一致、hard は then が 11 HP 手前', () => {
     const r4 = def.actions[3]
     if (r4.kind !== 'tactic') throw new Error('R4 must be tactic')
-    const expectedThenMax: Record<Difficulty, number> = { easy: 41, normal: 49, hard: 56 }
+    const expectedThenMax: Record<Difficulty, number> = { easy: 41, normal: 49, hard: 67 }
+    const expectedThenButNotBroken: Record<Difficulty, number> = { easy: 0, normal: 0, hard: 11 }
     for (const difficulty of ['easy', 'normal', 'hard'] as const) {
       const maxHp = Math.round(def.maxHp * RULES.difficulty[difficulty].enemyHpMultiplier)
       let thenButNotBroken = 0
@@ -173,7 +178,7 @@ describe('将軍家 Pilot 敵（忠次）', () => {
         expect(resolveEnemyTactic(r4, hp, maxHp, difficulty)).toEqual(branch === 'then' ? r4.then : r4.else)
       }
       expect({ difficulty, maxHp, thenMax }).toEqual({ difficulty, maxHp, thenMax: expectedThenMax[difficulty] })
-      expect({ difficulty, thenButNotBroken, brokenButElse }).toEqual({ difficulty, thenButNotBroken: 0, brokenButElse: 0 })
+      expect({ difficulty, thenButNotBroken, brokenButElse }).toEqual({ difficulty, thenButNotBroken: expectedThenButNotBroken[difficulty], brokenButElse: 0 })
     }
   })
 })

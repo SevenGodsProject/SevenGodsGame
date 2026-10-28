@@ -7,7 +7,7 @@
 //   ③ RULES.saveVersion ＝ 9
 //   ④ 指紋（rankingImpactSnapshot）に enemy_08／忠次／tadatsugu／軍略／tactic が乗らない・"id":"enemy_0x" は 7 つ
 //   ⑤ SHOGUNATE_ENEMIES ＝ [enemy_08]・ENEMIES ＝ CORE 7 ＋ PILOT 1 ＋ SHOGUNATE 1 ＝ 9・isPilotEnemyId が両 Pilot に真
-//   ⑥ 忠次の tactic しきい値は ratio 0.5 のみ（ratioByDifficulty を埋めない＝Enemy Break half 帯と境界一致）
+//   ⑥ 忠次の tactic しきい値は ratio 0.5＋ratioByDifficulty＝RULES.enemyTactic.hpRatioByDifficulty（v0.6：hard 0.6・easy／normal 0.5）
 //   ⑦ pickEnemyId は CORE 7 体だけを返す（500 seed）
 import { createHash } from 'node:crypto'
 import { mkdirSync, writeFileSync } from 'node:fs'
@@ -46,7 +46,7 @@ const checks = [
   { name: 'fingerprint excludes 忠次 / tadatsugu / 軍略', pass: !snap.includes('忠次') && !snap.includes('tadatsugu') && !snap.includes('軍略'), detail: null },
   { name: 'fingerprint excludes tactic / ratioByDifficulty / hpRatioByDifficulty', pass: !snap.includes('"tactic"') && !snap.includes('ratioByDifficulty') && !snap.includes('hpRatioByDifficulty'), detail: null },
   { name: 'fingerprint enemy ids = 7', pass: (snap.match(/"id":"enemy_0\d"/g) ?? []).length === 7, detail: (snap.match(/"id":"enemy_0\d"/g) ?? []).length },
-  { name: 'tadatsugu tactic cond = { enemyHpRatioAtMost, ratio 0.5 } without ratioByDifficulty', pass: !!tactic && tactic.cond?.type === 'enemyHpRatioAtMost' && tactic.cond?.ratio === 0.5 && tactic.cond?.ratioByDifficulty === undefined, detail: tactic?.cond ?? null },
+  { name: 'tadatsugu tactic cond = { enemyHpRatioAtMost, ratio 0.5, ratioByDifficulty {easy 0.5, normal 0.5, hard 0.6} }（v0.6）', pass: !!tactic && tactic.cond?.type === 'enemyHpRatioAtMost' && tactic.cond?.ratio === 0.5 && JSON.stringify(tactic.cond?.ratioByDifficulty) === JSON.stringify({ easy: 0.5, normal: 0.5, hard: 0.6 }), detail: tactic?.cond ?? null },
   { name: 'tadatsugu R3 charge / R4 tactic then attack 12 / else special 24 軍略・総攻め', pass: tadatsugu?.actions[2]?.kind === 'charge' && tactic?.then?.kind === 'attack' && tactic?.then?.amount === 12 && tactic?.else?.kind === 'special' && tactic?.else?.amount === 24 && tactic?.else?.name === '軍略・総攻め', detail: tadatsugu?.actions.map((a) => a.kind) },
   { name: 'enemyTactic.hpRatioByDifficulty = {easy 0.5, normal 0.5, hard 0.6} (RC 不変)', pass: JSON.stringify(RULES.enemyTactic.hpRatioByDifficulty) === JSON.stringify({ easy: 0.5, normal: 0.5, hard: 0.6 }), detail: RULES.enemyTactic.hpRatioByDifficulty },
   { name: 'CORE enemies have no tactic', pass: CORE_ENEMIES.every((e) => e.actions.every((a) => a.kind !== 'tactic')), detail: null },

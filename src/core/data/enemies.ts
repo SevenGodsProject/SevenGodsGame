@@ -429,14 +429,16 @@ export const SHOGUNATE_ENEMIES: EnemyDef[] = [
     // 軍略（tactic）：R3 の溜めで「次は戦況で手が変わる」と 1 手先に告げ、R4 の行動は R4 開始時の敵 HP で分岐する。
     // then（追い込めた・HP ≤ 49）：attack 12 ／ else（追い込めなかった）：名前つき必殺 24「軍略・総攻め」。
     // 7R 合計 then 57／else 69（既存 65〜77 帯）。then を 0 にしない＝追い込んでも受けは要る（一択化の防止・設計 §3-1）。
-    // しきい値は全難易度 0.5（easy 83→≤41・normal 98→≤49・hard 113→≤56＝Enemy Break の half 帯と同じ境界）
+    // しきい値（v0.6）：easy／normal 0.5（83→≤41・98→≤49＝Enemy Break の half 帯と同じ境界）・hard 0.6（113→≤67）。
+    // v0.6（CEO 承認 2026-10-29・`docs/SHOGUNATE_V0_6_DESIGN_AUDIT.md` §2）：hard の then 率 16.8%→43.9%（sim）。
+    // 値は Threat Pilot と同じ既存の RULES.enemyTactic.hpRatioByDifficulty（新しい調整値なし）。hard だけ half 帯（50%）と境界がずれる
     actions: [
       { kind: 'attack', amount: 5 },
       { kind: 'attack', amount: 9 },
       { kind: 'charge', label: '⚠ 傷が浅ければ次は総攻め' },
       {
         kind: 'tactic',
-        cond: { type: 'enemyHpRatioAtMost', ratio: RULES.enemyTactic.defaultHpRatio },
+        cond: { type: 'enemyHpRatioAtMost', ratio: RULES.enemyTactic.defaultHpRatio, ratioByDifficulty: RULES.enemyTactic.hpRatioByDifficulty },
         then: { kind: 'attack', amount: 12 },
         else: { kind: 'special', amount: 24, name: '軍略・総攻め' },
       },

@@ -1,0 +1,104 @@
+/// <reference types="node" />
+import { readFileSync } from 'node:fs'
+import { fileURLToPath } from 'node:url'
+import { describe, expect, it } from 'vitest'
+import { CORE_ENEMIES, PILOT_ENEMY_IDS, SHOGUNATE_ENEMY_IDS, getEnemyDef } from '../../core/data/enemies'
+import { RULES } from '../../core/data/rules'
+import { resolveEnemyTactic, tacticBranch } from '../../core/engine/tactic'
+import type { Difficulty, EnemyActionDef } from '../../core/types'
+import { labelContrastOnFill } from '../a11y/contrast'
+import { tacticLine, tacticThenMaxHp } from './tacticLine'
+
+/**
+ * 将軍家 Pilot v0.6（`docs/SHOGUNATE_V0_6_DESIGN_AUDIT.md` §1-3・§4 G5／G8）：「あと N で総攻めを止める」の契約。
+ *   - N は engine の分岐判定（tacticBranch）と一致：N === 0 ⇔ then、かつ N は最小（N−1 では else のまま）
+ *   - 出るのは忠次の R3（予告＝溜め・次の行動表＝軍略）だけ
+ *   - 赤い輪（EnemyPanel の resolveEnemyTactic 分岐）と同じ値で決まる＝輪の消失と「止めた」は同じ描画
+ *   - enemy_09 には出さない（EnemyPanel が isShogunateEnemyId で絞る）
+ */
+const DIFFS: Difficulty[] = ['easy', 'normal', 'hard']
+const def = getEnemyDef(SHOGUNATE_ENEMY_IDS.tadatsugu)
+const tactic = def.actions[3]
+const charge = def.actions[2] as EnemyActionDef
+const maxHpOf = (d: Difficulty) => Math.round(def.maxHp * RULES.difficulty[d].enemyHpMultiplier)
+const read = (rel: string): string => readFileSync(fileURLToPath(new URL(rel, import.meta.url)), 'utf8').replace(/\r\n/g, '\n')
+
+describe('tacticLine（忠次 R3 の残り必要ダメージ）', () => {
+  it('then になる最大 HP：easy 41／normal 49（＝Enemy Break half 帯）・hard 67（v0.6 の 0.6）', () => {
+    expect(DIFFS.map((d) => [d, maxHpOf(d), tacticThenMaxHp(tactic, maxHpOf(d), d)])).toEqual([
+      ['easy', 83, 41],
+      ['normal', 98, 49],
+      ['hard', 113, 67],
+    ])
+  })
+
+  it('全難易度 × 全 HP：N === 0 ⇔ 分岐が then／N は最小（HP−N で then・HP−N+1 で else）／赤い輪の解決と一致', () => {
+    for (const d of DIFFS) {
+      const maxHp = maxHpOf(d)
+      for (let hp = 0; hp <= maxHp; hp++) {
+        const line = tacticLine(charge, tactic, hp, maxHp, d)
+        expect(line, `${d} hp ${hp}`).not.toBeNull()
+        const branch = tacticBranch(tactic as Extract<typeof tactic, { kind: 'tactic' }>, hp, maxHp, d)
+        expect(line!.cleared, `${d} hp ${hp}`).toBe(branch === 'then')
+        expect(line!.remaining === 0, `${d} hp ${hp}`).toBe(branch === 'then')
+        if (line!.remaining > 0) {
+          expect(tacticBranch(tactic as Extract<typeof tactic, { kind: 'tactic' }>, hp - line!.remaining, maxHp, d)).toBe('then')
+          expect(tacticBranch(tactic as Extract<typeof tactic, { kind: 'tactic' }>, hp - line!.remaining + 1, maxHp, d)).toBe('else')
+        }
+        // 赤い輪：EnemyPanel は resolveEnemyTactic(nextScript, hpShown, …) が必殺なら輪を付ける＝未達と同値
+        const ringOn = resolveEnemyTactic(tactic, hp, maxHp, d).kind === 'special'
+        expect(ringOn, `${d} hp ${hp}`).toBe(!line!.cleared)
+      }
+    }
+  })
+
+  it('QA の進行（normal・R3 開始 HP 65 → 37）：あと 16（表示 160）→ ✓ 止めた', () => {
+    expect(tacticLine(charge, tactic, 65, 98, 'normal')).toEqual({ remaining: 16, cleared: false })
+    expect(tacticLine(charge, tactic, 37, 98, 'normal')).toEqual({ remaining: 0, cleared: true })
+  })
+
+  it('出るのは R3 だけ（忠次の 7 ラウンドの予告と次の行動表で走査）・全難易度', () => {
+    for (const d of DIFFS) {
+      const shown: number[] = []
+      for (let round = 1; round <= RULES.totalRounds; round++) {
+        const intent = resolveEnemyTactic(def.actions[round - 1], maxHpOf(d), maxHpOf(d), d)
+        const next = def.actions[round] ?? def.actions[def.actions.length - 1]
+        if (tacticLine(intent, next, maxHpOf(d), maxHpOf(d), d)) shown.push(round)
+      }
+      expect({ d, shown }).toEqual({ d, shown: [3] })
+    }
+  })
+
+  it('予告が無い・溜めでない・次が軍略でないときは null', () => {
+    expect(tacticLine(null, tactic, 50, 98, 'normal')).toBeNull()
+    expect(tacticLine(undefined, tactic, 50, 98, 'normal')).toBeNull()
+    expect(tacticLine({ kind: 'attack', amount: 9 }, tactic, 50, 98, 'normal')).toBeNull()
+    expect(tacticLine(charge, { kind: 'attack', amount: 15 }, 50, 98, 'normal')).toBeNull()
+  })
+
+  it('既存 7 体の行動表では一度も出ない（tactic を持たない）', () => {
+    for (const e of CORE_ENEMIES) {
+      for (let i = 0; i < e.actions.length; i++) {
+        const next = e.actions[i + 1] ?? e.actions[e.actions.length - 1]
+        const intent = resolveEnemyTactic(e.actions[i], e.maxHp, e.maxHp, 'normal')
+        expect(tacticLine(intent, next, e.maxHp, e.maxHp, 'normal'), `${e.id} r${i + 1}`).toBeNull()
+      }
+    }
+  })
+
+  it('EnemyPanel は忠次（isShogunateEnemyId）だけ・撃破中は出さない＝enemy_09 には出ない（source-fixed）', () => {
+    const src = read('./EnemyPanel.tsx')
+    expect(src).toContain('const tLine = isShogunateEnemyId(enemy.defId) && !defeated ? tacticLine(enemy.intent, nextScript, hpShown, enemy.maxHp, difficulty) : null')
+    expect(src).toContain("{tLine.cleared ? '✓ 総攻めを止めた' : `あと${formatScaled(tLine.remaining)}で総攻めを止める`}")
+    // enemy_09 は軍略を持つが将軍家ではない
+    expect(getEnemyDef(PILOT_ENEMY_IDS.oniTactic).actions.some((a) => a.kind === 'tactic')).toBe(true)
+  })
+
+  it('文字のコントラスト 4.5:1 以上（暗い pill の上・未達／到達）', () => {
+    for (const color of ['#ffd6d6', '#ffe7bf']) {
+      const ratio = labelContrastOnFill(color, '#05060bc4', '#16203c')
+      expect(ratio, color).not.toBeNull()
+      expect(ratio!, color).toBeGreaterThanOrEqual(4.5)
+    }
+  })
+})
