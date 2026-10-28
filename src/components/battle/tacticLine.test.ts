@@ -89,7 +89,10 @@ describe('tacticLine（忠次 R3 の残り必要ダメージ）', () => {
   it('EnemyPanel は忠次（isShogunateEnemyId）だけ・撃破中は出さない＝enemy_09 には出ない（source-fixed）', () => {
     const src = read('./EnemyPanel.tsx')
     expect(src).toContain('const tLine = isShogunateEnemyId(enemy.defId) && !defeated ? tacticLine(enemy.intent, nextScript, hpShown, enemy.maxHp, difficulty) : null')
-    expect(src).toContain("{tLine.cleared ? '✓ 総攻めを止めた' : `あと${formatScaled(tLine.remaining)}で総攻めを止める`}")
+    // 文言：未達「あと{N}で」＋「総攻めを止める」（句の切れ目で 2 span）／到達「✓ 総攻めを止めた」
+    expect(src).toContain("'✓ 総攻めを止めた'")
+    expect(src).toContain('<span>{`あと${formatScaled(tLine.remaining)}で`}</span>')
+    expect(src).toContain('<span>総攻めを止める</span>')
     // enemy_09 は軍略を持つが将軍家ではない
     expect(getEnemyDef(PILOT_ENEMY_IDS.oniTactic).actions.some((a) => a.kind === 'tactic')).toBe(true)
   })

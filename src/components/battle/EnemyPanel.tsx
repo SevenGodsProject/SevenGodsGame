@@ -172,7 +172,15 @@ export function EnemyPanel({
           </div>
           {tLine && (
             <div className="enemy-assault-line" data-testid="tactic-line" data-state={tLine.cleared ? 'cleared' : 'armed'}>
-              {tLine.cleared ? '✓ 総攻めを止めた' : `あと${formatScaled(tLine.remaining)}で総攻めを止める`}
+              {/* 文言は 1 つ。SP の狭い列では句の切れ目（「あと N で」／「総攻めを止める」）で折り返すよう 2 つの span に分ける */}
+              {tLine.cleared ? (
+                '✓ 総攻めを止めた'
+              ) : (
+                <span className="enemy-assault-line-text">
+                  <span>{`あと${formatScaled(tLine.remaining)}で`}</span>
+                  <span>総攻めを止める</span>
+                </span>
+              )}
             </div>
           )}
           {enemy.block > 0 && <div className="badge badge-block">🛡 {formatScaled(enemy.block)}</div>}

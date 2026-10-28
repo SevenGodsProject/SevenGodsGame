@@ -8302,6 +8302,10 @@ body.battle-viewport .enemy-panel[data-enemy='enemy_08'] .enemy-stage {
   background: #ff5c5c;
   box-shadow: 0 0 6px #ff5c5c;
 }
+/* 句の切れ目でだけ折り返す（SP375 の列幅 ≈147px では 2 行・PC は 1 行のまま） */
+.enemy-panel[data-enemy='enemy_08'] .enemy-assault-line-text > span {
+  display: inline-block;
+}
 .enemy-panel[data-enemy='enemy_08'] .enemy-assault-line[data-state='cleared'] {
   border-color: #ffd9a1aa;
   color: #ffe7bf;

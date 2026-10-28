@@ -264,7 +264,8 @@ for (const vp of VIEWPORTS) {
     await clickText(page, '神を選ぶ')
     await maybeClick(page, '新しく始める')
     await clickText(page, '大耀')
-    if (DIFFICULTY !== 'normal') await page.getByRole('button', { name: new RegExp(DIFFICULTY_LABEL) }).first().click({ timeout: 5000 })
+    // 難易度は role="radio" のボタン（GodSelectScreen）
+    if (DIFFICULTY !== 'normal') await page.getByRole('radio', { name: new RegExp(DIFFICULTY_LABEL) }).first().click({ timeout: 5000 })
     await clickText(page, 'この構成で始める')
     await page.getByText('挑む敵を選ぼう').first().waitFor({ timeout: 8000 })
     await page.getByRole('button', { name: new RegExp(PILOT_NAME) }).first().click({ timeout: 8000 })
