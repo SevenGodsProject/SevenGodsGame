@@ -26,6 +26,10 @@ const DIFFICULTY_LABEL = { easy: 'かんたん', normal: 'ふつう', hard: 'む
 const VIEWPORTS = [
   { id: 'pc', viewport: { width: 1508, height: 660 } },
   { id: 'sp375', viewport: { width: 375, height: 667 }, isMobile: true, hasTouch: true, deviceScaleFactor: 2 },
+  // v0.6 W2 修正の確認用（CF2_VIEWPORTS で明示したときだけ）：iPhone SE 級の 320 と iPhone 12〜15 級の 390
+  { id: 'sp320', viewport: { width: 320, height: 568 }, isMobile: true, hasTouch: true, deviceScaleFactor: 2 },
+  { id: 'sp360', viewport: { width: 360, height: 640 }, isMobile: true, hasTouch: true, deviceScaleFactor: 2 },
+  { id: 'sp390', viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true, deviceScaleFactor: 2 },
 ].filter((v) => ONLY.includes(v.id))
 const PILOT_NAME = '将軍四天王・忠次'
 
@@ -128,6 +132,54 @@ const tacticLineOf = (page) =>
       visible: cs.visibility !== 'hidden' && cs.display !== 'none' && Number(cs.opacity) > 0 && r.width > 0 && r.height > 0,
       pageScrollW: document.documentElement.scrollWidth,
       vw: innerWidth,
+    }
+  })
+/** v0.6 W2：名札の下端と立ち絵（img の箱／不透明な最初の行＝兜の飾りの先）の上端の重なり量（CSS px・正なら重なり） */
+const plateOverlapOf = (page) =>
+  page.evaluate(async () => {
+    const plate = document.querySelector('.enemy-plate')
+    const av = document.querySelector('.enemy-avatar')
+    if (!plate || !av) return null
+    const p = plate.getBoundingClientRect()
+    const r = av.getBoundingClientRect()
+    const cs = getComputedStyle(av)
+    // 立ち絵は div の background-image（contain・center／center bottom）。同じ当てはめで描いて不透明な最初の行を探す
+    let visibleTop = null
+    try {
+      const url = (cs.backgroundImage.match(/url\("?([^")]+)"?\)/) || [])[1]
+      if (url) {
+        const im = new Image()
+        im.src = url
+        await im.decode()
+        const w = Math.max(1, Math.round(r.width))
+        const h = Math.max(1, Math.round(r.height))
+        const scale = Math.min(w / im.naturalWidth, h / im.naturalHeight)
+        const dw = im.naturalWidth * scale
+        const dh = im.naturalHeight * scale
+        const pos = cs.backgroundPosition.split(' ').map((v) => parseFloat(v) / 100)
+        const dx = (w - dw) * (Number.isFinite(pos[0]) ? pos[0] : 0.5)
+        const dy = (h - dh) * (Number.isFinite(pos[1]) ? pos[1] : 0.5)
+        const c = document.createElement('canvas')
+        c.width = w
+        c.height = h
+        const ctx = c.getContext('2d')
+        ctx.drawImage(im, dx, dy, dw, dh)
+        const data = ctx.getImageData(0, 0, w, h).data
+        for (let y = 0; y < h && visibleTop === null; y++) {
+          for (let x = 0; x < w; x++) {
+            if (data[(y * w + x) * 4 + 3] > 24) { visibleTop = r.top + y; break }
+          }
+        }
+      }
+    } catch { visibleTop = null }
+    const round1 = (v) => (v === null ? null : Math.round(v * 10) / 10)
+    return {
+      plateBottom: round1(p.bottom),
+      plateH: round1(p.height),
+      avatarTop: round1(r.top),
+      visibleTop: round1(visibleTop),
+      overlapBoxPx: round1(p.bottom - r.top),
+      overlapVisiblePx: visibleTop === null ? null : round1(p.bottom - visibleTop),
     }
   })
 const glowOf = (page) =>
@@ -280,7 +332,7 @@ for (const vp of VIEWPORTS) {
       if (round > MAX_ROUNDS || round === 0) break
       if (!rounds.some((r) => r.round === round)) {
         if (round === 3) await page.waitForTimeout(500)
-        rounds.push({ round, intent: await intentOf(page), band: await bandOf(page), hp: await hpOf(page), glow: await glowOf(page), tacticLine: await tacticLineOf(page) })
+        rounds.push({ round, intent: await intentOf(page), band: await bandOf(page), hp: await hpOf(page), glow: await glowOf(page), tacticLine: await tacticLineOf(page), plateOverlap: await plateOverlapOf(page) })
         if (round === 3 || round === 4) await page.screenshot({ path: `${outDir}/${vp.id}-${seed}-r${round}-start.png` })
       }
       // 札の選び方（SG_STRATEGY）：damage＝使える札のうち「敵に N ダメージ」の N が最大の札（R3 までに 50% 帯をまたぐ経路を作る）／
@@ -434,6 +486,8 @@ const summary = {
       difficulty: DIFFICULTY,
       // v0.6：ラウンド開始時の「あと N」行（R3 だけに出るか・欠けないか）と、armed→cleared の同フレーム性
       tacticLineByRound: r.rounds.map((x) => ({ round: x.round, line: x.tacticLine ?? null })),
+      // v0.6 W2：ラウンドごとの名札↔立ち絵の重なり（R1・R2＝行なしの基準、R3＝「あと N」あり）
+      plateOverlapByRound: r.rounds.map((x) => ({ round: x.round, ...(x.plateOverlap ?? {}) })),
       tacticLineClears: r.plays.filter((p) => p.tacticLineClearMs !== null).map((p) => ({ round: p.round, card: p.card, clearMs: p.tacticLineClearMs, superOffMs: p.superOffMs, halfStartMs: p.halfStartMs, sameFrameAsSuperOff: p.tacticLineClearAndSuperOffSameFrame, sameFrameAsHalf: p.tacticLineClearAndHalfSameFrame, texts: p.tacticLineTexts })),
       tacticLineTextsR3: [...new Set(r.plays.filter((p) => p.round === 3).flatMap((p) => p.tacticLineTexts))],
       rafP95LiveMsMax: liveP95.length ? Math.max(...liveP95) : null,

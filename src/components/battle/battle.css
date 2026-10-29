@@ -8313,3 +8313,18 @@ body.battle-viewport .enemy-panel[data-enemy='enemy_08'] .enemy-stage {
 .enemy-panel[data-enemy='enemy_08'] .enemy-assault-line[data-state='cleared']::before {
   display: none;
 }
+/* v0.6 Human QA W2（docs/SHOGUNATE_V0_6_GATE.md §3）：SP では 13px の 2 行（h41）で名札が兜の飾りに約 12px 重なった。
+   SP だけ 11px（HP の数字と同じ大きさ）・丸なし・余白を詰めて 1 行（h≈19）にし、名札を立ち絵の上に戻す。
+   赤い光との結び付きは紅蓮の枠線が担う。文言・2 span の折り返し規則（狭い幅では句の切れ目で 2 行）・PC は不変 */
+@media (max-width: 899px) {
+  .enemy-panel[data-enemy='enemy_08'] .enemy-assault-line {
+    gap: 0;
+    margin-top: -2px;
+    padding: 0 6px;
+    font-size: 11px;
+    line-height: 1.2;
+  }
+  .enemy-panel[data-enemy='enemy_08'] .enemy-assault-line::before {
+    display: none;
+  }
+}
