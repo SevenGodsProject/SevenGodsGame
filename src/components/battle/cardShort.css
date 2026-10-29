@@ -1,0 +1,34 @@
+/* ============================================================
+   Cost-Short Marking v1（表示専用・engine 0・`disabled` 不変）
+   - 自分のターンで神力が足りない札（.card-view-short）に、珠の右へ「あとN」の帯を出す
+   - 帯は button の子なので group opacity を逃れられない。short 時だけ札の opacity を .45→.7 にし
+     （press.css の filter はそのまま）、白文字の帯が読めるようにする。敵ターン（inline .45）は変えない
+   - 詳細度：opacity は 0,4,0（press.css `.card-view:disabled:not(.card-view-playing)` 0,3,0 に勝つ）。
+     帯は 0,3,0（battle.css `.card-view > *:not(.card-view-clip)` 0,2,0 の position:relative に、
+     読み込み順に依存せず勝つ。artWindow.css と同じ手法）
+   - アニメーションなし。`.hand`・`.battle-dock` には触れない
+   ============================================================ */
+.card-view.card-view-short:disabled:not(.card-view-playing) {
+  opacity: 0.7;
+}
+.card-view.card-view-short > .card-view-short-tag {
+  position: absolute;
+  top: 3px;
+  left: 25px;
+  height: 14px;
+  line-height: 14px;
+  font-size: 10px;
+  font-weight: 700;
+  padding: 0 3px;
+  border-radius: 7px;
+  color: #fff;
+  background: #05060d;
+  border: 1px solid #ff6b6b99;
+  white-space: nowrap;
+  pointer-events: none;
+}
+/* Art Window 札は右上に「◯◯専用」の小札（artWindow.css・top:3px right:3px）があるので、珠の下へ逃がす */
+.card-view.card-view-short.card-view-artwin > .card-view-short-tag {
+  top: 24px;
+  left: 0;
+}
