@@ -84,3 +84,34 @@ sim の raceAware（hard）は 43.9%（監査時の見込み 60.4%）。本 sim 
 | 3 | 「✓ 総攻めを止めた」の瞬間の**達成感は v0.5 と同じかそれ以上**か | 同等以上 |
 
 否定が出た場合：文言だけを 1 回調整（仕組みは変えない）。hard を遊んだ場合は「崩れが遅れて見えたのが気になったか」を 1 行で聞く（W1 の判断材料）。
+
+## 5. CEO iPhone Human QA 結果（2026-10-30・build `ae7a893`・LAN preview 192.168.11.6:4183・`?pilot=shogunate&seed=sg-v04-01`・ふつう）
+
+| 項目 | 結果 |
+|---|---|
+| 戦闘 | 勝利。R4 は「強打 120」（then・probe と一致） |
+| R3 | ⚔豪快な一撃 1 枚目で「あと N」が減少、2 枚目で「✓ 総攻めを止めた」・赤い光の消失・崩れが**同期** |
+| Q1 赤い光の意味 | **はっきり分かった** |
+| Q2 札の選択に役立ったか | **役立った** |
+| Q3 達成感 | **v0.5 より v0.6 の方が強い** |
+| W2（SP の 2 行表示） | 文字は読めるが、**兜の飾りと重なっている** → §6 で修正 |
+
+判定（AI-PM）：**機能・ゲームデザインは合格（条件付き GO）**。残課題は W2 の表示重なりのみ。W1（hard の崩れと「✓ 止めた」のずれ）は今回未プレイ＝未判定のまま残す。
+
+## 6. W2 修正（SP の「あと N」行を 1 行化）— Gate PASS
+
+**変更**：`src/components/battle/battle.css` の enemy_08 ブロック末尾に `@media (max-width: 899px)` を 1 つ追加（11px・`line-height 1.2`・`padding 0 6px`・`margin-top −2px`・丸 `::before` 非表示）。すべて `[data-enemy='enemy_08']` 配下＝既存 7 体・enemy_09・PC は不変。文言・2 span の折り返し規則・`tacticLine.ts`・`EnemyPanel.tsx`・`src/core`・しきい値・演出タイミングは**変更 0**。probe（`scripts/shogunate-pilot/probe.mjs`）に viewport `sp320`／`sp360`／`sp390` と「名札下端 − 立ち絵の不透明な最初の行（兜の飾りの先）」の計測 `plateOverlapByRound` を追加（QA ツールのみ）。
+
+**計測**（`docs/evidence/shogunate-v0_6/13-w2-fix/probe-normal/summary.json`・normal・seed sg-v04-01・R3 開始時。重なりは正＝名札が飾りに乗る／負＝隙間）：
+
+| viewport | 行の高さ・行数・px | 修正前の重なり（推定：h41 換算） | **修正後の重なり** | R1（行なし・基準） |
+|---|---|---|---|---|
+| sp375（iPhone 優先） | h15・1 行・11px | 約 +19 | **−6.8（解消）** | −40.7 |
+| sp390 | h15・1 行・11px | 解消済み（余白大） | **−154.5** | −186.5 |
+| sp360（標準最小幅） | h15・1 行・11px | 約 +27 | **+1.5（飾りの先端のみ）** | −31.8 |
+| sp320（標準外） | h28・2 行・11px | 約 +67 | +54.2（修正前から R1 で +6＝構図の限界） | +6 |
+| pc | h24・1 行・13px（不変） | — | 名札が立ち絵に重なる既存構図のまま（R3 +27px は v0.6 Gate と同じ） | — |
+
+**回帰**：R4 分岐 then（強打 120）・「✓ 止めた」と赤い輪の消失・崩れの**同一フレーム**（5 viewport すべて `sameFrameAsSuperOff: true`）・行は R3 だけ・名札の内側・viewport の内側・横の溢れ 0・JS error 0。hard（sp375・`probe-hard/summary.json`・最終 build）：「あと130」が h15・1 行・重なり −8.0 → 「✓ 止めた」と赤い輪の消失が同一フレーム → R4 強打 140（then）。tsc 0（build 内）・**full vitest 1,610 PASS**（`05-vitest-full.txt`）・build PASS（CSS 197.96 kB＝+0.22 kB・JS 478.64 kB 不変、`01-build.txt`）・**不変性 20/20**（CORE sha256・gameVersion `1.d794038a00b5b53c`・save v9、`06-invariants.txt`）。
+
+**残リスク**：W1 は未判定のまま（hard を遊んだときに確認）。sp360 の +1.5px は飾りの先端 1〜2px が名札の半透明背景の下に入る程度で、顔・体には触れない。sp320 は本プロジェクトの標準 viewport（360×640 以上）外で、修正前から R1 時点で名札が飾りに乗る構図＝別 Decision（SP の名札と舞台の配置）で扱う。iOS Safari の実フォント幅で 11px の 1 行が 375px の列幅（147px）に収まるかは headless（Windows フォント）での計測＝CEO の次回 iPhone 確認で「1 行になっているか」を 1 問だけ聞く。
