@@ -1,8 +1,8 @@
 # Official Voice Crisis Pilot v1 — 大耀「ピンチ」（SGG Creator Kit v1.1 公式ボイス・2 本目）
 
 - 日付：2026-10-21（Lane 3「公式ボイス」・Infra＋Dev・**AI 判断**（CLAUDE.md §6-2）・CEO 決定282 に基づく次期開発。設計は `docs/OFFICIAL_VOICE_EXPANSION_AUDIT_V1.md` §5・§6 のとおり）
-- 状態：**IMPLEMENTED ON BRANCH — targeted vitest 48／48 PASS・tsc 0 — G-B スクリプト READY（§5-1・2026-10-22・未実行）— Automated Gate（build／Playwright）は PM 直列待ち — CEO Human QA READY（Gate 後）**（master／RC merge・push・tag・deploy は未実施）
-- worktree／branch：`SevenGodsGame-voice-pilot`／`feat/official-voice-crisis-pilot-v1`（基点 `release/v1_0_2-rc` **`ba0af34`**）
+- 状態：**v1.0.5 追従済み（merge `a96a409`・conflict 0・crisis 実装 不変）— Automated Gate PASS（2026-10-30・§5-2：tsc 0・targeted 60/60・full vitest 1,611・build・G-B 8/8 ALL PASS・着弾 +300ms 実測 296〜299ms）— CEO Human QA READY（§7・iPhone）**（master／RC merge・push・tag・deploy は未実施）
+- worktree／branch：`SevenGodsGame-voice-pilot`／`feat/official-voice-crisis-pilot-v1`（基点 `release/v1_0_2-rc` **`ba0af34`** → 2026-10-30 に Production v1.0.5 master **`a96a409`** を merge）
 - 前提：`docs/OFFICIAL_VOICE_PILOT_V1.md`（大耀「あいさつ」・CEO Q8 3／3 PASS）／`docs/OFFICIAL_VOICE_EXPANSION_AUDIT_V1.md`（本 branch へ同一バイトでコピー・lane3v 側は未変更）／`docs/DECISION257_SOUND_LAYER_V1_PILOT.md`（duck 経路）
 - 不変：**`src/core` 差分 0**（`git diff --stat release/v1_0_2-rc -- src/core`＝空。ゲーム規則・ダメージ・AP・敵・神・スコア・Seed・PRNG・save 不変）／既存 22 SE・BGM 音源・既存 greeting の時刻と挙動 不変／`docs/DECISIONS.md` 未編集（統合時に PM が 1 行追記）
 - 禁止事項の遵守：取得した音声は **1 本のみ**（他 26 本は取得していない）・加工 0・full vitest／build／preview 起動 0・push／merge／tag／deploy 0・他 worktree 編集 0
@@ -157,3 +157,20 @@ PLAYWRIGHT_MODULE=<playwright/index.mjs> node scripts/official-voice-pilot/accep
 1. PM：G-A（full vitest／build）→ G-B（`acceptance.mjs` 8 ケース＝§5-1 のコマンド。json の `crisisMeasuredDurationSec` を台帳 VOICE-KIT-08 の実測欄へ追記）→ preview 起動 → CEO Human QA
 2. PASS 後：`docs/DECISIONS.md` に AI 判断 1 行（台帳 ID VOICE-KIT-08 のみ引用）・RC への統合順序は PM
 3. その後：7 神 greeting 展開（data-only・VOICE-KIT-02〜07）→ C5 ジングル GainNode 化 → success → fatigue（CEO 試聴後）
+
+## 5-2. Automated Gate 実走結果（2026-10-30・AI-PM 直列・v1.0.5 追従 merge f8013f1 の後）
+
+| 項目 | 結果 | 証跡（docs/evidence/official-voice-crisis-pilot-v1/） |
+|---|---|---|
+| merge | Production v1.0.5 master a96a409 を merge・conflict 0・crisis 系 3 ファイルと音声 2 本は 64e6331 と同一バイト | git log f8013f1 |
+| tsc | 0 | 10-tsc-after-merge.txt |
+| targeted vitest | officialVoice／crisisVoice／crisisVoiceHook／creditsScreen **60/60 PASS** | 11-vitest-targeted-after-merge.txt |
+| full vitest | **1,611 PASS・0 fail・17 skip**（v1.0.5 の 1,578 ＋ 本 branch 33） | 12-vitest-full-after-merge.txt |
+| build | JS index-BDu5kkxP.js 477.95 kB（v1.0.5 475.99 → **+1.96 kB**・受入 ≤ +2.0 kB）／CSS 195.08 kB＝v1.0.5 と**同一ハッシュ ClB44gcF** | 13-build-after-merge.txt |
+| G-B 受入（Playwright・preview 4173） | **8/8 ALL PASS**（greeting PC／SP × ミュート有無 4・crisis 4） | 14-acceptance-after-merge.json／.stdout.txt |
+
+crisis × 音あり（PC／SP）の実測：入口で greeting＋crisis を各 1 回要求（先読み）→ greeting 1 本（11.783s）→ R4「大海嘯」で HP 300→100（表示）→ **ピンチ 1 本（8.858s）**。(b) 着弾 +300ms の実測は HP ラベル基準で **PC 299ms／SP 296ms**（許容 ±50）。(c) duck 0.343 → 復帰 1.0、必殺の duck と**合流**（merged true）。(d) 声の重なり 0ms。(e) R5 で HP 70 まで落ちても crisis は 1 本のまま。JS error 0・HP 経路 R1 260／R2 260／R3 300／R4 100／R5 70 が crisis-seed.mjs の予測と一致。crisis × ミュート：要求 0・start 0。
+
+QA スクリプトの修正（runtime 変更 0・scripts/official-voice-pilot/acceptance.mjs の 3 箇所）：① 計測フックの MutationObserver が addInitScript 時に null の documentElement を観測していた → document を観測 ② greeting ケースの要求回数 1 固定 → 本仕様（入口で 2 本先読み）に合わせ「greeting 1 回・合計 ≤2」 ③ 着弾基準＝浮遊数字の animationstart が必殺（カットイン）の数字で標本に乗らないため、HP ラベル変化（着弾＋130ms）を代替基準として同じ許容幅で判定。初回実走（修正前）は greeting 音あり 2 ケースが②で、crisis 4 ケースが①③で FAIL したが、声の start 回数・ミュート 0 回・duck 合流は修正前から PASS 値だった。
+
+残リスク：浮遊数字基準（deltaFromFloatMs）は null のまま＝QA 標本側の既知事項。iOS 実機（サイレントスイッチ・ホーム復帰・greeting 中の見送り）は §7 の CEO Human QA で確認。

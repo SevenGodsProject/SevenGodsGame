@@ -121,7 +121,8 @@ const CRISIS_HOOK = `() => {
     A.hpLabel.push({ atMs: now(), text: el.textContent })
     new MutationObserver(() => A.hpLabel.push({ atMs: now(), text: el.textContent })).observe(el, { childList: true, characterData: true, subtree: true })
   }
-  new MutationObserver(observeHp).observe(document.documentElement, { childList: true, subtree: true })
+  // addInitScript はドキュメント生成前に走るため documentElement が null のことがある → document（Node）を観測する（2026-10-30 Gate 実走で修正）
+  new MutationObserver(observeHp).observe(document, { childList: true, subtree: true })
 }`
 
 async function clickText(page, text, timeout = 6000) {
@@ -189,7 +190,8 @@ async function runGreetingCase(browser, vp, muted) {
     errors,
     pass: muted
       ? voiceStarts.length === 0 && voiceRequests.length === 0 && errors.length === 0 && inBattle
-      : voiceStarts.length === 1 && Math.abs(voiceStarts[0].duration - VOICE_SEC.greeting) < 0.1 && voiceRequests.length === 1 && !!duckDown && !!duckUp && errors.length === 0 && inBattle,
+      // Crisis Pilot v1 以降は入口で greeting＋crisis の 2 本を先読みする（仕様 §1「先読み」）。greeting の要求は 1 回・合計は 2 回まで
+      : voiceStarts.length === 1 && Math.abs(voiceStarts[0].duration - VOICE_SEC.greeting) < 0.1 && voiceRequests.filter((r) => r.url.includes('greeting.mp3')).length === 1 && voiceRequests.length <= 2 && !!duckDown && !!duckUp && errors.length === 0 && inBattle,
   }
   await context.close()
   return result
@@ -310,7 +312,11 @@ async function runCrisisCase(browser, vp, muted) {
   const deltaFloat = crisis && impactFloat ? crisis.atMs - impactFloat.atMs : null
   const deltaHp = crisis && hpChange ? crisis.atMs - (hpChange.atMs - CRISIS.hpLabelLagMs) : null
   const expectedDelta = CRISIS.afterImpactMs
-  const timingOk = deltaFloat !== null && Math.abs(deltaFloat - expectedDelta) <= CRISIS.toleranceMs
+  // 主判定＝浮遊数字の animationstart。必殺（カットイン）の数字は animationstart の標本に乗らないことがあるため（2026-10-30 実走）、
+  // 代替＝HP ラベルの変化（着弾 ＋ hit stop 40 ＋ HP_LAG 90 を引いた時刻）でも同じ許容幅で判定する
+  const floatOk = deltaFloat !== null && Math.abs(deltaFloat - expectedDelta) <= CRISIS.toleranceMs
+  const hpOk = deltaHp !== null && Math.abs(deltaHp - expectedDelta) <= CRISIS.toleranceMs
+  const timingOk = floatOk || hpOk
 
   // (c) duck：ピンチ開始の直後に 1 未満へ → その後 1 へ。合流＝再 duck の呼び出し時刻（ctxNow）が、直前に予約済みの「復帰 1.0」の時刻 t より前
   const rampsAt = crisis ? audio.ramps.filter((r) => r.atMs >= crisis.atMs - 50) : []
