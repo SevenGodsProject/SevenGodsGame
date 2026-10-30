@@ -426,3 +426,18 @@ CEO INPUT が不要なもの：SE（自作）、Kit 公式ファイルの sha256
 
 - 変更：本台帳・`ASSET_GENERATION_SERVICE_TERMS_AUDIT_ADDENDUM_FAL_MINIMAX.md`（§1 の「推定」を UNKNOWN に訂正・F1 再検証記録）・`ASSET_RIGHTS_LEDGER_CEO_INPUT_2026-10-07.md` §6（反映記録）・`RELEASE_STATUS.md` K13 行。`src/`・`public/`・`scripts/` 差分 0（commit 直前・直後に `git diff --stat` で確認）。生成 API／購入／外部サービスへの送信 0（fal ToS の再取得は閲覧のみ）
 - 複製した原本 14 ファイルは untracked・commit 対象外（§7-3）
+
+## 8. 将軍家 Pilot（忠次・enemy_08）— v0.4 で v1.0.2 RC 側へ移した記載（2026-10-21・branch `feat/shogunate-pilot-v0.4`・AI 記入・新規素材 0）
+
+v0.1〜v0.3（branch `feat/shogunate-pilot-v0.3` @ `5a357f1`・CEO 実装承認 2026-10-10）で記入した 2 行を、v1.0.2 RC（`release/v1_0_2-rc`）から切った本 branch へ**そのまま移した**もの。配信ファイル・原本は `git checkout 5a357f1 -- …` で流用し、再生成・再加工・新規取得は行っていない（sha256 は本 branch で再計測し、v0.3 の記載と一致）。
+
+出典：SGG Creator Kit **将軍家**（`docs/assets-kit/shogunate-manifest.json`＝公式 `https://sevengodsgames.com/creator-kit/shogunate/v1/manifest.json` の無改変コピー・`kitId sgg-creator-kit-shogunate`・`kitVersion 1.0.0`・`releasedAt 2026-10-08`・`termsId SGG-FAN-CREATION-GUIDELINES-1.0.0`）。規約本文は公式 `/creator-kit/v1/RIGHTS.md` を 2026-10-10 に再取得し、repo コピー `docs/assets-kit/SGG-CREATOR-KIT-RIGHTS.md`（2026-10-08 版）と**同一テキスト**（CR 無視で diff 0）であることを確認済み（v0.1 時点）。将軍家に公式ボイスは無い。名前は公式名「忠次」＋公式 role「将軍四天王」。二つ名・技名・台詞は非公式のファン創作（規約 §6・§7。「公式」「公認」とは表記しない）。
+
+| ID | Path（配信） | Source file（art-source） | Category | Creator | Model-Service | Generation date | Prompt reference | Reference inputs | Terms version・date checked | Commercial use | Modification | Attribution | Canonical source | Evidence（sha256） | Status |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| ENEMY-KIT-01 | `enemies/tadatsugu/art.webp`（768²・alpha・**57,326B（v0.2 以降不変）**・`enemies.ts` `SHOGUNATE_ENEMIES` art） | `art-source/enemies/tadatsugu/tadatsugu_front.webp`（Kit 原本 1600²・138,730B・無加工・tracked） | enemy | **Kit 公式**（将軍家 v1.0.0） | — | `releasedAt 2026-10-08` | — | なし | `SGG-FAN-CREATION-GUIDELINES-1.0.0`（Updated 2026-10-08）・2026-10-10 | 可（§1） | 可（§2）。実施（v0.2）：透過余白トリム（1067×1439）→ 絵の高さ 652 に等比縮小（483×652）→ 768² の額縁に上 60／下 56 の余白で配置（既存 7 体と同じ接地位置）→ webp q85（sharp・AI 非生成・画素の内容は不変。手順は v0.3 branch の `scripts/shogunate-pilot/prepare-assets.mjs`）。v0.4 では再加工 0 | 任意（§4）。CM-02 の Credits 文言「SEVENGODS Games Creator Kit」に含まれる | manifest `tadatsugu:FRONT`（`04_tadatsugu/tadatsugu_front.webp`・sha256 **`b8d7d894e6b5301e1288a112dfd96d1542b6c991e137a33e9df1c60516dc2586`**＝原本と一致・2026-10-21 再計測） | 配信 `9abb26407d63b61a`（先頭 16 桁・v0.2 以降不変・2026-10-21 再計測） | **◎ KNOWN**（原本保全・sha256 一致・Terms 確認日の 3 つ） |
+| STG-08 | `backgrounds/stages/08-shogunate-camp.webp`（1600×900・**164,216B（v0.2 以降不変）**）・将軍四天王・忠次「軍議の本陣」accent `#8c6d1f` | STG-02（`02-oni-castle.webp`）からの派生。独自の原本なし | stage | CEO 生成（原本＝STG-02）＋AI 非生成加工 | ChatGPT（STG-02 と同じ・プラン UNKNOWN） | 2026-10-10（加工） | STG-02 と同じ | STG-02 | STG-02 と同じ | STG-02 と同じ | 非生成：色相 +30°・彩度 0.42・明度 0.7（sharp `modulate`・v0.2）のみ。新規生成はしていない。v0.4 では再加工 0 | — | STG-02（配信 sha256 `0a55b064af931b58`） | `702229c42cba8d35`（v0.2 以降不変・2026-10-21 再計測） | STG-02 と同じ扱い（✗＝原本未保全を引き継ぐ。Pilot 用の暫定。本採用時は専用背景の生成を CEO 判断） |
+
+- 本 Pilot で追加した配信ファイルは上記 2 本のみ。既存 7 体の画像・背景・Threat Pilot（enemy_09＝鬼将の画像・舞台を共有）は変更していない（`coreRoster.test.ts`／`shogunateRoster.test.ts` が `CORE_ENEMIES` の sha256 を固定）
+- BACK（`tadatsugu_back.webp`）と将軍家の他 9 体は使用しないため取得していない（原本 1 本だけ保全）
+- §7-4 の集計（86 行）には含めていない（Pilot branch の暫定行。本採用時に 3-C／3-F へ転記し集計を更新する）

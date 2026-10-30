@@ -1,0 +1,116 @@
+/// <reference types="node" />
+// 忠次 v0.6 設計監査用 sim（scratchpad 専用・READ-ONLY：敵定義はこのテストプロセスのメモリ上だけで差し替え、ファイルは変更しない）
+// P1：hard のしきい値候補 0.5／0.55／0.6／0.65 の then 率・迷う局面・到達不能
+// P2：then／else 別の勝率・残 HP・最終スコア（normal・hard）
+import { writeFileSync } from 'node:fs'
+import { describe, expect, it } from 'vitest'
+import { GODS } from 'WT/src/core/data/gods'
+import { CORE_ENEMIES, SHOGUNATE_ENEMY_IDS, getEnemyDef } from 'WT/src/core/data/enemies'
+import { getCardDef } from 'WT/src/core/data/cards'
+import { getRecommendedDeck } from 'WT/src/core/data/deckBuilder'
+import { DIVINATION_CHOICES } from 'WT/src/core/data/divination'
+import type { CardInstance, Difficulty, EnemyTacticDef, GameState, GodId } from 'WT/src/core/types'
+import { applyAction } from 'WT/src/core/engine/reducer'
+import { enemyActionTotal } from 'WT/src/core/engine/intent'
+import { getFinalScore } from 'WT/src/core/engine/score'
+
+const OUT = process.env.SIM_OUT as string
+const SEEDS = 40
+const TADA = SHOGUNATE_ENEMY_IDS.tadatsugu
+type Policy = 'greedy' | 'raceAware'
+const costOf = (c: CardInstance) => getCardDef(c.defId).cost + (c.costModifier ?? 0)
+const dmgOf = (c: CardInstance) => getCardDef(c.defId).effects.reduce((s, e) => s + (e.kind === 'damage' && e.target === 'enemy' ? e.amount : 0), 0)
+const blkOf = (c: CardInstance) => getCardDef(c.defId).effects.reduce((s, e) => s + (e.kind === 'block' ? e.amount : 0), 0)
+const inc = (s: GameState) => (s.enemy.intent ? enemyActionTotal(s.enemy.intent) : 0)
+const danger = (s: GameState) => s.player.hp - Math.max(0, inc(s) - s.player.block) < s.player.maxHp * 0.35
+const TENKEI = 2
+const KAGO = 0
+const tenkeiDmg = DIVINATION_CHOICES[TENKEI].effects.reduce((s, e) => s + (e.kind === 'damage' ? e.amount : 0), 0)
+
+function pick(s: GameState): CardInstance | null {
+  const ok = s.hand.filter((c) => costOf(c) <= s.ap.current)
+  if (!ok.length) return null
+  if (danger(s) && s.player.block < inc(s)) {
+    const g = ok.filter((c) => blkOf(c) > 0).sort((a, b) => blkOf(b) - blkOf(a))[0]
+    if (g) return g
+  }
+  const a = ok.filter((c) => dmgOf(c) > 0).sort((x, y) => dmgOf(y) - dmgOf(x))[0]
+  return a ?? ok.sort((x, y) => costOf(x) - costOf(y))[0]
+}
+/** R3 終了時点で「R3 に出せる攻撃の総量」と閾値までの距離を測り、迷う局面（届くが全力が要る）を数える */
+function r3Reach(s: GameState, thr: number) {
+  const dmg = s.hand.filter((c) => dmgOf(c) > 0).reduce((a, c) => a + dmgOf(c), 0) + tenkeiDmg
+  const need = s.enemy.hp - thr
+  return need <= 0 ? 'already' : need <= dmg ? 'reachable' : 'unreachable'
+}
+type Out = { status: string; branch: 'then' | 'else' | null; hpLeft: number; score: number; reach: string | null }
+function play(seed: string, godId: GodId, d: Difficulty, policy: Policy, ratio: number): Out {
+  let s = applyAction(null, { type: 'START_GAME', seed, godId, enemyId: TADA, deck: getRecommendedDeck(godId), difficulty: d }).state
+  const thr = Math.floor(s.enemy.maxHp * ratio)
+  let branch: Out['branch'] = null
+  let reach: string | null = null
+  let g = 0
+  while (s.status === 'playing' && g++ < 500) {
+    if (s.round === 3 && reach === null) reach = r3Reach(s, thr)
+    if (s.round === 4 && branch === null) branch = s.enemy.intent?.kind === 'special' ? 'else' : 'then'
+    const c = pick(s)
+    if (c) {
+      s = applyAction(s, { type: 'PLAY_CARD', uid: c.uid }).state
+      continue
+    }
+    if (s.divination.remaining > 0 && !s.divination.usedThisRound) {
+      const left = 7 - s.round + 1
+      let ch: number | null = null
+      if (policy === 'raceAware' && s.round === 3 && s.enemy.hp > thr && s.enemy.hp - thr <= tenkeiDmg) ch = TENKEI
+      else if (policy === 'raceAware' && s.round === 4 && s.enemy.intent?.kind === 'special') ch = KAGO
+      else if (s.divination.remaining >= left || danger(s)) ch = danger(s) ? KAGO : TENKEI
+      if (ch !== null) {
+        s = applyAction(s, { type: 'USE_DIVINATION', choiceIndex: ch }).state
+        continue
+      }
+    }
+    s = applyAction(s, { type: 'END_ROUND' }).state
+  }
+  return { status: s.status, branch, hpLeft: s.player.hp / s.player.maxHp, score: getFinalScore(s.score), reach }
+}
+const r3 = (x: number) => +x.toFixed(3)
+function sum(o: Out[]) {
+  const by = (b: 'then' | 'else') => {
+    const a = o.filter((x) => x.branch === b)
+    return a.length
+      ? { n: a.length, win: r3(a.filter((x) => x.status === 'won').length / a.length), hpLeft: r3(a.reduce((p, x) => p + x.hpLeft, 0) / a.length), score: Math.round(a.reduce((p, x) => p + x.score, 0) / a.length) }
+      : null
+  }
+  const br = o.filter((x) => x.branch)
+  return {
+    n: o.length,
+    win: r3(o.filter((x) => x.status === 'won').length / o.length),
+    thenRate: br.length ? r3(o.filter((x) => x.branch === 'then').length / br.length) : null,
+    reachable: r3(o.filter((x) => x.reach === 'reachable').length / o.length),
+    unreachable: r3(o.filter((x) => x.reach === 'unreachable').length / o.length),
+    then: by('then'),
+    else: by('else'),
+  }
+}
+
+describe('忠次 v0.6 しきい値・分岐の価値 sim', () => {
+  it('候補比較', () => {
+    const cond = (getEnemyDef(TADA).actions[3] as EnemyTacticDef).cond
+    expect(cond.ratio).toBe(0.5)
+    const orig = { ...cond }
+    const seeds = Array.from({ length: SEEDS }, (_, i) => `shogunate-pilot-${i}`)
+    const run = (d: Difficulty, p: Policy, ratio: number) => {
+      cond.ratio = ratio // メモリ上だけ（ratioByDifficulty は無い＝ratio が使われる）
+      return sum(GODS.flatMap((g) => seeds.map((sd) => play(sd, g.id, d, p, ratio))))
+    }
+    const res: Record<string, unknown> = {}
+    for (const ratio of [0.5, 0.55, 0.6, 0.65]) for (const p of ['greedy', 'raceAware'] as Policy[]) res[`hard:${ratio}:${p}`] = run('hard', p, ratio)
+    for (const p of ['greedy', 'raceAware'] as Policy[]) res[`normal:0.5:${p}`] = run('normal', p, 0.5)
+    for (const p of ['greedy', 'raceAware'] as Policy[]) res[`easy:0.5:${p}`] = run('easy', p, 0.5)
+    Object.assign(cond, orig)
+    expect(cond.ratio).toBe(0.5)
+    // 既存 7 体には tactic が無い（候補値は 7 体に届かない）ことの確認
+    expect(CORE_ENEMIES.every((e) => e.actions.every((a) => a.kind !== 'tactic'))).toBe(true)
+    writeFileSync(OUT, JSON.stringify({ at: new Date().toISOString(), seeds: SEEDS, gods: GODS.length, res }, null, 2))
+  })
+})

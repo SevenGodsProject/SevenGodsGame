@@ -243,6 +243,10 @@ describe('v1.0.1 ★再付番：EnemyDef.rank（表示専用）は版に影響�
       expect(snapshot).toContain(`"id":"${enemy.id}"`)
       expect(snapshot).toContain(`"maxHp":${enemy.maxHp}`)
     }
+    // 将軍家 Pilot v0.4：忠次（enemy_08・`?pilot=shogunate` 限定）も指紋に乗らない。CORE 7 体の id だけが現れる
+    expect(snapshot).not.toContain('"id":"enemy_08"')
+    expect(snapshot).not.toContain('"id":"enemy_09"')
+    expect(snapshot.match(/"id":"enemy_0[0-9]"/g)).toHaveLength(CORE_ENEMIES.length)
   })
 })
 

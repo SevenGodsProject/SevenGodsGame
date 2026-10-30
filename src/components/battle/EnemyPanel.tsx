@@ -1,6 +1,8 @@
 import type { CSSProperties, ReactNode } from 'react'
-import type { EnemyState } from '../../core/types'
-import { getEnemyDef } from '../../core/data/enemies'
+import type { Difficulty, EnemyState } from '../../core/types'
+import { getEnemyDef, isShogunateEnemyId } from '../../core/data/enemies'
+import { resolveEnemyTactic } from '../../core/engine/tactic'
+import { tacticLine } from './tacticLine'
 import { STAT_LABEL } from '../setup/godStyle'
 import { formatScaled } from '../displayScale'
 import { formatEnemyIntentText, getIntentGlyph, getIntentStanceClass, getIntentTierClass, type PowerTier } from './cardStyle'
@@ -39,6 +41,8 @@ type EnemyPanelProps = {
   reduced?: boolean
   /** 決定249 Reaction Language v1：WEAKEN（敵の攻撃力を下げる札）の「よろめき」の再生回数（表示専用） */
   staggerKey?: number
+  /** 将軍家 Pilot v0.4：難易度（忠次 enemy_08 の予告グローを表示 HP で解決するときだけ読む。表示専用） */
+  difficulty?: Difficulty
 }
 
 /** 敵立ち絵のリアクション1層。reaction が無いときは素通しの div（ツリー構造を変えない） */
@@ -97,6 +101,7 @@ export function EnemyPanel({
   defeated,
   reduced = false,
   staggerKey = 0,
+  difficulty = 'normal',
 }: EnemyPanelProps) {
   const def = getEnemyDef(enemy.defId)
   const line = def.battleCries[(round - 1) % def.battleCries.length]
@@ -107,10 +112,19 @@ export function EnemyPanel({
   const surgeClass = isLateSurge ? (def.visualType === 'lateSurgeStrong' ? ' enemy-avatar-surge-strong' : ' enemy-avatar-surge-mild') : ''
   // ENEMY-VFX-01：次ラウンドが必殺技（special／技名付きmultiAttack）へつながる
   // chargeのときだけ、通常の溜めglowに「必殺充填」強化クラスを重ねる（data-driven）
-  const nextAction = def.actions[round] ?? def.actions[def.actions.length - 1]
+  const nextScript = def.actions[round] ?? def.actions[def.actions.length - 1]
+  // 将軍家 Pilot v0.4（enemy_08 忠次だけ・`docs/SHOGUNATE_NEXT_PILOT_AUDIT_V1.md` §4-3）：次ラウンドが軍略（tactic）なら
+  // **表示 HP**（hpShown）と難易度で解決した側を見る＝表示 HP が 50% を割った瞬間に「必殺充填」の赤い輪が外れ、
+  // Enemy Break の崩れ（同じ hpShown の帯遷移）と同じフレームで「追い込めた」が 1 つの出来事になる。
+  // engine は startRound で実 HP を使って改めて解決する（R4 開始時には hpShown === hp なので予告と実行は一致）。
+  // enemy_09（Threat Branch Pilot）は従来どおり解決しない（未来情報の常時表示をしない＝決定263 の境界・Lane 1 の CEO QA 済み画面を変えない）
+  const nextAction = isShogunateEnemyId(enemy.defId) ? resolveEnemyTactic(nextScript, hpShown, enemy.maxHp, difficulty) : nextScript
   const nextIsSpecial =
     nextAction.kind === 'special' || (nextAction.kind === 'multiAttack' && !!nextAction.special)
   const charging = enemy.intent?.kind === 'charge'
+  // 将軍家 Pilot v0.6（enemy_08 忠次だけ・`docs/SHOGUNATE_V0_6_DESIGN_AUDIT.md` §1-3）：R3 の溜め中に「あと N で総攻めを止める」。
+  // 上の赤い輪と同じ hpShown・同じ tacticBranch で決まる＝輪の消失と「✓ 総攻めを止めた」は同じ描画。enemy_09 には出さない
+  const tLine = isShogunateEnemyId(enemy.defId) && !defeated ? tacticLine(enemy.intent, nextScript, hpShown, enemy.maxHp, difficulty) : null
   const chargingClass =
     charging
       ? nextIsSpecial
@@ -156,6 +170,19 @@ export function EnemyPanel({
             {intentGlyph && <GlyphIcon glyph={intentGlyph} className="intent-glyph" />}
             {formatEnemyIntentText(enemy.intent)}
           </div>
+          {tLine && (
+            <div className="enemy-assault-line" data-testid="tactic-line" data-state={tLine.cleared ? 'cleared' : 'armed'}>
+              {/* 文言は 1 つ。SP の狭い列では句の切れ目（「あと N で」／「総攻めを止める」）で折り返すよう 2 つの span に分ける */}
+              {tLine.cleared ? (
+                '✓ 総攻めを止めた'
+              ) : (
+                <span className="enemy-assault-line-text">
+                  <span>{`あと${formatScaled(tLine.remaining)}で`}</span>
+                  <span>総攻めを止める</span>
+                </span>
+              )}
+            </div>
+          )}
           {enemy.block > 0 && <div className="badge badge-block">🛡 {formatScaled(enemy.block)}</div>}
           {enemy.buffs.length > 0 && (
             <div className="buff-list">
@@ -188,7 +215,8 @@ export function EnemyPanel({
           >
             <Reaction reaction={reactions[0]} planKey={planKey} index={0} staggerKey={defeated ? 0 : staggerKey}>
               <Reaction reaction={reactions[1]} planKey={planKey} index={1}>
-                <div className={`enemy-avatar${surgeClass}${chargingClass}${stanceClass}`} style={{ backgroundImage: `url(${def.art})` }} />
+                {/* 将軍家 Pilot v0.2：--enemy-art は enemy_08 の光レイヤー（battle.css 末尾・mask）が読む。他の敵は未使用の変数が付くだけ */}
+                <div className={`enemy-avatar${surgeClass}${chargingClass}${stanceClass}`} style={{ backgroundImage: `url(${def.art})`, ['--enemy-art' as string]: `url(${def.art})` }} />
               </Reaction>
             </Reaction>
           </div>

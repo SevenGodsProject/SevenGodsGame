@@ -1,0 +1,21 @@
+PASS  CORE_ENEMIES count = 7  7
+PASS  CORE_ENEMIES sha256 = golden 5678e3e7…  "5678e3e757f603ae3b2a1974c772c5480222bea9c7e3e6a78f96d1b49bd70e91"
+PASS  getGameVersion() = 1.d794038a00b5b53c  "1.d794038a00b5b53c"
+PASS  RULES.saveVersion = 9  9
+PASS  PILOT_ENEMIES = [enemy_09]  ["enemy_09"]
+PASS  SHOGUNATE_ENEMIES = [enemy_08 将軍四天王・忠次 maxHp 98]  [["enemy_08","将軍四天王・忠次",98]]
+PASS  ENEMIES = CORE + PILOT + SHOGUNATE (9)  ["enemy_01","enemy_02","enemy_03","enemy_04","enemy_05","enemy_06","enemy_07","enemy_09","enemy_08"]
+PASS  enemy_08 is not in CORE/PILOT  null
+PASS  isPilotEnemyId true for enemy_08 and enemy_09, false for CORE  null
+PASS  isShogunateEnemyId true only for enemy_08  null
+PASS  fingerprint excludes enemy_08  false
+PASS  fingerprint excludes enemy_09  false
+PASS  fingerprint excludes 忠次 / tadatsugu / 軍略  null
+PASS  fingerprint excludes tactic / ratioByDifficulty / hpRatioByDifficulty  null
+PASS  fingerprint enemy ids = 7  7
+PASS  tadatsugu tactic cond = { enemyHpRatioAtMost, ratio 0.5 } without ratioByDifficulty  {"type":"enemyHpRatioAtMost","ratio":0.5}
+PASS  tadatsugu R3 charge / R4 tactic then attack 12 / else special 24 軍略・総攻め  ["attack","attack","charge","tactic","attack","attack","attack"]
+PASS  enemyTactic.hpRatioByDifficulty = {easy 0.5, normal 0.5, hard 0.6} (RC 不変)  {"easy":0.5,"normal":0.5,"hard":0.6}
+PASS  CORE enemies have no tactic  null
+PASS  pickEnemyId(500 seeds) ⊆ CORE 7  ["enemy_01","enemy_02","enemy_03","enemy_04","enemy_05","enemy_06","enemy_07"]
+20/20 PASS  HEAD f0daa46

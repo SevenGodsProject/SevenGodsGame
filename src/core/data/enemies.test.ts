@@ -1,10 +1,19 @@
 import { describe, expect, it } from 'vitest'
-import { CORE_ENEMIES, ENEMIES, ENEMY_IDS, pickEnemyId } from './enemies'
+import { CORE_ENEMIES, ENEMIES, ENEMY_IDS, PILOT_ENEMIES, SHOGUNATE_ENEMIES, pickEnemyId } from './enemies'
 
 describe('ENEMIES', () => {
   it('has a unique id per enemy', () => {
     const ids = ENEMIES.map((e) => e.id)
     expect(new Set(ids).size).toBe(ids.length)
+  })
+
+  it('is CORE 7 + Threat Pilot (enemy_09) + 将軍家 Pilot (enemy_08) in that order; the default pick stays within CORE (v0.4)', () => {
+    expect(ENEMIES).toHaveLength(9)
+    expect(ENEMIES.map((e) => e.id as string)).toEqual([...Object.values(ENEMY_IDS), 'enemy_09', 'enemy_08'])
+    expect(PILOT_ENEMIES.map((e) => e.id as string)).toEqual(['enemy_09'])
+    expect(SHOGUNATE_ENEMIES.map((e) => e.id as string)).toEqual(['enemy_08'])
+    const core = new Set(CORE_ENEMIES.map((e) => e.id))
+    for (const seed of ['a', 'seed-1', 'seed-2', 'seed-999999', 'こんにちは']) expect(core.has(pickEnemyId(seed))).toBe(true)
   })
 
   it('gives every enemy a positive HP, at least one action, and art', () => {
@@ -92,12 +101,14 @@ describe('ENEMIES', () => {
     // 7ボス専用Stage Background。BattleScreenが`--stage-bg`として注入し、Enemy Selectも
     // `--enemy-stage-bg`として同じ値を使う（表示専用。ロジック・数値には不関与）。
     // Threat Branch Pilot v1：舞台の一意性は既存 7 体（CORE）の性質。Pilot 敵（enemy_09）は鬼将の舞台を共有する（新規素材 0）
+    // 将軍家 Pilot v0.4：忠次（enemy_08）は専用の舞台（08・STG-02 の非生成派生）を持つ＝CORE 7 体＋忠次でも一意
     const bgs = ENEMIES.map((e) => e.stage.bg)
     for (const bg of bgs) {
       expect(bg).toBeDefined()
       expect(bg).toMatch(/^\/assets\/backgrounds\/stages\/[0-9]{2}-[a-z-]+\.webp$/)
     }
     expect(new Set(CORE_ENEMIES.map((e) => e.stage.bg)).size).toBe(CORE_ENEMIES.length)
+    expect(new Set([...CORE_ENEMIES, ...SHOGUNATE_ENEMIES].map((e) => e.stage.bg)).size).toBe(CORE_ENEMIES.length + SHOGUNATE_ENEMIES.length)
   })
 
   it('ships the referenced stage background asset for every enemy', () => {

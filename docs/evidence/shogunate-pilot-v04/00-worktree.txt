@@ -1,0 +1,42 @@
+# G0 worktree / HEAD / merge-tree（忠次 Pilot v0.4 PM Gate・2026-10-22T11:41:48Z）
+worktree: C:\Users\kimi1\SevenGodsGame-shogunate-pilot
+branch: feat/shogunate-pilot-v0.4  HEAD: f0daa46dddbb940faaf4baee84263d296b6fe1a3
+起点 RC ba0af34 → a14dd09 → 5af68b5 → f0daa46
+
+## git status --short（tracked 差分 0・untracked は dist-v02/dist-v03 等 .gitignore 済み）
+?? docs/evidence/shogunate-pilot-v04/
+(tracked diff lines: 0)
+
+## merge-tree（merge はしない・読み取りのみ）
+master(CEO 指定) 0d38c05 = 0d38c0543a478b3994e622a3b52f125423197e91  [0d38c05 Merge pull request #2 from SevenGodsProject/release/v1_0_2-rc]
+local master 1ce9876 = v1.0.1 merge（0d38c05 の祖先）
+merge-base 0d38c05..HEAD = ba0af34c3f97af743ff8bae94afb4947850ab3b7  (= RC HEAD ba0af34)
+git merge-tree --write-tree 0d38c05 HEAD -> exit 0 / tree c900dbaaac02b1ad01e0dc9e27309ea872f375b2  conflict 0
+git merge-tree --write-tree 1ce9876 HEAD -> exit 0 / tree e9ee8e9df7d555ce52fb1b8a9e6efafbe57589f2  conflict 0
+
+## git diff --stat 0d38c05..HEAD
+ .gitignore                                         |   4 +
+ art-source/enemies/tadatsugu/tadatsugu_front.webp  | Bin 0 -> 138730 bytes
+ docs/ASSET_RIGHTS_LEDGER.md                        |  15 +
+ docs/SHOGUNATE_NEXT_PILOT_AUDIT_V1.md              | 288 +++++++++++++++++
+ docs/SHOGUNATE_PILOT_V0_4.md                       | 132 ++++++++
+ docs/assets-kit/shogunate-manifest.json            | 339 +++++++++++++++++++++
+ docs/evidence/v1_0_2-rc/pr-body.md                 |  32 --
+ .../backgrounds/stages/08-shogunate-camp.webp      | Bin 0 -> 164216 bytes
+ public/assets/enemies/tadatsugu/art.webp           | Bin 0 -> 57326 bytes
+ scripts/v1_0_2-rc/production-smoke.cjs             | 108 -------
+ src/components/battle/BattleEnemyCutin.tsx         |   2 +-
+ src/components/battle/BattleScreen.tsx             |   4 +-
+ src/components/battle/BossEntrance.tsx             |   1 +
+ src/components/battle/EnemyPanel.tsx               |  19 +-
+ src/components/battle/battle.css                   |  76 +++++
+ src/components/battle/shogunateVisual.test.ts      | 102 +++++++
+ src/components/pilot/pilotFlag.test.ts             |  48 ++-
+ src/components/pilot/pilotFlag.ts                  |  52 +++-
+ src/components/setup/EnemySelectScreen.tsx         |  20 +-
+ src/core/data/coreRoster.test.ts                   |  16 +-
+ src/core/data/enemies.test.ts                      |  13 +-
+ src/core/data/enemies.ts                           |  78 ++++-
+ src/core/data/shogunateRoster.test.ts              | 179 +++++++++++
+ src/core/replay/gameVersion.test.ts                |   4 +
+ 24 files changed, 1351 insertions(+), 181 deletions(-)
