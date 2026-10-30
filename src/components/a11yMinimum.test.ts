@@ -22,7 +22,12 @@ describe('A11Y-01 神 HP／敵 HP の数字のコントラスト ≥ 4.5:1', () 
   const battleCss = read('./battle/battle.css')
   const pill = block(battleCss, '.hp-bar-label-text').match(/background:\s*([^;]+);/)?.[1]?.trim()
   const text = block(battleCss, '.hp-bar-label').match(/color:\s*([^;]+);/)?.[1]?.trim()
-  const godFill = read('./battle/PlayerPanel.tsx').match(/<HpBar[^>]*color="(#[0-9a-fA-F]{6})"/)?.[1]
+  // 神 HP 危険帯 static v1：神の fill は段階別（high 緑／half 橙／quarter 橙赤）。3 色すべてを検査する
+  const playerPanel = read('./battle/PlayerPanel.tsx')
+  const godFills = Object.fromEntries(
+    [...playerPanel.matchAll(/(high|half|quarter):\s*'(#[0-9a-fA-F]{6})'/g)].map((m) => [m[1], m[2]]),
+  ) as Record<'high' | 'half' | 'quarter', string>
+  const godFill = godFills.high
   const enemyFill = read('./battle/EnemyPanel.tsx').match(/<HpBar[^>]*color="(#[0-9a-fA-F]{6})"/)?.[1]
   const trough = block(battleCss, '.hp-bar').match(/background:\s*([^;]+);/)?.[1]?.trim()
 
@@ -37,8 +42,11 @@ describe('A11Y-01 神 HP／敵 HP の数字のコントラスト ≥ 4.5:1', () 
   it('白文字 × pill × 緑（神）／赤（敵）／溝 のすべてで 4.5:1 以上（従来 1.96／3.24）', () => {
     expect(text).toBe('#e8e9f3')
     expect(godFill).toBe('#4dbd74')
+    expect(playerPanel).toMatch(/color=\{SELF_HP_FILL\[band\]\}/)
+    expect(godFills.half).toBe('#d9a441')
+    expect(godFills.quarter).toBe('#ff7a45')
     expect(enemyFill).toBe('#e5484d')
-    for (const fill of [godFill!, enemyFill!, trough!]) {
+    for (const fill of [godFill!, godFills.half, godFills.quarter, enemyFill!, trough!]) {
       const ratio = labelContrastOnFill(text!, pill!, fill)
       expect(ratio, `fill ${fill}`).not.toBeNull()
       expect(ratio!, `fill ${fill}`).toBeGreaterThanOrEqual(4.5)
