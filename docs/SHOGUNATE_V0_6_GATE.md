@@ -115,3 +115,12 @@ sim の raceAware（hard）は 43.9%（監査時の見込み 60.4%）。本 sim 
 **回帰**：R4 分岐 then（強打 120）・「✓ 止めた」と赤い輪の消失・崩れの**同一フレーム**（5 viewport すべて `sameFrameAsSuperOff: true`）・行は R3 だけ・名札の内側・viewport の内側・横の溢れ 0・JS error 0。hard（sp375・`probe-hard/summary.json`・最終 build）：「あと130」が h15・1 行・重なり −8.0 → 「✓ 止めた」と赤い輪の消失が同一フレーム → R4 強打 140（then）。tsc 0（build 内）・**full vitest 1,610 PASS**（`05-vitest-full.txt`）・build PASS（CSS 197.96 kB＝+0.22 kB・JS 478.64 kB 不変、`01-build.txt`）・**不変性 20/20**（CORE sha256・gameVersion `1.d794038a00b5b53c`・save v9、`06-invariants.txt`）。
 
 **残リスク**：W1 は未判定のまま（hard を遊んだときに確認）。sp360 の +1.5px は飾りの先端 1〜2px が名札の半透明背景の下に入る程度で、顔・体には触れない。sp320 は本プロジェクトの標準 viewport（360×640 以上）外で、修正前から R1 時点で名札が飾りに乗る構図＝別 Decision（SP の名札と舞台の配置）で扱う。iOS Safari の実フォント幅で 11px の 1 行が 375px の列幅（147px）に収まるかは headless（Windows フォント）での計測＝CEO の次回 iPhone 確認で「1 行になっているか」を 1 問だけ聞く。
+
+## 7. W2 修正の CEO iPhone 実機確認（2026-10-30・build 36531a1＝index-1k5bdak1.js／index-BplVkQKq.css・LAN preview 192.168.11.6:4183・?pilot=shogunate&seed=sg-v04-01）
+
+| 確認項目 | 結果 |
+|---|---|
+| 375px で R3 の「あと N」が 1 行か | **1 行** |
+| 名札が兜の飾りと重なっていないか | **重なっていない** |
+
+判定（AI-PM）：**W2 CLOSED**。v0.6 の機能・ゲームデザイン（§5 Q1〜Q3 肯定）と合わせて **v0.6 GO（統合待ち・push／merge は CEO）**。W1（hard で崩れ 50% と「✓ 止めた」60% が別瞬間）は実機未確認のリスクとして維持し、hard を遊ぶ機会に 1 問で確認する。preview 4183 は確認後に停止。
