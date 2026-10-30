@@ -68,3 +68,13 @@ Q2 が NG のとき：`cardShort.css` の opacity を .6＋`filter: none` に切
 
 - 変更ファイルは `CardView.tsx`・`BattleScreen.tsx`（1 行）・`cardShort.css`・`cardShort.test.ts`。忠次 v0.6（`feat/shogunate-pilot-v0.6` `96e6ff0`・17 ファイル）とは同一ファイルの編集 0。`git merge-tree a96a409 4a7cd99 96e6ff0` の conflict マーカー **0**（2026-10-30 実測）＝どちらを先に統合しても衝突しない
 - untracked の大きな PNG／jpg（`05-measure-hand/shots`・`06-polish`・`07-hover`・`08-gate249-252/gate249/*.png`）は証跡の原画で commit 対象外。削除していない
+
+## 6. CEO iPhone Human QA 結果（2026-10-30・LAN preview 192.168.11.6:4184・build index-0HgrFnqq.js＝ce8d293）
+
+| # | 設問 | 結果 |
+|---|---|---|
+| Q1 | 「あとN」の意味が説明なしで分かったか | **すぐ分かった** |
+| Q2 | 出せる札と出せない札の見分けは弱くなっていないか | **以前より明確に区別できた** |
+| Q3 | 帯が絵・名前・専用小札と重なって読みにくい／邪魔か | **重なりなし。絵も文字も見やすい** |
+
+判定（AI-PM）：**Human QA 3/3 PASS。自動 Gate（1 段目・2 段目 ALL PASS）と合わせて実装合格**。追加の仕様変更なし。§3 の任意修正（R1 z-index・R2 配札フェード）は適用しない（QA で問題にならなかったため）。状態：**IMPLEMENTATION PASSED — 統合待ち（push／merge は CEO）**。preview 4184 は QA 後に停止（LISTEN 0 確認）。
