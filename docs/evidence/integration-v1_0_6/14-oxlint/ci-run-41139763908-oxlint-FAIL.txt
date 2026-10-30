@@ -1,0 +1,8 @@
+CI run 41139763908 (PR #6, head 5327a95, event pull_request, 2026-10-30T22:41Z UTC) — job 'tsc / oxlint / vitest / build' FAILURE at step oxlint (tsc success, vitest/build skipped)
+URL: https://github.com/SevenGodsProject/SevenGodsGame/actions/runs/41139763908
+--- relevant log lines (job/step prefix stripped) ---
+2026-10-30T22:42:05.8057834Z ##[group]Run npm run lint
+2026-10-30T22:42:05.9106707Z > oxlint
+2026-10-30T22:42:06.0345003Z Found 13 warnings and 1 error.
+2026-10-30T22:42:06.0345466Z Finished in 79ms on 470 files with 104 rules using 4 threads.
+2026-10-30T22:42:06.0515322Z ##[error]Process completed with exit code 1.

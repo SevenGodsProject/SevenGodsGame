@@ -72,6 +72,9 @@ const { useCrisisVoice } = await import('./crisisVoice')
 function render(log: GameEvent[], state: GameState | null, visual = 'heavy') {
   h.ri = 0
   h.ei = 0
+  // test 専用：react を上の最小ランナー（useRef／useEffect のみ）に差し替えて hook 本体を直接駆動する。
+  // 実コンポーネント外からの呼び出しは意図したもの（CI oxlint RL-03 の rules-of-hooks を行単位で抑止）。
+  // oxlint-disable-next-line react-hooks/rules-of-hooks
   useCrisisVoice(log, state, visual)
 }
 function unmount() {

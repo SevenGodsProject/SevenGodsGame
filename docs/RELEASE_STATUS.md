@@ -9,10 +9,11 @@ Production の「確定状態」を一目で確認するための要約です。
 | 項目 | 状態 |
 |---|---|
 | **Release 候補** | **SEVEN GODS v1.0.6**：①神 HP 危険帯 Static v1（自分の HP 50%／25% で橙／橙赤＋記号）②Cost-Short Marking v1（手札の「あと N」帯）③大耀 crisis ボイス v1（HP 50% 初回到達・着弾 +300ms・1 戦 1 回）④将軍家 Pilot 忠次 v0.6（`?pilot=shogunate` 限定）＋決定285 v1.0.5 LIVE 記録の同梱 |
-| **branch** | `release/v1_0_6-integration`（起点 `a96a409`・local のみ・push 0）。merge 順 C→B→D→A（`05ad080`→`c09fcf3`→`c2ebb2d`→`4a5f49d`）＋`3120c32`（v1.0.5 記録）＋version bump |
+| **branch** | `release/v1_0_6-integration`（起点 `a96a409`）。merge 順 C→B→D→A（`05ad080`→`c09fcf3`→`c2ebb2d`→`4a5f49d`）＋`3120c32`（v1.0.5 記録）＋version bump。CEO が 3 段階 push 済み（remote = `5327a95`）→ **PR #6** `https://github.com/SevenGodsProject/SevenGodsGame/pull/6`（574 files・local 差分と一致） |
+| **CI／Preview** | CI run `41139763908` **FAIL（oxlint 1 error・`crisisVoiceHook.test.ts` rules-of-hooks・test 専用）** → test 1 行修正（runtime 変更 0）→ CEO 追加 push → CI 再実行待ち。Vercel Preview deployment `7450333843` READY（SSO 保護・中身は本番 Smoke で確認）。Gate §2-6／§7 |
 | **Gate** | `docs/V1_0_6_INTEGRATION_GATE.md`（統合監査 `docs/INTEGRATION_READINESS_AUDIT_V1_0_6.md`） |
 | **Rollback 先** | deployment **`7291166485`**（v1.0.5・`a96a409`） |
-| **公開** | CEO 判断待ち（iPhone 最終 QA → push／PR／merge は CEO） |
+| **公開** | CEO iPhone 最終 QA **9/9 PASS** → 決定286 **Production Release GO**（2026-10-31）。merge（= deploy）は CI GREEN 確認後に CEO。決定286 の LIVE 確定は本番 Smoke PASS 後 |
 
 ### A-0q. v1.0.5 公開（2026-10-24・決定285 PRODUCTION LIVE・履歴。記録 commit `98222ee` は v1.0.6 統合 RC に同梱）
 

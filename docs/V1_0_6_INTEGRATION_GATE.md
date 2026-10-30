@@ -1,6 +1,7 @@
 # v1.0.6 Integration Gate — 忠次 v0.6 × CSM v1 × 神 HP 危険帯 v1 × 大耀 crisis ボイス v1（2026-10-31・AI-PM）
 
-- 状態：**INTEGRATED（local）— 統合 Gate ALL PASS（FAIL 0・WARN 0）— CEO iPhone 最終 QA READY（LAN preview `http://192.168.11.6:4190/`）**。push／PR／merge／deploy は未実施（CEO）
+- 状態：**PR #6 作成済み（master ← `release/v1_0_6-integration`）— CI 1 回目 oxlint FAIL → test 専用 1 行で修正（runtime 変更 0）→ CEO の再 push 待ち**。CEO iPhone 最終 QA 9/9 PASS（決定286 Production Release GO・2026-10-31）。merge／deploy は未実施（CEO）。LAN preview `http://192.168.11.6:4190/` は本番 Smoke 完了まで維持
+- Release 工程（§7）：remote `release/v1_0_6-integration` = `5327a95` 確認 → PR `https://github.com/SevenGodsProject/SevenGodsGame/pull/6`（574 files・+228,940/−146・local 差分と file 一覧一致）→ Vercel Preview deployment `7450333843` READY（SSO 保護のため中身は CLI 不可・先例どおり deployment 状態で判定）→ CI run `41139763908` **FAIL（oxlint 1 error）** → §7 参照
 - worktree／branch：`SevenGodsGame-integ-v106`／`release/v1_0_6-integration`（起点 Production v1.0.5 `a96a409`）。CEO 承認：2026-10-31「v1.0.6 Local Integration GO」（順序 C→B→D→A・local merge のみ）
 - 設計根拠：`docs/INTEGRATION_READINESS_AUDIT_V1_0_6.md`（lane3plan `cd46d1e`・READ-ONLY 監査：6 ペア＋直列 conflict 0・参照無し tree で tsc 0／vitest 1,658／build PASS）
 - 禁止事項の遵守：Production master への merge／push／deploy 0・main repo の dirty 12 ファイル無接触・4 lane worktree の untracked 証跡無変更・重量処理は直列（各処理前に空きメモリを記録）・康政 Pilot 実装 0
@@ -39,6 +40,7 @@
 | 2-3 | build（`tsc -b && vite build`） | **PASS**：JS `index-DBJFGX_C.js` **481.11 kB**（v1.0.5 475.99 → +5.12 kB・gzip 149.92）／CSS `index-Tat7Jjqr.css` **198.64 kB**（+3.56）。サイズは統合監査の参照無し tree と同一（JS ハッシュだけ version／sha 文字列で変わる・CSS は同一ハッシュ） | `06-build.txt` |
 | 2-4 | `src/core` 差分 | `enemies.ts`（+76/−4・PILOT 配列追加＋`isPilotEnemyId` OR）と test 4 本のみ。`cards/`・`rules.ts`・engine・save・`gameVersion.ts` 変更 0 | `07-core-diff.txt` |
 | 2-5 | 既存 7 敵の決定論（cf2 probe・大耀 × 7 敵 PC＋龍神 SP375＝8 run・After 4190） | **8/8 完全一致**（忠次 v0.6 Gate #11 の基準＝v1.0.2 RC G8 と同値）：手数・札数・heavy・帯遷移 turn がすべて一致。試練 23/17/5（T17 half・T21 quarter）・鬼将 23/17/5・怨霊 18/13/2・機工師 19/14/2・魔獣 21/16/3・龍神 22/16/4・道化 21/16/3・龍神 SP375 22/16/4（offViewport 3＝基準 3・既知）。JS error 0・名札被り 0 | `08-cf2-core7/*-summary.json`・`COMPARE_VS_V0_6_BASELINE.txt` |
+| 2-6 | oxlint（CI RL-03 と同じ `npm run lint`・**PR 作成後に追加**） | 1 回目 **FAIL**：`Found 13 warnings and 1 error`。error は `src/components/battle/crisisVoiceHook.test.ts:75` react-hooks(rules-of-hooks)＝Lane D `3a01e2e` の独立 QA test が react を mock した最小ランナー内で `useCrisisVoice` を直接呼ぶ設計（意図どおり・runtime 無関係）。voice Lane Gate も本 Gate も oxlint を含めていなかったのが見逃しの原因。→ 当該 1 行に理由付き `oxlint-disable-next-line` を追加（test 専用・runtime 変更 0）→ **oxlint exit 0（13 warnings・0 error・warnings は v1.0.5 以前からの既存）**・当該 test **12/12 PASS** | `14-oxlint/ci-run-41139763908-oxlint-FAIL.txt`・`oxlint-after-fix.txt`・`vitest-crisisVoiceHook-after-fix.txt` |
 
 ## 3. ブラウザ probe（Playwright chromium・headless・1 browser 直列・After＝本 build preview／Before＝v1.0.5 build preview）
 
@@ -79,10 +81,21 @@ preview（1 本だけ・LAN）：**`http://192.168.11.6:4190/`**（本 branch �
 | R2 | 危険帯 25% 以下（橙赤 `▼`・2px 枠＋外光）と回復演出（緑 0.7s）の重なりが実機未確認 | 一瞬 2 色が重なる可能性 | §4 戦 2 |
 | R3 | crisis ボイスの iOS サイレントスイッチ・Safari 復帰が未確認 | greeting（決定282）と同経路＝既知挙動と同じと推定 | §4 戦 1 の途中で操作 |
 | R4 | crisis ボイスが忠次戦（大耀）でも鳴る | 設計どおり（HP ≤ 50% 初回）。忠次カットイン SE と duck 合流 | §4 戦 3 を大耀で |
+| R5 | Lane Gate・統合 Gate が CI の oxlint を含んでいなかった（本 Release で 1 回 CI FAIL） | 今回は test 1 行で解消。**教訓（AI 判断）：以後の Lane Gate／統合 Gate は tsc・vitest・build に加えて `npm run lint` を必須項目にする**（CI RL-03 の 4 ステップと一致させる） | §2-6・§7 |
 
 ## 6. Production 公開までの残作業（CEO 作業を含む）
 
-1. CEO：§4 iPhone 最終 QA（preview は AI が 1 本だけ起動・§4 に URL）
-2. QA PASS → CEO：`release/v1_0_6-integration` を新規 remote branch へ push → PR → CI GREEN → CEO merge（= Vercel Production deploy）。AI は push／merge をしない
+1. ~~CEO：§4 iPhone 最終 QA~~ → **9/9 PASS（2026-10-31・決定286 Production Release GO）**
+2. ~~QA PASS → CEO：`release/v1_0_6-integration` を新規 remote branch へ push~~ → **3 段階 push 完了・PR #6 作成済み**。CI 1 回目 FAIL（§2-6）→ 修正 commit を CEO が追加 push → CI GREEN → CEO merge（= Vercel Production deploy）。AI は push／merge をしない
 3. 公開後 AI：本番 URL で Smoke（Home version 表示・受入・a11y 1 run・cf2 1 run・音声 1 戦）→ `docs/V1_0_6_PRODUCTION_SMOKE.md`・`DECISIONS.md` 決定286 を LIVE に更新・`RELEASE_STATUS.md` に deployment ID と Rollback 先（`7291166485`＝v1.0.5）
 4. Rollback：Vercel で `7291166485` を Promote（CEO）。1 機能だけ外す場合は該当 merge commit の `git revert -m 1`
+
+## 7. Release 工程ログ（2026-10-31・AI-PM READ-ONLY 確認＋test 1 行修正）
+
+| # | 工程 | 結果 |
+|---|---|---|
+| 7-1 | CEO 3 段階 push（`05ad080` → `4a5f49d` → HEAD） | 完了。`git ls-remote` で remote `release/v1_0_6-integration` = **`5327a95`**（local HEAD と一致）。origin/master `a96a409` 不変 |
+| 7-2 | PR 作成（AI・`gh pr create`） | **PR #6** `https://github.com/SevenGodsProject/SevenGodsGame/pull/6`：base master ← head `release/v1_0_6-integration`・commits 43・**574 files・+228,940／−146**。API の file 一覧 574 件と local `git diff --name-only origin/master..HEAD` が**完全一致**。mergeable MERGEABLE／mergeState BLOCKED（ruleset `protect-master`：CI 必須） |
+| 7-3 | Vercel Preview | deployment **`7450333843`**（environment Preview・state success・「Deployment has completed」）。URL `https://seven-gods-game-ay32n29s5-seven-gods-games.vercel.app`（branch alias `…-git-release-v106-integration-…`）は **SSO 保護で 302**（CLI から中身の確認不可）。v1.0.5 の先例（PR #4・Preview `7283296539`）と同じく deployment 状態で GREEN 判定・中身は本番 Smoke で確認 |
+| 7-4 | CI run `41139763908`（pull_request・head `5327a95`） | **FAIL**：tsc success → **oxlint failure**（`Found 13 warnings and 1 error`）→ vitest／build skipped。原因と修正は §2-6。ローカルで同一 error を再現・修正後 exit 0 |
+| 7-5 | 修正 commit（AI・local のみ） | `src/components/battle/crisisVoiceHook.test.ts` に理由付き `oxlint-disable-next-line` 1 行＋コメント 2 行（test 専用・runtime 変更 0・build 不変）＋本 Gate 文書 §2-6／§5 R5／§7＋証跡 `14-oxlint/`＋RELEASE_STATUS／DECISIONS 追記。**CEO の追加 push → CI 再実行 → GREEN 確認 → merge 直前で停止して報告** |
