@@ -1,7 +1,7 @@
 # Official Voice Crisis Pilot v1 — 大耀「ピンチ」（SGG Creator Kit v1.1 公式ボイス・2 本目）
 
 - 日付：2026-10-21（Lane 3「公式ボイス」・Infra＋Dev・**AI 判断**（CLAUDE.md §6-2）・CEO 決定282 に基づく次期開発。設計は `docs/OFFICIAL_VOICE_EXPANSION_AUDIT_V1.md` §5・§6 のとおり）
-- 状態：**v1.0.5 追従済み（merge `a96a409`・conflict 0・crisis 実装 不変）— Automated Gate PASS（2026-10-30・§5-2：tsc 0・targeted 60/60・full vitest 1,611・build・G-B 8/8 ALL PASS・着弾 +300ms 実測 296〜299ms）— CEO Human QA READY（§7・iPhone）**（master／RC merge・push・tag・deploy は未実施）
+- 状態：**v1.0.5 追従済み（merge `a96a409`・conflict 0・crisis 実装 不変）— Automated Gate PASS（2026-10-30・§5-2：tsc 0・targeted 60/60・full vitest 1,611・build・G-B 8/8 ALL PASS・着弾 +300ms 実測 296〜299ms）— CEO iPhone Human QA 4/4 PASS（2026-10-31・§7-2）— 実装 GO・統合候補**（master／RC merge・push・tag・deploy は未実施。iOS サイレントスイッチ・Safari 復帰は未確認）
 - worktree／branch：`SevenGodsGame-voice-pilot`／`feat/official-voice-crisis-pilot-v1`（基点 `release/v1_0_2-rc` **`ba0af34`** → 2026-10-30 に Production v1.0.5 master **`a96a409`** を merge）
 - 前提：`docs/OFFICIAL_VOICE_PILOT_V1.md`（大耀「あいさつ」・CEO Q8 3／3 PASS）／`docs/OFFICIAL_VOICE_EXPANSION_AUDIT_V1.md`（本 branch へ同一バイトでコピー・lane3v 側は未変更）／`docs/DECISION257_SOUND_LAYER_V1_PILOT.md`（duck 経路）
 - 不変：**`src/core` 差分 0**（`git diff --stat release/v1_0_2-rc -- src/core`＝空。ゲーム規則・ダメージ・AP・敵・神・スコア・Seed・PRNG・save 不変）／既存 22 SE・BGM 音源・既存 greeting の時刻と挙動 不変／`docs/DECISIONS.md` 未編集（統合時に PM が 1 行追記）
@@ -174,3 +174,16 @@ crisis × 音あり（PC／SP）の実測：入口で greeting＋crisis を各 1
 QA スクリプトの修正（runtime 変更 0・scripts/official-voice-pilot/acceptance.mjs の 3 箇所）：① 計測フックの MutationObserver が addInitScript 時に null の documentElement を観測していた → document を観測 ② greeting ケースの要求回数 1 固定 → 本仕様（入口で 2 本先読み）に合わせ「greeting 1 回・合計 ≤2」 ③ 着弾基準＝浮遊数字の animationstart が必殺（カットイン）の数字で標本に乗らないため、HP ラベル変化（着弾＋130ms）を代替基準として同じ許容幅で判定。初回実走（修正前）は greeting 音あり 2 ケースが②で、crisis 4 ケースが①③で FAIL したが、声の start 回数・ミュート 0 回・duck 合流は修正前から PASS 値だった。
 
 残リスク：浮遊数字基準（deltaFromFloatMs）は null のまま＝QA 標本側の既知事項。iOS 実機（サイレントスイッチ・ホーム復帰・greeting 中の見送り）は §7 の CEO Human QA で確認。
+
+## 7-2. CEO iPhone Human QA 結果（2026-10-31・build 7d48654＝index-BDu5kkxP.js・LAN preview 4173・大耀 × 蒼海の龍神）
+
+| # | 設問 | CEO 回答 | 判定 |
+|---|---|---|---|
+| Q1 | HP 半分を切った直後の声が被弾と合って聞こえたか | 被弾と合って自然に聞こえた | PASS |
+| Q2 | 声の明瞭さ・BGM との音量バランス | 声が明瞭で BGM とのバランスも良い | PASS |
+| Q3 | 同一戦闘中の再生回数 | 1 回のみ | PASS |
+| Q4 | 毎戦鳴ることの許容・ピンチの緊張感 | 毎戦聞いてもよく、緊張感が高まる | PASS |
+
+**Human QA 4/4 PASS → AI-PM 判定：実装 GO・統合候補入り**（runtime 変更 0・push／merge／tag／deploy は未実施。統合は CEO）。
+
+未確認として残す項目（実機未検証）：iOS サイレントスイッチ ON 時の挙動／Safari をホームに戻して復帰したときの再生・duck 復帰／greeting 再生中に crisis 条件が成立したときの見送り。いずれも greeting（決定282）と同じ経路のため既知挙動と同じと推定するが、Production 公開前の iPhone 最終 QA で 1 戦ずつ確認する。QA 用 preview 4173 は確認後に停止・ポート解放済み。
