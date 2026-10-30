@@ -7,6 +7,17 @@ import type { PowerTier } from './cardStyle'
 import { HpBar } from './HpBar'
 import { FloatingNumbers } from './FloatingNumbers'
 import type { FloatingNumber } from './useFloatingNumbers'
+import { hpBand } from './visualHp'
+
+/**
+ * 神 HP 危険帯 static v1（Lane 2 Combat Feel v2 次工程監査 2026-10-29 §4-1・AI 判断・表示専用）。
+ * 段階は敵と同じ `hpBand`（表示 HP ÷ maxHp。≤50% half／≤25% quarter）＝engine の「HP が最大の 50% 以下」
+ * （RULES.cardBonus.lowHpRatio）と half の境界が一致する。新しい数値しきい値は作らない（決定232 方針）。
+ * 色は橙系（敵の「追い詰めた」赤 #ff5c5c と左右で混同しない）。色だけに頼らず、枠の太さ（hudPlate.css）と
+ * ラベル先頭の記号（▽／▼）でも段階が分かる。アニメーション 0・timer 0・既存の被弾／回復演出のプロパティに触れない。
+ */
+export const SELF_HP_FILL = { high: '#4dbd74', half: '#d9a441', quarter: '#ff7a45' } as const
+export const SELF_HP_MARKER: Record<ReturnType<typeof hpBand>, string | undefined> = { high: undefined, half: '▽', quarter: '▼' }
 
 type PlayerPanelProps = {
   godId: GodId
@@ -86,9 +97,11 @@ export function PlayerPanel({
   // Phase 6-A：敵の通常攻撃（単発・必殺でない）は、敵の突進の最前で着弾させる（旧：commit と同時）
   const normalDelayed = !specialHit && multiHitCount <= 1 && selfImpactMs != null && selfImpactMs > 0
   const impactStyle = normalDelayed ? ({ '--impact-delay': `${selfImpactMs}ms` } as CSSProperties) : undefined
+  // 神 HP 危険帯 static v1：表示 HP（着弾に追従）で段階を決める＝「殴られた→HP が危険色に」の順（Enemy Break と同じ原理）
+  const band = hpBand(hpShown, player.maxHp)
 
   return (
-    <div className="panel player-panel">
+    <div className={`panel player-panel player-band-${band}`}>
       {/* Phase 6-B（決定164）：神名・HP・主要状態を立ち絵の「上」に1枚の名札としてまとめる。
           EnemyPanel の .enemy-plate と対になる構造。台詞（god-tagline）は画面高が
           小さいときに CSS で省略できるよう、名札の中の独立要素にしておく。 */}
@@ -98,7 +111,13 @@ export function PlayerPanel({
           <span className="god-tagline">「{god.tagline}」</span>
         </div>
         <div key={`heal-${healKey}`} className={healKey > 0 ? 'heal-pulse' : undefined}>
-          <HpBar current={hpShown} max={player.maxHp} color="#4dbd74" />
+          <HpBar
+            current={hpShown}
+            max={player.maxHp}
+            color={SELF_HP_FILL[band]}
+            className={band === 'high' ? undefined : `hp-bar-self-${band}`}
+            marker={SELF_HP_MARKER[band]}
+          />
         </div>
         <div className="player-plate-status">
           {player.block > 0 && (

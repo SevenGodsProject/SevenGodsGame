@@ -81,6 +81,21 @@ body.battle-viewport .battle-main .hp-bar.hp-bar-quarter {
     0 0 12px #ff5c5c55;
 }
 
+/* 神 HP 危険帯 static v1（PlayerPanel.tsx・AI 判断・表示専用）：自分側は橙系で、敵の赤（上）と左右で混同しない。
+   half（≤50%）＝1px の橙枠、quarter（≤25%）＝2px の橙赤枠＋弱い外光（敵 quarter と同じ強さ・点滅なし）。
+   fill の色は PlayerPanel が inline で渡す（#d9a441／#ff7a45）。寸法・アニメーションは変えない */
+body.battle-viewport .battle-main .hp-bar.hp-bar-self-half {
+  box-shadow:
+    inset 0 1px 2px #000000e6,
+    0 0 0 1px #d9a441cc;
+}
+body.battle-viewport .battle-main .hp-bar.hp-bar-self-quarter {
+  box-shadow:
+    inset 0 1px 2px #000000e6,
+    0 0 0 2px #ff7a45cc,
+    0 0 12px #ff7a4555;
+}
+
 /* 決定95 の mid/high グローの形を溝に合わせる（opacity・box-shadow・animation は既存のまま） */
 body.battle-viewport .battle-main .resonance-gauge-wrap::after {
   border-radius: 3px;

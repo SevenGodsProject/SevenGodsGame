@@ -12,6 +12,8 @@ type HpBarProps = {
   color: string
   /** 追加クラス（敵の「追い詰めた」段階など） */
   className?: string
+  /** 神 HP 危険帯 static v1：数字の前に置く記号（▽／▼）。色だけに頼らない手掛かり。読み上げには含めない */
+  marker?: string
 }
 
 /**
@@ -20,7 +22,7 @@ type HpBarProps = {
  * HP_GHOST_DRAIN_MS で追いつく（CSS transition のみ。animationend に依存しない）。
  * 回復で増えるときはゴーストが主バーの下に隠れたまま追従するため、不自然な帯は出ない。
  */
-export function HpBar({ current, max, color, className }: HpBarProps) {
+export function HpBar({ current, max, color, className, marker }: HpBarProps) {
   const ratio = max > 0 ? Math.max(0, Math.min(1, current / max)) : 0
   const width = `${ratio * 100}%`
   return (
@@ -35,6 +37,12 @@ export function HpBar({ current, max, color, className }: HpBarProps) {
       <span className="hp-bar-label">
         {/* A11y Minimum Pack（A11Y-01）：数字の後ろに暗い pill を敷き、fill（緑・赤）や溝の上でも 4.5:1 以上にする */}
         <span className="hp-bar-label-text">
+          {/* 神 HP 危険帯 static v1：記号は pill の中（数字と同じ暗い背景＝コントラストは数字と同じ）。CSS 追加なし */}
+          {marker && (
+            <span className="hp-bar-marker" aria-hidden="true">
+              {marker}{' '}
+            </span>
+          )}
           {formatScaled(current)} / {formatScaled(max)}
         </span>
       </span>
