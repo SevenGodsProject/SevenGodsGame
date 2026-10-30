@@ -118,8 +118,8 @@ const CRISIS_HOOK = `() => {
     const el = document.querySelector('.player-panel .hp-bar-label-text')
     if (!el || el.__observed) return
     el.__observed = true
-    A.hpLabel.push({ atMs: now(), text: el.textContent })
-    new MutationObserver(() => A.hpLabel.push({ atMs: now(), text: el.textContent })).observe(el, { childList: true, characterData: true, subtree: true })
+    A.hpLabel.push({ atMs: now(), text: el.textContent.replace(/^[^0-9]+/, '') })
+    new MutationObserver(() => A.hpLabel.push({ atMs: now(), text: el.textContent.replace(/^[^0-9]+/, '') })).observe(el, { childList: true, characterData: true, subtree: true })
   }
   // addInitScript はドキュメント生成前に走るため documentElement が null のことがある → document（Node）を観測する（2026-10-30 Gate 実走で修正）
   new MutationObserver(observeHp).observe(document, { childList: true, subtree: true })
@@ -231,7 +231,7 @@ async function readRound(page) {
   })
 }
 async function readHpLabel(page) {
-  return page.evaluate(() => document.querySelector('.player-panel .hp-bar-label-text')?.textContent?.trim() ?? null)
+  return page.evaluate(() => document.querySelector('.player-panel .hp-bar-label-text')?.textContent?.trim().replace(/^[^0-9]+/, '') ?? null)
 }
 async function isGameOver(page) {
   return page.evaluate(() => !!document.querySelector('.game-over-overlay'))

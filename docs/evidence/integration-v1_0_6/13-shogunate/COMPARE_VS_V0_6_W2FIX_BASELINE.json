@@ -1,0 +1,167 @@
+{
+ "generatedAt": "2026-10-30T20:19:46.186Z",
+ "modes": [
+  {
+   "mode": "normal",
+   "rows": [
+    {
+     "key": "pc|sg-v04-01",
+     "status": "MATCH",
+     "diffs": [],
+     "errors": 0,
+     "after": [
+      {
+       "round": 1,
+       "intent": "50",
+       "band": "high",
+       "hp": "980 / 980",
+       "chargingSuper": false,
+       "tactic": null
+      },
+      {
+       "round": 2,
+       "intent": "90",
+       "band": "high",
+       "hp": "900 / 980",
+       "chargingSuper": false,
+       "tactic": null
+      },
+      {
+       "round": 3,
+       "intent": "⚠ 傷が浅ければ次は総攻め",
+       "band": "high",
+       "hp": "650 / 980",
+       "chargingSuper": true,
+       "tactic": "{\"state\":\"armed\",\"text\":\"あと160で総攻めを止める\",\"rect\":{\"x\":164,\"y\":196,\"w\":307,\"h\":24},\"insidePlate\":true,\"insideViewport\":true,\"overflowX\":false,\"lines\":1,\"fontSize\":13,\"visible\":true,\"pageScrollW\":1508,\"vw\":1508}"
+      },
+      {
+       "round": 4,
+       "intent": "強打 120",
+       "band": "half",
+       "hp": "370 / 980",
+       "chargingSuper": false,
+       "tactic": null
+      }
+     ]
+    },
+    {
+     "key": "pc|sg-v04-02",
+     "status": "NO_BASELINE"
+    },
+    {
+     "key": "pc|sg-v04-03",
+     "status": "NO_BASELINE"
+    },
+    {
+     "key": "sp375|sg-v04-01",
+     "status": "MATCH",
+     "diffs": [],
+     "errors": 0,
+     "after": [
+      {
+       "round": 1,
+       "intent": "50",
+       "band": "high",
+       "hp": "980 / 980",
+       "chargingSuper": false,
+       "tactic": null
+      },
+      {
+       "round": 2,
+       "intent": "90",
+       "band": "high",
+       "hp": "900 / 980",
+       "chargingSuper": false,
+       "tactic": null
+      },
+      {
+       "round": 3,
+       "intent": "⚠ 傷が浅ければ次は総攻め",
+       "band": "high",
+       "hp": "650 / 980",
+       "chargingSuper": true,
+       "tactic": "{\"state\":\"armed\",\"text\":\"あと160で総攻めを止める\",\"rect\":{\"x\":30,\"y\":201,\"w\":147,\"h\":15},\"insidePlate\":true,\"insideViewport\":true,\"overflowX\":false,\"lines\":1,\"fontSize\":11,\"visible\":true,\"pageScrollW\":375,\"vw\":375}"
+      },
+      {
+       "round": 4,
+       "intent": "強打 120",
+       "band": "half",
+       "hp": "370 / 980",
+       "chargingSuper": false,
+       "tactic": null
+      }
+     ]
+    },
+    {
+     "key": "sp375|sg-v04-02",
+     "status": "NO_BASELINE"
+    },
+    {
+     "key": "sp375|sg-v04-03",
+     "status": "NO_BASELINE"
+    }
+   ],
+   "match": 2,
+   "total": 6
+  },
+  {
+   "mode": "hard",
+   "rows": [
+    {
+     "key": "pc|sg-v04-01",
+     "status": "NO_BASELINE"
+    },
+    {
+     "key": "pc|sg-v04-02",
+     "status": "NO_BASELINE"
+    },
+    {
+     "key": "sp375|sg-v04-01",
+     "status": "MATCH",
+     "diffs": [],
+     "errors": 0,
+     "after": [
+      {
+       "round": 1,
+       "intent": "60",
+       "band": "high",
+       "hp": "1,130 / 1,130",
+       "chargingSuper": false,
+       "tactic": null
+      },
+      {
+       "round": 2,
+       "intent": "強打 100",
+       "band": "high",
+       "hp": "1,050 / 1,130",
+       "chargingSuper": false,
+       "tactic": null
+      },
+      {
+       "round": 3,
+       "intent": "⚠ 傷が浅ければ次は総攻め",
+       "band": "high",
+       "hp": "800 / 1,130",
+       "chargingSuper": true,
+       "tactic": "{\"state\":\"armed\",\"text\":\"あと130で総攻めを止める\",\"rect\":{\"x\":30,\"y\":201,\"w\":147,\"h\":15},\"insidePlate\":true,\"insideViewport\":true,\"overflowX\":false,\"lines\":1,\"fontSize\":11,\"visible\":true,\"pageScrollW\":375,\"vw\":375}"
+      },
+      {
+       "round": 4,
+       "intent": "強打 140",
+       "band": "half",
+       "hp": "520 / 1,130",
+       "chargingSuper": false,
+       "tactic": null
+      }
+     ]
+    },
+    {
+     "key": "sp375|sg-v04-02",
+     "status": "NO_BASELINE"
+    }
+   ],
+   "match": 1,
+   "total": 4
+  }
+ ]
+}
