@@ -636,6 +636,7 @@ export function BattleScreen({
                 key={instance.uid}
                 instance={instance}
                 affordable={getCardDef(instance.defId).cost + (instance.costModifier ?? 0) <= state.ap.current}
+                apCurrent={state.ap.current}
                 playable={isPlayerTurn}
                 playing={pendingCardUid === instance.uid}
                 bonusReady={isPlayerTurn && previewBonusTrigger(state, getCardDef(instance.defId))}

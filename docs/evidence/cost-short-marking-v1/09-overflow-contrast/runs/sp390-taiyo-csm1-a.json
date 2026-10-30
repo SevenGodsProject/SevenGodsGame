@@ -1,0 +1,2229 @@
+{
+ "key": "sp390-taiyo-csm1-a",
+ "vp": "sp390",
+ "god": "taiyo",
+ "seed": "csm1-a",
+ "enemy": "ryujin",
+ "base": "http://127.0.0.1:4302",
+ "mem": 1251,
+ "states": [
+  {
+   "round": 1,
+   "phase": "start",
+   "apText": "神力 2 / 2",
+   "endDisabled": false,
+   "backdrop": {
+    "r": 0,
+    "g": 0,
+    "b": 0,
+    "a": 1
+   },
+   "layers": [
+    "battle-viewport:image"
+   ],
+   "n": 5,
+   "tags": 0,
+   "cards": [
+    {
+     "i": 0,
+     "name": "呪縛",
+     "cost": "2",
+     "disabled": false,
+     "short": false,
+     "ready": false,
+     "artwin": false,
+     "exclusive": false,
+     "playing": false,
+     "opacity": 1,
+     "filter": "none",
+     "card": {
+      "x": 18,
+      "y": 676,
+      "w": 100,
+      "h": 158,
+      "r": 118,
+      "b": 834
+     },
+     "inView": true
+    },
+    {
+     "i": 1,
+     "name": "守護",
+     "cost": "1",
+     "disabled": false,
+     "short": false,
+     "ready": false,
+     "artwin": false,
+     "exclusive": false,
+     "playing": false,
+     "opacity": 1,
+     "filter": "none",
+     "card": {
+      "x": 126,
+      "y": 676,
+      "w": 100,
+      "h": 158,
+      "r": 226,
+      "b": 834
+     },
+     "inView": true
+    },
+    {
+     "i": 2,
+     "name": "姉御の号令",
+     "cost": "1",
+     "disabled": false,
+     "short": false,
+     "ready": false,
+     "artwin": false,
+     "exclusive": true,
+     "playing": false,
+     "opacity": 1,
+     "filter": "none",
+     "card": {
+      "x": 234,
+      "y": 676,
+      "w": 100,
+      "h": 158,
+      "r": 334,
+      "b": 834
+     },
+     "inView": true
+    },
+    {
+     "i": 3,
+     "name": "一心不乱",
+     "cost": "1",
+     "disabled": false,
+     "short": false,
+     "ready": false,
+     "artwin": false,
+     "exclusive": true,
+     "playing": false,
+     "opacity": 1,
+     "filter": "none",
+     "card": {
+      "x": 342,
+      "y": 676,
+      "w": 100,
+      "h": 158,
+      "r": 442,
+      "b": 834
+     },
+     "inView": true
+    },
+    {
+     "i": 4,
+     "name": "後輩想い",
+     "cost": "2",
+     "disabled": false,
+     "short": false,
+     "ready": false,
+     "artwin": false,
+     "exclusive": true,
+     "playing": false,
+     "opacity": 1,
+     "filter": "none",
+     "card": {
+      "x": 450,
+      "y": 676,
+      "w": 100,
+      "h": 158,
+      "r": 550,
+      "b": 834
+     },
+     "inView": false
+    }
+   ]
+  },
+  {
+   "round": 1,
+   "phase": "drained",
+   "apText": "神力 0 / 2",
+   "endDisabled": false,
+   "backdrop": {
+    "r": 0,
+    "g": 0,
+    "b": 0,
+    "a": 1
+   },
+   "layers": [
+    "battle-viewport:image"
+   ],
+   "n": 4,
+   "tags": 4,
+   "cards": [
+    {
+     "i": 0,
+     "name": "守護",
+     "cost": "1",
+     "disabled": true,
+     "short": true,
+     "ready": false,
+     "artwin": false,
+     "exclusive": false,
+     "playing": false,
+     "opacity": 0.7,
+     "filter": "grayscale(0.35) brightness(0.72)",
+     "card": {
+      "x": 18,
+      "y": 676,
+      "w": 100,
+      "h": 158,
+      "r": 118,
+      "b": 834
+     },
+     "inView": true,
+     "tag": {
+      "text": "あと1",
+      "rect": {
+       "x": 45,
+       "y": 681,
+       "w": 33.6,
+       "h": 14,
+       "r": 78.6,
+       "b": 695
+      },
+      "fontSize": "10px",
+      "fontPx": 10,
+      "color": "rgb(255, 255, 255)",
+      "bg": "rgb(5, 6, 13)",
+      "border": "rgba(255, 107, 107, 0.6)",
+      "lineHeight": "14px",
+      "overflow": 0,
+      "interGod": 0,
+      "interName": 0,
+      "godRect": null,
+      "nameRect": {
+       "x": 27,
+       "y": 713.9,
+       "w": 82,
+       "h": 17,
+       "r": 109,
+       "b": 730.9
+      },
+      "topmost": true,
+      "hitEl": "card-view-short-tag",
+      "body": {
+       "rect": {
+        "x": 20,
+        "y": 697.9,
+        "w": 96,
+        "h": 134.1,
+        "r": 116,
+        "b": 832
+       },
+       "bg": "rgba(0, 0, 0, 0)",
+       "bgImage": "linear-gradient(rgba(0, 0, 0, 0) 0%, rgba(5, 6, 13, 0.66) 35%, rgba(5, 6, 13, 0.95) 100%)",
+       "z": "1"
+      },
+      "nameGap": 18.9,
+      "contrast": 5.25,
+      "contrastOnBlack": 5.25,
+      "contrastOnWhite": 5.1,
+      "raw": 20.23
+     }
+    },
+    {
+     "i": 1,
+     "name": "姉御の号令",
+     "cost": "1",
+     "disabled": true,
+     "short": true,
+     "ready": false,
+     "artwin": false,
+     "exclusive": true,
+     "playing": false,
+     "opacity": 0.7,
+     "filter": "grayscale(0.35) brightness(0.72)",
+     "card": {
+      "x": 126,
+      "y": 676,
+      "w": 100,
+      "h": 158,
+      "r": 226,
+      "b": 834
+     },
+     "inView": true,
+     "tag": {
+      "text": "あと1",
+      "rect": {
+       "x": 153,
+       "y": 681,
+       "w": 33.6,
+       "h": 14,
+       "r": 186.6,
+       "b": 695
+      },
+      "fontSize": "10px",
+      "fontPx": 10,
+      "color": "rgb(255, 255, 255)",
+      "bg": "rgb(5, 6, 13)",
+      "border": "rgba(255, 107, 107, 0.6)",
+      "lineHeight": "14px",
+      "overflow": 0,
+      "interGod": 0,
+      "interName": 0,
+      "godRect": {
+       "x": 135,
+       "y": 701,
+       "w": 82,
+       "h": 14,
+       "r": 217,
+       "b": 715
+      },
+      "nameRect": {
+       "x": 135,
+       "y": 719,
+       "w": 82,
+       "h": 17,
+       "r": 217,
+       "b": 736
+      },
+      "topmost": false,
+      "hitEl": "card-view-body",
+      "body": {
+       "rect": {
+        "x": 128,
+        "y": 685,
+        "w": 96,
+        "h": 151,
+        "r": 224,
+        "b": 836
+       },
+       "bg": "rgba(0, 0, 0, 0)",
+       "bgImage": "linear-gradient(rgba(0, 0, 0, 0) 0%, rgba(5, 6, 13, 0.66) 35%, rgba(5, 6, 13, 0.95) 100%)",
+       "z": "1"
+      },
+      "nameGap": 24,
+      "contrast": 5.25,
+      "contrastOnBlack": 5.25,
+      "contrastOnWhite": 5.1,
+      "raw": 20.23
+     }
+    },
+    {
+     "i": 2,
+     "name": "一心不乱",
+     "cost": "1",
+     "disabled": true,
+     "short": true,
+     "ready": false,
+     "artwin": false,
+     "exclusive": true,
+     "playing": false,
+     "opacity": 0.7,
+     "filter": "grayscale(0.35) brightness(0.72)",
+     "card": {
+      "x": 234,
+      "y": 676,
+      "w": 100,
+      "h": 158,
+      "r": 334,
+      "b": 834
+     },
+     "inView": true,
+     "tag": {
+      "text": "あと1",
+      "rect": {
+       "x": 261,
+       "y": 681,
+       "w": 33.6,
+       "h": 14,
+       "r": 294.6,
+       "b": 695
+      },
+      "fontSize": "10px",
+      "fontPx": 10,
+      "color": "rgb(255, 255, 255)",
+      "bg": "rgb(5, 6, 13)",
+      "border": "rgba(255, 107, 107, 0.6)",
+      "lineHeight": "14px",
+      "overflow": 0,
+      "interGod": 0,
+      "interName": 0,
+      "godRect": {
+       "x": 243,
+       "y": 750,
+       "w": 82,
+       "h": 14,
+       "r": 325,
+       "b": 764
+      },
+      "nameRect": {
+       "x": 243,
+       "y": 768,
+       "w": 82,
+       "h": 17,
+       "r": 325,
+       "b": 785
+      },
+      "topmost": true,
+      "hitEl": "card-view-short-tag",
+      "body": {
+       "rect": {
+        "x": 236,
+        "y": 734,
+        "w": 96,
+        "h": 98,
+        "r": 332,
+        "b": 832
+       },
+       "bg": "rgba(0, 0, 0, 0)",
+       "bgImage": "linear-gradient(rgba(0, 0, 0, 0) 0%, rgba(5, 6, 13, 0.66) 35%, rgba(5, 6, 13, 0.95) 100%)",
+       "z": "1"
+      },
+      "nameGap": 73,
+      "contrast": 5.25,
+      "contrastOnBlack": 5.25,
+      "contrastOnWhite": 5.1,
+      "raw": 20.23
+     }
+    },
+    {
+     "i": 3,
+     "name": "後輩想い",
+     "cost": "2",
+     "disabled": true,
+     "short": true,
+     "ready": false,
+     "artwin": false,
+     "exclusive": true,
+     "playing": false,
+     "opacity": 0.7,
+     "filter": "grayscale(0.35) brightness(0.72)",
+     "card": {
+      "x": 342,
+      "y": 676,
+      "w": 100,
+      "h": 158,
+      "r": 442,
+      "b": 834
+     },
+     "inView": true,
+     "tag": {
+      "text": "あと2",
+      "rect": {
+       "x": 369,
+       "y": 681,
+       "w": 33.6,
+       "h": 14,
+       "r": 402.6,
+       "b": 695
+      },
+      "fontSize": "10px",
+      "fontPx": 10,
+      "color": "rgb(255, 255, 255)",
+      "bg": "rgb(5, 6, 13)",
+      "border": "rgba(255, 107, 107, 0.6)",
+      "lineHeight": "14px",
+      "overflow": 0,
+      "interGod": 0,
+      "interName": 0,
+      "godRect": {
+       "x": 351,
+       "y": 750,
+       "w": 82,
+       "h": 14,
+       "r": 433,
+       "b": 764
+      },
+      "nameRect": {
+       "x": 351,
+       "y": 768,
+       "w": 82,
+       "h": 17,
+       "r": 433,
+       "b": 785
+      },
+      "topmost": false,
+      "hitEl": "game-stage",
+      "body": {
+       "rect": {
+        "x": 344,
+        "y": 734,
+        "w": 96,
+        "h": 98,
+        "r": 440,
+        "b": 832
+       },
+       "bg": "rgba(0, 0, 0, 0)",
+       "bgImage": "linear-gradient(rgba(0, 0, 0, 0) 0%, rgba(5, 6, 13, 0.66) 35%, rgba(5, 6, 13, 0.95) 100%)",
+       "z": "1"
+      },
+      "nameGap": 73,
+      "contrast": 5.25,
+      "contrastOnBlack": 5.25,
+      "contrastOnWhite": 5.1,
+      "raw": 20.23
+     }
+    }
+   ]
+  },
+  {
+   "round": 2,
+   "phase": "start",
+   "apText": "神力 3 / 3",
+   "endDisabled": false,
+   "backdrop": {
+    "r": 0,
+    "g": 0,
+    "b": 0,
+    "a": 1
+   },
+   "layers": [
+    "battle-viewport:image"
+   ],
+   "n": 6,
+   "tags": 0,
+   "cards": [
+    {
+     "i": 0,
+     "name": "守護",
+     "cost": "1",
+     "disabled": false,
+     "short": false,
+     "ready": false,
+     "artwin": false,
+     "exclusive": false,
+     "playing": false,
+     "opacity": 1,
+     "filter": "none",
+     "card": {
+      "x": 18,
+      "y": 676,
+      "w": 100,
+      "h": 158,
+      "r": 118,
+      "b": 834
+     },
+     "inView": true
+    },
+    {
+     "i": 1,
+     "name": "姉御の号令",
+     "cost": "1",
+     "disabled": false,
+     "short": false,
+     "ready": false,
+     "artwin": false,
+     "exclusive": true,
+     "playing": false,
+     "opacity": 1,
+     "filter": "none",
+     "card": {
+      "x": 126,
+      "y": 676,
+      "w": 100,
+      "h": 158,
+      "r": 226,
+      "b": 834
+     },
+     "inView": true
+    },
+    {
+     "i": 2,
+     "name": "一心不乱",
+     "cost": "1",
+     "disabled": false,
+     "short": false,
+     "ready": false,
+     "artwin": false,
+     "exclusive": true,
+     "playing": false,
+     "opacity": 1,
+     "filter": "none",
+     "card": {
+      "x": 234,
+      "y": 676,
+      "w": 100,
+      "h": 158,
+      "r": 334,
+      "b": 834
+     },
+     "inView": true
+    },
+    {
+     "i": 3,
+     "name": "後輩想い",
+     "cost": "2",
+     "disabled": false,
+     "short": false,
+     "ready": false,
+     "artwin": false,
+     "exclusive": true,
+     "playing": false,
+     "opacity": 1,
+     "filter": "none",
+     "card": {
+      "x": 342,
+      "y": 676,
+      "w": 100,
+      "h": 158,
+      "r": 442,
+      "b": 834
+     },
+     "inView": true
+    },
+    {
+     "i": 4,
+     "name": "一心不乱",
+     "cost": "1",
+     "disabled": false,
+     "short": false,
+     "ready": false,
+     "artwin": false,
+     "exclusive": true,
+     "playing": false,
+     "opacity": 1,
+     "filter": "none",
+     "card": {
+      "x": 450,
+      "y": 676,
+      "w": 100,
+      "h": 158,
+      "r": 550,
+      "b": 834
+     },
+     "inView": false
+    },
+    {
+     "i": 5,
+     "name": "巫女の舞",
+     "cost": "1",
+     "disabled": false,
+     "short": false,
+     "ready": false,
+     "artwin": false,
+     "exclusive": false,
+     "playing": false,
+     "opacity": 1,
+     "filter": "none",
+     "card": {
+      "x": 558,
+      "y": 676,
+      "w": 100,
+      "h": 158,
+      "r": 658,
+      "b": 834
+     },
+     "inView": false
+    }
+   ]
+  },
+  {
+   "round": 2,
+   "phase": "drained",
+   "apText": "神力 0 / 3",
+   "endDisabled": false,
+   "backdrop": {
+    "r": 0,
+    "g": 0,
+    "b": 0,
+    "a": 1
+   },
+   "layers": [
+    "battle-viewport:image"
+   ],
+   "n": 4,
+   "tags": 4,
+   "cards": [
+    {
+     "i": 0,
+     "name": "姉御の号令",
+     "cost": "1",
+     "disabled": true,
+     "short": true,
+     "ready": false,
+     "artwin": false,
+     "exclusive": true,
+     "playing": false,
+     "opacity": 0.7,
+     "filter": "grayscale(0.35) brightness(0.72)",
+     "card": {
+      "x": 18,
+      "y": 676,
+      "w": 100,
+      "h": 158,
+      "r": 118,
+      "b": 834
+     },
+     "inView": true,
+     "tag": {
+      "text": "あと1",
+      "rect": {
+       "x": 45,
+       "y": 681,
+       "w": 33.6,
+       "h": 14,
+       "r": 78.6,
+       "b": 695
+      },
+      "fontSize": "10px",
+      "fontPx": 10,
+      "color": "rgb(255, 255, 255)",
+      "bg": "rgb(5, 6, 13)",
+      "border": "rgba(255, 107, 107, 0.6)",
+      "lineHeight": "14px",
+      "overflow": 0,
+      "interGod": 0,
+      "interName": 0,
+      "godRect": {
+       "x": 27,
+       "y": 701,
+       "w": 82,
+       "h": 14,
+       "r": 109,
+       "b": 715
+      },
+      "nameRect": {
+       "x": 27,
+       "y": 719,
+       "w": 82,
+       "h": 17,
+       "r": 109,
+       "b": 736
+      },
+      "topmost": false,
+      "hitEl": "card-view-body",
+      "body": {
+       "rect": {
+        "x": 20,
+        "y": 685,
+        "w": 96,
+        "h": 151,
+        "r": 116,
+        "b": 836
+       },
+       "bg": "rgba(0, 0, 0, 0)",
+       "bgImage": "linear-gradient(rgba(0, 0, 0, 0) 0%, rgba(5, 6, 13, 0.66) 35%, rgba(5, 6, 13, 0.95) 100%)",
+       "z": "1"
+      },
+      "nameGap": 24,
+      "contrast": 5.25,
+      "contrastOnBlack": 5.25,
+      "contrastOnWhite": 5.1,
+      "raw": 20.23
+     }
+    },
+    {
+     "i": 1,
+     "name": "一心不乱",
+     "cost": "1",
+     "disabled": true,
+     "short": true,
+     "ready": false,
+     "artwin": false,
+     "exclusive": true,
+     "playing": false,
+     "opacity": 0.7,
+     "filter": "grayscale(0.35) brightness(0.72)",
+     "card": {
+      "x": 126,
+      "y": 676,
+      "w": 100,
+      "h": 158,
+      "r": 226,
+      "b": 834
+     },
+     "inView": true,
+     "tag": {
+      "text": "あと1",
+      "rect": {
+       "x": 153,
+       "y": 681,
+       "w": 33.6,
+       "h": 14,
+       "r": 186.6,
+       "b": 695
+      },
+      "fontSize": "10px",
+      "fontPx": 10,
+      "color": "rgb(255, 255, 255)",
+      "bg": "rgb(5, 6, 13)",
+      "border": "rgba(255, 107, 107, 0.6)",
+      "lineHeight": "14px",
+      "overflow": 0,
+      "interGod": 0,
+      "interName": 0,
+      "godRect": {
+       "x": 135,
+       "y": 750,
+       "w": 82,
+       "h": 14,
+       "r": 217,
+       "b": 764
+      },
+      "nameRect": {
+       "x": 135,
+       "y": 768,
+       "w": 82,
+       "h": 17,
+       "r": 217,
+       "b": 785
+      },
+      "topmost": true,
+      "hitEl": "card-view-short-tag",
+      "body": {
+       "rect": {
+        "x": 128,
+        "y": 734,
+        "w": 96,
+        "h": 98,
+        "r": 224,
+        "b": 832
+       },
+       "bg": "rgba(0, 0, 0, 0)",
+       "bgImage": "linear-gradient(rgba(0, 0, 0, 0) 0%, rgba(5, 6, 13, 0.66) 35%, rgba(5, 6, 13, 0.95) 100%)",
+       "z": "1"
+      },
+      "nameGap": 73,
+      "contrast": 5.25,
+      "contrastOnBlack": 5.25,
+      "contrastOnWhite": 5.1,
+      "raw": 20.23
+     }
+    },
+    {
+     "i": 2,
+     "name": "一心不乱",
+     "cost": "1",
+     "disabled": true,
+     "short": true,
+     "ready": false,
+     "artwin": false,
+     "exclusive": true,
+     "playing": false,
+     "opacity": 0.7,
+     "filter": "grayscale(0.35) brightness(0.72)",
+     "card": {
+      "x": 234,
+      "y": 676,
+      "w": 100,
+      "h": 158,
+      "r": 334,
+      "b": 834
+     },
+     "inView": true,
+     "tag": {
+      "text": "あと1",
+      "rect": {
+       "x": 261,
+       "y": 681,
+       "w": 33.6,
+       "h": 14,
+       "r": 294.6,
+       "b": 695
+      },
+      "fontSize": "10px",
+      "fontPx": 10,
+      "color": "rgb(255, 255, 255)",
+      "bg": "rgb(5, 6, 13)",
+      "border": "rgba(255, 107, 107, 0.6)",
+      "lineHeight": "14px",
+      "overflow": 0,
+      "interGod": 0,
+      "interName": 0,
+      "godRect": {
+       "x": 243,
+       "y": 750,
+       "w": 82,
+       "h": 14,
+       "r": 325,
+       "b": 764
+      },
+      "nameRect": {
+       "x": 243,
+       "y": 768,
+       "w": 82,
+       "h": 17,
+       "r": 325,
+       "b": 785
+      },
+      "topmost": true,
+      "hitEl": "card-view-short-tag",
+      "body": {
+       "rect": {
+        "x": 236,
+        "y": 734,
+        "w": 96,
+        "h": 98,
+        "r": 332,
+        "b": 832
+       },
+       "bg": "rgba(0, 0, 0, 0)",
+       "bgImage": "linear-gradient(rgba(0, 0, 0, 0) 0%, rgba(5, 6, 13, 0.66) 35%, rgba(5, 6, 13, 0.95) 100%)",
+       "z": "1"
+      },
+      "nameGap": 73,
+      "contrast": 5.25,
+      "contrastOnBlack": 5.25,
+      "contrastOnWhite": 5.1,
+      "raw": 20.23
+     }
+    },
+    {
+     "i": 3,
+     "name": "巫女の舞",
+     "cost": "1",
+     "disabled": true,
+     "short": true,
+     "ready": false,
+     "artwin": false,
+     "exclusive": false,
+     "playing": false,
+     "opacity": 0.7,
+     "filter": "grayscale(0.35) brightness(0.72)",
+     "card": {
+      "x": 342,
+      "y": 676,
+      "w": 100,
+      "h": 158,
+      "r": 442,
+      "b": 834
+     },
+     "inView": true,
+     "tag": {
+      "text": "あと1",
+      "rect": {
+       "x": 369,
+       "y": 681,
+       "w": 33.6,
+       "h": 14,
+       "r": 402.6,
+       "b": 695
+      },
+      "fontSize": "10px",
+      "fontPx": 10,
+      "color": "rgb(255, 255, 255)",
+      "bg": "rgb(5, 6, 13)",
+      "border": "rgba(255, 107, 107, 0.6)",
+      "lineHeight": "14px",
+      "overflow": 0,
+      "interGod": 0,
+      "interName": 0,
+      "godRect": null,
+      "nameRect": {
+       "x": 351,
+       "y": 768,
+       "w": 82,
+       "h": 17,
+       "r": 433,
+       "b": 785
+      },
+      "topmost": false,
+      "hitEl": "game-stage",
+      "body": {
+       "rect": {
+        "x": 344,
+        "y": 752,
+        "w": 96,
+        "h": 80,
+        "r": 440,
+        "b": 832
+       },
+       "bg": "rgba(0, 0, 0, 0)",
+       "bgImage": "linear-gradient(rgba(0, 0, 0, 0) 0%, rgba(5, 6, 13, 0.66) 35%, rgba(5, 6, 13, 0.95) 100%)",
+       "z": "1"
+      },
+      "nameGap": 73,
+      "contrast": 5.25,
+      "contrastOnBlack": 5.25,
+      "contrastOnWhite": 5.1,
+      "raw": 20.23
+     }
+    }
+   ]
+  },
+  {
+   "round": 3,
+   "phase": "start",
+   "apText": "神力 4 / 4",
+   "endDisabled": false,
+   "backdrop": {
+    "r": 0,
+    "g": 0,
+    "b": 0,
+    "a": 1
+   },
+   "layers": [
+    "battle-viewport:image"
+   ],
+   "n": 6,
+   "tags": 0,
+   "cards": [
+    {
+     "i": 0,
+     "name": "姉御の号令",
+     "cost": "1",
+     "disabled": false,
+     "short": false,
+     "ready": false,
+     "artwin": false,
+     "exclusive": true,
+     "playing": false,
+     "opacity": 1,
+     "filter": "none",
+     "card": {
+      "x": 18,
+      "y": 676,
+      "w": 100,
+      "h": 158,
+      "r": 118,
+      "b": 834
+     },
+     "inView": true
+    },
+    {
+     "i": 1,
+     "name": "一心不乱",
+     "cost": "1",
+     "disabled": false,
+     "short": false,
+     "ready": false,
+     "artwin": false,
+     "exclusive": true,
+     "playing": false,
+     "opacity": 1,
+     "filter": "none",
+     "card": {
+      "x": 126,
+      "y": 676,
+      "w": 100,
+      "h": 158,
+      "r": 226,
+      "b": 834
+     },
+     "inView": true
+    },
+    {
+     "i": 2,
+     "name": "一心不乱",
+     "cost": "1",
+     "disabled": false,
+     "short": false,
+     "ready": false,
+     "artwin": false,
+     "exclusive": true,
+     "playing": false,
+     "opacity": 1,
+     "filter": "none",
+     "card": {
+      "x": 234,
+      "y": 676,
+      "w": 100,
+      "h": 158,
+      "r": 334,
+      "b": 834
+     },
+     "inView": true
+    },
+    {
+     "i": 3,
+     "name": "巫女の舞",
+     "cost": "1",
+     "disabled": false,
+     "short": false,
+     "ready": false,
+     "artwin": false,
+     "exclusive": false,
+     "playing": false,
+     "opacity": 1,
+     "filter": "none",
+     "card": {
+      "x": 342,
+      "y": 676,
+      "w": 100,
+      "h": 158,
+      "r": 442,
+      "b": 834
+     },
+     "inView": true
+    },
+    {
+     "i": 4,
+     "name": "鉄壁の構え",
+     "cost": "2",
+     "disabled": false,
+     "short": false,
+     "ready": false,
+     "artwin": false,
+     "exclusive": false,
+     "playing": false,
+     "opacity": 1,
+     "filter": "none",
+     "card": {
+      "x": 450,
+      "y": 676,
+      "w": 100,
+      "h": 158,
+      "r": 550,
+      "b": 834
+     },
+     "inView": false
+    },
+    {
+     "i": 5,
+     "name": "予言",
+     "cost": "2",
+     "disabled": false,
+     "short": false,
+     "ready": false,
+     "artwin": false,
+     "exclusive": false,
+     "playing": false,
+     "opacity": 1,
+     "filter": "none",
+     "card": {
+      "x": 558,
+      "y": 676,
+      "w": 100,
+      "h": 158,
+      "r": 658,
+      "b": 834
+     },
+     "inView": false
+    }
+   ]
+  },
+  {
+   "round": 3,
+   "phase": "drained",
+   "apText": "神力 0 / 4",
+   "endDisabled": false,
+   "backdrop": {
+    "r": 0,
+    "g": 0,
+    "b": 0,
+    "a": 1
+   },
+   "layers": [
+    "battle-viewport:image"
+   ],
+   "n": 6,
+   "tags": 6,
+   "cards": [
+    {
+     "i": 0,
+     "name": "姉御の号令",
+     "cost": "1",
+     "disabled": true,
+     "short": true,
+     "ready": false,
+     "artwin": false,
+     "exclusive": true,
+     "playing": false,
+     "opacity": 0.7,
+     "filter": "grayscale(0.35) brightness(0.72)",
+     "card": {
+      "x": 18,
+      "y": 676,
+      "w": 100,
+      "h": 158,
+      "r": 118,
+      "b": 834
+     },
+     "inView": true,
+     "tag": {
+      "text": "あと1",
+      "rect": {
+       "x": 45,
+       "y": 681,
+       "w": 33.6,
+       "h": 14,
+       "r": 78.6,
+       "b": 695
+      },
+      "fontSize": "10px",
+      "fontPx": 10,
+      "color": "rgb(255, 255, 255)",
+      "bg": "rgb(5, 6, 13)",
+      "border": "rgba(255, 107, 107, 0.6)",
+      "lineHeight": "14px",
+      "overflow": 0,
+      "interGod": 0,
+      "interName": 0,
+      "godRect": {
+       "x": 27,
+       "y": 701,
+       "w": 82,
+       "h": 14,
+       "r": 109,
+       "b": 715
+      },
+      "nameRect": {
+       "x": 27,
+       "y": 719,
+       "w": 82,
+       "h": 17,
+       "r": 109,
+       "b": 736
+      },
+      "topmost": false,
+      "hitEl": "card-view-body",
+      "body": {
+       "rect": {
+        "x": 20,
+        "y": 685,
+        "w": 96,
+        "h": 151,
+        "r": 116,
+        "b": 836
+       },
+       "bg": "rgba(0, 0, 0, 0)",
+       "bgImage": "linear-gradient(rgba(0, 0, 0, 0) 0%, rgba(5, 6, 13, 0.66) 35%, rgba(5, 6, 13, 0.95) 100%)",
+       "z": "1"
+      },
+      "nameGap": 24,
+      "contrast": 5.25,
+      "contrastOnBlack": 5.25,
+      "contrastOnWhite": 5.1,
+      "raw": 20.23
+     }
+    },
+    {
+     "i": 1,
+     "name": "一心不乱",
+     "cost": "1",
+     "disabled": true,
+     "short": true,
+     "ready": false,
+     "artwin": false,
+     "exclusive": true,
+     "playing": false,
+     "opacity": 0.7,
+     "filter": "grayscale(0.35) brightness(0.72)",
+     "card": {
+      "x": 126,
+      "y": 676,
+      "w": 100,
+      "h": 158,
+      "r": 226,
+      "b": 834
+     },
+     "inView": true,
+     "tag": {
+      "text": "あと1",
+      "rect": {
+       "x": 153,
+       "y": 681,
+       "w": 33.6,
+       "h": 14,
+       "r": 186.6,
+       "b": 695
+      },
+      "fontSize": "10px",
+      "fontPx": 10,
+      "color": "rgb(255, 255, 255)",
+      "bg": "rgb(5, 6, 13)",
+      "border": "rgba(255, 107, 107, 0.6)",
+      "lineHeight": "14px",
+      "overflow": 0,
+      "interGod": 0,
+      "interName": 0,
+      "godRect": {
+       "x": 135,
+       "y": 750,
+       "w": 82,
+       "h": 14,
+       "r": 217,
+       "b": 764
+      },
+      "nameRect": {
+       "x": 135,
+       "y": 768,
+       "w": 82,
+       "h": 17,
+       "r": 217,
+       "b": 785
+      },
+      "topmost": true,
+      "hitEl": "card-view-short-tag",
+      "body": {
+       "rect": {
+        "x": 128,
+        "y": 734,
+        "w": 96,
+        "h": 98,
+        "r": 224,
+        "b": 832
+       },
+       "bg": "rgba(0, 0, 0, 0)",
+       "bgImage": "linear-gradient(rgba(0, 0, 0, 0) 0%, rgba(5, 6, 13, 0.66) 35%, rgba(5, 6, 13, 0.95) 100%)",
+       "z": "1"
+      },
+      "nameGap": 73,
+      "contrast": 5.25,
+      "contrastOnBlack": 5.25,
+      "contrastOnWhite": 5.1,
+      "raw": 20.23
+     }
+    },
+    {
+     "i": 2,
+     "name": "一心不乱",
+     "cost": "1",
+     "disabled": true,
+     "short": true,
+     "ready": false,
+     "artwin": false,
+     "exclusive": true,
+     "playing": false,
+     "opacity": 0.7,
+     "filter": "grayscale(0.35) brightness(0.72)",
+     "card": {
+      "x": 234,
+      "y": 676,
+      "w": 100,
+      "h": 158,
+      "r": 334,
+      "b": 834
+     },
+     "inView": true,
+     "tag": {
+      "text": "あと1",
+      "rect": {
+       "x": 261,
+       "y": 681,
+       "w": 33.6,
+       "h": 14,
+       "r": 294.6,
+       "b": 695
+      },
+      "fontSize": "10px",
+      "fontPx": 10,
+      "color": "rgb(255, 255, 255)",
+      "bg": "rgb(5, 6, 13)",
+      "border": "rgba(255, 107, 107, 0.6)",
+      "lineHeight": "14px",
+      "overflow": 0,
+      "interGod": 0,
+      "interName": 0,
+      "godRect": {
+       "x": 243,
+       "y": 750,
+       "w": 82,
+       "h": 14,
+       "r": 325,
+       "b": 764
+      },
+      "nameRect": {
+       "x": 243,
+       "y": 768,
+       "w": 82,
+       "h": 17,
+       "r": 325,
+       "b": 785
+      },
+      "topmost": true,
+      "hitEl": "card-view-short-tag",
+      "body": {
+       "rect": {
+        "x": 236,
+        "y": 734,
+        "w": 96,
+        "h": 98,
+        "r": 332,
+        "b": 832
+       },
+       "bg": "rgba(0, 0, 0, 0)",
+       "bgImage": "linear-gradient(rgba(0, 0, 0, 0) 0%, rgba(5, 6, 13, 0.66) 35%, rgba(5, 6, 13, 0.95) 100%)",
+       "z": "1"
+      },
+      "nameGap": 73,
+      "contrast": 5.25,
+      "contrastOnBlack": 5.25,
+      "contrastOnWhite": 5.1,
+      "raw": 20.23
+     }
+    },
+    {
+     "i": 3,
+     "name": "巫女の舞",
+     "cost": "1",
+     "disabled": true,
+     "short": true,
+     "ready": false,
+     "artwin": false,
+     "exclusive": false,
+     "playing": false,
+     "opacity": 0.7,
+     "filter": "grayscale(0.35) brightness(0.72)",
+     "card": {
+      "x": 342,
+      "y": 676,
+      "w": 100,
+      "h": 158,
+      "r": 442,
+      "b": 834
+     },
+     "inView": true,
+     "tag": {
+      "text": "あと1",
+      "rect": {
+       "x": 369,
+       "y": 681,
+       "w": 33.6,
+       "h": 14,
+       "r": 402.6,
+       "b": 695
+      },
+      "fontSize": "10px",
+      "fontPx": 10,
+      "color": "rgb(255, 255, 255)",
+      "bg": "rgb(5, 6, 13)",
+      "border": "rgba(255, 107, 107, 0.6)",
+      "lineHeight": "14px",
+      "overflow": 0,
+      "interGod": 0,
+      "interName": 0,
+      "godRect": null,
+      "nameRect": {
+       "x": 351,
+       "y": 768,
+       "w": 82,
+       "h": 17,
+       "r": 433,
+       "b": 785
+      },
+      "topmost": false,
+      "hitEl": "game-stage",
+      "body": {
+       "rect": {
+        "x": 344,
+        "y": 752,
+        "w": 96,
+        "h": 80,
+        "r": 440,
+        "b": 832
+       },
+       "bg": "rgba(0, 0, 0, 0)",
+       "bgImage": "linear-gradient(rgba(0, 0, 0, 0) 0%, rgba(5, 6, 13, 0.66) 35%, rgba(5, 6, 13, 0.95) 100%)",
+       "z": "1"
+      },
+      "nameGap": 73,
+      "contrast": 5.25,
+      "contrastOnBlack": 5.25,
+      "contrastOnWhite": 5.1,
+      "raw": 20.23
+     }
+    },
+    {
+     "i": 4,
+     "name": "神楽舞",
+     "cost": "2",
+     "disabled": true,
+     "short": true,
+     "ready": false,
+     "artwin": false,
+     "exclusive": false,
+     "playing": false,
+     "opacity": 0.7,
+     "filter": "grayscale(0.35) brightness(0.72)",
+     "card": {
+      "x": 450,
+      "y": 676,
+      "w": 100,
+      "h": 158,
+      "r": 550,
+      "b": 834
+     },
+     "inView": false,
+     "tag": {
+      "text": "あと2",
+      "rect": {
+       "x": 477,
+       "y": 681,
+       "w": 33.6,
+       "h": 14,
+       "r": 510.6,
+       "b": 695
+      },
+      "fontSize": "10px",
+      "fontPx": 10,
+      "color": "rgb(255, 255, 255)",
+      "bg": "rgb(5, 6, 13)",
+      "border": "rgba(255, 107, 107, 0.6)",
+      "lineHeight": "14px",
+      "overflow": 0,
+      "interGod": 0,
+      "interName": 0,
+      "godRect": null,
+      "nameRect": {
+       "x": 459,
+       "y": 726.2,
+       "w": 82,
+       "h": 17,
+       "r": 541,
+       "b": 743.2
+      },
+      "topmost": false,
+      "hitEl": null,
+      "body": {
+       "rect": {
+        "x": 452,
+        "y": 710.2,
+        "w": 96,
+        "h": 121.8,
+        "r": 548,
+        "b": 832
+       },
+       "bg": "rgba(0, 0, 0, 0)",
+       "bgImage": "linear-gradient(rgba(0, 0, 0, 0) 0%, rgba(5, 6, 13, 0.66) 35%, rgba(5, 6, 13, 0.95) 100%)",
+       "z": "1"
+      },
+      "nameGap": 31.2,
+      "contrast": 5.25,
+      "contrastOnBlack": 5.25,
+      "contrastOnWhite": 5.1,
+      "raw": 20.23
+     }
+    },
+    {
+     "i": 5,
+     "name": "速攻",
+     "cost": "1",
+     "disabled": true,
+     "short": true,
+     "ready": false,
+     "artwin": false,
+     "exclusive": false,
+     "playing": false,
+     "opacity": 0.7,
+     "filter": "grayscale(0.35) brightness(0.72)",
+     "card": {
+      "x": 558,
+      "y": 676,
+      "w": 100,
+      "h": 158,
+      "r": 658,
+      "b": 834
+     },
+     "inView": false,
+     "tag": {
+      "text": "あと1",
+      "rect": {
+       "x": 585,
+       "y": 681,
+       "w": 33.6,
+       "h": 14,
+       "r": 618.6,
+       "b": 695
+      },
+      "fontSize": "10px",
+      "fontPx": 10,
+      "color": "rgb(255, 255, 255)",
+      "bg": "rgb(5, 6, 13)",
+      "border": "rgba(255, 107, 107, 0.6)",
+      "lineHeight": "14px",
+      "overflow": 0,
+      "interGod": 0,
+      "interName": 0,
+      "godRect": null,
+      "nameRect": {
+       "x": 567,
+       "y": 726.2,
+       "w": 82,
+       "h": 17,
+       "r": 649,
+       "b": 743.2
+      },
+      "topmost": false,
+      "hitEl": null,
+      "body": {
+       "rect": {
+        "x": 560,
+        "y": 710.2,
+        "w": 96,
+        "h": 121.8,
+        "r": 656,
+        "b": 832
+       },
+       "bg": "rgba(0, 0, 0, 0)",
+       "bgImage": "linear-gradient(rgba(0, 0, 0, 0) 0%, rgba(5, 6, 13, 0.66) 35%, rgba(5, 6, 13, 0.95) 100%)",
+       "z": "1"
+      },
+      "nameGap": 31.2,
+      "contrast": 5.25,
+      "contrastOnBlack": 5.25,
+      "contrastOnWhite": 5.1,
+      "raw": 20.23
+     }
+    }
+   ]
+  },
+  {
+   "round": 4,
+   "phase": "start",
+   "apText": "神力 5 / 5",
+   "endDisabled": false,
+   "backdrop": {
+    "r": 0,
+    "g": 0,
+    "b": 0,
+    "a": 1
+   },
+   "layers": [
+    "battle-viewport:image"
+   ],
+   "n": 8,
+   "tags": 0,
+   "cards": [
+    {
+     "i": 0,
+     "name": "姉御の号令",
+     "cost": "1",
+     "disabled": false,
+     "short": false,
+     "ready": false,
+     "artwin": false,
+     "exclusive": true,
+     "playing": false,
+     "opacity": 1,
+     "filter": "none",
+     "card": {
+      "x": 18,
+      "y": 676,
+      "w": 100,
+      "h": 158,
+      "r": 118,
+      "b": 834
+     },
+     "inView": true
+    },
+    {
+     "i": 1,
+     "name": "一心不乱",
+     "cost": "1",
+     "disabled": false,
+     "short": false,
+     "ready": false,
+     "artwin": false,
+     "exclusive": true,
+     "playing": false,
+     "opacity": 1,
+     "filter": "none",
+     "card": {
+      "x": 126,
+      "y": 676,
+      "w": 100,
+      "h": 158,
+      "r": 226,
+      "b": 834
+     },
+     "inView": true
+    },
+    {
+     "i": 2,
+     "name": "一心不乱",
+     "cost": "1",
+     "disabled": false,
+     "short": false,
+     "ready": false,
+     "artwin": false,
+     "exclusive": true,
+     "playing": false,
+     "opacity": 1,
+     "filter": "none",
+     "card": {
+      "x": 234,
+      "y": 676,
+      "w": 100,
+      "h": 158,
+      "r": 334,
+      "b": 834
+     },
+     "inView": true
+    },
+    {
+     "i": 3,
+     "name": "巫女の舞",
+     "cost": "1",
+     "disabled": false,
+     "short": false,
+     "ready": false,
+     "artwin": false,
+     "exclusive": false,
+     "playing": false,
+     "opacity": 1,
+     "filter": "none",
+     "card": {
+      "x": 342,
+      "y": 676,
+      "w": 100,
+      "h": 158,
+      "r": 442,
+      "b": 834
+     },
+     "inView": true
+    },
+    {
+     "i": 4,
+     "name": "神楽舞",
+     "cost": "2",
+     "disabled": false,
+     "short": false,
+     "ready": false,
+     "artwin": false,
+     "exclusive": false,
+     "playing": false,
+     "opacity": 1,
+     "filter": "none",
+     "card": {
+      "x": 450,
+      "y": 676,
+      "w": 100,
+      "h": 158,
+      "r": 550,
+      "b": 834
+     },
+     "inView": false
+    },
+    {
+     "i": 5,
+     "name": "速攻",
+     "cost": "1",
+     "disabled": false,
+     "short": false,
+     "ready": false,
+     "artwin": false,
+     "exclusive": false,
+     "playing": false,
+     "opacity": 1,
+     "filter": "none",
+     "card": {
+      "x": 558,
+      "y": 676,
+      "w": 100,
+      "h": 158,
+      "r": 658,
+      "b": 834
+     },
+     "inView": false
+    },
+    {
+     "i": 6,
+     "name": "剛撃",
+     "cost": "2",
+     "disabled": false,
+     "short": false,
+     "ready": false,
+     "artwin": false,
+     "exclusive": false,
+     "playing": false,
+     "opacity": 1,
+     "filter": "none",
+     "card": {
+      "x": 666,
+      "y": 676,
+      "w": 100,
+      "h": 158,
+      "r": 766,
+      "b": 834
+     },
+     "inView": false
+    },
+    {
+     "i": 7,
+     "name": "後輩想い",
+     "cost": "2",
+     "disabled": false,
+     "short": false,
+     "ready": false,
+     "artwin": false,
+     "exclusive": true,
+     "playing": false,
+     "opacity": 1,
+     "filter": "none",
+     "card": {
+      "x": 774,
+      "y": 676,
+      "w": 100,
+      "h": 158,
+      "r": 874,
+      "b": 834
+     },
+     "inView": false
+    }
+   ]
+  },
+  {
+   "round": 4,
+   "phase": "drained",
+   "apText": "神力 0 / 5",
+   "endDisabled": false,
+   "backdrop": {
+    "r": 0,
+    "g": 0,
+    "b": 0,
+    "a": 1
+   },
+   "layers": [
+    "battle-viewport:image"
+   ],
+   "n": 5,
+   "tags": 5,
+   "cards": [
+    {
+     "i": 0,
+     "name": "一心不乱",
+     "cost": "1",
+     "disabled": true,
+     "short": true,
+     "ready": false,
+     "artwin": false,
+     "exclusive": true,
+     "playing": false,
+     "opacity": 0.7,
+     "filter": "grayscale(0.35) brightness(0.72)",
+     "card": {
+      "x": 18,
+      "y": 676,
+      "w": 100,
+      "h": 158,
+      "r": 118,
+      "b": 834
+     },
+     "inView": true,
+     "tag": {
+      "text": "あと1",
+      "rect": {
+       "x": 45,
+       "y": 681,
+       "w": 33.6,
+       "h": 14,
+       "r": 78.6,
+       "b": 695
+      },
+      "fontSize": "10px",
+      "fontPx": 10,
+      "color": "rgb(255, 255, 255)",
+      "bg": "rgb(5, 6, 13)",
+      "border": "rgba(255, 107, 107, 0.6)",
+      "lineHeight": "14px",
+      "overflow": 0,
+      "interGod": 0,
+      "interName": 0,
+      "godRect": {
+       "x": 27,
+       "y": 750,
+       "w": 82,
+       "h": 14,
+       "r": 109,
+       "b": 764
+      },
+      "nameRect": {
+       "x": 27,
+       "y": 768,
+       "w": 82,
+       "h": 17,
+       "r": 109,
+       "b": 785
+      },
+      "topmost": true,
+      "hitEl": "card-view-short-tag",
+      "body": {
+       "rect": {
+        "x": 20,
+        "y": 734,
+        "w": 96,
+        "h": 98,
+        "r": 116,
+        "b": 832
+       },
+       "bg": "rgba(0, 0, 0, 0)",
+       "bgImage": "linear-gradient(rgba(0, 0, 0, 0) 0%, rgba(5, 6, 13, 0.66) 35%, rgba(5, 6, 13, 0.95) 100%)",
+       "z": "1"
+      },
+      "nameGap": 73,
+      "contrast": 5.25,
+      "contrastOnBlack": 5.25,
+      "contrastOnWhite": 5.1,
+      "raw": 20.23
+     }
+    },
+    {
+     "i": 1,
+     "name": "一心不乱",
+     "cost": "1",
+     "disabled": true,
+     "short": true,
+     "ready": false,
+     "artwin": false,
+     "exclusive": true,
+     "playing": false,
+     "opacity": 0.7,
+     "filter": "grayscale(0.35) brightness(0.72)",
+     "card": {
+      "x": 126,
+      "y": 676,
+      "w": 100,
+      "h": 158,
+      "r": 226,
+      "b": 834
+     },
+     "inView": true,
+     "tag": {
+      "text": "あと1",
+      "rect": {
+       "x": 153,
+       "y": 681,
+       "w": 33.6,
+       "h": 14,
+       "r": 186.6,
+       "b": 695
+      },
+      "fontSize": "10px",
+      "fontPx": 10,
+      "color": "rgb(255, 255, 255)",
+      "bg": "rgb(5, 6, 13)",
+      "border": "rgba(255, 107, 107, 0.6)",
+      "lineHeight": "14px",
+      "overflow": 0,
+      "interGod": 0,
+      "interName": 0,
+      "godRect": {
+       "x": 135,
+       "y": 750,
+       "w": 82,
+       "h": 14,
+       "r": 217,
+       "b": 764
+      },
+      "nameRect": {
+       "x": 135,
+       "y": 768,
+       "w": 82,
+       "h": 17,
+       "r": 217,
+       "b": 785
+      },
+      "topmost": true,
+      "hitEl": "card-view-short-tag",
+      "body": {
+       "rect": {
+        "x": 128,
+        "y": 734,
+        "w": 96,
+        "h": 98,
+        "r": 224,
+        "b": 832
+       },
+       "bg": "rgba(0, 0, 0, 0)",
+       "bgImage": "linear-gradient(rgba(0, 0, 0, 0) 0%, rgba(5, 6, 13, 0.66) 35%, rgba(5, 6, 13, 0.95) 100%)",
+       "z": "1"
+      },
+      "nameGap": 73,
+      "contrast": 5.25,
+      "contrastOnBlack": 5.25,
+      "contrastOnWhite": 5.1,
+      "raw": 20.23
+     }
+    },
+    {
+     "i": 2,
+     "name": "巫女の舞",
+     "cost": "1",
+     "disabled": true,
+     "short": true,
+     "ready": false,
+     "artwin": false,
+     "exclusive": false,
+     "playing": false,
+     "opacity": 0.7,
+     "filter": "grayscale(0.35) brightness(0.72)",
+     "card": {
+      "x": 234,
+      "y": 676,
+      "w": 100,
+      "h": 158,
+      "r": 334,
+      "b": 834
+     },
+     "inView": true,
+     "tag": {
+      "text": "あと1",
+      "rect": {
+       "x": 261,
+       "y": 681,
+       "w": 33.6,
+       "h": 14,
+       "r": 294.6,
+       "b": 695
+      },
+      "fontSize": "10px",
+      "fontPx": 10,
+      "color": "rgb(255, 255, 255)",
+      "bg": "rgb(5, 6, 13)",
+      "border": "rgba(255, 107, 107, 0.6)",
+      "lineHeight": "14px",
+      "overflow": 0,
+      "interGod": 0,
+      "interName": 0,
+      "godRect": null,
+      "nameRect": {
+       "x": 243,
+       "y": 768,
+       "w": 82,
+       "h": 17,
+       "r": 325,
+       "b": 785
+      },
+      "topmost": true,
+      "hitEl": "card-view-short-tag",
+      "body": {
+       "rect": {
+        "x": 236,
+        "y": 752,
+        "w": 96,
+        "h": 80,
+        "r": 332,
+        "b": 832
+       },
+       "bg": "rgba(0, 0, 0, 0)",
+       "bgImage": "linear-gradient(rgba(0, 0, 0, 0) 0%, rgba(5, 6, 13, 0.66) 35%, rgba(5, 6, 13, 0.95) 100%)",
+       "z": "1"
+      },
+      "nameGap": 73,
+      "contrast": 5.25,
+      "contrastOnBlack": 5.25,
+      "contrastOnWhite": 5.1,
+      "raw": 20.23
+     }
+    },
+    {
+     "i": 3,
+     "name": "速攻",
+     "cost": "1",
+     "disabled": true,
+     "short": true,
+     "ready": false,
+     "artwin": false,
+     "exclusive": false,
+     "playing": false,
+     "opacity": 0.7,
+     "filter": "grayscale(0.35) brightness(0.72)",
+     "card": {
+      "x": 342,
+      "y": 676,
+      "w": 100,
+      "h": 158,
+      "r": 442,
+      "b": 834
+     },
+     "inView": true,
+     "tag": {
+      "text": "あと1",
+      "rect": {
+       "x": 369,
+       "y": 681,
+       "w": 33.6,
+       "h": 14,
+       "r": 402.6,
+       "b": 695
+      },
+      "fontSize": "10px",
+      "fontPx": 10,
+      "color": "rgb(255, 255, 255)",
+      "bg": "rgb(5, 6, 13)",
+      "border": "rgba(255, 107, 107, 0.6)",
+      "lineHeight": "14px",
+      "overflow": 0,
+      "interGod": 0,
+      "interName": 0,
+      "godRect": null,
+      "nameRect": {
+       "x": 351,
+       "y": 726.2,
+       "w": 82,
+       "h": 17,
+       "r": 433,
+       "b": 743.2
+      },
+      "topmost": false,
+      "hitEl": "game-stage",
+      "body": {
+       "rect": {
+        "x": 344,
+        "y": 710.2,
+        "w": 96,
+        "h": 121.8,
+        "r": 440,
+        "b": 832
+       },
+       "bg": "rgba(0, 0, 0, 0)",
+       "bgImage": "linear-gradient(rgba(0, 0, 0, 0) 0%, rgba(5, 6, 13, 0.66) 35%, rgba(5, 6, 13, 0.95) 100%)",
+       "z": "1"
+      },
+      "nameGap": 31.2,
+      "contrast": 5.25,
+      "contrastOnBlack": 5.25,
+      "contrastOnWhite": 5.1,
+      "raw": 20.23
+     }
+    },
+    {
+     "i": 4,
+     "name": "後輩想い",
+     "cost": "2",
+     "disabled": true,
+     "short": true,
+     "ready": false,
+     "artwin": false,
+     "exclusive": true,
+     "playing": false,
+     "opacity": 0.7,
+     "filter": "grayscale(0.35) brightness(0.72)",
+     "card": {
+      "x": 450,
+      "y": 676,
+      "w": 100,
+      "h": 158,
+      "r": 550,
+      "b": 834
+     },
+     "inView": false,
+     "tag": {
+      "text": "あと2",
+      "rect": {
+       "x": 477,
+       "y": 681,
+       "w": 33.6,
+       "h": 14,
+       "r": 510.6,
+       "b": 695
+      },
+      "fontSize": "10px",
+      "fontPx": 10,
+      "color": "rgb(255, 255, 255)",
+      "bg": "rgb(5, 6, 13)",
+      "border": "rgba(255, 107, 107, 0.6)",
+      "lineHeight": "14px",
+      "overflow": 0,
+      "interGod": 0,
+      "interName": 0,
+      "godRect": {
+       "x": 459,
+       "y": 750,
+       "w": 82,
+       "h": 14,
+       "r": 541,
+       "b": 764
+      },
+      "nameRect": {
+       "x": 459,
+       "y": 768,
+       "w": 82,
+       "h": 17,
+       "r": 541,
+       "b": 785
+      },
+      "topmost": false,
+      "hitEl": null,
+      "body": {
+       "rect": {
+        "x": 452,
+        "y": 734,
+        "w": 96,
+        "h": 98,
+        "r": 548,
+        "b": 832
+       },
+       "bg": "rgba(0, 0, 0, 0)",
+       "bgImage": "linear-gradient(rgba(0, 0, 0, 0) 0%, rgba(5, 6, 13, 0.66) 35%, rgba(5, 6, 13, 0.95) 100%)",
+       "z": "1"
+      },
+      "nameGap": 73,
+      "contrast": 5.25,
+      "contrastOnBlack": 5.25,
+      "contrastOnWhite": 5.1,
+      "raw": 20.23
+     }
+    }
+   ]
+  }
+ ],
+ "enemyTurns": [
+  {
+   "round": 1,
+   "samples": 121,
+   "locked": 42,
+   "maxTagsWhileLocked": 0,
+   "maxShortWhileLocked": 0,
+   "firstLockAt": 22,
+   "tagsAtFirstLock": 0,
+   "tagsBeforeLock": [
+    0,
+    0,
+    0
+   ],
+   "over": false
+  },
+  {
+   "round": 2,
+   "samples": 52,
+   "locked": 19,
+   "maxTagsWhileLocked": 0,
+   "maxShortWhileLocked": 0,
+   "firstLockAt": 28,
+   "tagsAtFirstLock": 0,
+   "tagsBeforeLock": [
+    0,
+    0,
+    0
+   ],
+   "over": false
+  },
+  {
+   "round": 3,
+   "samples": 25,
+   "locked": 9,
+   "maxTagsWhileLocked": 0,
+   "maxShortWhileLocked": 0,
+   "firstLockAt": 17,
+   "tagsAtFirstLock": 0,
+   "tagsBeforeLock": [
+    0,
+    0,
+    0
+   ],
+   "over": false
+  }
+ ],
+ "played": [
+  {
+   "round": 1,
+   "name": "呪縛"
+  },
+  {
+   "round": 2,
+   "name": "後輩想い"
+  },
+  {
+   "round": 2,
+   "name": "守護"
+  },
+  {
+   "round": 3,
+   "name": "鉄壁の構え"
+  },
+  {
+   "round": 3,
+   "name": "予言"
+  },
+  {
+   "round": 4,
+   "name": "神楽舞"
+  },
+  {
+   "round": 4,
+   "name": "剛撃"
+  },
+  {
+   "round": 4,
+   "name": "姉御の号令"
+  }
+ ],
+ "shots": [],
+ "errors": []
+}
