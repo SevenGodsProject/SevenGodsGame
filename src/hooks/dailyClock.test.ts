@@ -1,5 +1,7 @@
 import { describe, expect, it } from 'vitest'
-import { formatDailyCountdown, isExpiredDailySave, msUntilNextDailyKey, todayDailyKey } from './dailyClock'
+import { formatDailyCountdown, isExpiredDailySave, msUntilNextDailyKey, nextDailyKey, todayDailyKey, tomorrowDailyTypeLabel } from './dailyClock'
+import { dailyBossFor } from '../core/data/dailyBoss'
+import { getEnemyDef } from '../core/data/enemies'
 import { startTestGame } from '../core/engine/testUtils'
 
 describe('dailyClock（DAILY-01）', () => {
@@ -59,5 +61,17 @@ describe('次の神域挑戦までの残り時間（Phase 7 P1・表示専用）
     expect(formatDailyCountdown(0)).toBe('00:00')
     expect(formatDailyCountdown(90 * 60_000 + 1)).toBe('01:31')
     expect(formatDailyCountdown(10 * 24 * 60 * 60_000)).toBe('24:00')
+  })
+})
+
+describe('明日の問い（v1.0.4 Retention 束 ③・表示専用）', () => {
+  it('nextDailyKey：JST 23:59:59 は翌日、JST 0:00 ちょうどは新しい日の翌日', () => {
+    expect(nextDailyKey(new Date('2026-09-01T14:59:59Z'))).toBe('2026-09-02')
+    expect(nextDailyKey(new Date('2026-09-01T15:00:00Z'))).toBe('2026-09-03')
+  })
+  it('nextDailyKey：月末・年末をまたぐ。型は翌日の敵の typeLabel だけ', () => {
+    expect(nextDailyKey(new Date('2026-09-30T10:00:00Z'))).toBe('2026-10-01')
+    expect(nextDailyKey(new Date('2026-12-31T10:00:00Z'))).toBe('2027-01-01')
+    expect(tomorrowDailyTypeLabel(new Date('2026-09-30T10:00:00Z'))).toBe(getEnemyDef(dailyBossFor('2026-10-01').enemyId).typeLabel)
   })
 })

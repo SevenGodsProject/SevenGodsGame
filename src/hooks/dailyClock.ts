@@ -1,6 +1,7 @@
 import type { GameState } from '../core/types'
 import { RULES } from '../core/data/rules'
-import { dailyKeyOf } from '../core/data/dailyBoss'
+import { dailyBossFor, dailyKeyOf } from '../core/data/dailyBoss'
+import { getEnemyDef } from '../core/data/enemies'
 
 /**
  * DAILY-01：現在時刻からJSTの日付キーを得る。
@@ -36,6 +37,16 @@ export function msUntilNextDailyKey(now: Date = new Date()): number {
   const shifted = new Date(now.getTime() + offsetMs)
   const nextMidnight = Date.UTC(shifted.getUTCFullYear(), shifted.getUTCMonth(), shifted.getUTCDate() + 1)
   return nextMidnight - shifted.getTime()
+}
+
+/** v1.0.4 Retention 束 ③：次の日付キー（既存 2 関数の合成。カウントダウン終端と同じ瞬間に切り替わる） */
+export function nextDailyKey(now: Date = new Date()): string {
+  return dailyKeyOf(new Date(now.getTime() + msUntilNextDailyKey(now)))
+}
+
+/** v1.0.4 Retention 束 ③：「明日の問い」の型だけを返す（敵名・Seed は出さない。表示専用・読み取りのみ） */
+export function tomorrowDailyTypeLabel(now: Date = new Date()): string {
+  return getEnemyDef(dailyBossFor(nextDailyKey(now)).enemyId).typeLabel
 }
 
 /**

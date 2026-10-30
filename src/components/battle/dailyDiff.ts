@@ -1,5 +1,6 @@
 import type { GameStatus, GodId } from '../../core/types'
-import type { DailyDay, DailyRecordResult, DailyResult } from '../../hooks/dailyStorage'
+import { RULES } from '../../core/data/rules'
+import { bestResultOf, type DailyDay, type DailyRecordResult, type DailyResult } from '../../hooks/dailyStorage'
 import { formatScaled } from '../displayScale'
 
 /**
@@ -93,4 +94,21 @@ export function describeDailyDiff(day: DailyDay, current: DailyDiffCurrent, resu
       text: `前回 ${formatScaled(previous.score)} → 今回 ${formatScaled(current.score)}（${formatSignedScaled(current.score - previous.score)}）${roundChange}`,
     },
   }
+}
+
+/**
+ * v1.0.4 Retention 束 ③（AI 判断・Lane 9 #1）：「今日の問い」の verdict 1 行。
+ * 保存済みの status／round だけで決める（新しい保存・正解の提示はしない＝決定263 の境界内）。
+ */
+export function describeDailyVerdict(result: { status: GameStatus; round: number }): string {
+  if (result.status === 'won') return `今日の問い：解けた（R${result.round} 撃破）`
+  if (result.status === 'lost') return `今日の問い：未解（R${result.round} 敗北）`
+  return `今日の問い：未解（${RULES.totalRounds}R 未撃破）`
+}
+
+/** Home 用：その日の記録から verdict を 1 行。撃破があれば最短ラウンドの撃破を優先し、未挑戦は「未着手」 */
+export function describeDailyDayVerdict(day: DailyDay): string {
+  const won = day.results.filter((r) => r.status === 'won').sort((a, b) => a.round - b.round)[0]
+  const pick = won ?? bestResultOf(day) ?? day.results[day.results.length - 1]
+  return pick ? describeDailyVerdict(pick) : '今日の問い：未着手'
 }

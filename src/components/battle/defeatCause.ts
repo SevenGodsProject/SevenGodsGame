@@ -49,7 +49,8 @@ export function deriveDefeatCause(log: GameEvent[], fallbackRound = 1): DefeatCa
     }
   }
   if (acted) {
-    const label = acted.label ?? (acted.kind === 'multiAttack' ? '連撃' : acted.kind === 'special' ? '必殺技' : '攻撃')
+    // v1.0.3 束 #3 同梱 C-4：「必殺技」→「必殺」（遊び方 ②「大技（必殺）」・敵パネルの typeDescription「必殺」と 1 語に統一）
+    const label = acted.label ?? (acted.kind === 'multiAttack' ? '連撃' : acted.kind === 'special' ? '必殺' : '攻撃')
     return { round, label, amount, selfInflicted: false }
   }
   return { round, label: null, amount, selfInflicted: true }

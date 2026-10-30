@@ -29,14 +29,14 @@ describe('computeOtomoGrowthDisplay', () => {
     expect(display.progressRatio).toBe(0)
   })
 
-  it('Lv3以上は「息の合った相棒」、doji到達かつLv5以上は「固い絆で結ばれた相棒」になる', () => {
+  it('Lv3以上は「息の合った相棒」、Lv5以上は童子到達に依らず「固い絆で結ばれた相棒」になる（v1.0.4 Retention 束 ①）', () => {
     const lv3 = computeOtomoGrowthDisplay(record({ battlesPlayed: 5, resonanceCount: 6 }))
     expect(lv3.level).toBe(3)
     expect(lv3.bondText).toBe('息の合った相棒')
 
     const lv5NoDoji = computeOtomoGrowthDisplay(record({ battlesPlayed: 10, resonanceCount: 12, dojiReached: 0 }))
     expect(lv5NoDoji.level).toBe(5)
-    expect(lv5NoDoji.bondText).toBe('息の合った相棒') // doji未到達なら最上位テキストにはならない
+    expect(lv5NoDoji.bondText).toBe('固い絆で結ばれた相棒') // v1.0.4：童子未到達でも Lv5 で最上位
 
     const lv5WithDoji = computeOtomoGrowthDisplay(record({ battlesPlayed: 10, resonanceCount: 12, dojiReached: 2 }))
     expect(lv5WithDoji.bondText).toBe('固い絆で結ばれた相棒')
@@ -80,18 +80,22 @@ describe('computeOtomoGrowthDisplay（絆称号tier・次の解放）', () => {
     expect(display.nextUnlockText).toBe('絆称号「息の合った相棒」（あと2pt）')
   })
 
-  it('bondTier=2（Lv3、doji未到達）は次の解放にpt・童子到達・童子の記録を示す', () => {
+  it('bondTier=2（Lv3、doji未到達）は次の解放に Lv5 までの pt だけを示す（童子条件なし）', () => {
     const display = computeOtomoGrowthDisplay(record({ battlesPlayed: 5, resonanceCount: 6, dojiReached: 0 }))
     expect(display.bondTier).toBe(2)
-    expect(display.nextUnlockText).toBe(
-      '絆称号「固い絆で結ばれた相棒」＋童子の記録（あと6pt・童子形態での対局終了が1回以上必要）',
-    )
+    expect(display.nextUnlockText).toBe('絆称号「固い絆で結ばれた相棒」（あと6pt）')
   })
 
-  it('bondTier=2（Lv5、doji未到達）はpt条件を満たしているため童子到達＋童子の記録のみを示す', () => {
+  it('Lv5・doji未到達は bondTier=3 になり、次の解放は童子の記録だけを示す', () => {
     const display = computeOtomoGrowthDisplay(record({ battlesPlayed: 10, resonanceCount: 12, dojiReached: 0 }))
-    expect(display.bondTier).toBe(2)
-    expect(display.nextUnlockText).toBe('絆称号「固い絆で結ばれた相棒」＋童子の記録（童子形態での対局終了が1回以上必要）')
+    expect(display.bondTier).toBe(3)
+    expect(display.nextUnlockText).toBe('童子の記録（童子形態で対局を終えると解放）')
+  })
+
+  it('既存の Lv5 記録は ★3 へ昇格するのみ（Lv5 未満は従来どおり tier2 以下＝降格なし）', () => {
+    expect(computeOtomoGrowthDisplay(record({ battlesPlayed: 9, resonanceCount: 11, dojiReached: 0 })).bondTier).toBe(2)
+    expect(computeOtomoGrowthDisplay(record({ battlesPlayed: 9, resonanceCount: 11, dojiReached: 3 })).bondTier).toBe(2)
+    expect(computeOtomoGrowthDisplay(record({ battlesPlayed: 30, resonanceCount: 20, dojiReached: 3 })).bondTier).toBe(3)
   })
 
   it('bondTier=3（最上位）に到達すると、これ以上の絆称号・形態記録は存在しないためnullを返す', () => {
@@ -123,6 +127,18 @@ describe('computeOtomoGrowthDisplay（unlockedForms）', () => {
     const display = computeOtomoGrowthDisplay(record({ battlesPlayed: 5, resonanceCount: 6, dojiReached: 0 }))
     expect(display.bondTier).toBe(2)
     expect(display.unlockedForms).toEqual(['spirit', 'incarnate'])
+  })
+
+  it('tier3・doji未到達は精霊態＋受肉態のまま（童子の記録は童子到達で開く）', () => {
+    const display = computeOtomoGrowthDisplay(record({ battlesPlayed: 10, resonanceCount: 12, dojiReached: 0 }))
+    expect(display.bondTier).toBe(3)
+    expect(display.unlockedForms).toEqual(['spirit', 'incarnate'])
+  })
+
+  it('tier2 でも doji 到達済みなら童子の記録を閲覧可能（称号と記録の分離）', () => {
+    const display = computeOtomoGrowthDisplay(record({ battlesPlayed: 4, resonanceCount: 6, dojiReached: 1 }))
+    expect(display.bondTier).toBe(2)
+    expect(display.unlockedForms).toEqual(['spirit', 'incarnate', 'doji'])
   })
 
   it('tier3（Lv5以上・doji到達済み）は3形態すべて閲覧可能', () => {
@@ -199,21 +215,16 @@ describe('computeNextBondGoal（Phase 7 P1）', () => {
   it('tier1：Lv3（6pt）までの残り pt。OTOMO 画面の「あとNpt」と一致する', () => {
     const rec = record({ battlesPlayed: 3, resonanceCount: 4 })
     const goal = computeNextBondGoal(rec)
-    expect(goal).toEqual({ title: '息の合った相棒', pointsNeeded: 2, needsDoji: false })
+    expect(goal).toEqual({ title: '息の合った相棒', pointsNeeded: 2 })
     expect(computeOtomoGrowthDisplay(rec).nextUnlockText).toContain('あと2pt')
   })
 
-  it('tier2：Lv5（12pt）までの残り pt と、童子到達が必要か', () => {
+  it('tier2：Lv5（12pt）までの残り pt（童子条件なし）', () => {
     expect(computeNextBondGoal(record({ battlesPlayed: 9, resonanceCount: 10, dojiReached: 0 }))).toEqual({
       title: '固い絆で結ばれた相棒',
       pointsNeeded: 2,
-      needsDoji: true,
     })
-    // Lv5 到達済みで童子だけが足りない
-    expect(computeNextBondGoal(record({ battlesPlayed: 15, resonanceCount: 13, dojiReached: 0 }))).toEqual({
-      title: '固い絆で結ばれた相棒',
-      pointsNeeded: 0,
-      needsDoji: true,
-    })
+    // Lv5 到達済みは童子未到達でも最終称号＝null
+    expect(computeNextBondGoal(record({ battlesPlayed: 15, resonanceCount: 13, dojiReached: 0 }))).toBeNull()
   })
 })

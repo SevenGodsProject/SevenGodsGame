@@ -1,0 +1,207 @@
+{
+  "base": "http://localhost:4204",
+  "startedAt": "2026-10-23T15:38:08.149Z",
+  "viewports": {
+    "pc1508": {
+      "secondWin": null,
+      "dailyWin": {
+        "homeBefore": "今日の問い：未着手",
+        "result": {
+          "vw": 1508,
+          "vh": 660,
+          "status": "勝利",
+          "score": "スコア 8,560",
+          "rewardPending": false,
+          "goal": {
+            "id": "D3",
+            "text": "今日のベスト 8,560。残り2回でさらに更新する",
+            "textHeight": 20,
+            "lineHeight": 20.3,
+            "lines": 1,
+            "inView": true
+          },
+          "primary": {
+            "text": "もう一度挑戦（残り2回）",
+            "exit": "rematch",
+            "testid": "result-primary",
+            "top": 524,
+            "height": 49,
+            "width": 420,
+            "area": 20580,
+            "inView": true,
+            "disabled": false
+          },
+          "secondary": [
+            {
+              "text": "デッキを調整",
+              "exit": "adjustDeck",
+              "testid": "result-secondary",
+              "top": 581,
+              "height": 44,
+              "width": 206,
+              "area": 9064,
+              "inView": false,
+              "disabled": false
+            },
+            {
+              "text": "神・デッキを選び直す",
+              "exit": "reselect",
+              "testid": "result-secondary",
+              "top": 581,
+              "height": 44,
+              "width": 206,
+              "area": 9064,
+              "inView": false,
+              "disabled": false
+            }
+          ],
+          "tertiary": [
+            {
+              "text": "ホームへ",
+              "exit": "home",
+              "testid": "result-tertiary-link",
+              "top": 1052,
+              "height": 44,
+              "width": 72,
+              "area": 3168,
+              "inView": false,
+              "disabled": false
+            },
+            {
+              "text": "挑戦状をコピー",
+              "exit": "share",
+              "testid": "result-share",
+              "top": 1052,
+              "height": 44,
+              "width": 111,
+              "area": 4884,
+              "inView": false,
+              "disabled": false
+            }
+          ],
+          "share": {
+            "text": "挑戦状をコピー",
+            "exit": "share",
+            "testid": "result-share",
+            "top": 1052,
+            "height": 44,
+            "width": 111,
+            "area": 4884,
+            "inView": false,
+            "disabled": false
+          },
+          "shareAfterPrimary": true,
+          "buttonsInView": [
+            {
+              "text": "もう一度挑戦（残り2回）",
+              "exit": "rematch"
+            }
+          ],
+          "dailyDiff": [
+            "今日の問い：解けた（R6 撃破）",
+            "今日のベスト 8,560（1回目）",
+            "残り 2 回"
+          ],
+          "breakdownOpen": true,
+          "scoreInView": true,
+          "card": {
+            "scrollHeight": 1061,
+            "clientHeight": 559,
+            "overflowX": false
+          },
+          "pageOverflowX": false,
+          "scrollX": 0
+        },
+        "exitHome": true,
+        "homeAfter": {
+          "verdict": "今日の問い：解けた（R6 撃破）",
+          "countdown": null
+        },
+        "storage": {
+          "daily": [
+            {
+              "dateKey": "2026-10-24",
+              "enemyId": "enemy_06",
+              "seed": "daily-2026-10-24-enemy_06",
+              "attemptsUsed": 1,
+              "results": [
+                [
+                  856,
+                  "won",
+                  6
+                ]
+              ],
+              "bestScore": 856
+            }
+          ],
+          "save": null
+        },
+        "errors": []
+      },
+      "dailyGod": "蒼毘",
+      "dailyStrategy": "win"
+    }
+  },
+  "errors": [],
+  "checks": [
+    {
+      "id": "G3w",
+      "name": "pc1508/勝利経路を通った",
+      "ok": true,
+      "detail": {
+        "status": "勝利",
+        "score": "スコア 8,560"
+      }
+    },
+    {
+      "id": "G3w",
+      "name": "pc1508/Home 未挑戦：今日の問い：未着手",
+      "ok": true,
+      "detail": "今日の問い：未着手"
+    },
+    {
+      "id": "G3w",
+      "name": "pc1508/結果画面 1 行目が status と一致する verdict（勝利）",
+      "ok": true,
+      "detail": [
+        "今日の問い：解けた（R6 撃破）",
+        "今日のベスト 8,560（1回目）",
+        "残り 2 回"
+      ]
+    },
+    {
+      "id": "G3w",
+      "name": "pc1508/verdict の下にベスト行が残る",
+      "ok": true,
+      "detail": [
+        "今日の問い：解けた（R6 撃破）",
+        "今日のベスト 8,560（1回目）",
+        "残り 2 回"
+      ]
+    },
+    {
+      "id": "G3w",
+      "name": "pc1508/Home の verdict が結果画面と同じ",
+      "ok": true,
+      "detail": {
+        "home": "今日の問い：解けた（R6 撃破）",
+        "result": "今日の問い：解けた（R6 撃破）"
+      }
+    },
+    {
+      "id": "G3w",
+      "name": "pc1508/残り 2 回の Home に countdown なし",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "id": "G3w",
+      "name": "pc1508/JS error 0",
+      "ok": true,
+      "detail": []
+    }
+  ],
+  "pass": 7,
+  "total": 7,
+  "finishedAt": "2026-10-23T15:38:57.598Z"
+}

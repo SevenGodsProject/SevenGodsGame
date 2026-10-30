@@ -1,0 +1,58 @@
+{
+  "base": "https://seven-gods-game.vercel.app",
+  "productionJs": "index-CAKmzlrW.js",
+  "productionCss": "index-bwEHtD6x.css",
+  "rcBuildSha": "374e7c0",
+  "mergeSha": "1f713d6",
+  "checks": [
+    {
+      "name": "JS byte-equal after normalizing the embedded build sha",
+      "pass": true,
+      "detail": {
+        "prodBytes": 472846,
+        "rcBytes": 472846,
+        "prodSha256": "4100b9ac73f697c5",
+        "rcSha256": "6acbd0802e7c0852"
+      }
+    },
+    {
+      "name": "CSS sha256 equal",
+      "pass": true,
+      "detail": {
+        "prodCss": "index-bwEHtD6x.css",
+        "rcCss": "index-bwEHtD6x.css"
+      }
+    },
+    {
+      "name": "Production JS contains version 1.0.3",
+      "pass": true
+    },
+    {
+      "name": "Production JS contains merge sha label",
+      "pass": true
+    },
+    {
+      "name": "Production JS has no 混入 token: /api/ranking",
+      "pass": true
+    },
+    {
+      "name": "Production JS has no 混入 token: RANKING_DATABASE_URL",
+      "pass": true
+    },
+    {
+      "name": "Production JS has no 混入 token: tadatsugu",
+      "pass": true
+    },
+    {
+      "name": "Production JS has no 混入 token: card_common_guard_01_v2",
+      "pass": true
+    },
+    {
+      "name": "Production JS has no 混入 token: voice/taiyo/crisis",
+      "pass": true
+    }
+  ],
+  "productionJsBytes": 472846,
+  "rcJsName": "index-C_e5frXY.js",
+  "rcJsBytes": 472846
+}

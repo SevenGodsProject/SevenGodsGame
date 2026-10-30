@@ -1,0 +1,182 @@
+{
+  "base": "http://localhost:4208",
+  "baselineUrl": null,
+  "at": "2026-10-23T22:18:29.475Z",
+  "expect": {
+    "special": {
+      "px": 3,
+      "ms": 240,
+      "startMs": 1300
+    },
+    "final": {
+      "px": 4,
+      "ms": 280,
+      "startMs": 1350
+    },
+    "tolMs": 30,
+    "breakRate": {
+      "half": 0.7,
+      "quarter": 0.6
+    },
+    "breakSyncMs": 16,
+    "resultVsBaselineMs": 50
+  },
+  "viewports": {
+    "sp375": {
+      "s3": {
+        "log": [
+          {
+            "round": 1,
+            "over": false,
+            "anims": []
+          },
+          {
+            "round": 2,
+            "over": false,
+            "anims": []
+          },
+          {
+            "round": 3,
+            "over": false,
+            "anims": [
+              {
+                "amp": 3,
+                "plannedStartMs": 1300,
+                "plannedDurMs": 240,
+                "visibleStartMs": 1693,
+                "visibleEndMs": 1734,
+                "finishedAfterMs": 1930,
+                "restAfterMs": 1931,
+                "cancelled": false,
+                "pipelineLagMs": 374,
+                "effectiveStartMs": 1674,
+                "maxFrameGapMs": 37,
+                "framesInWindow": 31,
+                "vsHit": {
+                  "name": "hit-shake-huge",
+                  "cls": "hit-shake-flash hit-tier-huge hit-delay-beam",
+                  "offsetMs": 40
+                }
+              }
+            ]
+          },
+          {
+            "round": 4,
+            "over": true,
+            "anims": [
+              {
+                "amp": 4,
+                "plannedStartMs": 248,
+                "plannedDurMs": 280,
+                "visibleStartMs": 305,
+                "visibleEndMs": 573,
+                "finishedAfterMs": 588,
+                "restAfterMs": 589,
+                "cancelled": false,
+                "pipelineLagMs": 54,
+                "effectiveStartMs": 302,
+                "maxFrameGapMs": 35,
+                "framesInWindow": 40,
+                "vsHit": {
+                  "name": "hit-shake",
+                  "cls": "hit-shake-flash juice-delayed",
+                  "offsetMs": 90
+                }
+              }
+            ]
+          }
+        ],
+        "errors": []
+      },
+      "s3wall": {
+        "startErr": 374,
+        "durErr": 16,
+        "pipelineLagMs": 374,
+        "maxFrameGapMs": 37,
+        "framesInWindow": 31,
+        "vsHit": {
+          "name": "hit-shake-huge",
+          "cls": "hit-shake-flash hit-tier-huge hit-delay-beam",
+          "offsetMs": 40
+        }
+      }
+    }
+  },
+  "checks": [
+    {
+      "id": "SHAKE",
+      "name": "sp375/致命でない必殺の計画値：3px／240ms／開始 1300ms",
+      "ok": true,
+      "detail": {
+        "amp": 3,
+        "plannedStartMs": 1300,
+        "plannedDurMs": 240,
+        "visibleStartMs": 1693,
+        "visibleEndMs": 1734,
+        "finishedAfterMs": 1930,
+        "restAfterMs": 1931,
+        "cancelled": false,
+        "pipelineLagMs": 374,
+        "effectiveStartMs": 1674,
+        "maxFrameGapMs": 37,
+        "framesInWindow": 31,
+        "vsHit": {
+          "name": "hit-shake-huge",
+          "cls": "hit-shake-flash hit-tier-huge hit-delay-beam",
+          "offsetMs": 40
+        }
+      }
+    },
+    {
+      "id": "SHAKE",
+      "name": "sp375/必殺の揺れは最後まで再生されて終わり、終了後は静止",
+      "ok": true,
+      "detail": {
+        "amp": 3,
+        "plannedStartMs": 1300,
+        "plannedDurMs": 240,
+        "visibleStartMs": 1693,
+        "visibleEndMs": 1734,
+        "finishedAfterMs": 1930,
+        "restAfterMs": 1931,
+        "cancelled": false,
+        "pipelineLagMs": 374,
+        "effectiveStartMs": 1674,
+        "maxFrameGapMs": 37,
+        "framesInWindow": 31,
+        "vsHit": {
+          "name": "hit-shake-huge",
+          "cls": "hit-shake-flash hit-tier-huge hit-delay-beam",
+          "offsetMs": 40
+        }
+      }
+    },
+    {
+      "id": "SHAKE",
+      "name": "sp375/必殺の揺れは被弾の演出の開始から 40ms で始まる（同じ timeline 上・0〜150ms）",
+      "ok": true,
+      "detail": {
+        "name": "hit-shake-huge",
+        "cls": "hit-shake-flash hit-tier-huge hit-delay-beam",
+        "offsetMs": 40
+      }
+    },
+    {
+      "id": "SHAKE",
+      "name": "sp375/通常攻撃・溜めのラウンドでは揺れない（敵側の揺れ以外の値 0 本）",
+      "ok": true,
+      "detail": []
+    },
+    {
+      "id": "SHAKE",
+      "name": "sp375/JS error 0（S3）",
+      "ok": true,
+      "detail": []
+    }
+  ],
+  "warns": [
+    "sp375/S3 必殺の揺れの実時間：開始のずれ 374ms・継続のずれ 16ms（animate()→開始の遅れ 374ms・最大フレーム間隔 37ms・区間内フレーム 31 本）＝headless の描画の遅れ。実機で確認"
+  ],
+  "pass": 5,
+  "total": 5
+}

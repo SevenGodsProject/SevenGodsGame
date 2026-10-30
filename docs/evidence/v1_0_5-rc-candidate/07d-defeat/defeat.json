@@ -1,0 +1,139 @@
+{
+  "base": "http://localhost:4208",
+  "passed": 18,
+  "total": 18,
+  "results": [
+    {
+      "viewport": "pc",
+      "checks": [
+        {
+          "name": "結果画面が出た（敗北）",
+          "pass": true,
+          "detail": {
+            "rounds": 8
+          }
+        },
+        {
+          "name": "敗因に「業斧・断岩」",
+          "pass": true
+        },
+        {
+          "name": "事実行が表示される",
+          "pass": true,
+          "detail": "必殺260を加護（予告の50%のブロック）で受けていれば残HP30"
+        },
+        {
+          "name": "事実行＝「必殺 N を加護（予告の50%のブロック）で受けていれば残HP X」の形",
+          "pass": true,
+          "detail": "必殺260を加護（予告の50%のブロック）で受けていれば残HP30"
+        },
+        {
+          "name": "事実行は 40 字以内",
+          "pass": true,
+          "detail": 33
+        },
+        {
+          "name": "既存「敵の残り HP」行は 1 回だけ",
+          "pass": true,
+          "detail": "敵の残りHP 940 / 940"
+        },
+        {
+          "name": "事実行に横 overflow 無し",
+          "pass": true,
+          "detail": {
+            "scrollWidth": 0,
+            "clientWidth": 0,
+            "lines": 1,
+            "top": 267,
+            "vh": 660
+          }
+        },
+        {
+          "name": "事実行は 2 行以内",
+          "pass": true,
+          "detail": {
+            "scrollWidth": 0,
+            "clientWidth": 0,
+            "lines": 1,
+            "top": 267,
+            "vh": 660
+          }
+        },
+        {
+          "name": "JS error 0",
+          "pass": true,
+          "detail": []
+        }
+      ],
+      "shots": [
+        "defeat-pc.png"
+      ]
+    },
+    {
+      "viewport": "sp375",
+      "checks": [
+        {
+          "name": "結果画面が出た（敗北）",
+          "pass": true,
+          "detail": {
+            "rounds": 8
+          }
+        },
+        {
+          "name": "敗因に「業斧・断岩」",
+          "pass": true
+        },
+        {
+          "name": "事実行が表示される",
+          "pass": true,
+          "detail": "必殺260を加護（予告の50%のブロック）で受けていれば残HP30"
+        },
+        {
+          "name": "事実行＝「必殺 N を加護（予告の50%のブロック）で受けていれば残HP X」の形",
+          "pass": true,
+          "detail": "必殺260を加護（予告の50%のブロック）で受けていれば残HP30"
+        },
+        {
+          "name": "事実行は 40 字以内",
+          "pass": true,
+          "detail": 33
+        },
+        {
+          "name": "既存「敵の残り HP」行は 1 回だけ",
+          "pass": true,
+          "detail": "敵の残りHP 940 / 940"
+        },
+        {
+          "name": "事実行に横 overflow 無し",
+          "pass": true,
+          "detail": {
+            "scrollWidth": 0,
+            "clientWidth": 0,
+            "lines": 2,
+            "top": 274,
+            "vh": 667
+          }
+        },
+        {
+          "name": "事実行は 2 行以内",
+          "pass": true,
+          "detail": {
+            "scrollWidth": 0,
+            "clientWidth": 0,
+            "lines": 2,
+            "top": 274,
+            "vh": 667
+          }
+        },
+        {
+          "name": "JS error 0",
+          "pass": true,
+          "detail": []
+        }
+      ],
+      "shots": [
+        "defeat-sp375.png"
+      ]
+    }
+  ]
+}

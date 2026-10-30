@@ -69,6 +69,7 @@ const HOME_METRICS = () => {
     primaryInView: inView(primary),
     linksInView: links.map(inView),
     linkRects: links.map(rect),
+    linkLabels: links.map((b) => b.textContent.trim().replace(/\s+/g, '')),
     buttons,
     minButtonHeight: Math.min(...buttons.map((b) => b.height)),
     hasOldDailyButton: !!document.querySelector('.home-cta-daily'),

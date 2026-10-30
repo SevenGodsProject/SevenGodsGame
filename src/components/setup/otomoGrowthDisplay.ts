@@ -72,26 +72,26 @@ const BOND_TIER_TITLE: Record<0 | 1 | 2 | 3, string> = {
 /**
  * 絆称号の段階判定。`computeBondText`が元々持っていた条件分岐（決定71）を
  * そのまま段階番号に置き換えただけで、新しい閾値は増やしていない。
- * tier3のみ「level>=5」と「dojiReached>0」の2条件が必要な非対称構造で、
- * `nextUnlockText`はこの非対称さ（童子到達が必須という条件）を隠さず
- * そのまま説明文に反映する。
+ * v1.0.4 Retention 束 ①（AI 判断・Lane 9 #5）：tier3 は「level>=5」だけで到達する。
+ * 旧条件（＋dojiReached>0）は童子到達率 0〜4%（決定186）で事実上到達不能だったため外した。
+ * 童子の記録（ギャラリー）は称号から分離し、`dojiReached>0` のときだけ開く
+ * （`computeUnlockedForms`）。既存 Lv5 記録は ★3 へ昇格するのみで降格は起きない。
  */
 function computeBondTier(record: OtomoBondRecord, level: number): 0 | 1 | 2 | 3 {
   if (record.battlesPlayed === 0) return 0
-  if (record.dojiReached > 0 && level >= 5) return 3
+  if (level >= 5) return 3
   if (level >= 3) return 2
   return 1
 }
 
 /**
- * 絆称号の段階からギャラリー閲覧可能な形態を導出する（Phase1.5 TASK1）。
- * 新しい閾値は増やさず、既存`bondTier`の境界（tier1到達・tier3到達）を
- * そのまま再利用する：tier0=精霊態のみ／tier1・2=+受肉態／tier3=+童子。
- * tier1→2の境界には形態解放を割り当てない（`computeNextUnlockText`と
- * 対応関係を一致させるため）。
+ * ギャラリー閲覧可能な形態を導出する（Phase1.5 TASK1）。
+ * tier0=精霊態のみ／tier1以上=+受肉態。童子は「記録」の意味を守るため
+ * `record.dojiReached > 0`（童子形態で対局を終えたことがある）のときだけ開く
+ * （v1.0.4 Retention 束 ①：称号 tier3 から分離）。
  */
-function computeUnlockedForms(tier: 0 | 1 | 2 | 3): readonly OtomoForm[] {
-  if (tier >= 3) return OTOMO_FORM_ORDER
+function computeUnlockedForms(tier: 0 | 1 | 2 | 3, record: OtomoBondRecord): readonly OtomoForm[] {
+  if (tier >= 1 && record.dojiReached > 0) return OTOMO_FORM_ORDER
   if (tier >= 1) return OTOMO_FORM_ORDER.slice(0, 2)
   return OTOMO_FORM_ORDER.slice(0, 1)
 }
@@ -117,17 +117,12 @@ function computeNextUnlockText(
     return `絆称号「${BOND_TIER_TITLE[2]}」（あと${needed}pt）`
   }
   if (tier === 2) {
-    // Phase1.5：tier2→3の境界でunlockedFormsが+童子に変わるタイミングと一致するため
-    // 「童子の記録」を併記する。
-    const needsLevel = level < 5
-    const needsDoji = record.dojiReached === 0
-    const pointsNeeded = needsLevel ? (5 - level) * POINTS_PER_LEVEL - pointsInLevel : 0
-    const conditions: string[] = []
-    if (needsLevel) conditions.push(`あと${pointsNeeded}pt`)
-    if (needsDoji) conditions.push('童子形態での対局終了が1回以上必要')
-    return `絆称号「${BOND_TIER_TITLE[3]}」＋童子の記録（${conditions.join('・')}）`
+    // v1.0.4 Retention 束 ①：tier3 は Lv5 のみが条件（童子の記録は称号と分離）
+    const pointsNeeded = (5 - level) * POINTS_PER_LEVEL - pointsInLevel
+    return `絆称号「${BOND_TIER_TITLE[3]}」（あと${pointsNeeded}pt）`
   }
-  // tier3：これ以上解放される絆称号・形態記録が存在しないため、存在しない報酬を示さずnullを返す
+  // tier3：童子の記録が未解放ならそれだけを示す。解放済みなら存在しない報酬を示さずnullを返す
+  if (record.dojiReached === 0) return '童子の記録（童子形態で対局を終えると解放）'
   return null
 }
 
@@ -143,7 +138,7 @@ export function computeOtomoGrowthDisplay(record: OtomoBondRecord): OtomoGrowthD
     bondText: BOND_TIER_TITLE[bondTier],
     bondTier,
     nextUnlockText: computeNextUnlockText(record, level, bondTier, pointsInLevel),
-    unlockedForms: computeUnlockedForms(bondTier),
+    unlockedForms: computeUnlockedForms(bondTier, record),
   }
 }
 
@@ -193,15 +188,13 @@ export function detectOtomoLevelUp(
 export type NextBondGoal = {
   /** 次に得られる絆称号 */
   title: string
-  /** 称号に必要な残り pt（0 ならポイント条件は満たしている） */
+  /** 称号に必要な残り pt */
   pointsNeeded: number
-  /** 童子形態での対局終了がまだ 1 回も無く、称号の条件に含まれる */
-  needsDoji: boolean
 }
 
 /**
  * Phase 7 P1（決定187）：結果画面の「次の目標」用に、次の絆称号までの距離を数値で返す。
- * `computeNextUnlockText`（OTOMO 画面の文言）と同じ境界（Lv3・Lv5＋童子）で計算し、
+ * `computeNextUnlockText`（OTOMO 画面の文言）と同じ境界（Lv3・Lv5。v1.0.4 で童子条件は外した）で計算し、
  * 表示文字列ではなく数値を返す（結果画面側で「近いときだけ」目標に採用するため）。
  * 未対局（tier0）と最終称号（tier3）は null。
  */
@@ -209,14 +202,10 @@ export function computeNextBondGoal(record: OtomoBondRecord): NextBondGoal | nul
   const display = computeOtomoGrowthDisplay(record)
   const { level, pointsInLevel, bondTier } = display
   if (bondTier === 1) {
-    return { title: BOND_TIER_TITLE[2], pointsNeeded: Math.max(0, (3 - level) * POINTS_PER_LEVEL - pointsInLevel), needsDoji: false }
+    return { title: BOND_TIER_TITLE[2], pointsNeeded: Math.max(0, (3 - level) * POINTS_PER_LEVEL - pointsInLevel) }
   }
   if (bondTier === 2) {
-    return {
-      title: BOND_TIER_TITLE[3],
-      pointsNeeded: Math.max(0, (5 - level) * POINTS_PER_LEVEL - pointsInLevel),
-      needsDoji: record.dojiReached === 0,
-    }
+    return { title: BOND_TIER_TITLE[3], pointsNeeded: Math.max(0, (5 - level) * POINTS_PER_LEVEL - pointsInLevel) }
   }
   return null
 }

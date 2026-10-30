@@ -3,6 +3,7 @@ import { getEnemyDef } from '../../core/data/enemies'
 import { dailyBossFor } from '../../core/data/dailyBoss'
 import { RULES } from '../../core/data/rules'
 import { bestResultOf, bestResultsByGod, dailyAttemptsLeft, loadDailyDay } from '../../hooks/dailyStorage'
+import { tomorrowDailyTypeLabel } from '../../hooks/dailyClock'
 import { formatScaled } from '../displayScale'
 import { DailyStatusBadge } from './DailyStatusBadge'
 import './setup.css'
@@ -150,7 +151,7 @@ export function DailyChallengeScreen({
         <button type="button" className="home-cta-secondary" onClick={onBack}>
           ‹ ホームへ戻る
         </button>
-        {exhausted && <span className="daily-note-exhausted">また明日、新しい敵が待っています。</span>}
+        {exhausted && <span className="daily-note-exhausted">明日の問いは【{tomorrowDailyTypeLabel()}】。また明日。</span>}
       </div>
     </div>
   )

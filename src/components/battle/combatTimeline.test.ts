@@ -205,6 +205,19 @@ describe('planVictory（撃破 → 勝利 → 報酬の順序）', () => {
     expect(gate).toBeGreaterThanOrEqual(visualHpEndMs(plan.finalStep!))
     expect(gate).toBeLessThan(plan.finalStep!.atMs + 1500)
   })
+
+  it('v1.0.3 RC（RETURN TO CALM 小）：結果画面は表示HPの変化の終わりから 200ms 後（BF-03 の 150〜300ms 帯）', async () => {
+    const { RESULT_GATE_AFTER_HP_MS } = await import('./enemyVfxTiming')
+    expect(RESULT_GATE_AFTER_HP_MS).toBe(200)
+    expect(RESULT_GATE_AFTER_HP_MS).toBeGreaterThanOrEqual(150)
+    expect(RESULT_GATE_AFTER_HP_MS).toBeLessThanOrEqual(300)
+    const plan = planBatch([{ t: 'ENEMY_ACTED', kind: 'special', amount: 26 }, dmg('self', 26), ended('lost')])
+    expect(planResultGate(plan)).toBe(visualHpEndMs(plan.finalStep!) + 200)
+    // 勝利経路は触っていない（planVictory の値は planResultGate と独立）
+    const won = planBatch([cardPlayed, dmg('enemy', 12), ended('won')])
+    expect(planVictory(won.finalStep).rewardMs).toBeGreaterThan(0)
+    expect(planResultGate({ finalStep: null, lastImpactMs: null, steps: [] })).toBe(0)
+  })
 })
 
 describe('安全弁（animationend を取りこぼしても止まらない）', () => {

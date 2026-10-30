@@ -1,0 +1,14 @@
+[gate-preview 2026-10-22T12:26:45.160Z] start vite preview --port 4197 --strictPort
+(node:24168) [DEP0190] DeprecationWarning: Passing args to a child process with shell option true can lead to security vulnerabilities, as the arguments are not escaped, only concatenated.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+[gate-preview 2026-10-22T12:26:48.769Z] [preview] [32m➜[39m  [1mLocal[22m:   [36mhttp://localhost:[1m4197[22m/[39m
+[gate-preview 2026-10-22T12:26:48.770Z] [preview] [2m  [32m➜[39m  [1mNetwork[22m[2m: use [22m[1m--host[22m[2m to expose[22m
+[gate-preview 2026-10-22T12:26:48.892Z] preview ready at http://localhost:4197
+[gate-preview 2026-10-22T12:26:48.892Z] run [sp-text-check]: node scripts/v1_0_3-rc/sp-text-check.mjs docs/evidence/v1_0_3-rc/07c-sp-text/result.json http://localhost:4197 env={}
+sp-text-check: 25/29 PASS
+  FAIL [pc] 戦闘：手札すべて overflow 無し（.card-view／body／text） [{"name":"⚔ 豪快な一撃","card":{"sw":114,"cw":112,"sh":162,"ch":160,"w":116,"h":164},"body":{"sw":112,"cw":112,"sh":82,"ch":82,"w":112,"h":82},"text":{"sw":100,"cw":100,"sh":34,"ch":34,"w":100,"h":34.171875}}]
+  FAIL [sp375] 戦闘：手札すべて overflow 無し（.card-view／body／text） [{"name":"⚔ 豪快な一撃","card":{"sw":98,"cw":96,"sh":138,"ch":136,"w":100,"h":140},"body":{"sw":96,"cw":96,"sh":78,"ch":78,"w":96,"h":77.859375},"text":{"sw":84,"cw":84,"sh":32,"ch":32,"w":84,"h":32.390625}},{"name":"🌿 姉御の号令","card":{"sw":96,"cw":96,"sh":138,"ch":136,"w":100,"h":140},"body":{"sw":96,"cw":96,"sh":131,"ch":131,"w":96,"h":131.0625},"text":{"sw":82,"cw":82,"sh":35,"ch":35,"w":82,"h":35.0625}}]
+  FAIL [sp375] 戦闘：札の高さ = 140px [140,146]
+  FAIL [sp390] 戦闘：札の高さ = 158px [158,164]
+[gate-preview 2026-10-22T12:28:27.124Z] exit 1 (98s) [sp-text-check]
+[gate-preview 2026-10-22T12:28:27.504Z] preview killed

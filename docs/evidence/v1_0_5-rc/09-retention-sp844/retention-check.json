@@ -1,0 +1,675 @@
+{
+  "base": "http://localhost:4208",
+  "startedAt": "2026-10-23T23:07:21.199Z",
+  "viewports": {
+    "sp844": {
+      "secondWin": {
+        "win1": {
+          "vw": 390,
+          "vh": 844,
+          "status": "勝利",
+          "score": "スコア 8,790",
+          "rewardPending": false,
+          "goal": {
+            "id": "NM1",
+            "text": "業斧の鬼将を別の神でも攻略する（この敵 1/7 神）",
+            "textHeight": 20,
+            "lineHeight": 20.3,
+            "lines": 1,
+            "inView": true
+          },
+          "primary": {
+            "text": "別の神で挑む（神を選び直す）",
+            "exit": "reselect",
+            "testid": "result-primary",
+            "top": 525,
+            "height": 49,
+            "width": 356,
+            "area": 17444,
+            "inView": true,
+            "disabled": false
+          },
+          "secondary": [
+            {
+              "text": "デッキを調整",
+              "exit": "adjustDeck",
+              "testid": "result-secondary",
+              "top": 582,
+              "height": 44,
+              "width": 174,
+              "area": 7656,
+              "inView": true,
+              "disabled": false
+            },
+            {
+              "text": "今日の神域挑戦へ",
+              "exit": "goDaily",
+              "testid": "result-secondary",
+              "top": 582,
+              "height": 44,
+              "width": 174,
+              "area": 7656,
+              "inView": true,
+              "disabled": false
+            }
+          ],
+          "tertiary": [
+            {
+              "text": "ホームへ",
+              "exit": "home",
+              "testid": "result-tertiary-link",
+              "top": 803,
+              "height": 44,
+              "width": 72,
+              "area": 3168,
+              "inView": false,
+              "disabled": false
+            },
+            {
+              "text": "同じ構成でもう一度",
+              "exit": "rematch",
+              "testid": "result-tertiary-link",
+              "top": 803,
+              "height": 44,
+              "width": 137,
+              "area": 6028,
+              "inView": false,
+              "disabled": false
+            },
+            {
+              "text": "挑戦状をコピー",
+              "exit": "share",
+              "testid": "result-share",
+              "top": 803,
+              "height": 44,
+              "width": 111,
+              "area": 4884,
+              "inView": false,
+              "disabled": false
+            }
+          ],
+          "share": {
+            "text": "挑戦状をコピー",
+            "exit": "share",
+            "testid": "result-share",
+            "top": 803,
+            "height": 44,
+            "width": 111,
+            "area": 4884,
+            "inView": false,
+            "disabled": false
+          },
+          "shareAfterPrimary": true,
+          "buttonsInView": [
+            {
+              "text": "別の神で挑む（神を選び直す）",
+              "exit": "reselect"
+            },
+            {
+              "text": "デッキを調整",
+              "exit": "adjustDeck"
+            },
+            {
+              "text": "今日の神域挑戦へ",
+              "exit": "goDaily"
+            }
+          ],
+          "dailyDiff": null,
+          "breakdownOpen": false,
+          "scoreInView": true,
+          "card": {
+            "scrollHeight": 801,
+            "clientHeight": 715,
+            "overflowX": false
+          },
+          "pageOverflowX": false,
+          "scrollX": 0
+        },
+        "win2": {
+          "vw": 390,
+          "vh": 844,
+          "status": "勝利",
+          "score": "スコア 8,790",
+          "rewardPending": false,
+          "goal": {
+            "id": "N4",
+            "text": "今日の神域挑戦：蒼海の龍神に挑む（残り3回）",
+            "textHeight": 20,
+            "lineHeight": 20.3,
+            "lines": 1,
+            "inView": true
+          },
+          "primary": {
+            "text": "今日の神域挑戦へ",
+            "exit": "goDaily",
+            "testid": "result-primary",
+            "top": 467,
+            "height": 49,
+            "width": 356,
+            "area": 17444,
+            "inView": true,
+            "disabled": false
+          },
+          "secondary": [
+            {
+              "text": "デッキを調整",
+              "exit": "adjustDeck",
+              "testid": "result-secondary",
+              "top": 524,
+              "height": 44,
+              "width": 174,
+              "area": 7656,
+              "inView": true,
+              "disabled": false
+            },
+            {
+              "text": "同じ構成でもう一度",
+              "exit": "rematch",
+              "testid": "result-secondary",
+              "top": 524,
+              "height": 44,
+              "width": 174,
+              "area": 7656,
+              "inView": true,
+              "disabled": false
+            }
+          ],
+          "tertiary": [
+            {
+              "text": "ホームへ",
+              "exit": "home",
+              "testid": "result-tertiary-link",
+              "top": 745,
+              "height": 44,
+              "width": 72,
+              "area": 3168,
+              "inView": false,
+              "disabled": false
+            },
+            {
+              "text": "神・デッキを選び直す",
+              "exit": "reselect",
+              "testid": "result-tertiary-link",
+              "top": 745,
+              "height": 44,
+              "width": 150,
+              "area": 6600,
+              "inView": false,
+              "disabled": false
+            },
+            {
+              "text": "挑戦状をコピー",
+              "exit": "share",
+              "testid": "result-share",
+              "top": 745,
+              "height": 44,
+              "width": 111,
+              "area": 4884,
+              "inView": false,
+              "disabled": false
+            }
+          ],
+          "share": {
+            "text": "挑戦状をコピー",
+            "exit": "share",
+            "testid": "result-share",
+            "top": 745,
+            "height": 44,
+            "width": 111,
+            "area": 4884,
+            "inView": false,
+            "disabled": false
+          },
+          "shareAfterPrimary": true,
+          "buttonsInView": [
+            {
+              "text": "今日の神域挑戦へ",
+              "exit": "goDaily"
+            },
+            {
+              "text": "デッキを調整",
+              "exit": "adjustDeck"
+            },
+            {
+              "text": "同じ構成でもう一度",
+              "exit": "rematch"
+            }
+          ],
+          "dailyDiff": null,
+          "breakdownOpen": false,
+          "scoreInView": true,
+          "card": {
+            "scrollHeight": 742,
+            "clientHeight": 715,
+            "overflowX": false
+          },
+          "pageOverflowX": false,
+          "scrollX": 0
+        },
+        "rematchClicked": true,
+        "matchups": "{\"version\":1,\"cleared\":{\"taiyo\":[\"enemy_02\"]},\"seeded\":{\"at\":1792796842450,\"source\":\"daily\"}}",
+        "errors": []
+      },
+      "dailyWin": {
+        "homeBefore": "今日の問い：未着手",
+        "result": {
+          "vw": 390,
+          "vh": 844,
+          "status": "勝利",
+          "score": "スコア 8,560",
+          "rewardPending": false,
+          "goal": {
+            "id": "D3",
+            "text": "今日のベスト 8,560。残り2回でさらに更新する",
+            "textHeight": 20,
+            "lineHeight": 20.3,
+            "lines": 1,
+            "inView": true
+          },
+          "primary": {
+            "text": "もう一度挑戦（残り2回）",
+            "exit": "rematch",
+            "testid": "result-primary",
+            "top": 624,
+            "height": 49,
+            "width": 356,
+            "area": 17444,
+            "inView": true,
+            "disabled": false
+          },
+          "secondary": [
+            {
+              "text": "デッキを調整",
+              "exit": "adjustDeck",
+              "testid": "result-secondary",
+              "top": 681,
+              "height": 44,
+              "width": 174,
+              "area": 7656,
+              "inView": true,
+              "disabled": false
+            },
+            {
+              "text": "神・デッキを選び直す",
+              "exit": "reselect",
+              "testid": "result-secondary",
+              "top": 681,
+              "height": 44,
+              "width": 174,
+              "area": 7656,
+              "inView": true,
+              "disabled": false
+            }
+          ],
+          "tertiary": [
+            {
+              "text": "ホームへ",
+              "exit": "home",
+              "testid": "result-tertiary-link",
+              "top": 901,
+              "height": 44,
+              "width": 72,
+              "area": 3168,
+              "inView": false,
+              "disabled": false
+            },
+            {
+              "text": "挑戦状をコピー",
+              "exit": "share",
+              "testid": "result-share",
+              "top": 901,
+              "height": 44,
+              "width": 111,
+              "area": 4884,
+              "inView": false,
+              "disabled": false
+            }
+          ],
+          "share": {
+            "text": "挑戦状をコピー",
+            "exit": "share",
+            "testid": "result-share",
+            "top": 901,
+            "height": 44,
+            "width": 111,
+            "area": 4884,
+            "inView": false,
+            "disabled": false
+          },
+          "shareAfterPrimary": true,
+          "buttonsInView": [
+            {
+              "text": "もう一度挑戦（残り2回）",
+              "exit": "rematch"
+            },
+            {
+              "text": "デッキを調整",
+              "exit": "adjustDeck"
+            },
+            {
+              "text": "神・デッキを選び直す",
+              "exit": "reselect"
+            }
+          ],
+          "dailyDiff": [
+            "今日の問い：解けた（R6 撃破）",
+            "今日のベスト 8,560（1回目）",
+            "残り 2 回"
+          ],
+          "breakdownOpen": false,
+          "scoreInView": true,
+          "card": {
+            "scrollHeight": 899,
+            "clientHeight": 715,
+            "overflowX": false
+          },
+          "pageOverflowX": false,
+          "scrollX": 0
+        },
+        "exitHome": true,
+        "homeAfter": {
+          "verdict": "今日の問い：解けた（R6 撃破）",
+          "countdown": null
+        },
+        "storage": {
+          "daily": [
+            {
+              "dateKey": "2026-10-24",
+              "enemyId": "enemy_06",
+              "seed": "daily-2026-10-24-enemy_06",
+              "attemptsUsed": 1,
+              "results": [
+                [
+                  856,
+                  "won",
+                  6
+                ]
+              ],
+              "bestScore": 856
+            }
+          ],
+          "save": null
+        },
+        "errors": []
+      },
+      "firstBattle": {
+        "result": {
+          "vw": 390,
+          "vh": 844,
+          "status": "勝利",
+          "score": "スコア 8,330",
+          "rewardPending": false,
+          "goal": {
+            "id": "NR1",
+            "text": "次は連撃型「双牙の魔獣」に挑む — 予告を読む戦い",
+            "textHeight": 20,
+            "lineHeight": 20.3,
+            "lines": 1,
+            "inView": true
+          },
+          "primary": {
+            "text": "魔獣に挑む（神を選ぶ）",
+            "exit": "reselect",
+            "testid": "result-primary",
+            "top": 550,
+            "height": 49,
+            "width": 356,
+            "area": 17444,
+            "inView": true,
+            "disabled": false
+          },
+          "secondary": [
+            {
+              "text": "デッキを調整",
+              "exit": "adjustDeck",
+              "testid": "result-secondary",
+              "top": 607,
+              "height": 44,
+              "width": 174,
+              "area": 7656,
+              "inView": true,
+              "disabled": false
+            },
+            {
+              "text": "今日の神域挑戦へ",
+              "exit": "goDaily",
+              "testid": "result-secondary",
+              "top": 607,
+              "height": 44,
+              "width": 174,
+              "area": 7656,
+              "inView": true,
+              "disabled": false
+            }
+          ],
+          "tertiary": [
+            {
+              "text": "ホームへ",
+              "exit": "home",
+              "testid": "result-tertiary-link",
+              "top": 715,
+              "height": 44,
+              "width": 72,
+              "area": 3168,
+              "inView": true,
+              "disabled": false
+            },
+            {
+              "text": "同じ構成でもう一度",
+              "exit": "rematch",
+              "testid": "result-tertiary-link",
+              "top": 715,
+              "height": 44,
+              "width": 137,
+              "area": 6028,
+              "inView": true,
+              "disabled": false
+            },
+            {
+              "text": "挑戦状をコピー",
+              "exit": "share",
+              "testid": "result-share",
+              "top": 715,
+              "height": 44,
+              "width": 111,
+              "area": 4884,
+              "inView": true,
+              "disabled": false
+            }
+          ],
+          "share": {
+            "text": "挑戦状をコピー",
+            "exit": "share",
+            "testid": "result-share",
+            "top": 715,
+            "height": 44,
+            "width": 111,
+            "area": 4884,
+            "inView": true,
+            "disabled": false
+          },
+          "shareAfterPrimary": true,
+          "buttonsInView": [
+            {
+              "text": "魔獣に挑む（神を選ぶ）",
+              "exit": "reselect"
+            },
+            {
+              "text": "デッキを調整",
+              "exit": "adjustDeck"
+            },
+            {
+              "text": "今日の神域挑戦へ",
+              "exit": "goDaily"
+            },
+            {
+              "text": "ホームへ",
+              "exit": "home"
+            },
+            {
+              "text": "同じ構成でもう一度",
+              "exit": "rematch"
+            },
+            {
+              "text": "挑戦状をコピー",
+              "exit": "share"
+            }
+          ],
+          "dailyDiff": null,
+          "breakdownOpen": false,
+          "scoreInView": true,
+          "card": {
+            "scrollHeight": 710,
+            "clientHeight": 710,
+            "overflowX": false
+          },
+          "pageOverflowX": false,
+          "scrollX": 0
+        },
+        "matchupClear": "✨ 初撃破：恵比寿 × 試練の影（この敵 1/7 神）",
+        "errors": []
+      },
+      "dailyGod": "蒼毘",
+      "dailyStrategy": "win"
+    }
+  },
+  "errors": [],
+  "checks": [
+    {
+      "id": "G4c",
+      "name": "sp844/初陣：勝利",
+      "ok": true,
+      "detail": {
+        "status": "勝利"
+      }
+    },
+    {
+      "id": "G4c",
+      "name": "sp844/初陣：初撃破の 1 行が出る（初撃破の経路を通った）",
+      "ok": true,
+      "detail": "✨ 初撃破：恵比寿 × 試練の影（この敵 1/7 神）"
+    },
+    {
+      "id": "G4c",
+      "name": "sp844/初陣：次の目標は NR1（NM1 ではない）",
+      "ok": true,
+      "detail": {
+        "id": "NR1",
+        "text": "次は連撃型「双牙の魔獣」に挑む — 予告を読む戦い",
+        "textHeight": 20,
+        "lineHeight": 20.3,
+        "lines": 1,
+        "inView": true
+      }
+    },
+    {
+      "id": "G4c",
+      "name": "sp844/JS error 0",
+      "ok": true,
+      "detail": []
+    },
+    {
+      "id": "G4b",
+      "name": "sp844/1 勝目：勝利かつ NM1",
+      "ok": true,
+      "detail": {
+        "status": "勝利",
+        "goal": {
+          "id": "NM1",
+          "text": "業斧の鬼将を別の神でも攻略する（この敵 1/7 神）",
+          "textHeight": 20,
+          "lineHeight": 20.3,
+          "lines": 1,
+          "inView": true
+        }
+      }
+    },
+    {
+      "id": "G4b",
+      "name": "sp844/もう一度が押せた",
+      "ok": true,
+      "detail": true
+    },
+    {
+      "id": "G4b",
+      "name": "sp844/2 勝目：勝利かつ NM1 なし",
+      "ok": true,
+      "detail": {
+        "status": "勝利",
+        "goal": {
+          "id": "N4",
+          "text": "今日の神域挑戦：蒼海の龍神に挑む（残り3回）",
+          "textHeight": 20,
+          "lineHeight": 20.3,
+          "lines": 1,
+          "inView": true
+        }
+      }
+    },
+    {
+      "id": "G4b",
+      "name": "sp844/JS error 0",
+      "ok": true,
+      "detail": []
+    },
+    {
+      "id": "G3w",
+      "name": "sp844/勝利経路を通った",
+      "ok": true,
+      "detail": {
+        "status": "勝利",
+        "score": "スコア 8,560"
+      }
+    },
+    {
+      "id": "G3w",
+      "name": "sp844/Home 未挑戦：今日の問い：未着手",
+      "ok": true,
+      "detail": "今日の問い：未着手"
+    },
+    {
+      "id": "G3w",
+      "name": "sp844/結果画面 1 行目が status と一致する verdict（勝利）",
+      "ok": true,
+      "detail": [
+        "今日の問い：解けた（R6 撃破）",
+        "今日のベスト 8,560（1回目）",
+        "残り 2 回"
+      ]
+    },
+    {
+      "id": "G3w",
+      "name": "sp844/verdict の下にベスト行が残る",
+      "ok": true,
+      "detail": [
+        "今日の問い：解けた（R6 撃破）",
+        "今日のベスト 8,560（1回目）",
+        "残り 2 回"
+      ]
+    },
+    {
+      "id": "G3w",
+      "name": "sp844/Home の verdict が結果画面と同じ",
+      "ok": true,
+      "detail": {
+        "home": "今日の問い：解けた（R6 撃破）",
+        "result": "今日の問い：解けた（R6 撃破）"
+      }
+    },
+    {
+      "id": "G3w",
+      "name": "sp844/残り 2 回の Home に countdown なし",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "id": "G3w",
+      "name": "sp844/JS error 0",
+      "ok": true,
+      "detail": []
+    }
+  ],
+  "pass": 15,
+  "total": 15,
+  "finishedAt": "2026-10-23T23:10:07.976Z"
+}

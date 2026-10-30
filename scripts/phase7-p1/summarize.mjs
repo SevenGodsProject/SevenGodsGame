@@ -49,16 +49,27 @@ add('AC1', '通常勝利後、Result だけで次の行動候補（Primary 1＋S
   return check(`${vp}/normal-win`, m && m.goal?.text && m.primary && m.secondary.length === 2 && m.primary.inView && m.secondary.every((b) => b.inView), m && { goal: m.goal?.text, primary: m.primary?.text, secondary: m.secondary.map((b) => b.text) })
 }))
 
+// v1.0.4 Retention 束 ③：daily-diff の先頭に「今日の問い：…」の verdict 行が 1 行だけ入る（RETENTION_BUNDLE_V1 §3「best 行の上に 1 行」）。
+// ベスト行・前回行の契約（verdict の直後がベスト行、2 回目以降はその次が前回行）は変えない。verdict 行の無い v1.0.3 以前の build も同じ判定で通る
+const VERDICT = /^今日の問い：(解けた（R\d 撃破）|未解（(R\d 敗北|7R 未撃破)）)$/
+const diffBody = (lines) => {
+  if (!lines) return { ok: false, body: [] }
+  const verdicts = lines.filter((l) => l.startsWith('今日の問い：'))
+  if (verdicts.length === 0) return { ok: true, body: lines }
+  return { ok: verdicts.length === 1 && VERDICT.test(lines[0]), body: lines.slice(1) }
+}
 add('AC2', 'Daily 終了後、今日のベストとの関係が分かる（2 回目以降は前回も）', Object.entries(vps).flatMap(([vp, v]) => {
   const list = []
+  const best = (lines) => { const { ok, body } = diffBody(lines); return ok && body[0]?.includes('今日のベスト') }
+  const bestAndPrev = (lines) => { const { ok, body } = diffBody(lines); return ok && body[0]?.includes('今日のベスト') && body[1]?.startsWith('前回') }
   const d = v.dailySequence
   if (d) {
-    list.push(check(`${vp}/daily-1`, d.r1?.metrics?.dailyDiff?.[0]?.includes('今日のベスト'), d.r1?.metrics?.dailyDiff))
-    list.push(check(`${vp}/daily-2`, d.r2?.metrics?.dailyDiff?.[0]?.includes('今日のベスト') && d.r2?.metrics?.dailyDiff?.[1]?.startsWith('前回'), d.r2?.metrics?.dailyDiff))
-    list.push(check(`${vp}/daily-3`, d.r3?.metrics?.dailyDiff?.[0]?.includes('今日のベスト') && d.r3?.metrics?.dailyDiff?.[1]?.startsWith('前回'), d.r3?.metrics?.dailyDiff))
+    list.push(check(`${vp}/daily-1`, best(d.r1?.metrics?.dailyDiff), d.r1?.metrics?.dailyDiff))
+    list.push(check(`${vp}/daily-2`, bestAndPrev(d.r2?.metrics?.dailyDiff), d.r2?.metrics?.dailyDiff))
+    list.push(check(`${vp}/daily-3`, bestAndPrev(d.r3?.metrics?.dailyDiff), d.r3?.metrics?.dailyDiff))
   }
   const f = v.dailyLoseFirst?.metrics
-  if (f) list.push(check(`${vp}/daily-lose-first`, f.dailyDiff?.[0]?.includes('今日のベスト'), f.dailyDiff))
+  if (f) list.push(check(`${vp}/daily-lose-first`, best(f.dailyDiff), f.dailyDiff))
   return list
 }))
 
@@ -108,8 +119,17 @@ add('AC10', 'Result 初期表示に別アクティビティへの CTA が 2 つ�
 add('AC11', '挑戦状のコピーは Primary より小さく、DOM 上も後ろ', allResults.map(({ name, m }) => check(name, m.share && m.primary && m.share.area < m.primary.area && m.shareAfterPrimary, m.share && { share: m.share.area, primary: m.primary?.area })))
 
 // Phase 7 Entrance E1（決定193・仕様 §10・§15）：Home の「遊び方を見る」はヘッダーの本のアイコン（同じ機能）へ一本化したため、
-// Home のリンクは「戦績を見る」「OTOMOとの絆を見る」の 2 本（機能の削除ではない）
-add('AC12', 'PC 1508×660 で Home のリンク（E1 以降は 2 本：戦績・OTOMO）が viewport 内', homes.filter((h) => h.name.startsWith('pc1508/')).map(({ name, m }) => check(name, m.linksInView.length === 2 && m.linksInView.every(Boolean), m.linkRects)))
+// Home のリンクは「戦績を見る」「OTOMOとの絆を見る」の 2 本（機能の削除ではない）。
+// v1.0.5（AI 判断）：4bfff2b（Legal／Credits 画面 v1・CM-02／03）で 3 本目「クレジット・権利表記」が加わったのに本数を 2 と決め打ちしていたため、
+// v1.0.0 以降ずっと FAIL していた（v1.0.4 RC Gate §7）。本数ではなく**ラベルの並びの完全一致**＋全本 viewport 内で判定する。
+// リンクが減る・増える・順序やラベルが変わる・1 本でも画面外に出る、のいずれでも FAIL。ラベルを測っていない旧 JSON も FAIL（再計測が必要）
+const HOME_LINK_LABELS = ['戦績を見る', 'OTOMOとの絆を見る', 'クレジット・権利表記']
+const homeLinksOk = (m) =>
+  Array.isArray(m.linkLabels) &&
+  JSON.stringify(m.linkLabels) === JSON.stringify(HOME_LINK_LABELS) &&
+  m.linksInView.length === HOME_LINK_LABELS.length &&
+  m.linksInView.every(Boolean)
+add('AC12', 'PC 1508×660 で Home のリンク（戦績・OTOMO・クレジット）がすべて viewport 内', homes.filter((h) => h.name.startsWith('pc1508/')).map(({ name, m }) => check(name, homeLinksOk(m), { labels: m.linkLabels ?? null, rects: m.linkRects })))
 
 add('AC13', 'Home CLS ≤ 0.1・Home のボタンはすべて 44px 以上', [
   ...Object.entries(vps).map(([vp, v]) => check(`${vp}/cls`, v.homeNoResume && v.homeNoResume.clsAfterTutorial <= 0.1, { load: v.homeNoResume?.clsLoad, afterTutorial: v.homeNoResume?.clsAfterTutorial })),

@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest'
 import type { EnemyId, GameStatus, GodId } from '../../core/types'
 import { GOD_IDS } from '../../core/data/gods'
 import type { DailyDay, DailyRecordResult, DailyResult } from '../../hooks/dailyStorage'
-import { describeDailyDiff, formatSignedScaled, type DailyDiffCurrent } from './dailyDiff'
+import { describeDailyDayVerdict, describeDailyDiff, describeDailyVerdict, formatSignedScaled, type DailyDiffCurrent } from './dailyDiff'
 
 /**
  * Phase 7 P1（決定187・仕様 §9）：神域挑戦の決着 2 行（BEST 軸／前回軸）。
@@ -111,5 +111,22 @@ describe('formatSignedScaled', () => {
     expect(formatSignedScaled(72)).toBe('+720')
     expect(formatSignedScaled(-729)).toBe('−7,290')
     expect(formatSignedScaled(0)).toBe('±0')
+  })
+})
+
+describe('今日の問い verdict（v1.0.4 Retention 束 ③）', () => {
+  it('撃破は「解けた（R{n} 撃破）」', () => {
+    expect(describeDailyVerdict({ status: 'won', round: 5 })).toBe('今日の問い：解けた（R5 撃破）')
+  })
+  it('敗北は「未解（R{n} 敗北）」', () => {
+    expect(describeDailyVerdict({ status: 'lost', round: 4 })).toBe('今日の問い：未解（R4 敗北）')
+  })
+  it('7R 未撃破は「未解（7R 未撃破）」', () => {
+    expect(describeDailyVerdict({ status: 'finished', round: 7 })).toBe('今日の問い：未解（7R 未撃破）')
+  })
+  it('Home：未挑戦は「未着手」、撃破があれば最短ラウンドの撃破を出す（スコア順ではない）', () => {
+    expect(describeDailyDayVerdict(day([]))).toBe('今日の問い：未着手')
+    expect(describeDailyDayVerdict(day([r(900, 'lost', 6), r(700, 'won', 6), r(650, 'won', 5)]))).toBe('今日の問い：解けた（R5 撃破）')
+    expect(describeDailyDayVerdict(day([r(500, 'lost', 3), r(800, 'lost', 5)]))).toBe('今日の問い：未解（R5 敗北）')
   })
 })

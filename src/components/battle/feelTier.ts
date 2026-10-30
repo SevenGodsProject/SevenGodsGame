@@ -49,6 +49,17 @@ export const SE_GAIN = {
 export const TAP_END_ROUND_RATE = 0.85
 
 /**
+ * Enemy Break SE v1（v1.0.5・docs/V1_0_5_BREAK_SE_V1.md）：敵の表示 HP が 50%／25% の帯をまたいで
+ * 崩れた瞬間の音。既存 `enemy_charge` を低い速度（half 0.7／quarter 0.6）で鳴らす（新規音源 0）。
+ * gain は専用係数（stateChange 0.65 を流用すると実効 0.5525 で溜め予告・L2 着弾より大きくなるため）。
+ * master を掛けて 0.4675＝L2 着弾（0.51）未満・溜め予告（0.425）より +0.8dB・声（0.68）未満。
+ */
+export const BREAK_SE = {
+  rate: { half: 0.7, quarter: 0.6 },
+  gain: 0.55,
+} as const
+
+/**
  * Tap Feedback v1：同じ音源（name@rate）が予約時刻で 30ms 未満に重なる 2 回目以降は鳴らさない。
  * 同一波形の同時加算（×2＝+6dB、×5＝+14dB）を防ぐ。打撃の最短間隔（110ms）には掛からない。
  */

@@ -1,4 +1,4 @@
-import { SE_DEDUP_WINDOW_MS, SE_GAIN, SOUND_LAYER, TAP_END_ROUND_RATE, VOICE_LAYER, type FeelTier } from './feelTier'
+import { BREAK_SE, SE_DEDUP_WINDOW_MS, SE_GAIN, SOUND_LAYER, TAP_END_ROUND_RATE, VOICE_LAYER, type FeelTier } from './feelTier'
 
 /**
  * 決定128（Game Feel Phase）：効果音エンジン。
@@ -320,6 +320,11 @@ export const sfx = {
   // Warning
   enemyTurn: () => playBuffer('enemy_turn', { gain: SE_GAIN.warning }),
   enemyCharge: () => playBuffer('enemy_charge', { gain: SE_GAIN.warning }),
+  /**
+   * Enemy Break SE v1：表示 HP が帯をまたいで崩れた瞬間（予約オフセット 0＝新しい timer を作らない）。
+   * 溜め予告と同じ音源だが rate が違う（name@rate が別）ので重複抑制の対象外
+   */
+  enemyBreak: (level: keyof typeof BREAK_SE.rate) => playBuffer('enemy_charge', { gain: BREAK_SE.gain, rate: BREAK_SE.rate[level] }),
   // 決定257 Sound Layer v1：決め所の rise（溜め）。着弾は既存の hit_l4／self_hit_heavy が担う
   /** 神の一撃：burst_ready の後〜突きまでの明るい上昇（commit 基準の予約） */
   burstRise: (delayMs: number) => playBuffer('burst_rise', { gain: SOUND_LAYER.riseGain.burst, delayMs }),

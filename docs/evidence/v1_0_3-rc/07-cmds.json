@@ -1,0 +1,25 @@
+[
+  {
+    "name": "v103-acceptance",
+    "cmd": "node scripts/v1_0_3-rc/acceptance.mjs docs/evidence/v1_0_3-rc/07a-acceptance/result.json http://localhost:4197 --sha 374e7c0 --version 1.0.3"
+  },
+  {
+    "name": "vocab-check",
+    "cmd": "node scripts/v1_0_2-rc/vocab-check.mjs docs/evidence/v1_0_3-rc/07b-vocab/result.json http://localhost:4197"
+  },
+  {
+    "name": "sp-text-check",
+    "cmd": "node scripts/v1_0_3-rc/sp-text-check.mjs docs/evidence/v1_0_3-rc/07c-sp-text/result.json http://localhost:4197"
+  },
+  {
+    "name": "defeat-check",
+    "cmd": "node scripts/v1_0_3-rc/defeat-check.mjs docs/evidence/v1_0_3-rc/07d-defeat/result.json http://localhost:4197"
+  },
+  {
+    "name": "home-version",
+    "cmd": "node scripts/release-audit/home-version-smoke.mjs docs/evidence/v1_0_3-rc/10-home-version.json http://localhost:4197 1.0.3 374e7c0",
+    "env": {
+      "PLAYWRIGHT_MODULE": "C:/Users/kimi1/SevenGodsGame-lane3/node_modules/playwright/index.mjs"
+    }
+  }
+]

@@ -160,12 +160,12 @@ describe('selectNextGoal — 通常モード', () => {
     expect(g).toMatchObject({ id: 'N7', text: '神階Ⅱ 鳥居 のベストまであと 1,000 点' })
   })
 
-  it('N8：絆称号まで 3pt 以内（童子が必要なら併記）', () => {
+  it('N8：絆称号まで 3pt 以内（v1.0.4：童子条件の併記なし）', () => {
     const near = selectNextGoal(base({ bondRecord: { battlesPlayed: 3, resonanceCount: 4, dojiReached: 0 } }))
     expect(near).toMatchObject({ id: 'N8', text: '絆称号「息の合った相棒」まであと2pt' })
     const tier2 = selectNextGoal(base({ bondRecord: { battlesPlayed: 9, resonanceCount: 10, dojiReached: 0 } }))
-    expect(tier2.text).toBe('絆称号「固い絆で結ばれた相棒」まであと2pt（童子形態での対局終了も必要）')
-    // pt は満たしていて童子だけが足りない＝近いとは言えないので採用しない
+    expect(tier2.text).toBe('絆称号「固い絆で結ばれた相棒」まであと2pt')
+    // Lv5 到達済み＝最終称号に到達しているので N8 は出ない
     expect(selectNextGoal(base({ bondRecord: { battlesPlayed: 15, resonanceCount: 13, dojiReached: 0 } })).id).not.toBe('N8')
   })
 
@@ -189,6 +189,33 @@ describe('selectNextGoal — 通常モード', () => {
       base({ todayDaily: null, stakeUnlocked: undefined }),
     ]
     for (const i of inputs) expect(selectNextGoal(i).text.length).toBeGreaterThan(0)
+  })
+})
+
+describe('NM1（v1.0.4 Retention 束 ②）：49 攻略の初撃破の直後だけ「別の神でも攻略する」', () => {
+  const daily0 = { enemyName: '蒼海の龍神', attemptsUsed: 0, attemptsLeft: 3 }
+
+  it('初撃破 → NM1（k/7 神・選び直し）。今日の神域挑戦が手つかずでも N4 より先', () => {
+    const g = selectNextGoal(base({ matchup: { isFirstClear: true, enemyClearedCount: 2 }, todayDaily: daily0 }))
+    expect(g).toMatchObject({
+      id: 'NM1',
+      text: '業斧の鬼将を別の神でも攻略する（この敵 2/7 神）',
+      action: 'reselect',
+      primaryLabel: '別の神で挑む（神を選び直す）',
+    })
+  })
+
+  it('初撃破でない／7 神すべて撃破済み／記録なしでは出ない', () => {
+    expect(selectNextGoal(base({ matchup: { isFirstClear: false, enemyClearedCount: 2 }, todayDaily: daily0 })).id).toBe('N4')
+    expect(selectNextGoal(base({ matchup: { isFirstClear: true, enemyClearedCount: 7 }, todayDaily: daily0 })).id).toBe('N4')
+    expect(selectNextGoal(base({ matchup: null, todayDaily: daily0 })).id).toBe('N4')
+  })
+
+  it('NR1・N2 が成立するときはそちらが優先、敗北では出ない', () => {
+    const earlyRead = { isFirstBattleSetup: true, godWinsAfterThis: 1, targetCleared: false }
+    expect(selectNextGoal(base({ matchup: { isFirstClear: true, enemyClearedCount: 1 }, earlyRead })).id).toBe('NR1')
+    expect(selectNextGoal(base({ matchup: { isFirstClear: true, enemyClearedCount: 1 }, stakeResult: stake({ hardClearedNow: true }) })).id).toBe('N2')
+    expect(selectNextGoal(base({ status: 'lost', enemyHpRatio: 0.3, matchup: { isFirstClear: true, enemyClearedCount: 1 } })).id).toBe('N1')
   })
 })
 
@@ -221,6 +248,11 @@ describe('selectNextGoal — 神域挑戦', () => {
       const g = selectNextGoal(daily({ status, daily: { isNewBest: false, prevBest: 900, attemptsLeft: 0 } }))
       expect(g).toMatchObject({ id: 'D4', action: 'home', text: '今日の挑戦は終了。次の敵まで 12:00' })
     }
+  })
+
+  it('D4（v1.0.4 ③）：明日の問いの型があれば添える（無ければ従来文）', () => {
+    const g = selectNextGoal(daily({ daily: { isNewBest: false, prevBest: 900, attemptsLeft: 0, tomorrowTypeLabel: '重撃型' } }))
+    expect(g).toMatchObject({ id: 'D4', action: 'home', text: '今日の挑戦は終了。明日の問いは【重撃型】・次の敵まで 12:00' })
   })
 
   it('神域挑戦では通常モードの目標（神階・今日の神域挑戦・絆）を出さない', () => {

@@ -12,11 +12,12 @@ import { buildShareText, copyToClipboard } from './shareText'
 import type { BattleRecap } from './battleRecap'
 import { useEffect, useState } from 'react'
 import { describeDefeatCause, type DefeatCause } from './defeatCause'
+import { describeDefeatGuardFact, type DefeatGuardFact } from './defeatFacts'
 import { getEnemyDef } from '../../core/data/enemies'
 import { useMinuteClock } from '../../hooks/useMinuteClock'
 import type { ResultContext } from './resultContext'
 import { selectNextGoal, type NextGoal } from './nextGoal'
-import { describeDailyDiff } from './dailyDiff'
+import { describeDailyDiff, describeDailyVerdict } from './dailyDiff'
 import { exitLabel, planResultExits, type ResultExit } from './resultHub'
 import type { ResultTransitionAction } from '../resultTransitions'
 import type { MatchupClearResult } from '../../hooks/matchupStorage'
@@ -112,6 +113,11 @@ type GameOverOverlayProps = {
   shareState?: GameState | null
   /** 決定128：敗北理由（lost のときだけ表示）。BattleScreen がログから導出して渡す */
   defeatCause?: DefeatCause | null
+  /**
+   * v1.0.3 RC（Lane 6 §7 #1）：敗北の事実行「◯◯ N を加護で受けていれば残 HP X」（lost のときだけ・計算できたときだけ）。
+   * BattleScreen がログから導出して渡す。「敵の残り HP」は既存の game-over-enemy-hp が担う（重複させない）
+   */
+  defeatFact?: DefeatGuardFact | null
   /** Phase 6-C（決定166）：この1戦の振り返り（最大3行）。BattleScreen がログから生成する */
   recap?: BattleRecap | null
   /** Phase 6-C：勝利で報酬がまだ確定していない（「報酬カードを選ぶ」だけを出す） */
@@ -122,6 +128,11 @@ type GameOverOverlayProps = {
    * 内容・計算・順序は変えない
    */
   bridged?: boolean
+  /**
+   * v1.0.5 Stage B：同じ盤面の前回比 1 行（`describeSameBoardDiff`）。同じ盤面と確かめられたときだけ非 null。
+   * 過去の事実だけ（正解・推奨手は出さない＝決定263）
+   */
+  sameBoardLine?: string | null
 }
 
 export function GameOverOverlay({
@@ -145,8 +156,10 @@ export function GameOverOverlay({
   stakeResult = null,
   shareState = null,
   defeatCause = null,
+  defeatFact = null,
   recap = null,
   rewardPending = false,
+  sameBoardLine = null,
   onOpenReward,
   bridged = false,
 }: GameOverOverlayProps) {
@@ -182,6 +195,8 @@ export function GameOverOverlay({
     return () => window.cancelAnimationFrame(raf)
   }, [status, finalScore, reduced, stagedSkip])
   const defeatText = status === 'lost' ? describeDefeatCause(defeatCause, getEnemyDef(enemy.defId).name) : null
+  // v1.0.3 RC（Lane 6 §7 #1）：事後の事実 1 行（正解・未来情報ではない）。敗因の枠の中に続けて出す
+  const defeatFactText = status === 'lost' && defeatText ? describeDefeatGuardFact(defeatFact) : null
   // 決定126（Seed共有）：コピー結果の表示（idle→copied/failed、数秒で戻す）
   const [copyState, setCopyState] = useState<'idle' | 'copied' | 'failed'>('idle')
   const handleShare = async () => {
@@ -276,6 +291,14 @@ export function GameOverOverlay({
         {defeatText && (
           <div className="game-over-defeat-cause">
             敗因：<strong>{defeatText}</strong>
+            {defeatFactText && (
+              <>
+                <br />
+                <span className="game-over-defeat-fact" data-testid="defeat-fact">
+                  {defeatFactText}
+                </span>
+              </>
+            )}
             {/* Phase 6-C：状況固有の助言（recap）があるときは定型文を出さない */}
             {!(recap && recap.lines.length > 0) && (
               <>
@@ -283,6 +306,12 @@ export function GameOverOverlay({
                 予告を見て、その一撃の前に守るか、先に倒し切ろう。
               </>
             )}
+          </div>
+        )}
+        {/* v1.0.5 Stage B：同じ盤面で何回目か・前回 → 今回（敗因の直後。Primary より上・G8 で余白 140px 以上を実測済み） */}
+        {sameBoardLine && (
+          <div className="game-over-same-board" data-testid="same-board-diff">
+            {sameBoardLine}
           </div>
         )}
         {otomoLevelUp && (
@@ -321,6 +350,10 @@ export function GameOverOverlay({
             旧表示の「ベスト未記録なのに同点」は describeDailyDiff 側で出さない */}
         {daily && (
           <div className="game-over-daily" data-testid="daily-diff">
+            {/* v1.0.4 Retention 束 ③：今日の問いの verdict（今回の status／round だけ）。best 行の上に 1 行 */}
+            {context?.dailyCurrent && (
+              <p className="game-over-daily-verdict" data-testid="daily-verdict">{describeDailyVerdict(context.dailyCurrent)}</p>
+            )}
             {dailyDiff ? (
               <>
                 <p className={`game-over-daily-best game-over-daily-best-${dailyDiff.best.kind}`}>{dailyDiff.best.text}</p>
