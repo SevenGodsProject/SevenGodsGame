@@ -1,6 +1,6 @@
 # 神 HP 危険帯 Static v1 — 実装 Gate（2026-10-30・Lane 2・AI 判断）
 
-- 状態：**IMPLEMENTED — Fast Gate ALL PASS（FAIL 0）— CEO iPhone Human QA READY（LAN preview `http://192.168.11.6:4185/`）**。push／merge／tag／deploy は未実施（統合は CEO）
+- 状態：**IMPLEMENTED — Fast Gate ALL PASS（FAIL 0）— CEO iPhone Human QA 3/3 PASS（2026-10-31・§4-2）— 実装 GO・統合候補**。push／merge／tag／deploy は未実施（統合は CEO）。実機未確認：25% 以下の見え方・回復演出との重なり（§4-2）
 - worktree／branch：`SevenGodsGame-hpband`／`feat/self-hp-danger-band-v1`（起点 Production v1.0.5 `a96a409`）。commit：実装 `6e15504`（＋本書・証跡の docs commit）
 - 設計：Lane 2 Combat Feel v2 次工程監査（2026-10-29）§4-1 の最小案／`docs/LANE3_NEXT_PLAN_V1.md` §2-①（CEO GO 2026-10-30「神HP危険帯 Static v1 実装GO」）
 - 不変：`src/core` 差分 0（gameVersion・save v9 不変）／`rules.ts`・`battle.css`・`visualHp.ts`・timeline／timing／presentation・`sound*`・`EnemyPanel`／`enemyBreak*`・立ち絵 filter 変更 0／既存 7 敵・Pilot 敵の挙動 0／アニメーション・timer 追加 0
@@ -87,3 +87,15 @@ NG のとき：Q2 NG → quarter の外光を外す（hudPlate.css 1 行）。Q3
 
 - 変更ファイルは `PlayerPanel.tsx`・`HpBar.tsx`・`hudPlate.css`・テスト 2。忠次 v0.6（`battle.css` ほか）・CSM v1（`CardView.tsx`・`BattleScreen.tsx`・`cardShort.*`）・crisis ボイス（`sound.ts`・`feelTier.ts`・`crisisVoice.ts`・`BattleScreen.tsx`）と**同一ファイルの編集 0**
 - 次工程（crisis ボイス）は本帯と同じ 50% 境界で「絵（着弾＋130ms）→ 音（着弾＋300ms）」の順になる（`docs/LANE3_NEXT_PLAN_V1.md` §2-②）
+
+## 4-2. CEO iPhone Human QA 結果（2026-10-31・build 81bd280＝index-B89SBNAb.js・LAN preview 4185）
+
+| # | 設問 | CEO 回答 | 判定 |
+|---|---|---|---|
+| Q1 | HP 50% 以下で「危ない」と気づいたか | YES | PASS |
+| Q2 | 自分の橙と敵の赤を混同しなかったか | 混同なし | PASS |
+| Q3 | 点滅・光・記号が過剰と感じたか | NO | PASS |
+
+**Human QA 3/3 PASS → AI-PM 判定：実装 GO・統合候補入り**（push／merge は CEO）。
+
+実機未確認として残す項目：**25% 以下（quarter・橙赤 `▼`・2px 枠＋外光）の実機見え方**と、**回復演出（`heal-pulse` 緑 0.7s）と橙枠の重なり**（§3 R1）。headless probe では quarter 160/160 PASS・コントラスト 12.11 だが iPhone では未到達。Production 公開前の最終 QA で `?seed=hpband-trial` × 試練の影（札を出さず R3 末）と回復札 1 枚で確認する。QA 用 preview 4185 は確認後に停止・ポート解放済み。
