@@ -30,10 +30,11 @@ import { deriveDefeatGuardFact } from './defeatFacts'
 import { useDecisionCallout } from './useDecisionCallout'
 import { BattleCallout } from './BattleCallout'
 import { buildBattleRecap } from './battleRecap'
-import { playVoice, preloadSe, preloadVoice, stopVoice } from './sound'
+import { playVoice, preloadSe, preloadVoice, releaseVoiceCacheExcept, stopVoice } from './sound'
 import { duckBgm } from './bgm'
 import { VOICE_LAYER } from './feelTier'
 import { useBattleSound } from './useBattleSound'
+import { useCrisisVoice } from './crisisVoice'
 import { useFloatingNumbers } from './useFloatingNumbers'
 import { CAST_FX, getEnemyDamagePowerTier, TYPE_STYLE } from './cardStyle'
 import { CardIcon } from './cardIcon'
@@ -247,6 +248,8 @@ export function BattleScreen({
   // ミュート解除時にuseBattleSound内部のseenCountが0にリセットされ、logが元の長さに
   // 戻った瞬間にその対局の全イベントのSEが一斉に再生されるバグを引き起こしていた。
   useBattleSound(log, enemyVisualType)
+  // Official Voice Crisis Pilot v1：HP が最大の 50% 以下に初めて落ちた着弾の直後に神の「ピンチ」の声（1 戦 1 回・表示専用）
+  useCrisisVoice(log, state, enemyVisualType)
 
   // 決定125：Mobile Battle Auto Focus。375px級の縦積みでは手札と敵パネルが約1,000px離れ、
   // 攻撃VFX・被弾・ダメージ数字が画面外で再生されて見えないため、敵ダメージカード／
@@ -277,7 +280,12 @@ export function BattleScreen({
       seenStartKeyRef.current = battleStartKey
       preloadSe()
       // Official Voice Pilot v1：入口の間に神の「あいさつ」（公式ボイス）を取得・デコードしておく（配信していない神は何もしない）
-      if (state) preloadVoice(state.godId, 'greeting')
+      // Crisis Pilot v1：「ピンチ」も同じ入口で先読み（+143KB）。他の神の decode 済みキャッシュは先に捨てる
+      if (state) {
+        releaseVoiceCacheExcept(state.godId)
+        preloadVoice(state.godId, 'greeting')
+        preloadVoice(state.godId, 'crisis')
+      }
       setEntranceVariant(takeBattleEntranceVariant())
       setEntranceKey(battleStartKey)
     }

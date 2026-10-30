@@ -7,7 +7,7 @@
  * - Creator Kit 素材の出典を表示する
  * - BGM・SE・生成 AI 素材は「確認済みの制作事実」だけを書く（Rights Ledger の UNKNOWN-ACCEPTED を
  *   「権利クリア」「許諾済み」とは書かない）
- * - Kit 配布の音声（大耀「あいさつ」1 本・feat/official-voice-pilot-v1）は統合済み＝素材 1 行目で「大耀の音声」と限定して事実だけ書く
+ * - Kit 配布の音声（大耀「あいさつ」feat/official-voice-pilot-v1・「ピンチ」feat/official-voice-crisis-pilot-v1）は素材 1 行目で「大耀の音声（場面の列挙）」と限定して事実だけ書く
  *   （「公式ボイス」「公式の声」の語は使わない。Kit §5 の「公式」は Kit 配布分の説明であり、本作の表示で公式性を示唆しない）
  * - 配信元（Vercel）のアクセス記録があるため「外部送信なし」と断定しない
  * - 問い合わせ先は未確定（「準備中」）。本作の問い合わせを SGG 運営へ送らないよう 1 文添える
@@ -24,7 +24,7 @@ export const CREDITS_SECTIONS: ReadonlyArray<{ heading: string; lines: ReadonlyA
   {
     heading: '素材について',
     lines: [
-      '神と OTOMO の画像、および大耀の音声（あいさつ）は「SEVENGODS Games Creator Kit」の配布素材をそのまま使用しています（声の素材を本作で制作してはいません）。',
+      '神と OTOMO の画像、および大耀の音声（あいさつ・ピンチ）は「SEVENGODS Games Creator Kit」の配布素材をそのまま使用しています（声の素材を本作で制作してはいません）。',
       'BGM は制作者が Suno で生成しました。効果音は制作者が合成して作成しました。',
       '敵・カード・背景などの一部の画像は、制作者が生成 AI を用いて作成しました。',
       '生成 AI で作成した素材の一部には、生成時の記録（利用プラン・生成日時など）が揃っていないものがあり、制作者の責任で使用しています。',
