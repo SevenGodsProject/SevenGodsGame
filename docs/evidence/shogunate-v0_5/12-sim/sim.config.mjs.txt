@@ -1,0 +1,9 @@
+// scratchpad 専用 vitest 設定：worktree のソースを WT エイリアスで読む（Pilot branch にファイルを足さない）
+const WT = 'C:/Users/kimi1/SevenGodsGame-shogunate-v05'
+const HERE = 'C:/Users/kimi1/AppData/Local/Temp/claude/C--Users-kimi1-SevenGodsGame/ccfc5b98-2798-4ed8-9048-87fba6a0556c/scratchpad/l1-sim'
+export default {
+  root: HERE,
+  resolve: { alias: { WT, vitest: WT + '/node_modules/vitest/dist/index.js' } },
+  server: { fs: { allow: [WT, HERE] } },
+  test: { include: ['*.sim.test.ts'], environment: 'node', testTimeout: 600000 },
+}

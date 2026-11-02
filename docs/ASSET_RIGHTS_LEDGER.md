@@ -316,15 +316,16 @@ CEO INPUT が不要なもの：SE（自作）、Kit 公式ファイルの sha256
 
 本表（2026-09-27）は保持。SE-02（2026-10-02 追加）・CARD-TAIYO-02（§2-3）・VID-01（§3-K）を含む最新の行数と**事実状態**の集計は §7-4。
 
-### 3-L. 公式ボイス（1 行・2026-10-09 追加・Official Voice Pilot v1）
+### 3-L. 公式ボイス（2 行・2026-10-09 追加・Official Voice Pilot v1／2026-10-21 VOICE-KIT-08 追加・Crisis Pilot v1）
 
 共通：Creator＝**Kit 公式**（SGG Creator Kit v1.1・公式ボイス。SGG が 2026-10-08 に公開）／Model-Service＝—（本作側で生成・収録・加工 0）／Source＝`audio-source/voice/<god>/<god>-<scene>.mp3`（Kit 配布 MP3 の原本・無改変）／配信＝同じバイト列を `public/assets/voice/<god>/<scene>.mp3` に置く（再エンコード・トリミング 0＝配信 sha256 ＝ 原本 sha256 ＝ Kit MCP `get_voice` の sha256）／Prompt reference＝—／Reference inputs＝—／**Terms＝`SGG-FAN-CREATION-GUIDELINES-1.0.0`（Updated 2026-10-08・§5「キャラクターの声」追加。termsId は据え置きのため本台帳では「1.0.0（Updated 2026-10-08）」と書く。AI 確認 2026-10-09・`docs/assets-kit/SGG-CREATOR-KIT-RIGHTS.md` を同日版へ更新）**／Commercial＝可（§1・§2「SGG Creator Kit など SGG が利用を許可した公式配布素材の加工と作品への組み込み」）／Attribution＝任意（§4）／**公式表示＝可**（§5「SEVEN GODS の公式の声は、SGG Creator Kit で配布している音声だけです」＝本行の音源はその配布分そのもの。本作に自作ボイスは 0 本。将来 OTOMO・敵に自作音声を足す場合は「公式」「公式ボイス」「公認」と表示しない）／Canonical＝Kit MCP `get_voice`（`https://sgg-creator-kit.svc-manage-2020.workers.dev/mcp`）の `key`＋`sha256`。2D manifest（v1.1.0）にはボイス項目が無い。Status＝◎（**KNOWN**）。
 
 | ID | Path（配信） | Source（原本） | Category | Creator | Kit key（Canonical） | 尺・形式【実測 2026-10-09】 | Terms | Evidence（sha256） | Status |
 |---|---|---|---|---|---|---|---|---|---|
 | VOICE-KIT-01 | `voice/taiyo/greeting.mp3`（189,357B・戦闘開始の入口直後に 1 戦 1 回・`src/components/battle/sound.ts` `OFFICIAL_VOICES`） | `audio-source/voice/taiyo/taiyo-greeting.mp3`（同一バイト列・tracked） | voice | Kit 公式 | `voice/v1/taiyo/taiyo-greeting.mp3`（character `taiyo-god`・scene `greeting`・label「あいさつ」） | **11.78 秒**（Chromium `decodeAudioData` の実測 11.783s・gapless トリム後。フレーム数からの素の長さ 493×1152／48,000＝11.83s）・MP3 CBR 128kbps・**48kHz**・493 frames・ID3v2.4（TSSE `Lavf62.12.100`）・Xing/Info ヘッダあり | 1.0.0（Updated 2026-10-08）・AI 確認 2026-10-09 | `cdb5d44c6b0c48d7a676f11b2d69a4d4dbb69e0f90abb1efd143ba2264aba3cc`（原本＝配信＝MCP の 3 者一致【実測】。`officialVoice.test.ts` が配信ファイルの sha256 をこの値で固定） | ◎（KNOWN） |
+| VOICE-KIT-08 | `voice/taiyo/crisis.mp3`（142,893B・自分の HP が最大の 50%（`RULES.cardBonus.lowHpRatio`）以下に初めて落ちた着弾 ＋300ms に 1 戦 1 回・`src/components/battle/sound.ts` `OFFICIAL_VOICES`・`crisisVoice.ts`） | `audio-source/voice/taiyo/taiyo-crisis.mp3`（同一バイト列・tracked） | voice | Kit 公式 | `voice/v1/taiyo/taiyo-crisis.mp3`（character `taiyo-god`・scene `crisis`・label「ピンチ」） | **8.86 秒**（MP3 フレーム走査からの decodeAudioData 相当＝(427,392 − encoder delay 576 − padding 1,618) ／ 48,000 ＝ 8.858s。同じ式で greeting は 11.783s＝Chromium 実測と一致。素の長さ 371×1152／48,000＝8.904s。Chromium 実測は Pilot Gate の `acceptance.mjs` 拡張時に追記）・MP3 CBR 128kbps・**48kHz**・mono・371 audio frames＋Info frame 1・ID3v2.4（TSSE `Lavf62.12.100`）・Xing/Info ヘッダあり（`Lavc62.28`） | 1.0.0（Updated 2026-10-08）・AI 確認 2026-10-21（Kit MCP `get_voice` の `termsUrl`＝`/RIGHTS.md`・`voicePolicy` 文は 2026-10-09 と同一） | `3df318eda81d94bf1fdb99ac609026cdb4aa7c873c7ea30e59056d3ca5140098`（原本＝配信＝MCP の 3 者一致【実測 2026-10-21】。`officialVoice.test.ts` が配信・原本の sha256 をこの値で固定） | ◎（KNOWN） |
 
-予約（未配置・7 神展開 Gate 用。配置前に行を埋める §1-4）：VOICE-KIT-02〜07＝ebisu／sobi／saika／juraku／fukuei／shouren の greeting（Kit MCP の bytes：122,925／139,821／170,541／125,229／128,685／150,957）。crisis／fatigue／success は Pilot の対象外。
+予約（未配置・7 神展開 Gate 用。配置前に行を埋める §1-4）：VOICE-KIT-02〜07＝ebisu／sobi／saika／juraku／fukuei／shouren の greeting（Kit MCP の bytes：122,925／139,821／170,541／125,229／128,685／150,957）。crisis は大耀 1 本のみ VOICE-KIT-08 で配置（Crisis Pilot v1・2026-10-21・`docs/OFFICIAL_VOICE_CRISIS_PILOT_V1.md`）。他 6 神の crisis と fatigue／success（計 20 本）は未配置・予約番号未採番（配置時に 09 以降を採番）。
 
 ## 6. 参照
 
@@ -425,3 +426,18 @@ CEO INPUT が不要なもの：SE（自作）、Kit 公式ファイルの sha256
 
 - 変更：本台帳・`ASSET_GENERATION_SERVICE_TERMS_AUDIT_ADDENDUM_FAL_MINIMAX.md`（§1 の「推定」を UNKNOWN に訂正・F1 再検証記録）・`ASSET_RIGHTS_LEDGER_CEO_INPUT_2026-10-07.md` §6（反映記録）・`RELEASE_STATUS.md` K13 行。`src/`・`public/`・`scripts/` 差分 0（commit 直前・直後に `git diff --stat` で確認）。生成 API／購入／外部サービスへの送信 0（fal ToS の再取得は閲覧のみ）
 - 複製した原本 14 ファイルは untracked・commit 対象外（§7-3）
+
+## 8. 将軍家 Pilot（忠次・enemy_08）— v0.4 で v1.0.2 RC 側へ移した記載（2026-10-21・branch `feat/shogunate-pilot-v0.4`・AI 記入・新規素材 0）
+
+v0.1〜v0.3（branch `feat/shogunate-pilot-v0.3` @ `5a357f1`・CEO 実装承認 2026-10-10）で記入した 2 行を、v1.0.2 RC（`release/v1_0_2-rc`）から切った本 branch へ**そのまま移した**もの。配信ファイル・原本は `git checkout 5a357f1 -- …` で流用し、再生成・再加工・新規取得は行っていない（sha256 は本 branch で再計測し、v0.3 の記載と一致）。
+
+出典：SGG Creator Kit **将軍家**（`docs/assets-kit/shogunate-manifest.json`＝公式 `https://sevengodsgames.com/creator-kit/shogunate/v1/manifest.json` の無改変コピー・`kitId sgg-creator-kit-shogunate`・`kitVersion 1.0.0`・`releasedAt 2026-10-08`・`termsId SGG-FAN-CREATION-GUIDELINES-1.0.0`）。規約本文は公式 `/creator-kit/v1/RIGHTS.md` を 2026-10-10 に再取得し、repo コピー `docs/assets-kit/SGG-CREATOR-KIT-RIGHTS.md`（2026-10-08 版）と**同一テキスト**（CR 無視で diff 0）であることを確認済み（v0.1 時点）。将軍家に公式ボイスは無い。名前は公式名「忠次」＋公式 role「将軍四天王」。二つ名・技名・台詞は非公式のファン創作（規約 §6・§7。「公式」「公認」とは表記しない）。
+
+| ID | Path（配信） | Source file（art-source） | Category | Creator | Model-Service | Generation date | Prompt reference | Reference inputs | Terms version・date checked | Commercial use | Modification | Attribution | Canonical source | Evidence（sha256） | Status |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| ENEMY-KIT-01 | `enemies/tadatsugu/art.webp`（768²・alpha・**57,326B（v0.2 以降不変）**・`enemies.ts` `SHOGUNATE_ENEMIES` art） | `art-source/enemies/tadatsugu/tadatsugu_front.webp`（Kit 原本 1600²・138,730B・無加工・tracked） | enemy | **Kit 公式**（将軍家 v1.0.0） | — | `releasedAt 2026-10-08` | — | なし | `SGG-FAN-CREATION-GUIDELINES-1.0.0`（Updated 2026-10-08）・2026-10-10 | 可（§1） | 可（§2）。実施（v0.2）：透過余白トリム（1067×1439）→ 絵の高さ 652 に等比縮小（483×652）→ 768² の額縁に上 60／下 56 の余白で配置（既存 7 体と同じ接地位置）→ webp q85（sharp・AI 非生成・画素の内容は不変。手順は v0.3 branch の `scripts/shogunate-pilot/prepare-assets.mjs`）。v0.4 では再加工 0 | 任意（§4）。CM-02 の Credits 文言「SEVENGODS Games Creator Kit」に含まれる | manifest `tadatsugu:FRONT`（`04_tadatsugu/tadatsugu_front.webp`・sha256 **`b8d7d894e6b5301e1288a112dfd96d1542b6c991e137a33e9df1c60516dc2586`**＝原本と一致・2026-10-21 再計測） | 配信 `9abb26407d63b61a`（先頭 16 桁・v0.2 以降不変・2026-10-21 再計測） | **◎ KNOWN**（原本保全・sha256 一致・Terms 確認日の 3 つ） |
+| STG-08 | `backgrounds/stages/08-shogunate-camp.webp`（1600×900・**164,216B（v0.2 以降不変）**）・将軍四天王・忠次「軍議の本陣」accent `#8c6d1f` | STG-02（`02-oni-castle.webp`）からの派生。独自の原本なし | stage | CEO 生成（原本＝STG-02）＋AI 非生成加工 | ChatGPT（STG-02 と同じ・プラン UNKNOWN） | 2026-10-10（加工） | STG-02 と同じ | STG-02 | STG-02 と同じ | STG-02 と同じ | 非生成：色相 +30°・彩度 0.42・明度 0.7（sharp `modulate`・v0.2）のみ。新規生成はしていない。v0.4 では再加工 0 | — | STG-02（配信 sha256 `0a55b064af931b58`） | `702229c42cba8d35`（v0.2 以降不変・2026-10-21 再計測） | STG-02 と同じ扱い（✗＝原本未保全を引き継ぐ。Pilot 用の暫定。本採用時は専用背景の生成を CEO 判断） |
+
+- 本 Pilot で追加した配信ファイルは上記 2 本のみ。既存 7 体の画像・背景・Threat Pilot（enemy_09＝鬼将の画像・舞台を共有）は変更していない（`coreRoster.test.ts`／`shogunateRoster.test.ts` が `CORE_ENEMIES` の sha256 を固定）
+- BACK（`tadatsugu_back.webp`）と将軍家の他 9 体は使用しないため取得していない（原本 1 本だけ保全）
+- §7-4 の集計（86 行）には含めていない（Pilot branch の暫定行。本採用時に 3-C／3-F へ転記し集計を更新する）

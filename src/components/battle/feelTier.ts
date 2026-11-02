@@ -73,11 +73,23 @@ export const SE_DEDUP_WINDOW_MS = 30
  * - lateDropMs：入口の終わりからこれ以上遅れて届いた（取得・デコードが遅い）ボイスは鳴らさない
  *   （R1 の思考中に唐突に始まるのを防ぐ。入口中に preload するので通常は遅れない）
  * 詳細 docs/OFFICIAL_VOICE_PILOT_V1.md §2。
+ *
+ * Official Voice Crisis Pilot v1（大耀「ピンチ」・docs/OFFICIAL_VOICE_CRISIS_PILOT_V1.md）：2 本目の声を
+ * 戦闘中（HP が最大の 50% 以下に初めて落ちた着弾の直後）に置くため、1 チャネルの取り合いを次の値で決める。
+ * - priority：鳴っている声より低い場面は鳴らさない（捨てる・キューしない）。同じ以上は置き換える
+ * - stopFadeMs：置き換えで前の声を止めるときのフェード（即時 stop は波形の途中で切るクリック音になる）
+ * - sceneLateDropMs：場面別の遅延 drop。crisis は「着弾からの距離」に意味があるので短い（未指定の場面は lateDropMs）
+ * - afterImpactMs.crisis：最後の自分への着弾からの遅れ。決定257 の duck 復帰開始点（SOUND_LAYER.duckTailMs 300）
+ *   に合わせ、声の duck が復帰ランプを挟まずに合流する
  */
 export const VOICE_LAYER = {
   gain: 0.8,
   duckTailMs: 300,
   lateDropMs: 1500,
+  priority: { greeting: 1, crisis: 2, success: 3, fatigue: 3 },
+  stopFadeMs: 80,
+  sceneLateDropMs: { crisis: 800 },
+  afterImpactMs: { crisis: 300 },
 } as const
 
 /** CSS クラス名（EnemyPanel／FloatingNumbers が使う） */

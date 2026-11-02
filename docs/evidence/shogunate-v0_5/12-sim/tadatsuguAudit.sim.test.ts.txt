@@ -1,0 +1,118 @@
+/// <reference types="node" />
+// 忠次 v0.5 ゲーム性監査用の決定論 sim（scratchpad 専用・Pilot branch には置かない）。
+// v0.3 の shogunateTactic.sim.test.ts を拡張：難易度 3 種 × 7 神 × 40 seed、既存 7 体＋enemy_09 と並べる。
+import { writeFileSync } from 'node:fs'
+import { describe, expect, it } from 'vitest'
+import { GODS } from 'WT/src/core/data/gods'
+import { CORE_ENEMIES, PILOT_ENEMY_IDS, SHOGUNATE_ENEMY_IDS, getEnemyDef } from 'WT/src/core/data/enemies'
+import { getCardDef } from 'WT/src/core/data/cards'
+import { getRecommendedDeck } from 'WT/src/core/data/deckBuilder'
+import { DIVINATION_CHOICES } from 'WT/src/core/data/divination'
+import type { CardInstance, Difficulty, EnemyId, GameState, GodId } from 'WT/src/core/types'
+import { applyAction } from 'WT/src/core/engine/reducer'
+import { enemyActionTotal } from 'WT/src/core/engine/intent'
+
+const OUT = process.env.SIM_OUT as string
+const SEEDS = 40
+const TADA = SHOGUNATE_ENEMY_IDS.tadatsugu
+const ONI_T = PILOT_ENEMY_IDS.oniTactic
+const DIFFS: Difficulty[] = ['easy', 'normal', 'hard']
+type Policy = 'greedy' | 'raceAware'
+type Out = { status: string; round: number; r4Ratio: number | null; branch: 'then' | 'else' | null; hpLeft: number; score: number }
+
+const costOf = (c: CardInstance) => getCardDef(c.defId).cost + (c.costModifier ?? 0)
+const dmgOf = (c: CardInstance) => getCardDef(c.defId).effects.reduce((s, e) => s + (e.kind === 'damage' && e.target === 'enemy' ? e.amount : 0), 0)
+const blkOf = (c: CardInstance) => getCardDef(c.defId).effects.reduce((s, e) => s + (e.kind === 'block' ? e.amount : 0), 0)
+const inc = (s: GameState) => (s.enemy.intent ? enemyActionTotal(s.enemy.intent) : 0)
+const danger = (s: GameState) => s.player.hp - Math.max(0, inc(s) - s.player.block) < s.player.maxHp * 0.35
+const TENKEI = 2
+const KAGO = 0
+const tenkeiDmg = DIVINATION_CHOICES[TENKEI].effects.reduce((s, e) => s + (e.kind === 'damage' ? e.amount : 0), 0)
+const isTactic = (id: EnemyId) => id === TADA || id === ONI_T
+
+function pick(s: GameState): CardInstance | null {
+  const ok = s.hand.filter((c) => costOf(c) <= s.ap.current)
+  if (!ok.length) return null
+  if (danger(s) && s.player.block < inc(s)) {
+    const g = ok.filter((c) => blkOf(c) > 0).sort((a, b) => blkOf(b) - blkOf(a))[0]
+    if (g) return g
+  }
+  const a = ok.filter((c) => dmgOf(c) > 0).sort((x, y) => dmgOf(y) - dmgOf(x))[0]
+  return a ?? ok.sort((x, y) => costOf(x) - costOf(y))[0]
+}
+
+function play(seed: string, godId: GodId, enemyId: EnemyId, difficulty: Difficulty, policy: Policy): Out {
+  let s = applyAction(null, { type: 'START_GAME', seed, godId, enemyId, deck: getRecommendedDeck(godId), difficulty }).state
+  const ratio = 0.5
+  const thr = Math.floor(s.enemy.maxHp * ratio)
+  let r4Ratio: number | null = null
+  let branch: Out['branch'] = null
+  let guard = 0
+  while (s.status === 'playing' && guard++ < 500) {
+    if (s.round === 4 && r4Ratio === null) {
+      r4Ratio = s.enemy.hp / s.enemy.maxHp
+      if (isTactic(enemyId)) branch = s.enemy.intent?.kind === 'special' ? 'else' : 'then'
+    }
+    const c = pick(s)
+    if (c) {
+      s = applyAction(s, { type: 'PLAY_CARD', uid: c.uid }).state
+      continue
+    }
+    if (s.divination.remaining > 0 && !s.divination.usedThisRound) {
+      const left = 7 - s.round + 1
+      let ch: number | null = null
+      if (policy === 'raceAware' && s.round === 3 && s.enemy.hp > thr && s.enemy.hp - thr <= tenkeiDmg) ch = TENKEI
+      else if (policy === 'raceAware' && s.round === 4 && s.enemy.intent?.kind === 'special') ch = KAGO
+      else if (s.divination.remaining >= left || danger(s)) ch = danger(s) ? KAGO : TENKEI
+      if (ch !== null) {
+        s = applyAction(s, { type: 'USE_DIVINATION', choiceIndex: ch }).state
+        continue
+      }
+    }
+    s = applyAction(s, { type: 'END_ROUND' }).state
+  }
+  return { status: s.status, round: s.round, r4Ratio, branch, hpLeft: s.player.hp / s.player.maxHp, score: s.score.total }
+}
+
+function sum(o: Out[]) {
+  const n = o.length
+  const won = o.filter((x) => x.status === 'won')
+  const r4 = o.filter((x) => x.r4Ratio !== null)
+  const br = o.filter((x) => x.branch)
+  const thenO = o.filter((x) => x.branch === 'then')
+  const elseO = o.filter((x) => x.branch === 'else')
+  const wr = (a: Out[]) => (a.length ? +(a.filter((x) => x.status === 'won').length / a.length).toFixed(3) : null)
+  return {
+    n,
+    winRate: +(won.length / n).toFixed(3),
+    lossRate: +(o.filter((x) => x.status === 'lost').length / n).toFixed(3),
+    meanWinRound: won.length ? +(won.reduce((a, x) => a + x.round, 0) / won.length).toFixed(2) : null,
+    meanHpLeft: +(o.reduce((a, x) => a + x.hpLeft, 0) / n).toFixed(3),
+    meanScore: Math.round(o.reduce((a, x) => a + x.score, 0) / n),
+    reachedR4: r4.length,
+    thenRate: br.length ? +(thenO.length / br.length).toFixed(3) : null,
+    winRateThen: wr(thenO),
+    winRateElse: wr(elseO),
+  }
+}
+
+describe('忠次 v0.5 監査 sim', () => {
+  it('3 難易度 × 7 神 × 40 seed', () => {
+    const seeds = Array.from({ length: SEEDS }, (_, i) => `shogunate-pilot-${i}`)
+    const enemies: EnemyId[] = [...CORE_ENEMIES.map((e) => e.id), ONI_T, TADA]
+    const res: Record<string, Record<string, unknown>> = {}
+    for (const d of DIFFS) {
+      res[d] = {}
+      for (const id of enemies) {
+        const pols: Policy[] = isTactic(id) ? ['greedy', 'raceAware'] : ['greedy']
+        for (const p of pols) {
+          const outs = GODS.flatMap((g) => seeds.map((sd) => play(sd, g.id, id, d, p)))
+          res[d][`${getEnemyDef(id).name}:${p}`] = sum(outs)
+        }
+      }
+    }
+    const again = seeds.map((sd) => play(sd, GODS[0].id, TADA, 'normal', 'greedy'))
+    expect(JSON.stringify(again)).toBe(JSON.stringify(seeds.map((sd) => play(sd, GODS[0].id, TADA, 'normal', 'greedy'))))
+    writeFileSync(OUT, JSON.stringify({ at: new Date().toISOString(), seeds: SEEDS, gods: GODS.length, res }, null, 2))
+  })
+})

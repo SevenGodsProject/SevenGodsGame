@@ -1,0 +1,3616 @@
+{
+ "at": "2026-10-30T19:45:26.834Z",
+ "afterBase": "http://127.0.0.1:4190",
+ "beforeBase": "http://127.0.0.1:4191",
+ "allPass": true,
+ "results": [
+  {
+   "viewport": "pc",
+   "enemy": "juuma",
+   "pass": true,
+   "checks": [
+    {
+     "name": "JS error 0 (after)",
+     "pass": true,
+     "detail": []
+    },
+    {
+     "name": "JS error 0 (before)",
+     "pass": true,
+     "detail": []
+    },
+    {
+     "name": "R1 start band = high / no marker / green fill",
+     "pass": true,
+     "detail": {
+      "band": "high",
+      "fill": "rgb(77, 189, 116)"
+     }
+    },
+    {
+     "name": "R1 band = high",
+     "pass": true,
+     "detail": {
+      "band": "high",
+      "label": "210 / 300",
+      "fill": "rgb(77, 189, 116)",
+      "barClass": "hp-bar"
+     }
+    },
+    {
+     "name": "R1 high: no self class / no marker / green",
+     "pass": true,
+     "detail": "rgba(0, 0, 0, 0.9) 0px 1px 2px 0px inset, rgba(184, 145, 74, 0.45) 0px 0px 0px 1px"
+    },
+    {
+     "name": "R1 label contrast ≥4.5 on fill",
+     "pass": true,
+     "detail": {
+      "contrastOnFill": 11.73,
+      "markerContrast": null
+     }
+    },
+    {
+     "name": "R1 no animation on .hp-bar",
+     "pass": true,
+     "detail": "none"
+    },
+    {
+     "name": "R1 enemy bar untouched (no self class)",
+     "pass": true,
+     "detail": "hp-bar"
+    },
+    {
+     "name": "R1 no horizontal overflow",
+     "pass": true,
+     "detail": {
+      "scrollW": 1508,
+      "innerW": 1508
+     }
+    },
+    {
+     "name": "R1 rect panel Before/After |Δ| ≤ 0.5px",
+     "pass": true,
+     "detail": {
+      "after": [
+       809,
+       101.5,
+       555,
+       306.5
+      ],
+      "before": [
+       809,
+       101.5,
+       555,
+       306.5
+      ],
+      "maxDiff": 0
+     }
+    },
+    {
+     "name": "R1 rect plate Before/After |Δ| ≤ 0.5px",
+     "pass": true,
+     "detail": {
+      "after": [
+       1116,
+       112.5,
+       237,
+       57
+      ],
+      "before": [
+       1116,
+       112.5,
+       237,
+       57
+      ],
+      "maxDiff": 0
+     }
+    },
+    {
+     "name": "R1 rect bar Before/After |Δ| ≤ 0.5px",
+     "pass": true,
+     "detail": {
+      "after": [
+       1125,
+       144.5,
+       219,
+       18
+      ],
+      "before": [
+       1125,
+       144.5,
+       219,
+       18
+      ],
+      "maxDiff": 0
+     }
+    },
+    {
+     "name": "R1 rect fill Before/After |Δ| ≤ 0.5px",
+     "pass": true,
+     "detail": {
+      "after": [
+       1125,
+       144.5,
+       153.3,
+       18
+      ],
+      "before": [
+       1125,
+       144.5,
+       153.3,
+       18
+      ],
+      "maxDiff": 0
+     }
+    },
+    {
+     "name": "R1 rect enemyBar Before/After |Δ| ≤ 0.5px",
+     "pass": true,
+     "detail": {
+      "after": [
+       164,
+       144.5,
+       307,
+       18
+      ],
+      "before": [
+       164,
+       144.5,
+       307,
+       18
+      ],
+      "maxDiff": 0
+     }
+    },
+    {
+     "name": "R1 pill height same & inside bar",
+     "pass": true,
+     "detail": {
+      "after": [
+       1204.5,
+       146.5,
+       59.9,
+       14
+      ],
+      "before": [
+       1204.5,
+       146.5,
+       59.9,
+       14
+      ],
+      "bar": [
+       1125,
+       144.5,
+       219,
+       18
+      ]
+     }
+    },
+    {
+     "name": "R1 label number same as Before",
+     "pass": true,
+     "detail": {
+      "after": "210 / 300",
+      "before": "210 / 300"
+     }
+    },
+    {
+     "name": "R1 Before has no band (regression baseline)",
+     "pass": true,
+     "detail": {
+      "panelClass": "panel player-panel",
+      "fill": "rgb(77, 189, 116)"
+     }
+    },
+    {
+     "name": "R2 band = half",
+     "pass": true,
+     "detail": {
+      "band": "half",
+      "label": "▽ 110 / 300",
+      "fill": "rgb(217, 164, 65)",
+      "barClass": "hp-bar hp-bar-self-half"
+     }
+    },
+    {
+     "name": "R2 half: orange fill #d9a441",
+     "pass": true,
+     "detail": "rgb(217, 164, 65)"
+    },
+    {
+     "name": "R2 half: class hp-bar-self-half + marker ▽ (aria-hidden)",
+     "pass": true,
+     "detail": {
+      "barClass": "hp-bar hp-bar-self-half",
+      "marker": "▽ "
+     }
+    },
+    {
+     "name": "R2 half: 1px orange ring in box-shadow",
+     "pass": true,
+     "detail": "rgba(0, 0, 0, 0.9) 0px 1px 2px 0px inset, rgba(217, 164, 65, 0.8) 0px 0px 0px 1px"
+    },
+    {
+     "name": "R2 label contrast ≥4.5 on fill",
+     "pass": true,
+     "detail": {
+      "contrastOnFill": 11.55,
+      "markerContrast": 11.55
+     }
+    },
+    {
+     "name": "R2 no animation on .hp-bar",
+     "pass": true,
+     "detail": "none"
+    },
+    {
+     "name": "R2 enemy bar untouched (no self class)",
+     "pass": true,
+     "detail": "hp-bar"
+    },
+    {
+     "name": "R2 no horizontal overflow",
+     "pass": true,
+     "detail": {
+      "scrollW": 1508,
+      "innerW": 1508
+     }
+    },
+    {
+     "name": "R2 rect panel Before/After |Δ| ≤ 0.5px",
+     "pass": true,
+     "detail": {
+      "after": [
+       809,
+       101.5,
+       555,
+       306.5
+      ],
+      "before": [
+       809,
+       101.5,
+       555,
+       306.5
+      ],
+      "maxDiff": 0
+     }
+    },
+    {
+     "name": "R2 rect plate Before/After |Δ| ≤ 0.5px",
+     "pass": true,
+     "detail": {
+      "after": [
+       1116,
+       112.5,
+       237,
+       57
+      ],
+      "before": [
+       1116,
+       112.5,
+       237,
+       57
+      ],
+      "maxDiff": 0
+     }
+    },
+    {
+     "name": "R2 rect bar Before/After |Δ| ≤ 0.5px",
+     "pass": true,
+     "detail": {
+      "after": [
+       1125,
+       144.5,
+       219,
+       18
+      ],
+      "before": [
+       1125,
+       144.5,
+       219,
+       18
+      ],
+      "maxDiff": 0
+     }
+    },
+    {
+     "name": "R2 rect fill Before/After |Δ| ≤ 0.5px",
+     "pass": true,
+     "detail": {
+      "after": [
+       1125,
+       144.5,
+       80.3,
+       18
+      ],
+      "before": [
+       1125,
+       144.5,
+       80.3,
+       18
+      ],
+      "maxDiff": 0
+     }
+    },
+    {
+     "name": "R2 rect enemyBar Before/After |Δ| ≤ 0.5px",
+     "pass": true,
+     "detail": {
+      "after": [
+       164,
+       144.5,
+       307,
+       18
+      ],
+      "before": [
+       164,
+       144.5,
+       307,
+       18
+      ],
+      "maxDiff": 0
+     }
+    },
+    {
+     "name": "R2 pill height same & inside bar",
+     "pass": true,
+     "detail": {
+      "after": [
+       1197.5,
+       146.5,
+       73.9,
+       14
+      ],
+      "before": [
+       1204.5,
+       146.5,
+       59.9,
+       14
+      ],
+      "bar": [
+       1125,
+       144.5,
+       219,
+       18
+      ]
+     }
+    },
+    {
+     "name": "R2 label number same as Before",
+     "pass": true,
+     "detail": {
+      "after": "▽ 110 / 300",
+      "before": "110 / 300"
+     }
+    },
+    {
+     "name": "R2 Before has no band (regression baseline)",
+     "pass": true,
+     "detail": {
+      "panelClass": "panel player-panel",
+      "fill": "rgb(77, 189, 116)"
+     }
+    }
+   ],
+   "after": {
+    "side": "after",
+    "viewport": "pc",
+    "enemy": "juuma",
+    "url": "http://127.0.0.1:4190/?seed=hpband-juuma",
+    "rounds": [
+     {
+      "round": 1,
+      "phase": "start",
+      "panelClass": "panel player-panel player-band-high",
+      "barClass": "hp-bar",
+      "fill": "rgb(77, 189, 116)",
+      "fillWidth": "100%",
+      "barShadow": "rgba(0, 0, 0, 0.9) 0px 1px 2px 0px inset, rgba(184, 145, 74, 0.45) 0px 0px 0px 1px",
+      "barAnimation": "none",
+      "marker": null,
+      "markerAriaHidden": null,
+      "label": "300 / 300",
+      "contrastOnFill": 11.73,
+      "markerContrast": null,
+      "enemyBarClass": "hp-bar",
+      "enemyBarShadow": "rgba(0, 0, 0, 0.9) 0px 1px 2px 0px inset, rgba(184, 145, 74, 0.45) 0px 0px 0px 1px",
+      "avatarFilter": "drop-shadow(rgba(0, 0, 0, 0.8) 0px 12px 16px) drop-shadow(rgba(77, 189, 116, 0.333) 0px 0px 22px) drop-shadow(rgba(255, 224, 170, 0.55) 0px 0px 1px)",
+      "rects": {
+       "panel": [
+        809,
+        101.5,
+        555,
+        306.5
+       ],
+       "plate": [
+        1116,
+        112.5,
+        237,
+        57
+       ],
+       "bar": [
+        1125,
+        144.5,
+        219,
+        18
+       ],
+       "text": [
+        1204.5,
+        146.5,
+        59.9,
+        14
+       ],
+       "fill": [
+        1125,
+        144.5,
+        219,
+        18
+       ],
+       "enemyBar": [
+        164,
+        144.5,
+        307,
+        18
+       ]
+      },
+      "docScrollW": 1508,
+      "innerW": 1508
+     },
+     {
+      "round": 1,
+      "phase": "afterEnemyTurn",
+      "panelClass": "panel player-panel player-band-high",
+      "barClass": "hp-bar",
+      "fill": "rgb(77, 189, 116)",
+      "fillWidth": "70%",
+      "barShadow": "rgba(0, 0, 0, 0.9) 0px 1px 2px 0px inset, rgba(184, 145, 74, 0.45) 0px 0px 0px 1px",
+      "barAnimation": "none",
+      "marker": null,
+      "markerAriaHidden": null,
+      "label": "210 / 300",
+      "contrastOnFill": 11.73,
+      "markerContrast": null,
+      "enemyBarClass": "hp-bar",
+      "enemyBarShadow": "rgba(0, 0, 0, 0.9) 0px 1px 2px 0px inset, rgba(184, 145, 74, 0.45) 0px 0px 0px 1px",
+      "avatarFilter": "drop-shadow(rgba(0, 0, 0, 0.8) 0px 12px 16px) drop-shadow(rgba(77, 189, 116, 0.333) 0px 0px 22px) drop-shadow(rgba(255, 224, 170, 0.55) 0px 0px 1px)",
+      "rects": {
+       "panel": [
+        809,
+        101.5,
+        555,
+        306.5
+       ],
+       "plate": [
+        1116,
+        112.5,
+        237,
+        57
+       ],
+       "bar": [
+        1125,
+        144.5,
+        219,
+        18
+       ],
+       "text": [
+        1204.5,
+        146.5,
+        59.9,
+        14
+       ],
+       "fill": [
+        1125,
+        144.5,
+        153.3,
+        18
+       ],
+       "enemyBar": [
+        164,
+        144.5,
+        307,
+        18
+       ]
+      },
+      "docScrollW": 1508,
+      "innerW": 1508
+     },
+     {
+      "round": 2,
+      "phase": "afterEnemyTurn",
+      "panelClass": "panel player-panel player-band-half",
+      "barClass": "hp-bar hp-bar-self-half",
+      "fill": "rgb(217, 164, 65)",
+      "fillWidth": "36.6667%",
+      "barShadow": "rgba(0, 0, 0, 0.9) 0px 1px 2px 0px inset, rgba(217, 164, 65, 0.8) 0px 0px 0px 1px",
+      "barAnimation": "none",
+      "marker": "▽ ",
+      "markerAriaHidden": "true",
+      "label": "▽ 110 / 300",
+      "contrastOnFill": 11.55,
+      "markerContrast": 11.55,
+      "enemyBarClass": "hp-bar",
+      "enemyBarShadow": "rgba(0, 0, 0, 0.9) 0px 1px 2px 0px inset, rgba(184, 145, 74, 0.45) 0px 0px 0px 1px",
+      "avatarFilter": "drop-shadow(rgba(0, 0, 0, 0.8) 0px 12px 16px) drop-shadow(rgba(77, 189, 116, 0.333) 0px 0px 22px) drop-shadow(rgba(255, 224, 170, 0.55) 0px 0px 1px)",
+      "rects": {
+       "panel": [
+        809,
+        101.5,
+        555,
+        306.5
+       ],
+       "plate": [
+        1116,
+        112.5,
+        237,
+        57
+       ],
+       "bar": [
+        1125,
+        144.5,
+        219,
+        18
+       ],
+       "text": [
+        1197.5,
+        146.5,
+        73.9,
+        14
+       ],
+       "fill": [
+        1125,
+        144.5,
+        80.3,
+        18
+       ],
+       "enemyBar": [
+        164,
+        144.5,
+        307,
+        18
+       ]
+      },
+      "docScrollW": 1508,
+      "innerW": 1508
+     }
+    ],
+    "errors": []
+   },
+   "before": {
+    "side": "before",
+    "viewport": "pc",
+    "enemy": "juuma",
+    "url": "http://127.0.0.1:4191/?seed=hpband-juuma",
+    "rounds": [
+     {
+      "round": 1,
+      "phase": "start",
+      "panelClass": "panel player-panel",
+      "barClass": "hp-bar",
+      "fill": "rgb(77, 189, 116)",
+      "fillWidth": "100%",
+      "barShadow": "rgba(0, 0, 0, 0.9) 0px 1px 2px 0px inset, rgba(184, 145, 74, 0.45) 0px 0px 0px 1px",
+      "barAnimation": "none",
+      "marker": null,
+      "markerAriaHidden": null,
+      "label": "300 / 300",
+      "contrastOnFill": 11.73,
+      "markerContrast": null,
+      "enemyBarClass": "hp-bar",
+      "enemyBarShadow": "rgba(0, 0, 0, 0.9) 0px 1px 2px 0px inset, rgba(184, 145, 74, 0.45) 0px 0px 0px 1px",
+      "avatarFilter": "drop-shadow(rgba(0, 0, 0, 0.8) 0px 12px 16px) drop-shadow(rgba(77, 189, 116, 0.333) 0px 0px 22px) drop-shadow(rgba(255, 224, 170, 0.55) 0px 0px 1px)",
+      "rects": {
+       "panel": [
+        809,
+        101.5,
+        555,
+        306.5
+       ],
+       "plate": [
+        1116,
+        112.5,
+        237,
+        57
+       ],
+       "bar": [
+        1125,
+        144.5,
+        219,
+        18
+       ],
+       "text": [
+        1204.5,
+        146.5,
+        59.9,
+        14
+       ],
+       "fill": [
+        1125,
+        144.5,
+        219,
+        18
+       ],
+       "enemyBar": [
+        164,
+        144.5,
+        307,
+        18
+       ]
+      },
+      "docScrollW": 1508,
+      "innerW": 1508
+     },
+     {
+      "round": 1,
+      "phase": "afterEnemyTurn",
+      "panelClass": "panel player-panel",
+      "barClass": "hp-bar",
+      "fill": "rgb(77, 189, 116)",
+      "fillWidth": "70%",
+      "barShadow": "rgba(0, 0, 0, 0.9) 0px 1px 2px 0px inset, rgba(184, 145, 74, 0.45) 0px 0px 0px 1px",
+      "barAnimation": "none",
+      "marker": null,
+      "markerAriaHidden": null,
+      "label": "210 / 300",
+      "contrastOnFill": 11.73,
+      "markerContrast": null,
+      "enemyBarClass": "hp-bar",
+      "enemyBarShadow": "rgba(0, 0, 0, 0.9) 0px 1px 2px 0px inset, rgba(184, 145, 74, 0.45) 0px 0px 0px 1px",
+      "avatarFilter": "drop-shadow(rgba(0, 0, 0, 0.8) 0px 12px 16px) drop-shadow(rgba(77, 189, 116, 0.333) 0px 0px 22px) drop-shadow(rgba(255, 224, 170, 0.55) 0px 0px 1px)",
+      "rects": {
+       "panel": [
+        809,
+        101.5,
+        555,
+        306.5
+       ],
+       "plate": [
+        1116,
+        112.5,
+        237,
+        57
+       ],
+       "bar": [
+        1125,
+        144.5,
+        219,
+        18
+       ],
+       "text": [
+        1204.5,
+        146.5,
+        59.9,
+        14
+       ],
+       "fill": [
+        1125,
+        144.5,
+        153.3,
+        18
+       ],
+       "enemyBar": [
+        164,
+        144.5,
+        307,
+        18
+       ]
+      },
+      "docScrollW": 1508,
+      "innerW": 1508
+     },
+     {
+      "round": 2,
+      "phase": "afterEnemyTurn",
+      "panelClass": "panel player-panel",
+      "barClass": "hp-bar",
+      "fill": "rgb(77, 189, 116)",
+      "fillWidth": "36.6667%",
+      "barShadow": "rgba(0, 0, 0, 0.9) 0px 1px 2px 0px inset, rgba(184, 145, 74, 0.45) 0px 0px 0px 1px",
+      "barAnimation": "none",
+      "marker": null,
+      "markerAriaHidden": null,
+      "label": "110 / 300",
+      "contrastOnFill": 11.73,
+      "markerContrast": null,
+      "enemyBarClass": "hp-bar",
+      "enemyBarShadow": "rgba(0, 0, 0, 0.9) 0px 1px 2px 0px inset, rgba(184, 145, 74, 0.45) 0px 0px 0px 1px",
+      "avatarFilter": "drop-shadow(rgba(0, 0, 0, 0.8) 0px 12px 16px) drop-shadow(rgba(77, 189, 116, 0.333) 0px 0px 22px) drop-shadow(rgba(255, 224, 170, 0.55) 0px 0px 1px)",
+      "rects": {
+       "panel": [
+        809,
+        101.5,
+        555,
+        306.5
+       ],
+       "plate": [
+        1116,
+        112.5,
+        237,
+        57
+       ],
+       "bar": [
+        1125,
+        144.5,
+        219,
+        18
+       ],
+       "text": [
+        1204.5,
+        146.5,
+        59.9,
+        14
+       ],
+       "fill": [
+        1125,
+        144.5,
+        80.3,
+        18
+       ],
+       "enemyBar": [
+        164,
+        144.5,
+        307,
+        18
+       ]
+      },
+      "docScrollW": 1508,
+      "innerW": 1508
+     }
+    ],
+    "errors": []
+   }
+  },
+  {
+   "viewport": "pc",
+   "enemy": "trial",
+   "pass": true,
+   "checks": [
+    {
+     "name": "JS error 0 (after)",
+     "pass": true,
+     "detail": []
+    },
+    {
+     "name": "JS error 0 (before)",
+     "pass": true,
+     "detail": []
+    },
+    {
+     "name": "R1 start band = high / no marker / green fill",
+     "pass": true,
+     "detail": {
+      "band": "high",
+      "fill": "rgb(77, 189, 116)"
+     }
+    },
+    {
+     "name": "R1 band = high",
+     "pass": true,
+     "detail": {
+      "band": "high",
+      "label": "250 / 300",
+      "fill": "rgb(77, 189, 116)",
+      "barClass": "hp-bar"
+     }
+    },
+    {
+     "name": "R1 high: no self class / no marker / green",
+     "pass": true,
+     "detail": "rgba(0, 0, 0, 0.9) 0px 1px 2px 0px inset, rgba(184, 145, 74, 0.45) 0px 0px 0px 1px"
+    },
+    {
+     "name": "R1 label contrast ≥4.5 on fill",
+     "pass": true,
+     "detail": {
+      "contrastOnFill": 11.73,
+      "markerContrast": null
+     }
+    },
+    {
+     "name": "R1 no animation on .hp-bar",
+     "pass": true,
+     "detail": "none"
+    },
+    {
+     "name": "R1 enemy bar untouched (no self class)",
+     "pass": true,
+     "detail": "hp-bar"
+    },
+    {
+     "name": "R1 no horizontal overflow",
+     "pass": true,
+     "detail": {
+      "scrollW": 1508,
+      "innerW": 1508
+     }
+    },
+    {
+     "name": "R1 rect panel Before/After |Δ| ≤ 0.5px",
+     "pass": true,
+     "detail": {
+      "after": [
+       809,
+       101.5,
+       555,
+       306.5
+      ],
+      "before": [
+       809,
+       101.5,
+       555,
+       306.5
+      ],
+      "maxDiff": 0
+     }
+    },
+    {
+     "name": "R1 rect plate Before/After |Δ| ≤ 0.5px",
+     "pass": true,
+     "detail": {
+      "after": [
+       1116,
+       112.5,
+       237,
+       57
+      ],
+      "before": [
+       1116,
+       112.5,
+       237,
+       57
+      ],
+      "maxDiff": 0
+     }
+    },
+    {
+     "name": "R1 rect bar Before/After |Δ| ≤ 0.5px",
+     "pass": true,
+     "detail": {
+      "after": [
+       1125,
+       144.5,
+       219,
+       18
+      ],
+      "before": [
+       1125,
+       144.5,
+       219,
+       18
+      ],
+      "maxDiff": 0
+     }
+    },
+    {
+     "name": "R1 rect fill Before/After |Δ| ≤ 0.5px",
+     "pass": true,
+     "detail": {
+      "after": [
+       1125,
+       144.5,
+       182.5,
+       18
+      ],
+      "before": [
+       1125,
+       144.5,
+       182.5,
+       18
+      ],
+      "maxDiff": 0
+     }
+    },
+    {
+     "name": "R1 rect enemyBar Before/After |Δ| ≤ 0.5px",
+     "pass": true,
+     "detail": {
+      "after": [
+       164,
+       144.5,
+       307,
+       18
+      ],
+      "before": [
+       164,
+       144.5,
+       307,
+       18
+      ],
+      "maxDiff": 0
+     }
+    },
+    {
+     "name": "R1 pill height same & inside bar",
+     "pass": true,
+     "detail": {
+      "after": [
+       1204.5,
+       146.5,
+       59.9,
+       14
+      ],
+      "before": [
+       1204.5,
+       146.5,
+       59.9,
+       14
+      ],
+      "bar": [
+       1125,
+       144.5,
+       219,
+       18
+      ]
+     }
+    },
+    {
+     "name": "R1 label number same as Before",
+     "pass": true,
+     "detail": {
+      "after": "250 / 300",
+      "before": "250 / 300"
+     }
+    },
+    {
+     "name": "R1 Before has no band (regression baseline)",
+     "pass": true,
+     "detail": {
+      "panelClass": "panel player-panel",
+      "fill": "rgb(77, 189, 116)"
+     }
+    },
+    {
+     "name": "R2 band = high",
+     "pass": true,
+     "detail": {
+      "band": "high",
+      "label": "170 / 300",
+      "fill": "rgb(77, 189, 116)",
+      "barClass": "hp-bar"
+     }
+    },
+    {
+     "name": "R2 high: no self class / no marker / green",
+     "pass": true,
+     "detail": "rgba(0, 0, 0, 0.9) 0px 1px 2px 0px inset, rgba(184, 145, 74, 0.45) 0px 0px 0px 1px"
+    },
+    {
+     "name": "R2 label contrast ≥4.5 on fill",
+     "pass": true,
+     "detail": {
+      "contrastOnFill": 11.73,
+      "markerContrast": null
+     }
+    },
+    {
+     "name": "R2 no animation on .hp-bar",
+     "pass": true,
+     "detail": "none"
+    },
+    {
+     "name": "R2 enemy bar untouched (no self class)",
+     "pass": true,
+     "detail": "hp-bar"
+    },
+    {
+     "name": "R2 no horizontal overflow",
+     "pass": true,
+     "detail": {
+      "scrollW": 1508,
+      "innerW": 1508
+     }
+    },
+    {
+     "name": "R2 rect panel Before/After |Δ| ≤ 0.5px",
+     "pass": true,
+     "detail": {
+      "after": [
+       809,
+       101.5,
+       555,
+       306.5
+      ],
+      "before": [
+       809,
+       101.5,
+       555,
+       306.5
+      ],
+      "maxDiff": 0
+     }
+    },
+    {
+     "name": "R2 rect plate Before/After |Δ| ≤ 0.5px",
+     "pass": true,
+     "detail": {
+      "after": [
+       1116,
+       112.5,
+       237,
+       57
+      ],
+      "before": [
+       1116,
+       112.5,
+       237,
+       57
+      ],
+      "maxDiff": 0
+     }
+    },
+    {
+     "name": "R2 rect bar Before/After |Δ| ≤ 0.5px",
+     "pass": true,
+     "detail": {
+      "after": [
+       1125,
+       144.5,
+       219,
+       18
+      ],
+      "before": [
+       1125,
+       144.5,
+       219,
+       18
+      ],
+      "maxDiff": 0
+     }
+    },
+    {
+     "name": "R2 rect fill Before/After |Δ| ≤ 0.5px",
+     "pass": true,
+     "detail": {
+      "after": [
+       1125,
+       144.5,
+       124.1,
+       18
+      ],
+      "before": [
+       1125,
+       144.5,
+       124.1,
+       18
+      ],
+      "maxDiff": 0
+     }
+    },
+    {
+     "name": "R2 rect enemyBar Before/After |Δ| ≤ 0.5px",
+     "pass": true,
+     "detail": {
+      "after": [
+       164,
+       144.5,
+       307,
+       18
+      ],
+      "before": [
+       164,
+       144.5,
+       307,
+       18
+      ],
+      "maxDiff": 0
+     }
+    },
+    {
+     "name": "R2 pill height same & inside bar",
+     "pass": true,
+     "detail": {
+      "after": [
+       1204.5,
+       146.5,
+       59.9,
+       14
+      ],
+      "before": [
+       1204.5,
+       146.5,
+       59.9,
+       14
+      ],
+      "bar": [
+       1125,
+       144.5,
+       219,
+       18
+      ]
+     }
+    },
+    {
+     "name": "R2 label number same as Before",
+     "pass": true,
+     "detail": {
+      "after": "170 / 300",
+      "before": "170 / 300"
+     }
+    },
+    {
+     "name": "R2 Before has no band (regression baseline)",
+     "pass": true,
+     "detail": {
+      "panelClass": "panel player-panel",
+      "fill": "rgb(77, 189, 116)"
+     }
+    },
+    {
+     "name": "R3 band = quarter",
+     "pass": true,
+     "detail": {
+      "band": "quarter",
+      "label": "▼ 60 / 300",
+      "fill": "rgb(255, 122, 69)",
+      "barClass": "hp-bar hp-bar-self-quarter"
+     }
+    },
+    {
+     "name": "R3 quarter: orange-red fill #ff7a45",
+     "pass": true,
+     "detail": "rgb(255, 122, 69)"
+    },
+    {
+     "name": "R3 quarter: class hp-bar-self-quarter + marker ▼",
+     "pass": true,
+     "detail": {
+      "barClass": "hp-bar hp-bar-self-quarter",
+      "marker": "▼ "
+     }
+    },
+    {
+     "name": "R3 quarter: 2px ring + 12px glow",
+     "pass": true,
+     "detail": "rgba(0, 0, 0, 0.9) 0px 1px 2px 0px inset, rgba(255, 122, 69, 0.8) 0px 0px 0px 2px, rgba(255, 122, 69, 0.333) 0px 0px 12px 0px"
+    },
+    {
+     "name": "R3 label contrast ≥4.5 on fill",
+     "pass": true,
+     "detail": {
+      "contrastOnFill": 12.11,
+      "markerContrast": 12.11
+     }
+    },
+    {
+     "name": "R3 no animation on .hp-bar",
+     "pass": true,
+     "detail": "none"
+    },
+    {
+     "name": "R3 enemy bar untouched (no self class)",
+     "pass": true,
+     "detail": "hp-bar"
+    },
+    {
+     "name": "R3 no horizontal overflow",
+     "pass": true,
+     "detail": {
+      "scrollW": 1508,
+      "innerW": 1508
+     }
+    },
+    {
+     "name": "R3 rect panel Before/After |Δ| ≤ 0.5px",
+     "pass": true,
+     "detail": {
+      "after": [
+       809,
+       101.5,
+       555,
+       306.5
+      ],
+      "before": [
+       809,
+       101.5,
+       555,
+       306.5
+      ],
+      "maxDiff": 0
+     }
+    },
+    {
+     "name": "R3 rect plate Before/After |Δ| ≤ 0.5px",
+     "pass": true,
+     "detail": {
+      "after": [
+       1116,
+       112.5,
+       237,
+       57
+      ],
+      "before": [
+       1116,
+       112.5,
+       237,
+       57
+      ],
+      "maxDiff": 0
+     }
+    },
+    {
+     "name": "R3 rect bar Before/After |Δ| ≤ 0.5px",
+     "pass": true,
+     "detail": {
+      "after": [
+       1125,
+       144.5,
+       219,
+       18
+      ],
+      "before": [
+       1125,
+       144.5,
+       219,
+       18
+      ],
+      "maxDiff": 0
+     }
+    },
+    {
+     "name": "R3 rect fill Before/After |Δ| ≤ 0.5px",
+     "pass": true,
+     "detail": {
+      "after": [
+       1125,
+       144.5,
+       43.8,
+       18
+      ],
+      "before": [
+       1125,
+       144.5,
+       43.8,
+       18
+      ],
+      "maxDiff": 0
+     }
+    },
+    {
+     "name": "R3 rect enemyBar Before/After |Δ| ≤ 0.5px",
+     "pass": true,
+     "detail": {
+      "after": [
+       164,
+       144.5,
+       307,
+       18
+      ],
+      "before": [
+       164,
+       144.5,
+       307,
+       18
+      ],
+      "maxDiff": 0
+     }
+    },
+    {
+     "name": "R3 pill height same & inside bar",
+     "pass": true,
+     "detail": {
+      "after": [
+       1200.5,
+       146.5,
+       68,
+       14
+      ],
+      "before": [
+       1207.5,
+       146.5,
+       54,
+       14
+      ],
+      "bar": [
+       1125,
+       144.5,
+       219,
+       18
+      ]
+     }
+    },
+    {
+     "name": "R3 label number same as Before",
+     "pass": true,
+     "detail": {
+      "after": "▼ 60 / 300",
+      "before": "60 / 300"
+     }
+    },
+    {
+     "name": "R3 Before has no band (regression baseline)",
+     "pass": true,
+     "detail": {
+      "panelClass": "panel player-panel",
+      "fill": "rgb(77, 189, 116)"
+     }
+    }
+   ],
+   "after": {
+    "side": "after",
+    "viewport": "pc",
+    "enemy": "trial",
+    "url": "http://127.0.0.1:4190/?seed=hpband-trial",
+    "rounds": [
+     {
+      "round": 1,
+      "phase": "start",
+      "panelClass": "panel player-panel player-band-high",
+      "barClass": "hp-bar",
+      "fill": "rgb(77, 189, 116)",
+      "fillWidth": "100%",
+      "barShadow": "rgba(0, 0, 0, 0.9) 0px 1px 2px 0px inset, rgba(184, 145, 74, 0.45) 0px 0px 0px 1px",
+      "barAnimation": "none",
+      "marker": null,
+      "markerAriaHidden": null,
+      "label": "300 / 300",
+      "contrastOnFill": 11.73,
+      "markerContrast": null,
+      "enemyBarClass": "hp-bar",
+      "enemyBarShadow": "rgba(0, 0, 0, 0.9) 0px 1px 2px 0px inset, rgba(184, 145, 74, 0.45) 0px 0px 0px 1px",
+      "avatarFilter": "drop-shadow(rgba(0, 0, 0, 0.8) 0px 12px 16px) drop-shadow(rgba(77, 189, 116, 0.333) 0px 0px 22px) drop-shadow(rgba(255, 224, 170, 0.55) 0px 0px 1px)",
+      "rects": {
+       "panel": [
+        809,
+        101.5,
+        555,
+        306.5
+       ],
+       "plate": [
+        1116,
+        112.5,
+        237,
+        57
+       ],
+       "bar": [
+        1125,
+        144.5,
+        219,
+        18
+       ],
+       "text": [
+        1204.5,
+        146.5,
+        59.9,
+        14
+       ],
+       "fill": [
+        1125,
+        144.5,
+        219,
+        18
+       ],
+       "enemyBar": [
+        164,
+        144.5,
+        307,
+        18
+       ]
+      },
+      "docScrollW": 1508,
+      "innerW": 1508
+     },
+     {
+      "round": 1,
+      "phase": "afterEnemyTurn",
+      "panelClass": "panel player-panel player-band-high",
+      "barClass": "hp-bar",
+      "fill": "rgb(77, 189, 116)",
+      "fillWidth": "83.3333%",
+      "barShadow": "rgba(0, 0, 0, 0.9) 0px 1px 2px 0px inset, rgba(184, 145, 74, 0.45) 0px 0px 0px 1px",
+      "barAnimation": "none",
+      "marker": null,
+      "markerAriaHidden": null,
+      "label": "250 / 300",
+      "contrastOnFill": 11.73,
+      "markerContrast": null,
+      "enemyBarClass": "hp-bar",
+      "enemyBarShadow": "rgba(0, 0, 0, 0.9) 0px 1px 2px 0px inset, rgba(184, 145, 74, 0.45) 0px 0px 0px 1px",
+      "avatarFilter": "drop-shadow(rgba(0, 0, 0, 0.8) 0px 12px 16px) drop-shadow(rgba(77, 189, 116, 0.333) 0px 0px 22px) drop-shadow(rgba(255, 224, 170, 0.55) 0px 0px 1px)",
+      "rects": {
+       "panel": [
+        809,
+        101.5,
+        555,
+        306.5
+       ],
+       "plate": [
+        1116,
+        112.5,
+        237,
+        57
+       ],
+       "bar": [
+        1125,
+        144.5,
+        219,
+        18
+       ],
+       "text": [
+        1204.5,
+        146.5,
+        59.9,
+        14
+       ],
+       "fill": [
+        1125,
+        144.5,
+        182.5,
+        18
+       ],
+       "enemyBar": [
+        164,
+        144.5,
+        307,
+        18
+       ]
+      },
+      "docScrollW": 1508,
+      "innerW": 1508
+     },
+     {
+      "round": 2,
+      "phase": "afterEnemyTurn",
+      "panelClass": "panel player-panel player-band-high",
+      "barClass": "hp-bar",
+      "fill": "rgb(77, 189, 116)",
+      "fillWidth": "56.6667%",
+      "barShadow": "rgba(0, 0, 0, 0.9) 0px 1px 2px 0px inset, rgba(184, 145, 74, 0.45) 0px 0px 0px 1px",
+      "barAnimation": "none",
+      "marker": null,
+      "markerAriaHidden": null,
+      "label": "170 / 300",
+      "contrastOnFill": 11.73,
+      "markerContrast": null,
+      "enemyBarClass": "hp-bar",
+      "enemyBarShadow": "rgba(0, 0, 0, 0.9) 0px 1px 2px 0px inset, rgba(184, 145, 74, 0.45) 0px 0px 0px 1px",
+      "avatarFilter": "drop-shadow(rgba(0, 0, 0, 0.8) 0px 12px 16px) drop-shadow(rgba(77, 189, 116, 0.333) 0px 0px 22px) drop-shadow(rgba(255, 224, 170, 0.55) 0px 0px 1px)",
+      "rects": {
+       "panel": [
+        809,
+        101.5,
+        555,
+        306.5
+       ],
+       "plate": [
+        1116,
+        112.5,
+        237,
+        57
+       ],
+       "bar": [
+        1125,
+        144.5,
+        219,
+        18
+       ],
+       "text": [
+        1204.5,
+        146.5,
+        59.9,
+        14
+       ],
+       "fill": [
+        1125,
+        144.5,
+        124.1,
+        18
+       ],
+       "enemyBar": [
+        164,
+        144.5,
+        307,
+        18
+       ]
+      },
+      "docScrollW": 1508,
+      "innerW": 1508
+     },
+     {
+      "round": 3,
+      "phase": "afterEnemyTurn",
+      "panelClass": "panel player-panel player-band-quarter",
+      "barClass": "hp-bar hp-bar-self-quarter",
+      "fill": "rgb(255, 122, 69)",
+      "fillWidth": "20%",
+      "barShadow": "rgba(0, 0, 0, 0.9) 0px 1px 2px 0px inset, rgba(255, 122, 69, 0.8) 0px 0px 0px 2px, rgba(255, 122, 69, 0.333) 0px 0px 12px 0px",
+      "barAnimation": "none",
+      "marker": "▼ ",
+      "markerAriaHidden": "true",
+      "label": "▼ 60 / 300",
+      "contrastOnFill": 12.11,
+      "markerContrast": 12.11,
+      "enemyBarClass": "hp-bar",
+      "enemyBarShadow": "rgba(0, 0, 0, 0.9) 0px 1px 2px 0px inset, rgba(184, 145, 74, 0.45) 0px 0px 0px 1px",
+      "avatarFilter": "drop-shadow(rgba(0, 0, 0, 0.8) 0px 12px 16px) drop-shadow(rgba(77, 189, 116, 0.333) 0px 0px 22px) drop-shadow(rgba(255, 224, 170, 0.55) 0px 0px 1px)",
+      "rects": {
+       "panel": [
+        809,
+        101.5,
+        555,
+        306.5
+       ],
+       "plate": [
+        1116,
+        112.5,
+        237,
+        57
+       ],
+       "bar": [
+        1125,
+        144.5,
+        219,
+        18
+       ],
+       "text": [
+        1200.5,
+        146.5,
+        68,
+        14
+       ],
+       "fill": [
+        1125,
+        144.5,
+        43.8,
+        18
+       ],
+       "enemyBar": [
+        164,
+        144.5,
+        307,
+        18
+       ]
+      },
+      "docScrollW": 1508,
+      "innerW": 1508
+     }
+    ],
+    "errors": []
+   },
+   "before": {
+    "side": "before",
+    "viewport": "pc",
+    "enemy": "trial",
+    "url": "http://127.0.0.1:4191/?seed=hpband-trial",
+    "rounds": [
+     {
+      "round": 1,
+      "phase": "start",
+      "panelClass": "panel player-panel",
+      "barClass": "hp-bar",
+      "fill": "rgb(77, 189, 116)",
+      "fillWidth": "100%",
+      "barShadow": "rgba(0, 0, 0, 0.9) 0px 1px 2px 0px inset, rgba(184, 145, 74, 0.45) 0px 0px 0px 1px",
+      "barAnimation": "none",
+      "marker": null,
+      "markerAriaHidden": null,
+      "label": "300 / 300",
+      "contrastOnFill": 11.73,
+      "markerContrast": null,
+      "enemyBarClass": "hp-bar",
+      "enemyBarShadow": "rgba(0, 0, 0, 0.9) 0px 1px 2px 0px inset, rgba(184, 145, 74, 0.45) 0px 0px 0px 1px",
+      "avatarFilter": "drop-shadow(rgba(0, 0, 0, 0.8) 0px 12px 16px) drop-shadow(rgba(77, 189, 116, 0.333) 0px 0px 22px) drop-shadow(rgba(255, 224, 170, 0.55) 0px 0px 1px)",
+      "rects": {
+       "panel": [
+        809,
+        101.5,
+        555,
+        306.5
+       ],
+       "plate": [
+        1116,
+        112.5,
+        237,
+        57
+       ],
+       "bar": [
+        1125,
+        144.5,
+        219,
+        18
+       ],
+       "text": [
+        1204.5,
+        146.5,
+        59.9,
+        14
+       ],
+       "fill": [
+        1125,
+        144.5,
+        219,
+        18
+       ],
+       "enemyBar": [
+        164,
+        144.5,
+        307,
+        18
+       ]
+      },
+      "docScrollW": 1508,
+      "innerW": 1508
+     },
+     {
+      "round": 1,
+      "phase": "afterEnemyTurn",
+      "panelClass": "panel player-panel",
+      "barClass": "hp-bar",
+      "fill": "rgb(77, 189, 116)",
+      "fillWidth": "83.3333%",
+      "barShadow": "rgba(0, 0, 0, 0.9) 0px 1px 2px 0px inset, rgba(184, 145, 74, 0.45) 0px 0px 0px 1px",
+      "barAnimation": "none",
+      "marker": null,
+      "markerAriaHidden": null,
+      "label": "250 / 300",
+      "contrastOnFill": 11.73,
+      "markerContrast": null,
+      "enemyBarClass": "hp-bar",
+      "enemyBarShadow": "rgba(0, 0, 0, 0.9) 0px 1px 2px 0px inset, rgba(184, 145, 74, 0.45) 0px 0px 0px 1px",
+      "avatarFilter": "drop-shadow(rgba(0, 0, 0, 0.8) 0px 12px 16px) drop-shadow(rgba(77, 189, 116, 0.333) 0px 0px 22px) drop-shadow(rgba(255, 224, 170, 0.55) 0px 0px 1px)",
+      "rects": {
+       "panel": [
+        809,
+        101.5,
+        555,
+        306.5
+       ],
+       "plate": [
+        1116,
+        112.5,
+        237,
+        57
+       ],
+       "bar": [
+        1125,
+        144.5,
+        219,
+        18
+       ],
+       "text": [
+        1204.5,
+        146.5,
+        59.9,
+        14
+       ],
+       "fill": [
+        1125,
+        144.5,
+        182.5,
+        18
+       ],
+       "enemyBar": [
+        164,
+        144.5,
+        307,
+        18
+       ]
+      },
+      "docScrollW": 1508,
+      "innerW": 1508
+     },
+     {
+      "round": 2,
+      "phase": "afterEnemyTurn",
+      "panelClass": "panel player-panel",
+      "barClass": "hp-bar",
+      "fill": "rgb(77, 189, 116)",
+      "fillWidth": "56.6667%",
+      "barShadow": "rgba(0, 0, 0, 0.9) 0px 1px 2px 0px inset, rgba(184, 145, 74, 0.45) 0px 0px 0px 1px",
+      "barAnimation": "none",
+      "marker": null,
+      "markerAriaHidden": null,
+      "label": "170 / 300",
+      "contrastOnFill": 11.73,
+      "markerContrast": null,
+      "enemyBarClass": "hp-bar",
+      "enemyBarShadow": "rgba(0, 0, 0, 0.9) 0px 1px 2px 0px inset, rgba(184, 145, 74, 0.45) 0px 0px 0px 1px",
+      "avatarFilter": "drop-shadow(rgba(0, 0, 0, 0.8) 0px 12px 16px) drop-shadow(rgba(77, 189, 116, 0.333) 0px 0px 22px) drop-shadow(rgba(255, 224, 170, 0.55) 0px 0px 1px)",
+      "rects": {
+       "panel": [
+        809,
+        101.5,
+        555,
+        306.5
+       ],
+       "plate": [
+        1116,
+        112.5,
+        237,
+        57
+       ],
+       "bar": [
+        1125,
+        144.5,
+        219,
+        18
+       ],
+       "text": [
+        1204.5,
+        146.5,
+        59.9,
+        14
+       ],
+       "fill": [
+        1125,
+        144.5,
+        124.1,
+        18
+       ],
+       "enemyBar": [
+        164,
+        144.5,
+        307,
+        18
+       ]
+      },
+      "docScrollW": 1508,
+      "innerW": 1508
+     },
+     {
+      "round": 3,
+      "phase": "afterEnemyTurn",
+      "panelClass": "panel player-panel",
+      "barClass": "hp-bar",
+      "fill": "rgb(77, 189, 116)",
+      "fillWidth": "20%",
+      "barShadow": "rgba(0, 0, 0, 0.9) 0px 1px 2px 0px inset, rgba(184, 145, 74, 0.45) 0px 0px 0px 1px",
+      "barAnimation": "none",
+      "marker": null,
+      "markerAriaHidden": null,
+      "label": "60 / 300",
+      "contrastOnFill": 11.73,
+      "markerContrast": null,
+      "enemyBarClass": "hp-bar",
+      "enemyBarShadow": "rgba(0, 0, 0, 0.9) 0px 1px 2px 0px inset, rgba(184, 145, 74, 0.45) 0px 0px 0px 1px",
+      "avatarFilter": "drop-shadow(rgba(0, 0, 0, 0.8) 0px 12px 16px) drop-shadow(rgba(77, 189, 116, 0.333) 0px 0px 22px) drop-shadow(rgba(255, 224, 170, 0.55) 0px 0px 1px)",
+      "rects": {
+       "panel": [
+        809,
+        101.5,
+        555,
+        306.5
+       ],
+       "plate": [
+        1116,
+        112.5,
+        237,
+        57
+       ],
+       "bar": [
+        1125,
+        144.5,
+        219,
+        18
+       ],
+       "text": [
+        1207.5,
+        146.5,
+        54,
+        14
+       ],
+       "fill": [
+        1125,
+        144.5,
+        43.8,
+        18
+       ],
+       "enemyBar": [
+        164,
+        144.5,
+        307,
+        18
+       ]
+      },
+      "docScrollW": 1508,
+      "innerW": 1508
+     }
+    ],
+    "errors": []
+   }
+  },
+  {
+   "viewport": "sp375",
+   "enemy": "juuma",
+   "pass": true,
+   "checks": [
+    {
+     "name": "JS error 0 (after)",
+     "pass": true,
+     "detail": []
+    },
+    {
+     "name": "JS error 0 (before)",
+     "pass": true,
+     "detail": []
+    },
+    {
+     "name": "R1 start band = high / no marker / green fill",
+     "pass": true,
+     "detail": {
+      "band": "high",
+      "fill": "rgb(77, 189, 116)"
+     }
+    },
+    {
+     "name": "R1 band = high",
+     "pass": true,
+     "detail": {
+      "band": "high",
+      "label": "210 / 300",
+      "fill": "rgb(77, 189, 116)",
+      "barClass": "hp-bar"
+     }
+    },
+    {
+     "name": "R1 high: no self class / no marker / green",
+     "pass": true,
+     "detail": "rgba(0, 0, 0, 0.9) 0px 1px 2px 0px inset, rgba(184, 145, 74, 0.45) 0px 0px 0px 1px"
+    },
+    {
+     "name": "R1 label contrast ≥4.5 on fill",
+     "pass": true,
+     "detail": {
+      "contrastOnFill": 11.73,
+      "markerContrast": null
+     }
+    },
+    {
+     "name": "R1 no animation on .hp-bar",
+     "pass": true,
+     "detail": "none"
+    },
+    {
+     "name": "R1 enemy bar untouched (no self class)",
+     "pass": true,
+     "detail": "hp-bar"
+    },
+    {
+     "name": "R1 no horizontal overflow",
+     "pass": true,
+     "detail": {
+      "scrollW": 375,
+      "innerW": 375
+     }
+    },
+    {
+     "name": "R1 rect panel Before/After |Δ| ≤ 0.5px",
+     "pass": true,
+     "detail": {
+      "after": [
+       198.6,
+       99.5,
+       162.4,
+       60.8
+      ],
+      "before": [
+       198.6,
+       99.5,
+       162.4,
+       60.8
+      ],
+      "maxDiff": 0
+     }
+    },
+    {
+     "name": "R1 rect plate Before/After |Δ| ≤ 0.5px",
+     "pass": true,
+     "detail": {
+      "after": [
+       207.6,
+       108.5,
+       144.4,
+       50.8
+      ],
+      "before": [
+       207.6,
+       108.5,
+       144.4,
+       50.8
+      ],
+      "maxDiff": 0
+     }
+    },
+    {
+     "name": "R1 rect bar Before/After |Δ| ≤ 0.5px",
+     "pass": true,
+     "detail": {
+      "after": [
+       214.6,
+       136.3,
+       130.4,
+       18
+      ],
+      "before": [
+       214.6,
+       136.3,
+       130.4,
+       18
+      ],
+      "maxDiff": 0
+     }
+    },
+    {
+     "name": "R1 rect fill Before/After |Δ| ≤ 0.5px",
+     "pass": true,
+     "detail": {
+      "after": [
+       214.6,
+       136.3,
+       91.3,
+       18
+      ],
+      "before": [
+       214.6,
+       136.3,
+       91.3,
+       18
+      ],
+      "maxDiff": 0
+     }
+    },
+    {
+     "name": "R1 rect enemyBar Before/After |Δ| ≤ 0.5px",
+     "pass": true,
+     "detail": {
+      "after": [
+       30,
+       136.3,
+       146.6,
+       18
+      ],
+      "before": [
+       30,
+       136.3,
+       146.6,
+       18
+      ],
+      "maxDiff": 0
+     }
+    },
+    {
+     "name": "R1 pill height same & inside bar",
+     "pass": true,
+     "detail": {
+      "after": [
+       249.8,
+       138.3,
+       59.9,
+       14
+      ],
+      "before": [
+       249.8,
+       138.3,
+       59.9,
+       14
+      ],
+      "bar": [
+       214.6,
+       136.3,
+       130.4,
+       18
+      ]
+     }
+    },
+    {
+     "name": "R1 label number same as Before",
+     "pass": true,
+     "detail": {
+      "after": "210 / 300",
+      "before": "210 / 300"
+     }
+    },
+    {
+     "name": "R1 Before has no band (regression baseline)",
+     "pass": true,
+     "detail": {
+      "panelClass": "panel player-panel",
+      "fill": "rgb(77, 189, 116)"
+     }
+    },
+    {
+     "name": "R2 band = half",
+     "pass": true,
+     "detail": {
+      "band": "half",
+      "label": "▽ 110 / 300",
+      "fill": "rgb(217, 164, 65)",
+      "barClass": "hp-bar hp-bar-self-half"
+     }
+    },
+    {
+     "name": "R2 half: orange fill #d9a441",
+     "pass": true,
+     "detail": "rgb(217, 164, 65)"
+    },
+    {
+     "name": "R2 half: class hp-bar-self-half + marker ▽ (aria-hidden)",
+     "pass": true,
+     "detail": {
+      "barClass": "hp-bar hp-bar-self-half",
+      "marker": "▽ "
+     }
+    },
+    {
+     "name": "R2 half: 1px orange ring in box-shadow",
+     "pass": true,
+     "detail": "rgba(0, 0, 0, 0.9) 0px 1px 2px 0px inset, rgba(217, 164, 65, 0.8) 0px 0px 0px 1px"
+    },
+    {
+     "name": "R2 label contrast ≥4.5 on fill",
+     "pass": true,
+     "detail": {
+      "contrastOnFill": 11.55,
+      "markerContrast": 11.55
+     }
+    },
+    {
+     "name": "R2 no animation on .hp-bar",
+     "pass": true,
+     "detail": "none"
+    },
+    {
+     "name": "R2 enemy bar untouched (no self class)",
+     "pass": true,
+     "detail": "hp-bar"
+    },
+    {
+     "name": "R2 no horizontal overflow",
+     "pass": true,
+     "detail": {
+      "scrollW": 375,
+      "innerW": 375
+     }
+    },
+    {
+     "name": "R2 rect panel Before/After |Δ| ≤ 0.5px",
+     "pass": true,
+     "detail": {
+      "after": [
+       198.6,
+       99.5,
+       162.4,
+       60.8
+      ],
+      "before": [
+       198.6,
+       99.5,
+       162.4,
+       60.8
+      ],
+      "maxDiff": 0
+     }
+    },
+    {
+     "name": "R2 rect plate Before/After |Δ| ≤ 0.5px",
+     "pass": true,
+     "detail": {
+      "after": [
+       207.6,
+       108.5,
+       144.4,
+       50.8
+      ],
+      "before": [
+       207.6,
+       108.5,
+       144.4,
+       50.8
+      ],
+      "maxDiff": 0
+     }
+    },
+    {
+     "name": "R2 rect bar Before/After |Δ| ≤ 0.5px",
+     "pass": true,
+     "detail": {
+      "after": [
+       214.6,
+       136.3,
+       130.4,
+       18
+      ],
+      "before": [
+       214.6,
+       136.3,
+       130.4,
+       18
+      ],
+      "maxDiff": 0
+     }
+    },
+    {
+     "name": "R2 rect fill Before/After |Δ| ≤ 0.5px",
+     "pass": true,
+     "detail": {
+      "after": [
+       214.6,
+       136.3,
+       47.8,
+       18
+      ],
+      "before": [
+       214.6,
+       136.3,
+       47.8,
+       18
+      ],
+      "maxDiff": 0
+     }
+    },
+    {
+     "name": "R2 rect enemyBar Before/After |Δ| ≤ 0.5px",
+     "pass": true,
+     "detail": {
+      "after": [
+       30,
+       136.3,
+       146.6,
+       18
+      ],
+      "before": [
+       30,
+       136.3,
+       146.6,
+       18
+      ],
+      "maxDiff": 0
+     }
+    },
+    {
+     "name": "R2 pill height same & inside bar",
+     "pass": true,
+     "detail": {
+      "after": [
+       242.8,
+       138.3,
+       73.9,
+       14
+      ],
+      "before": [
+       249.8,
+       138.3,
+       59.9,
+       14
+      ],
+      "bar": [
+       214.6,
+       136.3,
+       130.4,
+       18
+      ]
+     }
+    },
+    {
+     "name": "R2 label number same as Before",
+     "pass": true,
+     "detail": {
+      "after": "▽ 110 / 300",
+      "before": "110 / 300"
+     }
+    },
+    {
+     "name": "R2 Before has no band (regression baseline)",
+     "pass": true,
+     "detail": {
+      "panelClass": "panel player-panel",
+      "fill": "rgb(77, 189, 116)"
+     }
+    }
+   ],
+   "after": {
+    "side": "after",
+    "viewport": "sp375",
+    "enemy": "juuma",
+    "url": "http://127.0.0.1:4190/?seed=hpband-juuma",
+    "rounds": [
+     {
+      "round": 1,
+      "phase": "start",
+      "panelClass": "panel player-panel player-band-high",
+      "barClass": "hp-bar",
+      "fill": "rgb(77, 189, 116)",
+      "fillWidth": "100%",
+      "barShadow": "rgba(0, 0, 0, 0.9) 0px 1px 2px 0px inset, rgba(184, 145, 74, 0.45) 0px 0px 0px 1px",
+      "barAnimation": "none",
+      "marker": null,
+      "markerAriaHidden": null,
+      "label": "300 / 300",
+      "contrastOnFill": 11.73,
+      "markerContrast": null,
+      "enemyBarClass": "hp-bar",
+      "enemyBarShadow": "rgba(0, 0, 0, 0.9) 0px 1px 2px 0px inset, rgba(184, 145, 74, 0.45) 0px 0px 0px 1px",
+      "avatarFilter": "drop-shadow(rgba(0, 0, 0, 0.8) 0px 12px 16px) drop-shadow(rgba(77, 189, 116, 0.333) 0px 0px 22px) drop-shadow(rgba(255, 224, 170, 0.55) 0px 0px 1px)",
+      "rects": {
+       "panel": [
+        198.6,
+        99.5,
+        162.4,
+        60.8
+       ],
+       "plate": [
+        207.6,
+        108.5,
+        144.4,
+        50.8
+       ],
+       "bar": [
+        214.6,
+        136.3,
+        130.4,
+        18
+       ],
+       "text": [
+        249.8,
+        138.3,
+        59.9,
+        14
+       ],
+       "fill": [
+        214.6,
+        136.3,
+        130.4,
+        18
+       ],
+       "enemyBar": [
+        30,
+        136.3,
+        146.6,
+        18
+       ]
+      },
+      "docScrollW": 375,
+      "innerW": 375
+     },
+     {
+      "round": 1,
+      "phase": "afterEnemyTurn",
+      "panelClass": "panel player-panel player-band-high",
+      "barClass": "hp-bar",
+      "fill": "rgb(77, 189, 116)",
+      "fillWidth": "70%",
+      "barShadow": "rgba(0, 0, 0, 0.9) 0px 1px 2px 0px inset, rgba(184, 145, 74, 0.45) 0px 0px 0px 1px",
+      "barAnimation": "none",
+      "marker": null,
+      "markerAriaHidden": null,
+      "label": "210 / 300",
+      "contrastOnFill": 11.73,
+      "markerContrast": null,
+      "enemyBarClass": "hp-bar",
+      "enemyBarShadow": "rgba(0, 0, 0, 0.9) 0px 1px 2px 0px inset, rgba(184, 145, 74, 0.45) 0px 0px 0px 1px",
+      "avatarFilter": "drop-shadow(rgba(0, 0, 0, 0.8) 0px 12px 16px) drop-shadow(rgba(77, 189, 116, 0.333) 0px 0px 22px) drop-shadow(rgba(255, 224, 170, 0.55) 0px 0px 1px)",
+      "rects": {
+       "panel": [
+        198.6,
+        99.5,
+        162.4,
+        60.8
+       ],
+       "plate": [
+        207.6,
+        108.5,
+        144.4,
+        50.8
+       ],
+       "bar": [
+        214.6,
+        136.3,
+        130.4,
+        18
+       ],
+       "text": [
+        249.8,
+        138.3,
+        59.9,
+        14
+       ],
+       "fill": [
+        214.6,
+        136.3,
+        91.3,
+        18
+       ],
+       "enemyBar": [
+        30,
+        136.3,
+        146.6,
+        18
+       ]
+      },
+      "docScrollW": 375,
+      "innerW": 375
+     },
+     {
+      "round": 2,
+      "phase": "afterEnemyTurn",
+      "panelClass": "panel player-panel player-band-half",
+      "barClass": "hp-bar hp-bar-self-half",
+      "fill": "rgb(217, 164, 65)",
+      "fillWidth": "36.6667%",
+      "barShadow": "rgba(0, 0, 0, 0.9) 0px 1px 2px 0px inset, rgba(217, 164, 65, 0.8) 0px 0px 0px 1px",
+      "barAnimation": "none",
+      "marker": "▽ ",
+      "markerAriaHidden": "true",
+      "label": "▽ 110 / 300",
+      "contrastOnFill": 11.55,
+      "markerContrast": 11.55,
+      "enemyBarClass": "hp-bar",
+      "enemyBarShadow": "rgba(0, 0, 0, 0.9) 0px 1px 2px 0px inset, rgba(184, 145, 74, 0.45) 0px 0px 0px 1px",
+      "avatarFilter": "drop-shadow(rgba(0, 0, 0, 0.8) 0px 12px 16px) drop-shadow(rgba(77, 189, 116, 0.333) 0px 0px 22px) drop-shadow(rgba(255, 224, 170, 0.55) 0px 0px 1px)",
+      "rects": {
+       "panel": [
+        198.6,
+        99.5,
+        162.4,
+        60.8
+       ],
+       "plate": [
+        207.6,
+        108.5,
+        144.4,
+        50.8
+       ],
+       "bar": [
+        214.6,
+        136.3,
+        130.4,
+        18
+       ],
+       "text": [
+        242.8,
+        138.3,
+        73.9,
+        14
+       ],
+       "fill": [
+        214.6,
+        136.3,
+        47.8,
+        18
+       ],
+       "enemyBar": [
+        30,
+        136.3,
+        146.6,
+        18
+       ]
+      },
+      "docScrollW": 375,
+      "innerW": 375
+     }
+    ],
+    "errors": []
+   },
+   "before": {
+    "side": "before",
+    "viewport": "sp375",
+    "enemy": "juuma",
+    "url": "http://127.0.0.1:4191/?seed=hpband-juuma",
+    "rounds": [
+     {
+      "round": 1,
+      "phase": "start",
+      "panelClass": "panel player-panel",
+      "barClass": "hp-bar",
+      "fill": "rgb(77, 189, 116)",
+      "fillWidth": "100%",
+      "barShadow": "rgba(0, 0, 0, 0.9) 0px 1px 2px 0px inset, rgba(184, 145, 74, 0.45) 0px 0px 0px 1px",
+      "barAnimation": "none",
+      "marker": null,
+      "markerAriaHidden": null,
+      "label": "300 / 300",
+      "contrastOnFill": 11.73,
+      "markerContrast": null,
+      "enemyBarClass": "hp-bar",
+      "enemyBarShadow": "rgba(0, 0, 0, 0.9) 0px 1px 2px 0px inset, rgba(184, 145, 74, 0.45) 0px 0px 0px 1px",
+      "avatarFilter": "drop-shadow(rgba(0, 0, 0, 0.8) 0px 12px 16px) drop-shadow(rgba(77, 189, 116, 0.333) 0px 0px 22px) drop-shadow(rgba(255, 224, 170, 0.55) 0px 0px 1px)",
+      "rects": {
+       "panel": [
+        198.6,
+        99.5,
+        162.4,
+        60.8
+       ],
+       "plate": [
+        207.6,
+        108.5,
+        144.4,
+        50.8
+       ],
+       "bar": [
+        214.6,
+        136.3,
+        130.4,
+        18
+       ],
+       "text": [
+        249.8,
+        138.3,
+        59.9,
+        14
+       ],
+       "fill": [
+        214.6,
+        136.3,
+        130.4,
+        18
+       ],
+       "enemyBar": [
+        30,
+        136.3,
+        146.6,
+        18
+       ]
+      },
+      "docScrollW": 375,
+      "innerW": 375
+     },
+     {
+      "round": 1,
+      "phase": "afterEnemyTurn",
+      "panelClass": "panel player-panel",
+      "barClass": "hp-bar",
+      "fill": "rgb(77, 189, 116)",
+      "fillWidth": "70%",
+      "barShadow": "rgba(0, 0, 0, 0.9) 0px 1px 2px 0px inset, rgba(184, 145, 74, 0.45) 0px 0px 0px 1px",
+      "barAnimation": "none",
+      "marker": null,
+      "markerAriaHidden": null,
+      "label": "210 / 300",
+      "contrastOnFill": 11.73,
+      "markerContrast": null,
+      "enemyBarClass": "hp-bar",
+      "enemyBarShadow": "rgba(0, 0, 0, 0.9) 0px 1px 2px 0px inset, rgba(184, 145, 74, 0.45) 0px 0px 0px 1px",
+      "avatarFilter": "drop-shadow(rgba(0, 0, 0, 0.8) 0px 12px 16px) drop-shadow(rgba(77, 189, 116, 0.333) 0px 0px 22px) drop-shadow(rgba(255, 224, 170, 0.55) 0px 0px 1px)",
+      "rects": {
+       "panel": [
+        198.6,
+        99.5,
+        162.4,
+        60.8
+       ],
+       "plate": [
+        207.6,
+        108.5,
+        144.4,
+        50.8
+       ],
+       "bar": [
+        214.6,
+        136.3,
+        130.4,
+        18
+       ],
+       "text": [
+        249.8,
+        138.3,
+        59.9,
+        14
+       ],
+       "fill": [
+        214.6,
+        136.3,
+        91.3,
+        18
+       ],
+       "enemyBar": [
+        30,
+        136.3,
+        146.6,
+        18
+       ]
+      },
+      "docScrollW": 375,
+      "innerW": 375
+     },
+     {
+      "round": 2,
+      "phase": "afterEnemyTurn",
+      "panelClass": "panel player-panel",
+      "barClass": "hp-bar",
+      "fill": "rgb(77, 189, 116)",
+      "fillWidth": "36.6667%",
+      "barShadow": "rgba(0, 0, 0, 0.9) 0px 1px 2px 0px inset, rgba(184, 145, 74, 0.45) 0px 0px 0px 1px",
+      "barAnimation": "none",
+      "marker": null,
+      "markerAriaHidden": null,
+      "label": "110 / 300",
+      "contrastOnFill": 11.73,
+      "markerContrast": null,
+      "enemyBarClass": "hp-bar",
+      "enemyBarShadow": "rgba(0, 0, 0, 0.9) 0px 1px 2px 0px inset, rgba(184, 145, 74, 0.45) 0px 0px 0px 1px",
+      "avatarFilter": "drop-shadow(rgba(0, 0, 0, 0.8) 0px 12px 16px) drop-shadow(rgba(77, 189, 116, 0.333) 0px 0px 22px) drop-shadow(rgba(255, 224, 170, 0.55) 0px 0px 1px)",
+      "rects": {
+       "panel": [
+        198.6,
+        99.5,
+        162.4,
+        60.8
+       ],
+       "plate": [
+        207.6,
+        108.5,
+        144.4,
+        50.8
+       ],
+       "bar": [
+        214.6,
+        136.3,
+        130.4,
+        18
+       ],
+       "text": [
+        249.8,
+        138.3,
+        59.9,
+        14
+       ],
+       "fill": [
+        214.6,
+        136.3,
+        47.8,
+        18
+       ],
+       "enemyBar": [
+        30,
+        136.3,
+        146.6,
+        18
+       ]
+      },
+      "docScrollW": 375,
+      "innerW": 375
+     }
+    ],
+    "errors": []
+   }
+  },
+  {
+   "viewport": "sp375",
+   "enemy": "trial",
+   "pass": true,
+   "checks": [
+    {
+     "name": "JS error 0 (after)",
+     "pass": true,
+     "detail": []
+    },
+    {
+     "name": "JS error 0 (before)",
+     "pass": true,
+     "detail": []
+    },
+    {
+     "name": "R1 start band = high / no marker / green fill",
+     "pass": true,
+     "detail": {
+      "band": "high",
+      "fill": "rgb(77, 189, 116)"
+     }
+    },
+    {
+     "name": "R1 band = high",
+     "pass": true,
+     "detail": {
+      "band": "high",
+      "label": "250 / 300",
+      "fill": "rgb(77, 189, 116)",
+      "barClass": "hp-bar"
+     }
+    },
+    {
+     "name": "R1 high: no self class / no marker / green",
+     "pass": true,
+     "detail": "rgba(0, 0, 0, 0.9) 0px 1px 2px 0px inset, rgba(184, 145, 74, 0.45) 0px 0px 0px 1px"
+    },
+    {
+     "name": "R1 label contrast ≥4.5 on fill",
+     "pass": true,
+     "detail": {
+      "contrastOnFill": 11.73,
+      "markerContrast": null
+     }
+    },
+    {
+     "name": "R1 no animation on .hp-bar",
+     "pass": true,
+     "detail": "none"
+    },
+    {
+     "name": "R1 enemy bar untouched (no self class)",
+     "pass": true,
+     "detail": "hp-bar"
+    },
+    {
+     "name": "R1 no horizontal overflow",
+     "pass": true,
+     "detail": {
+      "scrollW": 375,
+      "innerW": 375
+     }
+    },
+    {
+     "name": "R1 rect panel Before/After |Δ| ≤ 0.5px",
+     "pass": true,
+     "detail": {
+      "after": [
+       198.6,
+       99.5,
+       162.4,
+       60.8
+      ],
+      "before": [
+       198.6,
+       99.5,
+       162.4,
+       60.8
+      ],
+      "maxDiff": 0
+     }
+    },
+    {
+     "name": "R1 rect plate Before/After |Δ| ≤ 0.5px",
+     "pass": true,
+     "detail": {
+      "after": [
+       207.6,
+       108.5,
+       144.4,
+       50.8
+      ],
+      "before": [
+       207.6,
+       108.5,
+       144.4,
+       50.8
+      ],
+      "maxDiff": 0
+     }
+    },
+    {
+     "name": "R1 rect bar Before/After |Δ| ≤ 0.5px",
+     "pass": true,
+     "detail": {
+      "after": [
+       214.6,
+       136.3,
+       130.4,
+       18
+      ],
+      "before": [
+       214.6,
+       136.3,
+       130.4,
+       18
+      ],
+      "maxDiff": 0
+     }
+    },
+    {
+     "name": "R1 rect fill Before/After |Δ| ≤ 0.5px",
+     "pass": true,
+     "detail": {
+      "after": [
+       214.6,
+       136.3,
+       108.7,
+       18
+      ],
+      "before": [
+       214.6,
+       136.3,
+       108.7,
+       18
+      ],
+      "maxDiff": 0
+     }
+    },
+    {
+     "name": "R1 rect enemyBar Before/After |Δ| ≤ 0.5px",
+     "pass": true,
+     "detail": {
+      "after": [
+       30,
+       136.3,
+       146.6,
+       18
+      ],
+      "before": [
+       30,
+       136.3,
+       146.6,
+       18
+      ],
+      "maxDiff": 0
+     }
+    },
+    {
+     "name": "R1 pill height same & inside bar",
+     "pass": true,
+     "detail": {
+      "after": [
+       249.8,
+       138.3,
+       59.9,
+       14
+      ],
+      "before": [
+       249.8,
+       138.3,
+       59.9,
+       14
+      ],
+      "bar": [
+       214.6,
+       136.3,
+       130.4,
+       18
+      ]
+     }
+    },
+    {
+     "name": "R1 label number same as Before",
+     "pass": true,
+     "detail": {
+      "after": "250 / 300",
+      "before": "250 / 300"
+     }
+    },
+    {
+     "name": "R1 Before has no band (regression baseline)",
+     "pass": true,
+     "detail": {
+      "panelClass": "panel player-panel",
+      "fill": "rgb(77, 189, 116)"
+     }
+    },
+    {
+     "name": "R2 band = high",
+     "pass": true,
+     "detail": {
+      "band": "high",
+      "label": "170 / 300",
+      "fill": "rgb(77, 189, 116)",
+      "barClass": "hp-bar"
+     }
+    },
+    {
+     "name": "R2 high: no self class / no marker / green",
+     "pass": true,
+     "detail": "rgba(0, 0, 0, 0.9) 0px 1px 2px 0px inset, rgba(184, 145, 74, 0.45) 0px 0px 0px 1px"
+    },
+    {
+     "name": "R2 label contrast ≥4.5 on fill",
+     "pass": true,
+     "detail": {
+      "contrastOnFill": 11.73,
+      "markerContrast": null
+     }
+    },
+    {
+     "name": "R2 no animation on .hp-bar",
+     "pass": true,
+     "detail": "none"
+    },
+    {
+     "name": "R2 enemy bar untouched (no self class)",
+     "pass": true,
+     "detail": "hp-bar"
+    },
+    {
+     "name": "R2 no horizontal overflow",
+     "pass": true,
+     "detail": {
+      "scrollW": 375,
+      "innerW": 375
+     }
+    },
+    {
+     "name": "R2 rect panel Before/After |Δ| ≤ 0.5px",
+     "pass": true,
+     "detail": {
+      "after": [
+       198.6,
+       99.5,
+       162.4,
+       60.8
+      ],
+      "before": [
+       198.6,
+       99.5,
+       162.4,
+       60.8
+      ],
+      "maxDiff": 0
+     }
+    },
+    {
+     "name": "R2 rect plate Before/After |Δ| ≤ 0.5px",
+     "pass": true,
+     "detail": {
+      "after": [
+       207.6,
+       108.5,
+       144.4,
+       50.8
+      ],
+      "before": [
+       207.6,
+       108.5,
+       144.4,
+       50.8
+      ],
+      "maxDiff": 0
+     }
+    },
+    {
+     "name": "R2 rect bar Before/After |Δ| ≤ 0.5px",
+     "pass": true,
+     "detail": {
+      "after": [
+       214.6,
+       136.3,
+       130.4,
+       18
+      ],
+      "before": [
+       214.6,
+       136.3,
+       130.4,
+       18
+      ],
+      "maxDiff": 0
+     }
+    },
+    {
+     "name": "R2 rect fill Before/After |Δ| ≤ 0.5px",
+     "pass": true,
+     "detail": {
+      "after": [
+       214.6,
+       136.3,
+       73.9,
+       18
+      ],
+      "before": [
+       214.6,
+       136.3,
+       73.9,
+       18
+      ],
+      "maxDiff": 0
+     }
+    },
+    {
+     "name": "R2 rect enemyBar Before/After |Δ| ≤ 0.5px",
+     "pass": true,
+     "detail": {
+      "after": [
+       30,
+       136.3,
+       146.6,
+       18
+      ],
+      "before": [
+       30,
+       136.3,
+       146.6,
+       18
+      ],
+      "maxDiff": 0
+     }
+    },
+    {
+     "name": "R2 pill height same & inside bar",
+     "pass": true,
+     "detail": {
+      "after": [
+       249.8,
+       138.3,
+       59.9,
+       14
+      ],
+      "before": [
+       249.8,
+       138.3,
+       59.9,
+       14
+      ],
+      "bar": [
+       214.6,
+       136.3,
+       130.4,
+       18
+      ]
+     }
+    },
+    {
+     "name": "R2 label number same as Before",
+     "pass": true,
+     "detail": {
+      "after": "170 / 300",
+      "before": "170 / 300"
+     }
+    },
+    {
+     "name": "R2 Before has no band (regression baseline)",
+     "pass": true,
+     "detail": {
+      "panelClass": "panel player-panel",
+      "fill": "rgb(77, 189, 116)"
+     }
+    },
+    {
+     "name": "R3 band = quarter",
+     "pass": true,
+     "detail": {
+      "band": "quarter",
+      "label": "▼ 60 / 300",
+      "fill": "rgb(255, 122, 69)",
+      "barClass": "hp-bar hp-bar-self-quarter"
+     }
+    },
+    {
+     "name": "R3 quarter: orange-red fill #ff7a45",
+     "pass": true,
+     "detail": "rgb(255, 122, 69)"
+    },
+    {
+     "name": "R3 quarter: class hp-bar-self-quarter + marker ▼",
+     "pass": true,
+     "detail": {
+      "barClass": "hp-bar hp-bar-self-quarter",
+      "marker": "▼ "
+     }
+    },
+    {
+     "name": "R3 quarter: 2px ring + 12px glow",
+     "pass": true,
+     "detail": "rgba(0, 0, 0, 0.9) 0px 1px 2px 0px inset, rgba(255, 122, 69, 0.8) 0px 0px 0px 2px, rgba(255, 122, 69, 0.333) 0px 0px 12px 0px"
+    },
+    {
+     "name": "R3 label contrast ≥4.5 on fill",
+     "pass": true,
+     "detail": {
+      "contrastOnFill": 12.11,
+      "markerContrast": 12.11
+     }
+    },
+    {
+     "name": "R3 no animation on .hp-bar",
+     "pass": true,
+     "detail": "none"
+    },
+    {
+     "name": "R3 enemy bar untouched (no self class)",
+     "pass": true,
+     "detail": "hp-bar"
+    },
+    {
+     "name": "R3 no horizontal overflow",
+     "pass": true,
+     "detail": {
+      "scrollW": 375,
+      "innerW": 375
+     }
+    },
+    {
+     "name": "R3 rect panel Before/After |Δ| ≤ 0.5px",
+     "pass": true,
+     "detail": {
+      "after": [
+       198.6,
+       99.5,
+       162.4,
+       60.8
+      ],
+      "before": [
+       198.6,
+       99.5,
+       162.4,
+       60.8
+      ],
+      "maxDiff": 0
+     }
+    },
+    {
+     "name": "R3 rect plate Before/After |Δ| ≤ 0.5px",
+     "pass": true,
+     "detail": {
+      "after": [
+       207.6,
+       108.5,
+       144.4,
+       50.8
+      ],
+      "before": [
+       207.6,
+       108.5,
+       144.4,
+       50.8
+      ],
+      "maxDiff": 0
+     }
+    },
+    {
+     "name": "R3 rect bar Before/After |Δ| ≤ 0.5px",
+     "pass": true,
+     "detail": {
+      "after": [
+       214.6,
+       136.3,
+       130.4,
+       18
+      ],
+      "before": [
+       214.6,
+       136.3,
+       130.4,
+       18
+      ],
+      "maxDiff": 0
+     }
+    },
+    {
+     "name": "R3 rect fill Before/After |Δ| ≤ 0.5px",
+     "pass": true,
+     "detail": {
+      "after": [
+       214.6,
+       136.3,
+       26.1,
+       18
+      ],
+      "before": [
+       214.6,
+       136.3,
+       26.1,
+       18
+      ],
+      "maxDiff": 0
+     }
+    },
+    {
+     "name": "R3 rect enemyBar Before/After |Δ| ≤ 0.5px",
+     "pass": true,
+     "detail": {
+      "after": [
+       30,
+       136.3,
+       146.6,
+       18
+      ],
+      "before": [
+       30,
+       136.3,
+       146.6,
+       18
+      ],
+      "maxDiff": 0
+     }
+    },
+    {
+     "name": "R3 pill height same & inside bar",
+     "pass": true,
+     "detail": {
+      "after": [
+       245.8,
+       138.3,
+       68,
+       14
+      ],
+      "before": [
+       252.8,
+       138.3,
+       54,
+       14
+      ],
+      "bar": [
+       214.6,
+       136.3,
+       130.4,
+       18
+      ]
+     }
+    },
+    {
+     "name": "R3 label number same as Before",
+     "pass": true,
+     "detail": {
+      "after": "▼ 60 / 300",
+      "before": "60 / 300"
+     }
+    },
+    {
+     "name": "R3 Before has no band (regression baseline)",
+     "pass": true,
+     "detail": {
+      "panelClass": "panel player-panel",
+      "fill": "rgb(77, 189, 116)"
+     }
+    }
+   ],
+   "after": {
+    "side": "after",
+    "viewport": "sp375",
+    "enemy": "trial",
+    "url": "http://127.0.0.1:4190/?seed=hpband-trial",
+    "rounds": [
+     {
+      "round": 1,
+      "phase": "start",
+      "panelClass": "panel player-panel player-band-high",
+      "barClass": "hp-bar",
+      "fill": "rgb(77, 189, 116)",
+      "fillWidth": "100%",
+      "barShadow": "rgba(0, 0, 0, 0.9) 0px 1px 2px 0px inset, rgba(184, 145, 74, 0.45) 0px 0px 0px 1px",
+      "barAnimation": "none",
+      "marker": null,
+      "markerAriaHidden": null,
+      "label": "300 / 300",
+      "contrastOnFill": 11.73,
+      "markerContrast": null,
+      "enemyBarClass": "hp-bar",
+      "enemyBarShadow": "rgba(0, 0, 0, 0.9) 0px 1px 2px 0px inset, rgba(184, 145, 74, 0.45) 0px 0px 0px 1px",
+      "avatarFilter": "drop-shadow(rgba(0, 0, 0, 0.8) 0px 12px 16px) drop-shadow(rgba(77, 189, 116, 0.333) 0px 0px 22px) drop-shadow(rgba(255, 224, 170, 0.55) 0px 0px 1px)",
+      "rects": {
+       "panel": [
+        198.6,
+        99.5,
+        162.4,
+        60.8
+       ],
+       "plate": [
+        207.6,
+        108.5,
+        144.4,
+        50.8
+       ],
+       "bar": [
+        214.6,
+        136.3,
+        130.4,
+        18
+       ],
+       "text": [
+        249.8,
+        138.3,
+        59.9,
+        14
+       ],
+       "fill": [
+        214.6,
+        136.3,
+        130.4,
+        18
+       ],
+       "enemyBar": [
+        30,
+        136.3,
+        146.6,
+        18
+       ]
+      },
+      "docScrollW": 375,
+      "innerW": 375
+     },
+     {
+      "round": 1,
+      "phase": "afterEnemyTurn",
+      "panelClass": "panel player-panel player-band-high",
+      "barClass": "hp-bar",
+      "fill": "rgb(77, 189, 116)",
+      "fillWidth": "83.3333%",
+      "barShadow": "rgba(0, 0, 0, 0.9) 0px 1px 2px 0px inset, rgba(184, 145, 74, 0.45) 0px 0px 0px 1px",
+      "barAnimation": "none",
+      "marker": null,
+      "markerAriaHidden": null,
+      "label": "250 / 300",
+      "contrastOnFill": 11.73,
+      "markerContrast": null,
+      "enemyBarClass": "hp-bar",
+      "enemyBarShadow": "rgba(0, 0, 0, 0.9) 0px 1px 2px 0px inset, rgba(184, 145, 74, 0.45) 0px 0px 0px 1px",
+      "avatarFilter": "drop-shadow(rgba(0, 0, 0, 0.8) 0px 12px 16px) drop-shadow(rgba(77, 189, 116, 0.333) 0px 0px 22px) drop-shadow(rgba(255, 224, 170, 0.55) 0px 0px 1px)",
+      "rects": {
+       "panel": [
+        198.6,
+        99.5,
+        162.4,
+        60.8
+       ],
+       "plate": [
+        207.6,
+        108.5,
+        144.4,
+        50.8
+       ],
+       "bar": [
+        214.6,
+        136.3,
+        130.4,
+        18
+       ],
+       "text": [
+        249.8,
+        138.3,
+        59.9,
+        14
+       ],
+       "fill": [
+        214.6,
+        136.3,
+        108.7,
+        18
+       ],
+       "enemyBar": [
+        30,
+        136.3,
+        146.6,
+        18
+       ]
+      },
+      "docScrollW": 375,
+      "innerW": 375
+     },
+     {
+      "round": 2,
+      "phase": "afterEnemyTurn",
+      "panelClass": "panel player-panel player-band-high",
+      "barClass": "hp-bar",
+      "fill": "rgb(77, 189, 116)",
+      "fillWidth": "56.6667%",
+      "barShadow": "rgba(0, 0, 0, 0.9) 0px 1px 2px 0px inset, rgba(184, 145, 74, 0.45) 0px 0px 0px 1px",
+      "barAnimation": "none",
+      "marker": null,
+      "markerAriaHidden": null,
+      "label": "170 / 300",
+      "contrastOnFill": 11.73,
+      "markerContrast": null,
+      "enemyBarClass": "hp-bar",
+      "enemyBarShadow": "rgba(0, 0, 0, 0.9) 0px 1px 2px 0px inset, rgba(184, 145, 74, 0.45) 0px 0px 0px 1px",
+      "avatarFilter": "drop-shadow(rgba(0, 0, 0, 0.8) 0px 12px 16px) drop-shadow(rgba(77, 189, 116, 0.333) 0px 0px 22px) drop-shadow(rgba(255, 224, 170, 0.55) 0px 0px 1px)",
+      "rects": {
+       "panel": [
+        198.6,
+        99.5,
+        162.4,
+        60.8
+       ],
+       "plate": [
+        207.6,
+        108.5,
+        144.4,
+        50.8
+       ],
+       "bar": [
+        214.6,
+        136.3,
+        130.4,
+        18
+       ],
+       "text": [
+        249.8,
+        138.3,
+        59.9,
+        14
+       ],
+       "fill": [
+        214.6,
+        136.3,
+        73.9,
+        18
+       ],
+       "enemyBar": [
+        30,
+        136.3,
+        146.6,
+        18
+       ]
+      },
+      "docScrollW": 375,
+      "innerW": 375
+     },
+     {
+      "round": 3,
+      "phase": "afterEnemyTurn",
+      "panelClass": "panel player-panel player-band-quarter",
+      "barClass": "hp-bar hp-bar-self-quarter",
+      "fill": "rgb(255, 122, 69)",
+      "fillWidth": "20%",
+      "barShadow": "rgba(0, 0, 0, 0.9) 0px 1px 2px 0px inset, rgba(255, 122, 69, 0.8) 0px 0px 0px 2px, rgba(255, 122, 69, 0.333) 0px 0px 12px 0px",
+      "barAnimation": "none",
+      "marker": "▼ ",
+      "markerAriaHidden": "true",
+      "label": "▼ 60 / 300",
+      "contrastOnFill": 12.11,
+      "markerContrast": 12.11,
+      "enemyBarClass": "hp-bar",
+      "enemyBarShadow": "rgba(0, 0, 0, 0.9) 0px 1px 2px 0px inset, rgba(184, 145, 74, 0.45) 0px 0px 0px 1px",
+      "avatarFilter": "drop-shadow(rgba(0, 0, 0, 0.8) 0px 12px 16px) drop-shadow(rgba(77, 189, 116, 0.333) 0px 0px 22px) drop-shadow(rgba(255, 224, 170, 0.55) 0px 0px 1px)",
+      "rects": {
+       "panel": [
+        198.6,
+        99.5,
+        162.4,
+        60.8
+       ],
+       "plate": [
+        207.6,
+        108.5,
+        144.4,
+        50.8
+       ],
+       "bar": [
+        214.6,
+        136.3,
+        130.4,
+        18
+       ],
+       "text": [
+        245.8,
+        138.3,
+        68,
+        14
+       ],
+       "fill": [
+        214.6,
+        136.3,
+        26.1,
+        18
+       ],
+       "enemyBar": [
+        30,
+        136.3,
+        146.6,
+        18
+       ]
+      },
+      "docScrollW": 375,
+      "innerW": 375
+     }
+    ],
+    "errors": []
+   },
+   "before": {
+    "side": "before",
+    "viewport": "sp375",
+    "enemy": "trial",
+    "url": "http://127.0.0.1:4191/?seed=hpband-trial",
+    "rounds": [
+     {
+      "round": 1,
+      "phase": "start",
+      "panelClass": "panel player-panel",
+      "barClass": "hp-bar",
+      "fill": "rgb(77, 189, 116)",
+      "fillWidth": "100%",
+      "barShadow": "rgba(0, 0, 0, 0.9) 0px 1px 2px 0px inset, rgba(184, 145, 74, 0.45) 0px 0px 0px 1px",
+      "barAnimation": "none",
+      "marker": null,
+      "markerAriaHidden": null,
+      "label": "300 / 300",
+      "contrastOnFill": 11.73,
+      "markerContrast": null,
+      "enemyBarClass": "hp-bar",
+      "enemyBarShadow": "rgba(0, 0, 0, 0.9) 0px 1px 2px 0px inset, rgba(184, 145, 74, 0.45) 0px 0px 0px 1px",
+      "avatarFilter": "drop-shadow(rgba(0, 0, 0, 0.8) 0px 12px 16px) drop-shadow(rgba(77, 189, 116, 0.333) 0px 0px 22px) drop-shadow(rgba(255, 224, 170, 0.55) 0px 0px 1px)",
+      "rects": {
+       "panel": [
+        198.6,
+        99.5,
+        162.4,
+        60.8
+       ],
+       "plate": [
+        207.6,
+        108.5,
+        144.4,
+        50.8
+       ],
+       "bar": [
+        214.6,
+        136.3,
+        130.4,
+        18
+       ],
+       "text": [
+        249.8,
+        138.3,
+        59.9,
+        14
+       ],
+       "fill": [
+        214.6,
+        136.3,
+        130.4,
+        18
+       ],
+       "enemyBar": [
+        30,
+        136.3,
+        146.6,
+        18
+       ]
+      },
+      "docScrollW": 375,
+      "innerW": 375
+     },
+     {
+      "round": 1,
+      "phase": "afterEnemyTurn",
+      "panelClass": "panel player-panel",
+      "barClass": "hp-bar",
+      "fill": "rgb(77, 189, 116)",
+      "fillWidth": "83.3333%",
+      "barShadow": "rgba(0, 0, 0, 0.9) 0px 1px 2px 0px inset, rgba(184, 145, 74, 0.45) 0px 0px 0px 1px",
+      "barAnimation": "none",
+      "marker": null,
+      "markerAriaHidden": null,
+      "label": "250 / 300",
+      "contrastOnFill": 11.73,
+      "markerContrast": null,
+      "enemyBarClass": "hp-bar",
+      "enemyBarShadow": "rgba(0, 0, 0, 0.9) 0px 1px 2px 0px inset, rgba(184, 145, 74, 0.45) 0px 0px 0px 1px",
+      "avatarFilter": "drop-shadow(rgba(0, 0, 0, 0.8) 0px 12px 16px) drop-shadow(rgba(77, 189, 116, 0.333) 0px 0px 22px) drop-shadow(rgba(255, 224, 170, 0.55) 0px 0px 1px)",
+      "rects": {
+       "panel": [
+        198.6,
+        99.5,
+        162.4,
+        60.8
+       ],
+       "plate": [
+        207.6,
+        108.5,
+        144.4,
+        50.8
+       ],
+       "bar": [
+        214.6,
+        136.3,
+        130.4,
+        18
+       ],
+       "text": [
+        249.8,
+        138.3,
+        59.9,
+        14
+       ],
+       "fill": [
+        214.6,
+        136.3,
+        108.7,
+        18
+       ],
+       "enemyBar": [
+        30,
+        136.3,
+        146.6,
+        18
+       ]
+      },
+      "docScrollW": 375,
+      "innerW": 375
+     },
+     {
+      "round": 2,
+      "phase": "afterEnemyTurn",
+      "panelClass": "panel player-panel",
+      "barClass": "hp-bar",
+      "fill": "rgb(77, 189, 116)",
+      "fillWidth": "56.6667%",
+      "barShadow": "rgba(0, 0, 0, 0.9) 0px 1px 2px 0px inset, rgba(184, 145, 74, 0.45) 0px 0px 0px 1px",
+      "barAnimation": "none",
+      "marker": null,
+      "markerAriaHidden": null,
+      "label": "170 / 300",
+      "contrastOnFill": 11.73,
+      "markerContrast": null,
+      "enemyBarClass": "hp-bar",
+      "enemyBarShadow": "rgba(0, 0, 0, 0.9) 0px 1px 2px 0px inset, rgba(184, 145, 74, 0.45) 0px 0px 0px 1px",
+      "avatarFilter": "drop-shadow(rgba(0, 0, 0, 0.8) 0px 12px 16px) drop-shadow(rgba(77, 189, 116, 0.333) 0px 0px 22px) drop-shadow(rgba(255, 224, 170, 0.55) 0px 0px 1px)",
+      "rects": {
+       "panel": [
+        198.6,
+        99.5,
+        162.4,
+        60.8
+       ],
+       "plate": [
+        207.6,
+        108.5,
+        144.4,
+        50.8
+       ],
+       "bar": [
+        214.6,
+        136.3,
+        130.4,
+        18
+       ],
+       "text": [
+        249.8,
+        138.3,
+        59.9,
+        14
+       ],
+       "fill": [
+        214.6,
+        136.3,
+        73.9,
+        18
+       ],
+       "enemyBar": [
+        30,
+        136.3,
+        146.6,
+        18
+       ]
+      },
+      "docScrollW": 375,
+      "innerW": 375
+     },
+     {
+      "round": 3,
+      "phase": "afterEnemyTurn",
+      "panelClass": "panel player-panel",
+      "barClass": "hp-bar",
+      "fill": "rgb(77, 189, 116)",
+      "fillWidth": "20%",
+      "barShadow": "rgba(0, 0, 0, 0.9) 0px 1px 2px 0px inset, rgba(184, 145, 74, 0.45) 0px 0px 0px 1px",
+      "barAnimation": "none",
+      "marker": null,
+      "markerAriaHidden": null,
+      "label": "60 / 300",
+      "contrastOnFill": 11.73,
+      "markerContrast": null,
+      "enemyBarClass": "hp-bar",
+      "enemyBarShadow": "rgba(0, 0, 0, 0.9) 0px 1px 2px 0px inset, rgba(184, 145, 74, 0.45) 0px 0px 0px 1px",
+      "avatarFilter": "drop-shadow(rgba(0, 0, 0, 0.8) 0px 12px 16px) drop-shadow(rgba(77, 189, 116, 0.333) 0px 0px 22px) drop-shadow(rgba(255, 224, 170, 0.55) 0px 0px 1px)",
+      "rects": {
+       "panel": [
+        198.6,
+        99.5,
+        162.4,
+        60.8
+       ],
+       "plate": [
+        207.6,
+        108.5,
+        144.4,
+        50.8
+       ],
+       "bar": [
+        214.6,
+        136.3,
+        130.4,
+        18
+       ],
+       "text": [
+        252.8,
+        138.3,
+        54,
+        14
+       ],
+       "fill": [
+        214.6,
+        136.3,
+        26.1,
+        18
+       ],
+       "enemyBar": [
+        30,
+        136.3,
+        146.6,
+        18
+       ]
+      },
+      "docScrollW": 375,
+      "innerW": 375
+     }
+    ],
+    "errors": []
+   }
+  }
+ ]
+}

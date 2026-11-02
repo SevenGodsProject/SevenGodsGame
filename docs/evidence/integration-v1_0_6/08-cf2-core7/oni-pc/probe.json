@@ -1,0 +1,1505 @@
+{
+  "summary": {
+    "base": "http://127.0.0.1:4190",
+    "reducedMotion": false,
+    "generatedAt": "2026-10-30T19:27:18.317Z",
+    "viewports": [
+      {
+        "viewport": "pc",
+        "enemyName": "業斧の鬼将",
+        "turns": 23,
+        "cardPlays": 17,
+        "heavyStrikes": 5,
+        "fxTotal": 39,
+        "fxOffViewport": 0,
+        "fxOverPlate": 0,
+        "fxOverBubble": 0,
+        "fxOverDock": 0,
+        "enemyFxCenterInAvatar": "22/22",
+        "bandTransitions": [
+          {
+            "turn": 17,
+            "t": 1180,
+            "band": "half"
+          },
+          {
+            "turn": 21,
+            "t": 770,
+            "band": "quarter"
+          }
+        ],
+        "cf2Seen": [
+          "cf2-break cf2-break-half@DIV",
+          "cf2-break cf2-break-quarter@DIV"
+        ],
+        "finished": true,
+        "errors": 0,
+        "layout": {
+          "vw": 1508,
+          "vh": 660,
+          "scrollW": 1508,
+          "enemyAvatar": {
+            "x": 479,
+            "y": 94,
+            "w": 318,
+            "h": 302
+          },
+          "enemyStage": {
+            "x": 488,
+            "y": 113,
+            "w": 300,
+            "h": 285
+          },
+          "enemyPlate": {
+            "x": 155,
+            "y": 113,
+            "w": 325,
+            "h": 86
+          },
+          "bubble": {
+            "x": 0,
+            "y": 0,
+            "w": 0,
+            "h": 0
+          },
+          "godAvatar": {
+            "x": 819,
+            "y": 109,
+            "w": 261,
+            "h": 288
+          },
+          "dock": {
+            "x": 134,
+            "y": 426,
+            "w": 1240,
+            "h": 228
+          },
+          "hand": {
+            "x": 134,
+            "y": 490,
+            "w": 1118,
+            "h": 164
+          },
+          "hitLayer": {
+            "x": 488,
+            "y": 113,
+            "w": 300,
+            "h": 285
+          }
+        }
+      }
+    ]
+  },
+  "results": [
+    {
+      "viewport": "pc",
+      "enemyName": "業斧の鬼将",
+      "layout": {
+        "vw": 1508,
+        "vh": 660,
+        "scrollW": 1508,
+        "enemyAvatar": {
+          "x": 479,
+          "y": 94,
+          "w": 318,
+          "h": 302
+        },
+        "enemyStage": {
+          "x": 488,
+          "y": 113,
+          "w": 300,
+          "h": 285
+        },
+        "enemyPlate": {
+          "x": 155,
+          "y": 113,
+          "w": 325,
+          "h": 86
+        },
+        "bubble": {
+          "x": 0,
+          "y": 0,
+          "w": 0,
+          "h": 0
+        },
+        "godAvatar": {
+          "x": 819,
+          "y": 109,
+          "w": 261,
+          "h": 288
+        },
+        "dock": {
+          "x": 134,
+          "y": 426,
+          "w": 1240,
+          "h": 228
+        },
+        "hand": {
+          "x": 134,
+          "y": 490,
+          "w": 1118,
+          "h": 164
+        },
+        "hitLayer": {
+          "x": 488,
+          "y": 113,
+          "w": 300,
+          "h": 285
+        }
+      },
+      "turns": [
+        {
+          "i": 1,
+          "action": {
+            "kind": "card",
+            "name": "🛡 鉄壁の構え",
+            "breakShot": null
+          },
+          "bandBefore": "high",
+          "bandAfter": "high",
+          "heavy": false,
+          "bands": [
+            {
+              "t": 66,
+              "band": "high"
+            }
+          ],
+          "cf2": [],
+          "fx": [],
+          "frames": 0
+        },
+        {
+          "i": 2,
+          "action": {
+            "kind": "endRound"
+          },
+          "bandBefore": "high",
+          "bandAfter": "high",
+          "heavy": false,
+          "bands": [
+            {
+              "t": 38,
+              "band": "high"
+            }
+          ],
+          "cf2": [],
+          "fx": [
+            {
+              "sel": ".player-hit-layer .floating-number",
+              "text": "軽減50",
+              "frames": 12,
+              "offViewport": 0,
+              "overPlate": 0,
+              "overBubble": 0,
+              "overDock": 0,
+              "centerInAvatar": 12,
+              "minY": 183,
+              "maxY": 240,
+              "minX": 863,
+              "maxX": 931,
+              "area": 2244
+            },
+            {
+              "sel": ".player-panel .floating-number",
+              "text": "軽減50",
+              "frames": 12,
+              "offViewport": 0,
+              "overPlate": 0,
+              "overBubble": 0,
+              "overDock": 0,
+              "centerInAvatar": 12,
+              "minY": 183,
+              "maxY": 240,
+              "minX": 863,
+              "maxX": 931,
+              "area": 2244
+            }
+          ],
+          "frames": 17
+        },
+        {
+          "i": 3,
+          "action": {
+            "kind": "card",
+            "name": "✨ 巫女の舞",
+            "breakShot": null
+          },
+          "bandBefore": "high",
+          "bandAfter": "high",
+          "heavy": false,
+          "bands": [
+            {
+              "t": 54,
+              "band": "high"
+            }
+          ],
+          "cf2": [],
+          "fx": [],
+          "frames": 0
+        },
+        {
+          "i": 4,
+          "action": {
+            "kind": "card",
+            "name": "⚔ 豪快な一撃",
+            "breakShot": null
+          },
+          "bandBefore": "high",
+          "bandAfter": "high",
+          "heavy": false,
+          "bands": [
+            {
+              "t": 101,
+              "band": "high"
+            }
+          ],
+          "cf2": [],
+          "fx": [
+            {
+              "sel": ".enemy-hit-layer .slash-fx",
+              "text": "",
+              "frames": 92,
+              "offViewport": 0,
+              "overPlate": 0,
+              "overBubble": 0,
+              "overDock": 0,
+              "centerInAvatar": 92,
+              "minY": 175,
+              "maxY": 334,
+              "minX": 518,
+              "maxX": 758,
+              "area": 38160
+            },
+            {
+              "sel": ".enemy-hit-layer .floating-number",
+              "text": "-140",
+              "frames": 9,
+              "offViewport": 0,
+              "overPlate": 0,
+              "overBubble": 0,
+              "overDock": 0,
+              "centerInAvatar": 9,
+              "minY": 187,
+              "maxY": 242,
+              "minX": 617,
+              "maxX": 660,
+              "area": 1419
+            },
+            {
+              "sel": ".player-hit-layer .floating-number",
+              "text": "-20",
+              "frames": 9,
+              "offViewport": 0,
+              "overPlate": 0,
+              "overBubble": 0,
+              "overDock": 0,
+              "centerInAvatar": 9,
+              "minY": 187,
+              "maxY": 233,
+              "minX": 937,
+              "maxX": 961,
+              "area": 576
+            },
+            {
+              "sel": ".player-panel .floating-number",
+              "text": "-20",
+              "frames": 9,
+              "offViewport": 0,
+              "overPlate": 0,
+              "overBubble": 0,
+              "overDock": 0,
+              "centerInAvatar": 9,
+              "minY": 187,
+              "maxY": 233,
+              "minX": 937,
+              "maxX": 961,
+              "area": 576
+            }
+          ],
+          "frames": 92
+        },
+        {
+          "i": 5,
+          "action": {
+            "kind": "endRound"
+          },
+          "bandBefore": "high",
+          "bandAfter": "high",
+          "heavy": false,
+          "bands": [
+            {
+              "t": 24,
+              "band": "high"
+            }
+          ],
+          "cf2": [],
+          "fx": [
+            {
+              "sel": ".enemy-hit-layer .slash-fx",
+              "text": "",
+              "frames": 10,
+              "offViewport": 0,
+              "overPlate": 0,
+              "overBubble": 0,
+              "overDock": 0,
+              "centerInAvatar": 10,
+              "minY": 175,
+              "maxY": 334,
+              "minX": 518,
+              "maxX": 758,
+              "area": 38160
+            },
+            {
+              "sel": ".player-hit-layer .floating-number",
+              "text": "-90",
+              "frames": 4,
+              "offViewport": 0,
+              "overPlate": 0,
+              "overBubble": 0,
+              "overDock": 0,
+              "centerInAvatar": 4,
+              "minY": 188,
+              "maxY": 231,
+              "minX": 937,
+              "maxX": 961,
+              "area": 576
+            },
+            {
+              "sel": ".player-panel .floating-number",
+              "text": "-90",
+              "frames": 4,
+              "offViewport": 0,
+              "overPlate": 0,
+              "overBubble": 0,
+              "overDock": 0,
+              "centerInAvatar": 4,
+              "minY": 188,
+              "maxY": 231,
+              "minX": 937,
+              "maxX": 961,
+              "area": 576
+            }
+          ],
+          "frames": 20
+        },
+        {
+          "i": 6,
+          "action": {
+            "kind": "card",
+            "name": "🌿 姉御の号令",
+            "breakShot": null
+          },
+          "bandBefore": "high",
+          "bandAfter": "high",
+          "heavy": false,
+          "bands": [
+            {
+              "t": 16,
+              "band": "high"
+            }
+          ],
+          "cf2": [],
+          "fx": [],
+          "frames": 0
+        },
+        {
+          "i": 7,
+          "action": {
+            "kind": "card",
+            "name": "⚔ 剛撃",
+            "breakShot": null
+          },
+          "bandBefore": "high",
+          "bandAfter": "high",
+          "heavy": true,
+          "bands": [
+            {
+              "t": 7,
+              "band": "high"
+            }
+          ],
+          "cf2": [],
+          "fx": [
+            {
+              "sel": ".enemy-hit-layer .slash-fx",
+              "text": "",
+              "frames": 37,
+              "offViewport": 0,
+              "overPlate": 0,
+              "overBubble": 0,
+              "overDock": 0,
+              "centerInAvatar": 37,
+              "minY": 155,
+              "maxY": 354,
+              "minX": 488,
+              "maxX": 788,
+              "area": 59700
+            },
+            {
+              "sel": ".enemy-hit-layer .floating-number",
+              "text": "-150",
+              "frames": 2,
+              "offViewport": 0,
+              "overPlate": 0,
+              "overBubble": 0,
+              "overDock": 0,
+              "centerInAvatar": 2,
+              "minY": 199,
+              "maxY": 253,
+              "minX": 608,
+              "maxX": 668,
+              "area": 2565
+            }
+          ],
+          "frames": 37
+        },
+        {
+          "i": 8,
+          "action": {
+            "kind": "card",
+            "name": "⚔ 一心不乱",
+            "breakShot": null
+          },
+          "bandBefore": "high",
+          "bandAfter": "high",
+          "heavy": true,
+          "bands": [
+            {
+              "t": 3,
+              "band": "high"
+            }
+          ],
+          "cf2": [],
+          "fx": [
+            {
+              "sel": ".enemy-hit-layer .slash-fx",
+              "text": "",
+              "frames": 41,
+              "offViewport": 0,
+              "overPlate": 0,
+              "overBubble": 0,
+              "overDock": 0,
+              "centerInAvatar": 41,
+              "minY": 155,
+              "maxY": 354,
+              "minX": 488,
+              "maxX": 788,
+              "area": 24384
+            },
+            {
+              "sel": ".enemy-hit-layer .floating-number",
+              "text": "-70",
+              "frames": 3,
+              "offViewport": 0,
+              "overPlate": 0,
+              "overBubble": 0,
+              "overDock": 0,
+              "centerInAvatar": 3,
+              "minY": 201,
+              "maxY": 233,
+              "minX": 626,
+              "maxX": 650,
+              "area": 576
+            }
+          ],
+          "frames": 41
+        },
+        {
+          "i": 9,
+          "action": {
+            "kind": "endRound"
+          },
+          "bandBefore": "high",
+          "bandAfter": "high",
+          "heavy": false,
+          "bands": [
+            {
+              "t": 54,
+              "band": "high"
+            }
+          ],
+          "cf2": [],
+          "fx": [
+            {
+              "sel": ".enemy-hit-layer .slash-fx",
+              "text": "",
+              "frames": 7,
+              "offViewport": 0,
+              "overPlate": 0,
+              "overBubble": 0,
+              "overDock": 0,
+              "centerInAvatar": 7,
+              "minY": 191,
+              "maxY": 318,
+              "minX": 542,
+              "maxX": 734,
+              "area": 24384
+            }
+          ],
+          "frames": 7
+        },
+        {
+          "i": 10,
+          "action": {
+            "kind": "card",
+            "name": "🌟 予言",
+            "breakShot": null
+          },
+          "bandBefore": "high",
+          "bandAfter": "high",
+          "heavy": false,
+          "bands": [
+            {
+              "t": 71,
+              "band": "high"
+            }
+          ],
+          "cf2": [],
+          "fx": [],
+          "frames": 0
+        },
+        {
+          "i": 11,
+          "action": {
+            "kind": "card",
+            "name": "🌿 後輩想い",
+            "breakShot": null
+          },
+          "bandBefore": "high",
+          "bandAfter": "high",
+          "heavy": false,
+          "bands": [
+            {
+              "t": 81,
+              "band": "high"
+            }
+          ],
+          "cf2": [],
+          "fx": [],
+          "frames": 3
+        },
+        {
+          "i": 12,
+          "action": {
+            "kind": "card",
+            "name": "🛡 守護",
+            "breakShot": null
+          },
+          "bandBefore": "high",
+          "bandAfter": "high",
+          "heavy": false,
+          "bands": [
+            {
+              "t": 65,
+              "band": "high"
+            }
+          ],
+          "cf2": [],
+          "fx": [],
+          "frames": 0
+        },
+        {
+          "i": 13,
+          "action": {
+            "kind": "endRound"
+          },
+          "bandBefore": "high",
+          "bandAfter": "high",
+          "heavy": false,
+          "bands": [
+            {
+              "t": 19,
+              "band": "high"
+            }
+          ],
+          "cf2": [],
+          "fx": [
+            {
+              "sel": ".player-hit-layer .impact-ring",
+              "text": "",
+              "frames": 27,
+              "offViewport": 0,
+              "overPlate": 0,
+              "overBubble": 0,
+              "overDock": 0,
+              "centerInAvatar": 27,
+              "minY": 133,
+              "maxY": 376,
+              "minX": 827,
+              "maxX": 1070,
+              "area": 59049
+            },
+            {
+              "sel": ".player-hit-layer .floating-number",
+              "text": "-150",
+              "frames": 2,
+              "offViewport": 0,
+              "overPlate": 0,
+              "overBubble": 0,
+              "overDock": 0,
+              "centerInAvatar": 2,
+              "minY": 208,
+              "maxY": 253,
+              "minX": 919,
+              "maxX": 976,
+              "area": 2565
+            },
+            {
+              "sel": ".player-hit-layer .floating-number",
+              "text": "軽減110",
+              "frames": 2,
+              "offViewport": 0,
+              "overPlate": 0,
+              "overBubble": 0,
+              "overDock": 0,
+              "centerInAvatar": 2,
+              "minY": 207,
+              "maxY": 242,
+              "minX": 859,
+              "maxX": 934,
+              "area": 2442
+            },
+            {
+              "sel": ".player-panel .floating-number",
+              "text": "-150",
+              "frames": 2,
+              "offViewport": 0,
+              "overPlate": 0,
+              "overBubble": 0,
+              "overDock": 0,
+              "centerInAvatar": 2,
+              "minY": 208,
+              "maxY": 253,
+              "minX": 919,
+              "maxX": 976,
+              "area": 2565
+            },
+            {
+              "sel": ".player-panel .floating-number",
+              "text": "軽減110",
+              "frames": 2,
+              "offViewport": 0,
+              "overPlate": 0,
+              "overBubble": 0,
+              "overDock": 0,
+              "centerInAvatar": 2,
+              "minY": 207,
+              "maxY": 242,
+              "minX": 859,
+              "maxX": 934,
+              "area": 2442
+            }
+          ],
+          "frames": 27
+        },
+        {
+          "i": 14,
+          "action": {
+            "kind": "card",
+            "name": "🌿 後輩想い",
+            "breakShot": null
+          },
+          "bandBefore": "high",
+          "bandAfter": "high",
+          "heavy": false,
+          "bands": [
+            {
+              "t": 84,
+              "band": "high"
+            }
+          ],
+          "cf2": [],
+          "fx": [],
+          "frames": 25
+        },
+        {
+          "i": 15,
+          "action": {
+            "kind": "card",
+            "name": "💀 呪縛",
+            "breakShot": null
+          },
+          "bandBefore": "high",
+          "bandAfter": "high",
+          "heavy": false,
+          "bands": [
+            {
+              "t": 4,
+              "band": "high"
+            }
+          ],
+          "cf2": [],
+          "fx": [
+            {
+              "sel": ".enemy-hit-layer .floating-number",
+              "text": "⚡-40",
+              "frames": 3,
+              "offViewport": 0,
+              "overPlate": 0,
+              "overBubble": 0,
+              "overDock": 0,
+              "centerInAvatar": 3,
+              "minY": 200,
+              "maxY": 262,
+              "minX": 626,
+              "maxX": 745,
+              "area": 7378
+            },
+            {
+              "sel": ".enemy-hit-layer .impact-ring",
+              "text": "",
+              "frames": 6,
+              "offViewport": 0,
+              "overPlate": 0,
+              "overBubble": 0,
+              "overDock": 0,
+              "centerInAvatar": 6,
+              "minY": 170,
+              "maxY": 339,
+              "minX": 553,
+              "maxX": 722,
+              "area": 28561
+            }
+          ],
+          "frames": 46
+        },
+        {
+          "i": 16,
+          "action": {
+            "kind": "card",
+            "name": "⚔ 一心不乱",
+            "breakShot": null
+          },
+          "bandBefore": "high",
+          "bandAfter": "high",
+          "heavy": false,
+          "bands": [
+            {
+              "t": 17,
+              "band": "high"
+            }
+          ],
+          "cf2": [],
+          "fx": [
+            {
+              "sel": ".enemy-hit-layer .slash-fx",
+              "text": "",
+              "frames": 51,
+              "offViewport": 0,
+              "overPlate": 0,
+              "overBubble": 0,
+              "overDock": 0,
+              "centerInAvatar": 51,
+              "minY": 191,
+              "maxY": 318,
+              "minX": 542,
+              "maxX": 734,
+              "area": 24384
+            },
+            {
+              "sel": ".enemy-hit-layer .floating-number",
+              "text": "-40",
+              "frames": 1,
+              "offViewport": 0,
+              "overPlate": 0,
+              "overBubble": 0,
+              "overDock": 0,
+              "centerInAvatar": 1,
+              "minY": 209,
+              "maxY": 233,
+              "minX": 626,
+              "maxX": 651,
+              "area": 600
+            }
+          ],
+          "frames": 54
+        },
+        {
+          "i": 17,
+          "action": {
+            "kind": "card",
+            "name": "⚔ 一撃",
+            "breakShot": {
+              "cf2Animations": [
+                "cf2-plate-flash-half@520",
+                "cf2-wound-bloom-half@600",
+                "cf2-break-body-half@420"
+              ],
+              "collapseTransform": "matrix(0.985027, 0, 0, 0.985027, -6.98718, 0)",
+              "collapseFilter": "brightness(0.720513) saturate(0.700549)",
+              "plateAfterOpacity": "0.469388",
+              "woundOpacity": "0.99677",
+              "woundScale": "0.93641"
+            }
+          },
+          "bandBefore": "high",
+          "bandAfter": "half",
+          "heavy": false,
+          "bands": [
+            {
+              "t": 110,
+              "band": "high"
+            },
+            {
+              "t": 1180,
+              "band": "half"
+            }
+          ],
+          "cf2": [
+            {
+              "key": "cf2-break cf2-break-half@DIV",
+              "t": 1180,
+              "rect": {
+                "x": 144,
+                "y": 102,
+                "w": 655,
+                "h": 307
+              },
+              "opacity": "1"
+            },
+            {
+              "key": "cf2-break cf2-break-half@DIV",
+              "t": 2699,
+              "rect": {
+                "x": 144,
+                "y": 102,
+                "w": 655,
+                "h": 307
+              },
+              "opacity": "1"
+            },
+            {
+              "key": "cf2-break cf2-break-half@DIV",
+              "t": 4535,
+              "rect": {
+                "x": 144,
+                "y": 102,
+                "w": 655,
+                "h": 307
+              },
+              "opacity": "1"
+            }
+          ],
+          "fx": [
+            {
+              "sel": ".enemy-hit-layer .slash-fx",
+              "text": "",
+              "frames": 59,
+              "offViewport": 0,
+              "overPlate": 0,
+              "overBubble": 0,
+              "overDock": 0,
+              "centerInAvatar": 59,
+              "minY": 191,
+              "maxY": 318,
+              "minX": 542,
+              "maxX": 734,
+              "area": 24384
+            },
+            {
+              "sel": ".enemy-hit-layer .impact-ring",
+              "text": "",
+              "frames": 7,
+              "offViewport": 0,
+              "overPlate": 0,
+              "overBubble": 0,
+              "overDock": 0,
+              "centerInAvatar": 7,
+              "minY": 170,
+              "maxY": 339,
+              "minX": 553,
+              "maxX": 722,
+              "area": 28561
+            }
+          ],
+          "frames": 59
+        },
+        {
+          "i": 18,
+          "action": {
+            "kind": "endRound"
+          },
+          "bandBefore": "half",
+          "bandAfter": "half",
+          "heavy": false,
+          "bands": [
+            {
+              "t": 83,
+              "band": "half"
+            }
+          ],
+          "cf2": [
+            {
+              "key": "cf2-break cf2-break-half@DIV",
+              "t": 83,
+              "rect": {
+                "x": 144,
+                "y": 102,
+                "w": 655,
+                "h": 307
+              },
+              "opacity": "1"
+            },
+            {
+              "key": "cf2-break cf2-break-half@DIV",
+              "t": 1596,
+              "rect": {
+                "x": 144,
+                "y": 102,
+                "w": 655,
+                "h": 307
+              },
+              "opacity": "1"
+            },
+            {
+              "key": "cf2-break cf2-break-half@DIV",
+              "t": 3293,
+              "rect": {
+                "x": 144,
+                "y": 102,
+                "w": 655,
+                "h": 307
+              },
+              "opacity": "1"
+            }
+          ],
+          "fx": [
+            {
+              "sel": ".enemy-hit-layer .slash-fx",
+              "text": "",
+              "frames": 4,
+              "offViewport": 0,
+              "overPlate": 0,
+              "overBubble": 0,
+              "overDock": 0,
+              "centerInAvatar": 4,
+              "minY": 191,
+              "maxY": 318,
+              "minX": 542,
+              "maxX": 734,
+              "area": 24384
+            }
+          ],
+          "frames": 15
+        },
+        {
+          "i": 19,
+          "action": {
+            "kind": "card",
+            "name": "⚔ 豪快な一撃",
+            "breakShot": null
+          },
+          "bandBefore": "half",
+          "bandAfter": "half",
+          "heavy": false,
+          "bands": [
+            {
+              "t": 61,
+              "band": "half"
+            }
+          ],
+          "cf2": [
+            {
+              "key": "cf2-break cf2-break-half@DIV",
+              "t": 61,
+              "rect": {
+                "x": 144,
+                "y": 102,
+                "w": 655,
+                "h": 307
+              },
+              "opacity": "1"
+            },
+            {
+              "key": "cf2-break cf2-break-half@DIV",
+              "t": 1632,
+              "rect": {
+                "x": 144,
+                "y": 102,
+                "w": 655,
+                "h": 307
+              },
+              "opacity": "1"
+            },
+            {
+              "key": "cf2-break cf2-break-half@DIV",
+              "t": 3225,
+              "rect": {
+                "x": 144,
+                "y": 102,
+                "w": 655,
+                "h": 307
+              },
+              "opacity": "1"
+            },
+            {
+              "key": "cf2-break cf2-break-half@DIV",
+              "t": 4818,
+              "rect": {
+                "x": 144,
+                "y": 102,
+                "w": 655,
+                "h": 307
+              },
+              "opacity": "1"
+            }
+          ],
+          "fx": [
+            {
+              "sel": ".enemy-hit-layer .slash-fx",
+              "text": "",
+              "frames": 37,
+              "offViewport": 0,
+              "overPlate": 0,
+              "overBubble": 0,
+              "overDock": 0,
+              "centerInAvatar": 37,
+              "minY": 175,
+              "maxY": 334,
+              "minX": 518,
+              "maxX": 758,
+              "area": 38160
+            },
+            {
+              "sel": ".enemy-hit-layer .floating-number",
+              "text": "-140",
+              "frames": 4,
+              "offViewport": 0,
+              "overPlate": 0,
+              "overBubble": 0,
+              "overDock": 0,
+              "centerInAvatar": 4,
+              "minY": 190,
+              "maxY": 239,
+              "minX": 617,
+              "maxX": 660,
+              "area": 1419
+            },
+            {
+              "sel": ".player-hit-layer .floating-number",
+              "text": "-20",
+              "frames": 4,
+              "offViewport": 0,
+              "overPlate": 0,
+              "overBubble": 0,
+              "overDock": 0,
+              "centerInAvatar": 4,
+              "minY": 190,
+              "maxY": 230,
+              "minX": 937,
+              "maxX": 961,
+              "area": 576
+            },
+            {
+              "sel": ".player-panel .floating-number",
+              "text": "-20",
+              "frames": 4,
+              "offViewport": 0,
+              "overPlate": 0,
+              "overBubble": 0,
+              "overDock": 0,
+              "centerInAvatar": 4,
+              "minY": 190,
+              "maxY": 230,
+              "minX": 937,
+              "maxX": 961,
+              "area": 576
+            }
+          ],
+          "frames": 39
+        },
+        {
+          "i": 20,
+          "action": {
+            "kind": "card",
+            "name": "🛡 受け流し",
+            "breakShot": null
+          },
+          "bandBefore": "half",
+          "bandAfter": "half",
+          "heavy": false,
+          "bands": [
+            {
+              "t": 50,
+              "band": "half"
+            }
+          ],
+          "cf2": [
+            {
+              "key": "cf2-break cf2-break-half@DIV",
+              "t": 50,
+              "rect": {
+                "x": 144,
+                "y": 102,
+                "w": 655,
+                "h": 307
+              },
+              "opacity": "1"
+            },
+            {
+              "key": "cf2-break cf2-break-half@DIV",
+              "t": 1677,
+              "rect": {
+                "x": 144,
+                "y": 102,
+                "w": 655,
+                "h": 307
+              },
+              "opacity": "1"
+            },
+            {
+              "key": "cf2-break cf2-break-half@DIV",
+              "t": 3276,
+              "rect": {
+                "x": 144,
+                "y": 102,
+                "w": 655,
+                "h": 307
+              },
+              "opacity": "1"
+            }
+          ],
+          "fx": [
+            {
+              "sel": ".enemy-hit-layer .slash-fx",
+              "text": "",
+              "frames": 3,
+              "offViewport": 0,
+              "overPlate": 0,
+              "overBubble": 0,
+              "overDock": 0,
+              "centerInAvatar": 3,
+              "minY": 175,
+              "maxY": 334,
+              "minX": 518,
+              "maxX": 758,
+              "area": 38160
+            }
+          ],
+          "frames": 41
+        },
+        {
+          "i": 21,
+          "action": {
+            "kind": "card",
+            "name": "🌟 神託",
+            "breakShot": {
+              "cf2Animations": [
+                "cf2-plate-flash-quarter@760",
+                "cf2-wound-bloom-quarter@720",
+                "cf2-break-body-quarter@560"
+              ],
+              "collapseTransform": "matrix(0.978326, 0, 0, 0.978326, -8.66959, 0)",
+              "collapseFilter": "brightness(0.716411) saturate(0.63315)",
+              "plateAfterOpacity": "0.446059",
+              "woundOpacity": "1",
+              "woundScale": "1.11831"
+            }
+          },
+          "bandBefore": "half",
+          "bandAfter": "quarter",
+          "heavy": true,
+          "bands": [
+            {
+              "t": 47,
+              "band": "half"
+            },
+            {
+              "t": 770,
+              "band": "quarter"
+            }
+          ],
+          "cf2": [
+            {
+              "key": "cf2-break cf2-break-half@DIV",
+              "t": 47,
+              "rect": {
+                "x": 144,
+                "y": 102,
+                "w": 655,
+                "h": 307
+              },
+              "opacity": "1"
+            },
+            {
+              "key": "cf2-break cf2-break-quarter@DIV",
+              "t": 770,
+              "rect": {
+                "x": 144,
+                "y": 102,
+                "w": 655,
+                "h": 307
+              },
+              "opacity": "1"
+            },
+            {
+              "key": "cf2-break cf2-break-quarter@DIV",
+              "t": 2374,
+              "rect": {
+                "x": 144,
+                "y": 102,
+                "w": 655,
+                "h": 307
+              },
+              "opacity": "1"
+            },
+            {
+              "key": "cf2-break cf2-break-quarter@DIV",
+              "t": 4061,
+              "rect": {
+                "x": 144,
+                "y": 102,
+                "w": 655,
+                "h": 307
+              },
+              "opacity": "1"
+            }
+          ],
+          "fx": [
+            {
+              "sel": ".enemy-hit-layer .slash-fx",
+              "text": "",
+              "frames": 58,
+              "offViewport": 0,
+              "overPlate": 0,
+              "overBubble": 0,
+              "overDock": 0,
+              "centerInAvatar": 58,
+              "minY": 130,
+              "maxY": 379,
+              "minX": 451,
+              "maxX": 825,
+              "area": 91884
+            }
+          ],
+          "frames": 61
+        },
+        {
+          "i": 22,
+          "action": {
+            "kind": "endRound"
+          },
+          "bandBefore": "quarter",
+          "bandAfter": "quarter",
+          "heavy": true,
+          "bands": [
+            {
+              "t": 1,
+              "band": "quarter"
+            }
+          ],
+          "cf2": [
+            {
+              "key": "cf2-break cf2-break-quarter@DIV",
+              "t": 1,
+              "rect": {
+                "x": 144,
+                "y": 102,
+                "w": 655,
+                "h": 307
+              },
+              "opacity": "1"
+            },
+            {
+              "key": "cf2-break cf2-break-quarter@DIV",
+              "t": 1518,
+              "rect": {
+                "x": 144,
+                "y": 102,
+                "w": 655,
+                "h": 307
+              },
+              "opacity": "1"
+            },
+            {
+              "key": "cf2-break cf2-break-quarter@DIV",
+              "t": 3038,
+              "rect": {
+                "x": 144,
+                "y": 102,
+                "w": 655,
+                "h": 307
+              },
+              "opacity": "1"
+            }
+          ],
+          "fx": [
+            {
+              "sel": ".enemy-hit-layer .slash-fx",
+              "text": "",
+              "frames": 9,
+              "offViewport": 0,
+              "overPlate": 0,
+              "overBubble": 0,
+              "overDock": 0,
+              "centerInAvatar": 9,
+              "minY": 131,
+              "maxY": 378,
+              "minX": 452,
+              "maxX": 824,
+              "area": 91884
+            },
+            {
+              "sel": ".player-hit-layer .floating-number",
+              "text": "-30",
+              "frames": 9,
+              "offViewport": 0,
+              "overPlate": 0,
+              "overBubble": 0,
+              "overDock": 0,
+              "centerInAvatar": 9,
+              "minY": 187,
+              "maxY": 233,
+              "minX": 937,
+              "maxX": 961,
+              "area": 576
+            },
+            {
+              "sel": ".player-hit-layer .floating-number",
+              "text": "軽減30",
+              "frames": 9,
+              "offViewport": 0,
+              "overPlate": 0,
+              "overBubble": 0,
+              "overDock": 0,
+              "centerInAvatar": 9,
+              "minY": 187,
+              "maxY": 242,
+              "minX": 863,
+              "maxX": 931,
+              "area": 2244
+            },
+            {
+              "sel": ".player-panel .floating-number",
+              "text": "-30",
+              "frames": 9,
+              "offViewport": 0,
+              "overPlate": 0,
+              "overBubble": 0,
+              "overDock": 0,
+              "centerInAvatar": 9,
+              "minY": 187,
+              "maxY": 233,
+              "minX": 937,
+              "maxX": 961,
+              "area": 576
+            },
+            {
+              "sel": ".player-panel .floating-number",
+              "text": "軽減30",
+              "frames": 9,
+              "offViewport": 0,
+              "overPlate": 0,
+              "overBubble": 0,
+              "overDock": 0,
+              "centerInAvatar": 9,
+              "minY": 187,
+              "maxY": 242,
+              "minX": 863,
+              "maxX": 931,
+              "area": 2244
+            }
+          ],
+          "frames": 38
+        },
+        {
+          "i": 23,
+          "action": {
+            "kind": "card",
+            "name": "✨ 神楽舞"
+          },
+          "bandBefore": "quarter",
+          "bandAfter": "quarter",
+          "heavy": true,
+          "bands": [
+            {
+              "t": 64,
+              "band": "quarter"
+            }
+          ],
+          "cf2": [
+            {
+              "key": "cf2-break cf2-break-quarter@DIV",
+              "t": 64,
+              "rect": {
+                "x": 144,
+                "y": 102,
+                "w": 655,
+                "h": 307
+              },
+              "opacity": "1"
+            },
+            {
+              "key": "cf2-break cf2-break-quarter@DIV",
+              "t": 1574,
+              "rect": {
+                "x": 144,
+                "y": 102,
+                "w": 655,
+                "h": 307
+              },
+              "opacity": "1"
+            },
+            {
+              "key": "cf2-break cf2-break-quarter@DIV",
+              "t": 3119,
+              "rect": {
+                "x": 144,
+                "y": 102,
+                "w": 655,
+                "h": 307
+              },
+              "opacity": "1"
+            },
+            {
+              "key": "cf2-break cf2-break-quarter@DIV",
+              "t": 4623,
+              "rect": {
+                "x": 144,
+                "y": 102,
+                "w": 655,
+                "h": 307
+              },
+              "opacity": "1"
+            }
+          ],
+          "fx": [
+            {
+              "sel": ".enemy-hit-layer .slash-fx",
+              "text": "",
+              "frames": 68,
+              "offViewport": 0,
+              "overPlate": 0,
+              "overBubble": 0,
+              "overDock": 0,
+              "centerInAvatar": 68,
+              "minY": 131,
+              "maxY": 379,
+              "minX": 451,
+              "maxX": 824,
+              "area": 91884
+            },
+            {
+              "sel": ".enemy-hit-layer .floating-number",
+              "text": "-360",
+              "frames": 9,
+              "offViewport": 0,
+              "overPlate": 0,
+              "overBubble": 0,
+              "overDock": 0,
+              "centerInAvatar": 9,
+              "minY": 165,
+              "maxY": 300,
+              "minX": 554,
+              "maxX": 719,
+              "area": 10875
+            }
+          ],
+          "frames": 71
+        }
+      ],
+      "finished": true,
+      "errors": []
+    }
+  ]
+}

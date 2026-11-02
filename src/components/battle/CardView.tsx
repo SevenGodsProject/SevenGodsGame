@@ -10,6 +10,7 @@ import { GOD_THEME_COLOR } from '../setup/godStyle'
 import { READY_IGNITE_BASE_DELAY_MS, READY_MATERIAL_PILOT, shouldIgnite } from './readyMaterial'
 import { getArtWindow } from './artWindow'
 import './artWindow.css'
+import './cardShort.css'
 
 type CardViewProps = {
   instance: CardInstance
@@ -31,6 +32,11 @@ type CardViewProps = {
   igniteDelayMs?: number
   /** 決定249 Reaction Language v1：TEMPO の札で引かれた札は下から立ち上がる（DEAL）。key と遅延（枚数順） */
   dealt?: { key: number; delayMs: number } | null
+  /**
+   * Cost-Short Marking v1：今の神力（表示専用）。自分のターンで神力が足りない札に「あとN」を出すためだけに使う。
+   * 使えるかどうかの判定（`disabled`）は従来どおり `affordable` が担い、ここでは変えない
+   */
+  apCurrent?: number
   onPlay: () => void
 }
 
@@ -51,12 +57,15 @@ export function CardView({
   bonusArmed = false,
   igniteDelayMs = READY_IGNITE_BASE_DELAY_MS,
   dealt = null,
+  apCurrent,
   onPlay,
 }: CardViewProps) {
   const def = getCardDef(instance.defId)
   const style = TYPE_STYLE[def.type]
   const rarity = RARITY_STYLE[def.rarity]
   const cost = def.cost + (instance.costModifier ?? 0)
+  // Cost-Short Marking v1：自分のターン・神力不足・使用演出中でない札だけ「あとN」。敵ターンは enemy-turn-banner が理由を担うので出さない
+  const short = playable && !affordable && !playing && apCurrent !== undefined ? Math.max(1, cost - apCurrent) : 0
   const godArt = def.godId ? getGodDef(def.godId).art.front : null
   const illustration = getCardArt(def.id)
   // Card Premium v2 Pilot：Art Window v2（原画のあるカードだけ・表示専用の許可リスト）
@@ -81,12 +90,13 @@ export function CardView({
   return (
     <button
       type="button"
-      className={`card-view${def.godId ? ' card-view-exclusive' : ''}${playing ? ' card-view-playing' : ''}${illustration ? ' card-view-has-art' : ''}${artWindow ? ' card-view-artwin' : ''}${readyOn ? ' card-view-ready' : ''}${dealt && !playing ? ' card-view-dealt' : ''}`}
+      className={`card-view${def.godId ? ' card-view-exclusive' : ''}${playing ? ' card-view-playing' : ''}${illustration ? ' card-view-has-art' : ''}${artWindow ? ' card-view-artwin' : ''}${readyOn ? ' card-view-ready' : ''}${dealt && !playing ? ' card-view-dealt' : ''}${short > 0 ? ' card-view-short' : ''}`}
       style={{
         ...readyStyle,
         ...(dealt ? ({ '--rl-deal-delay': `${dealt.delayMs}ms` } as CSSProperties) : undefined),
         borderColor: style.color,
-        opacity: playing ? undefined : affordable ? 1 : 0.45,
+        // 神力不足（自分のターン）は opacity を cardShort.css に委ねる（.7）。敵ターンは従来どおり .45
+        opacity: playing ? undefined : affordable ? 1 : playable ? undefined : 0.45,
         background: `linear-gradient(165deg, ${style.dark} 0%, #0b0d17 62%)`,
         boxShadow: def.godId
           ? `inset 0 0 0 1px ${style.color}40, 0 6px 14px -9px ${style.color}77, 0 0 16px -3px #ffd16688, 0 0 0 2px ${rarity.ring}55`
@@ -128,6 +138,12 @@ export function CardView({
       >
         {cost}
       </div>
+      {/* Cost-Short Marking v1：珠の右に「あとN」。accessible name に入れるため aria-hidden にしない */}
+      {short > 0 && (
+        <span className="card-view-short-tag" aria-hidden="false">
+          あと{short}
+        </span>
+      )}
       {/* Art Window v2：「◯◯専用」は本文から出して右上の小さな札にする（絵の窓を空けるため） */}
       {artWindow && godLabel}
       <div className="card-view-body">

@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import type { EnemyId, GodId } from '../../core/types'
-import { CORE_ENEMIES, PILOT_ENEMIES, isPilotEnemyId } from '../../core/data/enemies'
+import { CORE_ENEMIES, PILOT_ENEMIES, SHOGUNATE_ENEMIES, isPilotEnemyId, isShogunateEnemyId } from '../../core/data/enemies'
 import { isPilotEnabled } from '../pilot/pilotFlag'
 import { GODS } from '../../core/data/gods'
 import { isMatchupCleared, loadMatchups } from '../../hooks/matchupStorage'
@@ -56,8 +56,11 @@ export function EnemySelectScreen({ onSelect, onBack, godId = null }: EnemySelec
   const [matchups] = useState(() => (godId ? loadMatchups() : null))
   const godName = godId ? (GODS.find((g) => g.id === godId)?.nameJa ?? '') : ''
   // Threat Branch Pilot v1：`?pilot=threat` のときだけ Pilot 敵を末尾に並べる。通常は既存 7 体のまま
-  const pilot = isPilotEnabled()
-  const roster = pilot ? [...CORE_ENEMIES, ...PILOT_ENEMIES] : CORE_ENEMIES
+  // 将軍家 Pilot v0.4：`?pilot=shogunate` のときは忠次（enemy_08）を末尾に。`?pilot=all` で両方（値は集合＝排他にしない）
+  const threatPilot = isPilotEnabled('threat')
+  const shogunatePilot = isPilotEnabled('shogunate')
+  const pilot = threatPilot || shogunatePilot
+  const roster = pilot ? [...CORE_ENEMIES, ...(threatPilot ? PILOT_ENEMIES : []), ...(shogunatePilot ? SHOGUNATE_ENEMIES : [])] : CORE_ENEMIES
   return (
     <div className="setup-screen">
       <h1 className="setup-title">挑む敵を選ぼう</h1>
@@ -69,9 +72,14 @@ export function EnemySelectScreen({ onSelect, onBack, godId = null }: EnemySelec
         <br />
         迷ったら「神に委ねる」で、神々があなたの相手を選びます。
       </p>
-      {pilot && (
+      {threatPilot && (
         <p className="setup-subtitle" data-testid="enemy-pilot-notice">
           Threat Branch Pilot v1：この敵との戦いは戦績・セーブ・報酬に残りません
+        </p>
+      )}
+      {shogunatePilot && (
+        <p className="setup-subtitle" data-testid="enemy-shogunate-notice">
+          将軍家 Pilot v0.4：忠次との戦いは戦績・セーブ・報酬に残りません。既存 7 体と同じ神・デッキで比べてください。
         </p>
       )}
 
@@ -127,8 +135,8 @@ export function EnemySelectScreen({ onSelect, onBack, godId = null }: EnemySelec
               )}
               {/* Threat Branch Pilot v1：Pilot 敵の印（表示のみ・既存の chip クラスを再利用。新規 CSS 0）。記録に残らないことを選ぶ前に伝える */}
               {isPilotEnemyId(enemy.id) && (
-                <span className="enemy-select-read-chip" data-testid="enemy-pilot-chip">
-                  Pilot・記録に残らない
+                <span className="enemy-select-read-chip" data-testid="enemy-pilot-chip" data-pilot={isShogunateEnemyId(enemy.id) ? 'shogunate' : 'threat'}>
+                  {isShogunateEnemyId(enemy.id) ? '幕府 Pilot・記録に残らない' : 'Pilot・記録に残らない'}
                 </span>
               )}
               <span className="enemy-select-hint">{enemy.typeDescription}</span>

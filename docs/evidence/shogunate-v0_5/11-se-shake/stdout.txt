@@ -1,0 +1,70 @@
+scratchpad/l1-core7/stdout.txt:[gate-preview 2026-10-28T13:00:50.499Z] exit 0 (152s) [cf2-trial-pc]
+scratchpad/l1-core7/stdout.txt:[gate-preview 2026-10-28T13:03:35.888Z] exit 0 (165s) [cf2-oni-pc]
+scratchpad/l1-core7/stdout.txt:[gate-preview 2026-10-28T13:06:00.448Z] exit 0 (145s) [cf2-onryo-pc]
+scratchpad/l1-core7/stdout.txt:[gate-preview 2026-10-28T13:08:23.596Z] exit 0 (143s) [cf2-karakuri-pc]
+scratchpad/l1-core7/stdout.txt:[gate-preview 2026-10-28T13:10:39.163Z] exit 0 (136s) [cf2-juuma-pc]
+scratchpad/l1-core7/stdout.txt:[gate-preview 2026-10-28T13:13:12.408Z] exit 0 (153s) [cf2-ryujin-pc]
+scratchpad/l1-core7/stdout.txt:[gate-preview 2026-10-28T13:15:33.111Z] exit 0 (141s) [cf2-doukeshi-pc]
+scratchpad/l1-core7/stdout.txt:[gate-preview 2026-10-28T13:18:17.157Z] exit 0 (164s) [cf2-ryujin-sp375]
+scratchpad/l1-core7/stdout.txt:FAIL  SE  pc1508/崩しを half・quarter とも観測（4 戦）  [["業斧の鬼将",["half"]],["蒼海の龍神",["half"]],["藍花の怨霊",["half"]],["双牙の魔獣",["half"]]]
+scratchpad/l1-core7/stdout.txt:PASS  SE  pc1508/崩しの SE の回数＝鳴らすべき崩しの回数（各戦で一致・余分 0）
+scratchpad/l1-core7/stdout.txt:PASS  SE  pc1508/各崩しで帯どおりの rate（half 0.7・quarter 0.6）で鳴る
+scratchpad/l1-core7/stdout.txt:PASS  SE  pc1508/崩しの表示と SE の予約時刻の差 ≤ 16ms
+scratchpad/l1-core7/stdout.txt:PASS  SE  pc1508/JS error 0（S1）
+scratchpad/l1-core7/stdout.txt:PASS  SE  pc1508/JS error 0（S5）
+scratchpad/l1-core7/stdout.txt:PASS  SHAKE  pc1508/敗北 1 回目：揺れは 1 本だけ（R1〜R3 の通常攻撃・溜めでは揺れない）
+scratchpad/l1-core7/stdout.txt:PASS  SHAKE  pc1508/敗北の決着被弾の計画値：4px／280ms／開始 1350ms
+scratchpad/l1-core7/stdout.txt:PASS  SHAKE  pc1508/揺れは最後まで再生されて終わり（cancel なし）、終了後は静止（transform なし）
+scratchpad/l1-core7/stdout.txt:PASS  SHAKE  pc1508/揺れは結果画面が出る前に終わる
+scratchpad/l1-core7/stdout.txt:PASS  SHAKE  pc1508/揺れは被弾の演出の開始から 90ms で始まる（同じ timeline 上・0〜150ms）
+scratchpad/l1-core7/stdout.txt:PASS  UI  pc1508/敗北画面：敗北・事実行・Primary「同じ盤面でもう一度」が初期可視
+scratchpad/l1-core7/stdout.txt:PASS  UI  pc1508/2 回目の敗北：Stage B の前回比が出る・横はみ出し 0・Primary 初期可視
+scratchpad/l1-core7/stdout.txt:PASS  SHAKE  pc1508/2 回目の敗北でも揺れは 1 本・同じ値
+scratchpad/l1-core7/stdout.txt:PASS  UI  pc1508/JS error 0（S2）
+scratchpad/l1-core7/stdout.txt:PASS  SHAKE  pc1508/致命でない必殺の計画値：3px／240ms／開始 1300ms
+scratchpad/l1-core7/stdout.txt:PASS  SHAKE  pc1508/必殺の揺れは最後まで再生されて終わり、終了後は静止
+scratchpad/l1-core7/stdout.txt:PASS  SHAKE  pc1508/必殺の揺れは被弾の演出の開始から 40ms で始まる（同じ timeline 上・0〜150ms）
+scratchpad/l1-core7/stdout.txt:PASS  SHAKE  pc1508/通常攻撃・溜めのラウンドでは揺れない（敵側の揺れ以外の値 0 本）
+scratchpad/l1-core7/stdout.txt:PASS  SHAKE  pc1508/JS error 0（S3）
+scratchpad/l1-core7/stdout.txt:PASS  SHAKE  pc1508/reduced-motion：.battle-main の揺れ 0 本・敗北画面は出る
+scratchpad/l1-core7/stdout.txt:WARN  pc1508/S1：溜め予告中に half の崩しが起きなかった＝抑止条件は実画面では未観測（単体テスト breakSe.test.ts で固定済み）
+scratchpad/l1-core7/stdout.txt:WARN  pc1508/S5：3 通り試しても溜め予告中の half を作れなかった（[["half","quarter"],["half"],[]]）＝抑止条件は単体テストのみ
+scratchpad/l1-core7/stdout.txt:WARN  pc1508/S2 揺れの実時間：開始のずれ 866ms・継続のずれ 74ms（animate()→開始の遅れ 866ms・揺れの区間の最大フレーム間隔 187ms・区間内フレーム 6 本）＝headless の描画の遅れ。実機で確認
+scratchpad/l1-core7/stdout.txt:WARN  pc1508/S3 必殺の揺れの実時間：開始のずれ 836ms・継続のずれ 60ms（animate()→開始の遅れ 836ms・最大フレーム間隔 131ms・区間内フレーム 7 本）＝headless の描画の遅れ。実機で確認
+scratchpad/l1-core7/se-shake/probe-pc1508.json
+scratchpad/l1-core7/stdout.txt:[gate-preview 2026-10-28T13:24:04.542Z] exit 1 (347s) [se-shake-pc1508]
+scratchpad/l1-core7/stdout.txt:PASS  SE  sp375/崩しを half・quarter とも観測（4 戦）
+scratchpad/l1-core7/stdout.txt:PASS  SE  sp375/崩しの SE の回数＝鳴らすべき崩しの回数（各戦で一致・余分 0）
+scratchpad/l1-core7/stdout.txt:PASS  SE  sp375/各崩しで帯どおりの rate（half 0.7・quarter 0.6）で鳴る
+scratchpad/l1-core7/stdout.txt:PASS  SE  sp375/崩しの表示と SE の予約時刻の差 ≤ 16ms
+scratchpad/l1-core7/stdout.txt:PASS  SE  sp375/JS error 0（S1）
+scratchpad/l1-core7/stdout.txt:PASS  SE  sp375/JS error 0（S5）
+scratchpad/l1-core7/stdout.txt:PASS  SHAKE  sp375/敗北 1 回目：揺れは 1 本だけ（R1〜R3 の通常攻撃・溜めでは揺れない）
+scratchpad/l1-core7/stdout.txt:PASS  SHAKE  sp375/敗北の決着被弾の計画値：4px／280ms／開始 1350ms
+scratchpad/l1-core7/stdout.txt:PASS  SHAKE  sp375/揺れは最後まで再生されて終わり（cancel なし）、終了後は静止（transform なし）
+scratchpad/l1-core7/stdout.txt:PASS  SHAKE  sp375/揺れは結果画面が出る前に終わる
+scratchpad/l1-core7/stdout.txt:PASS  SHAKE  sp375/揺れは被弾の演出の開始から 90ms で始まる（同じ timeline 上・0〜150ms）
+scratchpad/l1-core7/stdout.txt:PASS  UI  sp375/敗北画面：敗北・事実行・Primary「同じ盤面でもう一度」が初期可視
+scratchpad/l1-core7/stdout.txt:PASS  UI  sp375/2 回目の敗北：Stage B の前回比が出る・横はみ出し 0・Primary 初期可視
+scratchpad/l1-core7/stdout.txt:PASS  SHAKE  sp375/2 回目の敗北でも揺れは 1 本・同じ値
+scratchpad/l1-core7/stdout.txt:PASS  UI  sp375/JS error 0（S2）
+scratchpad/l1-core7/stdout.txt:PASS  SHAKE  sp375/致命でない必殺の計画値：3px／240ms／開始 1300ms
+scratchpad/l1-core7/stdout.txt:PASS  SHAKE  sp375/必殺の揺れは最後まで再生されて終わり、終了後は静止
+scratchpad/l1-core7/stdout.txt:PASS  SHAKE  sp375/必殺の揺れは被弾の演出の開始から 40ms で始まる（同じ timeline 上・0〜150ms）
+scratchpad/l1-core7/stdout.txt:PASS  SHAKE  sp375/通常攻撃・溜めのラウンドでは揺れない（敵側の揺れ以外の値 0 本）
+scratchpad/l1-core7/stdout.txt:PASS  SHAKE  sp375/JS error 0（S3）
+scratchpad/l1-core7/stdout.txt:PASS  SHAKE  sp375/reduced-motion：.battle-main の揺れ 0 本・敗北画面は出る
+scratchpad/l1-core7/stdout.txt:WARN  sp375/S1：溜め予告中に half の崩しが起きなかった＝抑止条件は実画面では未観測（単体テスト breakSe.test.ts で固定済み）
+scratchpad/l1-core7/stdout.txt:WARN  sp375/S5：3 通り試しても溜め予告中の half を作れなかった（[["half","quarter"],["half"],[]]）＝抑止条件は単体テストのみ
+scratchpad/l1-core7/stdout.txt:WARN  sp375/S2 揺れの実時間：開始のずれ 318ms・継続のずれ 9ms（animate()→開始の遅れ 318ms・揺れの区間の最大フレーム間隔 41ms・区間内フレーム 38 本）＝headless の描画の遅れ。実機で確認
+scratchpad/l1-core7/stdout.txt:WARN  sp375/S3 必殺の揺れの実時間：開始のずれ 453ms・継続のずれ 20ms（animate()→開始の遅れ 453ms・最大フレーム間隔 65ms・区間内フレーム 29 本）＝headless の描画の遅れ。実機で確認
+scratchpad/l1-core7/se-shake/probe-sp375.json
+scratchpad/l1-core7/stdout.txt:[gate-preview 2026-10-28T13:28:59.009Z] exit 0 (294s) [se-shake-sp375]
+scratchpad/l1-core7/stdout-s1.txt:PASS  SE  pc1508/崩しを half・quarter とも観測（4 戦）
+scratchpad/l1-core7/stdout-s1.txt:PASS  SE  pc1508/崩しの SE の回数＝鳴らすべき崩しの回数（各戦で一致・余分 0）
+scratchpad/l1-core7/stdout-s1.txt:PASS  SE  pc1508/各崩しで帯どおりの rate（half 0.7・quarter 0.6）で鳴る
+scratchpad/l1-core7/stdout-s1.txt:PASS  SE  pc1508/崩しの表示と SE の予約時刻の差 ≤ 16ms
+scratchpad/l1-core7/stdout-s1.txt:PASS  SE  pc1508/JS error 0（S1）
+scratchpad/l1-core7/stdout-s1.txt:WARN  pc1508/S1：溜め予告中に half の崩しが起きなかった＝抑止条件は実画面では未観測（単体テスト breakSe.test.ts で固定済み）
+scratchpad/l1-core7/se-shake/probe-pc1508-s1-rerun.json
+scratchpad/l1-core7/stdout-s1.txt:[gate-preview 2026-10-28T13:33:44.801Z] exit 0 (170s) [se-shake-pc1508-s1-rerun]

@@ -1,0 +1,168 @@
+{
+  "head": "430ca39",
+  "date": "2026-10-29T16:12:29.185Z",
+  "coreSha": "5678e3e757f603ae3b2a1974c772c5480222bea9c7e3e6a78f96d1b49bd70e91",
+  "version": "1.d794038a00b5b53c",
+  "saveVersion": 9,
+  "enemyIds": [
+    "enemy_01",
+    "enemy_02",
+    "enemy_03",
+    "enemy_04",
+    "enemy_05",
+    "enemy_06",
+    "enemy_07",
+    "enemy_09",
+    "enemy_08"
+  ],
+  "checks": [
+    {
+      "name": "CORE_ENEMIES count = 7",
+      "pass": true,
+      "detail": 7
+    },
+    {
+      "name": "CORE_ENEMIES sha256 = golden 5678e3e7…",
+      "pass": true,
+      "detail": "5678e3e757f603ae3b2a1974c772c5480222bea9c7e3e6a78f96d1b49bd70e91"
+    },
+    {
+      "name": "getGameVersion() = 1.d794038a00b5b53c",
+      "pass": true,
+      "detail": "1.d794038a00b5b53c"
+    },
+    {
+      "name": "RULES.saveVersion = 9",
+      "pass": true,
+      "detail": 9
+    },
+    {
+      "name": "PILOT_ENEMIES = [enemy_09]",
+      "pass": true,
+      "detail": [
+        "enemy_09"
+      ]
+    },
+    {
+      "name": "SHOGUNATE_ENEMIES = [enemy_08 将軍四天王・忠次 maxHp 98]",
+      "pass": true,
+      "detail": [
+        [
+          "enemy_08",
+          "将軍四天王・忠次",
+          98
+        ]
+      ]
+    },
+    {
+      "name": "ENEMIES = CORE + PILOT + SHOGUNATE (9)",
+      "pass": true,
+      "detail": [
+        "enemy_01",
+        "enemy_02",
+        "enemy_03",
+        "enemy_04",
+        "enemy_05",
+        "enemy_06",
+        "enemy_07",
+        "enemy_09",
+        "enemy_08"
+      ]
+    },
+    {
+      "name": "enemy_08 is not in CORE/PILOT",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "isPilotEnemyId true for enemy_08 and enemy_09, false for CORE",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "isShogunateEnemyId true only for enemy_08",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "fingerprint excludes enemy_08",
+      "pass": true,
+      "detail": false
+    },
+    {
+      "name": "fingerprint excludes enemy_09",
+      "pass": true,
+      "detail": false
+    },
+    {
+      "name": "fingerprint excludes 忠次 / tadatsugu / 軍略",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "fingerprint excludes tactic / ratioByDifficulty / hpRatioByDifficulty",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "fingerprint enemy ids = 7",
+      "pass": true,
+      "detail": 7
+    },
+    {
+      "name": "tadatsugu tactic cond = { enemyHpRatioAtMost, ratio 0.5, ratioByDifficulty {easy 0.5, normal 0.5, hard 0.6} }（v0.6）",
+      "pass": true,
+      "detail": {
+        "type": "enemyHpRatioAtMost",
+        "ratio": 0.5,
+        "ratioByDifficulty": {
+          "easy": 0.5,
+          "normal": 0.5,
+          "hard": 0.6
+        }
+      }
+    },
+    {
+      "name": "tadatsugu R3 charge / R4 tactic then attack 12 / else special 24 軍略・総攻め",
+      "pass": true,
+      "detail": [
+        "attack",
+        "attack",
+        "charge",
+        "tactic",
+        "attack",
+        "attack",
+        "attack"
+      ]
+    },
+    {
+      "name": "enemyTactic.hpRatioByDifficulty = {easy 0.5, normal 0.5, hard 0.6} (RC 不変)",
+      "pass": true,
+      "detail": {
+        "easy": 0.5,
+        "normal": 0.5,
+        "hard": 0.6
+      }
+    },
+    {
+      "name": "CORE enemies have no tactic",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "pickEnemyId(500 seeds) ⊆ CORE 7",
+      "pass": true,
+      "detail": [
+        "enemy_01",
+        "enemy_02",
+        "enemy_03",
+        "enemy_04",
+        "enemy_05",
+        "enemy_06",
+        "enemy_07"
+      ]
+    }
+  ],
+  "pass": 20,
+  "total": 20
+}

@@ -8195,3 +8195,136 @@ body.battle-viewport .battle-main .enemy-avatar-wrap {
   max-width: 100%;
   animation: overlay-fade-in 0.2s ease-out;
 }
+
+/* ============================================================
+   将軍家 Pilot v0.2（docs/SHOGUNATE_PILOT_V0_2.md）：忠次（enemy_08）だけの「一体感」調整。
+   全セレクタを [data-enemy='enemy_08'] に閉じる＝既存 7 体の見た目は不変。画像ファイルは無改変（CSS の gradient／mask／filter のみ）。
+   engine・timing 定数・既存セレクタの値は変更しない。reduce の @media はここに書かない（決定232）。
+   ============================================================ */
+
+/* 1) 光と色調：中立グレーの鎧を本陣の金茶の光で照らす。立ち絵と同じ形に mask した光のレイヤー（soft-light）＝
+      右上から暖色の光・左下へ影。--enemy-art は EnemyPanel が注入する（画素は触らない） */
+.enemy-panel[data-enemy='enemy_08'] .enemy-avatar::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(160deg, #ffe1a8 0%, #c9a24d 32%, #6b4a1a 68%, #1a1005 100%);
+  -webkit-mask: var(--enemy-art) center / contain no-repeat;
+  mask: var(--enemy-art) center / contain no-repeat;
+  mix-blend-mode: soft-light;
+  opacity: 0.9;
+}
+
+body.battle-viewport .enemy-panel[data-enemy='enemy_08'] .enemy-avatar::before {
+  -webkit-mask-position: center bottom;
+  mask-position: center bottom;
+}
+
+/* 2) 基本の外光（紫 #9b59b6 → 金茶）。:where で既存 .enemy-avatar と同じ詳細度＝構え（決定240）・溜め・終盤 surge の filter には負ける */
+:where(.enemy-panel[data-enemy='enemy_08']) .enemy-avatar {
+  filter: drop-shadow(0 12px 16px #000000cc) drop-shadow(0 0 26px #c9a24d66) drop-shadow(0 0 1px #ffe0aa8c);
+}
+
+/* 3) 接地：足元の影を広く・床の金茶の反射を含める（決定264 C の接地影と SP の床影を忠次だけ上書き） */
+body.battle-viewport .battle-main .enemy-panel[data-enemy='enemy_08'] .enemy-stage::after {
+  width: 72%;
+  height: 11%;
+  background: radial-gradient(ellipse at center, #000000c0 0%, #1a100588 40%, #00000000 70%);
+}
+
+body.battle-viewport .enemy-panel[data-enemy='enemy_08'] .enemy-stage {
+  background-image: radial-gradient(ellipse 58% 6.5% at 50% 98%, #000000b4 0%, #1a100566 45%, transparent 74%);
+}
+
+/* 4) 舞台：鈍い金茶の本陣に暖色の周辺減光を足し、対峙（画面中央）へ視線を集める。既存の減光グラデは先頭のまま */
+.battle[data-enemy='enemy_08'] .battle-main {
+  background-image:
+    linear-gradient(180deg, #05060d22 0%, #05060d44 60%, #05060dcc 100%),
+    radial-gradient(ellipse 68% 62% at 50% 42%, #00000000 0%, #120b0366 100%),
+    var(--stage-bg, url('/assets/backgrounds/arena.jpg'));
+}
+
+/* 5) 入口（降臨の間）と必殺カットインの立ち絵にも同じ暖色の光（filter のみ） */
+.battle-entrance[data-enemy='enemy_08'] .boss-entrance-art {
+  filter: sepia(0.16) saturate(1.06) drop-shadow(0 10px 14px #000000cc) drop-shadow(0 0 26px #c9a24d66);
+}
+
+.enemy-cutin[data-enemy='enemy_08'] .enemy-cutin-image {
+  filter: sepia(0.16) saturate(1.06) contrast(1.04);
+}
+
+/* 6) 大きさ（決定261 の --artScale 系）：額縁を既存 7 体と揃えた上で PC だけ 1.04（神÷敵を 0.9〜1.15 に収める）。SP は既存どおり 1 */
+@media (min-width: 900px) and (min-height: 461px) {
+  body.battle-viewport .enemy-panel[data-enemy='enemy_08'] {
+    --artScale: 1.04;
+  }
+}
+
+/* 7) Pilot v0.3（docs/SHOGUNATE_PILOT_V0_3.md）：R3 必殺充填の「箱型グロー」を立ち絵の形に沿う光へ。
+      既存の .enemy-avatar.enemy-avatar-charging.enemy-avatar-charging-super は box-shadow（角丸 240×260 の箱・64px）で
+      光るため、透明パネル化（STAGE-LITE）の後も R3 だけ「箱の中のキャラ」に戻っていた（決定240 で構えは drop-shadow 化済み・
+      この 1 つだけ取り残し）。忠次は R3 が設計上の見せ場なので、enemy_08 に閉じて決定240 と同じ言語（drop-shadow 連鎖）に置換する。
+      色の序列は既存踏襲（紅蓮 #ff5c5c の芯＋広い輪・金 #ffd9a1 の内光）。animation・box-shadow・既存 7 体の値は触らない。 */
+.enemy-panel[data-enemy='enemy_08'] .enemy-avatar.enemy-avatar-charging.enemy-avatar-charging-super {
+  box-shadow: none;
+  filter: drop-shadow(0 12px 16px #000000cc) drop-shadow(0 0 3px #ff5c5c) drop-shadow(0 0 36px #ff5c5ccc)
+    drop-shadow(0 0 14px #ffd9a188) drop-shadow(0 0 1px #ffe0aa8c);
+}
+
+/* 8) Pilot v0.6（docs/SHOGUNATE_V0_6_DESIGN_AUDIT.md §1-3）：R3 の溜め中だけ、予告の下に「あと N で総攻めを止める」を 1 行。
+      赤い輪と同じ紅蓮 #ff5c5c の丸で「赤い光＝総攻めの溜め」を結ぶ。割った瞬間は「✓ 総攻めを止めた」＝金 #ffd9a1（v0.4 の金の溜め光と同系）。
+      名札のステータス行は flex-wrap なので flex-basis 100% で予告の下の行に置く。背景は HP の数字と同じ暗い pill（A11Y-01・4.5:1 以上）。
+      animation なし（reduced-motion の追加規則は不要）。予告本体（.intent）の文言・書式・色には触らない。 */
+.enemy-panel[data-enemy='enemy_08'] .enemy-assault-line {
+  flex-basis: 100%;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  box-sizing: border-box;
+  max-width: 100%;
+  padding: 2px 8px;
+  border: 1px solid #ff5c5c99;
+  border-radius: 6px;
+  background: #05060bc4;
+  color: #ffd6d6;
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1.35;
+  overflow-wrap: anywhere;
+}
+.enemy-panel[data-enemy='enemy_08'] .enemy-assault-line::before {
+  content: '';
+  flex: none;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #ff5c5c;
+  box-shadow: 0 0 6px #ff5c5c;
+}
+/* 句の切れ目でだけ折り返す（SP375 の列幅 ≈147px では 2 行・PC は 1 行のまま） */
+.enemy-panel[data-enemy='enemy_08'] .enemy-assault-line-text > span {
+  display: inline-block;
+}
+.enemy-panel[data-enemy='enemy_08'] .enemy-assault-line[data-state='cleared'] {
+  border-color: #ffd9a1aa;
+  color: #ffe7bf;
+}
+.enemy-panel[data-enemy='enemy_08'] .enemy-assault-line[data-state='cleared']::before {
+  display: none;
+}
+/* v0.6 Human QA W2（docs/SHOGUNATE_V0_6_GATE.md §3）：SP では 13px の 2 行（h41）で名札が兜の飾りに約 12px 重なった。
+   SP だけ 11px（HP の数字と同じ大きさ）・丸なし・余白を詰めて 1 行（h≈19）にし、名札を立ち絵の上に戻す。
+   赤い光との結び付きは紅蓮の枠線が担う。文言・2 span の折り返し規則（狭い幅では句の切れ目で 2 行）・PC は不変 */
+@media (max-width: 899px) {
+  .enemy-panel[data-enemy='enemy_08'] .enemy-assault-line {
+    gap: 0;
+    margin-top: -2px;
+    padding: 0 6px;
+    font-size: 11px;
+    line-height: 1.2;
+  }
+  .enemy-panel[data-enemy='enemy_08'] .enemy-assault-line::before {
+    display: none;
+  }
+}

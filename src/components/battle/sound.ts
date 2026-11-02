@@ -345,9 +345,10 @@ export const sfx = {
  * 以下が SE と違う：
  * - 音源は Kit 配布の MP3 を**無改変**で配信する（`public/assets/voice/<god>/<scene>.mp3`。原本は
  *   `audio-source/voice/`・sha256 は Kit MCP `get_voice` と一致。台帳 VOICE-KIT-01）
- * - 同時に鳴るボイスは常に 1 本（新しく鳴らすときは前のボイスを止める＝連続再生防止）
+ * - 同時に鳴るボイスは常に 1 本（Crisis Pilot v1：優先度つき。低い場面は鳴らさず、同じ以上は前の声を
+ *   80ms フェードで止めて置き換える＝連続再生防止・クリック音防止）
  * - fallback の合成トーンは持たない（取得・デコードに失敗したら無音）
- * - 入口の終わりから `VOICE_LAYER.lateDropMs` 以上遅れて届いたら鳴らさない
+ * - 要求から `voiceLateDropMs(scene)`（共通 1,500ms・crisis 800ms）以上遅れて届いたら鳴らさない
  * 権利：`docs/assets-kit/SGG-CREATOR-KIT-RIGHTS.md` §5（Updated 2026-10-08）。公式の声は Kit 配布分のみ。
  * 本作に自作ボイスは無く、ここに載せる音源は Kit 原本だけ（自作音源を「公式」と表示しない）。
  */
@@ -357,19 +358,50 @@ export type VoiceScene = 'greeting' | 'crisis' | 'fatigue' | 'success'
 
 /**
  * 配信中の公式ボイス（神 id → 場面 → `VOICE_BASE_PATH` からの相対パス）。
- * Pilot v1＝大耀「あいさつ」1 本。7 神展開は別 Gate（docs/OFFICIAL_VOICE_PILOT_V1.md §7）。
+ * Pilot v1＝大耀「あいさつ」。Crisis Pilot v1＝大耀「ピンチ」（台帳 VOICE-KIT-08・docs/OFFICIAL_VOICE_CRISIS_PILOT_V1.md）。
+ * 7 神展開は別 Gate（docs/OFFICIAL_VOICE_PILOT_V1.md §7）。
  */
 export const OFFICIAL_VOICES: Readonly<Record<string, Readonly<Partial<Record<VoiceScene, string>>>>> = {
-  taiyo: { greeting: 'taiyo/greeting.mp3' },
+  taiyo: { greeting: 'taiyo/greeting.mp3', crisis: 'taiyo/crisis.mp3' },
 }
 
 export function hasOfficialVoice(godId: string, scene: VoiceScene): boolean {
   return typeof OFFICIAL_VOICES[godId]?.[scene] === 'string'
 }
 
+/**
+ * Crisis Pilot v1：1 チャネルの取り合い（純関数）。鳴っている場面 `active` より優先度の低い `next` は鳴らさない
+ * （'drop'）。同じ以上は前の声をフェードで止めて置き換える（'replace'）。何も鳴っていなければ 'play'。
+ * キューはしない（数秒前の状態の台詞を後から鳴らさない）。
+ */
+export function resolveVoiceContention(active: VoiceScene | null, next: VoiceScene): 'play' | 'replace' | 'drop' {
+  if (active === null) return 'play'
+  return VOICE_LAYER.priority[next] < VOICE_LAYER.priority[active] ? 'drop' : 'replace'
+}
+
+/** Crisis Pilot v1：場面別の遅延 drop 閾値（ms）。場面に無ければ共通値 */
+export function voiceLateDropMs(scene: VoiceScene): number {
+  const table: Readonly<Partial<Record<VoiceScene, number>>> = VOICE_LAYER.sceneLateDropMs
+  return table[scene] ?? VOICE_LAYER.lateDropMs
+}
+
 const voiceBuffers = new Map<string, AudioBuffer | null>()
 const voiceLoading = new Map<string, Promise<AudioBuffer | null>>()
-let activeVoice: { src: AudioBufferSourceNode; gain: GainNode } | null = null
+let activeVoice: { src: AudioBufferSourceNode; gain: GainNode; scene: VoiceScene } | null = null
+
+/** 鳴っているボイスの場面（無ければ null）。計測・テスト用 */
+export function getActiveVoiceScene(): VoiceScene | null {
+  return activeVoice?.scene ?? null
+}
+
+/**
+ * Crisis Pilot v1：decode 済み PCM（1 本 ≈2〜6MB）を神単位で捨てる。新規開始の先読みの前に呼び、
+ * 選んだ神以外のキャッシュを残さない（神を替えるたび積み上がらないように）。取得中のものは触らない
+ */
+export function releaseVoiceCacheExcept(godId: string): void {
+  const keep = `${godId}/`
+  for (const path of [...voiceBuffers.keys()]) if (!path.startsWith(keep)) voiceBuffers.delete(path)
+}
 
 function loadVoice(path: string): Promise<AudioBuffer | null> {
   const cached = voiceBuffers.get(path)
@@ -401,19 +433,36 @@ export function preloadVoice(godId: string, scene: VoiceScene): void {
   if (path) void loadVoice(path)
 }
 
-/** 鳴っているボイスを止める（ミュート・画面離脱・次のボイス）。鳴っていなければ何もしない */
-export function stopVoice(): void {
+/**
+ * 鳴っているボイスを止める（ミュート・画面離脱・次のボイス）。鳴っていなければ何もしない。
+ * `fadeMs` > 0 なら GainNode をその時間で 0 へ下げてから stop する（Crisis Pilot v1：置き換え時のクリック音防止）。
+ * ミュート・画面離脱は従来どおり即時（無音になるため）。
+ */
+export function stopVoice(fadeMs = 0): void {
   const v = activeVoice
   activeVoice = null
   if (!v) return
+  const release = () => {
+    v.src.disconnect()
+    v.gain.disconnect()
+  }
   try {
+    if (fadeMs > 0) {
+      const now = v.gain.context.currentTime
+      const at = now + fadeMs / 1000
+      v.gain.gain.cancelScheduledValues(now)
+      v.gain.gain.setValueAtTime(v.gain.gain.value, now)
+      v.gain.gain.linearRampToValueAtTime(0, at)
+      v.src.onended = release
+      v.src.stop(at)
+      return
+    }
     v.src.onended = null
     v.src.stop()
   } catch {
     /* 既に止まっている */
   }
-  v.src.disconnect()
-  v.gain.disconnect()
+  release()
 }
 
 type VoiceOptions = {
@@ -422,26 +471,31 @@ type VoiceOptions = {
 }
 
 /**
- * 公式ボイスを 1 本鳴らす。配信していない神・場面、ミュート中、AudioContext 不可なら false。
- * true は「鳴らす手続きを始めた」の意味で、取得失敗・遅延 drop では結果的に無音になる。
+ * 公式ボイスを 1 本鳴らす。配信していない神・場面、ミュート中、AudioContext 不可、
+ * 鳴っている声より優先度が低い（`resolveVoiceContention` が 'drop'）なら false。
+ * true は「鳴らす手続きを始めた」の意味で、取得失敗・遅延 drop（場面別 `voiceLateDropMs`）では結果的に無音になる。
  */
 export function playVoice(godId: string, scene: VoiceScene, opts: VoiceOptions = {}): boolean {
   if (muted) return false
   const path = OFFICIAL_VOICES[godId]?.[scene]
   if (!path) return false
+  if (resolveVoiceContention(getActiveVoiceScene(), scene) === 'drop') return false
   const audioCtx = getCtx()
   if (!audioCtx) return false
   const requestedAt = audioCtx.currentTime
   const start = (buf: AudioBuffer) => {
     if (muted) return
-    stopVoice()
+    // 取得待ちの間に優先度の高い声が始まっていたら鳴らさない。置き換えは前の声を 80ms フェードで止める
+    const contention = resolveVoiceContention(getActiveVoiceScene(), scene)
+    if (contention === 'drop') return
+    if (contention === 'replace') stopVoice(VOICE_LAYER.stopFadeMs)
     const src = audioCtx.createBufferSource()
     src.buffer = buf
     const gain = audioCtx.createGain()
     gain.gain.value = Math.max(0, Math.min(1, VOICE_LAYER.gain * SE_GAIN.master))
     src.connect(gain)
     gain.connect(audioCtx.destination)
-    const handle = { src, gain }
+    const handle = { src, gain, scene }
     activeVoice = handle
     src.onended = () => {
       if (activeVoice === handle) activeVoice = null
@@ -460,7 +514,7 @@ export function playVoice(godId: string, scene: VoiceScene, opts: VoiceOptions =
   void loadVoice(path).then((buf) => {
     if (!buf) return
     const late = (audioCtx.currentTime - requestedAt) * 1000
-    if (late > VOICE_LAYER.lateDropMs) return
+    if (late > voiceLateDropMs(scene)) return
     start(buf)
   })
   return true

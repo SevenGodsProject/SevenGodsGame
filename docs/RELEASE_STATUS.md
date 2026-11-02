@@ -2,9 +2,30 @@
 
 Production の「確定状態」を一目で確認するための要約です。新しい仕様判断は含みません（根拠は `docs/DECISIONS.md`）。**§A が現在の正本**。§B 以降は 8/31 Public Beta〜Phase 3（2026-09-06）時点の履歴として残します（当時の Known Non-blockers 1〜16 は §A-4 の生存 Known に統合済み）。
 
-## A. 現在の Production 状態（2026-10-24・決定284 v1.0.4 PRODUCTION LIVE）
+## A. 現在の Production 状態（2026-10-24・決定285 v1.0.5 PRODUCTION LIVE／2026-10-31・決定286 候補 v1.0.6 統合 RC 作成中）
 
-### A-0. v1.0.4 公開（2026-10-24・決定284 PRODUCTION LIVE）
+### A-00. v1.0.6 統合 RC（2026-10-31・決定286 候補・CEO「Local Integration GO」・**未公開**）
+
+| 項目 | 状態 |
+|---|---|
+| **Release 候補** | **SEVEN GODS v1.0.6**：①神 HP 危険帯 Static v1（自分の HP 50%／25% で橙／橙赤＋記号）②Cost-Short Marking v1（手札の「あと N」帯）③大耀 crisis ボイス v1（HP 50% 初回到達・着弾 +300ms・1 戦 1 回）④将軍家 Pilot 忠次 v0.6（`?pilot=shogunate` 限定）＋決定285 v1.0.5 LIVE 記録の同梱 |
+| **branch** | `release/v1_0_6-integration`（起点 `a96a409`）。merge 順 C→B→D→A（`05ad080`→`c09fcf3`→`c2ebb2d`→`4a5f49d`）＋`3120c32`（v1.0.5 記録）＋version bump。CEO が 3 段階 push 済み（remote = `5327a95`）→ **PR #6** `https://github.com/SevenGodsProject/SevenGodsGame/pull/6`（574 files・local 差分と一致） |
+| **CI／Preview** | CI run `41139763908` **FAIL（oxlint 1 error・`crisisVoiceHook.test.ts` rules-of-hooks・test 専用）** → test 1 行修正（runtime 変更 0）→ CEO 追加 push → CI 再実行待ち。Vercel Preview deployment `7450333843` READY（SSO 保護・中身は本番 Smoke で確認）。Gate §2-6／§7 |
+| **Gate** | `docs/V1_0_6_INTEGRATION_GATE.md`（統合監査 `docs/INTEGRATION_READINESS_AUDIT_V1_0_6.md`） |
+| **Rollback 先** | deployment **`7291166485`**（v1.0.5・`a96a409`） |
+| **公開** | CEO iPhone 最終 QA **9/9 PASS** → 決定286 **Production Release GO**（2026-10-31）。merge（= deploy）は CI GREEN 確認後に CEO。決定286 の LIVE 確定は本番 Smoke PASS 後 |
+
+### A-0q. v1.0.5 公開（2026-10-24・決定285 PRODUCTION LIVE・履歴。記録 commit `98222ee` は v1.0.6 統合 RC に同梱）
+
+| 項目 | 状態 |
+|---|---|
+| **Release** | **SEVEN GODS v1.0.5**（決定285）：同じ盤面 Retry の前回比（Stage B）＋Enemy Break SE＋敵攻撃の揺れ＋AC12 スクリプト修正。`src/core` 0・save v9 不変 |
+| **Production HEAD** | master = origin/master **`a96a409`**（PR #5 merge・ツリーは RC `release/v1_0_5-rc` `77c2195` と一致）／runtime 最終変更 `ca7840c`（version） |
+| **Vercel deployment** | **`7291166485`**（sha `a96a409`）／bundle `index-BkzgPXaH.js`（475,991 B）／Home `v1.0.5 (a96a409)` |
+| **Rollback 先** | deployment **`7283378458`**（v1.0.4・`35a7f91`）。Promote は CEO のみ |
+| **Release Gate／Smoke** | `docs/V1_0_5_RC_GATE.md`（GO・FAIL 0・WARN 4）／`docs/V1_0_5_PRODUCTION_SMOKE.md`（受入 44/44・敗北 18/18・Stage B 3 viewport・旧セーブ 44/44・probe PC 20/20／SP 19/20） |
+
+### A-0. v1.0.4 公開（2026-10-24・決定284 PRODUCTION LIVE・履歴）
 
 | 項目 | 状態 |
 |---|---|
