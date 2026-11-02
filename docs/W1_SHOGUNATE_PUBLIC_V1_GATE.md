@@ -1,6 +1,6 @@
 # W1 将軍家 第一陣 公開 v1（決定287）— 実装・Gate 記録（2026-11-03）
 
-> **状態：IMPLEMENTED・自動 Gate ALL PASS・CEO Human QA 2 問 待ち。** branch `feat/w1-shogunate-public-v1`（起点 master `58227ff`＝v1.0.6 Production runtime）・worktree `SevenGodsGame-w1`。AI 判断（CLAUDE.md §6-2）で実装・Gate を実施。決定288 v1.1（CEO 承認 2026-11-03「進めて」）の W1。merge（＝v1.0.7 Production 公開）は CEO Gate。
+> **状態：IMPLEMENTED・自動 Gate ALL PASS・CEO Human QA 2/2 PASS（2026-11-03）→ Final Release Gate GO・CEO merge 待ち。** branch `feat/w1-shogunate-public-v1`（起点 master `58227ff`＝v1.0.6 Production runtime）・worktree `SevenGodsGame-w1`。AI 判断（CLAUDE.md §6-2）で実装・Gate を実施。決定288 v1.1（CEO 承認 2026-11-03「進めて」）の W1。merge（＝v1.0.7 Production 公開）は CEO Gate。
 
 ## 0. 結論
 
@@ -67,6 +67,8 @@
 | Q2 | **むずかしい**で忠次と 1 戦。R3 で「あと N で総攻めを止める」→ 止めたときに「✓ 止めた」と敵の崩れ（赤い罅）が **別の瞬間**に来る（hard W1）。それが気になったか | R3 の帯と「✓」 | NO（気にならない） |
 
 Q1 NO → 注記文言・★表示の見せ方のみ調整（仕組みは変えない）。Q2 YES（気になる）→ 文言 1 回調整（hard のしきい値 0.6 は変えない＝決定 v0.6）。
+
+**結果（CEO・2026-11-03）：Q1 PASS（通常戦・報酬・戦績）／Q2 PASS（むずかしい・演出違和感なし）→ Final Release Gate GO。** 公開直前の再確認：PR #8（docs-only）が master  に merge されたため本 branch に master を merge（conflict は DECISIONS／RELEASE_STATUS の追記行のみ・両方を保持）。runtime tree は  と同一。
 
 ## 5. 残リスク
 
