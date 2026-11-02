@@ -1,0 +1,3008 @@
+{
+  "summary": {
+    "base": "https://seven-gods-game.vercel.app",
+    "generatedAt": "2026-11-02T14:41:33.636Z",
+    "runs": [
+      {
+        "viewport": "pc",
+        "seed": "sg-v04-01",
+        "enemyName": "将軍四天王・忠次",
+        "rounds": [
+          {
+            "round": 1,
+            "intent": "60",
+            "band": "high",
+            "hp": "1,130 / 1,130",
+            "glow": {
+              "chargingSuper": false,
+              "charging": false,
+              "boxShadow": "none",
+              "filter": "drop-shadow(rgba(0, 0, 0, 0.8) 0px 12px 16px) drop-shadow(rgba(201, 162, 77, 0.4) 0px 0px 26px) drop-shadow(rgba(255, 224, 170, 0.55) 0px 0px 1px)",
+              "dropShadowCount": 3,
+              "dataEnemy": "enemy_08"
+            },
+            "tacticLine": null,
+            "plateOverlap": {
+              "plateBottom": 198.5,
+              "plateH": 86,
+              "avatarTop": 96,
+              "visibleTop": 119,
+              "overlapBoxPx": 102.5,
+              "overlapVisiblePx": 79.5
+            }
+          },
+          {
+            "round": 2,
+            "intent": "強打 100",
+            "band": "high",
+            "hp": "1,050 / 1,130",
+            "glow": {
+              "chargingSuper": false,
+              "charging": false,
+              "boxShadow": "none",
+              "filter": "drop-shadow(rgba(0, 0, 0, 0.8) 0px 12px 16px) drop-shadow(rgba(155, 89, 182, 0.4) 0px 0px 26px) drop-shadow(rgba(255, 107, 107, 0.9) 0px 0px 2px) drop-shadow(rgba(255, 224, 170, 0.55) 0px 0px 1px)",
+              "dropShadowCount": 4,
+              "dataEnemy": "enemy_08"
+            },
+            "tacticLine": null,
+            "plateOverlap": {
+              "plateBottom": 198.5,
+              "plateH": 86,
+              "avatarTop": 95.9,
+              "visibleTop": 118.9,
+              "overlapBoxPx": 102.6,
+              "overlapVisiblePx": 79.6
+            }
+          },
+          {
+            "round": 3,
+            "intent": "⚠ 傷が浅ければ次は総攻め",
+            "band": "high",
+            "hp": "800 / 1,130",
+            "glow": {
+              "chargingSuper": true,
+              "charging": true,
+              "boxShadow": "none",
+              "filter": "drop-shadow(rgba(0, 0, 0, 0.8) 0px 12px 16px) drop-shadow(rgb(255, 92, 92) 0px 0px 3px) drop-shadow(rgba(255, 92, 92, 0.8) 0px 0px 36px) drop-shadow(rgba(255, 217, 161, 0.533) 0px 0px 14px) drop-shadow(rgba(255, 224, 170",
+              "dropShadowCount": 5,
+              "dataEnemy": "enemy_08"
+            },
+            "tacticLine": {
+              "state": "armed",
+              "text": "あと130で総攻めを止める",
+              "rect": {
+                "x": 164,
+                "y": 196,
+                "w": 307,
+                "h": 24
+              },
+              "insidePlate": true,
+              "insideViewport": true,
+              "overflowX": false,
+              "lines": 1,
+              "fontSize": 13,
+              "visible": true,
+              "pageScrollW": 1508,
+              "vw": 1508
+            },
+            "plateOverlap": {
+              "plateBottom": 226,
+              "plateH": 113.5,
+              "avatarTop": 99.5,
+              "visibleTop": 122.5,
+              "overlapBoxPx": 126.6,
+              "overlapVisiblePx": 103.6
+            }
+          },
+          {
+            "round": 4,
+            "intent": "強打 140",
+            "band": "half",
+            "hp": "520 / 1,130",
+            "glow": {
+              "chargingSuper": false,
+              "charging": false,
+              "boxShadow": "none",
+              "filter": "drop-shadow(rgba(0, 0, 0, 0.8) 0px 12px 16px) drop-shadow(rgba(155, 89, 182, 0.4) 0px 0px 26px) drop-shadow(rgba(255, 107, 107, 0.9) 0px 0px 2px) drop-shadow(rgba(255, 224, 170, 0.55) 0px 0px 1px)",
+              "dropShadowCount": 4,
+              "dataEnemy": "enemy_08"
+            },
+            "tacticLine": null,
+            "plateOverlap": {
+              "plateBottom": 198.5,
+              "plateH": 86,
+              "avatarTop": 97.4,
+              "visibleTop": 120.4,
+              "overlapBoxPx": 101.1,
+              "overlapVisiblePx": 78.1
+            }
+          }
+        ],
+        "r3Intent": "⚠ 傷が浅ければ次は総攻め",
+        "r3Glow": {
+          "chargingSuper": true,
+          "charging": true,
+          "boxShadow": "none",
+          "filter": "drop-shadow(rgba(0, 0, 0, 0.8) 0px 12px 16px) drop-shadow(rgb(255, 92, 92) 0px 0px 3px) drop-shadow(rgba(255, 92, 92, 0.8) 0px 0px 36px) drop-shadow(rgba(255, 217, 161, 0.533) 0px 0px 14px) drop-shadow(rgba(255, 224, 170",
+          "dropShadowCount": 5,
+          "dataEnemy": "enemy_08"
+        },
+        "r4Intent": "強打 140",
+        "r4Branch": "then",
+        "r3HalfCrossing": {
+          "round": 3,
+          "card": "⚔ 豪快な一撃",
+          "bandBefore": "high",
+          "bandAfter": "half",
+          "shot": {
+            "cf2Animations": [
+              "cf2-plate-flash-half@520",
+              "cf2-wound-bloom-half@600",
+              "cf2-break-body-half@420"
+            ],
+            "plateAfterOpacity": "0.55",
+            "intentText": "⚠ 傷が浅ければ次は総攻め",
+            "intentColor": "rgb(255, 209, 102)",
+            "chargingSuper": false,
+            "avatarFilter": "drop-shadow(rgba(0, 0, 0, 0.8) 0px 12px 16px) drop-shadow(rgba(255, 209, 102, 0.667) 0px 0px 32px) drop-shadow(rgba(255, 224, 170, 0.55) 0px 0px 1px)",
+            "collapseTransform": "matrix(0.985027, 0, 0, 0.985027, -6.98718, 0)"
+          },
+          "frames": 52,
+          "breakStartMs": 765,
+          "breakEndMs": 1888,
+          "pausedSpanMs": 570,
+          "breakActiveMs": 553,
+          "breakNames": [
+            "cf2-plate-flash-half",
+            "cf2-wound-bloom-half",
+            "cf2-break-body-half"
+          ],
+          "unlockBtnMs": 475,
+          "intentTextsDuringBreak": [
+            "⚠ 傷が浅ければ次は総攻め"
+          ],
+          "intentChargeDuringBreak": true,
+          "intentOffViewportFrames": 0,
+          "horizontalScrollFrames": 0,
+          "bandAtEnd": "half",
+          "superOnAtStart": false,
+          "halfStartMs": 765,
+          "halfStartFrame": 6,
+          "superOffMs": null,
+          "superOffFrame": null,
+          "halfAndSuperOffSameFrame": null,
+          "superOffMinusHalfMs": null,
+          "tacticLineTexts": [
+            "✓ 総攻めを止めた"
+          ],
+          "tacticLineClearMs": null,
+          "tacticLineClearAndSuperOffSameFrame": null,
+          "tacticLineClearAndHalfSameFrame": null,
+          "dropShadowAtStart": true,
+          "boxShadowAtStart": "none",
+          "rafP95Ms": 138,
+          "rafP95LiveMs": 170,
+          "rafMaxLiveMs": 187,
+          "immediateEnd": true
+        },
+        "breaks": [
+          {
+            "round": 3,
+            "card": "⚔ 豪快な一撃",
+            "band": "high->half",
+            "names": [
+              "cf2-plate-flash-half",
+              "cf2-wound-bloom-half",
+              "cf2-break-body-half"
+            ],
+            "breakStartMs": 765,
+            "breakEndMs": 1888,
+            "breakActiveMs": 553,
+            "unlockBtnMs": 475,
+            "intentTextsDuringBreak": [
+              "⚠ 傷が浅ければ次は総攻め"
+            ],
+            "intentChargeDuringBreak": true,
+            "intentOffViewportFrames": 0,
+            "horizontalScrollFrames": 0,
+            "superOnAtStart": false,
+            "halfStartMs": 765,
+            "superOffMs": null,
+            "halfAndSuperOffSameFrame": null,
+            "superOffMinusHalfMs": null,
+            "shot": {
+              "cf2Animations": [
+                "cf2-plate-flash-half@520",
+                "cf2-wound-bloom-half@600",
+                "cf2-break-body-half@420"
+              ],
+              "plateAfterOpacity": "0.55",
+              "intentText": "⚠ 傷が浅ければ次は総攻め",
+              "intentColor": "rgb(255, 209, 102)",
+              "chargingSuper": false,
+              "avatarFilter": "drop-shadow(rgba(0, 0, 0, 0.8) 0px 12px 16px) drop-shadow(rgba(255, 209, 102, 0.667) 0px 0px 32px) drop-shadow(rgba(255, 224, 170, 0.55) 0px 0px 1px)",
+              "collapseTransform": "matrix(0.985027, 0, 0, 0.985027, -6.98718, 0)"
+            }
+          }
+        ],
+        "difficulty": "hard",
+        "tacticLineByRound": [
+          {
+            "round": 1,
+            "line": null
+          },
+          {
+            "round": 2,
+            "line": null
+          },
+          {
+            "round": 3,
+            "line": {
+              "state": "armed",
+              "text": "あと130で総攻めを止める",
+              "rect": {
+                "x": 164,
+                "y": 196,
+                "w": 307,
+                "h": 24
+              },
+              "insidePlate": true,
+              "insideViewport": true,
+              "overflowX": false,
+              "lines": 1,
+              "fontSize": 13,
+              "visible": true,
+              "pageScrollW": 1508,
+              "vw": 1508
+            }
+          },
+          {
+            "round": 4,
+            "line": null
+          }
+        ],
+        "plateOverlapByRound": [
+          {
+            "round": 1,
+            "plateBottom": 198.5,
+            "plateH": 86,
+            "avatarTop": 96,
+            "visibleTop": 119,
+            "overlapBoxPx": 102.5,
+            "overlapVisiblePx": 79.5
+          },
+          {
+            "round": 2,
+            "plateBottom": 198.5,
+            "plateH": 86,
+            "avatarTop": 95.9,
+            "visibleTop": 118.9,
+            "overlapBoxPx": 102.6,
+            "overlapVisiblePx": 79.6
+          },
+          {
+            "round": 3,
+            "plateBottom": 226,
+            "plateH": 113.5,
+            "avatarTop": 99.5,
+            "visibleTop": 122.5,
+            "overlapBoxPx": 126.6,
+            "overlapVisiblePx": 103.6
+          },
+          {
+            "round": 4,
+            "plateBottom": 198.5,
+            "plateH": 86,
+            "avatarTop": 97.4,
+            "visibleTop": 120.4,
+            "overlapBoxPx": 101.1,
+            "overlapVisiblePx": 78.1
+          }
+        ],
+        "tacticLineClears": [
+          {
+            "round": 3,
+            "card": "⚔ 豪快な一撃",
+            "clearMs": 1141,
+            "superOffMs": 1141,
+            "halfStartMs": null,
+            "sameFrameAsSuperOff": true,
+            "sameFrameAsHalf": null,
+            "texts": [
+              "あと130で総攻めを止める",
+              "✓ 総攻めを止めた"
+            ]
+          }
+        ],
+        "tacticLineTextsR3": [
+          "あと130で総攻めを止める",
+          "✓ 総攻めを止めた"
+        ],
+        "rafP95LiveMsMax": 627,
+        "immediateEnd": {
+          "round": 3,
+          "card": "⚔ 豪快な一撃",
+          "endClickMs": 1413,
+          "intentBefore": "⚠ 傷が浅ければ次は総攻め",
+          "glowBeforeEnd": {
+            "chargingSuper": false,
+            "charging": true,
+            "boxShadow": "none",
+            "filter": "drop-shadow(rgba(0, 0, 0, 0.8) 0px 12px 16px) drop-shadow(rgba(255, 209, 102, 0.667) 0px 0px 32px) drop-shadow(rgba(255, 224, 170, 0.55) 0px 0px 1px)",
+            "dropShadowCount": 3,
+            "dataEnemy": "enemy_08"
+          },
+          "intentChangeMs": 2440,
+          "intentAfter": "強打 140",
+          "breakEndMs": 1888,
+          "breakStillRunningAtIntentChange": false,
+          "r4Intent": "強打 140",
+          "r4Band": "half"
+        },
+        "plays": 8,
+        "finished": false,
+        "errors": 0
+      },
+      {
+        "viewport": "pc",
+        "seed": "sg-v04-02",
+        "enemyName": "将軍四天王・忠次",
+        "rounds": [
+          {
+            "round": 1,
+            "intent": "60",
+            "band": "high",
+            "hp": "1,130 / 1,130",
+            "glow": {
+              "chargingSuper": false,
+              "charging": false,
+              "boxShadow": "none",
+              "filter": "drop-shadow(rgba(0, 0, 0, 0.8) 0px 12px 16px) drop-shadow(rgba(201, 162, 77, 0.4) 0px 0px 26px) drop-shadow(rgba(255, 224, 170, 0.55) 0px 0px 1px)",
+              "dropShadowCount": 3,
+              "dataEnemy": "enemy_08"
+            },
+            "tacticLine": null,
+            "plateOverlap": {
+              "plateBottom": 198.5,
+              "plateH": 86,
+              "avatarTop": 95.8,
+              "visibleTop": 118.8,
+              "overlapBoxPx": 102.7,
+              "overlapVisiblePx": 79.7
+            }
+          },
+          {
+            "round": 2,
+            "intent": "強打 100",
+            "band": "high",
+            "hp": "990 / 1,130",
+            "glow": {
+              "chargingSuper": false,
+              "charging": false,
+              "boxShadow": "none",
+              "filter": "drop-shadow(rgba(0, 0, 0, 0.8) 0px 12px 16px) drop-shadow(rgba(155, 89, 182, 0.4) 0px 0px 26px) drop-shadow(rgba(255, 107, 107, 0.9) 0px 0px 2px) drop-shadow(rgba(255, 224, 170, 0.55) 0px 0px 1px)",
+              "dropShadowCount": 4,
+              "dataEnemy": "enemy_08"
+            },
+            "tacticLine": null,
+            "plateOverlap": {
+              "plateBottom": 198.5,
+              "plateH": 86,
+              "avatarTop": 100.3,
+              "visibleTop": 123.3,
+              "overlapBoxPx": 98.2,
+              "overlapVisiblePx": 75.2
+            }
+          },
+          {
+            "round": 3,
+            "intent": "⚠ 傷が浅ければ次は総攻め",
+            "band": "high",
+            "hp": "910 / 1,130",
+            "glow": {
+              "chargingSuper": true,
+              "charging": true,
+              "boxShadow": "none",
+              "filter": "drop-shadow(rgba(0, 0, 0, 0.8) 0px 12px 16px) drop-shadow(rgb(255, 92, 92) 0px 0px 3px) drop-shadow(rgba(255, 92, 92, 0.8) 0px 0px 36px) drop-shadow(rgba(255, 217, 161, 0.533) 0px 0px 14px) drop-shadow(rgba(255, 224, 170",
+              "dropShadowCount": 5,
+              "dataEnemy": "enemy_08"
+            },
+            "tacticLine": {
+              "state": "armed",
+              "text": "あと240で総攻めを止める",
+              "rect": {
+                "x": 164,
+                "y": 196,
+                "w": 307,
+                "h": 24
+              },
+              "insidePlate": true,
+              "insideViewport": true,
+              "overflowX": false,
+              "lines": 1,
+              "fontSize": 13,
+              "visible": true,
+              "pageScrollW": 1508,
+              "vw": 1508
+            },
+            "plateOverlap": {
+              "plateBottom": 252,
+              "plateH": 139.5,
+              "avatarTop": 100.4,
+              "visibleTop": 123.4,
+              "overlapBoxPx": 151.6,
+              "overlapVisiblePx": 128.6
+            }
+          },
+          {
+            "round": 4,
+            "intent": "軍略・総攻め 280",
+            "band": "high",
+            "hp": "790 / 1,130",
+            "glow": {
+              "chargingSuper": false,
+              "charging": false,
+              "boxShadow": "none",
+              "filter": "drop-shadow(rgba(0, 0, 0, 0.8) 0px 12px 16px) drop-shadow(rgba(155, 89, 182, 0.4) 0px 0px 26px) drop-shadow(rgb(255, 92, 92) 0px 0px 3px) drop-shadow(rgba(229, 72, 77, 0.8) 0px 0px 24px) drop-shadow(rgba(255, 224, 170, 0",
+              "dropShadowCount": 5,
+              "dataEnemy": "enemy_08"
+            },
+            "tacticLine": null,
+            "plateOverlap": {
+              "plateBottom": 198.5,
+              "plateH": 86,
+              "avatarTop": 97.8,
+              "visibleTop": 120.8,
+              "overlapBoxPx": 100.7,
+              "overlapVisiblePx": 77.7
+            }
+          }
+        ],
+        "r3Intent": "⚠ 傷が浅ければ次は総攻め",
+        "r3Glow": {
+          "chargingSuper": true,
+          "charging": true,
+          "boxShadow": "none",
+          "filter": "drop-shadow(rgba(0, 0, 0, 0.8) 0px 12px 16px) drop-shadow(rgb(255, 92, 92) 0px 0px 3px) drop-shadow(rgba(255, 92, 92, 0.8) 0px 0px 36px) drop-shadow(rgba(255, 217, 161, 0.533) 0px 0px 14px) drop-shadow(rgba(255, 224, 170",
+          "dropShadowCount": 5,
+          "dataEnemy": "enemy_08"
+        },
+        "r4Intent": "軍略・総攻め 280",
+        "r4Branch": "else",
+        "r3HalfCrossing": null,
+        "breaks": [
+          {
+            "round": 4,
+            "card": "✨ 共振",
+            "band": "high->quarter",
+            "names": [
+              "cf2-plate-flash-quarter",
+              "cf2-wound-bloom-quarter",
+              "cf2-break-body-quarter"
+            ],
+            "breakStartMs": 2600,
+            "breakEndMs": 4914,
+            "breakActiveMs": 1216,
+            "unlockBtnMs": 2600,
+            "intentTextsDuringBreak": [
+              "軍略・総攻め 280"
+            ],
+            "intentChargeDuringBreak": false,
+            "intentOffViewportFrames": 0,
+            "horizontalScrollFrames": 0,
+            "superOnAtStart": false,
+            "halfStartMs": null,
+            "superOffMs": null,
+            "halfAndSuperOffSameFrame": null,
+            "superOffMinusHalfMs": null,
+            "shot": {
+              "cf2Animations": [
+                "cf2-plate-flash-quarter@760",
+                "cf2-wound-bloom-quarter@720",
+                "cf2-break-body-quarter@560"
+              ],
+              "plateAfterOpacity": "0.643468",
+              "intentText": "軍略・総攻め 280",
+              "intentColor": "rgb(255, 180, 180)",
+              "chargingSuper": false,
+              "avatarFilter": "drop-shadow(rgba(0, 0, 0, 0.8) 0px 12px 16px) drop-shadow(rgba(155, 89, 182, 0.4) 0px 0px 26px) drop-shadow(rgb(255, 92, 92) 0px 0px 3px) drop-shadow(rgba(229, ",
+              "collapseTransform": "matrix(0.978326, 0, 0, 0.978326, -8.66959, 0)"
+            }
+          }
+        ],
+        "difficulty": "hard",
+        "tacticLineByRound": [
+          {
+            "round": 1,
+            "line": null
+          },
+          {
+            "round": 2,
+            "line": null
+          },
+          {
+            "round": 3,
+            "line": {
+              "state": "armed",
+              "text": "あと240で総攻めを止める",
+              "rect": {
+                "x": 164,
+                "y": 196,
+                "w": 307,
+                "h": 24
+              },
+              "insidePlate": true,
+              "insideViewport": true,
+              "overflowX": false,
+              "lines": 1,
+              "fontSize": 13,
+              "visible": true,
+              "pageScrollW": 1508,
+              "vw": 1508
+            }
+          },
+          {
+            "round": 4,
+            "line": null
+          }
+        ],
+        "plateOverlapByRound": [
+          {
+            "round": 1,
+            "plateBottom": 198.5,
+            "plateH": 86,
+            "avatarTop": 95.8,
+            "visibleTop": 118.8,
+            "overlapBoxPx": 102.7,
+            "overlapVisiblePx": 79.7
+          },
+          {
+            "round": 2,
+            "plateBottom": 198.5,
+            "plateH": 86,
+            "avatarTop": 100.3,
+            "visibleTop": 123.3,
+            "overlapBoxPx": 98.2,
+            "overlapVisiblePx": 75.2
+          },
+          {
+            "round": 3,
+            "plateBottom": 252,
+            "plateH": 139.5,
+            "avatarTop": 100.4,
+            "visibleTop": 123.4,
+            "overlapBoxPx": 151.6,
+            "overlapVisiblePx": 128.6
+          },
+          {
+            "round": 4,
+            "plateBottom": 198.5,
+            "plateH": 86,
+            "avatarTop": 97.8,
+            "visibleTop": 120.8,
+            "overlapBoxPx": 100.7,
+            "overlapVisiblePx": 77.7
+          }
+        ],
+        "tacticLineClears": [],
+        "tacticLineTextsR3": [
+          "あと240で総攻めを止める",
+          "あと120で総攻めを止める"
+        ],
+        "rafP95LiveMsMax": 737,
+        "immediateEnd": null,
+        "plays": 9,
+        "finished": true,
+        "errors": 0
+      },
+      {
+        "viewport": "sp375",
+        "seed": "sg-v04-01",
+        "enemyName": "将軍四天王・忠次",
+        "rounds": [
+          {
+            "round": 1,
+            "intent": "60",
+            "band": "high",
+            "hp": "1,130 / 1,130",
+            "glow": {
+              "chargingSuper": false,
+              "charging": false,
+              "boxShadow": "none",
+              "filter": "drop-shadow(rgba(0, 0, 0, 0.8) 0px 12px 16px) drop-shadow(rgba(201, 162, 77, 0.4) 0px 0px 26px) drop-shadow(rgba(255, 224, 170, 0.55) 0px 0px 1px)",
+              "dropShadowCount": 3,
+              "dataEnemy": "enemy_08"
+            },
+            "tacticLine": null,
+            "plateOverlap": {
+              "plateBottom": 184.5,
+              "plateH": 76,
+              "avatarTop": 211.1,
+              "visibleTop": 225.1,
+              "overlapBoxPx": -26.6,
+              "overlapVisiblePx": -40.6
+            }
+          },
+          {
+            "round": 2,
+            "intent": "強打 100",
+            "band": "high",
+            "hp": "1,050 / 1,130",
+            "glow": {
+              "chargingSuper": false,
+              "charging": false,
+              "boxShadow": "none",
+              "filter": "drop-shadow(rgba(0, 0, 0, 0.8) 0px 12px 16px) drop-shadow(rgba(155, 89, 182, 0.4) 0px 0px 26px) drop-shadow(rgba(255, 107, 107, 0.9) 0px 0px 2px) drop-shadow(rgba(255, 224, 170, 0.55) 0px 0px 1px)",
+              "dropShadowCount": 4,
+              "dataEnemy": "enemy_08"
+            },
+            "tacticLine": null,
+            "plateOverlap": {
+              "plateBottom": 184.5,
+              "plateH": 76,
+              "avatarTop": 211.2,
+              "visibleTop": 225.2,
+              "overlapBoxPx": -26.7,
+              "overlapVisiblePx": -40.7
+            }
+          },
+          {
+            "round": 3,
+            "intent": "⚠ 傷が浅ければ次は総攻め",
+            "band": "high",
+            "hp": "800 / 1,130",
+            "glow": {
+              "chargingSuper": true,
+              "charging": true,
+              "boxShadow": "none",
+              "filter": "drop-shadow(rgba(0, 0, 0, 0.8) 0px 12px 16px) drop-shadow(rgb(255, 92, 92) 0px 0px 3px) drop-shadow(rgba(255, 92, 92, 0.8) 0px 0px 36px) drop-shadow(rgba(255, 217, 161, 0.533) 0px 0px 14px) drop-shadow(rgba(255, 224, 170",
+              "dropShadowCount": 5,
+              "dataEnemy": "enemy_08"
+            },
+            "tacticLine": {
+              "state": "armed",
+              "text": "あと130で総攻めを止める",
+              "rect": {
+                "x": 30,
+                "y": 201,
+                "w": 147,
+                "h": 15
+              },
+              "insidePlate": true,
+              "insideViewport": true,
+              "overflowX": false,
+              "lines": 1,
+              "fontSize": 11,
+              "visible": true,
+              "pageScrollW": 375,
+              "vw": 375
+            },
+            "plateOverlap": {
+              "plateBottom": 220.9,
+              "plateH": 112.4,
+              "avatarTop": 212.6,
+              "visibleTop": 226.6,
+              "overlapBoxPx": 8.3,
+              "overlapVisiblePx": -5.7
+            }
+          },
+          {
+            "round": 4,
+            "intent": "強打 140",
+            "band": "half",
+            "hp": "520 / 1,130",
+            "glow": {
+              "chargingSuper": false,
+              "charging": false,
+              "boxShadow": "none",
+              "filter": "drop-shadow(rgba(0, 0, 0, 0.8) 0px 12px 16px) drop-shadow(rgba(155, 89, 182, 0.4) 0px 0px 26px) drop-shadow(rgba(255, 107, 107, 0.9) 0px 0px 2px) drop-shadow(rgba(255, 224, 170, 0.55) 0px 0px 1px)",
+              "dropShadowCount": 4,
+              "dataEnemy": "enemy_08"
+            },
+            "tacticLine": null,
+            "plateOverlap": {
+              "plateBottom": 184.5,
+              "plateH": 76,
+              "avatarTop": 214.6,
+              "visibleTop": 228.6,
+              "overlapBoxPx": -30.1,
+              "overlapVisiblePx": -44.1
+            }
+          }
+        ],
+        "r3Intent": "⚠ 傷が浅ければ次は総攻め",
+        "r3Glow": {
+          "chargingSuper": true,
+          "charging": true,
+          "boxShadow": "none",
+          "filter": "drop-shadow(rgba(0, 0, 0, 0.8) 0px 12px 16px) drop-shadow(rgb(255, 92, 92) 0px 0px 3px) drop-shadow(rgba(255, 92, 92, 0.8) 0px 0px 36px) drop-shadow(rgba(255, 217, 161, 0.533) 0px 0px 14px) drop-shadow(rgba(255, 224, 170",
+          "dropShadowCount": 5,
+          "dataEnemy": "enemy_08"
+        },
+        "r4Intent": "強打 140",
+        "r4Branch": "then",
+        "r3HalfCrossing": {
+          "round": 3,
+          "card": "⚔ 豪快な一撃",
+          "bandBefore": "high",
+          "bandAfter": "half",
+          "shot": {
+            "cf2Animations": [
+              "cf2-plate-flash-half@520",
+              "cf2-wound-bloom-half@600",
+              "cf2-break-body-half@420"
+            ],
+            "plateAfterOpacity": "0.55",
+            "intentText": "⚠ 傷が浅ければ次は総攻め",
+            "intentColor": "rgb(255, 209, 102)",
+            "chargingSuper": false,
+            "avatarFilter": "drop-shadow(rgba(0, 0, 0, 0.8) 0px 12px 16px) drop-shadow(rgba(255, 209, 102, 0.667) 0px 0px 32px) drop-shadow(rgba(255, 224, 170, 0.55) 0px 0px 1px)",
+            "collapseTransform": "matrix(0.985027, 0, 0, 0.985027, -4.99084, 0)"
+          },
+          "frames": 121,
+          "breakStartMs": 573,
+          "breakEndMs": 2567,
+          "pausedSpanMs": 1493,
+          "breakActiveMs": 501,
+          "breakNames": [
+            "cf2-plate-flash-half",
+            "cf2-wound-bloom-half",
+            "cf2-break-body-half"
+          ],
+          "unlockBtnMs": 347,
+          "intentTextsDuringBreak": [
+            "⚠ 傷が浅ければ次は総攻め"
+          ],
+          "intentChargeDuringBreak": true,
+          "intentOffViewportFrames": 0,
+          "horizontalScrollFrames": 0,
+          "bandAtEnd": "half",
+          "superOnAtStart": false,
+          "halfStartMs": 573,
+          "halfStartFrame": 19,
+          "superOffMs": null,
+          "superOffFrame": null,
+          "halfAndSuperOffSameFrame": null,
+          "superOffMinusHalfMs": null,
+          "tacticLineTexts": [
+            "✓ 総攻めを止めた"
+          ],
+          "tacticLineClearMs": null,
+          "tacticLineClearAndSuperOffSameFrame": null,
+          "tacticLineClearAndHalfSameFrame": null,
+          "dropShadowAtStart": true,
+          "boxShadowAtStart": "none",
+          "rafP95Ms": 63,
+          "rafP95LiveMs": 65,
+          "rafMaxLiveMs": 136,
+          "immediateEnd": true
+        },
+        "breaks": [
+          {
+            "round": 3,
+            "card": "⚔ 豪快な一撃",
+            "band": "high->half",
+            "names": [
+              "cf2-plate-flash-half",
+              "cf2-wound-bloom-half",
+              "cf2-break-body-half"
+            ],
+            "breakStartMs": 573,
+            "breakEndMs": 2567,
+            "breakActiveMs": 501,
+            "unlockBtnMs": 347,
+            "intentTextsDuringBreak": [
+              "⚠ 傷が浅ければ次は総攻め"
+            ],
+            "intentChargeDuringBreak": true,
+            "intentOffViewportFrames": 0,
+            "horizontalScrollFrames": 0,
+            "superOnAtStart": false,
+            "halfStartMs": 573,
+            "superOffMs": null,
+            "halfAndSuperOffSameFrame": null,
+            "superOffMinusHalfMs": null,
+            "shot": {
+              "cf2Animations": [
+                "cf2-plate-flash-half@520",
+                "cf2-wound-bloom-half@600",
+                "cf2-break-body-half@420"
+              ],
+              "plateAfterOpacity": "0.55",
+              "intentText": "⚠ 傷が浅ければ次は総攻め",
+              "intentColor": "rgb(255, 209, 102)",
+              "chargingSuper": false,
+              "avatarFilter": "drop-shadow(rgba(0, 0, 0, 0.8) 0px 12px 16px) drop-shadow(rgba(255, 209, 102, 0.667) 0px 0px 32px) drop-shadow(rgba(255, 224, 170, 0.55) 0px 0px 1px)",
+              "collapseTransform": "matrix(0.985027, 0, 0, 0.985027, -4.99084, 0)"
+            }
+          }
+        ],
+        "difficulty": "hard",
+        "tacticLineByRound": [
+          {
+            "round": 1,
+            "line": null
+          },
+          {
+            "round": 2,
+            "line": null
+          },
+          {
+            "round": 3,
+            "line": {
+              "state": "armed",
+              "text": "あと130で総攻めを止める",
+              "rect": {
+                "x": 30,
+                "y": 201,
+                "w": 147,
+                "h": 15
+              },
+              "insidePlate": true,
+              "insideViewport": true,
+              "overflowX": false,
+              "lines": 1,
+              "fontSize": 11,
+              "visible": true,
+              "pageScrollW": 375,
+              "vw": 375
+            }
+          },
+          {
+            "round": 4,
+            "line": null
+          }
+        ],
+        "plateOverlapByRound": [
+          {
+            "round": 1,
+            "plateBottom": 184.5,
+            "plateH": 76,
+            "avatarTop": 211.1,
+            "visibleTop": 225.1,
+            "overlapBoxPx": -26.6,
+            "overlapVisiblePx": -40.6
+          },
+          {
+            "round": 2,
+            "plateBottom": 184.5,
+            "plateH": 76,
+            "avatarTop": 211.2,
+            "visibleTop": 225.2,
+            "overlapBoxPx": -26.7,
+            "overlapVisiblePx": -40.7
+          },
+          {
+            "round": 3,
+            "plateBottom": 220.9,
+            "plateH": 112.4,
+            "avatarTop": 212.6,
+            "visibleTop": 226.6,
+            "overlapBoxPx": 8.3,
+            "overlapVisiblePx": -5.7
+          },
+          {
+            "round": 4,
+            "plateBottom": 184.5,
+            "plateH": 76,
+            "avatarTop": 214.6,
+            "visibleTop": 228.6,
+            "overlapBoxPx": -30.1,
+            "overlapVisiblePx": -44.1
+          }
+        ],
+        "tacticLineClears": [
+          {
+            "round": 3,
+            "card": "⚔ 豪快な一撃",
+            "clearMs": 847,
+            "superOffMs": 847,
+            "halfStartMs": null,
+            "sameFrameAsSuperOff": true,
+            "sameFrameAsHalf": null,
+            "texts": [
+              "あと130で総攻めを止める",
+              "✓ 総攻めを止めた"
+            ]
+          }
+        ],
+        "tacticLineTextsR3": [
+          "あと130で総攻めを止める",
+          "✓ 総攻めを止めた"
+        ],
+        "rafP95LiveMsMax": 145,
+        "immediateEnd": {
+          "round": 3,
+          "card": "⚔ 豪快な一撃",
+          "endClickMs": 2103,
+          "intentBefore": "⚠ 傷が浅ければ次は総攻め",
+          "glowBeforeEnd": {
+            "chargingSuper": false,
+            "charging": true,
+            "boxShadow": "none",
+            "filter": "drop-shadow(rgba(0, 0, 0, 0.8) 0px 12px 16px) drop-shadow(rgba(255, 209, 102, 0.667) 0px 0px 32px) drop-shadow(rgba(255, 224, 170, 0.55) 0px 0px 1px)",
+            "dropShadowCount": 3,
+            "dataEnemy": "enemy_08"
+          },
+          "intentChangeMs": 2880,
+          "intentAfter": "強打 140",
+          "breakEndMs": 2567,
+          "breakStillRunningAtIntentChange": false,
+          "r4Intent": "強打 140",
+          "r4Band": "half"
+        },
+        "plays": 8,
+        "finished": false,
+        "errors": 0
+      },
+      {
+        "viewport": "sp375",
+        "seed": "sg-v04-02",
+        "enemyName": "将軍四天王・忠次",
+        "rounds": [
+          {
+            "round": 1,
+            "intent": "60",
+            "band": "high",
+            "hp": "1,130 / 1,130",
+            "glow": {
+              "chargingSuper": false,
+              "charging": false,
+              "boxShadow": "none",
+              "filter": "drop-shadow(rgba(0, 0, 0, 0.8) 0px 12px 16px) drop-shadow(rgba(201, 162, 77, 0.4) 0px 0px 26px) drop-shadow(rgba(255, 224, 170, 0.55) 0px 0px 1px)",
+              "dropShadowCount": 3,
+              "dataEnemy": "enemy_08"
+            },
+            "tacticLine": null,
+            "plateOverlap": {
+              "plateBottom": 184.5,
+              "plateH": 76,
+              "avatarTop": 211.1,
+              "visibleTop": 225.1,
+              "overlapBoxPx": -26.6,
+              "overlapVisiblePx": -40.6
+            }
+          },
+          {
+            "round": 2,
+            "intent": "強打 100",
+            "band": "high",
+            "hp": "990 / 1,130",
+            "glow": {
+              "chargingSuper": false,
+              "charging": false,
+              "boxShadow": "none",
+              "filter": "drop-shadow(rgba(0, 0, 0, 0.8) 0px 12px 16px) drop-shadow(rgba(155, 89, 182, 0.4) 0px 0px 26px) drop-shadow(rgba(255, 107, 107, 0.9) 0px 0px 2px) drop-shadow(rgba(255, 224, 170, 0.55) 0px 0px 1px)",
+              "dropShadowCount": 4,
+              "dataEnemy": "enemy_08"
+            },
+            "tacticLine": null,
+            "plateOverlap": {
+              "plateBottom": 184.5,
+              "plateH": 76,
+              "avatarTop": 211.4,
+              "visibleTop": 225.4,
+              "overlapBoxPx": -26.9,
+              "overlapVisiblePx": -40.9
+            }
+          },
+          {
+            "round": 3,
+            "intent": "⚠ 傷が浅ければ次は総攻め",
+            "band": "high",
+            "hp": "910 / 1,130",
+            "glow": {
+              "chargingSuper": true,
+              "charging": true,
+              "boxShadow": "none",
+              "filter": "drop-shadow(rgba(0, 0, 0, 0.8) 0px 12px 16px) drop-shadow(rgb(255, 92, 92) 0px 0px 3px) drop-shadow(rgba(255, 92, 92, 0.8) 0px 0px 36px) drop-shadow(rgba(255, 217, 161, 0.533) 0px 0px 14px) drop-shadow(rgba(255, 224, 170",
+              "dropShadowCount": 5,
+              "dataEnemy": "enemy_08"
+            },
+            "tacticLine": {
+              "state": "armed",
+              "text": "あと240で総攻めを止める",
+              "rect": {
+                "x": 30,
+                "y": 201,
+                "w": 147,
+                "h": 15
+              },
+              "insidePlate": true,
+              "insideViewport": true,
+              "overflowX": false,
+              "lines": 1,
+              "fontSize": 11,
+              "visible": true,
+              "pageScrollW": 375,
+              "vw": 375
+            },
+            "plateOverlap": {
+              "plateBottom": 237.9,
+              "plateH": 129.4,
+              "avatarTop": 213.6,
+              "visibleTop": 227.6,
+              "overlapBoxPx": 24.3,
+              "overlapVisiblePx": 10.3
+            }
+          },
+          {
+            "round": 4,
+            "intent": "軍略・総攻め 280",
+            "band": "high",
+            "hp": "790 / 1,130",
+            "glow": {
+              "chargingSuper": false,
+              "charging": false,
+              "boxShadow": "none",
+              "filter": "drop-shadow(rgba(0, 0, 0, 0.8) 0px 12px 16px) drop-shadow(rgba(155, 89, 182, 0.4) 0px 0px 26px) drop-shadow(rgb(255, 92, 92) 0px 0px 3px) drop-shadow(rgba(229, 72, 77, 0.8) 0px 0px 24px) drop-shadow(rgba(255, 224, 170, 0",
+              "dropShadowCount": 5,
+              "dataEnemy": "enemy_08"
+            },
+            "tacticLine": null,
+            "plateOverlap": {
+              "plateBottom": 201.5,
+              "plateH": 93,
+              "avatarTop": 210.1,
+              "visibleTop": 224.1,
+              "overlapBoxPx": -8.6,
+              "overlapVisiblePx": -22.6
+            }
+          }
+        ],
+        "r3Intent": "⚠ 傷が浅ければ次は総攻め",
+        "r3Glow": {
+          "chargingSuper": true,
+          "charging": true,
+          "boxShadow": "none",
+          "filter": "drop-shadow(rgba(0, 0, 0, 0.8) 0px 12px 16px) drop-shadow(rgb(255, 92, 92) 0px 0px 3px) drop-shadow(rgba(255, 92, 92, 0.8) 0px 0px 36px) drop-shadow(rgba(255, 217, 161, 0.533) 0px 0px 14px) drop-shadow(rgba(255, 224, 170",
+          "dropShadowCount": 5,
+          "dataEnemy": "enemy_08"
+        },
+        "r4Intent": "軍略・総攻め 280",
+        "r4Branch": "else",
+        "r3HalfCrossing": null,
+        "breaks": [
+          {
+            "round": 4,
+            "card": "✨ 共振",
+            "band": "high->quarter",
+            "names": [
+              "cf2-plate-flash-quarter",
+              "cf2-wound-bloom-quarter",
+              "cf2-break-body-quarter"
+            ],
+            "breakStartMs": 2407,
+            "breakEndMs": 5523,
+            "breakActiveMs": 880,
+            "unlockBtnMs": 766,
+            "intentTextsDuringBreak": [
+              "軍略・総攻め 280"
+            ],
+            "intentChargeDuringBreak": false,
+            "intentOffViewportFrames": 0,
+            "horizontalScrollFrames": 0,
+            "superOnAtStart": false,
+            "halfStartMs": null,
+            "superOffMs": null,
+            "halfAndSuperOffSameFrame": null,
+            "superOffMinusHalfMs": null,
+            "shot": {
+              "cf2Animations": [
+                "cf2-plate-flash-quarter@760",
+                "cf2-wound-bloom-quarter@720",
+                "cf2-break-body-quarter@560"
+              ],
+              "plateAfterOpacity": "0.643468",
+              "intentText": "軍略・総攻め 280",
+              "intentColor": "rgb(255, 180, 180)",
+              "chargingSuper": false,
+              "avatarFilter": "drop-shadow(rgba(0, 0, 0, 0.8) 0px 12px 16px) drop-shadow(rgba(155, 89, 182, 0.4) 0px 0px 26px) drop-shadow(rgb(255, 92, 92) 0px 0px 3px) drop-shadow(rgba(229, ",
+              "collapseTransform": "matrix(0.978326, 0, 0, 0.978326, -6.06872, 0)"
+            }
+          }
+        ],
+        "difficulty": "hard",
+        "tacticLineByRound": [
+          {
+            "round": 1,
+            "line": null
+          },
+          {
+            "round": 2,
+            "line": null
+          },
+          {
+            "round": 3,
+            "line": {
+              "state": "armed",
+              "text": "あと240で総攻めを止める",
+              "rect": {
+                "x": 30,
+                "y": 201,
+                "w": 147,
+                "h": 15
+              },
+              "insidePlate": true,
+              "insideViewport": true,
+              "overflowX": false,
+              "lines": 1,
+              "fontSize": 11,
+              "visible": true,
+              "pageScrollW": 375,
+              "vw": 375
+            }
+          },
+          {
+            "round": 4,
+            "line": null
+          }
+        ],
+        "plateOverlapByRound": [
+          {
+            "round": 1,
+            "plateBottom": 184.5,
+            "plateH": 76,
+            "avatarTop": 211.1,
+            "visibleTop": 225.1,
+            "overlapBoxPx": -26.6,
+            "overlapVisiblePx": -40.6
+          },
+          {
+            "round": 2,
+            "plateBottom": 184.5,
+            "plateH": 76,
+            "avatarTop": 211.4,
+            "visibleTop": 225.4,
+            "overlapBoxPx": -26.9,
+            "overlapVisiblePx": -40.9
+          },
+          {
+            "round": 3,
+            "plateBottom": 237.9,
+            "plateH": 129.4,
+            "avatarTop": 213.6,
+            "visibleTop": 227.6,
+            "overlapBoxPx": 24.3,
+            "overlapVisiblePx": 10.3
+          },
+          {
+            "round": 4,
+            "plateBottom": 201.5,
+            "plateH": 93,
+            "avatarTop": 210.1,
+            "visibleTop": 224.1,
+            "overlapBoxPx": -8.6,
+            "overlapVisiblePx": -22.6
+          }
+        ],
+        "tacticLineClears": [],
+        "tacticLineTextsR3": [
+          "あと240で総攻めを止める",
+          "あと120で総攻めを止める"
+        ],
+        "rafP95LiveMsMax": 389,
+        "immediateEnd": null,
+        "plays": 9,
+        "finished": true,
+        "errors": 0
+      }
+    ]
+  },
+  "results": [
+    {
+      "viewport": "pc",
+      "seed": "sg-v04-01",
+      "strategy": "damage",
+      "enemyName": "将軍四天王・忠次",
+      "rounds": [
+        {
+          "round": 1,
+          "intent": "60",
+          "band": "high",
+          "hp": "1,130 / 1,130",
+          "glow": {
+            "chargingSuper": false,
+            "charging": false,
+            "boxShadow": "none",
+            "filter": "drop-shadow(rgba(0, 0, 0, 0.8) 0px 12px 16px) drop-shadow(rgba(201, 162, 77, 0.4) 0px 0px 26px) drop-shadow(rgba(255, 224, 170, 0.55) 0px 0px 1px)",
+            "dropShadowCount": 3,
+            "dataEnemy": "enemy_08"
+          },
+          "tacticLine": null,
+          "plateOverlap": {
+            "plateBottom": 198.5,
+            "plateH": 86,
+            "avatarTop": 96,
+            "visibleTop": 119,
+            "overlapBoxPx": 102.5,
+            "overlapVisiblePx": 79.5
+          }
+        },
+        {
+          "round": 2,
+          "intent": "強打 100",
+          "band": "high",
+          "hp": "1,050 / 1,130",
+          "glow": {
+            "chargingSuper": false,
+            "charging": false,
+            "boxShadow": "none",
+            "filter": "drop-shadow(rgba(0, 0, 0, 0.8) 0px 12px 16px) drop-shadow(rgba(155, 89, 182, 0.4) 0px 0px 26px) drop-shadow(rgba(255, 107, 107, 0.9) 0px 0px 2px) drop-shadow(rgba(255, 224, 170, 0.55) 0px 0px 1px)",
+            "dropShadowCount": 4,
+            "dataEnemy": "enemy_08"
+          },
+          "tacticLine": null,
+          "plateOverlap": {
+            "plateBottom": 198.5,
+            "plateH": 86,
+            "avatarTop": 95.9,
+            "visibleTop": 118.9,
+            "overlapBoxPx": 102.6,
+            "overlapVisiblePx": 79.6
+          }
+        },
+        {
+          "round": 3,
+          "intent": "⚠ 傷が浅ければ次は総攻め",
+          "band": "high",
+          "hp": "800 / 1,130",
+          "glow": {
+            "chargingSuper": true,
+            "charging": true,
+            "boxShadow": "none",
+            "filter": "drop-shadow(rgba(0, 0, 0, 0.8) 0px 12px 16px) drop-shadow(rgb(255, 92, 92) 0px 0px 3px) drop-shadow(rgba(255, 92, 92, 0.8) 0px 0px 36px) drop-shadow(rgba(255, 217, 161, 0.533) 0px 0px 14px) drop-shadow(rgba(255, 224, 170",
+            "dropShadowCount": 5,
+            "dataEnemy": "enemy_08"
+          },
+          "tacticLine": {
+            "state": "armed",
+            "text": "あと130で総攻めを止める",
+            "rect": {
+              "x": 164,
+              "y": 196,
+              "w": 307,
+              "h": 24
+            },
+            "insidePlate": true,
+            "insideViewport": true,
+            "overflowX": false,
+            "lines": 1,
+            "fontSize": 13,
+            "visible": true,
+            "pageScrollW": 1508,
+            "vw": 1508
+          },
+          "plateOverlap": {
+            "plateBottom": 226,
+            "plateH": 113.5,
+            "avatarTop": 99.5,
+            "visibleTop": 122.5,
+            "overlapBoxPx": 126.6,
+            "overlapVisiblePx": 103.6
+          }
+        },
+        {
+          "round": 4,
+          "intent": "強打 140",
+          "band": "half",
+          "hp": "520 / 1,130",
+          "glow": {
+            "chargingSuper": false,
+            "charging": false,
+            "boxShadow": "none",
+            "filter": "drop-shadow(rgba(0, 0, 0, 0.8) 0px 12px 16px) drop-shadow(rgba(155, 89, 182, 0.4) 0px 0px 26px) drop-shadow(rgba(255, 107, 107, 0.9) 0px 0px 2px) drop-shadow(rgba(255, 224, 170, 0.55) 0px 0px 1px)",
+            "dropShadowCount": 4,
+            "dataEnemy": "enemy_08"
+          },
+          "tacticLine": null,
+          "plateOverlap": {
+            "plateBottom": 198.5,
+            "plateH": 86,
+            "avatarTop": 97.4,
+            "visibleTop": 120.4,
+            "overlapBoxPx": 101.1,
+            "overlapVisiblePx": 78.1
+          }
+        }
+      ],
+      "plays": [
+        {
+          "round": 1,
+          "card": "⚔ 一心不乱",
+          "bandBefore": "high",
+          "bandAfter": "high",
+          "shot": null,
+          "frames": 72,
+          "breakStartMs": null,
+          "breakEndMs": null,
+          "pausedSpanMs": 0,
+          "breakActiveMs": null,
+          "breakNames": [],
+          "unlockBtnMs": 411,
+          "intentTextsDuringBreak": [],
+          "intentChargeDuringBreak": false,
+          "intentOffViewportFrames": 0,
+          "horizontalScrollFrames": 0,
+          "bandAtEnd": "high",
+          "superOnAtStart": false,
+          "halfStartMs": null,
+          "halfStartFrame": null,
+          "superOffMs": null,
+          "superOffFrame": null,
+          "halfAndSuperOffSameFrame": null,
+          "superOffMinusHalfMs": null,
+          "tacticLineTexts": [],
+          "tacticLineClearMs": null,
+          "tacticLineClearAndSuperOffSameFrame": null,
+          "tacticLineClearAndHalfSameFrame": null,
+          "dropShadowAtStart": true,
+          "boxShadowAtStart": "none",
+          "rafP95Ms": 98,
+          "rafP95LiveMs": 98,
+          "rafMaxLiveMs": 147
+        },
+        {
+          "round": 1,
+          "card": "⚔ 一心不乱",
+          "bandBefore": "high",
+          "bandAfter": "high",
+          "shot": null,
+          "frames": 82,
+          "breakStartMs": null,
+          "breakEndMs": null,
+          "pausedSpanMs": 0,
+          "breakActiveMs": null,
+          "breakNames": [],
+          "unlockBtnMs": 382,
+          "intentTextsDuringBreak": [],
+          "intentChargeDuringBreak": false,
+          "intentOffViewportFrames": 0,
+          "horizontalScrollFrames": 0,
+          "bandAtEnd": "high",
+          "superOnAtStart": false,
+          "halfStartMs": null,
+          "halfStartFrame": null,
+          "superOffMs": null,
+          "superOffFrame": null,
+          "halfAndSuperOffSameFrame": null,
+          "superOffMinusHalfMs": null,
+          "tacticLineTexts": [],
+          "tacticLineClearMs": null,
+          "tacticLineClearAndSuperOffSameFrame": null,
+          "tacticLineClearAndHalfSameFrame": null,
+          "dropShadowAtStart": true,
+          "boxShadowAtStart": "none",
+          "rafP95Ms": 85,
+          "rafP95LiveMs": 85,
+          "rafMaxLiveMs": 112
+        },
+        {
+          "round": 2,
+          "card": "🌟 神託",
+          "bandBefore": "high",
+          "bandAfter": "high",
+          "shot": null,
+          "frames": 37,
+          "breakStartMs": null,
+          "breakEndMs": null,
+          "pausedSpanMs": 0,
+          "breakActiveMs": null,
+          "breakNames": [],
+          "unlockBtnMs": 519,
+          "intentTextsDuringBreak": [],
+          "intentChargeDuringBreak": false,
+          "intentOffViewportFrames": 0,
+          "horizontalScrollFrames": 0,
+          "bandAtEnd": "high",
+          "superOnAtStart": false,
+          "halfStartMs": null,
+          "halfStartFrame": null,
+          "superOffMs": null,
+          "superOffFrame": null,
+          "halfAndSuperOffSameFrame": null,
+          "superOffMinusHalfMs": null,
+          "tacticLineTexts": [],
+          "tacticLineClearMs": null,
+          "tacticLineClearAndSuperOffSameFrame": null,
+          "tacticLineClearAndHalfSameFrame": null,
+          "dropShadowAtStart": true,
+          "boxShadowAtStart": "none",
+          "rafP95Ms": 208,
+          "rafP95LiveMs": 208,
+          "rafMaxLiveMs": 231
+        },
+        {
+          "round": 3,
+          "card": "⚔ 豪快な一撃",
+          "bandBefore": "high",
+          "bandAfter": "high",
+          "shot": null,
+          "frames": 33,
+          "breakStartMs": null,
+          "breakEndMs": null,
+          "pausedSpanMs": 0,
+          "breakActiveMs": null,
+          "breakNames": [],
+          "unlockBtnMs": 785,
+          "intentTextsDuringBreak": [],
+          "intentChargeDuringBreak": false,
+          "intentOffViewportFrames": 0,
+          "horizontalScrollFrames": 0,
+          "bandAtEnd": "high",
+          "superOnAtStart": true,
+          "halfStartMs": null,
+          "halfStartFrame": null,
+          "superOffMs": 1141,
+          "superOffFrame": 3,
+          "halfAndSuperOffSameFrame": null,
+          "superOffMinusHalfMs": null,
+          "tacticLineTexts": [
+            "あと130で総攻めを止める",
+            "✓ 総攻めを止めた"
+          ],
+          "tacticLineClearMs": 1141,
+          "tacticLineClearAndSuperOffSameFrame": true,
+          "tacticLineClearAndHalfSameFrame": null,
+          "dropShadowAtStart": true,
+          "boxShadowAtStart": "none",
+          "rafP95Ms": 627,
+          "rafP95LiveMs": 627,
+          "rafMaxLiveMs": 755
+        },
+        {
+          "round": 3,
+          "card": "⚔ 豪快な一撃",
+          "bandBefore": "high",
+          "bandAfter": "half",
+          "shot": {
+            "cf2Animations": [
+              "cf2-plate-flash-half@520",
+              "cf2-wound-bloom-half@600",
+              "cf2-break-body-half@420"
+            ],
+            "plateAfterOpacity": "0.55",
+            "intentText": "⚠ 傷が浅ければ次は総攻め",
+            "intentColor": "rgb(255, 209, 102)",
+            "chargingSuper": false,
+            "avatarFilter": "drop-shadow(rgba(0, 0, 0, 0.8) 0px 12px 16px) drop-shadow(rgba(255, 209, 102, 0.667) 0px 0px 32px) drop-shadow(rgba(255, 224, 170, 0.55) 0px 0px 1px)",
+            "collapseTransform": "matrix(0.985027, 0, 0, 0.985027, -6.98718, 0)"
+          },
+          "frames": 52,
+          "breakStartMs": 765,
+          "breakEndMs": 1888,
+          "pausedSpanMs": 570,
+          "breakActiveMs": 553,
+          "breakNames": [
+            "cf2-plate-flash-half",
+            "cf2-wound-bloom-half",
+            "cf2-break-body-half"
+          ],
+          "unlockBtnMs": 475,
+          "intentTextsDuringBreak": [
+            "⚠ 傷が浅ければ次は総攻め"
+          ],
+          "intentChargeDuringBreak": true,
+          "intentOffViewportFrames": 0,
+          "horizontalScrollFrames": 0,
+          "bandAtEnd": "half",
+          "superOnAtStart": false,
+          "halfStartMs": 765,
+          "halfStartFrame": 6,
+          "superOffMs": null,
+          "superOffFrame": null,
+          "halfAndSuperOffSameFrame": null,
+          "superOffMinusHalfMs": null,
+          "tacticLineTexts": [
+            "✓ 総攻めを止めた"
+          ],
+          "tacticLineClearMs": null,
+          "tacticLineClearAndSuperOffSameFrame": null,
+          "tacticLineClearAndHalfSameFrame": null,
+          "dropShadowAtStart": true,
+          "boxShadowAtStart": "none",
+          "rafP95Ms": 138,
+          "rafP95LiveMs": 170,
+          "rafMaxLiveMs": 187,
+          "immediateEnd": true
+        },
+        {
+          "round": 4,
+          "card": "💀 呪縛",
+          "bandBefore": "half",
+          "bandAfter": "half",
+          "shot": null,
+          "frames": 36,
+          "breakStartMs": null,
+          "breakEndMs": null,
+          "pausedSpanMs": 0,
+          "breakActiveMs": null,
+          "breakNames": [],
+          "unlockBtnMs": 626,
+          "intentTextsDuringBreak": [],
+          "intentChargeDuringBreak": false,
+          "intentOffViewportFrames": 0,
+          "horizontalScrollFrames": 0,
+          "bandAtEnd": "half",
+          "superOnAtStart": false,
+          "halfStartMs": 2,
+          "halfStartFrame": 0,
+          "superOffMs": null,
+          "superOffFrame": null,
+          "halfAndSuperOffSameFrame": null,
+          "superOffMinusHalfMs": null,
+          "tacticLineTexts": [],
+          "tacticLineClearMs": null,
+          "tacticLineClearAndSuperOffSameFrame": null,
+          "tacticLineClearAndHalfSameFrame": null,
+          "dropShadowAtStart": true,
+          "boxShadowAtStart": "none",
+          "rafP95Ms": 230,
+          "rafP95LiveMs": 230,
+          "rafMaxLiveMs": 257
+        },
+        {
+          "round": 4,
+          "card": "✨ 巫女の舞",
+          "bandBefore": "half",
+          "bandAfter": "half",
+          "shot": null,
+          "frames": 43,
+          "breakStartMs": null,
+          "breakEndMs": null,
+          "pausedSpanMs": 0,
+          "breakActiveMs": null,
+          "breakNames": [],
+          "unlockBtnMs": 510,
+          "intentTextsDuringBreak": [],
+          "intentChargeDuringBreak": false,
+          "intentOffViewportFrames": 0,
+          "horizontalScrollFrames": 0,
+          "bandAtEnd": "half",
+          "superOnAtStart": false,
+          "halfStartMs": 58,
+          "halfStartFrame": 0,
+          "superOffMs": null,
+          "superOffFrame": null,
+          "halfAndSuperOffSameFrame": null,
+          "superOffMinusHalfMs": null,
+          "tacticLineTexts": [],
+          "tacticLineClearMs": null,
+          "tacticLineClearAndSuperOffSameFrame": null,
+          "tacticLineClearAndHalfSameFrame": null,
+          "dropShadowAtStart": true,
+          "boxShadowAtStart": "none",
+          "rafP95Ms": 210,
+          "rafP95LiveMs": 210,
+          "rafMaxLiveMs": 222
+        },
+        {
+          "round": 4,
+          "card": "🛡 鉄壁の構え",
+          "bandBefore": "half",
+          "bandAfter": "half",
+          "shot": null,
+          "frames": 40,
+          "breakStartMs": null,
+          "breakEndMs": null,
+          "pausedSpanMs": 0,
+          "breakActiveMs": null,
+          "breakNames": [],
+          "unlockBtnMs": 364,
+          "intentTextsDuringBreak": [],
+          "intentChargeDuringBreak": false,
+          "intentOffViewportFrames": 0,
+          "horizontalScrollFrames": 0,
+          "bandAtEnd": "half",
+          "superOnAtStart": false,
+          "halfStartMs": 52,
+          "halfStartFrame": 0,
+          "superOffMs": null,
+          "superOffFrame": null,
+          "halfAndSuperOffSameFrame": null,
+          "superOffMinusHalfMs": null,
+          "tacticLineTexts": [],
+          "tacticLineClearMs": null,
+          "tacticLineClearAndSuperOffSameFrame": null,
+          "tacticLineClearAndHalfSameFrame": null,
+          "dropShadowAtStart": true,
+          "boxShadowAtStart": "none",
+          "rafP95Ms": 173,
+          "rafP95LiveMs": 173,
+          "rafMaxLiveMs": 240
+        }
+      ],
+      "immediateEnd": {
+        "round": 3,
+        "card": "⚔ 豪快な一撃",
+        "endClickMs": 1413,
+        "intentBefore": "⚠ 傷が浅ければ次は総攻め",
+        "glowBeforeEnd": {
+          "chargingSuper": false,
+          "charging": true,
+          "boxShadow": "none",
+          "filter": "drop-shadow(rgba(0, 0, 0, 0.8) 0px 12px 16px) drop-shadow(rgba(255, 209, 102, 0.667) 0px 0px 32px) drop-shadow(rgba(255, 224, 170, 0.55) 0px 0px 1px)",
+          "dropShadowCount": 3,
+          "dataEnemy": "enemy_08"
+        },
+        "intentChangeMs": 2440,
+        "intentAfter": "強打 140",
+        "breakEndMs": 1888,
+        "breakStillRunningAtIntentChange": false,
+        "r4Intent": "強打 140",
+        "r4Band": "half"
+      },
+      "finished": false,
+      "crashed": null,
+      "errors": []
+    },
+    {
+      "viewport": "pc",
+      "seed": "sg-v04-02",
+      "strategy": "damage",
+      "enemyName": "将軍四天王・忠次",
+      "rounds": [
+        {
+          "round": 1,
+          "intent": "60",
+          "band": "high",
+          "hp": "1,130 / 1,130",
+          "glow": {
+            "chargingSuper": false,
+            "charging": false,
+            "boxShadow": "none",
+            "filter": "drop-shadow(rgba(0, 0, 0, 0.8) 0px 12px 16px) drop-shadow(rgba(201, 162, 77, 0.4) 0px 0px 26px) drop-shadow(rgba(255, 224, 170, 0.55) 0px 0px 1px)",
+            "dropShadowCount": 3,
+            "dataEnemy": "enemy_08"
+          },
+          "tacticLine": null,
+          "plateOverlap": {
+            "plateBottom": 198.5,
+            "plateH": 86,
+            "avatarTop": 95.8,
+            "visibleTop": 118.8,
+            "overlapBoxPx": 102.7,
+            "overlapVisiblePx": 79.7
+          }
+        },
+        {
+          "round": 2,
+          "intent": "強打 100",
+          "band": "high",
+          "hp": "990 / 1,130",
+          "glow": {
+            "chargingSuper": false,
+            "charging": false,
+            "boxShadow": "none",
+            "filter": "drop-shadow(rgba(0, 0, 0, 0.8) 0px 12px 16px) drop-shadow(rgba(155, 89, 182, 0.4) 0px 0px 26px) drop-shadow(rgba(255, 107, 107, 0.9) 0px 0px 2px) drop-shadow(rgba(255, 224, 170, 0.55) 0px 0px 1px)",
+            "dropShadowCount": 4,
+            "dataEnemy": "enemy_08"
+          },
+          "tacticLine": null,
+          "plateOverlap": {
+            "plateBottom": 198.5,
+            "plateH": 86,
+            "avatarTop": 100.3,
+            "visibleTop": 123.3,
+            "overlapBoxPx": 98.2,
+            "overlapVisiblePx": 75.2
+          }
+        },
+        {
+          "round": 3,
+          "intent": "⚠ 傷が浅ければ次は総攻め",
+          "band": "high",
+          "hp": "910 / 1,130",
+          "glow": {
+            "chargingSuper": true,
+            "charging": true,
+            "boxShadow": "none",
+            "filter": "drop-shadow(rgba(0, 0, 0, 0.8) 0px 12px 16px) drop-shadow(rgb(255, 92, 92) 0px 0px 3px) drop-shadow(rgba(255, 92, 92, 0.8) 0px 0px 36px) drop-shadow(rgba(255, 217, 161, 0.533) 0px 0px 14px) drop-shadow(rgba(255, 224, 170",
+            "dropShadowCount": 5,
+            "dataEnemy": "enemy_08"
+          },
+          "tacticLine": {
+            "state": "armed",
+            "text": "あと240で総攻めを止める",
+            "rect": {
+              "x": 164,
+              "y": 196,
+              "w": 307,
+              "h": 24
+            },
+            "insidePlate": true,
+            "insideViewport": true,
+            "overflowX": false,
+            "lines": 1,
+            "fontSize": 13,
+            "visible": true,
+            "pageScrollW": 1508,
+            "vw": 1508
+          },
+          "plateOverlap": {
+            "plateBottom": 252,
+            "plateH": 139.5,
+            "avatarTop": 100.4,
+            "visibleTop": 123.4,
+            "overlapBoxPx": 151.6,
+            "overlapVisiblePx": 128.6
+          }
+        },
+        {
+          "round": 4,
+          "intent": "軍略・総攻め 280",
+          "band": "high",
+          "hp": "790 / 1,130",
+          "glow": {
+            "chargingSuper": false,
+            "charging": false,
+            "boxShadow": "none",
+            "filter": "drop-shadow(rgba(0, 0, 0, 0.8) 0px 12px 16px) drop-shadow(rgba(155, 89, 182, 0.4) 0px 0px 26px) drop-shadow(rgb(255, 92, 92) 0px 0px 3px) drop-shadow(rgba(229, 72, 77, 0.8) 0px 0px 24px) drop-shadow(rgba(255, 224, 170, 0",
+            "dropShadowCount": 5,
+            "dataEnemy": "enemy_08"
+          },
+          "tacticLine": null,
+          "plateOverlap": {
+            "plateBottom": 198.5,
+            "plateH": 86,
+            "avatarTop": 97.8,
+            "visibleTop": 120.8,
+            "overlapBoxPx": 100.7,
+            "overlapVisiblePx": 77.7
+          }
+        }
+      ],
+      "plays": [
+        {
+          "round": 1,
+          "card": "⚔ 豪快な一撃",
+          "bandBefore": "high",
+          "bandAfter": "high",
+          "shot": null,
+          "frames": 76,
+          "breakStartMs": null,
+          "breakEndMs": null,
+          "pausedSpanMs": 0,
+          "breakActiveMs": null,
+          "breakNames": [],
+          "unlockBtnMs": 417,
+          "intentTextsDuringBreak": [],
+          "intentChargeDuringBreak": false,
+          "intentOffViewportFrames": 0,
+          "horizontalScrollFrames": 0,
+          "bandAtEnd": "high",
+          "superOnAtStart": false,
+          "halfStartMs": null,
+          "halfStartFrame": null,
+          "superOffMs": null,
+          "superOffFrame": null,
+          "halfAndSuperOffSameFrame": null,
+          "superOffMinusHalfMs": null,
+          "tacticLineTexts": [],
+          "tacticLineClearMs": null,
+          "tacticLineClearAndSuperOffSameFrame": null,
+          "tacticLineClearAndHalfSameFrame": null,
+          "dropShadowAtStart": true,
+          "boxShadowAtStart": "none",
+          "rafP95Ms": 108,
+          "rafP95LiveMs": 108,
+          "rafMaxLiveMs": 132
+        },
+        {
+          "round": 2,
+          "card": "💀 呪縛",
+          "bandBefore": "high",
+          "bandAfter": "high",
+          "shot": null,
+          "frames": 34,
+          "breakStartMs": null,
+          "breakEndMs": null,
+          "pausedSpanMs": 0,
+          "breakActiveMs": null,
+          "breakNames": [],
+          "unlockBtnMs": 377,
+          "intentTextsDuringBreak": [],
+          "intentChargeDuringBreak": false,
+          "intentOffViewportFrames": 0,
+          "horizontalScrollFrames": 0,
+          "bandAtEnd": "high",
+          "superOnAtStart": false,
+          "halfStartMs": null,
+          "halfStartFrame": null,
+          "superOffMs": null,
+          "superOffFrame": null,
+          "halfAndSuperOffSameFrame": null,
+          "superOffMinusHalfMs": null,
+          "tacticLineTexts": [],
+          "tacticLineClearMs": null,
+          "tacticLineClearAndSuperOffSameFrame": null,
+          "tacticLineClearAndHalfSameFrame": null,
+          "dropShadowAtStart": true,
+          "boxShadowAtStart": "none",
+          "rafP95Ms": 249,
+          "rafP95LiveMs": 249,
+          "rafMaxLiveMs": 253
+        },
+        {
+          "round": 2,
+          "card": "⚔ 一心不乱",
+          "bandBefore": "high",
+          "bandAfter": "high",
+          "shot": null,
+          "frames": 31,
+          "breakStartMs": null,
+          "breakEndMs": null,
+          "pausedSpanMs": 0,
+          "breakActiveMs": null,
+          "breakNames": [],
+          "unlockBtnMs": 432,
+          "intentTextsDuringBreak": [],
+          "intentChargeDuringBreak": false,
+          "intentOffViewportFrames": 0,
+          "horizontalScrollFrames": 0,
+          "bandAtEnd": "high",
+          "superOnAtStart": false,
+          "halfStartMs": null,
+          "halfStartFrame": null,
+          "superOffMs": null,
+          "superOffFrame": null,
+          "halfAndSuperOffSameFrame": null,
+          "superOffMinusHalfMs": null,
+          "tacticLineTexts": [],
+          "tacticLineClearMs": null,
+          "tacticLineClearAndSuperOffSameFrame": null,
+          "tacticLineClearAndHalfSameFrame": null,
+          "dropShadowAtStart": true,
+          "boxShadowAtStart": "none",
+          "rafP95Ms": 266,
+          "rafP95LiveMs": 266,
+          "rafMaxLiveMs": 305
+        },
+        {
+          "round": 3,
+          "card": "⚔ 剛撃",
+          "bandBefore": "high",
+          "bandAfter": "high",
+          "shot": null,
+          "frames": 16,
+          "breakStartMs": null,
+          "breakEndMs": null,
+          "pausedSpanMs": 0,
+          "breakActiveMs": null,
+          "breakNames": [],
+          "unlockBtnMs": 996,
+          "intentTextsDuringBreak": [],
+          "intentChargeDuringBreak": false,
+          "intentOffViewportFrames": 0,
+          "horizontalScrollFrames": 0,
+          "bandAtEnd": "high",
+          "superOnAtStart": true,
+          "halfStartMs": null,
+          "halfStartFrame": null,
+          "superOffMs": null,
+          "superOffFrame": null,
+          "halfAndSuperOffSameFrame": null,
+          "superOffMinusHalfMs": null,
+          "tacticLineTexts": [
+            "あと240で総攻めを止める",
+            "あと120で総攻めを止める"
+          ],
+          "tacticLineClearMs": null,
+          "tacticLineClearAndSuperOffSameFrame": null,
+          "tacticLineClearAndHalfSameFrame": null,
+          "dropShadowAtStart": true,
+          "boxShadowAtStart": "none",
+          "rafP95Ms": 598,
+          "rafP95LiveMs": 598,
+          "rafMaxLiveMs": 598
+        },
+        {
+          "round": 3,
+          "card": "✨ 神楽舞",
+          "bandBefore": "high",
+          "bandAfter": "high",
+          "shot": null,
+          "frames": 17,
+          "breakStartMs": null,
+          "breakEndMs": null,
+          "pausedSpanMs": 0,
+          "breakActiveMs": null,
+          "breakNames": [],
+          "unlockBtnMs": 685,
+          "intentTextsDuringBreak": [],
+          "intentChargeDuringBreak": false,
+          "intentOffViewportFrames": 0,
+          "horizontalScrollFrames": 0,
+          "bandAtEnd": "high",
+          "superOnAtStart": true,
+          "halfStartMs": null,
+          "halfStartFrame": null,
+          "superOffMs": null,
+          "superOffFrame": null,
+          "halfAndSuperOffSameFrame": null,
+          "superOffMinusHalfMs": null,
+          "tacticLineTexts": [
+            "あと120で総攻めを止める"
+          ],
+          "tacticLineClearMs": null,
+          "tacticLineClearAndSuperOffSameFrame": null,
+          "tacticLineClearAndHalfSameFrame": null,
+          "dropShadowAtStart": true,
+          "boxShadowAtStart": "none",
+          "rafP95Ms": 594,
+          "rafP95LiveMs": 594,
+          "rafMaxLiveMs": 594
+        },
+        {
+          "round": 4,
+          "card": "⚔ 速攻",
+          "bandBefore": "high",
+          "bandAfter": "high",
+          "shot": null,
+          "frames": 14,
+          "breakStartMs": null,
+          "breakEndMs": null,
+          "pausedSpanMs": 0,
+          "breakActiveMs": null,
+          "breakNames": [],
+          "unlockBtnMs": 760,
+          "intentTextsDuringBreak": [],
+          "intentChargeDuringBreak": false,
+          "intentOffViewportFrames": 0,
+          "horizontalScrollFrames": 0,
+          "bandAtEnd": "high",
+          "superOnAtStart": false,
+          "halfStartMs": null,
+          "halfStartFrame": null,
+          "superOffMs": null,
+          "superOffFrame": null,
+          "halfAndSuperOffSameFrame": null,
+          "superOffMinusHalfMs": null,
+          "tacticLineTexts": [],
+          "tacticLineClearMs": null,
+          "tacticLineClearAndSuperOffSameFrame": null,
+          "tacticLineClearAndHalfSameFrame": null,
+          "dropShadowAtStart": true,
+          "boxShadowAtStart": "none",
+          "rafP95Ms": 682,
+          "rafP95LiveMs": 682,
+          "rafMaxLiveMs": 682
+        },
+        {
+          "round": 4,
+          "card": "⚔ 豪快な一撃",
+          "bandBefore": "high",
+          "bandAfter": "high",
+          "shot": null,
+          "frames": 14,
+          "breakStartMs": null,
+          "breakEndMs": null,
+          "pausedSpanMs": 0,
+          "breakActiveMs": null,
+          "breakNames": [],
+          "unlockBtnMs": 762,
+          "intentTextsDuringBreak": [],
+          "intentChargeDuringBreak": false,
+          "intentOffViewportFrames": 0,
+          "horizontalScrollFrames": 0,
+          "bandAtEnd": "high",
+          "superOnAtStart": false,
+          "halfStartMs": null,
+          "halfStartFrame": null,
+          "superOffMs": null,
+          "superOffFrame": null,
+          "halfAndSuperOffSameFrame": null,
+          "superOffMinusHalfMs": null,
+          "tacticLineTexts": [],
+          "tacticLineClearMs": null,
+          "tacticLineClearAndSuperOffSameFrame": null,
+          "tacticLineClearAndHalfSameFrame": null,
+          "dropShadowAtStart": true,
+          "boxShadowAtStart": "none",
+          "rafP95Ms": 737,
+          "rafP95LiveMs": 737,
+          "rafMaxLiveMs": 737
+        },
+        {
+          "round": 4,
+          "card": "🛡 守護",
+          "bandBefore": "high",
+          "bandAfter": "high",
+          "shot": null,
+          "frames": 15,
+          "breakStartMs": null,
+          "breakEndMs": null,
+          "pausedSpanMs": 0,
+          "breakActiveMs": null,
+          "breakNames": [],
+          "unlockBtnMs": 747,
+          "intentTextsDuringBreak": [],
+          "intentChargeDuringBreak": false,
+          "intentOffViewportFrames": 0,
+          "horizontalScrollFrames": 0,
+          "bandAtEnd": "high",
+          "superOnAtStart": false,
+          "halfStartMs": null,
+          "halfStartFrame": null,
+          "superOffMs": null,
+          "superOffFrame": null,
+          "halfAndSuperOffSameFrame": null,
+          "superOffMinusHalfMs": null,
+          "tacticLineTexts": [],
+          "tacticLineClearMs": null,
+          "tacticLineClearAndSuperOffSameFrame": null,
+          "tacticLineClearAndHalfSameFrame": null,
+          "dropShadowAtStart": true,
+          "boxShadowAtStart": "none",
+          "rafP95Ms": 685,
+          "rafP95LiveMs": 685,
+          "rafMaxLiveMs": 685
+        },
+        {
+          "round": 4,
+          "card": "✨ 共振",
+          "bandBefore": "high",
+          "bandAfter": "quarter",
+          "shot": {
+            "cf2Animations": [
+              "cf2-plate-flash-quarter@760",
+              "cf2-wound-bloom-quarter@720",
+              "cf2-break-body-quarter@560"
+            ],
+            "plateAfterOpacity": "0.643468",
+            "intentText": "軍略・総攻め 280",
+            "intentColor": "rgb(255, 180, 180)",
+            "chargingSuper": false,
+            "avatarFilter": "drop-shadow(rgba(0, 0, 0, 0.8) 0px 12px 16px) drop-shadow(rgba(155, 89, 182, 0.4) 0px 0px 26px) drop-shadow(rgb(255, 92, 92) 0px 0px 3px) drop-shadow(rgba(229, ",
+            "collapseTransform": "matrix(0.978326, 0, 0, 0.978326, -8.66959, 0)"
+          },
+          "frames": 59,
+          "breakStartMs": 2600,
+          "breakEndMs": 4914,
+          "pausedSpanMs": 1098,
+          "breakActiveMs": 1216,
+          "breakNames": [
+            "cf2-plate-flash-quarter",
+            "cf2-wound-bloom-quarter",
+            "cf2-break-body-quarter"
+          ],
+          "unlockBtnMs": 2600,
+          "intentTextsDuringBreak": [
+            "軍略・総攻め 280"
+          ],
+          "intentChargeDuringBreak": false,
+          "intentOffViewportFrames": 0,
+          "horizontalScrollFrames": 0,
+          "bandAtEnd": "quarter",
+          "superOnAtStart": false,
+          "halfStartMs": null,
+          "halfStartFrame": null,
+          "superOffMs": null,
+          "superOffFrame": null,
+          "halfAndSuperOffSameFrame": null,
+          "superOffMinusHalfMs": null,
+          "tacticLineTexts": [],
+          "tacticLineClearMs": null,
+          "tacticLineClearAndSuperOffSameFrame": null,
+          "tacticLineClearAndHalfSameFrame": null,
+          "dropShadowAtStart": true,
+          "boxShadowAtStart": "none",
+          "rafP95Ms": 547,
+          "rafP95LiveMs": 656,
+          "rafMaxLiveMs": 671
+        }
+      ],
+      "immediateEnd": null,
+      "finished": true,
+      "crashed": null,
+      "errors": []
+    },
+    {
+      "viewport": "sp375",
+      "seed": "sg-v04-01",
+      "strategy": "damage",
+      "enemyName": "将軍四天王・忠次",
+      "rounds": [
+        {
+          "round": 1,
+          "intent": "60",
+          "band": "high",
+          "hp": "1,130 / 1,130",
+          "glow": {
+            "chargingSuper": false,
+            "charging": false,
+            "boxShadow": "none",
+            "filter": "drop-shadow(rgba(0, 0, 0, 0.8) 0px 12px 16px) drop-shadow(rgba(201, 162, 77, 0.4) 0px 0px 26px) drop-shadow(rgba(255, 224, 170, 0.55) 0px 0px 1px)",
+            "dropShadowCount": 3,
+            "dataEnemy": "enemy_08"
+          },
+          "tacticLine": null,
+          "plateOverlap": {
+            "plateBottom": 184.5,
+            "plateH": 76,
+            "avatarTop": 211.1,
+            "visibleTop": 225.1,
+            "overlapBoxPx": -26.6,
+            "overlapVisiblePx": -40.6
+          }
+        },
+        {
+          "round": 2,
+          "intent": "強打 100",
+          "band": "high",
+          "hp": "1,050 / 1,130",
+          "glow": {
+            "chargingSuper": false,
+            "charging": false,
+            "boxShadow": "none",
+            "filter": "drop-shadow(rgba(0, 0, 0, 0.8) 0px 12px 16px) drop-shadow(rgba(155, 89, 182, 0.4) 0px 0px 26px) drop-shadow(rgba(255, 107, 107, 0.9) 0px 0px 2px) drop-shadow(rgba(255, 224, 170, 0.55) 0px 0px 1px)",
+            "dropShadowCount": 4,
+            "dataEnemy": "enemy_08"
+          },
+          "tacticLine": null,
+          "plateOverlap": {
+            "plateBottom": 184.5,
+            "plateH": 76,
+            "avatarTop": 211.2,
+            "visibleTop": 225.2,
+            "overlapBoxPx": -26.7,
+            "overlapVisiblePx": -40.7
+          }
+        },
+        {
+          "round": 3,
+          "intent": "⚠ 傷が浅ければ次は総攻め",
+          "band": "high",
+          "hp": "800 / 1,130",
+          "glow": {
+            "chargingSuper": true,
+            "charging": true,
+            "boxShadow": "none",
+            "filter": "drop-shadow(rgba(0, 0, 0, 0.8) 0px 12px 16px) drop-shadow(rgb(255, 92, 92) 0px 0px 3px) drop-shadow(rgba(255, 92, 92, 0.8) 0px 0px 36px) drop-shadow(rgba(255, 217, 161, 0.533) 0px 0px 14px) drop-shadow(rgba(255, 224, 170",
+            "dropShadowCount": 5,
+            "dataEnemy": "enemy_08"
+          },
+          "tacticLine": {
+            "state": "armed",
+            "text": "あと130で総攻めを止める",
+            "rect": {
+              "x": 30,
+              "y": 201,
+              "w": 147,
+              "h": 15
+            },
+            "insidePlate": true,
+            "insideViewport": true,
+            "overflowX": false,
+            "lines": 1,
+            "fontSize": 11,
+            "visible": true,
+            "pageScrollW": 375,
+            "vw": 375
+          },
+          "plateOverlap": {
+            "plateBottom": 220.9,
+            "plateH": 112.4,
+            "avatarTop": 212.6,
+            "visibleTop": 226.6,
+            "overlapBoxPx": 8.3,
+            "overlapVisiblePx": -5.7
+          }
+        },
+        {
+          "round": 4,
+          "intent": "強打 140",
+          "band": "half",
+          "hp": "520 / 1,130",
+          "glow": {
+            "chargingSuper": false,
+            "charging": false,
+            "boxShadow": "none",
+            "filter": "drop-shadow(rgba(0, 0, 0, 0.8) 0px 12px 16px) drop-shadow(rgba(155, 89, 182, 0.4) 0px 0px 26px) drop-shadow(rgba(255, 107, 107, 0.9) 0px 0px 2px) drop-shadow(rgba(255, 224, 170, 0.55) 0px 0px 1px)",
+            "dropShadowCount": 4,
+            "dataEnemy": "enemy_08"
+          },
+          "tacticLine": null,
+          "plateOverlap": {
+            "plateBottom": 184.5,
+            "plateH": 76,
+            "avatarTop": 214.6,
+            "visibleTop": 228.6,
+            "overlapBoxPx": -30.1,
+            "overlapVisiblePx": -44.1
+          }
+        }
+      ],
+      "plays": [
+        {
+          "round": 1,
+          "card": "⚔ 一心不乱",
+          "bandBefore": "high",
+          "bandAfter": "high",
+          "shot": null,
+          "frames": 248,
+          "breakStartMs": null,
+          "breakEndMs": null,
+          "pausedSpanMs": 0,
+          "breakActiveMs": null,
+          "breakNames": [],
+          "unlockBtnMs": 307,
+          "intentTextsDuringBreak": [],
+          "intentChargeDuringBreak": false,
+          "intentOffViewportFrames": 0,
+          "horizontalScrollFrames": 0,
+          "bandAtEnd": "high",
+          "superOnAtStart": false,
+          "halfStartMs": null,
+          "halfStartFrame": null,
+          "superOffMs": null,
+          "superOffFrame": null,
+          "halfAndSuperOffSameFrame": null,
+          "superOffMinusHalfMs": null,
+          "tacticLineTexts": [],
+          "tacticLineClearMs": null,
+          "tacticLineClearAndSuperOffSameFrame": null,
+          "tacticLineClearAndHalfSameFrame": null,
+          "dropShadowAtStart": true,
+          "boxShadowAtStart": "none",
+          "rafP95Ms": 20,
+          "rafP95LiveMs": 20,
+          "rafMaxLiveMs": 43
+        },
+        {
+          "round": 1,
+          "card": "⚔ 一心不乱",
+          "bandBefore": "high",
+          "bandAfter": "high",
+          "shot": null,
+          "frames": 242,
+          "breakStartMs": null,
+          "breakEndMs": null,
+          "pausedSpanMs": 0,
+          "breakActiveMs": null,
+          "breakNames": [],
+          "unlockBtnMs": 316,
+          "intentTextsDuringBreak": [],
+          "intentChargeDuringBreak": false,
+          "intentOffViewportFrames": 0,
+          "horizontalScrollFrames": 0,
+          "bandAtEnd": "high",
+          "superOnAtStart": false,
+          "halfStartMs": null,
+          "halfStartFrame": null,
+          "superOffMs": null,
+          "superOffFrame": null,
+          "halfAndSuperOffSameFrame": null,
+          "superOffMinusHalfMs": null,
+          "tacticLineTexts": [],
+          "tacticLineClearMs": null,
+          "tacticLineClearAndSuperOffSameFrame": null,
+          "tacticLineClearAndHalfSameFrame": null,
+          "dropShadowAtStart": true,
+          "boxShadowAtStart": "none",
+          "rafP95Ms": 22,
+          "rafP95LiveMs": 22,
+          "rafMaxLiveMs": 42
+        },
+        {
+          "round": 2,
+          "card": "🌟 神託",
+          "bandBefore": "high",
+          "bandAfter": "high",
+          "shot": null,
+          "frames": 97,
+          "breakStartMs": null,
+          "breakEndMs": null,
+          "pausedSpanMs": 0,
+          "breakActiveMs": null,
+          "breakNames": [],
+          "unlockBtnMs": 90,
+          "intentTextsDuringBreak": [],
+          "intentChargeDuringBreak": false,
+          "intentOffViewportFrames": 0,
+          "horizontalScrollFrames": 0,
+          "bandAtEnd": "high",
+          "superOnAtStart": false,
+          "halfStartMs": null,
+          "halfStartFrame": null,
+          "superOffMs": null,
+          "superOffFrame": null,
+          "halfAndSuperOffSameFrame": null,
+          "superOffMinusHalfMs": null,
+          "tacticLineTexts": [],
+          "tacticLineClearMs": null,
+          "tacticLineClearAndSuperOffSameFrame": null,
+          "tacticLineClearAndHalfSameFrame": null,
+          "dropShadowAtStart": true,
+          "boxShadowAtStart": "none",
+          "rafP95Ms": 88,
+          "rafP95LiveMs": 88,
+          "rafMaxLiveMs": 118
+        },
+        {
+          "round": 3,
+          "card": "⚔ 豪快な一撃",
+          "bandBefore": "high",
+          "bandAfter": "high",
+          "shot": null,
+          "frames": 128,
+          "breakStartMs": null,
+          "breakEndMs": null,
+          "pausedSpanMs": 0,
+          "breakActiveMs": null,
+          "breakNames": [],
+          "unlockBtnMs": 490,
+          "intentTextsDuringBreak": [],
+          "intentChargeDuringBreak": false,
+          "intentOffViewportFrames": 0,
+          "horizontalScrollFrames": 0,
+          "bandAtEnd": "high",
+          "superOnAtStart": true,
+          "halfStartMs": null,
+          "halfStartFrame": null,
+          "superOffMs": 847,
+          "superOffFrame": 5,
+          "halfAndSuperOffSameFrame": null,
+          "superOffMinusHalfMs": null,
+          "tacticLineTexts": [
+            "あと130で総攻めを止める",
+            "✓ 総攻めを止めた"
+          ],
+          "tacticLineClearMs": 847,
+          "tacticLineClearAndSuperOffSameFrame": true,
+          "tacticLineClearAndHalfSameFrame": null,
+          "dropShadowAtStart": true,
+          "boxShadowAtStart": "none",
+          "rafP95Ms": 50,
+          "rafP95LiveMs": 50,
+          "rafMaxLiveMs": 339
+        },
+        {
+          "round": 3,
+          "card": "⚔ 豪快な一撃",
+          "bandBefore": "high",
+          "bandAfter": "half",
+          "shot": {
+            "cf2Animations": [
+              "cf2-plate-flash-half@520",
+              "cf2-wound-bloom-half@600",
+              "cf2-break-body-half@420"
+            ],
+            "plateAfterOpacity": "0.55",
+            "intentText": "⚠ 傷が浅ければ次は総攻め",
+            "intentColor": "rgb(255, 209, 102)",
+            "chargingSuper": false,
+            "avatarFilter": "drop-shadow(rgba(0, 0, 0, 0.8) 0px 12px 16px) drop-shadow(rgba(255, 209, 102, 0.667) 0px 0px 32px) drop-shadow(rgba(255, 224, 170, 0.55) 0px 0px 1px)",
+            "collapseTransform": "matrix(0.985027, 0, 0, 0.985027, -4.99084, 0)"
+          },
+          "frames": 121,
+          "breakStartMs": 573,
+          "breakEndMs": 2567,
+          "pausedSpanMs": 1493,
+          "breakActiveMs": 501,
+          "breakNames": [
+            "cf2-plate-flash-half",
+            "cf2-wound-bloom-half",
+            "cf2-break-body-half"
+          ],
+          "unlockBtnMs": 347,
+          "intentTextsDuringBreak": [
+            "⚠ 傷が浅ければ次は総攻め"
+          ],
+          "intentChargeDuringBreak": true,
+          "intentOffViewportFrames": 0,
+          "horizontalScrollFrames": 0,
+          "bandAtEnd": "half",
+          "superOnAtStart": false,
+          "halfStartMs": 573,
+          "halfStartFrame": 19,
+          "superOffMs": null,
+          "superOffFrame": null,
+          "halfAndSuperOffSameFrame": null,
+          "superOffMinusHalfMs": null,
+          "tacticLineTexts": [
+            "✓ 総攻めを止めた"
+          ],
+          "tacticLineClearMs": null,
+          "tacticLineClearAndSuperOffSameFrame": null,
+          "tacticLineClearAndHalfSameFrame": null,
+          "dropShadowAtStart": true,
+          "boxShadowAtStart": "none",
+          "rafP95Ms": 63,
+          "rafP95LiveMs": 65,
+          "rafMaxLiveMs": 136,
+          "immediateEnd": true
+        },
+        {
+          "round": 4,
+          "card": "💀 呪縛",
+          "bandBefore": "half",
+          "bandAfter": "half",
+          "shot": null,
+          "frames": 73,
+          "breakStartMs": null,
+          "breakEndMs": null,
+          "pausedSpanMs": 0,
+          "breakActiveMs": null,
+          "breakNames": [],
+          "unlockBtnMs": 643,
+          "intentTextsDuringBreak": [],
+          "intentChargeDuringBreak": false,
+          "intentOffViewportFrames": 0,
+          "horizontalScrollFrames": 0,
+          "bandAtEnd": "half",
+          "superOnAtStart": false,
+          "halfStartMs": 10,
+          "halfStartFrame": 0,
+          "superOffMs": null,
+          "superOffFrame": null,
+          "halfAndSuperOffSameFrame": null,
+          "superOffMinusHalfMs": null,
+          "tacticLineTexts": [],
+          "tacticLineClearMs": null,
+          "tacticLineClearAndSuperOffSameFrame": null,
+          "tacticLineClearAndHalfSameFrame": null,
+          "dropShadowAtStart": true,
+          "boxShadowAtStart": "none",
+          "rafP95Ms": 145,
+          "rafP95LiveMs": 145,
+          "rafMaxLiveMs": 218
+        },
+        {
+          "round": 4,
+          "card": "✨ 巫女の舞",
+          "bandBefore": "half",
+          "bandAfter": "half",
+          "shot": null,
+          "frames": 76,
+          "breakStartMs": null,
+          "breakEndMs": null,
+          "pausedSpanMs": 0,
+          "breakActiveMs": null,
+          "breakNames": [],
+          "unlockBtnMs": 130,
+          "intentTextsDuringBreak": [],
+          "intentChargeDuringBreak": false,
+          "intentOffViewportFrames": 0,
+          "horizontalScrollFrames": 0,
+          "bandAtEnd": "half",
+          "superOnAtStart": false,
+          "halfStartMs": 5,
+          "halfStartFrame": 0,
+          "superOffMs": null,
+          "superOffFrame": null,
+          "halfAndSuperOffSameFrame": null,
+          "superOffMinusHalfMs": null,
+          "tacticLineTexts": [],
+          "tacticLineClearMs": null,
+          "tacticLineClearAndSuperOffSameFrame": null,
+          "tacticLineClearAndHalfSameFrame": null,
+          "dropShadowAtStart": true,
+          "boxShadowAtStart": "none",
+          "rafP95Ms": 125,
+          "rafP95LiveMs": 125,
+          "rafMaxLiveMs": 227
+        },
+        {
+          "round": 4,
+          "card": "🛡 鉄壁の構え",
+          "bandBefore": "half",
+          "bandAfter": "half",
+          "shot": null,
+          "frames": 94,
+          "breakStartMs": null,
+          "breakEndMs": null,
+          "pausedSpanMs": 0,
+          "breakActiveMs": null,
+          "breakNames": [],
+          "unlockBtnMs": 382,
+          "intentTextsDuringBreak": [],
+          "intentChargeDuringBreak": false,
+          "intentOffViewportFrames": 0,
+          "horizontalScrollFrames": 0,
+          "bandAtEnd": "half",
+          "superOnAtStart": false,
+          "halfStartMs": 24,
+          "halfStartFrame": 0,
+          "superOffMs": null,
+          "superOffFrame": null,
+          "halfAndSuperOffSameFrame": null,
+          "superOffMinusHalfMs": null,
+          "tacticLineTexts": [],
+          "tacticLineClearMs": null,
+          "tacticLineClearAndSuperOffSameFrame": null,
+          "tacticLineClearAndHalfSameFrame": null,
+          "dropShadowAtStart": true,
+          "boxShadowAtStart": "none",
+          "rafP95Ms": 82,
+          "rafP95LiveMs": 82,
+          "rafMaxLiveMs": 131
+        }
+      ],
+      "immediateEnd": {
+        "round": 3,
+        "card": "⚔ 豪快な一撃",
+        "endClickMs": 2103,
+        "intentBefore": "⚠ 傷が浅ければ次は総攻め",
+        "glowBeforeEnd": {
+          "chargingSuper": false,
+          "charging": true,
+          "boxShadow": "none",
+          "filter": "drop-shadow(rgba(0, 0, 0, 0.8) 0px 12px 16px) drop-shadow(rgba(255, 209, 102, 0.667) 0px 0px 32px) drop-shadow(rgba(255, 224, 170, 0.55) 0px 0px 1px)",
+          "dropShadowCount": 3,
+          "dataEnemy": "enemy_08"
+        },
+        "intentChangeMs": 2880,
+        "intentAfter": "強打 140",
+        "breakEndMs": 2567,
+        "breakStillRunningAtIntentChange": false,
+        "r4Intent": "強打 140",
+        "r4Band": "half"
+      },
+      "finished": false,
+      "crashed": null,
+      "errors": []
+    },
+    {
+      "viewport": "sp375",
+      "seed": "sg-v04-02",
+      "strategy": "damage",
+      "enemyName": "将軍四天王・忠次",
+      "rounds": [
+        {
+          "round": 1,
+          "intent": "60",
+          "band": "high",
+          "hp": "1,130 / 1,130",
+          "glow": {
+            "chargingSuper": false,
+            "charging": false,
+            "boxShadow": "none",
+            "filter": "drop-shadow(rgba(0, 0, 0, 0.8) 0px 12px 16px) drop-shadow(rgba(201, 162, 77, 0.4) 0px 0px 26px) drop-shadow(rgba(255, 224, 170, 0.55) 0px 0px 1px)",
+            "dropShadowCount": 3,
+            "dataEnemy": "enemy_08"
+          },
+          "tacticLine": null,
+          "plateOverlap": {
+            "plateBottom": 184.5,
+            "plateH": 76,
+            "avatarTop": 211.1,
+            "visibleTop": 225.1,
+            "overlapBoxPx": -26.6,
+            "overlapVisiblePx": -40.6
+          }
+        },
+        {
+          "round": 2,
+          "intent": "強打 100",
+          "band": "high",
+          "hp": "990 / 1,130",
+          "glow": {
+            "chargingSuper": false,
+            "charging": false,
+            "boxShadow": "none",
+            "filter": "drop-shadow(rgba(0, 0, 0, 0.8) 0px 12px 16px) drop-shadow(rgba(155, 89, 182, 0.4) 0px 0px 26px) drop-shadow(rgba(255, 107, 107, 0.9) 0px 0px 2px) drop-shadow(rgba(255, 224, 170, 0.55) 0px 0px 1px)",
+            "dropShadowCount": 4,
+            "dataEnemy": "enemy_08"
+          },
+          "tacticLine": null,
+          "plateOverlap": {
+            "plateBottom": 184.5,
+            "plateH": 76,
+            "avatarTop": 211.4,
+            "visibleTop": 225.4,
+            "overlapBoxPx": -26.9,
+            "overlapVisiblePx": -40.9
+          }
+        },
+        {
+          "round": 3,
+          "intent": "⚠ 傷が浅ければ次は総攻め",
+          "band": "high",
+          "hp": "910 / 1,130",
+          "glow": {
+            "chargingSuper": true,
+            "charging": true,
+            "boxShadow": "none",
+            "filter": "drop-shadow(rgba(0, 0, 0, 0.8) 0px 12px 16px) drop-shadow(rgb(255, 92, 92) 0px 0px 3px) drop-shadow(rgba(255, 92, 92, 0.8) 0px 0px 36px) drop-shadow(rgba(255, 217, 161, 0.533) 0px 0px 14px) drop-shadow(rgba(255, 224, 170",
+            "dropShadowCount": 5,
+            "dataEnemy": "enemy_08"
+          },
+          "tacticLine": {
+            "state": "armed",
+            "text": "あと240で総攻めを止める",
+            "rect": {
+              "x": 30,
+              "y": 201,
+              "w": 147,
+              "h": 15
+            },
+            "insidePlate": true,
+            "insideViewport": true,
+            "overflowX": false,
+            "lines": 1,
+            "fontSize": 11,
+            "visible": true,
+            "pageScrollW": 375,
+            "vw": 375
+          },
+          "plateOverlap": {
+            "plateBottom": 237.9,
+            "plateH": 129.4,
+            "avatarTop": 213.6,
+            "visibleTop": 227.6,
+            "overlapBoxPx": 24.3,
+            "overlapVisiblePx": 10.3
+          }
+        },
+        {
+          "round": 4,
+          "intent": "軍略・総攻め 280",
+          "band": "high",
+          "hp": "790 / 1,130",
+          "glow": {
+            "chargingSuper": false,
+            "charging": false,
+            "boxShadow": "none",
+            "filter": "drop-shadow(rgba(0, 0, 0, 0.8) 0px 12px 16px) drop-shadow(rgba(155, 89, 182, 0.4) 0px 0px 26px) drop-shadow(rgb(255, 92, 92) 0px 0px 3px) drop-shadow(rgba(229, 72, 77, 0.8) 0px 0px 24px) drop-shadow(rgba(255, 224, 170, 0",
+            "dropShadowCount": 5,
+            "dataEnemy": "enemy_08"
+          },
+          "tacticLine": null,
+          "plateOverlap": {
+            "plateBottom": 201.5,
+            "plateH": 93,
+            "avatarTop": 210.1,
+            "visibleTop": 224.1,
+            "overlapBoxPx": -8.6,
+            "overlapVisiblePx": -22.6
+          }
+        }
+      ],
+      "plays": [
+        {
+          "round": 1,
+          "card": "⚔ 豪快な一撃",
+          "bandBefore": "high",
+          "bandAfter": "high",
+          "shot": null,
+          "frames": 246,
+          "breakStartMs": null,
+          "breakEndMs": null,
+          "pausedSpanMs": 0,
+          "breakActiveMs": null,
+          "breakNames": [],
+          "unlockBtnMs": 314,
+          "intentTextsDuringBreak": [],
+          "intentChargeDuringBreak": false,
+          "intentOffViewportFrames": 0,
+          "horizontalScrollFrames": 0,
+          "bandAtEnd": "high",
+          "superOnAtStart": false,
+          "halfStartMs": null,
+          "halfStartFrame": null,
+          "superOffMs": null,
+          "superOffFrame": null,
+          "halfAndSuperOffSameFrame": null,
+          "superOffMinusHalfMs": null,
+          "tacticLineTexts": [],
+          "tacticLineClearMs": null,
+          "tacticLineClearAndSuperOffSameFrame": null,
+          "tacticLineClearAndHalfSameFrame": null,
+          "dropShadowAtStart": true,
+          "boxShadowAtStart": "none",
+          "rafP95Ms": 23,
+          "rafP95LiveMs": 23,
+          "rafMaxLiveMs": 35
+        },
+        {
+          "round": 2,
+          "card": "💀 呪縛",
+          "bandBefore": "high",
+          "bandAfter": "high",
+          "shot": null,
+          "frames": 88,
+          "breakStartMs": null,
+          "breakEndMs": null,
+          "pausedSpanMs": 0,
+          "breakActiveMs": null,
+          "breakNames": [],
+          "unlockBtnMs": 92,
+          "intentTextsDuringBreak": [],
+          "intentChargeDuringBreak": false,
+          "intentOffViewportFrames": 0,
+          "horizontalScrollFrames": 0,
+          "bandAtEnd": "high",
+          "superOnAtStart": false,
+          "halfStartMs": null,
+          "halfStartFrame": null,
+          "superOffMs": null,
+          "superOffFrame": null,
+          "halfAndSuperOffSameFrame": null,
+          "superOffMinusHalfMs": null,
+          "tacticLineTexts": [],
+          "tacticLineClearMs": null,
+          "tacticLineClearAndSuperOffSameFrame": null,
+          "tacticLineClearAndHalfSameFrame": null,
+          "dropShadowAtStart": true,
+          "boxShadowAtStart": "none",
+          "rafP95Ms": 88,
+          "rafP95LiveMs": 88,
+          "rafMaxLiveMs": 190
+        },
+        {
+          "round": 2,
+          "card": "⚔ 一心不乱",
+          "bandBefore": "high",
+          "bandAfter": "high",
+          "shot": null,
+          "frames": 90,
+          "breakStartMs": null,
+          "breakEndMs": null,
+          "pausedSpanMs": 0,
+          "breakActiveMs": null,
+          "breakNames": [],
+          "unlockBtnMs": 90,
+          "intentTextsDuringBreak": [],
+          "intentChargeDuringBreak": false,
+          "intentOffViewportFrames": 0,
+          "horizontalScrollFrames": 0,
+          "bandAtEnd": "high",
+          "superOnAtStart": false,
+          "halfStartMs": null,
+          "halfStartFrame": null,
+          "superOffMs": null,
+          "superOffFrame": null,
+          "halfAndSuperOffSameFrame": null,
+          "superOffMinusHalfMs": null,
+          "tacticLineTexts": [],
+          "tacticLineClearMs": null,
+          "tacticLineClearAndSuperOffSameFrame": null,
+          "tacticLineClearAndHalfSameFrame": null,
+          "dropShadowAtStart": true,
+          "boxShadowAtStart": "none",
+          "rafP95Ms": 94,
+          "rafP95LiveMs": 94,
+          "rafMaxLiveMs": 123
+        },
+        {
+          "round": 3,
+          "card": "⚔ 剛撃",
+          "bandBefore": "high",
+          "bandAfter": "high",
+          "shot": null,
+          "frames": 34,
+          "breakStartMs": null,
+          "breakEndMs": null,
+          "pausedSpanMs": 0,
+          "breakActiveMs": null,
+          "breakNames": [],
+          "unlockBtnMs": 307,
+          "intentTextsDuringBreak": [],
+          "intentChargeDuringBreak": false,
+          "intentOffViewportFrames": 0,
+          "horizontalScrollFrames": 0,
+          "bandAtEnd": "high",
+          "superOnAtStart": true,
+          "halfStartMs": null,
+          "halfStartFrame": null,
+          "superOffMs": null,
+          "superOffFrame": null,
+          "halfAndSuperOffSameFrame": null,
+          "superOffMinusHalfMs": null,
+          "tacticLineTexts": [
+            "あと240で総攻めを止める",
+            "あと120で総攻めを止める"
+          ],
+          "tacticLineClearMs": null,
+          "tacticLineClearAndSuperOffSameFrame": null,
+          "tacticLineClearAndHalfSameFrame": null,
+          "dropShadowAtStart": true,
+          "boxShadowAtStart": "none",
+          "rafP95Ms": 277,
+          "rafP95LiveMs": 277,
+          "rafMaxLiveMs": 304
+        },
+        {
+          "round": 3,
+          "card": "✨ 神楽舞",
+          "bandBefore": "high",
+          "bandAfter": "high",
+          "shot": null,
+          "frames": 37,
+          "breakStartMs": null,
+          "breakEndMs": null,
+          "pausedSpanMs": 0,
+          "breakActiveMs": null,
+          "breakNames": [],
+          "unlockBtnMs": 255,
+          "intentTextsDuringBreak": [],
+          "intentChargeDuringBreak": false,
+          "intentOffViewportFrames": 0,
+          "horizontalScrollFrames": 0,
+          "bandAtEnd": "high",
+          "superOnAtStart": true,
+          "halfStartMs": null,
+          "halfStartFrame": null,
+          "superOffMs": null,
+          "superOffFrame": null,
+          "halfAndSuperOffSameFrame": null,
+          "superOffMinusHalfMs": null,
+          "tacticLineTexts": [
+            "あと120で総攻めを止める"
+          ],
+          "tacticLineClearMs": null,
+          "tacticLineClearAndSuperOffSameFrame": null,
+          "tacticLineClearAndHalfSameFrame": null,
+          "dropShadowAtStart": true,
+          "boxShadowAtStart": "none",
+          "rafP95Ms": 251,
+          "rafP95LiveMs": 251,
+          "rafMaxLiveMs": 385
+        },
+        {
+          "round": 4,
+          "card": "⚔ 速攻",
+          "bandBefore": "high",
+          "bandAfter": "high",
+          "shot": null,
+          "frames": 33,
+          "breakStartMs": null,
+          "breakEndMs": null,
+          "pausedSpanMs": 0,
+          "breakActiveMs": null,
+          "breakNames": [],
+          "unlockBtnMs": 997,
+          "intentTextsDuringBreak": [],
+          "intentChargeDuringBreak": false,
+          "intentOffViewportFrames": 0,
+          "horizontalScrollFrames": 0,
+          "bandAtEnd": "high",
+          "superOnAtStart": false,
+          "halfStartMs": null,
+          "halfStartFrame": null,
+          "superOffMs": null,
+          "superOffFrame": null,
+          "halfAndSuperOffSameFrame": null,
+          "superOffMinusHalfMs": null,
+          "tacticLineTexts": [],
+          "tacticLineClearMs": null,
+          "tacticLineClearAndSuperOffSameFrame": null,
+          "tacticLineClearAndHalfSameFrame": null,
+          "dropShadowAtStart": true,
+          "boxShadowAtStart": "none",
+          "rafP95Ms": 389,
+          "rafP95LiveMs": 389,
+          "rafMaxLiveMs": 997
+        },
+        {
+          "round": 4,
+          "card": "⚔ 豪快な一撃",
+          "bandBefore": "high",
+          "bandAfter": "high",
+          "shot": null,
+          "frames": 33,
+          "breakStartMs": null,
+          "breakEndMs": null,
+          "pausedSpanMs": 0,
+          "breakActiveMs": null,
+          "breakNames": [],
+          "unlockBtnMs": 167,
+          "intentTextsDuringBreak": [],
+          "intentChargeDuringBreak": false,
+          "intentOffViewportFrames": 0,
+          "horizontalScrollFrames": 0,
+          "bandAtEnd": "high",
+          "superOnAtStart": false,
+          "halfStartMs": null,
+          "halfStartFrame": null,
+          "superOffMs": null,
+          "superOffFrame": null,
+          "halfAndSuperOffSameFrame": null,
+          "superOffMinusHalfMs": null,
+          "tacticLineTexts": [],
+          "tacticLineClearMs": null,
+          "tacticLineClearAndSuperOffSameFrame": null,
+          "tacticLineClearAndHalfSameFrame": null,
+          "dropShadowAtStart": true,
+          "boxShadowAtStart": "none",
+          "rafP95Ms": 336,
+          "rafP95LiveMs": 336,
+          "rafMaxLiveMs": 367
+        },
+        {
+          "round": 4,
+          "card": "🛡 守護",
+          "bandBefore": "high",
+          "bandAfter": "high",
+          "shot": null,
+          "frames": 33,
+          "breakStartMs": null,
+          "breakEndMs": null,
+          "pausedSpanMs": 0,
+          "breakActiveMs": null,
+          "breakNames": [],
+          "unlockBtnMs": 143,
+          "intentTextsDuringBreak": [],
+          "intentChargeDuringBreak": false,
+          "intentOffViewportFrames": 0,
+          "horizontalScrollFrames": 0,
+          "bandAtEnd": "high",
+          "superOnAtStart": false,
+          "halfStartMs": null,
+          "halfStartFrame": null,
+          "superOffMs": null,
+          "superOffFrame": null,
+          "halfAndSuperOffSameFrame": null,
+          "superOffMinusHalfMs": null,
+          "tacticLineTexts": [],
+          "tacticLineClearMs": null,
+          "tacticLineClearAndSuperOffSameFrame": null,
+          "tacticLineClearAndHalfSameFrame": null,
+          "dropShadowAtStart": true,
+          "boxShadowAtStart": "none",
+          "rafP95Ms": 252,
+          "rafP95LiveMs": 252,
+          "rafMaxLiveMs": 413
+        },
+        {
+          "round": 4,
+          "card": "✨ 共振",
+          "bandBefore": "high",
+          "bandAfter": "quarter",
+          "shot": {
+            "cf2Animations": [
+              "cf2-plate-flash-quarter@760",
+              "cf2-wound-bloom-quarter@720",
+              "cf2-break-body-quarter@560"
+            ],
+            "plateAfterOpacity": "0.643468",
+            "intentText": "軍略・総攻め 280",
+            "intentColor": "rgb(255, 180, 180)",
+            "chargingSuper": false,
+            "avatarFilter": "drop-shadow(rgba(0, 0, 0, 0.8) 0px 12px 16px) drop-shadow(rgba(155, 89, 182, 0.4) 0px 0px 26px) drop-shadow(rgb(255, 92, 92) 0px 0px 3px) drop-shadow(rgba(229, ",
+            "collapseTransform": "matrix(0.978326, 0, 0, 0.978326, -6.06872, 0)"
+          },
+          "frames": 119,
+          "breakStartMs": 2407,
+          "breakEndMs": 5523,
+          "pausedSpanMs": 2236,
+          "breakActiveMs": 880,
+          "breakNames": [
+            "cf2-plate-flash-quarter",
+            "cf2-wound-bloom-quarter",
+            "cf2-break-body-quarter"
+          ],
+          "unlockBtnMs": 766,
+          "intentTextsDuringBreak": [
+            "軍略・総攻め 280"
+          ],
+          "intentChargeDuringBreak": false,
+          "intentOffViewportFrames": 0,
+          "horizontalScrollFrames": 0,
+          "bandAtEnd": "quarter",
+          "superOnAtStart": false,
+          "halfStartMs": null,
+          "halfStartFrame": null,
+          "superOffMs": null,
+          "superOffFrame": null,
+          "halfAndSuperOffSameFrame": null,
+          "superOffMinusHalfMs": null,
+          "tacticLineTexts": [],
+          "tacticLineClearMs": null,
+          "tacticLineClearAndSuperOffSameFrame": null,
+          "tacticLineClearAndHalfSameFrame": null,
+          "dropShadowAtStart": true,
+          "boxShadowAtStart": "none",
+          "rafP95Ms": 255,
+          "rafP95LiveMs": 188,
+          "rafMaxLiveMs": 355
+        }
+      ],
+      "immediateEnd": null,
+      "finished": true,
+      "crashed": null,
+      "errors": []
+    }
+  ]
+}
