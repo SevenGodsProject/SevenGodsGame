@@ -61,7 +61,8 @@ for (const vp of VIEWPORTS) {
     const check = (name, pass, detail) => r.checks.push({ name, pass: !!pass, ...(detail !== undefined ? { detail } : {}) })
     await toEnemySelect(page)
     const cards = await page.locator('.enemy-select-card').count()
-    check(`enemy cards = ${pilot ? 9 : 8} (7 + entrust${pilot ? ' + pilot' : ''})`, cards === (pilot ? 9 : 8), cards)
+    // 決定287 W1：通常導線は CORE 7 ＋ 忠次 ＋ 委ねる ＝ 9 枚（Pilot 時は enemy_09 が足されて 10 枚）
+    check(`enemy cards = ${pilot ? 10 : 9} (7 + tadatsugu + entrust${pilot ? ' + pilot' : ''})`, cards === (pilot ? 10 : 9), cards)
     for (const n of CORE_NAMES) {
       // 「業斧の鬼将」は Pilot 名「業斧の鬼将・軍略」にも部分一致するので、Pilot 時だけ 2 件が正
       const expected = pilot && n === '業斧の鬼将' ? 2 : 1

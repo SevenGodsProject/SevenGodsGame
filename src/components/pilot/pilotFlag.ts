@@ -4,9 +4,9 @@
  *
  * URL の `?pilot=` に Pilot の名前が入っているときだけ、Enemy Select にその Pilot の敵が並ぶ。
  *   - `?pilot=threat`     … Threat Branch Pilot（`PILOT_ENEMIES`・enemy_09）
- *   - `?pilot=shogunate`  … 将軍家 Pilot（`SHOGUNATE_ENEMIES`・enemy_08 忠次）
- *   - `?pilot=all` または `?pilot=threat,shogunate`（カンマ区切り・`pilot` の複数指定も可）… 両方
- * 通常の URL では既存 7 体のまま＝既存プレイヤーの導線・seed・Daily・Records・Save に影響しない。
+ *   - `?pilot=all`／カンマ区切り・`pilot` の複数指定も可（値は集合として読む・不明な値は無視）
+ *   - 旧 `?pilot=shogunate`（将軍家 Pilot v0.4〜v0.6）は決定287 W1 で忠次が通常導線へ公開されたため廃止＝不明な値として無視する
+ * 通常の URL では既存 7 体＋将軍家＝seed・Daily・Records・Save の既存挙動に影響しない。
  * 値はページ読み込み時に 1 回だけ読む（SPA 内の遷移で URL は変わらない）。
  * v0.4 で忠次 Pilot の `shogunatePilot.ts`（値 `shogunate` だけを見る同型のスイッチ）をここへ一本化した。
  * 同じキーで排他にすると 1 つの URL で両 Pilot を比べられないため、値は「集合」として読む。
@@ -15,8 +15,8 @@ export const PILOT_QUERY_KEY = 'pilot'
 /** Threat Branch Pilot v1 の値（既存の受入スクリプト `scripts/lane1-threat-branch/acceptance.mjs` が参照する） */
 export const PILOT_QUERY_VALUE = 'threat'
 
-export type PilotKind = 'threat' | 'shogunate'
-export const PILOT_KINDS: readonly PilotKind[] = ['threat', 'shogunate']
+export type PilotKind = 'threat'
+export const PILOT_KINDS: readonly PilotKind[] = ['threat']
 const PILOT_ALL = 'all'
 
 function isPilotKind(value: string): value is PilotKind {

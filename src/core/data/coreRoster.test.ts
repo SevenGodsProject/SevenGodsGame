@@ -123,11 +123,11 @@ describe('Pilot 敵（enemy_09 業斧の鬼将・軍略）', () => {
     for (const e of CORE_ENEMIES) expect(isPilotEnemyId(e.id)).toBe(false)
     expect(isPilotEnemyId(null)).toBe(false)
     expect(isPilotEnemyId(undefined)).toBe(false)
-    // enemy_08 は決定274 忠次（将軍家 Pilot）。CORE にも PILOT_ENEMIES にも入らない（記録ガードは isPilotEnemyId が両 Pilot を受ける）
+    // enemy_08 は決定274 忠次（将軍家）。CORE にも PILOT_ENEMIES にも入らない。決定287 W1 で通常導線へ公開＝isPilotEnemyId は偽（記録ガードは Threat Pilot だけ）
     expect(CORE_ENEMIES.some((e) => (e.id as string) === 'enemy_08')).toBe(false)
     expect(PILOT_ENEMIES.some((e) => (e.id as string) === 'enemy_08')).toBe(false)
     expect(SHOGUNATE_ENEMIES.map((e) => e.id as string)).toEqual(['enemy_08'])
-    expect(isPilotEnemyId(SHOGUNATE_ENEMIES[0].id)).toBe(true)
+    expect(isPilotEnemyId(SHOGUNATE_ENEMIES[0].id)).toBe(false)
   })
 
   it('鬼将のコピー（新規素材 0）：maxHp 94・art・stage・visualType・rank 3（v1.0.1 の★を継承）・battleCries は同一', () => {

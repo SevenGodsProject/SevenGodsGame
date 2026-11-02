@@ -389,8 +389,8 @@ export const PILOT_ENEMIES: EnemyDef[] = [
  * `tactic.ts` の 4 引数解決）に載せ替えたもの。engine は RC 版をそのまま使う（v0.3 の engine 差分は持ち込まない）。
  * - 既存 7 体（`CORE_ENEMIES`）は 1 文字も変更しない（`coreRoster.test.ts`／`shogunateRoster.test.ts` が JSON の sha256 で固定）
  * - `pickEnemyId`・Daily・49 攻略盤・gameVersion の指紋は `ENEMY_IDS`／`CORE_ENEMIES` だけを見る＝seed・Daily・Records・版は不変
- * - Enemy Select には `?pilot=shogunate`（または `all`）のときだけ並ぶ（`components/pilot/pilotFlag.ts`）。戦績・セーブ・報酬にも残さない
- *   （記録ガード・報酬畳み込みは `isPilotEnemyId` が Threat Pilot と共通で受ける）
+ * - 決定287 W1（将軍家 第一陣 公開 v1・2026-11-03）：Enemy Select の通常導線に 8 体目として並ぶ。戦績・セーブ・報酬・神階・絆は既存 7 体と同じ扱い。
+ *   Daily 巡回・49 攻略盤・`pickEnemyId`・gameVersion は引き続き CORE 7 体だけ（攻略盤の対象外＝Enemy Select に注記）。v0.4〜v0.6 は `?pilot=shogunate` 隔離だった
  * - しきい値は `cond.ratio` 0.5 のみ（`ratioByDifficulty` は埋めない）：Enemy Break の half 帯（表示 HP ≤ 0.5）と全難易度で一致させ、
  *   「崩れ＝追い込めた（R4 は then）」が嘘をつかないようにする（`SHOGUNATE_NEXT_PILOT_AUDIT_V1.md` §4-1・§4-3）
  * - 名前は Kit manifest の公式名「忠次」と公式 role「将軍四天王」。二つ名・技名・台詞は非公式のファン創作（Kit 規約 §6・§7。
@@ -449,17 +449,18 @@ export const SHOGUNATE_ENEMIES: EnemyDef[] = [
   },
 ]
 
-/** 全敵（既存 7 体＋Threat Pilot＋将軍家 Pilot）。`getEnemyDef`・Enemy Select（Pilot 時）の走査はこちら。seed 選出・Daily・攻略盤・gameVersion は CORE のみ */
+/** 全敵（既存 7 体＋Threat Pilot＋将軍家）。`getEnemyDef` の走査はこちら。Enemy Select は CORE＋将軍家（＋`?pilot=threat` 時だけ Threat Pilot）。seed 選出・Daily・攻略盤・gameVersion は CORE のみ */
 export const ENEMIES: EnemyDef[] = [...CORE_ENEMIES, ...PILOT_ENEMIES, ...SHOGUNATE_ENEMIES]
 
-/** 将軍家 Pilot の敵か（Enemy Select の印の文言分けと EnemyPanel の表示分岐に使う。記録ガードは `isPilotEnemyId` が両 Pilot をまとめて受ける） */
+/** 将軍家の敵か（EnemyPanel の軍略表示分岐と Enemy Select の「攻略盤の対象外」注記に使う。決定287 W1 で通常導線へ公開＝記録ガード（`isPilotEnemyId`）の対象外） */
 export function isShogunateEnemyId(id: EnemyId | null | undefined): boolean {
   return id !== null && id !== undefined && SHOGUNATE_ENEMIES.some((e) => e.id === id)
 }
 
-/** Pilot 敵か（戦績・セーブ・報酬・攻略盤に残さない判定に使う）。Threat Pilot（enemy_09）と将軍家 Pilot（enemy_08）の両方に真 */
+/** Pilot 敵か（戦績・セーブ・報酬・攻略盤に残さない判定に使う）。Threat Pilot（enemy_09）だけに真。
+ * 決定287 W1：忠次（enemy_08）は通常の敵になったため偽＝戦績・セーブ・報酬・神階・絆・同じ盤面 Retry を既存 7 体と同じに扱う */
 export function isPilotEnemyId(id: EnemyId | null | undefined): boolean {
-  return id !== null && id !== undefined && (PILOT_ENEMIES.some((e) => e.id === id) || isShogunateEnemyId(id))
+  return id !== null && id !== undefined && PILOT_ENEMIES.some((e) => e.id === id)
 }
 
 const ENEMY_BY_ID = new Map<EnemyId, EnemyDef>(ENEMIES.map((e) => [e.id, e]))

@@ -6,7 +6,8 @@ import { PILOT_KINDS, isPilotEnabled, parsePilotFlag, parsePilotFlags, resetPilo
 
 /**
  * Threat Branch Pilot v1：Pilot 専用経路と「既存に影響させない」配線の契約（source-fixed）。
- * 将軍家 Pilot v0.4：`?pilot=` を集合で読む（`threat`／`shogunate`／`all`／カンマ区切り）。既定（引数なし）は従来どおり threat。
+ * 将軍家 Pilot v0.4：`?pilot=` を集合で読む（`all`／カンマ区切り）。既定（引数なし）は従来どおり threat。
+ * 決定287 W1：`shogunate` は kind から外れた（忠次は通常導線）＝不明な値として無視される。
  */
 const read = (rel: string): string => readFileSync(fileURLToPath(new URL(rel, import.meta.url)), 'utf8').replace(/\r\n/g, '\n')
 
@@ -24,21 +25,20 @@ describe('Pilot フラグ（?pilot=threat）', () => {
 
   it('window が無い環境（Node）では無効', () => {
     expect(isPilotEnabled()).toBe(false)
-    expect(isPilotEnabled('shogunate')).toBe(false)
+    expect(isPilotEnabled('threat')).toBe(false)
   })
 })
 
-describe('Pilot フラグの集合（v0.4：threat と shogunate の併用）', () => {
-  it('threat／shogunate は互いに独立。all とカンマ区切り・複数指定で両方。不明な値は無視・空白は許容', () => {
-    expect(PILOT_KINDS).toEqual(['threat', 'shogunate'])
+describe('Pilot フラグの集合（W1：kind は threat だけ。旧 shogunate は不明な値）', () => {
+  it('all とカンマ区切り・複数指定で threat。旧 shogunate・不明な値は無視・空白は許容', () => {
+    expect(PILOT_KINDS).toEqual(['threat'])
     expect([...parsePilotFlags('?pilot=threat')]).toEqual(['threat'])
-    expect([...parsePilotFlags('?pilot=shogunate')]).toEqual(['shogunate'])
-    expect(parsePilotFlag('?pilot=shogunate', 'shogunate')).toBe(true)
-    expect(parsePilotFlag('?pilot=threat', 'shogunate')).toBe(false)
-    expect([...parsePilotFlags('?pilot=all')].sort()).toEqual(['shogunate', 'threat'])
-    expect([...parsePilotFlags('?pilot=threat,shogunate')].sort()).toEqual(['shogunate', 'threat'])
-    expect([...parsePilotFlags('?pilot=shogunate&pilot=threat')].sort()).toEqual(['shogunate', 'threat'])
-    expect([...parsePilotFlags('?pilot=%20shogunate%20,other')]).toEqual(['shogunate'])
+    expect([...parsePilotFlags('?pilot=shogunate')]).toEqual([])
+    expect(parsePilotFlag('?pilot=shogunate', 'threat')).toBe(false)
+    expect([...parsePilotFlags('?pilot=all')]).toEqual(['threat'])
+    expect([...parsePilotFlags('?pilot=threat,shogunate')]).toEqual(['threat'])
+    expect([...parsePilotFlags('?pilot=shogunate&pilot=threat')]).toEqual(['threat'])
+    expect([...parsePilotFlags('?pilot=%20shogunate%20,other')]).toEqual([])
     expect(parsePilotFlags('?pilot=other').size).toBe(0)
     expect(parsePilotFlags('').size).toBe(0)
     expect(parsePilotFlags('?pilot=').size).toBe(0)
@@ -46,13 +46,13 @@ describe('Pilot フラグの集合（v0.4：threat と shogunate の併用）', 
 })
 
 describe('配線（既存の導線・記録に影響させない）', () => {
-  it('Enemy Select：通常は CORE_ENEMIES、threat 時は PILOT_ENEMIES・shogunate 時は SHOGUNATE_ENEMIES を末尾に足す。Pilot 敵には印と案内（新規 CSS 0）', () => {
+  it('Enemy Select：通常は CORE_ENEMIES＋SHOGUNATE_ENEMIES、threat 時だけ PILOT_ENEMIES を末尾に足す。Pilot 敵には印と案内・将軍家には攻略盤外の注記（新規 CSS 0）', () => {
     const src = read('../setup/EnemySelectScreen.tsx')
     expect(src).toMatch(/import \{ CORE_ENEMIES, PILOT_ENEMIES, SHOGUNATE_ENEMIES, isPilotEnemyId, isShogunateEnemyId \} from '\.\.\/\.\.\/core\/data\/enemies'/)
     expect(src).toMatch(/const threatPilot = isPilotEnabled\('threat'\)/)
-    expect(src).toMatch(/const shogunatePilot = isPilotEnabled\('shogunate'\)/)
+    expect(src).not.toMatch(/isPilotEnabled\('shogunate'\)/)
     expect(src).toMatch(
-      /const roster = pilot \? \[\.\.\.CORE_ENEMIES, \.\.\.\(threatPilot \? PILOT_ENEMIES : \[\]\), \.\.\.\(shogunatePilot \? SHOGUNATE_ENEMIES : \[\]\)\] : CORE_ENEMIES/,
+      /const roster = threatPilot \? \[\.\.\.CORE_ENEMIES, \.\.\.SHOGUNATE_ENEMIES, \.\.\.PILOT_ENEMIES\] : \[\.\.\.CORE_ENEMIES, \.\.\.SHOGUNATE_ENEMIES\]/,
     )
     expect(src).toMatch(/\{roster\.map\(\(enemy\) => \(/)
     expect(src).not.toMatch(/\{ENEMIES\.map/)
@@ -60,10 +60,12 @@ describe('配線（既存の導線・記録に影響させない）', () => {
     // 案内は Pilot ごとに 1 つ（threat の testid・文言は v1 のまま＝lane1 の受入スクリプトが数える）
     expect(src).toMatch(/\{threatPilot && \(\n\s+<p className="setup-subtitle" data-testid="enemy-pilot-notice">/)
     expect(src).toContain('Threat Branch Pilot v1：この敵との戦いは戦績・セーブ・報酬に残りません')
-    expect(src).toMatch(/\{shogunatePilot && \(\n\s+<p className="setup-subtitle" data-testid="enemy-shogunate-notice">/)
-    expect(src).toContain('将軍家 Pilot v0.4：忠次との戦いは戦績・セーブ・報酬に残りません')
-    // 攻略済みの印は Pilot 敵に出さない（攻略盤の対象外）
-    expect(src).toMatch(/matchups\?\.available && !isPilotEnemyId\(enemy\.id\)/)
+    // 決定287 W1：将軍家 Pilot の案内は無い。将軍家カードには「攻略盤の対象外」の注記 1 つ
+    expect(src).not.toMatch(/enemy-shogunate-notice/)
+    expect(src).toMatch(/data-testid="enemy-shogunate-chip"/)
+    expect(src).toContain('攻略盤の対象外・戦績と報酬には残る')
+    // 攻略済みの印は 49 盤の敵（MATCHUP_ENEMIES＝CORE 7 体）にだけ出す
+    expect(src).toMatch(/matchups\?\.available && MATCHUP_ENEMIES\.includes\(enemy\.id\)/)
     // 新しい CSS クラスを作らない（既存の chip／subtitle を再利用）
     expect(src).not.toMatch(/enemy-select-pilot-/)
   })
