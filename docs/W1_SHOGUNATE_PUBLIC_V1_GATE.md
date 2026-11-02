@@ -68,7 +68,7 @@
 
 Q1 NO → 注記文言・★表示の見せ方のみ調整（仕組みは変えない）。Q2 YES（気になる）→ 文言 1 回調整（hard のしきい値 0.6 は変えない＝決定 v0.6）。
 
-**結果（CEO・2026-11-03）：Q1 PASS（通常戦・報酬・戦績）／Q2 PASS（むずかしい・演出違和感なし）→ Final Release Gate GO。** 公開直前の再確認：PR #8（docs-only）が master  に merge されたため本 branch に master を merge（conflict は DECISIONS／RELEASE_STATUS の追記行のみ・両方を保持）。runtime tree は  と同一。
+**結果（CEO・2026-11-03）：Q1 PASS（通常戦・報酬・戦績）／Q2 PASS（むずかしい・演出違和感なし）→ Final Release Gate GO。** 公開直前の再確認：PR #8（docs-only）が master `83d6b75` に merge されたため本 branch に master を merge（conflict は DECISIONS／RELEASE_STATUS の追記行のみ・両方を保持・`f9c865d`）。runtime tree は `17bbeb9` と同一（`git diff 17bbeb9 f9c865d -- src public scripts` 空）。
 
 ## 5. 残リスク
 
