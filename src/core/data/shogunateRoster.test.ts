@@ -27,7 +27,7 @@ import { hpBand } from '../../components/battle/visualHp'
  * 将軍家 Pilot v0.4（`docs/SHOGUNATE_PILOT_V0_4.md`）：ロスター分離の契約（v0.1 の契約を v1.0.2 RC の構造へ載せ替え）。
  *   - 既存 7 体は 1 文字も変わっていない（v1.0.2 統合形の `CORE_ENEMIES` JSON sha256＝`coreRoster.test.ts` と同じ golden）
  *   - seed → 敵（pickEnemyId）・Daily の巡回・49 攻略盤・gameVersion は既存 7 体だけを見る（golden は master 時点の実測値）
- *   - 忠次（enemy_08）は `ENEMIES`（getEnemyDef・Enemy Select の Pilot 経路）にだけ現れる。Threat Pilot（enemy_09）と同居する
+ *   - 忠次（enemy_08）は `ENEMIES` の末尾側に現れる。決定287 W1（2026-11-03）で通常導線へ公開＝`isPilotEnemyId` は偽（記録ガードの対象外）。Threat Pilot（enemy_09）は隔離のまま
  *   - 軍略のしきい値（0.5・難易度別なし）は Enemy Break の half 帯（表示 HP ≤ 0.5）と全難易度で一致する（監査 §4-1・Gate G5）
  */
 const CORE_GOLDEN_SHA256 = '5678e3e757f603ae3b2a1974c772c5480222bea9c7e3e6a78f96d1b49bd70e91'
@@ -103,7 +103,7 @@ describe('seed・Daily・49 攻略盤・gameVersion は既存 7 体だけを見�
 describe('将軍家 Pilot 敵（忠次）', () => {
   const def = getEnemyDef(SHOGUNATE_ENEMY_IDS.tadatsugu)
 
-  it('ENEMIES は既存 7 体＋Threat Pilot＋将軍家 Pilot の順。将軍家判定は忠次にだけ真・Pilot 判定（記録ガード）は両 Pilot に真', () => {
+  it('ENEMIES は既存 7 体＋Threat Pilot＋将軍家の順。将軍家判定は忠次にだけ真・Pilot 判定（記録ガード）は Threat Pilot にだけ真（W1：忠次は偽）', () => {
     expect(ENEMIES).toEqual([...CORE_ENEMIES, ...PILOT_ENEMIES, ...SHOGUNATE_ENEMIES])
     expect(SHOGUNATE_ENEMIES).toHaveLength(1)
     expect(isShogunateEnemyId(SHOGUNATE_ENEMY_IDS.tadatsugu)).toBe(true)
@@ -111,15 +111,17 @@ describe('将軍家 Pilot 敵（忠次）', () => {
     for (const e of CORE_ENEMIES) expect(isShogunateEnemyId(e.id)).toBe(false)
     expect(isShogunateEnemyId(null)).toBe(false)
     expect(isShogunateEnemyId(undefined)).toBe(false)
-    // 記録ガード（useGameEngine）・報酬畳み込み（BattleScreen）は isPilotEnemyId 1 つで両 Pilot を受ける
-    expect(isPilotEnemyId(SHOGUNATE_ENEMY_IDS.tadatsugu)).toBe(true)
+    // 記録ガード（useGameEngine）・報酬畳み込み（BattleScreen）は isPilotEnemyId＝Threat Pilot だけ。忠次は通常の敵（決定287 W1）
+    expect(isPilotEnemyId(SHOGUNATE_ENEMY_IDS.tadatsugu)).toBe(false)
     expect(isPilotEnemyId(PILOT_ENEMY_IDS.oniTactic)).toBe(true)
+    for (const e of CORE_ENEMIES) expect(isPilotEnemyId(e.id)).toBe(false)
   })
 
-  it('設計 §4-2 の値：HP 98・★3・軍略型・heavy・30 字以内の説明・台詞 7 本・R4 tactic（then 12／else 24）・7R 合計 then 57／else 69', () => {
+  it('設計 §4-2 の値：HP 98・★1（W1 実測）・軍略型・heavy・30 字以内の説明・台詞 7 本・R4 tactic（then 12／else 24）・7R 合計 then 57／else 69', () => {
     expect(def.id).toBe('enemy_08')
     expect(def.maxHp).toBe(98)
-    expect(def.rank).toBe(3)
+    // 決定287 W1：★は実測（normal 指数 28.4 ＜ 道化 28.6 ＝ ★1 帯）。数値不変
+    expect(def.rank).toBe(1)
     expect(def.typeLabel).toBe('軍略型')
     expect(def.visualType).toBe('heavy')
     expect(def.typeDescription.length).toBeLessThanOrEqual(30)

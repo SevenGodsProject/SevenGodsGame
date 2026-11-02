@@ -1,0 +1,6444 @@
+{
+  "meta": {
+    "engine": "v1.0.0 (d2135d2 runtime)",
+    "mode": "normal",
+    "seeds": [
+      "star-audit-1",
+      "star-audit-2",
+      "star-audit-3",
+      "star-audit-4",
+      "star-audit-5",
+      "star-audit-6",
+      "star-audit-7",
+      "star-audit-8",
+      "star-audit-9",
+      "star-audit-10",
+      "star-audit-11",
+      "star-audit-12",
+      "star-audit-13",
+      "star-audit-14",
+      "star-audit-15",
+      "star-audit-16"
+    ],
+    "lines": [
+      "h-balanced",
+      "h-aggressive",
+      "h-defensive",
+      "s-balanced",
+      "s-rush",
+      "s-score"
+    ],
+    "difficulties": [
+      "easy",
+      "normal",
+      "hard"
+    ],
+    "deck": "recommended",
+    "growthPath": "guardian",
+    "engineRuns": 18144,
+    "elapsedSec": 145,
+    "indexFormula": "0.5*(1-win)+0.3*min(1,hpLost/maxHp)+0.2*((killRound-1)/6) ×100",
+    "generatedAt": "2026-11-02T21:21:33.613Z"
+  },
+  "byEnemyDiff": {
+    "enemy_01:easy": {
+      "n": 672,
+      "winPct": 100,
+      "lossPct": 0,
+      "stallPct": 0,
+      "avgHpWin": 28.6,
+      "avgHpAll": 28.6,
+      "avgHpLost": 13.1,
+      "avgHpLostRatio": 0.37,
+      "avgKillRound": 4.53,
+      "killRoundDist": {
+        "R5": 230,
+        "R4": 237,
+        "R6": 99,
+        "R3": 98,
+        "R7": 8
+      },
+      "avgScore": 874,
+      "specialHitPct": 0
+    },
+    "enemy_02:easy": {
+      "n": 672,
+      "winPct": 100,
+      "lossPct": 0,
+      "stallPct": 0,
+      "avgHpWin": 28.5,
+      "avgHpAll": 28.5,
+      "avgHpLost": 12,
+      "avgHpLostRatio": 0.34,
+      "avgKillRound": 4.26,
+      "killRoundDist": {
+        "R4": 257,
+        "R5": 201,
+        "R3": 152,
+        "R6": 62
+      },
+      "avgScore": 877,
+      "specialHitPct": 37.8
+    },
+    "enemy_03:easy": {
+      "n": 672,
+      "winPct": 99.7,
+      "lossPct": 0.3,
+      "stallPct": 0,
+      "avgHpWin": 28,
+      "avgHpAll": 28,
+      "avgHpLost": 12.9,
+      "avgHpLostRatio": 0.37,
+      "avgKillRound": 4.26,
+      "killRoundDist": {
+        "R4": 244,
+        "R5": 203,
+        "R6": 62,
+        "R3": 156,
+        "R2": 3,
+        "R7": 2
+      },
+      "avgScore": 876,
+      "specialHitPct": 36.5
+    },
+    "enemy_04:easy": {
+      "n": 672,
+      "winPct": 100,
+      "lossPct": 0,
+      "stallPct": 0,
+      "avgHpWin": 28.1,
+      "avgHpAll": 28.1,
+      "avgHpLost": 12.3,
+      "avgHpLostRatio": 0.35,
+      "avgKillRound": 4.46,
+      "killRoundDist": {
+        "R4": 259,
+        "R5": 205,
+        "R6": 91,
+        "R3": 104,
+        "R7": 10,
+        "R2": 3
+      },
+      "avgScore": 872,
+      "specialHitPct": 10
+    },
+    "enemy_05:easy": {
+      "n": 672,
+      "winPct": 99.9,
+      "lossPct": 0.1,
+      "stallPct": 0,
+      "avgHpWin": 26.7,
+      "avgHpAll": 26.6,
+      "avgHpLost": 15,
+      "avgHpLostRatio": 0.43,
+      "avgKillRound": 3.93,
+      "killRoundDist": {
+        "R4": 237,
+        "R3": 244,
+        "R5": 157,
+        "R6": 27,
+        "R2": 6
+      },
+      "avgScore": 880,
+      "specialHitPct": 40
+    },
+    "enemy_06:easy": {
+      "n": 672,
+      "winPct": 100,
+      "lossPct": 0,
+      "stallPct": 0,
+      "avgHpWin": 28.2,
+      "avgHpAll": 28.2,
+      "avgHpLost": 13.3,
+      "avgHpLostRatio": 0.38,
+      "avgKillRound": 4.52,
+      "killRoundDist": {
+        "R5": 237,
+        "R4": 235,
+        "R6": 94,
+        "R3": 99,
+        "R7": 7
+      },
+      "avgScore": 874,
+      "specialHitPct": 40.8
+    },
+    "enemy_07:easy": {
+      "n": 672,
+      "winPct": 100,
+      "lossPct": 0,
+      "stallPct": 0,
+      "avgHpWin": 28.7,
+      "avgHpAll": 28.7,
+      "avgHpLost": 10.1,
+      "avgHpLostRatio": 0.29,
+      "avgKillRound": 4.18,
+      "killRoundDist": {
+        "R4": 239,
+        "R5": 186,
+        "R3": 183,
+        "R6": 61,
+        "R2": 3
+      },
+      "avgScore": 876,
+      "specialHitPct": 62.2
+    },
+    "enemy_09:easy": {
+      "n": 672,
+      "winPct": 100,
+      "lossPct": 0,
+      "stallPct": 0,
+      "avgHpWin": 30,
+      "avgHpAll": 30,
+      "avgHpLost": 9.8,
+      "avgHpLostRatio": 0.28,
+      "avgKillRound": 4.2,
+      "killRoundDist": {
+        "R4": 285,
+        "R5": 183,
+        "R3": 152,
+        "R6": 52
+      },
+      "avgScore": 882,
+      "specialHitPct": 11.2
+    },
+    "enemy_08:easy": {
+      "n": 672,
+      "winPct": 100,
+      "lossPct": 0,
+      "stallPct": 0,
+      "avgHpWin": 30.1,
+      "avgHpAll": 30.1,
+      "avgHpLost": 9.9,
+      "avgHpLostRatio": 0.28,
+      "avgKillRound": 4.32,
+      "killRoundDist": {
+        "R4": 280,
+        "R5": 202,
+        "R3": 122,
+        "R6": 68
+      },
+      "avgScore": 880,
+      "specialHitPct": 12.5
+    },
+    "enemy_01:normal": {
+      "n": 672,
+      "winPct": 95.2,
+      "lossPct": 4.8,
+      "stallPct": 0,
+      "avgHpWin": 22.6,
+      "avgHpAll": 21.6,
+      "avgHpLost": 18,
+      "avgHpLostRatio": 0.6,
+      "avgKillRound": 5.02,
+      "killRoundDist": {
+        "R4": 179,
+        "R5": 231,
+        "R6": 172,
+        "R3": 24,
+        "R7": 34
+      },
+      "avgScore": 858,
+      "specialHitPct": 0
+    },
+    "enemy_02:normal": {
+      "n": 672,
+      "winPct": 93.5,
+      "lossPct": 6.5,
+      "stallPct": 0,
+      "avgHpWin": 21.7,
+      "avgHpAll": 20.2,
+      "avgHpLost": 18.4,
+      "avgHpLostRatio": 0.61,
+      "avgKillRound": 4.7,
+      "killRoundDist": {
+        "R5": 221,
+        "R4": 214,
+        "R6": 118,
+        "R3": 60,
+        "R7": 15
+      },
+      "avgScore": 850,
+      "specialHitPct": 58.3
+    },
+    "enemy_03:normal": {
+      "n": 672,
+      "winPct": 90.6,
+      "lossPct": 9.4,
+      "stallPct": 0,
+      "avgHpWin": 21.4,
+      "avgHpAll": 19.4,
+      "avgHpLost": 19.5,
+      "avgHpLostRatio": 0.65,
+      "avgKillRound": 4.68,
+      "killRoundDist": {
+        "R5": 202,
+        "R4": 222,
+        "R6": 113,
+        "R3": 58,
+        "R7": 14
+      },
+      "avgScore": 835,
+      "specialHitPct": 56
+    },
+    "enemy_04:normal": {
+      "n": 672,
+      "winPct": 98.4,
+      "lossPct": 1.6,
+      "stallPct": 0,
+      "avgHpWin": 21.4,
+      "avgHpAll": 21.1,
+      "avgHpLost": 17.5,
+      "avgHpLostRatio": 0.58,
+      "avgKillRound": 4.97,
+      "killRoundDist": {
+        "R5": 237,
+        "R6": 165,
+        "R4": 187,
+        "R3": 36,
+        "R7": 36
+      },
+      "avgScore": 875,
+      "specialHitPct": 26
+    },
+    "enemy_05:normal": {
+      "n": 672,
+      "winPct": 95.5,
+      "lossPct": 4.5,
+      "stallPct": 0,
+      "avgHpWin": 20.7,
+      "avgHpAll": 19.7,
+      "avgHpLost": 20,
+      "avgHpLostRatio": 0.67,
+      "avgKillRound": 4.49,
+      "killRoundDist": {
+        "R4": 236,
+        "R5": 221,
+        "R6": 86,
+        "R3": 94,
+        "R7": 5
+      },
+      "avgScore": 862,
+      "specialHitPct": 58.8
+    },
+    "enemy_06:normal": {
+      "n": 672,
+      "winPct": 91.4,
+      "lossPct": 8.6,
+      "stallPct": 0,
+      "avgHpWin": 21.6,
+      "avgHpAll": 19.7,
+      "avgHpLost": 20.2,
+      "avgHpLostRatio": 0.67,
+      "avgKillRound": 4.98,
+      "killRoundDist": {
+        "R5": 214,
+        "R4": 177,
+        "R6": 164,
+        "R3": 29,
+        "R7": 30
+      },
+      "avgScore": 834,
+      "specialHitPct": 62.2
+    },
+    "enemy_07:normal": {
+      "n": 672,
+      "winPct": 97.8,
+      "lossPct": 2.2,
+      "stallPct": 0,
+      "avgHpWin": 21.7,
+      "avgHpAll": 21.3,
+      "avgHpLost": 15.4,
+      "avgHpLostRatio": 0.51,
+      "avgKillRound": 4.66,
+      "killRoundDist": {
+        "R5": 215,
+        "R4": 231,
+        "R6": 120,
+        "R3": 74,
+        "R7": 17
+      },
+      "avgScore": 877,
+      "specialHitPct": 77.7
+    },
+    "enemy_09:normal": {
+      "n": 672,
+      "winPct": 98.5,
+      "lossPct": 1.5,
+      "stallPct": 0,
+      "avgHpWin": 23.3,
+      "avgHpAll": 22.9,
+      "avgHpLost": 14.4,
+      "avgHpLostRatio": 0.48,
+      "avgKillRound": 4.69,
+      "killRoundDist": {
+        "R5": 247,
+        "R4": 227,
+        "R6": 116,
+        "R3": 60,
+        "R7": 12
+      },
+      "avgScore": 888,
+      "specialHitPct": 18.6
+    },
+    "enemy_08:normal": {
+      "n": 672,
+      "winPct": 98.2,
+      "lossPct": 1.8,
+      "stallPct": 0,
+      "avgHpWin": 23.6,
+      "avgHpAll": 23.2,
+      "avgHpLost": 14.6,
+      "avgHpLostRatio": 0.49,
+      "avgKillRound": 4.83,
+      "killRoundDist": {
+        "R5": 250,
+        "R6": 146,
+        "R4": 199,
+        "R3": 47,
+        "R7": 18
+      },
+      "avgScore": 883,
+      "specialHitPct": 21.3
+    },
+    "enemy_01:hard": {
+      "n": 672,
+      "winPct": 85.1,
+      "lossPct": 14.1,
+      "stallPct": 0.7,
+      "avgHpWin": 18.5,
+      "avgHpAll": 15.9,
+      "avgHpLost": 23.5,
+      "avgHpLostRatio": 0.87,
+      "avgKillRound": 5.47,
+      "killRoundDist": {
+        "R5": 206,
+        "R6": 196,
+        "R7": 83,
+        "R4": 83,
+        "R3": 4
+      },
+      "avgScore": 815,
+      "specialHitPct": 0
+    },
+    "enemy_02:hard": {
+      "n": 672,
+      "winPct": 74.3,
+      "lossPct": 25.3,
+      "stallPct": 0.4,
+      "avgHpWin": 17.3,
+      "avgHpAll": 13,
+      "avgHpLost": 24.2,
+      "avgHpLostRatio": 0.9,
+      "avgKillRound": 5.09,
+      "killRoundDist": {
+        "R5": 202,
+        "R6": 125,
+        "R4": 123,
+        "R7": 35,
+        "R3": 14
+      },
+      "avgScore": 745,
+      "specialHitPct": 78.1
+    },
+    "enemy_03:hard": {
+      "n": 672,
+      "winPct": 69.2,
+      "lossPct": 30.8,
+      "stallPct": 0,
+      "avgHpWin": 17.2,
+      "avgHpAll": 11.9,
+      "avgHpLost": 25.5,
+      "avgHpLostRatio": 0.95,
+      "avgKillRound": 5.02,
+      "killRoundDist": {
+        "R6": 105,
+        "R5": 179,
+        "R7": 33,
+        "R4": 136,
+        "R3": 12
+      },
+      "avgScore": 712,
+      "specialHitPct": 74.9
+    },
+    "enemy_04:hard": {
+      "n": 672,
+      "winPct": 82.7,
+      "lossPct": 16.4,
+      "stallPct": 0.9,
+      "avgHpWin": 18.2,
+      "avgHpAll": 15.2,
+      "avgHpLost": 22.7,
+      "avgHpLostRatio": 0.84,
+      "avgKillRound": 5.41,
+      "killRoundDist": {
+        "R5": 206,
+        "R6": 182,
+        "R4": 88,
+        "R7": 73,
+        "R3": 7
+      },
+      "avgScore": 795,
+      "specialHitPct": 42.9
+    },
+    "enemy_05:hard": {
+      "n": 672,
+      "winPct": 79.3,
+      "lossPct": 20.7,
+      "stallPct": 0,
+      "avgHpWin": 16.9,
+      "avgHpAll": 13.4,
+      "avgHpLost": 24.9,
+      "avgHpLostRatio": 0.92,
+      "avgKillRound": 4.86,
+      "killRoundDist": {
+        "R5": 176,
+        "R4": 179,
+        "R6": 126,
+        "R3": 31,
+        "R7": 21
+      },
+      "avgScore": 774,
+      "specialHitPct": 77.7
+    },
+    "enemy_06:hard": {
+      "n": 672,
+      "winPct": 74.7,
+      "lossPct": 24.7,
+      "stallPct": 0.6,
+      "avgHpWin": 17,
+      "avgHpAll": 12.8,
+      "avgHpLost": 26.5,
+      "avgHpLostRatio": 0.98,
+      "avgKillRound": 5.39,
+      "killRoundDist": {
+        "R6": 169,
+        "R5": 178,
+        "R7": 62,
+        "R4": 89,
+        "R3": 4
+      },
+      "avgScore": 746,
+      "specialHitPct": 81.3
+    },
+    "enemy_07:hard": {
+      "n": 672,
+      "winPct": 87.6,
+      "lossPct": 12.4,
+      "stallPct": 0,
+      "avgHpWin": 19.6,
+      "avgHpAll": 17.2,
+      "avgHpLost": 18.4,
+      "avgHpLostRatio": 0.68,
+      "avgKillRound": 5.19,
+      "killRoundDist": {
+        "R5": 230,
+        "R6": 177,
+        "R4": 117,
+        "R3": 20,
+        "R7": 45
+      },
+      "avgScore": 826,
+      "specialHitPct": 87.6
+    },
+    "enemy_09:hard": {
+      "n": 672,
+      "winPct": 89,
+      "lossPct": 10.6,
+      "stallPct": 0.4,
+      "avgHpWin": 20.6,
+      "avgHpAll": 18.4,
+      "avgHpLost": 17.8,
+      "avgHpLostRatio": 0.66,
+      "avgKillRound": 5.15,
+      "killRoundDist": {
+        "R5": 245,
+        "R6": 170,
+        "R4": 130,
+        "R7": 39,
+        "R3": 14
+      },
+      "avgScore": 849,
+      "specialHitPct": 15.8
+    },
+    "enemy_08:hard": {
+      "n": 672,
+      "winPct": 90.3,
+      "lossPct": 9.4,
+      "stallPct": 0.3,
+      "avgHpWin": 20.7,
+      "avgHpAll": 18.8,
+      "avgHpLost": 18.2,
+      "avgHpLostRatio": 0.67,
+      "avgKillRound": 5.28,
+      "killRoundDist": {
+        "R5": 240,
+        "R6": 192,
+        "R4": 115,
+        "R7": 53,
+        "R3": 7
+      },
+      "avgScore": 860,
+      "specialHitPct": 18.3
+    }
+  },
+  "byEnemyDiffTypical": {
+    "enemy_01:easy": {
+      "n": 112,
+      "winPct": 100,
+      "lossPct": 0,
+      "stallPct": 0,
+      "avgHpWin": 25.4,
+      "avgHpAll": 25.4,
+      "avgHpLost": 16.7,
+      "avgHpLostRatio": 0.48,
+      "avgKillRound": 5.04,
+      "killRoundDist": {
+        "R5": 55,
+        "R6": 30,
+        "R4": 24,
+        "R3": 2,
+        "R7": 1
+      },
+      "avgScore": 822,
+      "specialHitPct": 0
+    },
+    "enemy_02:easy": {
+      "n": 112,
+      "winPct": 100,
+      "lossPct": 0,
+      "stallPct": 0,
+      "avgHpWin": 25.4,
+      "avgHpAll": 25.4,
+      "avgHpLost": 15.3,
+      "avgHpLostRatio": 0.44,
+      "avgKillRound": 4.77,
+      "killRoundDist": {
+        "R4": 36,
+        "R5": 51,
+        "R6": 20,
+        "R3": 5
+      },
+      "avgScore": 829,
+      "specialHitPct": 57.1
+    },
+    "enemy_03:easy": {
+      "n": 112,
+      "winPct": 100,
+      "lossPct": 0,
+      "stallPct": 0,
+      "avgHpWin": 24.7,
+      "avgHpAll": 24.7,
+      "avgHpLost": 17.9,
+      "avgHpLostRatio": 0.51,
+      "avgKillRound": 4.85,
+      "killRoundDist": {
+        "R4": 28,
+        "R6": 21,
+        "R5": 58,
+        "R3": 5
+      },
+      "avgScore": 825,
+      "specialHitPct": 60.7
+    },
+    "enemy_04:easy": {
+      "n": 112,
+      "winPct": 100,
+      "lossPct": 0,
+      "stallPct": 0,
+      "avgHpWin": 23.9,
+      "avgHpAll": 23.9,
+      "avgHpLost": 16.5,
+      "avgHpLostRatio": 0.47,
+      "avgKillRound": 4.92,
+      "killRoundDist": {
+        "R4": 38,
+        "R6": 27,
+        "R5": 46,
+        "R7": 1
+      },
+      "avgScore": 825,
+      "specialHitPct": 15.2
+    },
+    "enemy_05:easy": {
+      "n": 112,
+      "winPct": 100,
+      "lossPct": 0,
+      "stallPct": 0,
+      "avgHpWin": 23.6,
+      "avgHpAll": 23.6,
+      "avgHpLost": 19.7,
+      "avgHpLostRatio": 0.56,
+      "avgKillRound": 4.49,
+      "killRoundDist": {
+        "R4": 51,
+        "R5": 46,
+        "R3": 7,
+        "R6": 8
+      },
+      "avgScore": 834,
+      "specialHitPct": 59.8
+    },
+    "enemy_06:easy": {
+      "n": 112,
+      "winPct": 100,
+      "lossPct": 0,
+      "stallPct": 0,
+      "avgHpWin": 25,
+      "avgHpAll": 25,
+      "avgHpLost": 17.6,
+      "avgHpLostRatio": 0.5,
+      "avgKillRound": 5.06,
+      "killRoundDist": {
+        "R5": 59,
+        "R6": 30,
+        "R4": 19,
+        "R3": 3,
+        "R7": 1
+      },
+      "avgScore": 822,
+      "specialHitPct": 58
+    },
+    "enemy_07:easy": {
+      "n": 112,
+      "winPct": 100,
+      "lossPct": 0,
+      "stallPct": 0,
+      "avgHpWin": 23.8,
+      "avgHpAll": 23.8,
+      "avgHpLost": 15.5,
+      "avgHpLostRatio": 0.44,
+      "avgKillRound": 4.71,
+      "killRoundDist": {
+        "R4": 41,
+        "R5": 54,
+        "R6": 14,
+        "R3": 3
+      },
+      "avgScore": 825,
+      "specialHitPct": 96.4
+    },
+    "enemy_09:easy": {
+      "n": 112,
+      "winPct": 100,
+      "lossPct": 0,
+      "stallPct": 0,
+      "avgHpWin": 27.7,
+      "avgHpAll": 27.7,
+      "avgHpLost": 11.4,
+      "avgHpLostRatio": 0.33,
+      "avgKillRound": 4.5,
+      "killRoundDist": {
+        "R4": 58,
+        "R5": 37,
+        "R6": 12,
+        "R3": 5
+      },
+      "avgScore": 849,
+      "specialHitPct": 7.1
+    },
+    "enemy_08:easy": {
+      "n": 112,
+      "winPct": 100,
+      "lossPct": 0,
+      "stallPct": 0,
+      "avgHpWin": 27.2,
+      "avgHpAll": 27.2,
+      "avgHpLost": 12,
+      "avgHpLostRatio": 0.34,
+      "avgKillRound": 4.64,
+      "killRoundDist": {
+        "R4": 48,
+        "R5": 44,
+        "R6": 16,
+        "R3": 4
+      },
+      "avgScore": 842,
+      "specialHitPct": 8.9
+    },
+    "enemy_01:normal": {
+      "n": 112,
+      "winPct": 98.2,
+      "lossPct": 1.8,
+      "stallPct": 0,
+      "avgHpWin": 21.1,
+      "avgHpAll": 20.7,
+      "avgHpLost": 21.7,
+      "avgHpLostRatio": 0.72,
+      "avgKillRound": 5.59,
+      "killRoundDist": {
+        "R4": 5,
+        "R6": 54,
+        "R5": 43,
+        "R7": 8
+      },
+      "avgScore": 821,
+      "specialHitPct": 0
+    },
+    "enemy_02:normal": {
+      "n": 112,
+      "winPct": 97.3,
+      "lossPct": 2.7,
+      "stallPct": 0,
+      "avgHpWin": 18.7,
+      "avgHpAll": 18.2,
+      "avgHpLost": 23,
+      "avgHpLostRatio": 0.77,
+      "avgKillRound": 5.36,
+      "killRoundDist": {
+        "R5": 54,
+        "R6": 45,
+        "R4": 6,
+        "R3": 2,
+        "R7": 2
+      },
+      "avgScore": 818,
+      "specialHitPct": 89.3
+    },
+    "enemy_03:normal": {
+      "n": 112,
+      "winPct": 93.8,
+      "lossPct": 6.3,
+      "stallPct": 0,
+      "avgHpWin": 18,
+      "avgHpAll": 16.8,
+      "avgHpLost": 25.7,
+      "avgHpLostRatio": 0.86,
+      "avgKillRound": 5.37,
+      "killRoundDist": {
+        "R5": 52,
+        "R4": 7,
+        "R6": 42,
+        "R3": 1,
+        "R7": 3
+      },
+      "avgScore": 795,
+      "specialHitPct": 85.7
+    },
+    "enemy_04:normal": {
+      "n": 112,
+      "winPct": 99.1,
+      "lossPct": 0.9,
+      "stallPct": 0,
+      "avgHpWin": 20.7,
+      "avgHpAll": 20.5,
+      "avgHpLost": 20.1,
+      "avgHpLostRatio": 0.67,
+      "avgKillRound": 5.64,
+      "killRoundDist": {
+        "R5": 41,
+        "R6": 54,
+        "R7": 11,
+        "R4": 5
+      },
+      "avgScore": 819,
+      "specialHitPct": 50.9
+    },
+    "enemy_05:normal": {
+      "n": 112,
+      "winPct": 100,
+      "lossPct": 0,
+      "stallPct": 0,
+      "avgHpWin": 18.2,
+      "avgHpAll": 18.2,
+      "avgHpLost": 24.7,
+      "avgHpLostRatio": 0.82,
+      "avgKillRound": 5.14,
+      "killRoundDist": {
+        "R4": 14,
+        "R5": 66,
+        "R3": 1,
+        "R6": 30,
+        "R7": 1
+      },
+      "avgScore": 835,
+      "specialHitPct": 50.9
+    },
+    "enemy_06:normal": {
+      "n": 112,
+      "winPct": 96.4,
+      "lossPct": 3.6,
+      "stallPct": 0,
+      "avgHpWin": 19.2,
+      "avgHpAll": 18.5,
+      "avgHpLost": 24.8,
+      "avgHpLostRatio": 0.83,
+      "avgKillRound": 5.61,
+      "killRoundDist": {
+        "R5": 40,
+        "R6": 58,
+        "R4": 4,
+        "R7": 6
+      },
+      "avgScore": 810,
+      "specialHitPct": 83.9
+    },
+    "enemy_07:normal": {
+      "n": 112,
+      "winPct": 100,
+      "lossPct": 0,
+      "stallPct": 0,
+      "avgHpWin": 20.6,
+      "avgHpAll": 20.6,
+      "avgHpLost": 16.9,
+      "avgHpLostRatio": 0.56,
+      "avgKillRound": 5.3,
+      "killRoundDist": {
+        "R5": 59,
+        "R6": 39,
+        "R4": 11,
+        "R7": 3
+      },
+      "avgScore": 835,
+      "specialHitPct": 98.2
+    },
+    "enemy_09:normal": {
+      "n": 112,
+      "winPct": 100,
+      "lossPct": 0,
+      "stallPct": 0,
+      "avgHpWin": 21.3,
+      "avgHpAll": 21.3,
+      "avgHpLost": 16.9,
+      "avgHpLostRatio": 0.56,
+      "avgKillRound": 5.2,
+      "killRoundDist": {
+        "R5": 60,
+        "R6": 35,
+        "R4": 13,
+        "R3": 2,
+        "R7": 2
+      },
+      "avgScore": 849,
+      "specialHitPct": 18.8
+    },
+    "enemy_08:normal": {
+      "n": 112,
+      "winPct": 99.1,
+      "lossPct": 0.9,
+      "stallPct": 0,
+      "avgHpWin": 22.2,
+      "avgHpAll": 22,
+      "avgHpLost": 17.1,
+      "avgHpLostRatio": 0.57,
+      "avgKillRound": 5.35,
+      "killRoundDist": {
+        "R5": 58,
+        "R6": 40,
+        "R4": 9,
+        "R7": 4
+      },
+      "avgScore": 840,
+      "specialHitPct": 20.5
+    },
+    "enemy_01:hard": {
+      "n": 112,
+      "winPct": 85.7,
+      "lossPct": 14.3,
+      "stallPct": 0,
+      "avgHpWin": 17.4,
+      "avgHpAll": 14.9,
+      "avgHpLost": 28.3,
+      "avgHpLostRatio": 1.05,
+      "avgKillRound": 6.15,
+      "killRoundDist": {
+        "R5": 14,
+        "R6": 54,
+        "R7": 28
+      },
+      "avgScore": 761,
+      "specialHitPct": 0
+    },
+    "enemy_02:hard": {
+      "n": 112,
+      "winPct": 64.3,
+      "lossPct": 34.8,
+      "stallPct": 0.9,
+      "avgHpWin": 15,
+      "avgHpAll": 9.9,
+      "avgHpLost": 29.9,
+      "avgHpLostRatio": 1.11,
+      "avgKillRound": 5.89,
+      "killRoundDist": {
+        "R5": 22,
+        "R6": 36,
+        "R7": 14
+      },
+      "avgScore": 623,
+      "specialHitPct": 98.2
+    },
+    "enemy_03:hard": {
+      "n": 112,
+      "winPct": 47.3,
+      "lossPct": 52.7,
+      "stallPct": 0,
+      "avgHpWin": 15.1,
+      "avgHpAll": 7.1,
+      "avgHpLost": 31.5,
+      "avgHpLostRatio": 1.17,
+      "avgKillRound": 5.81,
+      "killRoundDist": {
+        "R6": 25,
+        "R5": 16,
+        "R7": 10,
+        "R4": 2
+      },
+      "avgScore": 512,
+      "specialHitPct": 95.5
+    },
+    "enemy_04:hard": {
+      "n": 112,
+      "winPct": 83,
+      "lossPct": 16.1,
+      "stallPct": 0.9,
+      "avgHpWin": 18.4,
+      "avgHpAll": 15.5,
+      "avgHpLost": 24.4,
+      "avgHpLostRatio": 0.9,
+      "avgKillRound": 6.19,
+      "killRoundDist": {
+        "R5": 14,
+        "R6": 47,
+        "R7": 32
+      },
+      "avgScore": 743,
+      "specialHitPct": 79.5
+    },
+    "enemy_05:hard": {
+      "n": 112,
+      "winPct": 69.6,
+      "lossPct": 30.4,
+      "stallPct": 0,
+      "avgHpWin": 16,
+      "avgHpAll": 11.2,
+      "avgHpLost": 30.7,
+      "avgHpLostRatio": 1.14,
+      "avgKillRound": 5.58,
+      "killRoundDist": {
+        "R5": 31,
+        "R6": 40,
+        "R4": 3,
+        "R7": 4
+      },
+      "avgScore": 664,
+      "specialHitPct": 83
+    },
+    "enemy_06:hard": {
+      "n": 112,
+      "winPct": 55.4,
+      "lossPct": 43.8,
+      "stallPct": 0.9,
+      "avgHpWin": 15.2,
+      "avgHpAll": 8.7,
+      "avgHpLost": 32.5,
+      "avgHpLostRatio": 1.2,
+      "avgKillRound": 6.16,
+      "killRoundDist": {
+        "R6": 38,
+        "R5": 7,
+        "R7": 17
+      },
+      "avgScore": 567,
+      "specialHitPct": 98.2
+    },
+    "enemy_07:hard": {
+      "n": 112,
+      "winPct": 99.1,
+      "lossPct": 0.9,
+      "stallPct": 0,
+      "avgHpWin": 19.6,
+      "avgHpAll": 19.4,
+      "avgHpLost": 16.9,
+      "avgHpLostRatio": 0.63,
+      "avgKillRound": 5.85,
+      "killRoundDist": {
+        "R5": 36,
+        "R6": 56,
+        "R7": 19
+      },
+      "avgScore": 853,
+      "specialHitPct": 89.3
+    },
+    "enemy_09:hard": {
+      "n": 112,
+      "winPct": 92.9,
+      "lossPct": 6.3,
+      "stallPct": 0.9,
+      "avgHpWin": 18.8,
+      "avgHpAll": 17.7,
+      "avgHpLost": 21.8,
+      "avgHpLostRatio": 0.81,
+      "avgKillRound": 5.84,
+      "killRoundDist": {
+        "R5": 30,
+        "R6": 61,
+        "R7": 13
+      },
+      "avgScore": 815,
+      "specialHitPct": 15.2
+    },
+    "enemy_08:hard": {
+      "n": 112,
+      "winPct": 95.5,
+      "lossPct": 3.6,
+      "stallPct": 0.9,
+      "avgHpWin": 19.1,
+      "avgHpAll": 18.5,
+      "avgHpLost": 22.1,
+      "avgHpLostRatio": 0.82,
+      "avgKillRound": 5.93,
+      "killRoundDist": {
+        "R5": 23,
+        "R6": 65,
+        "R7": 18,
+        "R4": 1
+      },
+      "avgScore": 837,
+      "specialHitPct": 17
+    }
+  },
+  "byEnemyDiffLine": {
+    "enemy_01:easy:h-balanced": {
+      "n": 112,
+      "winPct": 100,
+      "lossPct": 0,
+      "stallPct": 0,
+      "avgHpWin": 25.4,
+      "avgHpAll": 25.4,
+      "avgHpLost": 16.7,
+      "avgHpLostRatio": 0.48,
+      "avgKillRound": 5.04,
+      "killRoundDist": {
+        "R5": 55,
+        "R6": 30,
+        "R4": 24,
+        "R3": 2,
+        "R7": 1
+      },
+      "avgScore": 822,
+      "specialHitPct": 0
+    },
+    "enemy_01:easy:h-aggressive": {
+      "n": 112,
+      "winPct": 100,
+      "lossPct": 0,
+      "stallPct": 0,
+      "avgHpWin": 21.3,
+      "avgHpAll": 21.3,
+      "avgHpLost": 18.5,
+      "avgHpLostRatio": 0.53,
+      "avgKillRound": 4.85,
+      "killRoundDist": {
+        "R4": 33,
+        "R5": 58,
+        "R6": 18,
+        "R3": 2,
+        "R7": 1
+      },
+      "avgScore": 827,
+      "specialHitPct": 0
+    },
+    "enemy_01:easy:h-defensive": {
+      "n": 112,
+      "winPct": 100,
+      "lossPct": 0,
+      "stallPct": 0,
+      "avgHpWin": 28.9,
+      "avgHpAll": 28.9,
+      "avgHpLost": 11.7,
+      "avgHpLostRatio": 0.33,
+      "avgKillRound": 5.45,
+      "killRoundDist": {
+        "R5": 58,
+        "R6": 43,
+        "R7": 6,
+        "R4": 5
+      },
+      "avgScore": 800,
+      "specialHitPct": 0
+    },
+    "enemy_01:easy:s-balanced": {
+      "n": 112,
+      "winPct": 100,
+      "lossPct": 0,
+      "stallPct": 0,
+      "avgHpWin": 33.1,
+      "avgHpAll": 33.1,
+      "avgHpLost": 8.9,
+      "avgHpLostRatio": 0.25,
+      "avgKillRound": 3.96,
+      "killRoundDist": {
+        "R4": 56,
+        "R3": 33,
+        "R5": 18,
+        "R6": 5
+      },
+      "avgScore": 928,
+      "specialHitPct": 0
+    },
+    "enemy_01:easy:s-rush": {
+      "n": 112,
+      "winPct": 100,
+      "lossPct": 0,
+      "stallPct": 0,
+      "avgHpWin": 31.7,
+      "avgHpAll": 31.7,
+      "avgHpLost": 11.8,
+      "avgHpLostRatio": 0.34,
+      "avgKillRound": 4.01,
+      "killRoundDist": {
+        "R4": 58,
+        "R3": 28,
+        "R5": 23,
+        "R6": 3
+      },
+      "avgScore": 920,
+      "specialHitPct": 0
+    },
+    "enemy_01:easy:s-score": {
+      "n": 112,
+      "winPct": 100,
+      "lossPct": 0,
+      "stallPct": 0,
+      "avgHpWin": 31.4,
+      "avgHpAll": 31.4,
+      "avgHpLost": 10.8,
+      "avgHpLostRatio": 0.31,
+      "avgKillRound": 3.87,
+      "killRoundDist": {
+        "R4": 61,
+        "R3": 33,
+        "R5": 18
+      },
+      "avgScore": 945,
+      "specialHitPct": 0
+    },
+    "enemy_02:easy:h-balanced": {
+      "n": 112,
+      "winPct": 100,
+      "lossPct": 0,
+      "stallPct": 0,
+      "avgHpWin": 25.4,
+      "avgHpAll": 25.4,
+      "avgHpLost": 15.3,
+      "avgHpLostRatio": 0.44,
+      "avgKillRound": 4.77,
+      "killRoundDist": {
+        "R4": 36,
+        "R5": 51,
+        "R6": 20,
+        "R3": 5
+      },
+      "avgScore": 829,
+      "specialHitPct": 57.1
+    },
+    "enemy_02:easy:h-aggressive": {
+      "n": 112,
+      "winPct": 100,
+      "lossPct": 0,
+      "stallPct": 0,
+      "avgHpWin": 22.4,
+      "avgHpAll": 22.4,
+      "avgHpLost": 16,
+      "avgHpLostRatio": 0.46,
+      "avgKillRound": 4.47,
+      "killRoundDist": {
+        "R4": 56,
+        "R5": 44,
+        "R6": 7,
+        "R3": 5
+      },
+      "avgScore": 841,
+      "specialHitPct": 45.5
+    },
+    "enemy_02:easy:h-defensive": {
+      "n": 112,
+      "winPct": 100,
+      "lossPct": 0,
+      "stallPct": 0,
+      "avgHpWin": 26.3,
+      "avgHpAll": 26.3,
+      "avgHpLost": 14.7,
+      "avgHpLostRatio": 0.42,
+      "avgKillRound": 5.21,
+      "killRoundDist": {
+        "R5": 66,
+        "R6": 35,
+        "R4": 11
+      },
+      "avgScore": 802,
+      "specialHitPct": 89.3
+    },
+    "enemy_02:easy:s-balanced": {
+      "n": 112,
+      "winPct": 100,
+      "lossPct": 0,
+      "stallPct": 0,
+      "avgHpWin": 32.9,
+      "avgHpAll": 32.9,
+      "avgHpLost": 7.4,
+      "avgHpLostRatio": 0.21,
+      "avgKillRound": 3.69,
+      "killRoundDist": {
+        "R4": 51,
+        "R3": 48,
+        "R5": 13
+      },
+      "avgScore": 926,
+      "specialHitPct": 11.6
+    },
+    "enemy_02:easy:s-rush": {
+      "n": 112,
+      "winPct": 100,
+      "lossPct": 0,
+      "stallPct": 0,
+      "avgHpWin": 32,
+      "avgHpAll": 32,
+      "avgHpLost": 10,
+      "avgHpLostRatio": 0.29,
+      "avgKillRound": 3.73,
+      "killRoundDist": {
+        "R4": 52,
+        "R3": 45,
+        "R5": 15
+      },
+      "avgScore": 922,
+      "specialHitPct": 12.5
+    },
+    "enemy_02:easy:s-score": {
+      "n": 112,
+      "winPct": 100,
+      "lossPct": 0,
+      "stallPct": 0,
+      "avgHpWin": 31.9,
+      "avgHpAll": 31.9,
+      "avgHpLost": 8.9,
+      "avgHpLostRatio": 0.25,
+      "avgKillRound": 3.67,
+      "killRoundDist": {
+        "R4": 51,
+        "R3": 49,
+        "R5": 12
+      },
+      "avgScore": 941,
+      "specialHitPct": 10.7
+    },
+    "enemy_03:easy:h-balanced": {
+      "n": 112,
+      "winPct": 100,
+      "lossPct": 0,
+      "stallPct": 0,
+      "avgHpWin": 24.7,
+      "avgHpAll": 24.7,
+      "avgHpLost": 17.9,
+      "avgHpLostRatio": 0.51,
+      "avgKillRound": 4.85,
+      "killRoundDist": {
+        "R4": 28,
+        "R6": 21,
+        "R5": 58,
+        "R3": 5
+      },
+      "avgScore": 825,
+      "specialHitPct": 60.7
+    },
+    "enemy_03:easy:h-aggressive": {
+      "n": 112,
+      "winPct": 98.2,
+      "lossPct": 1.8,
+      "stallPct": 0,
+      "avgHpWin": 20.1,
+      "avgHpAll": 19.7,
+      "avgHpLost": 18.3,
+      "avgHpLostRatio": 0.52,
+      "avgKillRound": 4.45,
+      "killRoundDist": {
+        "R4": 55,
+        "R5": 45,
+        "R6": 5,
+        "R3": 5
+      },
+      "avgScore": 830,
+      "specialHitPct": 45.5
+    },
+    "enemy_03:easy:h-defensive": {
+      "n": 112,
+      "winPct": 100,
+      "lossPct": 0,
+      "stallPct": 0,
+      "avgHpWin": 25.2,
+      "avgHpAll": 25.2,
+      "avgHpLost": 17,
+      "avgHpLostRatio": 0.49,
+      "avgKillRound": 5.25,
+      "killRoundDist": {
+        "R5": 62,
+        "R6": 36,
+        "R4": 12,
+        "R7": 2
+      },
+      "avgScore": 800,
+      "specialHitPct": 85.7
+    },
+    "enemy_03:easy:s-balanced": {
+      "n": 112,
+      "winPct": 100,
+      "lossPct": 0,
+      "stallPct": 0,
+      "avgHpWin": 33.4,
+      "avgHpAll": 33.4,
+      "avgHpLost": 6.9,
+      "avgHpLostRatio": 0.2,
+      "avgKillRound": 3.68,
+      "killRoundDist": {
+        "R4": 47,
+        "R3": 49,
+        "R5": 15,
+        "R2": 1
+      },
+      "avgScore": 929,
+      "specialHitPct": 9.8
+    },
+    "enemy_03:easy:s-rush": {
+      "n": 112,
+      "winPct": 100,
+      "lossPct": 0,
+      "stallPct": 0,
+      "avgHpWin": 32.3,
+      "avgHpAll": 32.3,
+      "avgHpLost": 9.4,
+      "avgHpLostRatio": 0.27,
+      "avgKillRound": 3.7,
+      "killRoundDist": {
+        "R4": 49,
+        "R3": 47,
+        "R5": 15,
+        "R2": 1
+      },
+      "avgScore": 925,
+      "specialHitPct": 10.7
+    },
+    "enemy_03:easy:s-score": {
+      "n": 112,
+      "winPct": 100,
+      "lossPct": 0,
+      "stallPct": 0,
+      "avgHpWin": 32.4,
+      "avgHpAll": 32.4,
+      "avgHpLost": 7.9,
+      "avgHpLostRatio": 0.22,
+      "avgKillRound": 3.61,
+      "killRoundDist": {
+        "R4": 53,
+        "R3": 50,
+        "R5": 8,
+        "R2": 1
+      },
+      "avgScore": 946,
+      "specialHitPct": 6.3
+    },
+    "enemy_04:easy:h-balanced": {
+      "n": 112,
+      "winPct": 100,
+      "lossPct": 0,
+      "stallPct": 0,
+      "avgHpWin": 23.9,
+      "avgHpAll": 23.9,
+      "avgHpLost": 16.5,
+      "avgHpLostRatio": 0.47,
+      "avgKillRound": 4.92,
+      "killRoundDist": {
+        "R4": 38,
+        "R6": 27,
+        "R5": 46,
+        "R7": 1
+      },
+      "avgScore": 825,
+      "specialHitPct": 15.2
+    },
+    "enemy_04:easy:h-aggressive": {
+      "n": 112,
+      "winPct": 100,
+      "lossPct": 0,
+      "stallPct": 0,
+      "avgHpWin": 20.4,
+      "avgHpAll": 20.4,
+      "avgHpLost": 18.8,
+      "avgHpLostRatio": 0.54,
+      "avgKillRound": 4.75,
+      "killRoundDist": {
+        "R4": 39,
+        "R5": 51,
+        "R6": 17,
+        "R3": 4,
+        "R7": 1
+      },
+      "avgScore": 827,
+      "specialHitPct": 8.9
+    },
+    "enemy_04:easy:h-defensive": {
+      "n": 112,
+      "winPct": 100,
+      "lossPct": 0,
+      "stallPct": 0,
+      "avgHpWin": 31.1,
+      "avgHpAll": 31.1,
+      "avgHpLost": 7.6,
+      "avgHpLostRatio": 0.22,
+      "avgKillRound": 5.41,
+      "killRoundDist": {
+        "R5": 46,
+        "R6": 44,
+        "R4": 14,
+        "R7": 8
+      },
+      "avgScore": 800,
+      "specialHitPct": 33.9
+    },
+    "enemy_04:easy:s-balanced": {
+      "n": 112,
+      "winPct": 100,
+      "lossPct": 0,
+      "stallPct": 0,
+      "avgHpWin": 33.1,
+      "avgHpAll": 33.1,
+      "avgHpLost": 6.9,
+      "avgHpLostRatio": 0.2,
+      "avgKillRound": 3.95,
+      "killRoundDist": {
+        "R4": 51,
+        "R3": 33,
+        "R5": 25,
+        "R2": 1,
+        "R6": 2
+      },
+      "avgScore": 919,
+      "specialHitPct": 0.9
+    },
+    "enemy_04:easy:s-rush": {
+      "n": 112,
+      "winPct": 100,
+      "lossPct": 0,
+      "stallPct": 0,
+      "avgHpWin": 30.6,
+      "avgHpAll": 30.6,
+      "avgHpLost": 12.4,
+      "avgHpLostRatio": 0.35,
+      "avgKillRound": 3.92,
+      "killRoundDist": {
+        "R4": 57,
+        "R3": 31,
+        "R5": 22,
+        "R2": 1,
+        "R6": 1
+      },
+      "avgScore": 919,
+      "specialHitPct": 0.9
+    },
+    "enemy_04:easy:s-score": {
+      "n": 112,
+      "winPct": 100,
+      "lossPct": 0,
+      "stallPct": 0,
+      "avgHpWin": 29.4,
+      "avgHpAll": 29.4,
+      "avgHpLost": 11.8,
+      "avgHpLostRatio": 0.34,
+      "avgKillRound": 3.79,
+      "killRoundDist": {
+        "R4": 60,
+        "R3": 36,
+        "R5": 15,
+        "R2": 1
+      },
+      "avgScore": 940,
+      "specialHitPct": 0
+    },
+    "enemy_05:easy:h-balanced": {
+      "n": 112,
+      "winPct": 100,
+      "lossPct": 0,
+      "stallPct": 0,
+      "avgHpWin": 23.6,
+      "avgHpAll": 23.6,
+      "avgHpLost": 19.7,
+      "avgHpLostRatio": 0.56,
+      "avgKillRound": 4.49,
+      "killRoundDist": {
+        "R4": 51,
+        "R5": 46,
+        "R3": 7,
+        "R6": 8
+      },
+      "avgScore": 834,
+      "specialHitPct": 59.8
+    },
+    "enemy_05:easy:h-aggressive": {
+      "n": 112,
+      "winPct": 99.1,
+      "lossPct": 0.9,
+      "stallPct": 0,
+      "avgHpWin": 18,
+      "avgHpAll": 17.8,
+      "avgHpLost": 20.6,
+      "avgHpLostRatio": 0.59,
+      "avgKillRound": 4.12,
+      "killRoundDist": {
+        "R4": 62,
+        "R5": 28,
+        "R3": 19,
+        "R6": 2
+      },
+      "avgScore": 838,
+      "specialHitPct": 74.1
+    },
+    "enemy_05:easy:h-defensive": {
+      "n": 112,
+      "winPct": 100,
+      "lossPct": 0,
+      "stallPct": 0,
+      "avgHpWin": 27.8,
+      "avgHpAll": 27.8,
+      "avgHpLost": 11.2,
+      "avgHpLostRatio": 0.32,
+      "avgKillRound": 4.9,
+      "killRoundDist": {
+        "R4": 26,
+        "R5": 68,
+        "R6": 17,
+        "R3": 1
+      },
+      "avgScore": 813,
+      "specialHitPct": 46.4
+    },
+    "enemy_05:easy:s-balanced": {
+      "n": 112,
+      "winPct": 100,
+      "lossPct": 0,
+      "stallPct": 0,
+      "avgHpWin": 31.8,
+      "avgHpAll": 31.8,
+      "avgHpLost": 10.7,
+      "avgHpLostRatio": 0.31,
+      "avgKillRound": 3.39,
+      "killRoundDist": {
+        "R3": 72,
+        "R4": 30,
+        "R5": 8,
+        "R2": 2
+      },
+      "avgScore": 929,
+      "specialHitPct": 14.3
+    },
+    "enemy_05:easy:s-rush": {
+      "n": 112,
+      "winPct": 100,
+      "lossPct": 0,
+      "stallPct": 0,
+      "avgHpWin": 29.4,
+      "avgHpAll": 29.4,
+      "avgHpLost": 14.4,
+      "avgHpLostRatio": 0.41,
+      "avgKillRound": 3.37,
+      "killRoundDist": {
+        "R3": 71,
+        "R4": 35,
+        "R2": 2,
+        "R5": 4
+      },
+      "avgScore": 927,
+      "specialHitPct": 23.2
+    },
+    "enemy_05:easy:s-score": {
+      "n": 112,
+      "winPct": 100,
+      "lossPct": 0,
+      "stallPct": 0,
+      "avgHpWin": 29.3,
+      "avgHpAll": 29.3,
+      "avgHpLost": 13.3,
+      "avgHpLostRatio": 0.38,
+      "avgKillRound": 3.33,
+      "killRoundDist": {
+        "R3": 74,
+        "R4": 33,
+        "R2": 2,
+        "R5": 3
+      },
+      "avgScore": 940,
+      "specialHitPct": 22.3
+    },
+    "enemy_06:easy:h-balanced": {
+      "n": 112,
+      "winPct": 100,
+      "lossPct": 0,
+      "stallPct": 0,
+      "avgHpWin": 25,
+      "avgHpAll": 25,
+      "avgHpLost": 17.6,
+      "avgHpLostRatio": 0.5,
+      "avgKillRound": 5.06,
+      "killRoundDist": {
+        "R5": 59,
+        "R6": 30,
+        "R4": 19,
+        "R3": 3,
+        "R7": 1
+      },
+      "avgScore": 822,
+      "specialHitPct": 58
+    },
+    "enemy_06:easy:h-aggressive": {
+      "n": 112,
+      "winPct": 100,
+      "lossPct": 0,
+      "stallPct": 0,
+      "avgHpWin": 20.2,
+      "avgHpAll": 20.2,
+      "avgHpLost": 19.5,
+      "avgHpLostRatio": 0.56,
+      "avgKillRound": 4.8,
+      "killRoundDist": {
+        "R4": 35,
+        "R5": 56,
+        "R6": 17,
+        "R3": 3,
+        "R7": 1
+      },
+      "avgScore": 829,
+      "specialHitPct": 61.6
+    },
+    "enemy_06:easy:h-defensive": {
+      "n": 112,
+      "winPct": 100,
+      "lossPct": 0,
+      "stallPct": 0,
+      "avgHpWin": 26.7,
+      "avgHpAll": 26.7,
+      "avgHpLost": 14.8,
+      "avgHpLostRatio": 0.42,
+      "avgKillRound": 5.43,
+      "killRoundDist": {
+        "R5": 59,
+        "R6": 43,
+        "R7": 5,
+        "R4": 5
+      },
+      "avgScore": 799,
+      "specialHitPct": 86.6
+    },
+    "enemy_06:easy:s-balanced": {
+      "n": 112,
+      "winPct": 100,
+      "lossPct": 0,
+      "stallPct": 0,
+      "avgHpWin": 33.2,
+      "avgHpAll": 33.2,
+      "avgHpLost": 7.7,
+      "avgHpLostRatio": 0.22,
+      "avgKillRound": 3.94,
+      "killRoundDist": {
+        "R4": 58,
+        "R3": 32,
+        "R5": 19,
+        "R6": 3
+      },
+      "avgScore": 928,
+      "specialHitPct": 10.7
+    },
+    "enemy_06:easy:s-rush": {
+      "n": 112,
+      "winPct": 100,
+      "lossPct": 0,
+      "stallPct": 0,
+      "avgHpWin": 32.3,
+      "avgHpAll": 32.3,
+      "avgHpLost": 10.7,
+      "avgHpLostRatio": 0.31,
+      "avgKillRound": 4,
+      "killRoundDist": {
+        "R4": 57,
+        "R3": 28,
+        "R5": 26,
+        "R6": 1
+      },
+      "avgScore": 922,
+      "specialHitPct": 15.2
+    },
+    "enemy_06:easy:s-score": {
+      "n": 112,
+      "winPct": 100,
+      "lossPct": 0,
+      "stallPct": 0,
+      "avgHpWin": 32,
+      "avgHpAll": 32,
+      "avgHpLost": 9.7,
+      "avgHpLostRatio": 0.28,
+      "avgKillRound": 3.87,
+      "killRoundDist": {
+        "R4": 61,
+        "R3": 33,
+        "R5": 18
+      },
+      "avgScore": 945,
+      "specialHitPct": 12.5
+    },
+    "enemy_07:easy:h-balanced": {
+      "n": 112,
+      "winPct": 100,
+      "lossPct": 0,
+      "stallPct": 0,
+      "avgHpWin": 23.8,
+      "avgHpAll": 23.8,
+      "avgHpLost": 15.5,
+      "avgHpLostRatio": 0.44,
+      "avgKillRound": 4.71,
+      "killRoundDist": {
+        "R4": 41,
+        "R5": 54,
+        "R6": 14,
+        "R3": 3
+      },
+      "avgScore": 825,
+      "specialHitPct": 96.4
+    },
+    "enemy_07:easy:h-aggressive": {
+      "n": 112,
+      "winPct": 100,
+      "lossPct": 0,
+      "stallPct": 0,
+      "avgHpWin": 19.1,
+      "avgHpAll": 19.1,
+      "avgHpLost": 18.3,
+      "avgHpLostRatio": 0.52,
+      "avgKillRound": 4.49,
+      "killRoundDist": {
+        "R4": 56,
+        "R5": 39,
+        "R6": 11,
+        "R3": 6
+      },
+      "avgScore": 831,
+      "specialHitPct": 93.8
+    },
+    "enemy_07:easy:h-defensive": {
+      "n": 112,
+      "winPct": 100,
+      "lossPct": 0,
+      "stallPct": 0,
+      "avgHpWin": 31.4,
+      "avgHpAll": 31.4,
+      "avgHpLost": 6,
+      "avgHpLostRatio": 0.17,
+      "avgKillRound": 5.18,
+      "killRoundDist": {
+        "R5": 62,
+        "R6": 35,
+        "R4": 15
+      },
+      "avgScore": 803,
+      "specialHitPct": 60.7
+    },
+    "enemy_07:easy:s-balanced": {
+      "n": 112,
+      "winPct": 100,
+      "lossPct": 0,
+      "stallPct": 0,
+      "avgHpWin": 34.1,
+      "avgHpAll": 34.1,
+      "avgHpLost": 4.5,
+      "avgHpLostRatio": 0.13,
+      "avgKillRound": 3.63,
+      "killRoundDist": {
+        "R3": 55,
+        "R4": 41,
+        "R5": 14,
+        "R2": 1,
+        "R6": 1
+      },
+      "avgScore": 924,
+      "specialHitPct": 34.8
+    },
+    "enemy_07:easy:s-rush": {
+      "n": 112,
+      "winPct": 100,
+      "lossPct": 0,
+      "stallPct": 0,
+      "avgHpWin": 32.4,
+      "avgHpAll": 32.4,
+      "avgHpLost": 8.4,
+      "avgHpLostRatio": 0.24,
+      "avgKillRound": 3.58,
+      "killRoundDist": {
+        "R3": 56,
+        "R4": 44,
+        "R5": 11,
+        "R2": 1
+      },
+      "avgScore": 926,
+      "specialHitPct": 46.4
+    },
+    "enemy_07:easy:s-score": {
+      "n": 112,
+      "winPct": 100,
+      "lossPct": 0,
+      "stallPct": 0,
+      "avgHpWin": 31.5,
+      "avgHpAll": 31.5,
+      "avgHpLost": 7.8,
+      "avgHpLostRatio": 0.22,
+      "avgKillRound": 3.47,
+      "killRoundDist": {
+        "R3": 63,
+        "R4": 42,
+        "R5": 6,
+        "R2": 1
+      },
+      "avgScore": 945,
+      "specialHitPct": 41.1
+    },
+    "enemy_09:easy:h-balanced": {
+      "n": 112,
+      "winPct": 100,
+      "lossPct": 0,
+      "stallPct": 0,
+      "avgHpWin": 27.7,
+      "avgHpAll": 27.7,
+      "avgHpLost": 11.4,
+      "avgHpLostRatio": 0.33,
+      "avgKillRound": 4.5,
+      "killRoundDist": {
+        "R4": 58,
+        "R5": 37,
+        "R6": 12,
+        "R3": 5
+      },
+      "avgScore": 849,
+      "specialHitPct": 7.1
+    },
+    "enemy_09:easy:h-aggressive": {
+      "n": 112,
+      "winPct": 100,
+      "lossPct": 0,
+      "stallPct": 0,
+      "avgHpWin": 25.9,
+      "avgHpAll": 25.9,
+      "avgHpLost": 12.3,
+      "avgHpLostRatio": 0.35,
+      "avgKillRound": 4.46,
+      "killRoundDist": {
+        "R4": 58,
+        "R5": 41,
+        "R6": 8,
+        "R3": 5
+      },
+      "avgScore": 846,
+      "specialHitPct": 8
+    },
+    "enemy_09:easy:h-defensive": {
+      "n": 112,
+      "winPct": 100,
+      "lossPct": 0,
+      "stallPct": 0,
+      "avgHpWin": 28.9,
+      "avgHpAll": 28.9,
+      "avgHpLost": 10.2,
+      "avgHpLostRatio": 0.29,
+      "avgKillRound": 5.15,
+      "killRoundDist": {
+        "R5": 65,
+        "R6": 32,
+        "R4": 15
+      },
+      "avgScore": 809,
+      "specialHitPct": 39.3
+    },
+    "enemy_09:easy:s-balanced": {
+      "n": 112,
+      "winPct": 100,
+      "lossPct": 0,
+      "stallPct": 0,
+      "avgHpWin": 33.1,
+      "avgHpAll": 33.1,
+      "avgHpLost": 7,
+      "avgHpLostRatio": 0.2,
+      "avgKillRound": 3.69,
+      "killRoundDist": {
+        "R4": 51,
+        "R3": 48,
+        "R5": 13
+      },
+      "avgScore": 926,
+      "specialHitPct": 4.5
+    },
+    "enemy_09:easy:s-rush": {
+      "n": 112,
+      "winPct": 100,
+      "lossPct": 0,
+      "stallPct": 0,
+      "avgHpWin": 32.4,
+      "avgHpAll": 32.4,
+      "avgHpLost": 9.3,
+      "avgHpLostRatio": 0.27,
+      "avgKillRound": 3.73,
+      "killRoundDist": {
+        "R4": 52,
+        "R3": 45,
+        "R5": 15
+      },
+      "avgScore": 923,
+      "specialHitPct": 4.5
+    },
+    "enemy_09:easy:s-score": {
+      "n": 112,
+      "winPct": 100,
+      "lossPct": 0,
+      "stallPct": 0,
+      "avgHpWin": 32.2,
+      "avgHpAll": 32.2,
+      "avgHpLost": 8.3,
+      "avgHpLostRatio": 0.24,
+      "avgKillRound": 3.67,
+      "killRoundDist": {
+        "R4": 51,
+        "R3": 49,
+        "R5": 12
+      },
+      "avgScore": 942,
+      "specialHitPct": 3.6
+    },
+    "enemy_08:easy:h-balanced": {
+      "n": 112,
+      "winPct": 100,
+      "lossPct": 0,
+      "stallPct": 0,
+      "avgHpWin": 27.2,
+      "avgHpAll": 27.2,
+      "avgHpLost": 12,
+      "avgHpLostRatio": 0.34,
+      "avgKillRound": 4.64,
+      "killRoundDist": {
+        "R4": 48,
+        "R5": 44,
+        "R6": 16,
+        "R3": 4
+      },
+      "avgScore": 842,
+      "specialHitPct": 8.9
+    },
+    "enemy_08:easy:h-aggressive": {
+      "n": 112,
+      "winPct": 100,
+      "lossPct": 0,
+      "stallPct": 0,
+      "avgHpWin": 25.9,
+      "avgHpAll": 25.9,
+      "avgHpLost": 12.5,
+      "avgHpLostRatio": 0.36,
+      "avgKillRound": 4.6,
+      "killRoundDist": {
+        "R4": 49,
+        "R5": 47,
+        "R6": 12,
+        "R3": 4
+      },
+      "avgScore": 842,
+      "specialHitPct": 9.8
+    },
+    "enemy_08:easy:h-defensive": {
+      "n": 112,
+      "winPct": 100,
+      "lossPct": 0,
+      "stallPct": 0,
+      "avgHpWin": 29.2,
+      "avgHpAll": 29.2,
+      "avgHpLost": 10.1,
+      "avgHpLostRatio": 0.29,
+      "avgKillRound": 5.25,
+      "killRoundDist": {
+        "R5": 62,
+        "R6": 39,
+        "R4": 11
+      },
+      "avgScore": 808,
+      "specialHitPct": 44.6
+    },
+    "enemy_08:easy:s-balanced": {
+      "n": 112,
+      "winPct": 100,
+      "lossPct": 0,
+      "stallPct": 0,
+      "avgHpWin": 33.3,
+      "avgHpAll": 33.3,
+      "avgHpLost": 6.9,
+      "avgHpLostRatio": 0.2,
+      "avgKillRound": 3.81,
+      "killRoundDist": {
+        "R4": 58,
+        "R3": 38,
+        "R5": 15,
+        "R6": 1
+      },
+      "avgScore": 926,
+      "specialHitPct": 3.6
+    },
+    "enemy_08:easy:s-rush": {
+      "n": 112,
+      "winPct": 100,
+      "lossPct": 0,
+      "stallPct": 0,
+      "avgHpWin": 32.6,
+      "avgHpAll": 32.6,
+      "avgHpLost": 9.3,
+      "avgHpLostRatio": 0.27,
+      "avgKillRound": 3.86,
+      "killRoundDist": {
+        "R4": 58,
+        "R3": 35,
+        "R5": 19
+      },
+      "avgScore": 922,
+      "specialHitPct": 4.5
+    },
+    "enemy_08:easy:s-score": {
+      "n": 112,
+      "winPct": 100,
+      "lossPct": 0,
+      "stallPct": 0,
+      "avgHpWin": 32.2,
+      "avgHpAll": 32.2,
+      "avgHpLost": 8.3,
+      "avgHpLostRatio": 0.24,
+      "avgKillRound": 3.77,
+      "killRoundDist": {
+        "R4": 56,
+        "R3": 41,
+        "R5": 15
+      },
+      "avgScore": 942,
+      "specialHitPct": 3.6
+    },
+    "enemy_01:normal:h-balanced": {
+      "n": 112,
+      "winPct": 98.2,
+      "lossPct": 1.8,
+      "stallPct": 0,
+      "avgHpWin": 21.1,
+      "avgHpAll": 20.7,
+      "avgHpLost": 21.7,
+      "avgHpLostRatio": 0.72,
+      "avgKillRound": 5.59,
+      "killRoundDist": {
+        "R4": 5,
+        "R6": 54,
+        "R5": 43,
+        "R7": 8
+      },
+      "avgScore": 821,
+      "specialHitPct": 0
+    },
+    "enemy_01:normal:h-aggressive": {
+      "n": 112,
+      "winPct": 73.2,
+      "lossPct": 26.8,
+      "stallPct": 0,
+      "avgHpWin": 15.6,
+      "avgHpAll": 11.4,
+      "avgHpLost": 25.1,
+      "avgHpLostRatio": 0.84,
+      "avgKillRound": 5.37,
+      "killRoundDist": {
+        "R5": 33,
+        "R6": 35,
+        "R4": 11,
+        "R7": 3
+      },
+      "avgScore": 666,
+      "specialHitPct": 0
+    },
+    "enemy_01:normal:h-defensive": {
+      "n": 112,
+      "winPct": 100,
+      "lossPct": 0,
+      "stallPct": 0,
+      "avgHpWin": 22.8,
+      "avgHpAll": 22.8,
+      "avgHpLost": 16.5,
+      "avgHpLostRatio": 0.55,
+      "avgKillRound": 5.93,
+      "killRoundDist": {
+        "R5": 23,
+        "R6": 62,
+        "R7": 23,
+        "R4": 4
+      },
+      "avgScore": 811,
+      "specialHitPct": 0
+    },
+    "enemy_01:normal:s-balanced": {
+      "n": 112,
+      "winPct": 100,
+      "lossPct": 0,
+      "stallPct": 0,
+      "avgHpWin": 26.6,
+      "avgHpAll": 26.6,
+      "avgHpLost": 12.5,
+      "avgHpLostRatio": 0.42,
+      "avgKillRound": 4.52,
+      "killRoundDist": {
+        "R4": 50,
+        "R5": 45,
+        "R3": 7,
+        "R6": 10
+      },
+      "avgScore": 945,
+      "specialHitPct": 0
+    },
+    "enemy_01:normal:s-rush": {
+      "n": 112,
+      "winPct": 100,
+      "lossPct": 0,
+      "stallPct": 0,
+      "avgHpWin": 24.1,
+      "avgHpAll": 24.1,
+      "avgHpLost": 16.9,
+      "avgHpLostRatio": 0.56,
+      "avgKillRound": 4.49,
+      "killRoundDist": {
+        "R5": 45,
+        "R4": 50,
+        "R3": 8,
+        "R6": 9
+      },
+      "avgScore": 939,
+      "specialHitPct": 0
+    },
+    "enemy_01:normal:s-score": {
+      "n": 112,
+      "winPct": 100,
+      "lossPct": 0,
+      "stallPct": 0,
+      "avgHpWin": 23.7,
+      "avgHpAll": 23.7,
+      "avgHpLost": 15.4,
+      "avgHpLostRatio": 0.51,
+      "avgKillRound": 4.33,
+      "killRoundDist": {
+        "R4": 59,
+        "R5": 42,
+        "R3": 9,
+        "R6": 2
+      },
+      "avgScore": 966,
+      "specialHitPct": 0
+    },
+    "enemy_02:normal:h-balanced": {
+      "n": 112,
+      "winPct": 97.3,
+      "lossPct": 2.7,
+      "stallPct": 0,
+      "avgHpWin": 18.7,
+      "avgHpAll": 18.2,
+      "avgHpLost": 23,
+      "avgHpLostRatio": 0.77,
+      "avgKillRound": 5.36,
+      "killRoundDist": {
+        "R5": 54,
+        "R6": 45,
+        "R4": 6,
+        "R3": 2,
+        "R7": 2
+      },
+      "avgScore": 818,
+      "specialHitPct": 89.3
+    },
+    "enemy_02:normal:h-aggressive": {
+      "n": 112,
+      "winPct": 67.9,
+      "lossPct": 32.1,
+      "stallPct": 0,
+      "avgHpWin": 13.8,
+      "avgHpAll": 9.4,
+      "avgHpLost": 25.1,
+      "avgHpLostRatio": 0.84,
+      "avgKillRound": 4.86,
+      "killRoundDist": {
+        "R4": 22,
+        "R5": 38,
+        "R3": 2,
+        "R6": 13,
+        "R7": 1
+      },
+      "avgScore": 644,
+      "specialHitPct": 78.6
+    },
+    "enemy_02:normal:h-defensive": {
+      "n": 112,
+      "winPct": 95.5,
+      "lossPct": 4.5,
+      "stallPct": 0,
+      "avgHpWin": 18.2,
+      "avgHpAll": 17.4,
+      "avgHpLost": 23.1,
+      "avgHpLostRatio": 0.77,
+      "avgKillRound": 5.68,
+      "killRoundDist": {
+        "R5": 40,
+        "R6": 52,
+        "R7": 12,
+        "R4": 3
+      },
+      "avgScore": 783,
+      "specialHitPct": 96.4
+    },
+    "enemy_02:normal:s-balanced": {
+      "n": 112,
+      "winPct": 100,
+      "lossPct": 0,
+      "stallPct": 0,
+      "avgHpWin": 26.3,
+      "avgHpAll": 26.3,
+      "avgHpLost": 11.3,
+      "avgHpLostRatio": 0.38,
+      "avgKillRound": 4.17,
+      "killRoundDist": {
+        "R4": 63,
+        "R3": 17,
+        "R5": 28,
+        "R6": 4
+      },
+      "avgScore": 948,
+      "specialHitPct": 27.7
+    },
+    "enemy_02:normal:s-rush": {
+      "n": 112,
+      "winPct": 100,
+      "lossPct": 0,
+      "stallPct": 0,
+      "avgHpWin": 25,
+      "avgHpAll": 25,
+      "avgHpLost": 14.4,
+      "avgHpLostRatio": 0.48,
+      "avgKillRound": 4.16,
+      "killRoundDist": {
+        "R4": 60,
+        "R5": 32,
+        "R3": 18,
+        "R6": 2
+      },
+      "avgScore": 945,
+      "specialHitPct": 30.4
+    },
+    "enemy_02:normal:s-score": {
+      "n": 112,
+      "winPct": 100,
+      "lossPct": 0,
+      "stallPct": 0,
+      "avgHpWin": 25.1,
+      "avgHpAll": 25.1,
+      "avgHpLost": 13.7,
+      "avgHpLostRatio": 0.46,
+      "avgKillRound": 4.11,
+      "killRoundDist": {
+        "R4": 60,
+        "R3": 21,
+        "R5": 29,
+        "R6": 2
+      },
+      "avgScore": 964,
+      "specialHitPct": 27.7
+    },
+    "enemy_03:normal:h-balanced": {
+      "n": 112,
+      "winPct": 93.8,
+      "lossPct": 6.3,
+      "stallPct": 0,
+      "avgHpWin": 18,
+      "avgHpAll": 16.8,
+      "avgHpLost": 25.7,
+      "avgHpLostRatio": 0.86,
+      "avgKillRound": 5.37,
+      "killRoundDist": {
+        "R5": 52,
+        "R4": 7,
+        "R6": 42,
+        "R3": 1,
+        "R7": 3
+      },
+      "avgScore": 795,
+      "specialHitPct": 85.7
+    },
+    "enemy_03:normal:h-aggressive": {
+      "n": 112,
+      "winPct": 61.6,
+      "lossPct": 38.4,
+      "stallPct": 0,
+      "avgHpWin": 13.1,
+      "avgHpAll": 8.1,
+      "avgHpLost": 26.4,
+      "avgHpLostRatio": 0.88,
+      "avgKillRound": 4.91,
+      "killRoundDist": {
+        "R4": 20,
+        "R5": 30,
+        "R3": 2,
+        "R6": 16,
+        "R7": 1
+      },
+      "avgScore": 598,
+      "specialHitPct": 80.4
+    },
+    "enemy_03:normal:h-defensive": {
+      "n": 112,
+      "winPct": 88.4,
+      "lossPct": 11.6,
+      "stallPct": 0,
+      "avgHpWin": 18.4,
+      "avgHpAll": 16.2,
+      "avgHpLost": 24.4,
+      "avgHpLostRatio": 0.81,
+      "avgKillRound": 5.61,
+      "killRoundDist": {
+        "R5": 41,
+        "R6": 44,
+        "R7": 10,
+        "R4": 4
+      },
+      "avgScore": 749,
+      "specialHitPct": 96.4
+    },
+    "enemy_03:normal:s-balanced": {
+      "n": 112,
+      "winPct": 100,
+      "lossPct": 0,
+      "stallPct": 0,
+      "avgHpWin": 26.6,
+      "avgHpAll": 26.6,
+      "avgHpLost": 12,
+      "avgHpLostRatio": 0.4,
+      "avgKillRound": 4.19,
+      "killRoundDist": {
+        "R4": 59,
+        "R5": 28,
+        "R3": 19,
+        "R6": 6
+      },
+      "avgScore": 951,
+      "specialHitPct": 25.9
+    },
+    "enemy_03:normal:s-rush": {
+      "n": 112,
+      "winPct": 100,
+      "lossPct": 0,
+      "stallPct": 0,
+      "avgHpWin": 24.3,
+      "avgHpAll": 24.3,
+      "avgHpLost": 15.1,
+      "avgHpLostRatio": 0.5,
+      "avgKillRound": 4.18,
+      "killRoundDist": {
+        "R4": 64,
+        "R5": 28,
+        "R3": 16,
+        "R6": 4
+      },
+      "avgScore": 946,
+      "specialHitPct": 26.8
+    },
+    "enemy_03:normal:s-score": {
+      "n": 112,
+      "winPct": 100,
+      "lossPct": 0,
+      "stallPct": 0,
+      "avgHpWin": 24.1,
+      "avgHpAll": 24.1,
+      "avgHpLost": 13.4,
+      "avgHpLostRatio": 0.45,
+      "avgKillRound": 4.04,
+      "killRoundDist": {
+        "R4": 68,
+        "R3": 20,
+        "R5": 23,
+        "R6": 1
+      },
+      "avgScore": 969,
+      "specialHitPct": 20.5
+    },
+    "enemy_04:normal:h-balanced": {
+      "n": 112,
+      "winPct": 99.1,
+      "lossPct": 0.9,
+      "stallPct": 0,
+      "avgHpWin": 20.7,
+      "avgHpAll": 20.5,
+      "avgHpLost": 20.1,
+      "avgHpLostRatio": 0.67,
+      "avgKillRound": 5.64,
+      "killRoundDist": {
+        "R5": 41,
+        "R6": 54,
+        "R7": 11,
+        "R4": 5
+      },
+      "avgScore": 819,
+      "specialHitPct": 50.9
+    },
+    "enemy_04:normal:h-aggressive": {
+      "n": 112,
+      "winPct": 91.1,
+      "lossPct": 8.9,
+      "stallPct": 0,
+      "avgHpWin": 13.3,
+      "avgHpAll": 12.1,
+      "avgHpLost": 24.5,
+      "avgHpLostRatio": 0.82,
+      "avgKillRound": 5.2,
+      "killRoundDist": {
+        "R5": 56,
+        "R6": 26,
+        "R7": 5,
+        "R4": 14,
+        "R3": 1
+      },
+      "avgScore": 785,
+      "specialHitPct": 27.7
+    },
+    "enemy_04:normal:h-defensive": {
+      "n": 112,
+      "winPct": 100,
+      "lossPct": 0,
+      "stallPct": 0,
+      "avgHpWin": 24.1,
+      "avgHpAll": 24.1,
+      "avgHpLost": 13.1,
+      "avgHpLostRatio": 0.44,
+      "avgKillRound": 5.94,
+      "killRoundDist": {
+        "R6": 68,
+        "R5": 21,
+        "R7": 20,
+        "R4": 3
+      },
+      "avgScore": 807,
+      "specialHitPct": 66.1
+    },
+    "enemy_04:normal:s-balanced": {
+      "n": 112,
+      "winPct": 100,
+      "lossPct": 0,
+      "stallPct": 0,
+      "avgHpWin": 26.4,
+      "avgHpAll": 26.4,
+      "avgHpLost": 10.9,
+      "avgHpLostRatio": 0.36,
+      "avgKillRound": 4.55,
+      "killRoundDist": {
+        "R5": 48,
+        "R4": 42,
+        "R3": 10,
+        "R6": 12
+      },
+      "avgScore": 931,
+      "specialHitPct": 8.9
+    },
+    "enemy_04:normal:s-rush": {
+      "n": 112,
+      "winPct": 100,
+      "lossPct": 0,
+      "stallPct": 0,
+      "avgHpWin": 21.9,
+      "avgHpAll": 21.9,
+      "avgHpLost": 18.4,
+      "avgHpLostRatio": 0.61,
+      "avgKillRound": 4.29,
+      "killRoundDist": {
+        "R5": 35,
+        "R4": 62,
+        "R3": 11,
+        "R6": 4
+      },
+      "avgScore": 945,
+      "specialHitPct": 1.8
+    },
+    "enemy_04:normal:s-score": {
+      "n": 112,
+      "winPct": 100,
+      "lossPct": 0,
+      "stallPct": 0,
+      "avgHpWin": 21.5,
+      "avgHpAll": 21.5,
+      "avgHpLost": 17.7,
+      "avgHpLostRatio": 0.59,
+      "avgKillRound": 4.21,
+      "killRoundDist": {
+        "R4": 61,
+        "R5": 36,
+        "R3": 14,
+        "R6": 1
+      },
+      "avgScore": 964,
+      "specialHitPct": 0.9
+    },
+    "enemy_05:normal:h-balanced": {
+      "n": 112,
+      "winPct": 100,
+      "lossPct": 0,
+      "stallPct": 0,
+      "avgHpWin": 18.2,
+      "avgHpAll": 18.2,
+      "avgHpLost": 24.7,
+      "avgHpLostRatio": 0.82,
+      "avgKillRound": 5.14,
+      "killRoundDist": {
+        "R4": 14,
+        "R5": 66,
+        "R3": 1,
+        "R6": 30,
+        "R7": 1
+      },
+      "avgScore": 835,
+      "specialHitPct": 50.9
+    },
+    "enemy_05:normal:h-aggressive": {
+      "n": 112,
+      "winPct": 74.1,
+      "lossPct": 25.9,
+      "stallPct": 0,
+      "avgHpWin": 10.8,
+      "avgHpAll": 8,
+      "avgHpLost": 27.2,
+      "avgHpLostRatio": 0.91,
+      "avgKillRound": 4.65,
+      "killRoundDist": {
+        "R4": 35,
+        "R5": 37,
+        "R3": 2,
+        "R6": 8,
+        "R7": 1
+      },
+      "avgScore": 675,
+      "specialHitPct": 91.1
+    },
+    "enemy_05:normal:h-defensive": {
+      "n": 112,
+      "winPct": 99.1,
+      "lossPct": 0.9,
+      "stallPct": 0,
+      "avgHpWin": 21.9,
+      "avgHpAll": 21.7,
+      "avgHpLost": 17.2,
+      "avgHpLostRatio": 0.57,
+      "avgKillRound": 5.4,
+      "killRoundDist": {
+        "R5": 56,
+        "R6": 45,
+        "R4": 7,
+        "R7": 3
+      },
+      "avgScore": 816,
+      "specialHitPct": 57.1
+    },
+    "enemy_05:normal:s-balanced": {
+      "n": 112,
+      "winPct": 100,
+      "lossPct": 0,
+      "stallPct": 0,
+      "avgHpWin": 25.8,
+      "avgHpAll": 25.8,
+      "avgHpLost": 13.9,
+      "avgHpLostRatio": 0.46,
+      "avgKillRound": 3.99,
+      "killRoundDist": {
+        "R4": 57,
+        "R3": 29,
+        "R5": 24,
+        "R6": 2
+      },
+      "avgScore": 946,
+      "specialHitPct": 45.5
+    },
+    "enemy_05:normal:s-rush": {
+      "n": 112,
+      "winPct": 100,
+      "lossPct": 0,
+      "stallPct": 0,
+      "avgHpWin": 22.7,
+      "avgHpAll": 22.7,
+      "avgHpLost": 19.2,
+      "avgHpLostRatio": 0.64,
+      "avgKillRound": 3.95,
+      "killRoundDist": {
+        "R4": 59,
+        "R3": 30,
+        "R5": 22,
+        "R6": 1
+      },
+      "avgScore": 940,
+      "specialHitPct": 51.8
+    },
+    "enemy_05:normal:s-score": {
+      "n": 112,
+      "winPct": 100,
+      "lossPct": 0,
+      "stallPct": 0,
+      "avgHpWin": 22,
+      "avgHpAll": 22,
+      "avgHpLost": 18,
+      "avgHpLostRatio": 0.6,
+      "avgKillRound": 3.86,
+      "killRoundDist": {
+        "R4": 64,
+        "R3": 32,
+        "R5": 16
+      },
+      "avgScore": 960,
+      "specialHitPct": 56.3
+    },
+    "enemy_06:normal:h-balanced": {
+      "n": 112,
+      "winPct": 96.4,
+      "lossPct": 3.6,
+      "stallPct": 0,
+      "avgHpWin": 19.2,
+      "avgHpAll": 18.5,
+      "avgHpLost": 24.8,
+      "avgHpLostRatio": 0.83,
+      "avgKillRound": 5.61,
+      "killRoundDist": {
+        "R5": 40,
+        "R6": 58,
+        "R4": 4,
+        "R7": 6
+      },
+      "avgScore": 810,
+      "specialHitPct": 83.9
+    },
+    "enemy_06:normal:h-aggressive": {
+      "n": 112,
+      "winPct": 57.1,
+      "lossPct": 42.9,
+      "stallPct": 0,
+      "avgHpWin": 14.7,
+      "avgHpAll": 8.4,
+      "avgHpLost": 27.3,
+      "avgHpLostRatio": 0.91,
+      "avgKillRound": 5.33,
+      "killRoundDist": {
+        "R5": 26,
+        "R6": 25,
+        "R4": 10,
+        "R7": 3
+      },
+      "avgScore": 566,
+      "specialHitPct": 87.5
+    },
+    "enemy_06:normal:h-defensive": {
+      "n": 112,
+      "winPct": 94.6,
+      "lossPct": 5.4,
+      "stallPct": 0,
+      "avgHpWin": 20.3,
+      "avgHpAll": 19.2,
+      "avgHpLost": 22.5,
+      "avgHpLostRatio": 0.75,
+      "avgKillRound": 5.92,
+      "killRoundDist": {
+        "R5": 24,
+        "R6": 58,
+        "R7": 21,
+        "R4": 3
+      },
+      "avgScore": 780,
+      "specialHitPct": 93.8
+    },
+    "enemy_06:normal:s-balanced": {
+      "n": 112,
+      "winPct": 100,
+      "lossPct": 0,
+      "stallPct": 0,
+      "avgHpWin": 25.9,
+      "avgHpAll": 25.9,
+      "avgHpLost": 13.5,
+      "avgHpLostRatio": 0.45,
+      "avgKillRound": 4.47,
+      "killRoundDist": {
+        "R4": 50,
+        "R5": 41,
+        "R3": 10,
+        "R6": 11
+      },
+      "avgScore": 946,
+      "specialHitPct": 36.6
+    },
+    "enemy_06:normal:s-rush": {
+      "n": 112,
+      "winPct": 100,
+      "lossPct": 0,
+      "stallPct": 0,
+      "avgHpWin": 23.3,
+      "avgHpAll": 23.3,
+      "avgHpLost": 17.4,
+      "avgHpLostRatio": 0.58,
+      "avgKillRound": 4.46,
+      "killRoundDist": {
+        "R5": 44,
+        "R4": 51,
+        "R3": 9,
+        "R6": 8
+      },
+      "avgScore": 941,
+      "specialHitPct": 38.4
+    },
+    "enemy_06:normal:s-score": {
+      "n": 112,
+      "winPct": 100,
+      "lossPct": 0,
+      "stallPct": 0,
+      "avgHpWin": 23.2,
+      "avgHpAll": 23.2,
+      "avgHpLost": 15.7,
+      "avgHpLostRatio": 0.52,
+      "avgKillRound": 4.33,
+      "killRoundDist": {
+        "R4": 59,
+        "R5": 39,
+        "R3": 10,
+        "R6": 4
+      },
+      "avgScore": 964,
+      "specialHitPct": 33
+    },
+    "enemy_07:normal:h-balanced": {
+      "n": 112,
+      "winPct": 100,
+      "lossPct": 0,
+      "stallPct": 0,
+      "avgHpWin": 20.6,
+      "avgHpAll": 20.6,
+      "avgHpLost": 16.9,
+      "avgHpLostRatio": 0.56,
+      "avgKillRound": 5.3,
+      "killRoundDist": {
+        "R5": 59,
+        "R6": 39,
+        "R4": 11,
+        "R7": 3
+      },
+      "avgScore": 835,
+      "specialHitPct": 98.2
+    },
+    "enemy_07:normal:h-aggressive": {
+      "n": 112,
+      "winPct": 86.6,
+      "lossPct": 13.4,
+      "stallPct": 0,
+      "avgHpWin": 12,
+      "avgHpAll": 10.4,
+      "avgHpLost": 24.6,
+      "avgHpLostRatio": 0.82,
+      "avgKillRound": 4.94,
+      "killRoundDist": {
+        "R4": 26,
+        "R5": 44,
+        "R6": 22,
+        "R3": 3,
+        "R7": 2
+      },
+      "avgScore": 756,
+      "specialHitPct": 96.4
+    },
+    "enemy_07:normal:h-defensive": {
+      "n": 112,
+      "winPct": 100,
+      "lossPct": 0,
+      "stallPct": 0,
+      "avgHpWin": 26.2,
+      "avgHpAll": 26.2,
+      "avgHpLost": 9.3,
+      "avgHpLostRatio": 0.31,
+      "avgKillRound": 5.59,
+      "killRoundDist": {
+        "R5": 48,
+        "R6": 47,
+        "R7": 12,
+        "R4": 5
+      },
+      "avgScore": 823,
+      "specialHitPct": 67.9
+    },
+    "enemy_07:normal:s-balanced": {
+      "n": 112,
+      "winPct": 100,
+      "lossPct": 0,
+      "stallPct": 0,
+      "avgHpWin": 27.2,
+      "avgHpAll": 27.2,
+      "avgHpLost": 8.3,
+      "avgHpLostRatio": 0.27,
+      "avgKillRound": 4.21,
+      "killRoundDist": {
+        "R4": 52,
+        "R3": 23,
+        "R5": 27,
+        "R6": 10
+      },
+      "avgScore": 936,
+      "specialHitPct": 52.7
+    },
+    "enemy_07:normal:s-rush": {
+      "n": 112,
+      "winPct": 100,
+      "lossPct": 0,
+      "stallPct": 0,
+      "avgHpWin": 22,
+      "avgHpAll": 22,
+      "avgHpLost": 17.1,
+      "avgHpLostRatio": 0.57,
+      "avgKillRound": 4.01,
+      "killRoundDist": {
+        "R4": 69,
+        "R5": 19,
+        "R3": 22,
+        "R6": 2
+      },
+      "avgScore": 947,
+      "specialHitPct": 77.7
+    },
+    "enemy_07:normal:s-score": {
+      "n": 112,
+      "winPct": 100,
+      "lossPct": 0,
+      "stallPct": 0,
+      "avgHpWin": 21.2,
+      "avgHpAll": 21.2,
+      "avgHpLost": 16.4,
+      "avgHpLostRatio": 0.55,
+      "avgKillRound": 3.93,
+      "killRoundDist": {
+        "R4": 68,
+        "R3": 26,
+        "R5": 18
+      },
+      "avgScore": 966,
+      "specialHitPct": 73.2
+    },
+    "enemy_09:normal:h-balanced": {
+      "n": 112,
+      "winPct": 100,
+      "lossPct": 0,
+      "stallPct": 0,
+      "avgHpWin": 21.3,
+      "avgHpAll": 21.3,
+      "avgHpLost": 16.9,
+      "avgHpLostRatio": 0.56,
+      "avgKillRound": 5.2,
+      "killRoundDist": {
+        "R5": 60,
+        "R6": 35,
+        "R4": 13,
+        "R3": 2,
+        "R7": 2
+      },
+      "avgScore": 849,
+      "specialHitPct": 18.8
+    },
+    "enemy_09:normal:h-aggressive": {
+      "n": 112,
+      "winPct": 94.6,
+      "lossPct": 5.4,
+      "stallPct": 0,
+      "avgHpWin": 17.2,
+      "avgHpAll": 16.3,
+      "avgHpLost": 19,
+      "avgHpLostRatio": 0.63,
+      "avgKillRound": 4.96,
+      "killRoundDist": {
+        "R4": 22,
+        "R5": 61,
+        "R6": 20,
+        "R3": 2,
+        "R7": 1
+      },
+      "avgScore": 819,
+      "specialHitPct": 18.8
+    },
+    "enemy_09:normal:h-defensive": {
+      "n": 112,
+      "winPct": 96.4,
+      "lossPct": 3.6,
+      "stallPct": 0,
+      "avgHpWin": 20.5,
+      "avgHpAll": 19.8,
+      "avgHpLost": 18.4,
+      "avgHpLostRatio": 0.61,
+      "avgKillRound": 5.64,
+      "killRoundDist": {
+        "R5": 42,
+        "R6": 54,
+        "R7": 9,
+        "R4": 3
+      },
+      "avgScore": 795,
+      "specialHitPct": 57.1
+    },
+    "enemy_09:normal:s-balanced": {
+      "n": 112,
+      "winPct": 100,
+      "lossPct": 0,
+      "stallPct": 0,
+      "avgHpWin": 27.1,
+      "avgHpAll": 27.1,
+      "avgHpLost": 9.2,
+      "avgHpLostRatio": 0.31,
+      "avgKillRound": 4.14,
+      "killRoundDist": {
+        "R4": 66,
+        "R3": 17,
+        "R5": 25,
+        "R6": 4
+      },
+      "avgScore": 950,
+      "specialHitPct": 8.9
+    },
+    "enemy_09:normal:s-rush": {
+      "n": 112,
+      "winPct": 100,
+      "lossPct": 0,
+      "stallPct": 0,
+      "avgHpWin": 26.5,
+      "avgHpAll": 26.5,
+      "avgHpLost": 11.7,
+      "avgHpLostRatio": 0.39,
+      "avgKillRound": 4.14,
+      "killRoundDist": {
+        "R4": 62,
+        "R5": 30,
+        "R3": 18,
+        "R6": 2
+      },
+      "avgScore": 948,
+      "specialHitPct": 4.5
+    },
+    "enemy_09:normal:s-score": {
+      "n": 112,
+      "winPct": 100,
+      "lossPct": 0,
+      "stallPct": 0,
+      "avgHpWin": 26.6,
+      "avgHpAll": 26.6,
+      "avgHpLost": 11,
+      "avgHpLostRatio": 0.37,
+      "avgKillRound": 4.09,
+      "killRoundDist": {
+        "R4": 61,
+        "R3": 21,
+        "R5": 29,
+        "R6": 1
+      },
+      "avgScore": 968,
+      "specialHitPct": 3.6
+    },
+    "enemy_08:normal:h-balanced": {
+      "n": 112,
+      "winPct": 99.1,
+      "lossPct": 0.9,
+      "stallPct": 0,
+      "avgHpWin": 22.2,
+      "avgHpAll": 22,
+      "avgHpLost": 17.1,
+      "avgHpLostRatio": 0.57,
+      "avgKillRound": 5.35,
+      "killRoundDist": {
+        "R5": 58,
+        "R6": 40,
+        "R4": 9,
+        "R7": 4
+      },
+      "avgScore": 840,
+      "specialHitPct": 20.5
+    },
+    "enemy_08:normal:h-aggressive": {
+      "n": 112,
+      "winPct": 93.8,
+      "lossPct": 6.3,
+      "stallPct": 0,
+      "avgHpWin": 17.2,
+      "avgHpAll": 16.1,
+      "avgHpLost": 19.8,
+      "avgHpLostRatio": 0.66,
+      "avgKillRound": 5.19,
+      "killRoundDist": {
+        "R5": 57,
+        "R6": 31,
+        "R4": 15,
+        "R7": 2
+      },
+      "avgScore": 804,
+      "specialHitPct": 21.4
+    },
+    "enemy_08:normal:h-defensive": {
+      "n": 112,
+      "winPct": 96.4,
+      "lossPct": 3.6,
+      "stallPct": 0,
+      "avgHpWin": 21.7,
+      "avgHpAll": 20.9,
+      "avgHpLost": 18.1,
+      "avgHpLostRatio": 0.6,
+      "avgKillRound": 5.78,
+      "killRoundDist": {
+        "R6": 63,
+        "R5": 30,
+        "R7": 12,
+        "R4": 3
+      },
+      "avgScore": 793,
+      "specialHitPct": 63.4
+    },
+    "enemy_08:normal:s-balanced": {
+      "n": 112,
+      "winPct": 100,
+      "lossPct": 0,
+      "stallPct": 0,
+      "avgHpWin": 27.5,
+      "avgHpAll": 27.5,
+      "avgHpLost": 9.7,
+      "avgHpLostRatio": 0.32,
+      "avgKillRound": 4.32,
+      "killRoundDist": {
+        "R5": 37,
+        "R4": 56,
+        "R3": 13,
+        "R6": 6
+      },
+      "avgScore": 946,
+      "specialHitPct": 10.7
+    },
+    "enemy_08:normal:s-rush": {
+      "n": 112,
+      "winPct": 100,
+      "lossPct": 0,
+      "stallPct": 0,
+      "avgHpWin": 26.5,
+      "avgHpAll": 26.5,
+      "avgHpLost": 12.1,
+      "avgHpLostRatio": 0.4,
+      "avgKillRound": 4.27,
+      "killRoundDist": {
+        "R4": 57,
+        "R5": 35,
+        "R3": 15,
+        "R6": 5
+      },
+      "avgScore": 946,
+      "specialHitPct": 7.1
+    },
+    "enemy_08:normal:s-score": {
+      "n": 112,
+      "winPct": 100,
+      "lossPct": 0,
+      "stallPct": 0,
+      "avgHpWin": 26.4,
+      "avgHpAll": 26.4,
+      "avgHpLost": 10.9,
+      "avgHpLostRatio": 0.36,
+      "avgKillRound": 4.14,
+      "killRoundDist": {
+        "R4": 59,
+        "R3": 19,
+        "R5": 33,
+        "R6": 1
+      },
+      "avgScore": 971,
+      "specialHitPct": 4.5
+    },
+    "enemy_01:hard:h-balanced": {
+      "n": 112,
+      "winPct": 85.7,
+      "lossPct": 14.3,
+      "stallPct": 0,
+      "avgHpWin": 17.4,
+      "avgHpAll": 14.9,
+      "avgHpLost": 28.3,
+      "avgHpLostRatio": 1.05,
+      "avgKillRound": 6.15,
+      "killRoundDist": {
+        "R5": 14,
+        "R6": 54,
+        "R7": 28
+      },
+      "avgScore": 761,
+      "specialHitPct": 0
+    },
+    "enemy_01:hard:h-aggressive": {
+      "n": 112,
+      "winPct": 36.6,
+      "lossPct": 62.5,
+      "stallPct": 0.9,
+      "avgHpWin": 14.5,
+      "avgHpAll": 5.5,
+      "avgHpLost": 27.2,
+      "avgHpLostRatio": 1.01,
+      "avgKillRound": 6.15,
+      "killRoundDist": {
+        "R6": 23,
+        "R5": 6,
+        "R7": 12
+      },
+      "avgScore": 427,
+      "specialHitPct": 0
+    },
+    "enemy_01:hard:h-defensive": {
+      "n": 112,
+      "winPct": 88.4,
+      "lossPct": 8,
+      "stallPct": 3.6,
+      "avgHpWin": 19.7,
+      "avgHpAll": 18.3,
+      "avgHpLost": 22.3,
+      "avgHpLostRatio": 0.82,
+      "avgKillRound": 6.32,
+      "killRoundDist": {
+        "R6": 53,
+        "R7": 39,
+        "R5": 7
+      },
+      "avgScore": 777,
+      "specialHitPct": 0
+    },
+    "enemy_01:hard:s-balanced": {
+      "n": 112,
+      "winPct": 100,
+      "lossPct": 0,
+      "stallPct": 0,
+      "avgHpWin": 20.6,
+      "avgHpAll": 20.6,
+      "avgHpLost": 18.6,
+      "avgHpLostRatio": 0.69,
+      "avgKillRound": 5.06,
+      "killRoundDist": {
+        "R5": 61,
+        "R6": 25,
+        "R4": 22,
+        "R3": 1,
+        "R7": 3
+      },
+      "avgScore": 966,
+      "specialHitPct": 0
+    },
+    "enemy_01:hard:s-rush": {
+      "n": 112,
+      "winPct": 100,
+      "lossPct": 0,
+      "stallPct": 0,
+      "avgHpWin": 18.6,
+      "avgHpAll": 18.6,
+      "avgHpLost": 22.3,
+      "avgHpLostRatio": 0.83,
+      "avgKillRound": 4.95,
+      "killRoundDist": {
+        "R5": 55,
+        "R6": 25,
+        "R4": 29,
+        "R3": 2,
+        "R7": 1
+      },
+      "avgScore": 967,
+      "specialHitPct": 0
+    },
+    "enemy_01:hard:s-score": {
+      "n": 112,
+      "winPct": 100,
+      "lossPct": 0,
+      "stallPct": 0,
+      "avgHpWin": 17.7,
+      "avgHpAll": 17.7,
+      "avgHpLost": 22.1,
+      "avgHpLostRatio": 0.82,
+      "avgKillRound": 4.84,
+      "killRoundDist": {
+        "R5": 63,
+        "R6": 16,
+        "R4": 32,
+        "R3": 1
+      },
+      "avgScore": 992,
+      "specialHitPct": 0
+    },
+    "enemy_02:hard:h-balanced": {
+      "n": 112,
+      "winPct": 64.3,
+      "lossPct": 34.8,
+      "stallPct": 0.9,
+      "avgHpWin": 15,
+      "avgHpAll": 9.9,
+      "avgHpLost": 29.9,
+      "avgHpLostRatio": 1.11,
+      "avgKillRound": 5.89,
+      "killRoundDist": {
+        "R5": 22,
+        "R6": 36,
+        "R7": 14
+      },
+      "avgScore": 623,
+      "specialHitPct": 98.2
+    },
+    "enemy_02:hard:h-aggressive": {
+      "n": 112,
+      "winPct": 24.1,
+      "lossPct": 75,
+      "stallPct": 0.9,
+      "avgHpWin": 10.7,
+      "avgHpAll": 2.8,
+      "avgHpLost": 28.8,
+      "avgHpLostRatio": 1.07,
+      "avgKillRound": 5.63,
+      "killRoundDist": {
+        "R5": 5,
+        "R4": 4,
+        "R6": 15,
+        "R7": 3
+      },
+      "avgScore": 353,
+      "specialHitPct": 95.5
+    },
+    "enemy_02:hard:h-defensive": {
+      "n": 112,
+      "winPct": 59.8,
+      "lossPct": 39.3,
+      "stallPct": 0.9,
+      "avgHpWin": 14.6,
+      "avgHpAll": 8.9,
+      "avgHpLost": 28.1,
+      "avgHpLostRatio": 1.04,
+      "avgKillRound": 6.1,
+      "killRoundDist": {
+        "R5": 11,
+        "R6": 38,
+        "R7": 18
+      },
+      "avgScore": 580,
+      "specialHitPct": 100
+    },
+    "enemy_02:hard:s-balanced": {
+      "n": 112,
+      "winPct": 99.1,
+      "lossPct": 0.9,
+      "stallPct": 0,
+      "avgHpWin": 19.8,
+      "avgHpAll": 19.6,
+      "avgHpLost": 18,
+      "avgHpLostRatio": 0.67,
+      "avgKillRound": 4.73,
+      "killRoundDist": {
+        "R5": 58,
+        "R4": 37,
+        "R6": 13,
+        "R3": 3
+      },
+      "avgScore": 964,
+      "specialHitPct": 62.5
+    },
+    "enemy_02:hard:s-rush": {
+      "n": 112,
+      "winPct": 100,
+      "lossPct": 0,
+      "stallPct": 0,
+      "avgHpWin": 18.7,
+      "avgHpAll": 18.7,
+      "avgHpLost": 20.7,
+      "avgHpLostRatio": 0.77,
+      "avgKillRound": 4.68,
+      "killRoundDist": {
+        "R5": 54,
+        "R4": 38,
+        "R3": 6,
+        "R6": 14
+      },
+      "avgScore": 972,
+      "specialHitPct": 58
+    },
+    "enemy_02:hard:s-score": {
+      "n": 112,
+      "winPct": 98.2,
+      "lossPct": 1.8,
+      "stallPct": 0,
+      "avgHpWin": 18.2,
+      "avgHpAll": 17.9,
+      "avgHpLost": 19.9,
+      "avgHpLostRatio": 0.74,
+      "avgKillRound": 4.59,
+      "killRoundDist": {
+        "R5": 52,
+        "R4": 44,
+        "R3": 5,
+        "R6": 9
+      },
+      "avgScore": 979,
+      "specialHitPct": 54.5
+    },
+    "enemy_03:hard:h-balanced": {
+      "n": 112,
+      "winPct": 47.3,
+      "lossPct": 52.7,
+      "stallPct": 0,
+      "avgHpWin": 15.1,
+      "avgHpAll": 7.1,
+      "avgHpLost": 31.5,
+      "avgHpLostRatio": 1.17,
+      "avgKillRound": 5.81,
+      "killRoundDist": {
+        "R6": 25,
+        "R5": 16,
+        "R7": 10,
+        "R4": 2
+      },
+      "avgScore": 512,
+      "specialHitPct": 95.5
+    },
+    "enemy_03:hard:h-aggressive": {
+      "n": 112,
+      "winPct": 20.5,
+      "lossPct": 79.5,
+      "stallPct": 0,
+      "avgHpWin": 11.7,
+      "avgHpAll": 2.4,
+      "avgHpLost": 29.4,
+      "avgHpLostRatio": 1.09,
+      "avgKillRound": 5.7,
+      "killRoundDist": {
+        "R5": 2,
+        "R4": 4,
+        "R6": 14,
+        "R7": 3
+      },
+      "avgScore": 329,
+      "specialHitPct": 92.9
+    },
+    "enemy_03:hard:h-defensive": {
+      "n": 112,
+      "winPct": 50.9,
+      "lossPct": 49.1,
+      "stallPct": 0,
+      "avgHpWin": 15.7,
+      "avgHpAll": 8,
+      "avgHpLost": 29.2,
+      "avgHpLostRatio": 1.08,
+      "avgKillRound": 6.25,
+      "killRoundDist": {
+        "R6": 31,
+        "R7": 20,
+        "R5": 6
+      },
+      "avgScore": 515,
+      "specialHitPct": 99.1
+    },
+    "enemy_03:hard:s-balanced": {
+      "n": 112,
+      "winPct": 100,
+      "lossPct": 0,
+      "stallPct": 0,
+      "avgHpWin": 19.8,
+      "avgHpAll": 19.8,
+      "avgHpLost": 19.2,
+      "avgHpLostRatio": 0.71,
+      "avgKillRound": 4.7,
+      "killRoundDist": {
+        "R5": 52,
+        "R4": 41,
+        "R3": 4,
+        "R6": 15
+      },
+      "avgScore": 975,
+      "specialHitPct": 53.6
+    },
+    "enemy_03:hard:s-rush": {
+      "n": 112,
+      "winPct": 97.3,
+      "lossPct": 2.7,
+      "stallPct": 0,
+      "avgHpWin": 17.8,
+      "avgHpAll": 17.3,
+      "avgHpLost": 22.4,
+      "avgHpLostRatio": 0.83,
+      "avgKillRound": 4.67,
+      "killRoundDist": {
+        "R5": 49,
+        "R4": 42,
+        "R3": 4,
+        "R6": 14
+      },
+      "avgScore": 953,
+      "specialHitPct": 54.5
+    },
+    "enemy_03:hard:s-score": {
+      "n": 112,
+      "winPct": 99.1,
+      "lossPct": 0.9,
+      "stallPct": 0,
+      "avgHpWin": 17.1,
+      "avgHpAll": 16.9,
+      "avgHpLost": 21.6,
+      "avgHpLostRatio": 0.8,
+      "avgKillRound": 4.56,
+      "killRoundDist": {
+        "R5": 54,
+        "R4": 47,
+        "R3": 4,
+        "R6": 6
+      },
+      "avgScore": 988,
+      "specialHitPct": 53.6
+    },
+    "enemy_04:hard:h-balanced": {
+      "n": 112,
+      "winPct": 83,
+      "lossPct": 16.1,
+      "stallPct": 0.9,
+      "avgHpWin": 18.4,
+      "avgHpAll": 15.5,
+      "avgHpLost": 24.4,
+      "avgHpLostRatio": 0.9,
+      "avgKillRound": 6.19,
+      "killRoundDist": {
+        "R5": 14,
+        "R6": 47,
+        "R7": 32
+      },
+      "avgScore": 743,
+      "specialHitPct": 79.5
+    },
+    "enemy_04:hard:h-aggressive": {
+      "n": 112,
+      "winPct": 30.4,
+      "lossPct": 69.6,
+      "stallPct": 0,
+      "avgHpWin": 11.7,
+      "avgHpAll": 3.5,
+      "avgHpLost": 28.7,
+      "avgHpLostRatio": 1.06,
+      "avgKillRound": 5.65,
+      "killRoundDist": {
+        "R5": 15,
+        "R6": 16,
+        "R7": 3
+      },
+      "avgScore": 381,
+      "specialHitPct": 38.4
+    },
+    "enemy_04:hard:h-defensive": {
+      "n": 112,
+      "winPct": 83,
+      "lossPct": 12.5,
+      "stallPct": 4.5,
+      "avgHpWin": 19,
+      "avgHpAll": 16.5,
+      "avgHpLost": 20.3,
+      "avgHpLostRatio": 0.75,
+      "avgKillRound": 6.31,
+      "killRoundDist": {
+        "R6": 50,
+        "R7": 36,
+        "R5": 7
+      },
+      "avgScore": 736,
+      "specialHitPct": 83.9
+    },
+    "enemy_04:hard:s-balanced": {
+      "n": 112,
+      "winPct": 100,
+      "lossPct": 0,
+      "stallPct": 0,
+      "avgHpWin": 22,
+      "avgHpAll": 22,
+      "avgHpLost": 15.9,
+      "avgHpLostRatio": 0.59,
+      "avgKillRound": 5.06,
+      "killRoundDist": {
+        "R5": 55,
+        "R6": 32,
+        "R4": 21,
+        "R3": 3,
+        "R7": 1
+      },
+      "avgScore": 958,
+      "specialHitPct": 25.9
+    },
+    "enemy_04:hard:s-rush": {
+      "n": 112,
+      "winPct": 100,
+      "lossPct": 0,
+      "stallPct": 0,
+      "avgHpWin": 17.5,
+      "avgHpAll": 17.5,
+      "avgHpLost": 23.5,
+      "avgHpLostRatio": 0.87,
+      "avgKillRound": 4.88,
+      "killRoundDist": {
+        "R5": 55,
+        "R4": 31,
+        "R3": 3,
+        "R6": 23
+      },
+      "avgScore": 967,
+      "specialHitPct": 18.8
+    },
+    "enemy_04:hard:s-score": {
+      "n": 112,
+      "winPct": 100,
+      "lossPct": 0,
+      "stallPct": 0,
+      "avgHpWin": 16.2,
+      "avgHpAll": 16.2,
+      "avgHpLost": 23.6,
+      "avgHpLostRatio": 0.87,
+      "avgKillRound": 4.8,
+      "killRoundDist": {
+        "R5": 60,
+        "R4": 36,
+        "R6": 14,
+        "R3": 1,
+        "R7": 1
+      },
+      "avgScore": 986,
+      "specialHitPct": 10.7
+    },
+    "enemy_05:hard:h-balanced": {
+      "n": 112,
+      "winPct": 69.6,
+      "lossPct": 30.4,
+      "stallPct": 0,
+      "avgHpWin": 16,
+      "avgHpAll": 11.2,
+      "avgHpLost": 30.7,
+      "avgHpLostRatio": 1.14,
+      "avgKillRound": 5.58,
+      "killRoundDist": {
+        "R5": 31,
+        "R6": 40,
+        "R4": 3,
+        "R7": 4
+      },
+      "avgScore": 664,
+      "specialHitPct": 83
+    },
+    "enemy_05:hard:h-aggressive": {
+      "n": 112,
+      "winPct": 19.6,
+      "lossPct": 80.4,
+      "stallPct": 0,
+      "avgHpWin": 10.9,
+      "avgHpAll": 2.1,
+      "avgHpLost": 28.5,
+      "avgHpLostRatio": 1.05,
+      "avgKillRound": 5.64,
+      "killRoundDist": {
+        "R5": 7,
+        "R4": 2,
+        "R6": 10,
+        "R7": 3
+      },
+      "avgScore": 283,
+      "specialHitPct": 97.3
+    },
+    "enemy_05:hard:h-defensive": {
+      "n": 112,
+      "winPct": 87.5,
+      "lossPct": 12.5,
+      "stallPct": 0,
+      "avgHpWin": 16.5,
+      "avgHpAll": 14.5,
+      "avgHpLost": 24,
+      "avgHpLostRatio": 0.89,
+      "avgKillRound": 5.85,
+      "killRoundDist": {
+        "R5": 27,
+        "R6": 56,
+        "R7": 14,
+        "R4": 1
+      },
+      "avgScore": 767,
+      "specialHitPct": 61.6
+    },
+    "enemy_05:hard:s-balanced": {
+      "n": 112,
+      "winPct": 99.1,
+      "lossPct": 0.9,
+      "stallPct": 0,
+      "avgHpWin": 21.3,
+      "avgHpAll": 21.1,
+      "avgHpLost": 18.3,
+      "avgHpLostRatio": 0.68,
+      "avgKillRound": 4.48,
+      "killRoundDist": {
+        "R5": 40,
+        "R4": 54,
+        "R6": 10,
+        "R3": 7
+      },
+      "avgScore": 965,
+      "specialHitPct": 69.6
+    },
+    "enemy_05:hard:s-rush": {
+      "n": 112,
+      "winPct": 100,
+      "lossPct": 0,
+      "stallPct": 0,
+      "avgHpWin": 16.5,
+      "avgHpAll": 16.5,
+      "avgHpLost": 24.1,
+      "avgHpLostRatio": 0.89,
+      "avgKillRound": 4.38,
+      "killRoundDist": {
+        "R5": 40,
+        "R4": 56,
+        "R3": 10,
+        "R6": 6
+      },
+      "avgScore": 971,
+      "specialHitPct": 78.6
+    },
+    "enemy_05:hard:s-score": {
+      "n": 112,
+      "winPct": 100,
+      "lossPct": 0,
+      "stallPct": 0,
+      "avgHpWin": 15.2,
+      "avgHpAll": 15.2,
+      "avgHpLost": 23.8,
+      "avgHpLostRatio": 0.88,
+      "avgKillRound": 4.22,
+      "killRoundDist": {
+        "R4": 63,
+        "R5": 31,
+        "R3": 14,
+        "R6": 4
+      },
+      "avgScore": 993,
+      "specialHitPct": 75.9
+    },
+    "enemy_06:hard:h-balanced": {
+      "n": 112,
+      "winPct": 55.4,
+      "lossPct": 43.8,
+      "stallPct": 0.9,
+      "avgHpWin": 15.2,
+      "avgHpAll": 8.7,
+      "avgHpLost": 32.5,
+      "avgHpLostRatio": 1.2,
+      "avgKillRound": 6.16,
+      "killRoundDist": {
+        "R6": 38,
+        "R5": 7,
+        "R7": 17
+      },
+      "avgScore": 567,
+      "specialHitPct": 98.2
+    },
+    "enemy_06:hard:h-aggressive": {
+      "n": 112,
+      "winPct": 25.9,
+      "lossPct": 73.2,
+      "stallPct": 0.9,
+      "avgHpWin": 12.1,
+      "avgHpAll": 3.4,
+      "avgHpLost": 29.1,
+      "avgHpLostRatio": 1.08,
+      "avgKillRound": 6.14,
+      "killRoundDist": {
+        "R6": 18,
+        "R4": 1,
+        "R7": 8,
+        "R5": 2
+      },
+      "avgScore": 359,
+      "specialHitPct": 90.2
+    },
+    "enemy_06:hard:h-defensive": {
+      "n": 112,
+      "winPct": 70.5,
+      "lossPct": 27.7,
+      "stallPct": 1.8,
+      "avgHpWin": 17.7,
+      "avgHpAll": 12.8,
+      "avgHpLost": 27.9,
+      "avgHpLostRatio": 1.03,
+      "avgKillRound": 6.38,
+      "killRoundDist": {
+        "R6": 37,
+        "R7": 36,
+        "R5": 6
+      },
+      "avgScore": 653,
+      "specialHitPct": 99.1
+    },
+    "enemy_06:hard:s-balanced": {
+      "n": 112,
+      "winPct": 100,
+      "lossPct": 0,
+      "stallPct": 0,
+      "avgHpWin": 19.4,
+      "avgHpAll": 19.4,
+      "avgHpLost": 20.7,
+      "avgHpLostRatio": 0.77,
+      "avgKillRound": 5.03,
+      "killRoundDist": {
+        "R5": 55,
+        "R6": 29,
+        "R4": 26,
+        "R3": 1,
+        "R7": 1
+      },
+      "avgScore": 968,
+      "specialHitPct": 67
+    },
+    "enemy_06:hard:s-rush": {
+      "n": 112,
+      "winPct": 97.3,
+      "lossPct": 2.7,
+      "stallPct": 0,
+      "avgHpWin": 17.3,
+      "avgHpAll": 16.9,
+      "avgHpLost": 25.2,
+      "avgHpLostRatio": 0.93,
+      "avgKillRound": 4.97,
+      "killRoundDist": {
+        "R5": 52,
+        "R6": 28,
+        "R4": 27,
+        "R3": 2
+      },
+      "avgScore": 946,
+      "specialHitPct": 67.9
+    },
+    "enemy_06:hard:s-score": {
+      "n": 112,
+      "winPct": 99.1,
+      "lossPct": 0.9,
+      "stallPct": 0,
+      "avgHpWin": 16.1,
+      "avgHpAll": 15.9,
+      "avgHpLost": 23.8,
+      "avgHpLostRatio": 0.88,
+      "avgKillRound": 4.84,
+      "killRoundDist": {
+        "R5": 56,
+        "R6": 19,
+        "R4": 35,
+        "R3": 1
+      },
+      "avgScore": 984,
+      "specialHitPct": 65.2
+    },
+    "enemy_07:hard:h-balanced": {
+      "n": 112,
+      "winPct": 99.1,
+      "lossPct": 0.9,
+      "stallPct": 0,
+      "avgHpWin": 19.6,
+      "avgHpAll": 19.4,
+      "avgHpLost": 16.9,
+      "avgHpLostRatio": 0.63,
+      "avgKillRound": 5.85,
+      "killRoundDist": {
+        "R5": 36,
+        "R6": 56,
+        "R7": 19
+      },
+      "avgScore": 853,
+      "specialHitPct": 89.3
+    },
+    "enemy_07:hard:h-aggressive": {
+      "n": 112,
+      "winPct": 26.8,
+      "lossPct": 73.2,
+      "stallPct": 0,
+      "avgHpWin": 11.2,
+      "avgHpAll": 3,
+      "avgHpLost": 26.7,
+      "avgHpLostRatio": 0.99,
+      "avgKillRound": 5.73,
+      "killRoundDist": {
+        "R6": 22,
+        "R5": 6,
+        "R7": 1,
+        "R3": 1
+      },
+      "avgScore": 331,
+      "specialHitPct": 99.1
+    },
+    "enemy_07:hard:h-defensive": {
+      "n": 112,
+      "winPct": 100,
+      "lossPct": 0,
+      "stallPct": 0,
+      "avgHpWin": 22.8,
+      "avgHpAll": 22.8,
+      "avgHpLost": 12.2,
+      "avgHpLostRatio": 0.45,
+      "avgKillRound": 6.04,
+      "killRoundDist": {
+        "R5": 19,
+        "R6": 67,
+        "R7": 25,
+        "R4": 1
+      },
+      "avgScore": 850,
+      "specialHitPct": 80.4
+    },
+    "enemy_07:hard:s-balanced": {
+      "n": 112,
+      "winPct": 100,
+      "lossPct": 0,
+      "stallPct": 0,
+      "avgHpWin": 23.4,
+      "avgHpAll": 23.4,
+      "avgHpLost": 11.2,
+      "avgHpLostRatio": 0.42,
+      "avgKillRound": 4.85,
+      "killRoundDist": {
+        "R5": 60,
+        "R6": 21,
+        "R4": 24,
+        "R3": 7
+      },
+      "avgScore": 957,
+      "specialHitPct": 76.8
+    },
+    "enemy_07:hard:s-rush": {
+      "n": 112,
+      "winPct": 100,
+      "lossPct": 0,
+      "stallPct": 0,
+      "avgHpWin": 17.9,
+      "avgHpAll": 17.9,
+      "avgHpLost": 20.9,
+      "avgHpLostRatio": 0.78,
+      "avgKillRound": 4.52,
+      "killRoundDist": {
+        "R5": 49,
+        "R4": 48,
+        "R3": 7,
+        "R6": 8
+      },
+      "avgScore": 978,
+      "specialHitPct": 89.3
+    },
+    "enemy_07:hard:s-score": {
+      "n": 112,
+      "winPct": 100,
+      "lossPct": 0,
+      "stallPct": 0,
+      "avgHpWin": 16.6,
+      "avgHpAll": 16.6,
+      "avgHpLost": 22.3,
+      "avgHpLostRatio": 0.83,
+      "avgKillRound": 4.54,
+      "killRoundDist": {
+        "R5": 60,
+        "R4": 44,
+        "R6": 3,
+        "R3": 5
+      },
+      "avgScore": 990,
+      "specialHitPct": 91.1
+    },
+    "enemy_09:hard:h-balanced": {
+      "n": 112,
+      "winPct": 92.9,
+      "lossPct": 6.3,
+      "stallPct": 0.9,
+      "avgHpWin": 18.8,
+      "avgHpAll": 17.7,
+      "avgHpLost": 21.8,
+      "avgHpLostRatio": 0.81,
+      "avgKillRound": 5.84,
+      "killRoundDist": {
+        "R5": 30,
+        "R6": 61,
+        "R7": 13
+      },
+      "avgScore": 815,
+      "specialHitPct": 15.2
+    },
+    "enemy_09:hard:h-aggressive": {
+      "n": 112,
+      "winPct": 70.5,
+      "lossPct": 28.6,
+      "stallPct": 0.9,
+      "avgHpWin": 14,
+      "avgHpAll": 10.1,
+      "avgHpLost": 22.9,
+      "avgHpLostRatio": 0.85,
+      "avgKillRound": 5.47,
+      "killRoundDist": {
+        "R5": 35,
+        "R6": 36,
+        "R4": 5,
+        "R7": 3
+      },
+      "avgScore": 675,
+      "specialHitPct": 13.4
+    },
+    "enemy_09:hard:h-defensive": {
+      "n": 112,
+      "winPct": 72.3,
+      "lossPct": 26.8,
+      "stallPct": 0.9,
+      "avgHpWin": 19.6,
+      "avgHpAll": 14.4,
+      "avgHpLost": 22,
+      "avgHpLostRatio": 0.82,
+      "avgKillRound": 6.15,
+      "killRoundDist": {
+        "R6": 47,
+        "R7": 23,
+        "R5": 11
+      },
+      "avgScore": 661,
+      "specialHitPct": 51.8
+    },
+    "enemy_09:hard:s-balanced": {
+      "n": 112,
+      "winPct": 99.1,
+      "lossPct": 0.9,
+      "stallPct": 0,
+      "avgHpWin": 24.1,
+      "avgHpAll": 23.9,
+      "avgHpLost": 11.2,
+      "avgHpLostRatio": 0.42,
+      "avgKillRound": 4.7,
+      "killRoundDist": {
+        "R5": 59,
+        "R4": 38,
+        "R3": 3,
+        "R6": 11
+      },
+      "avgScore": 969,
+      "specialHitPct": 5.4
+    },
+    "enemy_09:hard:s-rush": {
+      "n": 112,
+      "winPct": 100,
+      "lossPct": 0,
+      "stallPct": 0,
+      "avgHpWin": 22.6,
+      "avgHpAll": 22.6,
+      "avgHpLost": 14.8,
+      "avgHpLostRatio": 0.55,
+      "avgKillRound": 4.63,
+      "killRoundDist": {
+        "R5": 56,
+        "R4": 40,
+        "R3": 6,
+        "R6": 10
+      },
+      "avgScore": 979,
+      "specialHitPct": 4.5
+    },
+    "enemy_09:hard:s-score": {
+      "n": 112,
+      "winPct": 99.1,
+      "lossPct": 0.9,
+      "stallPct": 0,
+      "avgHpWin": 22.2,
+      "avgHpAll": 22,
+      "avgHpLost": 14.2,
+      "avgHpLostRatio": 0.53,
+      "avgKillRound": 4.53,
+      "killRoundDist": {
+        "R5": 54,
+        "R4": 47,
+        "R3": 5,
+        "R6": 5
+      },
+      "avgScore": 995,
+      "specialHitPct": 4.5
+    },
+    "enemy_08:hard:h-balanced": {
+      "n": 112,
+      "winPct": 95.5,
+      "lossPct": 3.6,
+      "stallPct": 0.9,
+      "avgHpWin": 19.1,
+      "avgHpAll": 18.5,
+      "avgHpLost": 22.1,
+      "avgHpLostRatio": 0.82,
+      "avgKillRound": 5.93,
+      "killRoundDist": {
+        "R5": 23,
+        "R6": 65,
+        "R7": 18,
+        "R4": 1
+      },
+      "avgScore": 837,
+      "specialHitPct": 17
+    },
+    "enemy_08:hard:h-aggressive": {
+      "n": 112,
+      "winPct": 70.5,
+      "lossPct": 28.6,
+      "stallPct": 0.9,
+      "avgHpWin": 14.8,
+      "avgHpAll": 10.7,
+      "avgHpLost": 23.5,
+      "avgHpLostRatio": 0.87,
+      "avgKillRound": 5.65,
+      "killRoundDist": {
+        "R5": 28,
+        "R6": 42,
+        "R7": 6,
+        "R4": 3
+      },
+      "avgScore": 676,
+      "specialHitPct": 17
+    },
+    "enemy_08:hard:h-defensive": {
+      "n": 112,
+      "winPct": 75.9,
+      "lossPct": 24.1,
+      "stallPct": 0,
+      "avgHpWin": 19.2,
+      "avgHpAll": 14.6,
+      "avgHpLost": 22.6,
+      "avgHpLostRatio": 0.84,
+      "avgKillRound": 6.21,
+      "killRoundDist": {
+        "R6": 45,
+        "R5": 11,
+        "R7": 29
+      },
+      "avgScore": 690,
+      "specialHitPct": 58.9
+    },
+    "enemy_08:hard:s-balanced": {
+      "n": 112,
+      "winPct": 100,
+      "lossPct": 0,
+      "stallPct": 0,
+      "avgHpWin": 24,
+      "avgHpAll": 24,
+      "avgHpLost": 11.9,
+      "avgHpLostRatio": 0.44,
+      "avgKillRound": 4.85,
+      "killRoundDist": {
+        "R5": 64,
+        "R6": 16,
+        "R4": 31,
+        "R3": 1
+      },
+      "avgScore": 975,
+      "specialHitPct": 8
+    },
+    "enemy_08:hard:s-rush": {
+      "n": 112,
+      "winPct": 100,
+      "lossPct": 0,
+      "stallPct": 0,
+      "avgHpWin": 22.8,
+      "avgHpAll": 22.8,
+      "avgHpLost": 14.9,
+      "avgHpLostRatio": 0.55,
+      "avgKillRound": 4.76,
+      "killRoundDist": {
+        "R5": 54,
+        "R4": 38,
+        "R3": 3,
+        "R6": 17
+      },
+      "avgScore": 978,
+      "specialHitPct": 4.5
+    },
+    "enemy_08:hard:s-score": {
+      "n": 112,
+      "winPct": 100,
+      "lossPct": 0,
+      "stallPct": 0,
+      "avgHpWin": 22.1,
+      "avgHpAll": 22.1,
+      "avgHpLost": 14.3,
+      "avgHpLostRatio": 0.53,
+      "avgKillRound": 4.63,
+      "killRoundDist": {
+        "R5": 60,
+        "R4": 42,
+        "R3": 3,
+        "R6": 7
+      },
+      "avgScore": 1003,
+      "specialHitPct": 4.5
+    }
+  },
+  "byEnemyDiffExpertBest": {
+    "enemy_01:easy": {
+      "winPct": 100,
+      "avgKillRound": 3.82,
+      "avgScore": 947
+    },
+    "enemy_02:easy": {
+      "winPct": 100,
+      "avgKillRound": 3.61,
+      "avgScore": 944
+    },
+    "enemy_03:easy": {
+      "winPct": 100,
+      "avgKillRound": 3.56,
+      "avgScore": 948
+    },
+    "enemy_04:easy": {
+      "winPct": 100,
+      "avgKillRound": 3.73,
+      "avgScore": 943
+    },
+    "enemy_05:easy": {
+      "winPct": 100,
+      "avgKillRound": 3.29,
+      "avgScore": 941
+    },
+    "enemy_06:easy": {
+      "winPct": 100,
+      "avgKillRound": 3.83,
+      "avgScore": 948
+    },
+    "enemy_07:easy": {
+      "winPct": 100,
+      "avgKillRound": 3.44,
+      "avgScore": 946
+    },
+    "enemy_09:easy": {
+      "winPct": 100,
+      "avgKillRound": 3.61,
+      "avgScore": 945
+    },
+    "enemy_08:easy": {
+      "winPct": 100,
+      "avgKillRound": 3.7,
+      "avgScore": 946
+    },
+    "enemy_01:normal": {
+      "winPct": 100,
+      "avgKillRound": 4.27,
+      "avgScore": 970
+    },
+    "enemy_02:normal": {
+      "winPct": 100,
+      "avgKillRound": 4.01,
+      "avgScore": 970
+    },
+    "enemy_03:normal": {
+      "winPct": 100,
+      "avgKillRound": 4,
+      "avgScore": 973
+    },
+    "enemy_04:normal": {
+      "winPct": 100,
+      "avgKillRound": 4.17,
+      "avgScore": 966
+    },
+    "enemy_05:normal": {
+      "winPct": 100,
+      "avgKillRound": 3.77,
+      "avgScore": 965
+    },
+    "enemy_06:normal": {
+      "winPct": 100,
+      "avgKillRound": 4.29,
+      "avgScore": 968
+    },
+    "enemy_07:normal": {
+      "winPct": 100,
+      "avgKillRound": 3.84,
+      "avgScore": 971
+    },
+    "enemy_09:normal": {
+      "winPct": 100,
+      "avgKillRound": 3.98,
+      "avgScore": 974
+    },
+    "enemy_08:normal": {
+      "winPct": 100,
+      "avgKillRound": 4.11,
+      "avgScore": 973
+    },
+    "enemy_01:hard": {
+      "winPct": 100,
+      "avgKillRound": 4.74,
+      "avgScore": 998
+    },
+    "enemy_02:hard": {
+      "winPct": 100,
+      "avgKillRound": 4.5,
+      "avgScore": 998
+    },
+    "enemy_03:hard": {
+      "winPct": 100,
+      "avgKillRound": 4.47,
+      "avgScore": 1001
+    },
+    "enemy_04:hard": {
+      "winPct": 100,
+      "avgKillRound": 4.71,
+      "avgScore": 993
+    },
+    "enemy_05:hard": {
+      "winPct": 100,
+      "avgKillRound": 4.12,
+      "avgScore": 1001
+    },
+    "enemy_06:hard": {
+      "winPct": 100,
+      "avgKillRound": 4.75,
+      "avgScore": 996
+    },
+    "enemy_07:hard": {
+      "winPct": 100,
+      "avgKillRound": 4.41,
+      "avgScore": 998
+    },
+    "enemy_09:hard": {
+      "winPct": 100,
+      "avgKillRound": 4.46,
+      "avgScore": 1006
+    },
+    "enemy_08:hard": {
+      "winPct": 100,
+      "avgKillRound": 4.54,
+      "avgScore": 1008
+    }
+  },
+  "byEnemyGodNormal": {
+    "enemy_01:ebisu": {
+      "n": 96,
+      "winPct": 92.7,
+      "lossPct": 7.3,
+      "stallPct": 0,
+      "avgHpWin": 23.5,
+      "avgHpAll": 21.8,
+      "avgHpLost": 26,
+      "avgHpLostRatio": 0.87,
+      "avgKillRound": 4.91,
+      "killRoundDist": {
+        "R4": 28,
+        "R5": 41,
+        "R6": 20
+      },
+      "avgScore": 843,
+      "specialHitPct": 0
+    },
+    "enemy_01:taiyo": {
+      "n": 96,
+      "winPct": 91.7,
+      "lossPct": 8.3,
+      "stallPct": 0,
+      "avgHpWin": 16.5,
+      "avgHpAll": 15.1,
+      "avgHpLost": 18.2,
+      "avgHpLostRatio": 0.61,
+      "avgKillRound": 4.66,
+      "killRoundDist": {
+        "R6": 18,
+        "R4": 30,
+        "R3": 11,
+        "R5": 27,
+        "R7": 2
+      },
+      "avgScore": 853,
+      "specialHitPct": 0
+    },
+    "enemy_01:sobi": {
+      "n": 96,
+      "winPct": 100,
+      "lossPct": 0,
+      "stallPct": 0,
+      "avgHpWin": 24.6,
+      "avgHpAll": 24.6,
+      "avgHpLost": 8.6,
+      "avgHpLostRatio": 0.29,
+      "avgKillRound": 4.98,
+      "killRoundDist": {
+        "R7": 3,
+        "R6": 27,
+        "R5": 34,
+        "R4": 29,
+        "R3": 3
+      },
+      "avgScore": 885,
+      "specialHitPct": 0
+    },
+    "enemy_01:saika": {
+      "n": 96,
+      "winPct": 87.5,
+      "lossPct": 12.5,
+      "stallPct": 0,
+      "avgHpWin": 18.5,
+      "avgHpAll": 16.2,
+      "avgHpLost": 17.2,
+      "avgHpLostRatio": 0.57,
+      "avgKillRound": 4.63,
+      "killRoundDist": {
+        "R6": 17,
+        "R4": 44,
+        "R5": 19,
+        "R3": 3,
+        "R7": 1
+      },
+      "avgScore": 863,
+      "specialHitPct": 0
+    },
+    "enemy_01:juraku": {
+      "n": 96,
+      "winPct": 100,
+      "lossPct": 0,
+      "stallPct": 0,
+      "avgHpWin": 25.7,
+      "avgHpAll": 25.7,
+      "avgHpLost": 10,
+      "avgHpLostRatio": 0.33,
+      "avgKillRound": 5.25,
+      "killRoundDist": {
+        "R5": 45,
+        "R4": 17,
+        "R6": 27,
+        "R7": 7
+      },
+      "avgScore": 851,
+      "specialHitPct": 0
+    },
+    "enemy_01:fukuei": {
+      "n": 96,
+      "winPct": 96.9,
+      "lossPct": 3.1,
+      "stallPct": 0,
+      "avgHpWin": 22,
+      "avgHpAll": 21.4,
+      "avgHpLost": 27.7,
+      "avgHpLostRatio": 0.92,
+      "avgKillRound": 5.71,
+      "killRoundDist": {
+        "R6": 41,
+        "R5": 35,
+        "R7": 14,
+        "R4": 3
+      },
+      "avgScore": 828,
+      "specialHitPct": 0
+    },
+    "enemy_01:shouren": {
+      "n": 96,
+      "winPct": 97.9,
+      "lossPct": 2.1,
+      "stallPct": 0,
+      "avgHpWin": 26.8,
+      "avgHpAll": 26.2,
+      "avgHpLost": 18.3,
+      "avgHpLostRatio": 0.61,
+      "avgKillRound": 4.94,
+      "killRoundDist": {
+        "R5": 30,
+        "R6": 22,
+        "R4": 28,
+        "R3": 7,
+        "R7": 7
+      },
+      "avgScore": 883,
+      "specialHitPct": 0
+    },
+    "enemy_02:ebisu": {
+      "n": 96,
+      "winPct": 91.7,
+      "lossPct": 8.3,
+      "stallPct": 0,
+      "avgHpWin": 25.4,
+      "avgHpAll": 23.3,
+      "avgHpLost": 22,
+      "avgHpLostRatio": 0.73,
+      "avgKillRound": 4.58,
+      "killRoundDist": {
+        "R5": 35,
+        "R4": 39,
+        "R6": 10,
+        "R3": 4
+      },
+      "avgScore": 845,
+      "specialHitPct": 55.2
+    },
+    "enemy_02:taiyo": {
+      "n": 96,
+      "winPct": 90.6,
+      "lossPct": 9.4,
+      "stallPct": 0,
+      "avgHpWin": 17,
+      "avgHpAll": 15.4,
+      "avgHpLost": 17.4,
+      "avgHpLostRatio": 0.58,
+      "avgKillRound": 4.44,
+      "killRoundDist": {
+        "R5": 22,
+        "R6": 15,
+        "R4": 28,
+        "R3": 20,
+        "R7": 2
+      },
+      "avgScore": 842,
+      "specialHitPct": 50
+    },
+    "enemy_02:sobi": {
+      "n": 96,
+      "winPct": 99,
+      "lossPct": 1,
+      "stallPct": 0,
+      "avgHpWin": 20.8,
+      "avgHpAll": 20.6,
+      "avgHpLost": 12.5,
+      "avgHpLostRatio": 0.42,
+      "avgKillRound": 4.71,
+      "killRoundDist": {
+        "R6": 23,
+        "R5": 32,
+        "R4": 29,
+        "R3": 11
+      },
+      "avgScore": 877,
+      "specialHitPct": 53.1
+    },
+    "enemy_02:saika": {
+      "n": 96,
+      "winPct": 89.6,
+      "lossPct": 10.4,
+      "stallPct": 0,
+      "avgHpWin": 19.3,
+      "avgHpAll": 17.3,
+      "avgHpLost": 15,
+      "avgHpLostRatio": 0.5,
+      "avgKillRound": 4.36,
+      "killRoundDist": {
+        "R5": 22,
+        "R6": 9,
+        "R4": 46,
+        "R3": 9
+      },
+      "avgScore": 876,
+      "specialHitPct": 42.7
+    },
+    "enemy_02:juraku": {
+      "n": 96,
+      "winPct": 97.9,
+      "lossPct": 2.1,
+      "stallPct": 0,
+      "avgHpWin": 23.4,
+      "avgHpAll": 22.9,
+      "avgHpLost": 14.8,
+      "avgHpLostRatio": 0.49,
+      "avgKillRound": 4.94,
+      "killRoundDist": {
+        "R6": 22,
+        "R5": 38,
+        "R4": 32,
+        "R7": 2
+      },
+      "avgScore": 843,
+      "specialHitPct": 66.7
+    },
+    "enemy_02:fukuei": {
+      "n": 96,
+      "winPct": 89.6,
+      "lossPct": 10.4,
+      "stallPct": 0,
+      "avgHpWin": 18.4,
+      "avgHpAll": 16.5,
+      "avgHpLost": 29,
+      "avgHpLostRatio": 0.97,
+      "avgKillRound": 5.24,
+      "killRoundDist": {
+        "R6": 20,
+        "R4": 13,
+        "R5": 46,
+        "R7": 7
+      },
+      "avgScore": 796,
+      "specialHitPct": 86.5
+    },
+    "enemy_02:shouren": {
+      "n": 96,
+      "winPct": 95.8,
+      "lossPct": 4.2,
+      "stallPct": 0,
+      "avgHpWin": 26.7,
+      "avgHpAll": 25.6,
+      "avgHpLost": 18.3,
+      "avgHpLostRatio": 0.61,
+      "avgKillRound": 4.65,
+      "killRoundDist": {
+        "R6": 19,
+        "R4": 27,
+        "R3": 16,
+        "R5": 26,
+        "R7": 4
+      },
+      "avgScore": 873,
+      "specialHitPct": 54.2
+    },
+    "enemy_03:ebisu": {
+      "n": 96,
+      "winPct": 88.5,
+      "lossPct": 11.5,
+      "stallPct": 0,
+      "avgHpWin": 22.4,
+      "avgHpAll": 19.9,
+      "avgHpLost": 26.2,
+      "avgHpLostRatio": 0.87,
+      "avgKillRound": 4.62,
+      "killRoundDist": {
+        "R5": 29,
+        "R4": 41,
+        "R6": 13,
+        "R3": 2
+      },
+      "avgScore": 816,
+      "specialHitPct": 55.2
+    },
+    "enemy_03:taiyo": {
+      "n": 96,
+      "winPct": 84.4,
+      "lossPct": 15.6,
+      "stallPct": 0,
+      "avgHpWin": 17.1,
+      "avgHpAll": 14.5,
+      "avgHpLost": 17.7,
+      "avgHpLostRatio": 0.59,
+      "avgKillRound": 4.23,
+      "killRoundDist": {
+        "R6": 10,
+        "R3": 22,
+        "R5": 21,
+        "R4": 28
+      },
+      "avgScore": 814,
+      "specialHitPct": 45.8
+    },
+    "enemy_03:sobi": {
+      "n": 96,
+      "winPct": 97.9,
+      "lossPct": 2.1,
+      "stallPct": 0,
+      "avgHpWin": 22.2,
+      "avgHpAll": 21.7,
+      "avgHpLost": 11.3,
+      "avgHpLostRatio": 0.38,
+      "avgKillRound": 4.71,
+      "killRoundDist": {
+        "R7": 2,
+        "R6": 20,
+        "R5": 32,
+        "R4": 29,
+        "R3": 11
+      },
+      "avgScore": 871,
+      "specialHitPct": 49
+    },
+    "enemy_03:saika": {
+      "n": 96,
+      "winPct": 86.5,
+      "lossPct": 13.5,
+      "stallPct": 0,
+      "avgHpWin": 17.9,
+      "avgHpAll": 15.5,
+      "avgHpLost": 16.9,
+      "avgHpLostRatio": 0.56,
+      "avgKillRound": 4.3,
+      "killRoundDist": {
+        "R5": 22,
+        "R6": 6,
+        "R4": 46,
+        "R3": 9
+      },
+      "avgScore": 861,
+      "specialHitPct": 42.7
+    },
+    "enemy_03:juraku": {
+      "n": 96,
+      "winPct": 97.9,
+      "lossPct": 2.1,
+      "stallPct": 0,
+      "avgHpWin": 23.5,
+      "avgHpAll": 23,
+      "avgHpLost": 14.4,
+      "avgHpLostRatio": 0.48,
+      "avgKillRound": 4.97,
+      "killRoundDist": {
+        "R6": 21,
+        "R5": 40,
+        "R4": 30,
+        "R7": 3
+      },
+      "avgScore": 843,
+      "specialHitPct": 68.8
+    },
+    "enemy_03:fukuei": {
+      "n": 96,
+      "winPct": 86.5,
+      "lossPct": 13.5,
+      "stallPct": 0,
+      "avgHpWin": 18.2,
+      "avgHpAll": 15.7,
+      "avgHpLost": 30.4,
+      "avgHpLostRatio": 1.01,
+      "avgKillRound": 5.25,
+      "killRoundDist": {
+        "R5": 38,
+        "R4": 15,
+        "R6": 24,
+        "R7": 6
+      },
+      "avgScore": 780,
+      "specialHitPct": 84.4
+    },
+    "enemy_03:shouren": {
+      "n": 96,
+      "winPct": 92.7,
+      "lossPct": 7.3,
+      "stallPct": 0,
+      "avgHpWin": 27.2,
+      "avgHpAll": 25.3,
+      "avgHpLost": 19.5,
+      "avgHpLostRatio": 0.65,
+      "avgKillRound": 4.6,
+      "killRoundDist": {
+        "R5": 20,
+        "R4": 33,
+        "R6": 19,
+        "R3": 14,
+        "R7": 3
+      },
+      "avgScore": 858,
+      "specialHitPct": 45.8
+    },
+    "enemy_04:ebisu": {
+      "n": 96,
+      "winPct": 99,
+      "lossPct": 1,
+      "stallPct": 0,
+      "avgHpWin": 22.2,
+      "avgHpAll": 22,
+      "avgHpLost": 22.2,
+      "avgHpLostRatio": 0.74,
+      "avgKillRound": 4.88,
+      "killRoundDist": {
+        "R5": 44,
+        "R6": 20,
+        "R4": 31
+      },
+      "avgScore": 881,
+      "specialHitPct": 21.9
+    },
+    "enemy_04:taiyo": {
+      "n": 96,
+      "winPct": 96.9,
+      "lossPct": 3.1,
+      "stallPct": 0,
+      "avgHpWin": 17.4,
+      "avgHpAll": 16.8,
+      "avgHpLost": 15.8,
+      "avgHpLostRatio": 0.53,
+      "avgKillRound": 4.71,
+      "killRoundDist": {
+        "R6": 19,
+        "R5": 29,
+        "R3": 19,
+        "R4": 20,
+        "R7": 6
+      },
+      "avgScore": 876,
+      "specialHitPct": 26
+    },
+    "enemy_04:sobi": {
+      "n": 96,
+      "winPct": 100,
+      "lossPct": 0,
+      "stallPct": 0,
+      "avgHpWin": 22.5,
+      "avgHpAll": 22.5,
+      "avgHpLost": 10.2,
+      "avgHpLostRatio": 0.34,
+      "avgKillRound": 5.04,
+      "killRoundDist": {
+        "R7": 7,
+        "R6": 27,
+        "R5": 28,
+        "R4": 31,
+        "R3": 3
+      },
+      "avgScore": 871,
+      "specialHitPct": 17.7
+    },
+    "enemy_04:saika": {
+      "n": 96,
+      "winPct": 100,
+      "lossPct": 0,
+      "stallPct": 0,
+      "avgHpWin": 14.5,
+      "avgHpAll": 14.5,
+      "avgHpLost": 17.8,
+      "avgHpLostRatio": 0.59,
+      "avgKillRound": 4.59,
+      "killRoundDist": {
+        "R5": 23,
+        "R6": 18,
+        "R4": 53,
+        "R3": 2
+      },
+      "avgScore": 941,
+      "specialHitPct": 16.7
+    },
+    "enemy_04:juraku": {
+      "n": 96,
+      "winPct": 100,
+      "lossPct": 0,
+      "stallPct": 0,
+      "avgHpWin": 23.4,
+      "avgHpAll": 23.4,
+      "avgHpLost": 14.1,
+      "avgHpLostRatio": 0.47,
+      "avgKillRound": 5.22,
+      "killRoundDist": {
+        "R6": 29,
+        "R5": 44,
+        "R4": 18,
+        "R7": 5
+      },
+      "avgScore": 844,
+      "specialHitPct": 29.2
+    },
+    "enemy_04:fukuei": {
+      "n": 96,
+      "winPct": 93.8,
+      "lossPct": 6.3,
+      "stallPct": 0,
+      "avgHpWin": 22.6,
+      "avgHpAll": 21.2,
+      "avgHpLost": 25.3,
+      "avgHpLostRatio": 0.84,
+      "avgKillRound": 5.51,
+      "killRoundDist": {
+        "R6": 29,
+        "R5": 39,
+        "R4": 9,
+        "R7": 13
+      },
+      "avgScore": 821,
+      "specialHitPct": 50
+    },
+    "enemy_04:shouren": {
+      "n": 96,
+      "winPct": 99,
+      "lossPct": 1,
+      "stallPct": 0,
+      "avgHpWin": 27.5,
+      "avgHpAll": 27.2,
+      "avgHpLost": 16.7,
+      "avgHpLostRatio": 0.56,
+      "avgKillRound": 4.83,
+      "killRoundDist": {
+        "R5": 30,
+        "R4": 25,
+        "R3": 12,
+        "R6": 23,
+        "R7": 5
+      },
+      "avgScore": 890,
+      "specialHitPct": 20.8
+    },
+    "enemy_05:ebisu": {
+      "n": 96,
+      "winPct": 91.7,
+      "lossPct": 8.3,
+      "stallPct": 0,
+      "avgHpWin": 23.1,
+      "avgHpAll": 21.2,
+      "avgHpLost": 26.5,
+      "avgHpLostRatio": 0.88,
+      "avgKillRound": 4.41,
+      "killRoundDist": {
+        "R4": 42,
+        "R5": 32,
+        "R6": 6,
+        "R3": 8
+      },
+      "avgScore": 837,
+      "specialHitPct": 78.1
+    },
+    "enemy_05:taiyo": {
+      "n": 96,
+      "winPct": 92.7,
+      "lossPct": 7.3,
+      "stallPct": 0,
+      "avgHpWin": 15.2,
+      "avgHpAll": 14.1,
+      "avgHpLost": 19.2,
+      "avgHpLostRatio": 0.64,
+      "avgKillRound": 4.21,
+      "killRoundDist": {
+        "R6": 10,
+        "R4": 20,
+        "R3": 31,
+        "R5": 27,
+        "R7": 1
+      },
+      "avgScore": 849,
+      "specialHitPct": 41.7
+    },
+    "enemy_05:sobi": {
+      "n": 96,
+      "winPct": 100,
+      "lossPct": 0,
+      "stallPct": 0,
+      "avgHpWin": 21.7,
+      "avgHpAll": 21.7,
+      "avgHpLost": 11.6,
+      "avgHpLostRatio": 0.39,
+      "avgKillRound": 4.48,
+      "killRoundDist": {
+        "R6": 11,
+        "R5": 35,
+        "R4": 39,
+        "R3": 11
+      },
+      "avgScore": 886,
+      "specialHitPct": 36.5
+    },
+    "enemy_05:saika": {
+      "n": 96,
+      "winPct": 95.8,
+      "lossPct": 4.2,
+      "stallPct": 0,
+      "avgHpWin": 14.8,
+      "avgHpAll": 14.2,
+      "avgHpLost": 18.4,
+      "avgHpLostRatio": 0.61,
+      "avgKillRound": 4.1,
+      "killRoundDist": {
+        "R5": 23,
+        "R6": 5,
+        "R4": 40,
+        "R3": 24
+      },
+      "avgScore": 912,
+      "specialHitPct": 55.2
+    },
+    "enemy_05:juraku": {
+      "n": 96,
+      "winPct": 97.9,
+      "lossPct": 2.1,
+      "stallPct": 0,
+      "avgHpWin": 24.4,
+      "avgHpAll": 23.8,
+      "avgHpLost": 14.3,
+      "avgHpLostRatio": 0.48,
+      "avgKillRound": 4.71,
+      "killRoundDist": {
+        "R5": 37,
+        "R4": 42,
+        "R6": 15
+      },
+      "avgScore": 851,
+      "specialHitPct": 58.3
+    },
+    "enemy_05:fukuei": {
+      "n": 96,
+      "winPct": 94.8,
+      "lossPct": 5.2,
+      "stallPct": 0,
+      "avgHpWin": 18.3,
+      "avgHpAll": 17.4,
+      "avgHpLost": 28.3,
+      "avgHpLostRatio": 0.94,
+      "avgKillRound": 4.91,
+      "killRoundDist": {
+        "R5": 37,
+        "R4": 27,
+        "R6": 23,
+        "R3": 3,
+        "R7": 1
+      },
+      "avgScore": 837,
+      "specialHitPct": 84.4
+    },
+    "enemy_05:shouren": {
+      "n": 96,
+      "winPct": 95.8,
+      "lossPct": 4.2,
+      "stallPct": 0,
+      "avgHpWin": 26.8,
+      "avgHpAll": 25.7,
+      "avgHpLost": 22,
+      "avgHpLostRatio": 0.73,
+      "avgKillRound": 4.59,
+      "killRoundDist": {
+        "R5": 30,
+        "R6": 16,
+        "R4": 26,
+        "R3": 17,
+        "R7": 3
+      },
+      "avgScore": 862,
+      "specialHitPct": 57.3
+    },
+    "enemy_06:ebisu": {
+      "n": 96,
+      "winPct": 87.5,
+      "lossPct": 12.5,
+      "stallPct": 0,
+      "avgHpWin": 22.4,
+      "avgHpAll": 19.6,
+      "avgHpLost": 28.7,
+      "avgHpLostRatio": 0.96,
+      "avgKillRound": 4.92,
+      "killRoundDist": {
+        "R5": 37,
+        "R4": 27,
+        "R6": 20
+      },
+      "avgScore": 807,
+      "specialHitPct": 69.8
+    },
+    "enemy_06:taiyo": {
+      "n": 96,
+      "winPct": 87.5,
+      "lossPct": 12.5,
+      "stallPct": 0,
+      "avgHpWin": 15.7,
+      "avgHpAll": 13.8,
+      "avgHpLost": 19.3,
+      "avgHpLostRatio": 0.64,
+      "avgKillRound": 4.57,
+      "killRoundDist": {
+        "R6": 13,
+        "R3": 13,
+        "R5": 26,
+        "R4": 29,
+        "R7": 3
+      },
+      "avgScore": 830,
+      "specialHitPct": 54.2
+    },
+    "enemy_06:sobi": {
+      "n": 96,
+      "winPct": 99,
+      "lossPct": 1,
+      "stallPct": 0,
+      "avgHpWin": 22.9,
+      "avgHpAll": 22.6,
+      "avgHpLost": 10.6,
+      "avgHpLostRatio": 0.35,
+      "avgKillRound": 4.99,
+      "killRoundDist": {
+        "R7": 3,
+        "R6": 29,
+        "R5": 31,
+        "R4": 28,
+        "R3": 4
+      },
+      "avgScore": 875,
+      "specialHitPct": 50
+    },
+    "enemy_06:saika": {
+      "n": 96,
+      "winPct": 86.5,
+      "lossPct": 13.5,
+      "stallPct": 0,
+      "avgHpWin": 17,
+      "avgHpAll": 14.7,
+      "avgHpLost": 18.3,
+      "avgHpLostRatio": 0.61,
+      "avgKillRound": 4.59,
+      "killRoundDist": {
+        "R6": 14,
+        "R4": 44,
+        "R5": 21,
+        "R3": 3,
+        "R7": 1
+      },
+      "avgScore": 857,
+      "specialHitPct": 49
+    },
+    "enemy_06:juraku": {
+      "n": 96,
+      "winPct": 99,
+      "lossPct": 1,
+      "stallPct": 0,
+      "avgHpWin": 24.3,
+      "avgHpAll": 24.1,
+      "avgHpLost": 12.9,
+      "avgHpLostRatio": 0.43,
+      "avgKillRound": 5.29,
+      "killRoundDist": {
+        "R6": 27,
+        "R5": 42,
+        "R4": 17,
+        "R7": 9
+      },
+      "avgScore": 841,
+      "specialHitPct": 74
+    },
+    "enemy_06:fukuei": {
+      "n": 96,
+      "winPct": 86.5,
+      "lossPct": 13.5,
+      "stallPct": 0,
+      "avgHpWin": 20.1,
+      "avgHpAll": 17.4,
+      "avgHpLost": 31.7,
+      "avgHpLostRatio": 1.06,
+      "avgKillRound": 5.6,
+      "killRoundDist": {
+        "R6": 34,
+        "R5": 38,
+        "R7": 9,
+        "R4": 2
+      },
+      "avgScore": 774,
+      "specialHitPct": 90.6
+    },
+    "enemy_06:shouren": {
+      "n": 96,
+      "winPct": 93.8,
+      "lossPct": 6.3,
+      "stallPct": 0,
+      "avgHpWin": 27.7,
+      "avgHpAll": 26,
+      "avgHpLost": 20,
+      "avgHpLostRatio": 0.67,
+      "avgKillRound": 4.88,
+      "killRoundDist": {
+        "R6": 27,
+        "R4": 30,
+        "R5": 19,
+        "R3": 9,
+        "R7": 5
+      },
+      "avgScore": 859,
+      "specialHitPct": 47.9
+    },
+    "enemy_07:ebisu": {
+      "n": 96,
+      "winPct": 96.9,
+      "lossPct": 3.1,
+      "stallPct": 0,
+      "avgHpWin": 21.2,
+      "avgHpAll": 20.6,
+      "avgHpLost": 20.6,
+      "avgHpLostRatio": 0.69,
+      "avgKillRound": 4.58,
+      "killRoundDist": {
+        "R5": 40,
+        "R4": 40,
+        "R6": 9,
+        "R3": 4
+      },
+      "avgScore": 871,
+      "specialHitPct": 91.7
+    },
+    "enemy_07:taiyo": {
+      "n": 96,
+      "winPct": 94.8,
+      "lossPct": 5.2,
+      "stallPct": 0,
+      "avgHpWin": 20.2,
+      "avgHpAll": 19.1,
+      "avgHpLost": 12.9,
+      "avgHpLostRatio": 0.43,
+      "avgKillRound": 4.42,
+      "killRoundDist": {
+        "R5": 23,
+        "R3": 24,
+        "R4": 26,
+        "R7": 3,
+        "R6": 15
+      },
+      "avgScore": 872,
+      "specialHitPct": 61.5
+    },
+    "enemy_07:sobi": {
+      "n": 96,
+      "winPct": 100,
+      "lossPct": 0,
+      "stallPct": 0,
+      "avgHpWin": 21.9,
+      "avgHpAll": 21.9,
+      "avgHpLost": 10.4,
+      "avgHpLostRatio": 0.35,
+      "avgKillRound": 4.72,
+      "killRoundDist": {
+        "R5": 16,
+        "R6": 27,
+        "R4": 44,
+        "R3": 7,
+        "R7": 2
+      },
+      "avgScore": 879,
+      "specialHitPct": 67.7
+    },
+    "enemy_07:saika": {
+      "n": 96,
+      "winPct": 94.8,
+      "lossPct": 5.2,
+      "stallPct": 0,
+      "avgHpWin": 18.6,
+      "avgHpAll": 17.6,
+      "avgHpLost": 14.5,
+      "avgHpLostRatio": 0.48,
+      "avgKillRound": 4.1,
+      "killRoundDist": {
+        "R5": 28,
+        "R4": 44,
+        "R3": 19
+      },
+      "avgScore": 919,
+      "specialHitPct": 75
+    },
+    "enemy_07:juraku": {
+      "n": 96,
+      "winPct": 100,
+      "lossPct": 0,
+      "stallPct": 0,
+      "avgHpWin": 22.5,
+      "avgHpAll": 22.5,
+      "avgHpLost": 12.9,
+      "avgHpLostRatio": 0.43,
+      "avgKillRound": 4.95,
+      "killRoundDist": {
+        "R5": 44,
+        "R4": 30,
+        "R6": 19,
+        "R7": 3
+      },
+      "avgScore": 852,
+      "specialHitPct": 91.7
+    },
+    "enemy_07:fukuei": {
+      "n": 96,
+      "winPct": 100,
+      "lossPct": 0,
+      "stallPct": 0,
+      "avgHpWin": 20.1,
+      "avgHpAll": 20.1,
+      "avgHpLost": 21.8,
+      "avgHpLostRatio": 0.73,
+      "avgKillRound": 5.26,
+      "killRoundDist": {
+        "R6": 34,
+        "R4": 21,
+        "R5": 35,
+        "R7": 6
+      },
+      "avgScore": 858,
+      "specialHitPct": 92.7
+    },
+    "enemy_07:shouren": {
+      "n": 96,
+      "winPct": 97.9,
+      "lossPct": 2.1,
+      "stallPct": 0,
+      "avgHpWin": 27.6,
+      "avgHpAll": 27.1,
+      "avgHpLost": 14.8,
+      "avgHpLostRatio": 0.49,
+      "avgKillRound": 4.53,
+      "killRoundDist": {
+        "R5": 29,
+        "R3": 20,
+        "R4": 26,
+        "R6": 16,
+        "R7": 3
+      },
+      "avgScore": 888,
+      "specialHitPct": 63.5
+    },
+    "enemy_09:ebisu": {
+      "n": 96,
+      "winPct": 100,
+      "lossPct": 0,
+      "stallPct": 0,
+      "avgHpWin": 24.8,
+      "avgHpAll": 24.8,
+      "avgHpLost": 17.9,
+      "avgHpLostRatio": 0.6,
+      "avgKillRound": 4.66,
+      "killRoundDist": {
+        "R5": 39,
+        "R4": 39,
+        "R6": 14,
+        "R3": 4
+      },
+      "avgScore": 895,
+      "specialHitPct": 13.5
+    },
+    "enemy_09:taiyo": {
+      "n": 96,
+      "winPct": 97.9,
+      "lossPct": 2.1,
+      "stallPct": 0,
+      "avgHpWin": 18,
+      "avgHpAll": 17.6,
+      "avgHpLost": 15.4,
+      "avgHpLostRatio": 0.51,
+      "avgKillRound": 4.48,
+      "killRoundDist": {
+        "R5": 25,
+        "R6": 17,
+        "R4": 30,
+        "R3": 20,
+        "R7": 2
+      },
+      "avgScore": 892,
+      "specialHitPct": 24
+    },
+    "enemy_09:sobi": {
+      "n": 96,
+      "winPct": 100,
+      "lossPct": 0,
+      "stallPct": 0,
+      "avgHpWin": 25.2,
+      "avgHpAll": 25.2,
+      "avgHpLost": 7.4,
+      "avgHpLostRatio": 0.25,
+      "avgKillRound": 4.55,
+      "killRoundDist": {
+        "R5": 34,
+        "R4": 36,
+        "R6": 15,
+        "R3": 11
+      },
+      "avgScore": 900,
+      "specialHitPct": 8.3
+    },
+    "enemy_09:saika": {
+      "n": 96,
+      "winPct": 97.9,
+      "lossPct": 2.1,
+      "stallPct": 0,
+      "avgHpWin": 20,
+      "avgHpAll": 19.6,
+      "avgHpLost": 12.8,
+      "avgHpLostRatio": 0.42,
+      "avgKillRound": 4.36,
+      "killRoundDist": {
+        "R5": 31,
+        "R6": 6,
+        "R4": 48,
+        "R3": 9
+      },
+      "avgScore": 938,
+      "specialHitPct": 13.5
+    },
+    "enemy_09:juraku": {
+      "n": 96,
+      "winPct": 100,
+      "lossPct": 0,
+      "stallPct": 0,
+      "avgHpWin": 26.4,
+      "avgHpAll": 26.4,
+      "avgHpLost": 9.7,
+      "avgHpLostRatio": 0.32,
+      "avgKillRound": 4.91,
+      "killRoundDist": {
+        "R5": 41,
+        "R4": 33,
+        "R6": 20,
+        "R7": 2
+      },
+      "avgScore": 862,
+      "specialHitPct": 21.9
+    },
+    "enemy_09:fukuei": {
+      "n": 96,
+      "winPct": 93.8,
+      "lossPct": 6.3,
+      "stallPct": 0,
+      "avgHpWin": 20.9,
+      "avgHpAll": 19.6,
+      "avgHpLost": 23.8,
+      "avgHpLostRatio": 0.79,
+      "avgKillRound": 5.2,
+      "killRoundDist": {
+        "R5": 49,
+        "R6": 22,
+        "R4": 14,
+        "R7": 5
+      },
+      "avgScore": 831,
+      "specialHitPct": 43.8
+    },
+    "enemy_09:shouren": {
+      "n": 96,
+      "winPct": 100,
+      "lossPct": 0,
+      "stallPct": 0,
+      "avgHpWin": 27.2,
+      "avgHpAll": 27.2,
+      "avgHpLost": 13.5,
+      "avgHpLostRatio": 0.45,
+      "avgKillRound": 4.68,
+      "killRoundDist": {
+        "R5": 28,
+        "R6": 22,
+        "R4": 27,
+        "R3": 16,
+        "R7": 3
+      },
+      "avgScore": 900,
+      "specialHitPct": 5.2
+    },
+    "enemy_08:ebisu": {
+      "n": 96,
+      "winPct": 99,
+      "lossPct": 1,
+      "stallPct": 0,
+      "avgHpWin": 24.9,
+      "avgHpAll": 24.6,
+      "avgHpLost": 18.9,
+      "avgHpLostRatio": 0.63,
+      "avgKillRound": 4.79,
+      "killRoundDist": {
+        "R5": 39,
+        "R6": 19,
+        "R4": 35,
+        "R3": 2
+      },
+      "avgScore": 885,
+      "specialHitPct": 18.8
+    },
+    "enemy_08:taiyo": {
+      "n": 96,
+      "winPct": 99,
+      "lossPct": 1,
+      "stallPct": 0,
+      "avgHpWin": 17.7,
+      "avgHpAll": 17.6,
+      "avgHpLost": 15.8,
+      "avgHpLostRatio": 0.53,
+      "avgKillRound": 4.62,
+      "killRoundDist": {
+        "R5": 30,
+        "R6": 20,
+        "R4": 26,
+        "R3": 17,
+        "R7": 2
+      },
+      "avgScore": 897,
+      "specialHitPct": 28.1
+    },
+    "enemy_08:sobi": {
+      "n": 96,
+      "winPct": 100,
+      "lossPct": 0,
+      "stallPct": 0,
+      "avgHpWin": 25.3,
+      "avgHpAll": 25.3,
+      "avgHpLost": 7.4,
+      "avgHpLostRatio": 0.25,
+      "avgKillRound": 4.67,
+      "killRoundDist": {
+        "R5": 31,
+        "R6": 22,
+        "R4": 32,
+        "R3": 11
+      },
+      "avgScore": 898,
+      "specialHitPct": 11.5
+    },
+    "enemy_08:saika": {
+      "n": 96,
+      "winPct": 97.9,
+      "lossPct": 2.1,
+      "stallPct": 0,
+      "avgHpWin": 20.8,
+      "avgHpAll": 20.3,
+      "avgHpLost": 12.9,
+      "avgHpLostRatio": 0.43,
+      "avgKillRound": 4.48,
+      "killRoundDist": {
+        "R5": 29,
+        "R6": 11,
+        "R4": 48,
+        "R3": 6
+      },
+      "avgScore": 939,
+      "specialHitPct": 13.5
+    },
+    "enemy_08:juraku": {
+      "n": 96,
+      "winPct": 100,
+      "lossPct": 0,
+      "stallPct": 0,
+      "avgHpWin": 27,
+      "avgHpAll": 27,
+      "avgHpLost": 9.1,
+      "avgHpLostRatio": 0.3,
+      "avgKillRound": 5.09,
+      "killRoundDist": {
+        "R5": 46,
+        "R4": 23,
+        "R6": 22,
+        "R7": 5
+      },
+      "avgScore": 854,
+      "specialHitPct": 22.9
+    },
+    "enemy_08:fukuei": {
+      "n": 96,
+      "winPct": 91.7,
+      "lossPct": 8.3,
+      "stallPct": 0,
+      "avgHpWin": 23,
+      "avgHpAll": 21.1,
+      "avgHpLost": 24.2,
+      "avgHpLostRatio": 0.81,
+      "avgKillRound": 5.38,
+      "killRoundDist": {
+        "R5": 44,
+        "R6": 28,
+        "R4": 9,
+        "R7": 7
+      },
+      "avgScore": 815,
+      "specialHitPct": 46.9
+    },
+    "enemy_08:shouren": {
+      "n": 96,
+      "winPct": 100,
+      "lossPct": 0,
+      "stallPct": 0,
+      "avgHpWin": 26.8,
+      "avgHpAll": 26.8,
+      "avgHpLost": 13.9,
+      "avgHpLostRatio": 0.46,
+      "avgKillRound": 4.83,
+      "killRoundDist": {
+        "R5": 31,
+        "R6": 24,
+        "R4": 26,
+        "R3": 11,
+        "R7": 4
+      },
+      "avgScore": 895,
+      "specialHitPct": 7.3
+    }
+  },
+  "index": {
+    "easy": {
+      "enemy_01": 22.9,
+      "enemy_02": 21.1,
+      "enemy_03": 22.1,
+      "enemy_04": 22,
+      "enemy_05": 22.7,
+      "enemy_06": 23.1,
+      "enemy_07": 19.3,
+      "enemy_09": 19.1,
+      "enemy_08": 19.5
+    },
+    "normal": {
+      "enemy_01": 33.8,
+      "enemy_02": 33.9,
+      "enemy_03": 36.5,
+      "enemy_04": 31.4,
+      "enemy_05": 34,
+      "enemy_06": 37.7,
+      "enemy_07": 28.6,
+      "enemy_09": 27.5,
+      "enemy_08": 28.4
+    },
+    "hard": {
+      "enemy_01": 48.5,
+      "enemy_02": 53.5,
+      "enemy_03": 57.3,
+      "enemy_04": 48.5,
+      "enemy_05": 50.8,
+      "enemy_06": 56.7,
+      "enemy_07": 40.6,
+      "enemy_09": 39.1,
+      "enemy_08": 39.2
+    }
+  },
+  "rankByDiff": {
+    "easy": [
+      {
+        "enemyId": "enemy_01",
+        "star": 2,
+        "index": 22.9,
+        "rank": 2,
+        "indexTypical": 27.9,
+        "rankTypical": 4
+      },
+      {
+        "enemyId": "enemy_02",
+        "star": 3,
+        "index": 21.1,
+        "rank": 6,
+        "indexTypical": 25.8,
+        "rankTypical": 6
+      },
+      {
+        "enemyId": "enemy_03",
+        "star": 4,
+        "index": 22.1,
+        "rank": 4,
+        "indexTypical": 28.1,
+        "rankTypical": 3
+      },
+      {
+        "enemyId": "enemy_04",
+        "star": 2,
+        "index": 22,
+        "rank": 5,
+        "indexTypical": 27.2,
+        "rankTypical": 5
+      },
+      {
+        "enemyId": "enemy_05",
+        "star": 3,
+        "index": 22.7,
+        "rank": 3,
+        "indexTypical": 28.4,
+        "rankTypical": 2
+      },
+      {
+        "enemyId": "enemy_06",
+        "star": 4,
+        "index": 23.1,
+        "rank": 1,
+        "indexTypical": 28.5,
+        "rankTypical": 1
+      },
+      {
+        "enemyId": "enemy_07",
+        "star": 1,
+        "index": 19.3,
+        "rank": 8,
+        "indexTypical": 25.6,
+        "rankTypical": 7
+      },
+      {
+        "enemyId": "enemy_09",
+        "star": 3,
+        "index": 19.1,
+        "rank": 9,
+        "indexTypical": 21.6,
+        "rankTypical": 9
+      },
+      {
+        "enemyId": "enemy_08",
+        "star": 3,
+        "index": 19.5,
+        "rank": 7,
+        "indexTypical": 22.3,
+        "rankTypical": 8
+      }
+    ],
+    "normal": [
+      {
+        "enemyId": "enemy_01",
+        "star": 2,
+        "index": 33.8,
+        "rank": 5,
+        "indexTypical": 37.8,
+        "rankTypical": 5
+      },
+      {
+        "enemyId": "enemy_02",
+        "star": 3,
+        "index": 33.9,
+        "rank": 4,
+        "indexTypical": 39,
+        "rankTypical": 3
+      },
+      {
+        "enemyId": "enemy_03",
+        "star": 4,
+        "index": 36.5,
+        "rank": 2,
+        "indexTypical": 43.5,
+        "rankTypical": 1
+      },
+      {
+        "enemyId": "enemy_04",
+        "star": 2,
+        "index": 31.4,
+        "rank": 6,
+        "indexTypical": 36,
+        "rankTypical": 6
+      },
+      {
+        "enemyId": "enemy_05",
+        "star": 3,
+        "index": 34,
+        "rank": 3,
+        "indexTypical": 38.4,
+        "rankTypical": 4
+      },
+      {
+        "enemyId": "enemy_06",
+        "star": 4,
+        "index": 37.7,
+        "rank": 1,
+        "indexTypical": 42.1,
+        "rankTypical": 2
+      },
+      {
+        "enemyId": "enemy_07",
+        "star": 1,
+        "index": 28.6,
+        "rank": 7,
+        "indexTypical": 31.1,
+        "rankTypical": 8
+      },
+      {
+        "enemyId": "enemy_09",
+        "star": 3,
+        "index": 27.5,
+        "rank": 9,
+        "indexTypical": 30.8,
+        "rankTypical": 9
+      },
+      {
+        "enemyId": "enemy_08",
+        "star": 3,
+        "index": 28.4,
+        "rank": 8,
+        "indexTypical": 32.1,
+        "rankTypical": 7
+      }
+    ],
+    "hard": [
+      {
+        "enemyId": "enemy_01",
+        "star": 2,
+        "index": 48.5,
+        "rank": 5.5,
+        "indexTypical": 54.3,
+        "rankTypical": 5
+      },
+      {
+        "enemyId": "enemy_02",
+        "star": 3,
+        "index": 53.5,
+        "rank": 3,
+        "indexTypical": 64.2,
+        "rankTypical": 3
+      },
+      {
+        "enemyId": "enemy_03",
+        "star": 4,
+        "index": 57.3,
+        "rank": 1,
+        "indexTypical": 72.4,
+        "rankTypical": 1
+      },
+      {
+        "enemyId": "enemy_04",
+        "star": 2,
+        "index": 48.5,
+        "rank": 5.5,
+        "indexTypical": 52.8,
+        "rankTypical": 6
+      },
+      {
+        "enemyId": "enemy_05",
+        "star": 3,
+        "index": 50.8,
+        "rank": 4,
+        "indexTypical": 60.5,
+        "rankTypical": 4
+      },
+      {
+        "enemyId": "enemy_06",
+        "star": 4,
+        "index": 56.7,
+        "rank": 2,
+        "indexTypical": 69.5,
+        "rankTypical": 2
+      },
+      {
+        "enemyId": "enemy_07",
+        "star": 1,
+        "index": 40.6,
+        "rank": 7,
+        "indexTypical": 35.5,
+        "rankTypical": 9
+      },
+      {
+        "enemyId": "enemy_09",
+        "star": 3,
+        "index": 39.1,
+        "rank": 9,
+        "indexTypical": 44,
+        "rankTypical": 7
+      },
+      {
+        "enemyId": "enemy_08",
+        "star": 3,
+        "index": 39.2,
+        "rank": 8,
+        "indexTypical": 43.3,
+        "rankTypical": 8
+      }
+    ]
+  },
+  "spearmanByDiff": {
+    "easy": {
+      "all": 0.34,
+      "typical": 0.42
+    },
+    "normal": {
+      "all": 0.58,
+      "typical": 0.66
+    },
+    "hard": {
+      "all": 0.58,
+      "typical": 0.74
+    }
+  },
+  "staticByDiff": {
+    "easy": {
+      "enemy_01": {
+        "perRound": [
+          4,
+          7,
+          9,
+          13,
+          11,
+          8,
+          5
+        ],
+        "total": 57,
+        "peak": 13,
+        "peakRound": 4,
+        "chargeRounds": [],
+        "specialRounds": [],
+        "multiRounds": [],
+        "first3": 20,
+        "r4to7": 37,
+        "hp": 88
+      },
+      "enemy_02": {
+        "perRound": [
+          4,
+          8,
+          0,
+          22,
+          13,
+          9,
+          6
+        ],
+        "total": 62,
+        "peak": 22,
+        "peakRound": 4,
+        "chargeRounds": [
+          3
+        ],
+        "specialRounds": [
+          4
+        ],
+        "multiRounds": [],
+        "first3": 12,
+        "r4to7": 50,
+        "hp": 80
+      },
+      "enemy_03": {
+        "perRound": [
+          3,
+          5,
+          11,
+          20,
+          15,
+          8,
+          3
+        ],
+        "total": 65,
+        "peak": 20,
+        "peakRound": 4,
+        "chargeRounds": [],
+        "specialRounds": [
+          4
+        ],
+        "multiRounds": [],
+        "first3": 19,
+        "r4to7": 46,
+        "hp": 81
+      },
+      "enemy_04": {
+        "perRound": [
+          5,
+          0,
+          19,
+          0,
+          20,
+          6,
+          8
+        ],
+        "total": 58,
+        "peak": 20,
+        "peakRound": 5,
+        "chargeRounds": [
+          2,
+          4
+        ],
+        "specialRounds": [
+          5
+        ],
+        "multiRounds": [],
+        "first3": 24,
+        "r4to7": 34,
+        "hp": 85
+      },
+      "enemy_05": {
+        "perRound": [
+          8,
+          9,
+          10,
+          14,
+          13,
+          12,
+          11
+        ],
+        "total": 77,
+        "peak": 14,
+        "peakRound": 4,
+        "chargeRounds": [],
+        "specialRounds": [
+          3
+        ],
+        "multiRounds": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7
+        ],
+        "first3": 27,
+        "r4to7": 50,
+        "hp": 72
+      },
+      "enemy_06": {
+        "perRound": [
+          3,
+          6,
+          10,
+          17,
+          14,
+          8,
+          4
+        ],
+        "total": 62,
+        "peak": 17,
+        "peakRound": 4,
+        "chargeRounds": [],
+        "specialRounds": [
+          4
+        ],
+        "multiRounds": [],
+        "first3": 19,
+        "r4to7": 43,
+        "hp": 88
+      },
+      "enemy_07": {
+        "perRound": [
+          3,
+          0,
+          20,
+          8,
+          0,
+          16,
+          8
+        ],
+        "total": 55,
+        "peak": 20,
+        "peakRound": 3,
+        "chargeRounds": [
+          2,
+          5
+        ],
+        "specialRounds": [
+          3
+        ],
+        "multiRounds": [],
+        "first3": 23,
+        "r4to7": 32,
+        "hp": 78
+      },
+      "enemy_09": {
+        "perRound": [
+          4,
+          8,
+          0,
+          0,
+          13,
+          9,
+          6
+        ],
+        "total": 40,
+        "peak": 13,
+        "peakRound": 5,
+        "chargeRounds": [
+          3
+        ],
+        "specialRounds": [],
+        "multiRounds": [],
+        "first3": 12,
+        "r4to7": 28,
+        "hp": 80
+      },
+      "enemy_08": {
+        "perRound": [
+          4,
+          8,
+          0,
+          0,
+          13,
+          9,
+          5
+        ],
+        "total": 39,
+        "peak": 13,
+        "peakRound": 5,
+        "chargeRounds": [
+          3
+        ],
+        "specialRounds": [],
+        "multiRounds": [],
+        "first3": 12,
+        "r4to7": 27,
+        "hp": 83
+      }
+    },
+    "normal": {
+      "enemy_01": {
+        "perRound": [
+          5,
+          8,
+          11,
+          15,
+          13,
+          9,
+          6
+        ],
+        "total": 67,
+        "peak": 15,
+        "peakRound": 4,
+        "chargeRounds": [],
+        "specialRounds": [],
+        "multiRounds": [],
+        "first3": 24,
+        "r4to7": 43,
+        "hp": 103
+      },
+      "enemy_02": {
+        "perRound": [
+          5,
+          9,
+          0,
+          26,
+          15,
+          11,
+          7
+        ],
+        "total": 73,
+        "peak": 26,
+        "peakRound": 4,
+        "chargeRounds": [
+          3
+        ],
+        "specialRounds": [
+          4
+        ],
+        "multiRounds": [],
+        "first3": 14,
+        "r4to7": 59,
+        "hp": 94
+      },
+      "enemy_03": {
+        "perRound": [
+          3,
+          6,
+          13,
+          23,
+          18,
+          9,
+          4
+        ],
+        "total": 76,
+        "peak": 23,
+        "peakRound": 4,
+        "chargeRounds": [],
+        "specialRounds": [
+          4
+        ],
+        "multiRounds": [],
+        "first3": 22,
+        "r4to7": 54,
+        "hp": 95
+      },
+      "enemy_04": {
+        "perRound": [
+          6,
+          0,
+          22,
+          0,
+          24,
+          7,
+          9
+        ],
+        "total": 68,
+        "peak": 24,
+        "peakRound": 5,
+        "chargeRounds": [
+          2,
+          4
+        ],
+        "specialRounds": [
+          5
+        ],
+        "multiRounds": [],
+        "first3": 28,
+        "r4to7": 40,
+        "hp": 100
+      },
+      "enemy_05": {
+        "perRound": [
+          9,
+          10,
+          12,
+          16,
+          15,
+          14,
+          13
+        ],
+        "total": 89,
+        "peak": 16,
+        "peakRound": 4,
+        "chargeRounds": [],
+        "specialRounds": [
+          3
+        ],
+        "multiRounds": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7
+        ],
+        "first3": 31,
+        "r4to7": 58,
+        "hp": 85
+      },
+      "enemy_06": {
+        "perRound": [
+          4,
+          7,
+          12,
+          20,
+          16,
+          9,
+          5
+        ],
+        "total": 73,
+        "peak": 20,
+        "peakRound": 4,
+        "chargeRounds": [],
+        "specialRounds": [
+          4
+        ],
+        "multiRounds": [],
+        "first3": 23,
+        "r4to7": 50,
+        "hp": 103
+      },
+      "enemy_07": {
+        "perRound": [
+          4,
+          0,
+          24,
+          9,
+          0,
+          19,
+          9
+        ],
+        "total": 65,
+        "peak": 24,
+        "peakRound": 3,
+        "chargeRounds": [
+          2,
+          5
+        ],
+        "specialRounds": [
+          3
+        ],
+        "multiRounds": [],
+        "first3": 28,
+        "r4to7": 37,
+        "hp": 92
+      },
+      "enemy_09": {
+        "perRound": [
+          5,
+          9,
+          0,
+          0,
+          15,
+          11,
+          7
+        ],
+        "total": 47,
+        "peak": 15,
+        "peakRound": 5,
+        "chargeRounds": [
+          3
+        ],
+        "specialRounds": [],
+        "multiRounds": [],
+        "first3": 14,
+        "r4to7": 33,
+        "hp": 94
+      },
+      "enemy_08": {
+        "perRound": [
+          5,
+          9,
+          0,
+          0,
+          15,
+          10,
+          6
+        ],
+        "total": 45,
+        "peak": 15,
+        "peakRound": 5,
+        "chargeRounds": [
+          3
+        ],
+        "specialRounds": [],
+        "multiRounds": [],
+        "first3": 14,
+        "r4to7": 31,
+        "hp": 98
+      }
+    },
+    "hard": {
+      "enemy_01": {
+        "perRound": [
+          6,
+          9,
+          13,
+          17,
+          15,
+          10,
+          7
+        ],
+        "total": 77,
+        "peak": 17,
+        "peakRound": 4,
+        "chargeRounds": [],
+        "specialRounds": [],
+        "multiRounds": [],
+        "first3": 28,
+        "r4to7": 49,
+        "hp": 118
+      },
+      "enemy_02": {
+        "perRound": [
+          6,
+          10,
+          0,
+          30,
+          17,
+          13,
+          8
+        ],
+        "total": 84,
+        "peak": 30,
+        "peakRound": 4,
+        "chargeRounds": [
+          3
+        ],
+        "specialRounds": [
+          4
+        ],
+        "multiRounds": [],
+        "first3": 16,
+        "r4to7": 68,
+        "hp": 108
+      },
+      "enemy_03": {
+        "perRound": [
+          3,
+          7,
+          15,
+          26,
+          21,
+          10,
+          5
+        ],
+        "total": 87,
+        "peak": 26,
+        "peakRound": 4,
+        "chargeRounds": [],
+        "specialRounds": [
+          4
+        ],
+        "multiRounds": [],
+        "first3": 25,
+        "r4to7": 62,
+        "hp": 109
+      },
+      "enemy_04": {
+        "perRound": [
+          7,
+          0,
+          25,
+          0,
+          28,
+          8,
+          10
+        ],
+        "total": 78,
+        "peak": 28,
+        "peakRound": 5,
+        "chargeRounds": [
+          2,
+          4
+        ],
+        "specialRounds": [
+          5
+        ],
+        "multiRounds": [],
+        "first3": 32,
+        "r4to7": 46,
+        "hp": 115
+      },
+      "enemy_05": {
+        "perRound": [
+          10,
+          12,
+          14,
+          18,
+          17,
+          16,
+          15
+        ],
+        "total": 102,
+        "peak": 18,
+        "peakRound": 4,
+        "chargeRounds": [],
+        "specialRounds": [
+          3
+        ],
+        "multiRounds": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7
+        ],
+        "first3": 36,
+        "r4to7": 66,
+        "hp": 98
+      },
+      "enemy_06": {
+        "perRound": [
+          5,
+          8,
+          14,
+          23,
+          18,
+          10,
+          6
+        ],
+        "total": 84,
+        "peak": 23,
+        "peakRound": 4,
+        "chargeRounds": [],
+        "specialRounds": [
+          4
+        ],
+        "multiRounds": [],
+        "first3": 27,
+        "r4to7": 57,
+        "hp": 118
+      },
+      "enemy_07": {
+        "perRound": [
+          5,
+          0,
+          28,
+          10,
+          0,
+          22,
+          10
+        ],
+        "total": 75,
+        "peak": 28,
+        "peakRound": 3,
+        "chargeRounds": [
+          2,
+          5
+        ],
+        "specialRounds": [
+          3
+        ],
+        "multiRounds": [],
+        "first3": 33,
+        "r4to7": 42,
+        "hp": 106
+      },
+      "enemy_09": {
+        "perRound": [
+          6,
+          10,
+          0,
+          0,
+          17,
+          13,
+          8
+        ],
+        "total": 54,
+        "peak": 17,
+        "peakRound": 5,
+        "chargeRounds": [
+          3
+        ],
+        "specialRounds": [],
+        "multiRounds": [],
+        "first3": 16,
+        "r4to7": 38,
+        "hp": 108
+      },
+      "enemy_08": {
+        "perRound": [
+          6,
+          10,
+          0,
+          0,
+          17,
+          12,
+          7
+        ],
+        "total": 52,
+        "peak": 17,
+        "peakRound": 5,
+        "chargeRounds": [
+          3
+        ],
+        "specialRounds": [],
+        "multiRounds": [],
+        "first3": 16,
+        "r4to7": 36,
+        "hp": 113
+      }
+    }
+  }
+}

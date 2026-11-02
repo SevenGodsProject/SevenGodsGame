@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { GODS } from '../data/gods'
-import { CORE_ENEMIES as ENEMIES, ENEMY_IDS } from '../data/enemies'
+import { CORE_ENEMIES as ENEMIES, ENEMY_IDS, SHOGUNATE_ENEMIES } from '../data/enemies'
 import { getCardDef } from '../data/cards'
 import { getRecommendedDeck } from '../data/deckBuilder'
 import type { StakeChoiceId } from '../types'
@@ -488,6 +488,31 @@ describe('バランスシミュレーション（Planner用・アサーション
       }
     }
 
+    expect(failures, `詰み（最善戦略でも勝率50%未満）が発生:\n${failures.join('\n')}`).toEqual([])
+  }, 30000)
+
+  /**
+   * 決定287 W1（将軍家 第一陣 公開 v1）：通常導線に出る将軍家の敵にも決定58 と同じ「詰み」基準を機械で課す。
+   * 既存 7 体のケース（上）は 1 文字も変えない。将軍家が増えるたび（W2〜W5）に対象が自動で広がる。
+   */
+  it('決定287：hard×全神×将軍家で、少なくとも1戦略が50%以上の勝率を保つ（公開対象の詰み防止）', () => {
+    const strategies: Strategy[] = ['balanced', 'aggressive', 'defensive']
+    const failures: string[] = []
+    for (const enemy of SHOGUNATE_ENEMIES) {
+      for (const god of GODS) {
+        const deck = getRecommendedDeck(god.id)
+        let best = 0
+        let bestStrategy: Strategy = 'balanced'
+        for (const strategy of strategies) {
+          const r = summarizeWinRate(god.nameJa, god.id, deck, strategy, 40, enemy.id, 'guardian', 'hard')
+          if (r.winRate > best) {
+            best = r.winRate
+            bestStrategy = strategy
+          }
+        }
+        if (best < 50) failures.push(`${enemy.name} × ${god.nameJa}：最善戦略(${bestStrategy})でも勝率${best.toFixed(0)}%`)
+      }
+    }
     expect(failures, `詰み（最善戦略でも勝率50%未満）が発生:\n${failures.join('\n')}`).toEqual([])
   }, 30000)
 

@@ -3,7 +3,7 @@ import type { EnemyId, GodId } from '../../core/types'
 import { CORE_ENEMIES, PILOT_ENEMIES, SHOGUNATE_ENEMIES, isPilotEnemyId, isShogunateEnemyId } from '../../core/data/enemies'
 import { isPilotEnabled } from '../pilot/pilotFlag'
 import { GODS } from '../../core/data/gods'
-import { isMatchupCleared, loadMatchups } from '../../hooks/matchupStorage'
+import { MATCHUP_ENEMIES, isMatchupCleared, loadMatchups } from '../../hooks/matchupStorage'
 import { EARLY_READ_TARGET_ENEMY_ID } from '../battle/nextGoal'
 import './setup.css'
 
@@ -55,12 +55,9 @@ export function EnemySelectScreen({ onSelect, onBack, godId = null }: EnemySelec
   // Phase 7 P2（決定189）：神×敵の攻略状況はマウント時に 1 回だけ読む（読めない環境では印を出さない）
   const [matchups] = useState(() => (godId ? loadMatchups() : null))
   const godName = godId ? (GODS.find((g) => g.id === godId)?.nameJa ?? '') : ''
-  // Threat Branch Pilot v1：`?pilot=threat` のときだけ Pilot 敵を末尾に並べる。通常は既存 7 体のまま
-  // 将軍家 Pilot v0.4：`?pilot=shogunate` のときは忠次（enemy_08）を末尾に。`?pilot=all` で両方（値は集合＝排他にしない）
+  // 決定287 W1（将軍家 第一陣 公開 v1）：通常の並びは既存 7 体＋将軍家（忠次）。Threat Branch Pilot v1 の enemy_09 だけ `?pilot=threat` のときに末尾へ
   const threatPilot = isPilotEnabled('threat')
-  const shogunatePilot = isPilotEnabled('shogunate')
-  const pilot = threatPilot || shogunatePilot
-  const roster = pilot ? [...CORE_ENEMIES, ...(threatPilot ? PILOT_ENEMIES : []), ...(shogunatePilot ? SHOGUNATE_ENEMIES : [])] : CORE_ENEMIES
+  const roster = threatPilot ? [...CORE_ENEMIES, ...SHOGUNATE_ENEMIES, ...PILOT_ENEMIES] : [...CORE_ENEMIES, ...SHOGUNATE_ENEMIES]
   return (
     <div className="setup-screen">
       <h1 className="setup-title">挑む敵を選ぼう</h1>
@@ -75,11 +72,6 @@ export function EnemySelectScreen({ onSelect, onBack, godId = null }: EnemySelec
       {threatPilot && (
         <p className="setup-subtitle" data-testid="enemy-pilot-notice">
           Threat Branch Pilot v1：この敵との戦いは戦績・セーブ・報酬に残りません
-        </p>
-      )}
-      {shogunatePilot && (
-        <p className="setup-subtitle" data-testid="enemy-shogunate-notice">
-          将軍家 Pilot v0.4：忠次との戦いは戦績・セーブ・報酬に残りません。既存 7 体と同じ神・デッキで比べてください。
         </p>
       )}
 
@@ -100,7 +92,7 @@ export function EnemySelectScreen({ onSelect, onBack, godId = null }: EnemySelec
             onClick={() => onSelect(enemy.id)}
           >
             {/* Phase 7 P2（決定189）：この神でこの敵を倒したか。✓ と文字で示す（色だけにしない）。表示のみ */}
-            {godId && matchups?.available && !isPilotEnemyId(enemy.id) && (
+            {godId && matchups?.available && MATCHUP_ENEMIES.includes(enemy.id) && (
               isMatchupCleared(matchups.data, godId, enemy.id) ? (
                 <span className="enemy-select-matchup enemy-select-matchup-cleared" data-testid="enemy-matchup" data-cleared="true">
                   ✓ {godName}で撃破済み
@@ -135,8 +127,14 @@ export function EnemySelectScreen({ onSelect, onBack, godId = null }: EnemySelec
               )}
               {/* Threat Branch Pilot v1：Pilot 敵の印（表示のみ・既存の chip クラスを再利用。新規 CSS 0）。記録に残らないことを選ぶ前に伝える */}
               {isPilotEnemyId(enemy.id) && (
-                <span className="enemy-select-read-chip" data-testid="enemy-pilot-chip" data-pilot={isShogunateEnemyId(enemy.id) ? 'shogunate' : 'threat'}>
-                  {isShogunateEnemyId(enemy.id) ? '幕府 Pilot・記録に残らない' : 'Pilot・記録に残らない'}
+                <span className="enemy-select-read-chip" data-testid="enemy-pilot-chip" data-pilot="threat">
+                  Pilot・記録に残らない
+                </span>
+              )}
+              {/* 決定287 W1：将軍家は 49 攻略盤（7×7）の対象外。攻略印が無いのを不具合と誤解させないための 1 行（表示のみ・既存 chip 流用・新 CSS 0） */}
+              {isShogunateEnemyId(enemy.id) && (
+                <span className="enemy-select-read-chip" data-testid="enemy-shogunate-chip">
+                  攻略盤の対象外・戦績は残る
                 </span>
               )}
               <span className="enemy-select-hint">{enemy.typeDescription}</span>

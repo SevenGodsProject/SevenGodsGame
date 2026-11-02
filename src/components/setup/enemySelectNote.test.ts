@@ -1,8 +1,10 @@
 import { createElement } from 'react'
 import { renderToStaticMarkup } from 'react-dom/server'
 import { describe, expect, it } from 'vitest'
-// v1.0.2 統合：既定の敵選択が描画するのは CORE 7 体だけ（Pilot 敵 enemy_09 は ?pilot=threat 経路でしか現れない）
-import { CORE_ENEMIES } from '../../core/data/enemies'
+// 決定287 W1：既定の敵選択が描画するのは CORE 7 体＋将軍家（忠次）の 8 体（Pilot 敵 enemy_09 は ?pilot=threat 経路でしか現れない）
+import { CORE_ENEMIES, SHOGUNATE_ENEMIES } from '../../core/data/enemies'
+
+const PUBLIC_ROSTER = [...CORE_ENEMIES, ...SHOGUNATE_ENEMIES]
 import { EnemySelectScreen, MAX_THREAT_STARS, ThreatStars } from './EnemySelectScreen'
 
 /**
@@ -26,8 +28,8 @@ describe('EnemySelectScreen の注記', () => {
     expect(html).not.toContain('敵の手強さの目安')
   })
 
-  it('★は 7 体とも新しい rank で描画され、aria-label「脅威度 N / 5」が rank と一致する', () => {
-    for (const enemy of CORE_ENEMIES) {
+  it('★は 8 体（CORE 7＋忠次）とも rank で描画され、aria-label「脅威度 N / 5」が rank と一致する', () => {
+    for (const enemy of PUBLIC_ROSTER) {
       const idx = html.indexOf(`>${enemy.name}<`)
       expect(idx, enemy.name).toBeGreaterThan(0)
       // この敵のカード内（名前の直前）にある最後の ThreatStars の aria-label を見る
@@ -35,11 +37,17 @@ describe('EnemySelectScreen の注記', () => {
       const label = [...before.matchAll(/aria-label="脅威度 (\d) \/ 5"/g)].at(-1)
       expect(label?.[1], enemy.name).toBe(String(enemy.rank))
     }
-    expect((html.match(/aria-label="脅威度 \d \/ 5"/g) ?? []).length).toBe(CORE_ENEMIES.length)
+    expect((html.match(/aria-label="脅威度 \d \/ 5"/g) ?? []).length).toBe(PUBLIC_ROSTER.length)
+    // 決定287 W1：忠次には「攻略盤の対象外」の注記・Pilot の印と案内は無い
+    expect(html).toContain('data-testid="enemy-shogunate-chip"')
+    expect(html).toContain('攻略盤の対象外・戦績は残る')
+    expect(html).not.toContain('enemy-pilot-chip')
+    expect(html).not.toContain('enemy-shogunate-notice')
+    expect(html).not.toContain('記録に残らない')
   })
 
   it('スポイラーポリシー：HP・ダメージ数値は出さない（注記の追加で増えていない。必殺の名前は従来どおり 1 行ヒントにだけ出る）', () => {
-    for (const enemy of CORE_ENEMIES) {
+    for (const enemy of PUBLIC_ROSTER) {
       expect(html).not.toContain(`>${enemy.maxHp}<`)
       for (const action of enemy.actions) {
         if ('amount' in action) expect(html).not.toMatch(new RegExp(`[：:]\\s*${action.amount}\\b`))
