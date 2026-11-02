@@ -1,0 +1,1014 @@
+{
+  "base": "https://seven-gods-game.vercel.app",
+  "at": "2026-11-02T14:25:42.120Z",
+  "allPass": true,
+  "crisisMeasuredDurationSec": 8.858,
+  "results": [
+    {
+      "suite": "greeting",
+      "viewport": "pc",
+      "muted": false,
+      "inBattle": true,
+      "voiceRequests": [
+        {
+          "url": "/assets/voice/taiyo/greeting.mp3",
+          "afterStartMs": 1702
+        },
+        {
+          "url": "/assets/voice/taiyo/crisis.mp3",
+          "afterStartMs": 1702
+        }
+      ],
+      "voiceStarts": [
+        {
+          "duration": 11.783,
+          "atMs": 5797,
+          "rate": 1
+        }
+      ],
+      "seStartsCount": 2,
+      "duck": {
+        "down": {
+          "value": 0.343,
+          "atMs": 5797
+        },
+        "up": {
+          "value": 1,
+          "atMs": 5797
+        }
+      },
+      "errors": [],
+      "pass": true
+    },
+    {
+      "suite": "greeting",
+      "viewport": "pc",
+      "muted": true,
+      "inBattle": true,
+      "voiceRequests": [],
+      "voiceStarts": [],
+      "seStartsCount": 0,
+      "duck": null,
+      "errors": [],
+      "pass": true
+    },
+    {
+      "suite": "greeting",
+      "viewport": "sp",
+      "muted": false,
+      "inBattle": true,
+      "voiceRequests": [
+        {
+          "url": "/assets/voice/taiyo/greeting.mp3",
+          "afterStartMs": 1216
+        },
+        {
+          "url": "/assets/voice/taiyo/crisis.mp3",
+          "afterStartMs": 1216
+        }
+      ],
+      "voiceStarts": [
+        {
+          "duration": 11.783,
+          "atMs": 4896,
+          "rate": 1
+        }
+      ],
+      "seStartsCount": 2,
+      "duck": {
+        "down": {
+          "value": 0.343,
+          "atMs": 4896
+        },
+        "up": {
+          "value": 1,
+          "atMs": 4896
+        }
+      },
+      "errors": [],
+      "pass": true
+    },
+    {
+      "suite": "greeting",
+      "viewport": "sp",
+      "muted": true,
+      "inBattle": true,
+      "voiceRequests": [],
+      "voiceStarts": [],
+      "seStartsCount": 0,
+      "duck": null,
+      "errors": [],
+      "pass": true
+    },
+    {
+      "suite": "crisis",
+      "viewport": "pc",
+      "muted": false,
+      "url": "/?enemy=ryujin&seed=crisis-003",
+      "seed": "crisis-003",
+      "enemyOk": true,
+      "inBattle": true,
+      "rounds": [
+        {
+          "round": 1,
+          "played": [
+            "1",
+            "1"
+          ],
+          "endClickMs": 7475,
+          "hpLabel": "260 / 300",
+          "expectedHp": 26,
+          "hpMatch": true,
+          "gameOver": false
+        },
+        {
+          "round": 2,
+          "played": [
+            "2",
+            "1"
+          ],
+          "endClickMs": 12040,
+          "hpLabel": "260 / 300",
+          "expectedHp": 26,
+          "hpMatch": true,
+          "gameOver": false
+        },
+        {
+          "round": 3,
+          "played": [
+            "2",
+            "2"
+          ],
+          "endClickMs": 17212,
+          "hpLabel": "300 / 300",
+          "expectedHp": 30,
+          "hpMatch": true,
+          "gameOver": false
+        },
+        {
+          "round": 4,
+          "played": [
+            "2",
+            "1",
+            "1",
+            "1"
+          ],
+          "endClickMs": 29045,
+          "hpLabel": "100 / 300",
+          "expectedHp": 10,
+          "hpMatch": true,
+          "gameOver": false
+        },
+        {
+          "round": 5,
+          "played": [
+            "2",
+            "2",
+            "1"
+          ],
+          "endClickMs": 40218,
+          "hpLabel": "70 / 300",
+          "expectedHp": 7,
+          "hpMatch": true,
+          "gameOver": false
+        }
+      ],
+      "voiceRequests": [
+        {
+          "url": "/assets/voice/taiyo/greeting.mp3",
+          "afterStartMs": 1617
+        },
+        {
+          "url": "/assets/voice/taiyo/crisis.mp3",
+          "afterStartMs": 1617
+        }
+      ],
+      "crisisRequestCount": 1,
+      "voiceStarts": [
+        {
+          "id": 2,
+          "duration": 11.783,
+          "atMs": 5623,
+          "ctxNow": 3.435,
+          "rate": 1
+        },
+        {
+          "id": 44,
+          "duration": 8.858,
+          "atMs": 33286,
+          "ctxNow": 31.093,
+          "rate": 1
+        }
+      ],
+      "seStartsCount": 56,
+      "measured": {
+        "crisisDurationSec": 8.858,
+        "greetingDurationSec": 11.783,
+        "expectedCrisisDurationSec": 8.858
+      },
+      "timing": {
+        "expectedAfterImpactMs": 300,
+        "toleranceMs": 50,
+        "impactFloat": null,
+        "hpLabelChange": {
+          "atMs": 33121,
+          "text": "100 / 300"
+        },
+        "voiceStartMs": 33286,
+        "deltaFromFloatMs": null,
+        "deltaFromHpLabelMs": 295,
+        "ok": true
+      },
+      "duck": {
+        "down": {
+          "value": 0.343,
+          "t": 31.153,
+          "ctxNow": 31.093,
+          "atMs": 33286
+        },
+        "up": {
+          "value": 1,
+          "t": 40.552,
+          "ctxNow": 31.093,
+          "atMs": 33286
+        },
+        "prevUp": {
+          "value": 1,
+          "t": 31.396,
+          "ctxNow": 29.536,
+          "atMs": 31724
+        },
+        "merged": true,
+        "ok": true
+      },
+      "voiceIntervals": [
+        {
+          "id": 2,
+          "scene": "greeting",
+          "from": 5623,
+          "to": 17406
+        },
+        {
+          "id": 44,
+          "scene": "crisis",
+          "from": 33286,
+          "to": 42144
+        }
+      ],
+      "overlapMs": 0,
+      "noOverlap": true,
+      "onePerBattle": {
+        "laterDropRound": 5,
+        "reachedLater": true,
+        "crisisStartCount": 1
+      },
+      "hpPathOk": true,
+      "playerFloats": [
+        {
+          "atMs": 9183,
+          "text": "-40",
+          "cls": "floating-number floating-number-damage floating-number-l1"
+        },
+        {
+          "atMs": 13727,
+          "text": "軽減70",
+          "cls": "floating-number floating-number-block"
+        },
+        {
+          "atMs": 16810,
+          "text": "+40",
+          "cls": "floating-number floating-number-heal"
+        },
+        {
+          "atMs": 19560,
+          "text": "軽減120",
+          "cls": "floating-number floating-number-block"
+        },
+        {
+          "atMs": 41483,
+          "text": "-30",
+          "cls": "floating-number floating-number-damage floating-number-l1"
+        },
+        {
+          "atMs": 41483,
+          "text": "軽減130",
+          "cls": "floating-number floating-number-block"
+        }
+      ],
+      "hpLabelLog": [
+        {
+          "atMs": 2622,
+          "text": "300 / 300"
+        },
+        {
+          "atMs": 9036,
+          "text": "260 / 300"
+        },
+        {
+          "atMs": 15877,
+          "text": "300 / 300"
+        },
+        {
+          "atMs": 22723,
+          "text": "280 / 300"
+        },
+        {
+          "atMs": 26368,
+          "text": "300 / 300"
+        },
+        {
+          "atMs": 33121,
+          "text": "100 / 300"
+        },
+        {
+          "atMs": 41446,
+          "text": "70 / 300"
+        }
+      ],
+      "ramps": [
+        {
+          "value": 0.343,
+          "t": 3.495,
+          "ctxNow": 3.435,
+          "atMs": 5623
+        },
+        {
+          "value": 1,
+          "t": 15.817,
+          "ctxNow": 3.435,
+          "atMs": 5623
+        },
+        {
+          "value": 0.343,
+          "t": 29.596,
+          "ctxNow": 29.536,
+          "atMs": 31724
+        },
+        {
+          "value": 1,
+          "t": 31.396,
+          "ctxNow": 29.536,
+          "atMs": 31724
+        },
+        {
+          "value": 0.343,
+          "t": 31.153,
+          "ctxNow": 31.093,
+          "atMs": 33286
+        },
+        {
+          "value": 1,
+          "t": 40.552,
+          "ctxNow": 31.093,
+          "atMs": 33286
+        }
+      ],
+      "errors": [],
+      "pass": true
+    },
+    {
+      "suite": "crisis",
+      "viewport": "pc",
+      "muted": true,
+      "url": "/?enemy=ryujin&seed=crisis-003",
+      "seed": "crisis-003",
+      "enemyOk": true,
+      "inBattle": true,
+      "rounds": [
+        {
+          "round": 1,
+          "played": [
+            "1",
+            "1"
+          ],
+          "endClickMs": 7612,
+          "hpLabel": "260 / 300",
+          "expectedHp": 26,
+          "hpMatch": true,
+          "gameOver": false
+        },
+        {
+          "round": 2,
+          "played": [
+            "2",
+            "1"
+          ],
+          "endClickMs": 11895,
+          "hpLabel": "260 / 300",
+          "expectedHp": 26,
+          "hpMatch": true,
+          "gameOver": false
+        },
+        {
+          "round": 3,
+          "played": [
+            "2",
+            "2"
+          ],
+          "endClickMs": 16320,
+          "hpLabel": "300 / 300",
+          "expectedHp": 30,
+          "hpMatch": true,
+          "gameOver": false
+        },
+        {
+          "round": 4,
+          "played": [
+            "2",
+            "1",
+            "1",
+            "1"
+          ],
+          "endClickMs": 29468,
+          "hpLabel": "100 / 300",
+          "expectedHp": 10,
+          "hpMatch": true,
+          "gameOver": false
+        },
+        {
+          "round": 5,
+          "played": [
+            "2",
+            "2",
+            "1"
+          ],
+          "endClickMs": 38857,
+          "hpLabel": "70 / 300",
+          "expectedHp": 7,
+          "hpMatch": true,
+          "gameOver": false
+        }
+      ],
+      "voiceRequests": [],
+      "crisisRequestCount": 0,
+      "voiceStarts": [],
+      "seStartsCount": 0,
+      "measured": {
+        "crisisDurationSec": null,
+        "greetingDurationSec": null,
+        "expectedCrisisDurationSec": 8.858
+      },
+      "timing": {
+        "expectedAfterImpactMs": 300,
+        "toleranceMs": 50,
+        "impactFloat": null,
+        "hpLabelChange": null,
+        "voiceStartMs": null,
+        "deltaFromFloatMs": null,
+        "deltaFromHpLabelMs": null,
+        "ok": false
+      },
+      "duck": {
+        "down": null,
+        "up": null,
+        "prevUp": null,
+        "merged": false,
+        "ok": false
+      },
+      "voiceIntervals": [],
+      "overlapMs": 0,
+      "noOverlap": true,
+      "onePerBattle": {
+        "laterDropRound": 5,
+        "reachedLater": true,
+        "crisisStartCount": 0
+      },
+      "hpPathOk": true,
+      "playerFloats": [
+        {
+          "atMs": 9354,
+          "text": "-40",
+          "cls": "floating-number floating-number-damage floating-number-l1"
+        },
+        {
+          "atMs": 13501,
+          "text": "軽減70",
+          "cls": "floating-number floating-number-block"
+        },
+        {
+          "atMs": 16113,
+          "text": "+40",
+          "cls": "floating-number floating-number-heal"
+        },
+        {
+          "atMs": 19035,
+          "text": "軽減120",
+          "cls": "floating-number floating-number-block"
+        },
+        {
+          "atMs": 40031,
+          "text": "-30",
+          "cls": "floating-number floating-number-damage floating-number-l1"
+        },
+        {
+          "atMs": 40031,
+          "text": "軽減130",
+          "cls": "floating-number floating-number-block"
+        }
+      ],
+      "hpLabelLog": [
+        {
+          "atMs": 2465,
+          "text": "300 / 300"
+        },
+        {
+          "atMs": 9027,
+          "text": "260 / 300"
+        },
+        {
+          "atMs": 15091,
+          "text": "300 / 300"
+        },
+        {
+          "atMs": 22080,
+          "text": "280 / 300"
+        },
+        {
+          "atMs": 25822,
+          "text": "300 / 300"
+        },
+        {
+          "atMs": 32994,
+          "text": "100 / 300"
+        },
+        {
+          "atMs": 40035,
+          "text": "70 / 300"
+        }
+      ],
+      "ramps": [],
+      "errors": [],
+      "pass": true
+    },
+    {
+      "suite": "crisis",
+      "viewport": "sp",
+      "muted": false,
+      "url": "/?enemy=ryujin&seed=crisis-003",
+      "seed": "crisis-003",
+      "enemyOk": true,
+      "inBattle": true,
+      "rounds": [
+        {
+          "round": 1,
+          "played": [
+            "1",
+            "1"
+          ],
+          "endClickMs": 5526,
+          "hpLabel": "260 / 300",
+          "expectedHp": 26,
+          "hpMatch": true,
+          "gameOver": false
+        },
+        {
+          "round": 2,
+          "played": [
+            "2",
+            "1"
+          ],
+          "endClickMs": 9081,
+          "hpLabel": "260 / 300",
+          "expectedHp": 26,
+          "hpMatch": true,
+          "gameOver": false
+        },
+        {
+          "round": 3,
+          "played": [
+            "2",
+            "2"
+          ],
+          "endClickMs": 13154,
+          "hpLabel": "300 / 300",
+          "expectedHp": 30,
+          "hpMatch": true,
+          "gameOver": false
+        },
+        {
+          "round": 4,
+          "played": [
+            "2",
+            "1",
+            "1",
+            "1"
+          ],
+          "endClickMs": 21998,
+          "hpLabel": "100 / 300",
+          "expectedHp": 10,
+          "hpMatch": true,
+          "gameOver": false
+        },
+        {
+          "round": 5,
+          "played": [
+            "2",
+            "2",
+            "1"
+          ],
+          "endClickMs": 32625,
+          "hpLabel": "70 / 300",
+          "expectedHp": 7,
+          "hpMatch": true,
+          "gameOver": false
+        }
+      ],
+      "voiceRequests": [
+        {
+          "url": "/assets/voice/taiyo/greeting.mp3",
+          "afterStartMs": 1014
+        },
+        {
+          "url": "/assets/voice/taiyo/crisis.mp3",
+          "afterStartMs": 1014
+        }
+      ],
+      "crisisRequestCount": 1,
+      "voiceStarts": [
+        {
+          "id": 1,
+          "duration": 11.783,
+          "atMs": 4682,
+          "ctxNow": 3.2,
+          "rate": 1
+        },
+        {
+          "id": 43,
+          "duration": 8.858,
+          "atMs": 24978,
+          "ctxNow": 23.499,
+          "rate": 1
+        }
+      ],
+      "seStartsCount": 55,
+      "measured": {
+        "crisisDurationSec": 8.858,
+        "greetingDurationSec": 11.783,
+        "expectedCrisisDurationSec": 8.858
+      },
+      "timing": {
+        "expectedAfterImpactMs": 300,
+        "toleranceMs": 50,
+        "impactFloat": null,
+        "hpLabelChange": {
+          "atMs": 24817,
+          "text": "100 / 300"
+        },
+        "voiceStartMs": 24978,
+        "deltaFromFloatMs": null,
+        "deltaFromHpLabelMs": 291,
+        "ok": true
+      },
+      "duck": {
+        "down": {
+          "value": 0.343,
+          "t": 23.559,
+          "ctxNow": 23.499,
+          "atMs": 24978
+        },
+        "up": {
+          "value": 1,
+          "t": 32.957,
+          "ctxNow": 23.499,
+          "atMs": 24978
+        },
+        "prevUp": {
+          "value": 1,
+          "t": 23.801,
+          "ctxNow": 21.941,
+          "atMs": 23416
+        },
+        "merged": true,
+        "ok": true
+      },
+      "voiceIntervals": [
+        {
+          "id": 1,
+          "scene": "greeting",
+          "from": 4682,
+          "to": 16465
+        },
+        {
+          "id": 43,
+          "scene": "crisis",
+          "from": 24978,
+          "to": 33836
+        }
+      ],
+      "overlapMs": 0,
+      "noOverlap": true,
+      "onePerBattle": {
+        "laterDropRound": 5,
+        "reachedLater": true,
+        "crisisStartCount": 1
+      },
+      "hpPathOk": true,
+      "playerFloats": [
+        {
+          "atMs": 6676,
+          "text": "-40",
+          "cls": "floating-number floating-number-damage floating-number-l1"
+        },
+        {
+          "atMs": 10302,
+          "text": "軽減70",
+          "cls": "floating-number floating-number-block"
+        },
+        {
+          "atMs": 12580,
+          "text": "+40",
+          "cls": "floating-number floating-number-heal"
+        },
+        {
+          "atMs": 14845,
+          "text": "軽減120",
+          "cls": "floating-number floating-number-block"
+        },
+        {
+          "atMs": 21331,
+          "text": "+20",
+          "cls": "floating-number floating-number-heal"
+        },
+        {
+          "atMs": 25161,
+          "text": "-200",
+          "cls": "floating-number floating-number-damage floating-number-emphasis floating-number-l3"
+        },
+        {
+          "atMs": 32465,
+          "text": "軽減20",
+          "cls": "floating-number floating-number-block"
+        },
+        {
+          "atMs": 33687,
+          "text": "-30",
+          "cls": "floating-number floating-number-damage floating-number-l1"
+        },
+        {
+          "atMs": 33687,
+          "text": "軽減130",
+          "cls": "floating-number floating-number-block"
+        }
+      ],
+      "hpLabelLog": [
+        {
+          "atMs": 1714,
+          "text": "300 / 300"
+        },
+        {
+          "atMs": 6673,
+          "text": "260 / 300"
+        },
+        {
+          "atMs": 12175,
+          "text": "300 / 300"
+        },
+        {
+          "atMs": 17715,
+          "text": "280 / 300"
+        },
+        {
+          "atMs": 20388,
+          "text": "300 / 300"
+        },
+        {
+          "atMs": 24817,
+          "text": "100 / 300"
+        },
+        {
+          "atMs": 33716,
+          "text": "70 / 300"
+        }
+      ],
+      "ramps": [
+        {
+          "value": 0.343,
+          "t": 3.26,
+          "ctxNow": 3.2,
+          "atMs": 4682
+        },
+        {
+          "value": 1,
+          "t": 15.583,
+          "ctxNow": 3.2,
+          "atMs": 4682
+        },
+        {
+          "value": 0.343,
+          "t": 22.001,
+          "ctxNow": 21.941,
+          "atMs": 23416
+        },
+        {
+          "value": 1,
+          "t": 23.801,
+          "ctxNow": 21.941,
+          "atMs": 23416
+        },
+        {
+          "value": 0.343,
+          "t": 23.559,
+          "ctxNow": 23.499,
+          "atMs": 24978
+        },
+        {
+          "value": 1,
+          "t": 32.957,
+          "ctxNow": 23.499,
+          "atMs": 24978
+        }
+      ],
+      "errors": [],
+      "pass": true
+    },
+    {
+      "suite": "crisis",
+      "viewport": "sp",
+      "muted": true,
+      "url": "/?enemy=ryujin&seed=crisis-003",
+      "seed": "crisis-003",
+      "enemyOk": true,
+      "inBattle": true,
+      "rounds": [
+        {
+          "round": 1,
+          "played": [
+            "1",
+            "1"
+          ],
+          "endClickMs": 6875,
+          "hpLabel": "260 / 300",
+          "expectedHp": 26,
+          "hpMatch": true,
+          "gameOver": false
+        },
+        {
+          "round": 2,
+          "played": [
+            "2",
+            "1"
+          ],
+          "endClickMs": 10764,
+          "hpLabel": "260 / 300",
+          "expectedHp": 26,
+          "hpMatch": true,
+          "gameOver": false
+        },
+        {
+          "round": 3,
+          "played": [
+            "2",
+            "2"
+          ],
+          "endClickMs": 16835,
+          "hpLabel": "300 / 300",
+          "expectedHp": 30,
+          "hpMatch": true,
+          "gameOver": false
+        },
+        {
+          "round": 4,
+          "played": [
+            "2",
+            "1",
+            "1",
+            "1"
+          ],
+          "endClickMs": 28128,
+          "hpLabel": "100 / 300",
+          "expectedHp": 10,
+          "hpMatch": true,
+          "gameOver": false
+        },
+        {
+          "round": 5,
+          "played": [
+            "2",
+            "2",
+            "1"
+          ],
+          "endClickMs": 36549,
+          "hpLabel": "70 / 300",
+          "expectedHp": 7,
+          "hpMatch": true,
+          "gameOver": false
+        }
+      ],
+      "voiceRequests": [],
+      "crisisRequestCount": 0,
+      "voiceStarts": [],
+      "seStartsCount": 0,
+      "measured": {
+        "crisisDurationSec": null,
+        "greetingDurationSec": null,
+        "expectedCrisisDurationSec": 8.858
+      },
+      "timing": {
+        "expectedAfterImpactMs": 300,
+        "toleranceMs": 50,
+        "impactFloat": null,
+        "hpLabelChange": null,
+        "voiceStartMs": null,
+        "deltaFromFloatMs": null,
+        "deltaFromHpLabelMs": null,
+        "ok": false
+      },
+      "duck": {
+        "down": null,
+        "up": null,
+        "prevUp": null,
+        "merged": false,
+        "ok": false
+      },
+      "voiceIntervals": [],
+      "overlapMs": 0,
+      "noOverlap": true,
+      "onePerBattle": {
+        "laterDropRound": 5,
+        "reachedLater": true,
+        "crisisStartCount": 0
+      },
+      "hpPathOk": true,
+      "playerFloats": [
+        {
+          "atMs": 8048,
+          "text": "-40",
+          "cls": "floating-number floating-number-damage floating-number-l1"
+        },
+        {
+          "atMs": 12297,
+          "text": "軽減70",
+          "cls": "floating-number floating-number-block"
+        },
+        {
+          "atMs": 16002,
+          "text": "+40",
+          "cls": "floating-number floating-number-heal"
+        },
+        {
+          "atMs": 18524,
+          "text": "軽減120",
+          "cls": "floating-number floating-number-block"
+        },
+        {
+          "atMs": 23429,
+          "text": "-20",
+          "cls": "floating-number floating-number-damage floating-number-l1"
+        },
+        {
+          "atMs": 31804,
+          "text": "-200",
+          "cls": "floating-number floating-number-damage floating-number-emphasis floating-number-l3"
+        },
+        {
+          "atMs": 36272,
+          "text": "軽減20",
+          "cls": "floating-number floating-number-block"
+        },
+        {
+          "atMs": 37777,
+          "text": "-30",
+          "cls": "floating-number floating-number-damage floating-number-l1"
+        },
+        {
+          "atMs": 37777,
+          "text": "軽減130",
+          "cls": "floating-number floating-number-block"
+        }
+      ],
+      "hpLabelLog": [
+        {
+          "atMs": 1882,
+          "text": "300 / 300"
+        },
+        {
+          "atMs": 8153,
+          "text": "260 / 300"
+        },
+        {
+          "atMs": 15474,
+          "text": "300 / 300"
+        },
+        {
+          "atMs": 22668,
+          "text": "280 / 300"
+        },
+        {
+          "atMs": 25133,
+          "text": "300 / 300"
+        },
+        {
+          "atMs": 31285,
+          "text": "100 / 300"
+        },
+        {
+          "atMs": 37800,
+          "text": "70 / 300"
+        }
+      ],
+      "ramps": [],
+      "errors": [],
+      "pass": true
+    }
+  ]
+}
