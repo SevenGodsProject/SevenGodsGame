@@ -1,0 +1,18 @@
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+page.goto: net::ERR_NETWORK_ACCESS_DENIED at http://localhost:4195/?enemy=oni&seed=migrate-a
+Call log:
+[2m  - navigating to "http://localhost:4195/?enemy=oni&seed=migrate-a", waiting until "load"[22m
+
+    at gotoHome (C:\Users\kimi1\SevenGodsGame-w1\scripts\release-audit\_lib.mjs:81:14)
+    at startNormal (C:\Users\kimi1\SevenGodsGame-w1\scripts\release-audit\save-migration.mjs:68:9)
+    at C:\Users\kimi1\SevenGodsGame-w1\scripts\release-audit\save-migration.mjs:169:9 {
+  log: [
+    '  - navigating to "http://localhost:4195/?enemy=oni&seed=migrate-a", waiting until "load"'
+  ],
+  name: 'Error'
+}
+
+Node.js v24.18.1
