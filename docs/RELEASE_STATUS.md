@@ -15,6 +15,8 @@ Production の「確定状態」を一目で確認するための要約です。
 | **Rollback 先** | deployment **`7291166485`**（v1.0.5・`a96a409`）。Promote は CEO のみ・未使用 |
 | **Release Gate／Smoke** | `docs/V1_0_6_INTEGRATION_GATE.md`（統合 Gate ALL PASS・CEO iPhone QA 9/9）／`docs/V1_0_6_PRODUCTION_SMOKE.md`（**PASS**：受入 44/44・敗北 18/18・crisis 8/8・忠次 138/138＋probe 10/10・危険帯 機能 PASS・旧セーブ 44/44・CSM 22 run はみ出し 0・cf2 2/2・console error 0。UNVERIFIED：本番 iOS 実機・CEO 目視・聴感） |
 | **記録 commit** | 本 LIVE 記録は branch `docs/v1_0_6-live-record`（master `10b0cd3` 起点・docs-only）。push／PR／merge は CEO |
+| **再検証（2026-11-03）** | Production は引き続き `10b0cd3`／deployment `7494257506`（GitHub deployments 最新 Production・2026-11-02T14:09:31Z）／配信 bundle `index-CH4f08vg.js`・`index-Tat7Jjqr.css`（HTTP 再取得で一致）／master CI `41459151947` success。新しい deploy・再 Smoke は無し |
+| **次 Release 候補（v1.0.7）** | **将軍家 第一陣 公開 v1**（忠次 enemy_08 を通常 Enemy Select の 8 体目へ・Daily／49 盤／委ねる seed／gameVersion は既存 7 体のまま固定）＝決定287（候補）・`docs/SHOGUNATE_PUBLIC_ROSTER_V1_AUDIT.md`（READ-ONLY 設計監査 完了・実装未開始・CEO 返答 1 回＝公開 GO＋台詞 7 本の監修）。2 番手＝康政 Pilot v0.1（`LANE3_NEXT_PLAN_V1.md` §2-③）／並走候補＝7 神 crisis・greeting ボイス展開（データ追加のみ・CEO 試聴） |
 
 ### A-0q. v1.0.5 公開（2026-10-24・決定285 PRODUCTION LIVE・履歴。記録 commit `98222ee` は v1.0.6 統合 RC に同梱）
 
