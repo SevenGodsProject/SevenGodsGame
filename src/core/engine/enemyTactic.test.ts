@@ -1,13 +1,13 @@
 import { describe, expect, it } from 'vitest'
 import { GOD_IDS } from '../data/gods'
-import { PILOT_ENEMY_IDS, getEnemyDef } from '../data/enemies'
+import { PILOT_ENEMY_IDS, SHOGUNATE_ENEMY_IDS, getEnemyDef } from '../data/enemies'
 import { STARTER_DECK } from '../data/decks'
 import { RULES } from '../data/rules'
 import { resolveStakeRules, specialMultiplierFor } from '../data/stakes'
 import type { Difficulty, EnemyActionDef, EnemyTacticDef, GameState } from '../types'
 import { applyAction } from './reducer'
 import { enemyActionTotal } from './intent'
-import { resolveEnemyTactic, tacticBranch, tacticRatio } from './tactic'
+import { resolveEnemyTactic, tacticBranch, tacticRatio, tacticRoundDamageNeeded } from './tactic'
 
 /**
  * Threat Branch Pilot v1：軍略（tactic）の契約（機構は決定274 忠次「軍略」の移植。純関数部分はそのまま）。
@@ -245,5 +245,37 @@ describe('Pilot v1.1：難易度別しきい値（RULES.enemyTactic.hpRatioByDif
         s = applyAction(s, { type: 'END_ROUND' }).state
       }
     }
+  })
+})
+
+describe('W2 康政型（roundDamageAtLeast・決定288 v1.1）', () => {
+  const YASUMASA = SHOGUNATE_ENEMY_IDS.yasumasa
+  const r4 = getEnemyDef(YASUMASA).actions[3] as EnemyTacticDef
+  function startY(seed: string, difficulty: Difficulty = 'normal'): GameState {
+    return applyAction(null, { type: 'START_GAME', seed, godId: GOD_IDS.ebisu, enemyId: YASUMASA, deck: STARTER_DECK, difficulty }).state
+  }
+  it('純関数：直前 R の実効ダメージが maxHp×ratio（切り上げ）以上なら then。敵 HP 比は読まない。roundDamage 省略時は 0＝else', () => {
+    expect(tacticRoundDamageNeeded(r4, 96, 'normal')).toBe(24)
+    expect(tacticRoundDamageNeeded(r4, 110, 'hard')).toBe(22)
+    expect(tacticBranch(r4, 96, 96, 'normal', 24)).toBe('then')
+    expect(tacticBranch(r4, 96, 96, 'normal', 23)).toBe('else')
+    expect(tacticBranch(r4, 1, 96, 'normal')).toBe('else')
+    expect(resolveEnemyTactic(r4, 96, 96, 'normal', 30)).toEqual({ kind: 'attack', amount: 10 })
+    expect(resolveEnemyTactic(r4, 96, 96, 'normal', 0)).toEqual({ kind: 'special', amount: 26, name: '采配・総崩し' })
+    // 忠次型は 5 引数目を読まない（既存の解決は不変）
+    expect(tacticBranch(TACTIC, 48, 94, 'normal', 1000)).toBe('else')
+    expect(tacticBranch(TACTIC, 47, 94, 'normal', 0)).toBe('then')
+  })
+  it('engine：札を出さずに R4 へ進むと roundDamage 0 → else（必殺 26×難易度）。R3 の与ダメージは R4 開始の解決に使われ、その後 0 に戻る', () => {
+    const s = toRound(startY('w2-yasumasa-1'), 4)
+    expect(s.enemy.intent).toEqual({ kind: 'special', amount: 26, name: '采配・総崩し' })
+    expect(s.mastery.roundDamage).toBe(0)
+    // R3 の与ダメージを人工的に 24 にして R4 を開始 → then
+    const r3 = toRound(startY('w2-yasumasa-1'), 3)
+    const forced: GameState = { ...r3, mastery: { ...r3.mastery, roundDamage: 24 } }
+    const r4s = applyAction(forced, { type: 'END_ROUND' }).state
+    expect(r4s.round).toBe(4)
+    expect(r4s.enemy.intent).toEqual({ kind: 'attack', amount: 10 })
+    expect(r4s.mastery.roundDamage).toBe(0)
   })
 })

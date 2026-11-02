@@ -2983,3 +2983,22 @@
     background: radial-gradient(farthest-side at 38% 50%, #05060df2 0%, #05060de6 62%, #05060d00 100%);
   }
 }
+
+/* W2 将軍家 第二陣（決定288 v1.1）：敵選択の「将軍家」見出し。grid の全幅に置く表示専用の 1 ブロック（色は既存の金系） */
+.enemy-select-section {
+  grid-column: 1 / -1;
+  margin: 10px 0 0;
+  padding: 6px 2px 2px;
+  border-top: 1px solid #ffd16655;
+  font-size: 15px;
+  font-weight: 700;
+  color: #ffe6a3;
+  letter-spacing: 0.06em;
+}
+.enemy-select-section-note {
+  margin-left: 8px;
+  font-size: 11px;
+  font-weight: 500;
+  color: #cbb98a;
+  letter-spacing: 0.02em;
+}

@@ -70,7 +70,9 @@ function nextEnemyAction(state: GameState): EnemyActionDef {
   // （解決は `startRound` の予告時に 1 回。`runEnemyTurn` は `state.enemy.intent` をそのまま実行する＝予告と実行は一致。
   // 既存 7 体の行動表に tactic は無いので、7 体の値は 1 つも変わらない。
   // Pilot v1.1：しきい値は難易度別（`cond.ratioByDifficulty`・値は RULES.enemyTactic.hpRatioByDifficulty をデータが埋め込む）
-  const raw = resolveEnemyTactic(actionForRound(enemyDef.actions, state.round), state.enemy.hp, state.enemy.maxHp, state.difficulty)
+  // W2（康政・roundDamageAtLeast）：直前ラウンドの 1 ラウンド実効ダメージも渡す（startRound はこの解決の後で roundDamage を 0 にする）。
+  // 忠次型（enemyHpRatioAtMost）はこの引数を読まない＝既存の解決は不変
+  const raw = resolveEnemyTactic(actionForRound(enemyDef.actions, state.round), state.enemy.hp, state.enemy.maxHp, state.difficulty, state.mastery.roundDamage)
   // DAILY-01：神域強化の攻撃倍率は難易度倍率に乗算し、合計保存丸めを1回だけ行う。
   // 通常モード（modifier無し）は×1で従来と完全に同じ値。
   // 決定126：神階の累積ルール。難易度倍率×Daily修正子×神階ATK×後半激化×必殺・連撃倍率を
