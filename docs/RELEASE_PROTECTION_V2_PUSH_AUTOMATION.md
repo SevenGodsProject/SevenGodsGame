@@ -47,4 +47,5 @@
 
 ## 5. 実 push の記録
 
-（AI が追記）
+- 2026-11-03：branch docs/ops-policy-2026-11-03 を AI が自律 push（Claude Code の deny に抵触せず・自動モードの分類器も通過）。1 回目は hook ⑥が **本書に書いた検査パターンの文字列そのもの** を secret 様として REFUSED（誤検知・設計どおりの動作）→ 文書の表記を一般語に直して amend → 2 回目 **OK**（new branch・fast-forward）。PR #8 を AI が作成。merge は CEO Gate
+- 教訓：検査パターンの正規表現は hook 本文にだけ置き、docs には書かない
