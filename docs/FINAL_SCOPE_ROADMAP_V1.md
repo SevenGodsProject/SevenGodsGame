@@ -39,6 +39,7 @@
 | 9 | doman | ドーマン | 科学者 | 元・陰陽寮の天才科学者・道曼。将軍に「逆さ五重塔」を献じた。 | FRONT | 未実装 | **W5** |
 | 10 | okappiki | 岡っ引き | 捕り方 | 穢土の町を取り締まる将軍家の捕り方。 | MAIN（非透過） | 未実装 | **W3** |
 
+- **照合 2026-11-03**（`docs/SHOGUNATE_OFFICIAL_ASSET_VERIFICATION_2026-11-03.md`）：CEO 提示の公式 ID 10 件は manifest と順序まで一致／画像 16 点は配布元で 16／16 HTTP 200・webp 1600²／3D Kit（catalog v0.3.0・MCP）は将軍家 10 体の GLB が全て available だが静止モデル・各 11 MB＝**本スコープ外**／**公式音声は将軍家に無し**（MCP `get_voice` が NO_OFFICIAL_VOICE）→ 非公式オリジナル AI ボイス案を維持／忠次 Pilot の立ち絵原本は公式 FRONT の sha256 と一致
 - 既存 Production の敵：CEO 生成 7 体（`CORE_ENEMIES`・試練の影／業斧の鬼将／藍花の怨霊／銀甲の機工師／双牙の魔獣／蒼海の龍神／乱舞の道化）＋ Threat Pilot `enemy_09`（鬼将の派生・隔離）＋ 将軍家 Pilot `enemy_08` 忠次（隔離）。**公式キャラは 忠次 1 体のみ・それも通常導線には未公開**
 - 忠次の現行データ（HP 98・★3・actions 7・台詞 7・art／stage・軍略 then 12／else 24）は AI 設計＋CEO Human QA 済み。台詞 7 本と二つ名は **AI 仮文**（CEO 2026-11-03「暫定維持」）
 - 既存の「公式ボイス」は 7 神の 28 本（greeting／crisis／fatigue／success）のみ。本作は 大耀 greeting・crisis の 2 本を配信中。**将軍家の公式ボイスは無い** → 本スコープのボイスはすべて **自作（AI 生成）・非公式表記**（規約 §5）
