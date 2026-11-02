@@ -1,5 +1,7 @@
 # SEVEN GODS 最終開発スコープ・ロードマップ v1 — 公式敵キャラ 10 体 × キャラクターボイス → 運営報告（READ-ONLY）
 
+> **改訂（2026-11-03・v1.1・CEO 修正案）：敵キャラの新規 AI ボイス（70 本・ElevenLabs 契約・音声生成費用）を最終スコープから除外。** 修正後のスコープ・wave・CEO 判断は **§10（改訂 v1.1）** が正本。§0〜§9 は提案時の記録として保持する（ボイス関連の記述は履歴）。
+
 > **状態（2026-11-03・AI-PM＋Planner＋Dev＋Infra・AI 判断・docs-only・read-only）：SCOPE PROPOSAL — 実装 0／runtime・assets・scripts 変更 0／音声生成 0／有料 API 呼び出し 0／push・merge・deploy 0。** 基準点：Production = master = origin/master **`10b0cd3`**（v1.0.6・決定286 LIVE）。本書は CEO 最終方針（2026-11-03「公式敵キャラの追加とキャラクターボイス実装を最終開発スコープとし、完了後は運営への成果報告へ移行」）を受けた **最終スコープとロードマップの確定案** であり、CEO の承認（§8）までは実装を開始しない。
 
 - 前提文書：`docs/SHOGUNATE_FACTION_DESIGN_V1.md`（将軍家 設計 v1）／`docs/SHOGUNATE_NEXT_PILOT_AUDIT_V1.md` §3（9 体の評価）／`docs/SHOGUNATE_PUBLIC_ROSTER_V1_AUDIT.md`（決定287 候補・忠次 公開）／`docs/LANE3_NEXT_PLAN_V1.md`（康政 sim）／`docs/OFFICIAL_ENEMY_VOICE_AUDIT_V1.md`（**本書と同時に作成**：ボイス設計・台本・音声サービス・権利）／`docs/ROADMAP_TO_RELEASE.md` §7 DoD
@@ -180,3 +182,73 @@ CEO Action：①〜④ 各 承認 / 拒否（②はサービス名と上限額�
 - 既存 dirty／untracked：保護（触れていない）
 - Ranking・Neon・secrets：対象外
 - `docs/DECISIONS.md`：決定288（候補）の **スコープ提案行のみ** 追記（CEO 承認後に「確定」へ更新）
+
+---
+
+## 10. 改訂 v1.1（2026-11-03・CEO 修正案・**本節が正本**）
+
+### 10-1. 修正の内容と理由（CEO・AI-PM 協議）
+
+| 項目 | v1（§0〜§9） | **v1.1（修正後）** |
+|---|---|---|
+| 敵キャラの新規 AI ボイス | 10 体 × 7 場面＝70 本・ElevenLabs Starter 契約・音声生成費用 | **除外**（`OFFICIAL_ENEMY_VOICE_AUDIT_V1.md` は記録として保持・実施しない） |
+| 既存の音 | 神側ボイス（大耀 greeting／crisis）・BGM・SE 22 音源 | **維持**（変更しない） |
+| 敵の演出 | ボイスで場面を立てる | **登場・必殺・被弾・撃破の演出品質向上**（表示のみ・既存の演出系統の中で） |
+| CEO 判断 | 4 件（スコープ／音声サービスと予算／W1 開始／報告書形式） | **3 件**（音声サービス判断を削除） |
+
+理由（CEO）：①将軍家 10 体には公式ボイスがない ②公式キャラクターの世界観と統一感を優先（公式音声のない陣営に本作だけの声を足さない） ③開発期間・費用・iOS 音声不具合リスクの削減 ④最終目標はゲーム完成と運営への成果報告。AI-PM 所見：ボイス監査で挙げた残リスク（iOS サイレント／復帰・撃破 ≤0.6 秒の尺制約・大耀戦での神／敵の声の競合・MAIN 3 体と合わせた Human QA 増）は、除外によってすべて消える。差別化は「判断の型」（§2-2）と演出で担う。
+
+### 10-2. 修正後の最終スコープ（7 項目）
+
+1. **公式将軍家 10 体の実装**（忠次の公開＋9 体の新規。語彙の線引き・Daily／49 盤／seed／gameVersion 不変・新 storage 0・enemy_09 隔離は §0〜§2 のまま）
+2. **既存 7 敵と差別化された戦闘体験**（§2-2 の「判断の型」表：忠次＝R3 までに追い込むか／直政＝追い込むと怒る／康政＝狙った 1 ラウンドで崩す／影＝2 回の読み／忠勝＝受けるか削り切るか／ドーマン＝共鳴を溜めるほど危ない／康虎＝2 段 tactic＋必殺 2 種。各 wave の Preflight sim で「then 率 35〜65%・hard ≥50%・既存 7 体 決定論一致」を証明）
+3. **既存 BGM・SE・神側ボイスの維持**（`sound.ts`／`bgm.ts`／`feelTier.ts`／`VOICE_LAYER` に変更 0。新 voice scene・新 gain・新 duck 経路を作らない）
+4. **敵の登場・必殺・被弾・撃破演出の品質向上**（表示のみ・`src/core` 0）
+   - 既存の **データ駆動の演出口** を 10 体ぶん設計して埋める：`visualType`（突進の重さ・heavy／normal／multi）・`stage`（舞台背景＋accent 色）・必殺の技名（カットインの名札）・溜め予告の `label`・Enemy Break（half／quarter の崩れ・v1.0.2）・被弾の段階別シェイク／hit stop（決定162／Combat Feel v2）・撃破の崩壊（`enemy-defeat` 520ms）・`data-enemy` 限定 CSS（忠次の舞台減光が前例）
+   - 新規の演出系統（新 timer・新 keyframe の大量追加・動画）は作らない。品質向上は **既存の口に正しい値を入れる＋敵ごとの 1 点の見せ場（CSS 数行）** に限る。候補は 10 体実装後に READ-ONLY 監査（`docs/SHOGUNATE_PRESENTATION_AUDIT_V1.md`・新規）で各敵 1 件ずつ選ぶ
+   - 既存 7 体の演出は変えない（決定論・Human QA 済みの体感を守る）
+5. **PC・iPhone 最終 QA**（7 神 × 将軍家 10 体の決定論 probe（normal／hard）＋CEO 実機 通し 1 周＋iOS の BGM 復帰・ミュート（既存どおり））
+6. **Production Release Gate**（§6 のとおり：DoD 18 再点検・台帳全行 Status・Rollback 演習・Known 凍結・最終 Smoke）
+7. **運営向け成果報告書**（§7 のとおり：docs 正本＋共有ページ 1 枚。「公式敵キャラ・ボイス対応状況」の章は「公式ボイスは 7 神のみ・将軍家は公式ボイスなし＝本作も声を付けない方針（世界観統一）」と事実を記す）
+
+### 10-3. 修正後の wave（6 → 6・ボイス wave を演出 wave に置換）
+
+| wave | 内容 | runtime 範囲 | Gate（自動・直列） | Human QA（CEO） | Release |
+|---|---|---|---|---|---|
+| **W1** | 忠次 公開 v1（決定287） | 判定関数・Enemy Select・pilotFlag・Credits・rank（★実測） | 決定287 監査 §9 G1〜G8＋CEO 指定 4 Gate（攻略体験の差別化・★実測・hard W1・Human QA） | 2 問 | v1.0.7 |
+| **W2** | 岡っ引き・直政・康政 | `SHOGUNATE_ENEMIES` +3・康政 +12 行・Enemy Select 2 段見出し・舞台派生 2 面・立ち絵 3（MAIN 1 切り抜き） | W1 Gate＋Preflight sim（決定58／then 率／決定論）＋★監査 再実行＋旧セーブ 44 | 3 戦・各 1 問＋切り抜き目視 | v1.1.0 |
+| **W3** | 影・くノ一・鬼半蔵 | +3（engine 0）・MAIN 2 切り抜き・舞台 1 面 | 同上 | 3 戦 | v1.1.1 |
+| **W4** | 忠勝・ドーマン | +2（ドーマン cond 0〜+6 行）・舞台 1 面 | 同上 | 2 戦 | v1.1.2 |
+| **W5** | 康虎 Boss ★5 | +1・`enemies.test.ts` rank 更新 | 同上＋Boss の hard 勝率 ≥50% | 1 戦（normal／hard） | v1.1.3 |
+| **W6** | 敵演出 品質向上（10 体横断・表示のみ） | 各敵 1 点の見せ場（CSS／データ値）・既存 7 体は不変 | cf2 決定論 8/8（既存 7 体）＋将軍家 10 体の probe（演出の時刻・JS error 0）＋a11y 69＋SP375／390 box 計測＋reduced-motion | 通し 1 周（PC＋iPhone） | v1.1.4 |
+| **最終** | 最終 Release Gate（§6）→ 運営報告書（§7） | 0 | DoD 18・Known 凍結・台帳・Rollback 演習 | — | tag v1.1.x（CEO） |
+
+- 所要（目安）：W1 1 週／W2〜W4 各 1.5 週／W5 1 週／W6 1〜1.5 週／最終 1.5 週 ＝ **約 8〜9.5 週**（v1 比 −1〜1.5 週・CEO 試聴 5 回と iPhone 音声 QA 1 回が不要に）
+- 外部費用：**0 円**（画像は Kit 公式・舞台は非生成派生・音声なし）
+- W2 以降の各 wave は「敵データ＋立ち絵＋舞台＋台帳＋テスト」だけ＝コード変更は康政 +12 行とドーマン 0〜+6 行のみ。演出の値（`visualType`・accent・技名・label）は各 wave で入れ、W6 で横断的に整える
+
+### 10-4. 変更しないもの（v1 から据え置き）
+
+- §1 照合結果・§2 語彙の線引きと 9 体の判断の型・§2-3 密結合・§6 最終 Gate・§7 報告書構成
+- `OFFICIAL_ENEMY_VOICE_AUDIT_V1.md`：**実施しない記録**として保持（将来 CEO が方針を戻す場合の設計資産。音声サービス比較は取得日 2026-11-03 のスナップショット）
+- 既存の神側ボイス（大耀 greeting／crisis）：維持。7 神への展開も本スコープでは行わない（報告書の引き継ぎ事項に記載）
+
+### 10-5. CEO 判断（3 件・§6-4 形式・1 回の返答で）
+
+```
+【CEO DECISION REQUIRED】
+Issue：最終開発スコープ・ロードマップ v1.1（本節 §10）の確定
+AI Recommendation：承認。
+  ①最終スコープ＝公式将軍家 10 体の roster 化（既存語彙＋康政型 cond のみ・seal/counter/共鳴干渉なし・enemy_09 隔離維持・
+    Daily/49 盤/seed/gameVersion/新 storage 不変）＋ 差別化された判断の型 ＋ 既存 BGM/SE/神ボイス維持 ＋ 敵演出の品質向上（表示のみ）。
+    新規敵ボイス・ElevenLabs 契約・音声生成費用は除外
+  ②W1「忠次 公開 v1」（決定287）の実装開始
+  ③運営報告書＝docs 正本 ＋ 共有ページ 1 枚（最終 Gate 後に作成）
+Reason：公式ボイスのない陣営に本作だけの声を足さず世界観の統一を優先。期間 −1〜1.5 週・外部費用 0・iOS 音声リスク 0。
+  差別化は engine の「判断の型」と既存演出系統の正しい値で担い、save v9・既存 7 体の決定論・指紋を最後まで守る
+Alternatives：v1 のまま AI ボイス 70 本を作る（世界観の不統一・費用・iOS リスク・CEO 試聴 5 回＝却下）／
+  忠次 1 体だけボイス Pilot（1 体だけ声があると不統一が目立つ＝却下）／演出向上も省く（10 体が「絵と数値だけ」になり既存 7 体との品質差が出る＝却下）
+Risk：MAIN 3 体の切り抜き品質／★実測の違和感／演出向上の範囲が膨らむ（W6 を各敵 1 点に固定し READ-ONLY 監査で選ぶ）
+Impact if delayed：全 wave が止まる
+CEO Action：①〜③ 各 承認 / 拒否
+```
