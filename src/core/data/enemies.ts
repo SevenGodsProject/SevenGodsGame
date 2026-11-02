@@ -412,8 +412,9 @@ export const SHOGUNATE_ENEMIES: EnemyDef[] = [
     typeDescription: 'R4は傷が浅ければ総攻め。R3までに追い込め。',
     // v0.2：重装の軍師＝突進は 'heavy'（0.65s・着弾計画も既存の heavy 経路）。表示専用・数値不変
     visualType: 'heavy',
-    // 四天王＝中〜高位（v1.0.1 ★再付番後も鬼将・魔獣と同じ ★3 帯。表示専用・CORE 外なので指紋に乗らない）
-    rank: 3,
+    // 決定287 W1（2026-11-03）：★は実測（v1.0.1 と同じ 6 打ち筋 × 16 seed × 3 難易度の指数・docs/evidence/shogunate-public-v1/star）。
+    // normal 指数 28.4 は道化（★1・28.6）より低く ★1 帯。数値は変えない（CEO 方針：★は実測に合わせ難易度調整は原則しない）。表示専用・CORE 外なので指紋に乗らない
+    rank: 1,
     // 舞台背景は CEO 生成の「戦火の陣」（02）を色相・明度だけ非生成加工した派生（台帳 STG-08）。新規生成はしていない
     stage: { nameJa: '軍議の本陣', accent: '#8c6d1f', bg: '/assets/backgrounds/stages/08-shogunate-camp.webp' },
     // 非公式のファン創作（Kit の口調本文は配布対象外）。役割「軍師」1 行から AI が起こした仮文・CEO 監修待ち

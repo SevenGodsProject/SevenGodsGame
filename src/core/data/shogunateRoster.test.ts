@@ -117,10 +117,11 @@ describe('将軍家 Pilot 敵（忠次）', () => {
     for (const e of CORE_ENEMIES) expect(isPilotEnemyId(e.id)).toBe(false)
   })
 
-  it('設計 §4-2 の値：HP 98・★3・軍略型・heavy・30 字以内の説明・台詞 7 本・R4 tactic（then 12／else 24）・7R 合計 then 57／else 69', () => {
+  it('設計 §4-2 の値：HP 98・★1（W1 実測）・軍略型・heavy・30 字以内の説明・台詞 7 本・R4 tactic（then 12／else 24）・7R 合計 then 57／else 69', () => {
     expect(def.id).toBe('enemy_08')
     expect(def.maxHp).toBe(98)
-    expect(def.rank).toBe(3)
+    // 決定287 W1：★は実測（normal 指数 28.4 ＜ 道化 28.6 ＝ ★1 帯）。数値不変
+    expect(def.rank).toBe(1)
     expect(def.typeLabel).toBe('軍略型')
     expect(def.visualType).toBe('heavy')
     expect(def.typeDescription.length).toBeLessThanOrEqual(30)
