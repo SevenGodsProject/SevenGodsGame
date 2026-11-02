@@ -40,7 +40,7 @@ describe('EnemySelectScreen の注記', () => {
     expect((html.match(/aria-label="脅威度 \d \/ 5"/g) ?? []).length).toBe(PUBLIC_ROSTER.length)
     // 決定287 W1：忠次には「攻略盤の対象外」の注記・Pilot の印と案内は無い
     expect(html).toContain('data-testid="enemy-shogunate-chip"')
-    expect(html).toContain('攻略盤の対象外・戦績と報酬には残る')
+    expect(html).toContain('攻略盤の対象外・戦績は残る')
     expect(html).not.toContain('enemy-pilot-chip')
     expect(html).not.toContain('enemy-shogunate-notice')
     expect(html).not.toContain('記録に残らない')

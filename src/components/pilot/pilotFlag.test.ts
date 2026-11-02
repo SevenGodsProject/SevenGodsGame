@@ -63,7 +63,7 @@ describe('配線（既存の導線・記録に影響させない）', () => {
     // 決定287 W1：将軍家 Pilot の案内は無い。将軍家カードには「攻略盤の対象外」の注記 1 つ
     expect(src).not.toMatch(/enemy-shogunate-notice/)
     expect(src).toMatch(/data-testid="enemy-shogunate-chip"/)
-    expect(src).toContain('攻略盤の対象外・戦績と報酬には残る')
+    expect(src).toContain('攻略盤の対象外・戦績は残る')
     // 攻略済みの印は 49 盤の敵（MATCHUP_ENEMIES＝CORE 7 体）にだけ出す
     expect(src).toMatch(/matchups\?\.available && MATCHUP_ENEMIES\.includes\(enemy\.id\)/)
     // 新しい CSS クラスを作らない（既存の chip／subtitle を再利用）

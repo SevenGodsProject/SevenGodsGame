@@ -134,7 +134,7 @@ export function EnemySelectScreen({ onSelect, onBack, godId = null }: EnemySelec
               {/* 決定287 W1：将軍家は 49 攻略盤（7×7）の対象外。攻略印が無いのを不具合と誤解させないための 1 行（表示のみ・既存 chip 流用・新 CSS 0） */}
               {isShogunateEnemyId(enemy.id) && (
                 <span className="enemy-select-read-chip" data-testid="enemy-shogunate-chip">
-                  攻略盤の対象外・戦績と報酬には残る
+                  攻略盤の対象外・戦績は残る
                 </span>
               )}
               <span className="enemy-select-hint">{enemy.typeDescription}</span>
