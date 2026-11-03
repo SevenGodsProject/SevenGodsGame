@@ -15,7 +15,7 @@ Production の「確定状態」を一目で確認するための要約です。
 | **Rollback 先** | deployment **`7506844432`**（`72025ae`・v1.1.0）／**`7505565396`**（`f7e263d`・v1.0.7）。Promote は CEO のみ・未使用 |
 | **Release Gate／Smoke** | `docs/W3_SHOGUNATE_WAVE3_GATE.md`（自動 Gate ALL PASS・CEO Human QA 3/3）／`docs/V1_1_1_PRODUCTION_SMOKE.md`（S2 44・S5 210・S6 6 MATCH・**S8 旧セーブ 本番直撃は UNVERIFIED**＝W3 Gate G6b 44/44 を採用） |
 | **version 表示** | package version 1.0.6 のまま（Home `v1.0.6 (ee4f187)`）。次の version bump で揃える |
-| **次** | W4 将軍家 第四陣（忠勝・ドーマン）＝別 branch で自律開始 → Gate → PR → CEO Human QA → CEO merge |
+| **次** | W4 将軍家 第四陣（忠勝・ドーマン）＝`feat/w4-shogunate-wave4` 実装済み・自動 Gate ALL PASS → PR → CEO Human QA 2 戦 → CEO merge（v1.1.2） |
 
 ### A-0000. v1.1.0 公開（2026-11-03・決定288 W2 PRODUCTION LIVE）
 
@@ -57,6 +57,7 @@ Production の「確定状態」を一目で確認するための要約です。
 | **v1.0.7 RC（W1 忠次 公開 v1・決定287）** | branch `feat/w1-shogunate-public-v1`（起点 `58227ff`）。忠次を通常の Enemy Select に 8 体目として公開（★実測 ★1・戦績／セーブ／報酬は通常・Daily／49 盤／seed／gameVersion は CORE 固定）。自動 Gate ALL PASS（`docs/W1_SHOGUNATE_PUBLIC_V1_GATE.md`）。**CEO Human QA 2 問 → CEO merge（Production 公開）待ち**。runtime 差分 ≈ 判定関数・Enemy Select・pilotFlag・Credits・rank のみ／build +0.05 kB・CSS 同一 |
 | **v1.1.0 RC（W2 将軍家 第二陣・決定288）** | branch `feat/w2-shogunate-wave2`（起点 `f7e263d`）。岡っ引き・直政・康政を通常の Enemy Select に（将軍家 4 体・見出し）。engine は康政型 cond 1 種追加のみ（指紋不変）・★実測 ★1・Daily／49 盤／seed／gameVersion／save v9 不変・敵ボイスなし。自動 Gate ALL PASS（`docs/W2_SHOGUNATE_WAVE2_GATE.md`）。CEO Human QA 3/3 → **LIVE（v1.1.0・`72025ae`・A-0000）**。build +4.23 kB・CSS +3.33 kB |
 | **v1.1.1 RC（W3 将軍家 第三陣・決定288）** | branch `feat/w3-shogunate-wave3`（起点 `72025ae`）。影・くノ一・鬼半蔵を通常の Enemy Select に（将軍家 7 体）。engine 変更 0・★実測（鬼半蔵 ★2・他 ★1）・Daily／49 盤／seed／gameVersion／save v9 不変・敵ボイスなし。自動 Gate ALL PASS（`docs/W3_SHOGUNATE_WAVE3_GATE.md`）。CEO Human QA 3/3 → **LIVE（v1.1.1・`ee4f187`・A-00000）**。build +2.96 kB・CSS +3.04 kB |
+| **v1.1.2 RC（W4 将軍家 第四陣・決定288）** | branch `feat/w4-shogunate-wave4`（起点 `ee4f187`）。忠勝・ドーマンを通常の Enemy Select に（将軍家 9 体）。engine はドーマン型 cond 1 種追加のみ（指紋不変）・★実測（忠勝 normal 指数 41.9 → **★4**（龍神 37.7 を超え 17 体で最高・将軍家初の ★4）／ドーマン 30.0 → **★1**（道化 28.6〜機工師 31.4 の間）。既存 7 体の指数・順序は v1.0.1 と完全一致）・Daily／49 盤／seed／gameVersion／save v9 不変・敵ボイスなし・version 1.1.2 同梱。自動 Gate ALL PASS（`docs/W4_SHOGUNATE_WAVE4_GATE.md`）。**CEO Human QA 2 戦 → CEO merge（Production 公開）待ち**。build +2.75 kB・CSS +2.28 kB |
 | **次 Release 候補（v1.0.7）** | **将軍家 第一陣 公開 v1**（忠次 enemy_08 を通常 Enemy Select の 8 体目へ・Daily／49 盤／委ねる seed／gameVersion は既存 7 体のまま固定）＝決定287（候補）・`docs/SHOGUNATE_PUBLIC_ROSTER_V1_AUDIT.md`（READ-ONLY 設計監査 完了・実装未開始・CEO 返答 1 回＝公開 GO＋台詞 7 本の監修）。2 番手＝康政 Pilot v0.1（`LANE3_NEXT_PLAN_V1.md` §2-③）／並走候補＝7 神 crisis・greeting ボイス展開（データ追加のみ・CEO 試聴） |
 
 ### A-0q. v1.0.5 公開（2026-10-24・決定285 PRODUCTION LIVE・履歴。記録 commit `98222ee` は v1.0.6 統合 RC に同梱）
