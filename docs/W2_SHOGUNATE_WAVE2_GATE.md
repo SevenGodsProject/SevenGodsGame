@@ -1,6 +1,6 @@
 # W2 将軍家 第二陣（岡っ引き・直政・康政）— 実装・Gate 記録（決定288 v1.1・2026-11-03）
 
-> **状態：IMPLEMENTED・自動 Gate ALL PASS・CEO Human QA 3 戦 待ち。** branch `feat/w2-shogunate-wave2`（起点 master `f7e263d`＝v1.0.7 Production runtime）・worktree `SevenGodsGame-w2`。AI 判断（CLAUDE.md §6-2）で実装・Gate を実施。決定288 v1.1 §10-3 の W2。merge（＝v1.1.0 Production 公開）は CEO Gate。
+> **状態：IMPLEMENTED・自動 Gate ALL PASS・CEO Human QA Q1〜Q3 PASS（2026-11-03）→ Release GO・CEO merge 待ち。** branch `feat/w2-shogunate-wave2`（起点 master `f7e263d`＝v1.0.7 Production runtime）・worktree `SevenGodsGame-w2`。AI 判断（CLAUDE.md §6-2）で実装・Gate を実施。決定288 v1.1 §10-3 の W2。merge（＝v1.1.0 Production 公開）は CEO Gate。
 
 ## 0. 結論
 
@@ -66,6 +66,8 @@
 | Q1 | 岡っ引き（ふつう） | 小刻みな連撃にブロックで応じる「群れ」の手応えがあり、R6「十手・乱打」のカットインに違和感がないか | YES |
 | Q2 | 直政（ふつう） | R3 の「あと N で一文字を止める」を読み、止めた／止めなかったで R4 が変わる（猛り連撃／一文字）のが分かるか。赤熱の見た目が邪魔でないか | YES |
 | Q3 | 康政（ふつう） | R3 中に札を出すたび「あと N で采配を崩す」が減り、崩すと「✓」。R2 で温存して R3 に集中する判断が生まれたか | YES |
+
+**結果（CEO・2026-11-03）：Q1 PASS（岡っ引き）／Q2 PASS（直政）／Q3 PASS（康政）→ v1.1.0 Release GO。** PR #10（v1.0.7 LIVE 記録）の merge に先立ち、同 branch を本 branch へ merge（DECISIONS の追記行 conflict のみ・両方保持・runtime 同一）。
 
 ## 5. 残リスク
 

@@ -2,7 +2,19 @@
 
 Production の「確定状態」を一目で確認するための要約です。新しい仕様判断は含みません（根拠は `docs/DECISIONS.md`）。**§A が現在の正本**。§B 以降は 8/31 Public Beta〜Phase 3（2026-09-06）時点の履歴として残します（当時の Known Non-blockers 1〜16 は §A-4 の生存 Known に統合済み）。
 
-## A. 現在の Production 状態（2026-11-02・決定286 v1.0.6 PRODUCTION LIVE）
+## A. 現在の Production 状態（2026-11-03・決定287 v1.0.7 PRODUCTION LIVE）
+
+### A-000. v1.0.7 公開（2026-11-03・決定287 PRODUCTION LIVE）
+
+| 項目 | 状態 |
+|---|---|
+| **Release** | **SEVEN GODS v1.0.7**（決定287・決定288 v1.1 の W1）：将軍家 第一陣 公開 v1＝忠次（enemy_08）を通常の Enemy Select に 8 体目として公開（★実測 ★1・戦績／セーブ／報酬／神階／絆は通常・Daily／49 盤／委ねる seed／gameVersion は CORE 7 体固定・save v9 不変）。runtime 差分は判定関数・Enemy Select・pilotFlag・Credits 1 行・rank のみ。package version は 1.0.6 のまま（表示 `v1.0.6 (f7e263d)`・次の version bump で 1.0.7 に揃える） |
+| **Production HEAD** | master = origin/master **`f7e263d`**（PR #9 merge・2026-11-02T22:58:07Z・runtime tree は Gate 対象 `17bbeb9` と同一） |
+| **CI** | master run `41541637863` success（PR run `41540671010` success） |
+| **Vercel deployment** | **`7505565396`**（sha `f7e263d`・success 22:58:55Z）／bundle `index-ha74wdvd.js`（481,166 B・sha 正規化後に W1 build と byte 一致）・`index-Tat7Jjqr.css`（不変） |
+| **Rollback 先** | deployment **`7505377243`**（master `83d6b75`・v1.0.6 runtime）／**`7494257506`**（`10b0cd3`）。Promote は CEO のみ・未使用 |
+| **Release Gate／Smoke** | `docs/W1_SHOGUNATE_PUBLIC_V1_GATE.md`（自動 Gate ALL PASS・CEO Human QA 2/2）／`docs/V1_0_7_PRODUCTION_SMOKE.md`（S2 44/44・S5 150/150・S6 6/6 MATCH・S8 UNVERIFIED（W1 Gate 44/44 を採用）） |
+| **運用** | 決定289（CEO 操作最小化）：push・PR・CI 確認は AI、merge は CEO。Release Protection v2（`docs/RELEASE_PROTECTION_V2_PUSH_AUTOMATION.md`） |
 
 ### A-00. v1.0.6 公開（2026-11-02・決定286 PRODUCTION LIVE）
 
