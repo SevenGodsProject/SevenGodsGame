@@ -409,6 +409,7 @@ export const SHOGUNATE_ENEMY_IDS = {
   // W4（決定288 v1.1・2026-11-03）：四天王最強の軍神と、逆さ五重塔の科学者
   tadakatsu: enemyId('enemy_16'),
   doman: enemyId('enemy_17'),
+  yasutora: enemyId('enemy_18'),
 } as const
 
 export const SHOGUNATE_ENEMIES: EnemyDef[] = [
@@ -780,6 +781,57 @@ export const SHOGUNATE_ENEMIES: EnemyDef[] = [
         cond: { type: 'resonanceAtLeast', ratio: RULES.enemyTactic.defaultResonanceRatio },
         then: { kind: 'attack', amount: 11 },
         else: { kind: 'special', amount: 26, name: '逆さ五重塔・反転' },
+      },
+    ],
+  },
+  /**
+   * W5 将軍家 最終（決定288 v1.1 §10-3）：十七代将軍・康虎＝最終 Boss ★5。engine 語彙は既存のみ（attack／multiAttack／charge／special／tactic 忠次型 × 2 段）。
+   * 公式（Kit manifest）＝名前・role「17代将軍」・profile「穢土を治める17代将軍。側室や側近以外には姿を見せない独裁者」・画像のみ。二つ名・型・台詞・技名は本作の創作（非公式）。
+   * rank 5 は v1.0.1 から Boss 予約だった枠（enemies.test「通常 ≤4・康虎のみ 5」）。Daily・49 盤・seed は CORE 固定なので康虎は出ない。
+   */
+  {
+    id: SHOGUNATE_ENEMY_IDS.yasutora,
+    name: '十七代将軍・康虎',
+    // 最終 Boss：HP は balanceSim 決定287（hard × 全神 × 3 戦略 ≥50%）を満たす最大帯を掃引で決めた（docs/W5_SHOGUNATE_WAVE5_GATE.md §3）
+    maxHp: 114,
+    // Kit FRONT（1600²・透過・sha256 fb7b5dcf…feb5）→ 余白トリム → 768² webp（忠次と同手順・非生成加工）。原本は art-source/enemies/yasutora/
+    art: '/assets/enemies/yasutora/art.webp',
+    typeLabel: '君臨型',
+    typeDescription: '全ての型を使う。追い込まねば裁きが下る。',
+    visualType: 'heavy',
+    // ★5＝Boss 予約枠（表示専用・実測指数は docs/evidence/shogunate-wave5/star に記録。帯の上限 ★4 を超える位置づけ）
+    rank: 5,
+    // 舞台は STG-02（02-oni-castle・CEO 生成）を金へ色相回転・減光した派生（台帳 STG-17）
+    stage: { nameJa: '穢土城・大広間', accent: '#d4a72c', bg: '/assets/backgrounds/stages/17-yasutora-throne.webp' },
+    // 非公式のファン創作（profile「穢土を治める17代将軍。側室や側近以外には姿を見せない独裁者」の範囲）
+    battleCries: [
+      '……余の前に立つか。珍しい客だ',
+      '穢土は余のもの。神とて例外ではない',
+      '近習は下がれ。余が自ら裁く',
+      'ほう。まだ立っているか',
+      '裁きの刻だ。平伏せよ',
+      '……余を、ここまで追い込むとはな',
+      '見事。穢土の記憶に刻んでおこう',
+    ],
+    // 君臨：全語彙の複合。R2 連撃 5×3／R3 溜め→R4 忠次型 tactic（bossOpeningHpRatio まで追い込めば近習の槍 6×3、届かなければ必殺 32「将軍の威」）／R5 重撃 14／
+    // R6 溜め→R7 忠次型 tactic 2 段目（bossFinalHpRatio まで追い込めば 12、届かなければ必殺 36「穢土の裁き」）。合計 then 67／else 105（既存最大 忠勝 82 の上）。比は rules.ts。連撃 5×3／6×3・必殺 32／36 はロードマップ値（4×3／5×3・30／34）から +1／+2（★実測で 18 体の最上位にするため・docs/W5_SHOGUNATE_WAVE5_GATE.md §3）
+    actions: [
+      { kind: 'attack', amount: 8 },
+      { kind: 'multiAttack', hits: [5, 5, 5] },
+      { kind: 'charge', label: '⚠ 追い込まねば次は将軍の威' },
+      {
+        kind: 'tactic',
+        cond: { type: 'enemyHpRatioAtMost', ratio: RULES.enemyTactic.bossOpeningHpRatio, ratioByDifficulty: RULES.enemyTactic.bossOpeningHpRatioByDifficulty },
+        then: { kind: 'multiAttack', hits: [6, 6, 6], name: '近習の槍' },
+        else: { kind: 'special', amount: 32, name: '将軍の威' },
+      },
+      { kind: 'attack', amount: 14 },
+      { kind: 'charge', label: '⚠ 追い込まねば次は穢土の裁き' },
+      {
+        kind: 'tactic',
+        cond: { type: 'enemyHpRatioAtMost', ratio: RULES.enemyTactic.bossFinalHpRatio, ratioByDifficulty: RULES.enemyTactic.bossFinalHpRatioByDifficulty },
+        then: { kind: 'attack', amount: 12 },
+        else: { kind: 'special', amount: 36, name: '穢土の裁き' },
       },
     ],
   },

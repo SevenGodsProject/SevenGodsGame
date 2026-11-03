@@ -478,6 +478,15 @@ export const RULES = {
      * ゲージは難易度で変わらないので難易度別の表は持たない。engine はこの表を直接読まず、敵データが `cond.ratio` として埋め込む
      */
     defaultResonanceRatio: 0.5,
+    /**
+     * W5 康虎（決定288 v1.1・AI 判断）：Boss の 2 段 tactic の HP 比。R4 側（opening）＝「R3 までにここまで追い込めたか」、R7 側（final）＝「R6 までにとどめの帯へ追い込めたか」。
+     * 忠次型の既定（0.5／hard 0.6）は HP 114 の Boss では 3 R で 57 を要求して Preflight sim の then 率が 1 割を切る（判断が成立しない）ため Boss 専用の比を持つ。
+     * hard は既定と同じく少し甘い（敵 HP ×1.15 の分）。値は Preflight sim（docs/evidence/shogunate-wave5/sim.json・ratio 掃引）で決めた。engine は読まず、敵データが cond.ratio として埋め込む
+     */
+    bossOpeningHpRatio: 0.6,
+    bossOpeningHpRatioByDifficulty: { easy: 0.6, normal: 0.6, hard: 0.65 },
+    bossFinalHpRatio: 0.15,
+    bossFinalHpRatioByDifficulty: { easy: 0.15, normal: 0.15, hard: 0.2 },
   },
   saveVersion: 9,
 } as const

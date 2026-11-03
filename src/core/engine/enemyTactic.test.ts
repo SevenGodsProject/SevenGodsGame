@@ -315,3 +315,33 @@ describe('W4 ドーマン型（resonanceAtLeast・決定288 v1.1）', () => {
     expect(hs.enemy.intent?.kind).toBe('special')
   })
 })
+
+describe('W5 康虎（忠次型 × 2 段・決定288 v1.1）', () => {
+  const def = getEnemyDef(SHOGUNATE_ENEMY_IDS.yasutora)
+  const r4 = def.actions[3] as EnemyTacticDef
+  const r7 = def.actions[6] as EnemyTacticDef
+
+  it('R4 は bossOpeningHpRatio・R7 は bossFinalHpRatio を読む（rules.ts に集約・hard は少し甘い）', () => {
+    expect(tacticRatio(r4, 'normal')).toBe(RULES.enemyTactic.bossOpeningHpRatioByDifficulty.normal)
+    expect(tacticRatio(r4, 'hard')).toBe(RULES.enemyTactic.bossOpeningHpRatioByDifficulty.hard)
+    expect(tacticRatio(r7, 'normal')).toBe(RULES.enemyTactic.bossFinalHpRatioByDifficulty.normal)
+    expect(tacticRatio(r7, 'hard')).toBe(RULES.enemyTactic.bossFinalHpRatioByDifficulty.hard)
+    expect(RULES.enemyTactic.bossOpeningHpRatioByDifficulty.normal).toBe(RULES.enemyTactic.bossOpeningHpRatio)
+    expect(RULES.enemyTactic.bossFinalHpRatioByDifficulty.normal).toBe(RULES.enemyTactic.bossFinalHpRatio)
+    expect(RULES.enemyTactic.bossOpeningHpRatioByDifficulty.hard).toBeGreaterThan(RULES.enemyTactic.bossOpeningHpRatio)
+    expect(RULES.enemyTactic.bossFinalHpRatioByDifficulty.hard).toBeGreaterThan(RULES.enemyTactic.bossFinalHpRatio)
+  })
+
+  it('engine 経路：R6 終了時に敵 HP を final 比以下にして R7 を迎えると then（attack 12）、そうでなければ穢土の裁き（special 36）', () => {
+    const start = applyAction(null, { type: 'START_GAME', seed: 'w5-yasutora-1', godId: GOD_IDS.ebisu, enemyId: SHOGUNATE_ENEMY_IDS.yasutora, deck: STARTER_DECK, difficulty: 'normal', otomoGrowthPath: 'guardian' }).state
+    let s = start
+    while (s.round < 6 && s.status === 'playing') s = applyAction(s, { type: 'END_ROUND' }).state
+    if (s.status !== 'playing') return // 札を出さない進行で先に負けた場合は engine 経路の検証対象外（純関数側で担保）
+    const low = applyAction({ ...s, enemy: { ...s.enemy, hp: Math.floor(def.maxHp * RULES.enemyTactic.bossFinalHpRatio) } }, { type: 'END_ROUND' }).state
+    expect(low.round).toBe(7)
+    expect(low.enemy.intent).toEqual({ kind: 'attack', amount: 12 })
+    const high = applyAction({ ...s, enemy: { ...s.enemy, hp: Math.floor(def.maxHp * RULES.enemyTactic.bossFinalHpRatio) + 1 } }, { type: 'END_ROUND' }).state
+    expect(high.enemy.intent?.kind).toBe('special')
+    expect((high.enemy.intent as EnemyActionDef & { name?: string }).name).toBe('穢土の裁き')
+  })
+})

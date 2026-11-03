@@ -165,3 +165,23 @@ describe('W4 ドーマン（resonanceAtLeast）の「共鳴あと N で五重塔
     expect(tacticLineWords(d.actions[6])).toEqual({ armed: '五重塔を止める', cleared: '✓ 五重塔を止めた' })
   })
 })
+
+describe('W5 康虎：R3「あと N で将軍の威を止める」・R6「あと N で穢土の裁きを止める」（忠次型の 2 段・bossFinalHpRatio）', () => {
+  const def = getEnemyDef(SHOGUNATE_ENEMY_IDS.yasutora)
+  it('文言は else の必殺名から（「・」なし＝そのまま）', () => {
+    expect(tacticLineWords(def.actions[3])).toEqual({ armed: '将軍の威を止める', cleared: '✓ 将軍の威を止めた' })
+    expect(tacticLineWords(def.actions[6])).toEqual({ armed: '穢土の裁きを止める', cleared: '✓ 穢土の裁きを止めた' })
+  })
+  it('R6 の残りは bossFinalHpRatio まで（hard は少し甘い）。満タンなら maxHp − floor(maxHp×ratio)・届いていれば cleared。R3 側は bossOpeningHpRatio', () => {
+    const hp = def.maxHp
+    const o = RULES.enemyTactic.bossOpeningHpRatioByDifficulty
+    const f = RULES.enemyTactic.bossFinalHpRatioByDifficulty
+    const r6 = tacticLine(def.actions[5] as EnemyActionDef, def.actions[6], hp, hp, 'normal')
+    expect(r6).toEqual({ remaining: hp - tacticThenMaxHp(def.actions[6], hp, 'normal'), cleared: false })
+    expect(tacticThenMaxHp(def.actions[6], hp, 'normal')).toBe(Math.floor(hp * f.normal))
+    expect(tacticThenMaxHp(def.actions[6], hp, 'hard')).toBe(Math.floor(hp * f.hard))
+    expect(tacticLine(def.actions[5] as EnemyActionDef, def.actions[6], Math.floor(hp * f.normal), hp, 'normal')).toEqual({ remaining: 0, cleared: true })
+    expect(tacticThenMaxHp(def.actions[3], hp, 'normal')).toBe(Math.floor(hp * o.normal))
+    expect(tacticThenMaxHp(def.actions[3], hp, 'hard')).toBe(Math.floor(hp * o.hard))
+  })
+})
