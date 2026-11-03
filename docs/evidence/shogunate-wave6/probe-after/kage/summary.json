@@ -1,0 +1,656 @@
+{
+  "base": "http://localhost:4198",
+  "generatedAt": "2026-11-03T22:01:52.514Z",
+  "runs": [
+    {
+      "viewport": "pc",
+      "seed": "sg-v04-01",
+      "enemyName": "忍者衆・影",
+      "rounds": [
+        {
+          "round": 1,
+          "intent": "50",
+          "band": "high",
+          "hp": "960 / 960",
+          "glow": {
+            "chargingSuper": false,
+            "charging": false,
+            "boxShadow": "none",
+            "filter": "drop-shadow(rgba(0, 0, 0, 0.8) 0px 12px 16px) drop-shadow(rgba(155, 89, 182, 0.4) 0px 0px 26px) drop-shadow(rgba(255, 224, 170, 0.55) 0px 0px 1px)",
+            "dropShadowCount": 3,
+            "dataEnemy": "enemy_13"
+          },
+          "tacticLine": null,
+          "plateOverlap": {
+            "plateBottom": 198.5,
+            "plateH": 86,
+            "avatarTop": 133.6,
+            "visibleTop": 143.6,
+            "overlapBoxPx": 64.9,
+            "overlapVisiblePx": 54.9
+          }
+        },
+        {
+          "round": 2,
+          "intent": "強打 110",
+          "band": "high",
+          "hp": "880 / 960",
+          "glow": {
+            "chargingSuper": false,
+            "charging": false,
+            "boxShadow": "none",
+            "filter": "drop-shadow(rgba(0, 0, 0, 0.8) 0px 12px 16px) drop-shadow(rgba(155, 89, 182, 0.4) 0px 0px 26px) drop-shadow(rgba(255, 107, 107, 0.9) 0px 0px 2px) drop-shadow(rgba(255, 224, 170, 0.55) 0px 0px 1px)",
+            "dropShadowCount": 4,
+            "dataEnemy": "enemy_13"
+          },
+          "tacticLine": null,
+          "plateOverlap": {
+            "plateBottom": 198.5,
+            "plateH": 86,
+            "avatarTop": 134.6,
+            "visibleTop": 144.6,
+            "overlapBoxPx": 63.9,
+            "overlapVisiblePx": 53.9
+          }
+        },
+        {
+          "round": 3,
+          "intent": "80",
+          "band": "high",
+          "hp": "630 / 960",
+          "glow": {
+            "chargingSuper": false,
+            "charging": false,
+            "boxShadow": "none",
+            "filter": "drop-shadow(rgba(0, 0, 0, 0.8) 0px 12px 16px) drop-shadow(rgba(155, 89, 182, 0.4) 0px 0px 26px) drop-shadow(rgba(255, 224, 170, 0.55) 0px 0px 1px)",
+            "dropShadowCount": 3,
+            "dataEnemy": "enemy_13"
+          },
+          "tacticLine": null,
+          "plateOverlap": {
+            "plateBottom": 198.5,
+            "plateH": 86,
+            "avatarTop": 135.5,
+            "visibleTop": 145.5,
+            "overlapBoxPx": 63,
+            "overlapVisiblePx": 53
+          }
+        },
+        {
+          "round": 4,
+          "intent": "⚠ 追い込めねば次は闇討ち",
+          "band": "half",
+          "hp": "350 / 960",
+          "glow": {
+            "chargingSuper": true,
+            "charging": true,
+            "boxShadow": "none",
+            "filter": "drop-shadow(rgba(0, 0, 0, 0.8) 0px 12px 16px) drop-shadow(rgb(42, 58, 138) 0px 0px 16px) brightness(0.8)",
+            "dropShadowCount": 2,
+            "dataEnemy": "enemy_13"
+          },
+          "tacticLine": {
+            "state": "armed",
+            "text": "あと20で闇討ちを止める",
+            "rect": {
+              "x": 242,
+              "y": 200,
+              "w": 151,
+              "h": 26
+            },
+            "insidePlate": true,
+            "insideViewport": true,
+            "overflowX": false,
+            "lines": 1,
+            "fontSize": 13,
+            "visible": true,
+            "pageScrollW": 1508,
+            "vw": 1508
+          },
+          "plateOverlap": {
+            "plateBottom": 232,
+            "plateH": 119.5,
+            "avatarTop": 135.4,
+            "visibleTop": 145.4,
+            "overlapBoxPx": 96.6,
+            "overlapVisiblePx": 86.6
+          }
+        }
+      ],
+      "r3Intent": "80",
+      "r3Glow": {
+        "chargingSuper": false,
+        "charging": false,
+        "boxShadow": "none",
+        "filter": "drop-shadow(rgba(0, 0, 0, 0.8) 0px 12px 16px) drop-shadow(rgba(155, 89, 182, 0.4) 0px 0px 26px) drop-shadow(rgba(255, 224, 170, 0.55) 0px 0px 1px)",
+        "dropShadowCount": 3,
+        "dataEnemy": "enemy_13"
+      },
+      "r4Intent": "⚠ 追い込めねば次は闇討ち",
+      "r4Branch": "then",
+      "r3HalfCrossing": {
+        "round": 3,
+        "card": "⚔ 豪快な一撃",
+        "bandBefore": "high",
+        "bandAfter": "half",
+        "shot": {
+          "cf2Animations": [
+            "cf2-plate-flash-half@520",
+            "cf2-wound-bloom-half@600",
+            "cf2-break-body-half@420"
+          ],
+          "plateAfterOpacity": "0.55",
+          "intentText": "80",
+          "intentColor": "rgb(255, 180, 180)",
+          "chargingSuper": false,
+          "avatarFilter": "drop-shadow(rgba(0, 0, 0, 0.8) 0px 12px 16px) drop-shadow(rgba(155, 89, 182, 0.4) 0px 0px 26px) drop-shadow(rgba(255, 224, 170, 0.55) 0px 0px 1px)",
+          "collapseTransform": "matrix(0.985027, 0, 0, 0.985027, -6.98718, 0)"
+        },
+        "frames": 50,
+        "breakStartMs": 682,
+        "breakEndMs": 2056,
+        "pausedSpanMs": 773,
+        "breakActiveMs": 601,
+        "breakNames": [
+          "cf2-plate-flash-half",
+          "cf2-wound-bloom-half",
+          "cf2-break-body-half"
+        ],
+        "unlockBtnMs": 441,
+        "intentTextsDuringBreak": [
+          "80"
+        ],
+        "intentChargeDuringBreak": false,
+        "intentOffViewportFrames": 0,
+        "horizontalScrollFrames": 0,
+        "bandAtEnd": "half",
+        "superOnAtStart": false,
+        "halfStartMs": 682,
+        "halfStartFrame": 7,
+        "superOffMs": null,
+        "superOffFrame": null,
+        "halfAndSuperOffSameFrame": null,
+        "superOffMinusHalfMs": null,
+        "tacticLineTexts": [
+          "あと20で闇討ちを止める"
+        ],
+        "tacticLineClearMs": null,
+        "tacticLineClearAndSuperOffSameFrame": null,
+        "tacticLineClearAndHalfSameFrame": null,
+        "dropShadowAtStart": true,
+        "boxShadowAtStart": "none",
+        "rafP95Ms": 134,
+        "rafP95LiveMs": 150,
+        "rafMaxLiveMs": 221,
+        "immediateEnd": true
+      },
+      "breaks": [
+        {
+          "round": 3,
+          "card": "⚔ 豪快な一撃",
+          "band": "high->half",
+          "names": [
+            "cf2-plate-flash-half",
+            "cf2-wound-bloom-half",
+            "cf2-break-body-half"
+          ],
+          "breakStartMs": 682,
+          "breakEndMs": 2056,
+          "breakActiveMs": 601,
+          "unlockBtnMs": 441,
+          "intentTextsDuringBreak": [
+            "80"
+          ],
+          "intentChargeDuringBreak": false,
+          "intentOffViewportFrames": 0,
+          "horizontalScrollFrames": 0,
+          "superOnAtStart": false,
+          "halfStartMs": 682,
+          "superOffMs": null,
+          "halfAndSuperOffSameFrame": null,
+          "superOffMinusHalfMs": null,
+          "shot": {
+            "cf2Animations": [
+              "cf2-plate-flash-half@520",
+              "cf2-wound-bloom-half@600",
+              "cf2-break-body-half@420"
+            ],
+            "plateAfterOpacity": "0.55",
+            "intentText": "80",
+            "intentColor": "rgb(255, 180, 180)",
+            "chargingSuper": false,
+            "avatarFilter": "drop-shadow(rgba(0, 0, 0, 0.8) 0px 12px 16px) drop-shadow(rgba(155, 89, 182, 0.4) 0px 0px 26px) drop-shadow(rgba(255, 224, 170, 0.55) 0px 0px 1px)",
+            "collapseTransform": "matrix(0.985027, 0, 0, 0.985027, -6.98718, 0)"
+          }
+        }
+      ],
+      "difficulty": "normal",
+      "tacticLineByRound": [
+        {
+          "round": 1,
+          "line": null
+        },
+        {
+          "round": 2,
+          "line": null
+        },
+        {
+          "round": 3,
+          "line": null
+        },
+        {
+          "round": 4,
+          "line": {
+            "state": "armed",
+            "text": "あと20で闇討ちを止める",
+            "rect": {
+              "x": 242,
+              "y": 200,
+              "w": 151,
+              "h": 26
+            },
+            "insidePlate": true,
+            "insideViewport": true,
+            "overflowX": false,
+            "lines": 1,
+            "fontSize": 13,
+            "visible": true,
+            "pageScrollW": 1508,
+            "vw": 1508
+          }
+        }
+      ],
+      "plateOverlapByRound": [
+        {
+          "round": 1,
+          "plateBottom": 198.5,
+          "plateH": 86,
+          "avatarTop": 133.6,
+          "visibleTop": 143.6,
+          "overlapBoxPx": 64.9,
+          "overlapVisiblePx": 54.9
+        },
+        {
+          "round": 2,
+          "plateBottom": 198.5,
+          "plateH": 86,
+          "avatarTop": 134.6,
+          "visibleTop": 144.6,
+          "overlapBoxPx": 63.9,
+          "overlapVisiblePx": 53.9
+        },
+        {
+          "round": 3,
+          "plateBottom": 198.5,
+          "plateH": 86,
+          "avatarTop": 135.5,
+          "visibleTop": 145.5,
+          "overlapBoxPx": 63,
+          "overlapVisiblePx": 53
+        },
+        {
+          "round": 4,
+          "plateBottom": 232,
+          "plateH": 119.5,
+          "avatarTop": 135.4,
+          "visibleTop": 145.4,
+          "overlapBoxPx": 96.6,
+          "overlapVisiblePx": 86.6
+        }
+      ],
+      "tacticLineClears": [],
+      "tacticLineTextsR3": [
+        "あと20で闇討ちを止める"
+      ],
+      "rafP95LiveMsMax": 223,
+      "immediateEnd": {
+        "round": 3,
+        "card": "⚔ 豪快な一撃",
+        "endClickMs": 1525,
+        "intentBefore": "80",
+        "glowBeforeEnd": {
+          "chargingSuper": false,
+          "charging": false,
+          "boxShadow": "none",
+          "filter": "drop-shadow(rgba(0, 0, 0, 0.8) 0px 12px 16px) drop-shadow(rgba(155, 89, 182, 0.4) 0px 0px 26px) drop-shadow(rgba(255, 224, 170, 0.55) 0px 0px 1px)",
+          "dropShadowCount": 3,
+          "dataEnemy": "enemy_13"
+        },
+        "intentChangeMs": 2451,
+        "intentAfter": "⚠ 追い込めねば次は闇討ち",
+        "breakEndMs": 2056,
+        "breakStillRunningAtIntentChange": false,
+        "r4Intent": "⚠ 追い込めねば次は闇討ち",
+        "r4Band": "half"
+      },
+      "plays": 8,
+      "finished": false,
+      "errors": 0
+    },
+    {
+      "viewport": "sp375",
+      "seed": "sg-v04-01",
+      "enemyName": "忍者衆・影",
+      "rounds": [
+        {
+          "round": 1,
+          "intent": "50",
+          "band": "high",
+          "hp": "960 / 960",
+          "glow": {
+            "chargingSuper": false,
+            "charging": false,
+            "boxShadow": "none",
+            "filter": "drop-shadow(rgba(0, 0, 0, 0.8) 0px 12px 16px) drop-shadow(rgba(155, 89, 182, 0.4) 0px 0px 26px) drop-shadow(rgba(255, 224, 170, 0.55) 0px 0px 1px)",
+            "dropShadowCount": 3,
+            "dataEnemy": "enemy_13"
+          },
+          "tacticLine": null,
+          "plateOverlap": {
+            "plateBottom": 184.5,
+            "plateH": 76,
+            "avatarTop": 228.3,
+            "visibleTop": 234.3,
+            "overlapBoxPx": -43.8,
+            "overlapVisiblePx": -49.8
+          }
+        },
+        {
+          "round": 2,
+          "intent": "強打 110",
+          "band": "high",
+          "hp": "880 / 960",
+          "glow": {
+            "chargingSuper": false,
+            "charging": false,
+            "boxShadow": "none",
+            "filter": "drop-shadow(rgba(0, 0, 0, 0.8) 0px 12px 16px) drop-shadow(rgba(155, 89, 182, 0.4) 0px 0px 26px) drop-shadow(rgba(255, 107, 107, 0.9) 0px 0px 2px) drop-shadow(rgba(255, 224, 170, 0.55) 0px 0px 1px)",
+            "dropShadowCount": 4,
+            "dataEnemy": "enemy_13"
+          },
+          "tacticLine": null,
+          "plateOverlap": {
+            "plateBottom": 184.5,
+            "plateH": 76,
+            "avatarTop": 229.6,
+            "visibleTop": 235.6,
+            "overlapBoxPx": -45.1,
+            "overlapVisiblePx": -51.1
+          }
+        },
+        {
+          "round": 3,
+          "intent": "80",
+          "band": "high",
+          "hp": "630 / 960",
+          "glow": {
+            "chargingSuper": false,
+            "charging": false,
+            "boxShadow": "none",
+            "filter": "drop-shadow(rgba(0, 0, 0, 0.8) 0px 12px 16px) drop-shadow(rgba(155, 89, 182, 0.4) 0px 0px 26px) drop-shadow(rgba(255, 224, 170, 0.55) 0px 0px 1px)",
+            "dropShadowCount": 3,
+            "dataEnemy": "enemy_13"
+          },
+          "tacticLine": null,
+          "plateOverlap": {
+            "plateBottom": 184.5,
+            "plateH": 76,
+            "avatarTop": 230.6,
+            "visibleTop": 236.6,
+            "overlapBoxPx": -46.1,
+            "overlapVisiblePx": -52.1
+          }
+        },
+        {
+          "round": 4,
+          "intent": "⚠ 追い込めねば次は闇討ち",
+          "band": "half",
+          "hp": "350 / 960",
+          "glow": {
+            "chargingSuper": true,
+            "charging": true,
+            "boxShadow": "none",
+            "filter": "drop-shadow(rgba(0, 0, 0, 0.8) 0px 12px 16px) drop-shadow(rgb(42, 58, 138) 0px 0px 16px) brightness(0.8)",
+            "dropShadowCount": 2,
+            "dataEnemy": "enemy_13"
+          },
+          "tacticLine": {
+            "state": "armed",
+            "text": "あと20で闇討ちを止める",
+            "rect": {
+              "x": 40,
+              "y": 207,
+              "w": 127,
+              "h": 21
+            },
+            "insidePlate": true,
+            "insideViewport": true,
+            "overflowX": false,
+            "lines": 1,
+            "fontSize": 11,
+            "visible": true,
+            "pageScrollW": 375,
+            "vw": 375
+          },
+          "plateOverlap": {
+            "plateBottom": 232.3,
+            "plateH": 123.8,
+            "avatarTop": 230.6,
+            "visibleTop": 236.6,
+            "overlapBoxPx": 1.7,
+            "overlapVisiblePx": -4.3
+          }
+        }
+      ],
+      "r3Intent": "80",
+      "r3Glow": {
+        "chargingSuper": false,
+        "charging": false,
+        "boxShadow": "none",
+        "filter": "drop-shadow(rgba(0, 0, 0, 0.8) 0px 12px 16px) drop-shadow(rgba(155, 89, 182, 0.4) 0px 0px 26px) drop-shadow(rgba(255, 224, 170, 0.55) 0px 0px 1px)",
+        "dropShadowCount": 3,
+        "dataEnemy": "enemy_13"
+      },
+      "r4Intent": "⚠ 追い込めねば次は闇討ち",
+      "r4Branch": "then",
+      "r3HalfCrossing": {
+        "round": 3,
+        "card": "⚔ 豪快な一撃",
+        "bandBefore": "high",
+        "bandAfter": "half",
+        "shot": {
+          "cf2Animations": [
+            "cf2-plate-flash-half@520",
+            "cf2-wound-bloom-half@600",
+            "cf2-break-body-half@420"
+          ],
+          "plateAfterOpacity": "0.55",
+          "intentText": "80",
+          "intentColor": "rgb(255, 180, 180)",
+          "chargingSuper": false,
+          "avatarFilter": "drop-shadow(rgba(0, 0, 0, 0.8) 0px 12px 16px) drop-shadow(rgba(155, 89, 182, 0.4) 0px 0px 26px) drop-shadow(rgba(255, 224, 170, 0.55) 0px 0px 1px)",
+          "collapseTransform": "matrix(0.985027, 0, 0, 0.985027, -4.99084, 0)"
+        },
+        "frames": 132,
+        "breakStartMs": 617,
+        "breakEndMs": 2870,
+        "pausedSpanMs": 1703,
+        "breakActiveMs": 550,
+        "breakNames": [
+          "cf2-plate-flash-half",
+          "cf2-wound-bloom-half",
+          "cf2-break-body-half"
+        ],
+        "unlockBtnMs": 381,
+        "intentTextsDuringBreak": [
+          "80"
+        ],
+        "intentChargeDuringBreak": false,
+        "intentOffViewportFrames": 0,
+        "horizontalScrollFrames": 0,
+        "bandAtEnd": "half",
+        "superOnAtStart": false,
+        "halfStartMs": 617,
+        "halfStartFrame": 18,
+        "superOffMs": null,
+        "superOffFrame": null,
+        "halfAndSuperOffSameFrame": null,
+        "superOffMinusHalfMs": null,
+        "tacticLineTexts": [
+          "あと20で闇討ちを止める"
+        ],
+        "tacticLineClearMs": null,
+        "tacticLineClearAndSuperOffSameFrame": null,
+        "tacticLineClearAndHalfSameFrame": null,
+        "dropShadowAtStart": true,
+        "boxShadowAtStart": "none",
+        "rafP95Ms": 62,
+        "rafP95LiveMs": 65,
+        "rafMaxLiveMs": 110,
+        "immediateEnd": true
+      },
+      "breaks": [
+        {
+          "round": 3,
+          "card": "⚔ 豪快な一撃",
+          "band": "high->half",
+          "names": [
+            "cf2-plate-flash-half",
+            "cf2-wound-bloom-half",
+            "cf2-break-body-half"
+          ],
+          "breakStartMs": 617,
+          "breakEndMs": 2870,
+          "breakActiveMs": 550,
+          "unlockBtnMs": 381,
+          "intentTextsDuringBreak": [
+            "80"
+          ],
+          "intentChargeDuringBreak": false,
+          "intentOffViewportFrames": 0,
+          "horizontalScrollFrames": 0,
+          "superOnAtStart": false,
+          "halfStartMs": 617,
+          "superOffMs": null,
+          "halfAndSuperOffSameFrame": null,
+          "superOffMinusHalfMs": null,
+          "shot": {
+            "cf2Animations": [
+              "cf2-plate-flash-half@520",
+              "cf2-wound-bloom-half@600",
+              "cf2-break-body-half@420"
+            ],
+            "plateAfterOpacity": "0.55",
+            "intentText": "80",
+            "intentColor": "rgb(255, 180, 180)",
+            "chargingSuper": false,
+            "avatarFilter": "drop-shadow(rgba(0, 0, 0, 0.8) 0px 12px 16px) drop-shadow(rgba(155, 89, 182, 0.4) 0px 0px 26px) drop-shadow(rgba(255, 224, 170, 0.55) 0px 0px 1px)",
+            "collapseTransform": "matrix(0.985027, 0, 0, 0.985027, -4.99084, 0)"
+          }
+        }
+      ],
+      "difficulty": "normal",
+      "tacticLineByRound": [
+        {
+          "round": 1,
+          "line": null
+        },
+        {
+          "round": 2,
+          "line": null
+        },
+        {
+          "round": 3,
+          "line": null
+        },
+        {
+          "round": 4,
+          "line": {
+            "state": "armed",
+            "text": "あと20で闇討ちを止める",
+            "rect": {
+              "x": 40,
+              "y": 207,
+              "w": 127,
+              "h": 21
+            },
+            "insidePlate": true,
+            "insideViewport": true,
+            "overflowX": false,
+            "lines": 1,
+            "fontSize": 11,
+            "visible": true,
+            "pageScrollW": 375,
+            "vw": 375
+          }
+        }
+      ],
+      "plateOverlapByRound": [
+        {
+          "round": 1,
+          "plateBottom": 184.5,
+          "plateH": 76,
+          "avatarTop": 228.3,
+          "visibleTop": 234.3,
+          "overlapBoxPx": -43.8,
+          "overlapVisiblePx": -49.8
+        },
+        {
+          "round": 2,
+          "plateBottom": 184.5,
+          "plateH": 76,
+          "avatarTop": 229.6,
+          "visibleTop": 235.6,
+          "overlapBoxPx": -45.1,
+          "overlapVisiblePx": -51.1
+        },
+        {
+          "round": 3,
+          "plateBottom": 184.5,
+          "plateH": 76,
+          "avatarTop": 230.6,
+          "visibleTop": 236.6,
+          "overlapBoxPx": -46.1,
+          "overlapVisiblePx": -52.1
+        },
+        {
+          "round": 4,
+          "plateBottom": 232.3,
+          "plateH": 123.8,
+          "avatarTop": 230.6,
+          "visibleTop": 236.6,
+          "overlapBoxPx": 1.7,
+          "overlapVisiblePx": -4.3
+        }
+      ],
+      "tacticLineClears": [],
+      "tacticLineTextsR3": [
+        "あと20で闇討ちを止める"
+      ],
+      "rafP95LiveMsMax": 82,
+      "immediateEnd": {
+        "round": 3,
+        "card": "⚔ 豪快な一撃",
+        "endClickMs": 2367,
+        "intentBefore": "80",
+        "glowBeforeEnd": {
+          "chargingSuper": false,
+          "charging": false,
+          "boxShadow": "none",
+          "filter": "drop-shadow(rgba(0, 0, 0, 0.8) 0px 12px 16px) drop-shadow(rgba(155, 89, 182, 0.4) 0px 0px 26px) drop-shadow(rgba(255, 224, 170, 0.55) 0px 0px 1px)",
+          "dropShadowCount": 3,
+          "dataEnemy": "enemy_13"
+        },
+        "intentChangeMs": 3143,
+        "intentAfter": "⚠ 追い込めねば次は闇討ち",
+        "breakEndMs": 2870,
+        "breakStillRunningAtIntentChange": false,
+        "r4Intent": "⚠ 追い込めねば次は闇討ち",
+        "r4Band": "half"
+      },
+      "plays": 8,
+      "finished": false,
+      "errors": 0
+    }
+  ]
+}
