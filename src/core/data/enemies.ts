@@ -402,6 +402,10 @@ export const SHOGUNATE_ENEMY_IDS = {
   okappiki: enemyId('enemy_10'),
   naomasa: enemyId('enemy_11'),
   yasumasa: enemyId('enemy_12'),
+  // W3（決定288 v1.1・2026-11-03）：影の忍者衆と頭領
+  kage: enemyId('enemy_13'),
+  kunoichi: enemyId('enemy_14'),
+  onihanzo: enemyId('enemy_15'),
 } as const
 
 export const SHOGUNATE_ENEMIES: EnemyDef[] = [
@@ -569,6 +573,125 @@ export const SHOGUNATE_ENEMIES: EnemyDef[] = [
       { kind: 'attack', amount: 14 },
       { kind: 'attack', amount: 10 },
       { kind: 'attack', amount: 6 },
+    ],
+  },
+  /**
+   * W3 将軍家 第三陣（決定288 v1.1 §10-3）：忍者衆「影」の 2 体と頭領 鬼半蔵。engine 語彙は既存のみ（tactic は忠次型）。
+   * 公式（Kit manifest）＝名前・role・profile・画像のみ。二つ名・型・台詞・技名は本作の創作（非公式）。公式ボイスは無く、本作も声を付けない。
+   */
+  {
+    id: SHOGUNATE_ENEMY_IDS.kage,
+    name: '忍者衆・影',
+    maxHp: 96,
+    // Kit MAIN（1600²・非透過）→ 人物中心を切り出し＋放射状フェード → 768² webp（岡っ引きと同手順・非生成加工）
+    art: '/assets/enemies/kage/art.webp',
+    typeLabel: '読めぬ型',
+    typeDescription: 'R2とR5で手が変わる。R1の削りとR4の備えで読め。',
+    visualType: 'fast',
+    rank: 1,
+    stage: { nameJa: '影の里', accent: '#5a6b9e', bg: '/assets/backgrounds/stages/12-kage-village.webp' },
+    // 非公式のファン創作（profile「将軍家に仕える忍者衆。諜報と暗殺を担う」の範囲）
+    battleCries: [
+      '……任務、開始',
+      '気配は、消した',
+      '読めるか。読めまい',
+      '影は二度、揺れる',
+      '次は、闇から',
+      '深追いは、しない',
+      '……退く。影は消える',
+    ],
+    // 2 回の読み：R2 は「R1 で先手を取られたか」（HP 比 ≤0.85 なら then＝連撃 3×3、else 重撃 11・予告なしの静かな分岐）、
+    // R5 は忠次型の軍略（R4 溜め→R5 開始時 HP 比 ≤0.5 なら then 攻撃 9／else 必殺 20「闇討ち」）。合計 then 5+9+8+0+9+10+8＝49／else 5+11+8+0+20+10+8＝62
+    actions: [
+      { kind: 'attack', amount: 5 },
+      {
+        kind: 'tactic',
+        cond: { type: 'enemyHpRatioAtMost', ratio: 0.85 },
+        then: { kind: 'multiAttack', hits: [3, 3, 3] },
+        else: { kind: 'attack', amount: 11 },
+      },
+      { kind: 'attack', amount: 8 },
+      { kind: 'charge', label: '⚠ 追い込めねば次は闇討ち' },
+      {
+        kind: 'tactic',
+        // R5 開始時は R1〜R4 の累積で HP 比が下がっているため、既定 0.5 だと then 率 79.6%（帯 35〜65 超）→ 0.35（hard 0.45）
+        cond: { type: 'enemyHpRatioAtMost', ratio: 0.35, ratioByDifficulty: { easy: 0.35, normal: 0.35, hard: 0.45 } },
+        then: { kind: 'attack', amount: 9 },
+        else: { kind: 'special', amount: 20, name: '闇討ち' },
+      },
+      { kind: 'attack', amount: 10 },
+      { kind: 'attack', amount: 8 },
+    ],
+  },
+  {
+    id: SHOGUNATE_ENEMY_IDS.kunoichi,
+    name: '忍者衆・くノ一',
+    maxHp: 90,
+    art: '/assets/enemies/kunoichi/art.webp',
+    typeLabel: '疾風型',
+    typeDescription: '速い連撃が続く。R6の影走りまでに体力を残せ。',
+    visualType: 'fast',
+    rank: 1,
+    stage: { nameJa: '月下の忍び道', accent: '#c9a24d', bg: '/assets/backgrounds/stages/13-kunoichi-moonpath.webp' },
+    // 非公式のファン創作（profile「忍者衆「影」に属する女忍」の範囲）
+    battleCries: [
+      '影より参ります',
+      '速いですよ',
+      '一太刀では、足りません',
+      '息を乱さず、もう一度',
+      '次は、影走り',
+      'あら……やりますね',
+      'お役目、ここまで',
+    ],
+    // 疾風：連撃中心・R6 技名つき連撃（special）。合計 4+6+7+9+0+18+8＝52
+    actions: [
+      { kind: 'multiAttack', hits: [2, 2] },
+      { kind: 'multiAttack', hits: [3, 3] },
+      { kind: 'attack', amount: 7 },
+      { kind: 'multiAttack', hits: [3, 3, 3] },
+      { kind: 'charge', label: '⚠ 次は影走り' },
+      { kind: 'multiAttack', hits: [6, 6, 6], name: '影走り', special: true },
+      { kind: 'multiAttack', hits: [4, 4] },
+    ],
+  },
+  {
+    id: SHOGUNATE_ENEMY_IDS.onihanzo,
+    name: '影の頭領・鬼半蔵',
+    maxHp: 110,
+    // Kit FRONT（1600²・透過）→ 余白トリム → 768² webp（忠次と同手順・非生成加工）
+    art: '/assets/enemies/onihanzo/art.webp',
+    typeLabel: '頭領型',
+    typeDescription: 'R4とR7に必殺。R3までに追い込めば血風は連撃に。',
+    visualType: 'heavy',
+    // ★は実測（docs/evidence/shogunate-wave3/star）：normal 指数 31.7 ＝ 機工師（★2・31.4）の帯 → ★2。影 25.3・くノ一 21.9 は ★1
+    rank: 2,
+    stage: { nameJa: '鬼嶽の砦', accent: '#b8322d', bg: '/assets/backgrounds/stages/14-onihanzo-fort.webp' },
+    // 非公式のファン創作（profile「忍者衆「影」を率いる頭領。代々将軍家に仕え、鬼嶽一族の血を引く」の範囲）
+    battleCries: [
+      '鬼嶽の血が、騒ぐ',
+      '沈め',
+      '影は、俺の手足だ',
+      '次は……血の風だ',
+      '追い込めたか。それでも、来い',
+      'ほう……影を抜くか',
+      '頭領の名に……懸けて……',
+    ],
+    // 頭領：高 HP・R4 軍略（追い込めた then 連撃 4×3 special／else 必殺 24「鬼嶽・血風」）・R7 必殺 26。合計 then 6+9+0+12+12+0+26＝65／else 77
+    // しきい値（Preflight sim・docs/evidence/shogunate-wave3/sim.json）：HP 110 で既定 0.5 だと then 率 23.6%（帯 35〜65 未満）→ 0.55（hard 0.65）＝
+    // then に必要なダメージ normal 50／hard 44 で忠次（49／44）と同帯。Enemy Break の崩れ（50%）より先に「✓」が出る（頭領は読みの期限が早い・全難易度）
+    actions: [
+      { kind: 'attack', amount: 6 },
+      { kind: 'multiAttack', hits: [3, 3, 3] },
+      { kind: 'charge', label: '⚠ 追い込めねば次は血風' },
+      {
+        kind: 'tactic',
+        cond: { type: 'enemyHpRatioAtMost', ratio: 0.55, ratioByDifficulty: { easy: 0.55, normal: 0.55, hard: 0.65 } },
+        then: { kind: 'multiAttack', hits: [4, 4, 4], name: '鬼嶽・連風', special: true },
+        else: { kind: 'special', amount: 24, name: '鬼嶽・血風' },
+      },
+      { kind: 'attack', amount: 12 },
+      { kind: 'charge', label: '⚠ 次は頭領の一撃' },
+      { kind: 'special', amount: 26, name: '鬼嶽・頭領斬り' },
     ],
   },
 ]

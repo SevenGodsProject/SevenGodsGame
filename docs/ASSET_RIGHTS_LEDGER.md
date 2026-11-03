@@ -457,3 +457,18 @@ v0.1〜v0.3（branch `feat/shogunate-pilot-v0.3` @ `5a357f1`・CEO 実装承認 
 
 - BACK（直政・康政）と将軍家の他 6 体（康虎・忠勝・鬼半蔵・影・くノ一・ドーマン）は本 wave では取得していない
 - 音声：追加 0（決定288 v1.1 で敵ボイスはスコープ外）
+
+## 10. 将軍家 第三陣（影・くノ一・鬼半蔵）— W3（2026-11-03・branch `feat/w3-shogunate-wave3`・AI 記入）
+
+出典・規約・加工方針は §9 と同じ（Kit 将軍家 v1.0.0・`SGG-FAN-CREATION-GUIDELINES-1.0.0`・確認日 2026-11-03・非生成加工のみ・二つ名／型／台詞／技名は本作の創作・音声なし）。
+
+| ID | Path（配信） | Source file（art-source） | Category | Creator | Model-Service | Generation date | Prompt reference | Reference inputs | Terms version・date checked | Commercial use | Modification | Attribution | Canonical source | Evidence（sha256） | Status |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| ENEMY-KIT-05 | `enemies/kage/art.webp`（768²・alpha） | `art-source/enemies/kage/kage_main.webp`（Kit 原本 MAIN 1600²・非透過・115,976B・無加工・tracked） | enemy | **Kit 公式**（将軍家 v1.0.0） | — | `releasedAt 2026-10-08` | — | なし | `SGG-FAN-CREATION-GUIDELINES-1.0.0`・2026-11-03 | 可 | 可。人物中心の切り出し（1000×1250）＋放射状の透過フェード＋768²（sharp・非生成） | 任意（Credits に明記） | manifest `kage:MAIN` sha256 `330dcfd3259e56fc…`（一致） | 37380298b713178b…・125758B | ◎ |
+| ENEMY-KIT-06 | `enemies/kunoichi/art.webp`（768²・alpha） | `art-source/enemies/kunoichi/kunoichi_main.webp`（Kit 原本 MAIN 1600²・非透過・144,654B・無加工・tracked） | enemy | **Kit 公式** | — | 同上 | — | なし | 同上 | 可 | 可。同上 | 任意 | manifest `kunoichi:MAIN` sha256 `51e3510269dd5f16…`（一致） | 2641e5fc31349c69…・139928B | ◎ |
+| ENEMY-KIT-07 | `enemies/onihanzo/art.webp`（768²・alpha） | `art-source/enemies/onihanzo/onihanzo_front.webp`（Kit 原本 FRONT 1600²・透過・96,278B・無加工・tracked） | enemy | **Kit 公式** | — | 同上 | — | なし | 同上 | 可 | 可。透明余白トリム＋768²（忠次と同手順） | 任意 | manifest `onihanzo:FRONT` sha256 `b9b3bd4e00cf3f4f…`（一致） | 33b0943262af85b9…・61652B | ◎ |
+| STG-12 | `backgrounds/stages/12-kage-village.webp`（1600×900）・忍者衆・影「影の里」accent `#5a6b9e` | STG-03（`03-ghost-hydrangea.webp`・CEO 生成）からの派生 | stage | CEO 生成（原本＝STG-03）＋AI 非生成加工 | STG-03 に従う | 同上 | 同上 | なし | — | 同上 | 色相回転（hue 200）・減光 0.7・彩度 0.6 | — | — | 60aa3a8917a81844…・255394B | STG-03 と同じ Status |
+| STG-13 | `backgrounds/stages/13-kunoichi-moonpath.webp`（1600×900）・忍者衆・くノ一「月下の忍び道」accent `#c9a24d` | STG-05（`05-beast-moonpeak.webp`・CEO 生成）からの派生 | stage | CEO 生成（原本＝STG-05）＋AI 非生成加工 | 同上 | 同上 | 同上 | なし | — | 同上 | 色相回転（hue 20）・減光 0.85・彩度 0.8 | — | — | f31097f348af5d51…・307964B | 同上 |
+| STG-14 | `backgrounds/stages/14-onihanzo-fort.webp`（1600×900）・影の頭領・鬼半蔵「鬼嶽の砦」accent `#b8322d` | STG-02（`02-oni-castle.webp`・CEO 生成）からの派生 | stage | CEO 生成（原本＝STG-02）＋AI 非生成加工 | 同上 | 同上 | 同上 | なし | — | 同上 | 色相回転（hue −15）・減光 0.75・彩度 1.1 | — | — | 26999c67af6fcdec…・191822B | 同上 |
+
+- 残る将軍家 3 体（康虎・忠勝・ドーマン）は W4／W5 で取得する。BACK は使用しない

@@ -59,6 +59,8 @@ import { describeSameBoardDiff, type SameBoardMemo } from './retrySemantics'
 import './battle.css'
 // W2 将軍家 第二陣（決定288 v1.1）：岡っ引き・直政・康政の表示専用 CSS（battle.css の忠次ブロックは末尾固定のため別ファイル）
 import './shogunateWave2.css'
+// W3 将軍家 第三陣：影・くノ一・鬼半蔵の表示専用 CSS
+import './shogunateWave3.css'
 
 type BattleScreenProps = {
   /** GameFlowが保持するuseGameEngineの戻り値。state は必ずゲーム進行中/決着済み */

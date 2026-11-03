@@ -105,8 +105,8 @@ describe('将軍家 Pilot 敵（忠次）', () => {
 
   it('ENEMIES は既存 7 体＋Threat Pilot＋将軍家の順。将軍家判定は忠次にだけ真・Pilot 判定（記録ガード）は Threat Pilot にだけ真（W1：忠次は偽）', () => {
     expect(ENEMIES).toEqual([...CORE_ENEMIES, ...PILOT_ENEMIES, ...SHOGUNATE_ENEMIES])
-    expect(SHOGUNATE_ENEMIES).toHaveLength(4)
-    expect(SHOGUNATE_ENEMIES.map((e) => e.id as string)).toEqual(['enemy_08', 'enemy_10', 'enemy_11', 'enemy_12'])
+    expect(SHOGUNATE_ENEMIES).toHaveLength(7)
+    expect(SHOGUNATE_ENEMIES.map((e) => e.id as string)).toEqual(['enemy_08', 'enemy_10', 'enemy_11', 'enemy_12', 'enemy_13', 'enemy_14', 'enemy_15'])
     for (const e of SHOGUNATE_ENEMIES) expect(isShogunateEnemyId(e.id)).toBe(true)
     expect(isShogunateEnemyId(SHOGUNATE_ENEMY_IDS.tadatsugu)).toBe(true)
     expect(isShogunateEnemyId(PILOT_ENEMY_IDS.oniTactic)).toBe(false)
@@ -260,5 +260,69 @@ describe('W2 将軍家 第二陣（岡っ引き・直政・康政・決定288 v1
     expect(okappiki.art).toBe('/assets/enemies/okappiki/art.webp')
     expect(naomasa.stage.bg).toBe('/assets/backgrounds/stages/10-naomasa-camp.webp')
     expect(yasumasa.stage.bg).toBe('/assets/backgrounds/stages/11-yasumasa-camp.webp')
+  })
+})
+
+describe('W3 将軍家 第三陣（影・くノ一・鬼半蔵・決定288 v1.1）', () => {
+  const kage = getEnemyDef(SHOGUNATE_ENEMY_IDS.kage)
+  const kunoichi = getEnemyDef(SHOGUNATE_ENEMY_IDS.kunoichi)
+  const onihanzo = getEnemyDef(SHOGUNATE_ENEMY_IDS.onihanzo)
+  const totals = (def: ReturnType<typeof getEnemyDef>, branch: 'then' | 'else') =>
+    def.actions.map((a) => (a.kind === 'tactic' ? enemyActionTotal(a[branch]) : enemyActionTotal(a)))
+
+  it('影：HP 96・2 回の読み（R2 ratio 0.85 の静かな分岐・R5 忠次型の軍略 then 9／else 闇討ち 20）・合計 then 49／else 62', () => {
+    expect(kage.id).toBe('enemy_13')
+    expect(kage.maxHp).toBe(96)
+    const r2 = kage.actions[1]
+    const r5 = kage.actions[4]
+    if (r2.kind !== 'tactic' || r5.kind !== 'tactic') throw new Error('R2/R5 must be tactic')
+    expect(r2.cond).toEqual({ type: 'enemyHpRatioAtMost', ratio: 0.85 })
+    expect(r2.then).toEqual({ kind: 'multiAttack', hits: [3, 3, 3] })
+    expect(r2.else).toEqual({ kind: 'attack', amount: 11 })
+    expect(r5.cond).toEqual({ type: 'enemyHpRatioAtMost', ratio: 0.35, ratioByDifficulty: { easy: 0.35, normal: 0.35, hard: 0.45 } })
+    expect(r5.else).toEqual({ kind: 'special', amount: 20, name: '闇討ち' })
+    expect(kage.actions[3]).toEqual({ kind: 'charge', label: '⚠ 追い込めねば次は闇討ち' })
+    expect(totals(kage, 'then').reduce((s, t) => s + t, 0)).toBe(49)
+    expect(totals(kage, 'else').reduce((s, t) => s + t, 0)).toBe(62)
+    // R2 の分岐：96 × 0.85 ＝ 81.6 → HP 81 以下で then（R1 に 15 以上削られた）
+    expect(tacticBranch(r2, 81, 96, 'normal')).toBe('then')
+    expect(tacticBranch(r2, 82, 96, 'normal')).toBe('else')
+  })
+
+  it('くノ一：HP 90・疾風型・fast・連撃中心・R6 影走り 6×3 special・engine 語彙は既存のみ・合計 52', () => {
+    expect(kunoichi.id).toBe('enemy_14')
+    expect(kunoichi.maxHp).toBe(90)
+    expect(kunoichi.visualType).toBe('fast')
+    expect(kunoichi.actions.map((a) => a.kind)).toEqual(['multiAttack', 'multiAttack', 'attack', 'multiAttack', 'charge', 'multiAttack', 'multiAttack'])
+    expect(kunoichi.actions[5]).toEqual({ kind: 'multiAttack', hits: [6, 6, 6], name: '影走り', special: true })
+    expect(totals(kunoichi, 'then').reduce((s, t) => s + t, 0)).toBe(52)
+  })
+
+  it('鬼半蔵：HP 110・頭領型・heavy・R4 軍略 then 連撃 4×3 special／else 必殺 24・R7 必殺 26・合計 then 65／else 77', () => {
+    expect(onihanzo.id).toBe('enemy_15')
+    expect(onihanzo.maxHp).toBe(110)
+    expect(onihanzo.visualType).toBe('heavy')
+    const r4 = onihanzo.actions[3]
+    if (r4.kind !== 'tactic') throw new Error('R4 must be tactic')
+    expect(r4.then).toEqual({ kind: 'multiAttack', hits: [4, 4, 4], name: '鬼嶽・連風', special: true })
+    expect(r4.else).toEqual({ kind: 'special', amount: 24, name: '鬼嶽・血風' })
+    expect(onihanzo.actions[6]).toEqual({ kind: 'special', amount: 26, name: '鬼嶽・頭領斬り' })
+    expect(totals(onihanzo, 'then').reduce((s, t) => s + t, 0)).toBe(65)
+    expect(totals(onihanzo, 'else').reduce((s, t) => s + t, 0)).toBe(77)
+  })
+
+  it('表記：公式名と公式 role だけで名前を組み「公式」「公認」「提携」を書かない。素材は 11 体で一意', () => {
+    expect(kage.name).toBe('忍者衆・影')
+    expect(kunoichi.name).toBe('忍者衆・くノ一')
+    expect(onihanzo.name).toBe('影の頭領・鬼半蔵')
+    for (const def of [kage, kunoichi, onihanzo]) {
+      expect(def.battleCries).toHaveLength(7)
+      expect(def.typeDescription.length).toBeLessThanOrEqual(30)
+      const text = [def.name, def.typeLabel, def.typeDescription, def.stage.nameJa, ...def.battleCries].join('\n')
+      expect(text).not.toMatch(/公式|公認|提携/)
+    }
+    const all = [...CORE_ENEMIES, ...SHOGUNATE_ENEMIES]
+    expect(new Set(all.map((e) => e.art)).size).toBe(all.length)
+    expect(new Set(all.map((e) => e.stage.bg)).size).toBe(all.length)
   })
 })
