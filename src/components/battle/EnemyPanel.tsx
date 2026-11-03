@@ -163,7 +163,13 @@ export function EnemyPanel({
   useEnemyBreakSe(brk, charging)
 
   return (
-    <div className={`panel enemy-panel enemy-band-${band}${enemyBreakClass('cf2-break', brk.level)}`} data-enemy={enemy.defId} style={breakVars}>
+    <div
+      className={`panel enemy-panel enemy-band-${band}${enemyBreakClass('cf2-break', brk.level)}`}
+      data-enemy={enemy.defId}
+      // W6（決定288 v1.1 §10-3）：「あと N」行の状態（armed／cleared）を panel の根にも写す表示専用の口。shogunateWave6.css が読む（将軍家以外は付かない）
+      data-tactic={tLine ? (tLine.cleared ? 'cleared' : 'armed') : undefined}
+      style={breakVars}
+    >
       {/* Phase 6-B（決定164）：名前・HP・予告・状態を立ち絵の「上」に1枚の名札としてまとめる。
           こうすると、どの画面高でも予告と HP が立ち絵と一緒に必ず見える（旧：立ち絵の下にあり、
           手札を触る位置までスクロールすると画面外になっていた）。 */}

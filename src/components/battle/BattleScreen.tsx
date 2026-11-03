@@ -63,6 +63,7 @@ import './shogunateWave2.css'
 import './shogunateWave3.css'
 import './shogunateWave4.css'
 import './shogunateWave5.css'
+import './shogunateWave6.css'
 
 type BattleScreenProps = {
   /** GameFlowが保持するuseGameEngineの戻り値。state は必ずゲーム進行中/決着済み */
