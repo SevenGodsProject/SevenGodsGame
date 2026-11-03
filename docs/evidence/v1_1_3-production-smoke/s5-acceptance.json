@@ -1,0 +1,1214 @@
+{
+  "base": "https://seven-gods-game.vercel.app/",
+  "generatedAt": "2026-11-03T20:43:47.023Z",
+  "pass": 228,
+  "total": 228,
+  "results": [
+    {
+      "viewport": "pc",
+      "mode": "normal",
+      "checks": [
+        {
+          "name": "enemy cards = 18 (7 + shogunate 10 + entrust)",
+          "pass": true,
+          "detail": 18
+        },
+        {
+          "name": "shogunate enemy listed: 将軍四天王・忠次",
+          "pass": true
+        },
+        {
+          "name": "shogunate enemy listed: 捕り方・岡っ引き",
+          "pass": true
+        },
+        {
+          "name": "shogunate enemy listed: 将軍四天王・直政",
+          "pass": true
+        },
+        {
+          "name": "shogunate enemy listed: 将軍四天王・康政",
+          "pass": true
+        },
+        {
+          "name": "shogunate enemy listed: 忍者衆・影",
+          "pass": true
+        },
+        {
+          "name": "shogunate enemy listed: 忍者衆・くノ一",
+          "pass": true
+        },
+        {
+          "name": "shogunate enemy listed: 影の頭領・鬼半蔵",
+          "pass": true
+        },
+        {
+          "name": "shogunate enemy listed: 将軍四天王・忠勝",
+          "pass": true
+        },
+        {
+          "name": "shogunate enemy listed: 科学者・ドーマン",
+          "pass": true
+        },
+        {
+          "name": "shogunate enemy listed: 十七代将軍・康虎",
+          "pass": true
+        },
+        {
+          "name": "shogunate section heading shown once",
+          "pass": true
+        },
+        {
+          "name": "core enemy listed: 試練の影",
+          "pass": true,
+          "detail": 1
+        },
+        {
+          "name": "core enemy listed: 業斧の鬼将",
+          "pass": true,
+          "detail": 1
+        },
+        {
+          "name": "core enemy listed: 藍花の怨霊",
+          "pass": true,
+          "detail": 1
+        },
+        {
+          "name": "core enemy listed: 銀甲の機工師",
+          "pass": true,
+          "detail": 1
+        },
+        {
+          "name": "core enemy listed: 双牙の魔獣",
+          "pass": true,
+          "detail": 1
+        },
+        {
+          "name": "core enemy listed: 蒼海の龍神",
+          "pass": true,
+          "detail": 1
+        },
+        {
+          "name": "core enemy listed: 乱舞の道化",
+          "pass": true,
+          "detail": 1
+        },
+        {
+          "name": "tadatsugu card shown (public roster)",
+          "pass": true
+        },
+        {
+          "name": "threat card hidden",
+          "pass": true
+        },
+        {
+          "name": "shogunate chip (enemy-shogunate-chip) shown 10",
+          "pass": true
+        },
+        {
+          "name": "shogunate chip text = 攻略盤の対象外・戦績は残る",
+          "pass": true,
+          "detail": "攻略盤の対象外・戦績は残る"
+        },
+        {
+          "name": "shogunate chip fits inside the card",
+          "pass": true,
+          "detail": {
+            "chipRight": 709,
+            "cardRight": 748,
+            "chipLeft": 556,
+            "cardLeft": 517
+          }
+        },
+        {
+          "name": "pilot chip hidden",
+          "pass": true
+        },
+        {
+          "name": "threat notice hidden",
+          "pass": true
+        },
+        {
+          "name": "no shogunate pilot notice",
+          "pass": true
+        },
+        {
+          "name": "no 「記録に残らない」 on tadatsugu card",
+          "pass": true
+        },
+        {
+          "name": "tadatsugu ★ = 1 (measured)",
+          "pass": true,
+          "detail": "脅威度 1 / 5"
+        },
+        {
+          "name": "no horizontal overflow on enemy select",
+          "pass": true,
+          "detail": {
+            "scrollWidth": 1508,
+            "innerWidth": 1508
+          }
+        },
+        {
+          "name": "battle started",
+          "pass": true
+        },
+        {
+          "name": "enemy name shown",
+          "pass": true
+        },
+        {
+          "name": ".battle[data-enemy=enemy_08]",
+          "pass": true,
+          "detail": {
+            "battleDataEnemy": "enemy_08"
+          }
+        },
+        {
+          "name": "battleSave written while playing (記録に残る)",
+          "pass": true,
+          "detail": [
+            "sevengods.battleSave",
+            "sevengods.deckPreference",
+            "sevengods.matchups"
+          ]
+        },
+        {
+          "name": "battleSave is enemy_08 / version 9",
+          "pass": true,
+          "detail": {
+            "version": 9
+          }
+        },
+        {
+          "name": "Home offers 続きから",
+          "pass": true
+        },
+        {
+          "name": "resumed battle shows tadatsugu",
+          "pass": true
+        },
+        {
+          "name": "resumed at round 1",
+          "pass": true,
+          "detail": "ラウンド 1 / 7\n神力 2 / 2\nスコア 0"
+        },
+        {
+          "name": "R1 intent = ⚔ 50",
+          "pass": true,
+          "detail": "50"
+        },
+        {
+          "name": "R3 intent = charge「⚠ 傷が浅ければ次は総攻め」",
+          "pass": true,
+          "detail": "⚠ 傷が浅ければ次は総攻め"
+        },
+        {
+          "name": "R4 intent = 軍略・総攻め 240 (else)",
+          "pass": true,
+          "detail": "軍略・総攻め 240"
+        },
+        {
+          "name": "battle finished (result shown)",
+          "pass": true
+        },
+        {
+          "name": "records written after battle (戦績に残る)",
+          "pass": true,
+          "detail": [
+            "sevengods.deckPreference",
+            "sevengods.matchups",
+            "sevengods.otomoBond",
+            "sevengods.records",
+            "sevengods.stakes"
+          ]
+        },
+        {
+          "name": "battleSave cleared after battle",
+          "pass": true,
+          "detail": [
+            "sevengods.deckPreference",
+            "sevengods.matchups",
+            "sevengods.otomoBond",
+            "sevengods.records",
+            "sevengods.stakes"
+          ]
+        },
+        {
+          "name": "matchups has no enemy_08 (49 盤の対象外)",
+          "pass": true,
+          "detail": {
+            "version": 1,
+            "cleared": {},
+            "seeded": {
+              "at": 1793738463069,
+              "source": "daily"
+            }
+          }
+        },
+        {
+          "name": "JS error 0",
+          "pass": true,
+          "detail": []
+        }
+      ],
+      "intents": [
+        "50",
+        "90",
+        "⚠ 傷が浅ければ次は総攻め",
+        "軍略・総攻め 240",
+        "行動予告なし"
+      ]
+    },
+    {
+      "viewport": "pc",
+      "mode": "legacy-shogunate",
+      "checks": [
+        {
+          "name": "enemy cards = 18 (7 + shogunate 10 + entrust)",
+          "pass": true,
+          "detail": 18
+        },
+        {
+          "name": "shogunate enemy listed: 将軍四天王・忠次",
+          "pass": true
+        },
+        {
+          "name": "shogunate enemy listed: 捕り方・岡っ引き",
+          "pass": true
+        },
+        {
+          "name": "shogunate enemy listed: 将軍四天王・直政",
+          "pass": true
+        },
+        {
+          "name": "shogunate enemy listed: 将軍四天王・康政",
+          "pass": true
+        },
+        {
+          "name": "shogunate enemy listed: 忍者衆・影",
+          "pass": true
+        },
+        {
+          "name": "shogunate enemy listed: 忍者衆・くノ一",
+          "pass": true
+        },
+        {
+          "name": "shogunate enemy listed: 影の頭領・鬼半蔵",
+          "pass": true
+        },
+        {
+          "name": "shogunate enemy listed: 将軍四天王・忠勝",
+          "pass": true
+        },
+        {
+          "name": "shogunate enemy listed: 科学者・ドーマン",
+          "pass": true
+        },
+        {
+          "name": "shogunate enemy listed: 十七代将軍・康虎",
+          "pass": true
+        },
+        {
+          "name": "shogunate section heading shown once",
+          "pass": true
+        },
+        {
+          "name": "core enemy listed: 試練の影",
+          "pass": true,
+          "detail": 1
+        },
+        {
+          "name": "core enemy listed: 業斧の鬼将",
+          "pass": true,
+          "detail": 1
+        },
+        {
+          "name": "core enemy listed: 藍花の怨霊",
+          "pass": true,
+          "detail": 1
+        },
+        {
+          "name": "core enemy listed: 銀甲の機工師",
+          "pass": true,
+          "detail": 1
+        },
+        {
+          "name": "core enemy listed: 双牙の魔獣",
+          "pass": true,
+          "detail": 1
+        },
+        {
+          "name": "core enemy listed: 蒼海の龍神",
+          "pass": true,
+          "detail": 1
+        },
+        {
+          "name": "core enemy listed: 乱舞の道化",
+          "pass": true,
+          "detail": 1
+        },
+        {
+          "name": "tadatsugu card shown (public roster)",
+          "pass": true
+        },
+        {
+          "name": "threat card hidden",
+          "pass": true
+        },
+        {
+          "name": "shogunate chip (enemy-shogunate-chip) shown 10",
+          "pass": true
+        },
+        {
+          "name": "shogunate chip text = 攻略盤の対象外・戦績は残る",
+          "pass": true,
+          "detail": "攻略盤の対象外・戦績は残る"
+        },
+        {
+          "name": "shogunate chip fits inside the card",
+          "pass": true,
+          "detail": {
+            "chipRight": 709,
+            "cardRight": 748,
+            "chipLeft": 556,
+            "cardLeft": 517
+          }
+        },
+        {
+          "name": "pilot chip hidden",
+          "pass": true
+        },
+        {
+          "name": "threat notice hidden",
+          "pass": true
+        },
+        {
+          "name": "no shogunate pilot notice",
+          "pass": true
+        },
+        {
+          "name": "no 「記録に残らない」 on tadatsugu card",
+          "pass": true
+        },
+        {
+          "name": "tadatsugu ★ = 1 (measured)",
+          "pass": true,
+          "detail": "脅威度 1 / 5"
+        },
+        {
+          "name": "no horizontal overflow on enemy select",
+          "pass": true,
+          "detail": {
+            "scrollWidth": 1508,
+            "innerWidth": 1508
+          }
+        },
+        {
+          "name": "科学者・ドーマン battle data-enemy",
+          "pass": true,
+          "detail": {
+            "battleDataEnemy": "enemy_17"
+          }
+        },
+        {
+          "name": "科学者・ドーマン R3 tactic line armed",
+          "pass": true,
+          "detail": "共鳴あと4で\n五重塔を止める"
+        },
+        {
+          "name": "科学者・ドーマン R4 intent = else（必殺）",
+          "pass": true,
+          "detail": "逆さ五重塔 240"
+        },
+        {
+          "name": "JS error 0",
+          "pass": true,
+          "detail": []
+        }
+      ],
+      "intents": [
+        "50",
+        "70",
+        "⚠ 五重塔が共鳴に反応",
+        "逆さ五重塔 240"
+      ]
+    },
+    {
+      "viewport": "pc",
+      "mode": "threat",
+      "checks": [
+        {
+          "name": "enemy cards = 19 (7 + shogunate 10 + entrust + threat)",
+          "pass": true,
+          "detail": 19
+        },
+        {
+          "name": "shogunate enemy listed: 将軍四天王・忠次",
+          "pass": true
+        },
+        {
+          "name": "shogunate enemy listed: 捕り方・岡っ引き",
+          "pass": true
+        },
+        {
+          "name": "shogunate enemy listed: 将軍四天王・直政",
+          "pass": true
+        },
+        {
+          "name": "shogunate enemy listed: 将軍四天王・康政",
+          "pass": true
+        },
+        {
+          "name": "shogunate enemy listed: 忍者衆・影",
+          "pass": true
+        },
+        {
+          "name": "shogunate enemy listed: 忍者衆・くノ一",
+          "pass": true
+        },
+        {
+          "name": "shogunate enemy listed: 影の頭領・鬼半蔵",
+          "pass": true
+        },
+        {
+          "name": "shogunate enemy listed: 将軍四天王・忠勝",
+          "pass": true
+        },
+        {
+          "name": "shogunate enemy listed: 科学者・ドーマン",
+          "pass": true
+        },
+        {
+          "name": "shogunate enemy listed: 十七代将軍・康虎",
+          "pass": true
+        },
+        {
+          "name": "shogunate section heading shown once",
+          "pass": true
+        },
+        {
+          "name": "core enemy listed: 試練の影",
+          "pass": true,
+          "detail": 1
+        },
+        {
+          "name": "core enemy listed: 業斧の鬼将",
+          "pass": true,
+          "detail": 2
+        },
+        {
+          "name": "core enemy listed: 藍花の怨霊",
+          "pass": true,
+          "detail": 1
+        },
+        {
+          "name": "core enemy listed: 銀甲の機工師",
+          "pass": true,
+          "detail": 1
+        },
+        {
+          "name": "core enemy listed: 双牙の魔獣",
+          "pass": true,
+          "detail": 1
+        },
+        {
+          "name": "core enemy listed: 蒼海の龍神",
+          "pass": true,
+          "detail": 1
+        },
+        {
+          "name": "core enemy listed: 乱舞の道化",
+          "pass": true,
+          "detail": 1
+        },
+        {
+          "name": "tadatsugu card shown (public roster)",
+          "pass": true
+        },
+        {
+          "name": "threat card shown",
+          "pass": true
+        },
+        {
+          "name": "shogunate chip (enemy-shogunate-chip) shown 10",
+          "pass": true
+        },
+        {
+          "name": "shogunate chip text = 攻略盤の対象外・戦績は残る",
+          "pass": true,
+          "detail": "攻略盤の対象外・戦績は残る"
+        },
+        {
+          "name": "shogunate chip fits inside the card",
+          "pass": true,
+          "detail": {
+            "chipRight": 709,
+            "cardRight": 748,
+            "chipLeft": 556,
+            "cardLeft": 517
+          }
+        },
+        {
+          "name": "pilot chip shown 1",
+          "pass": true
+        },
+        {
+          "name": "threat notice shown",
+          "pass": true
+        },
+        {
+          "name": "no shogunate pilot notice",
+          "pass": true
+        },
+        {
+          "name": "no 「記録に残らない」 on tadatsugu card",
+          "pass": true
+        },
+        {
+          "name": "tadatsugu ★ = 1 (measured)",
+          "pass": true,
+          "detail": "脅威度 1 / 5"
+        },
+        {
+          "name": "no horizontal overflow on enemy select",
+          "pass": true,
+          "detail": {
+            "scrollWidth": 1508,
+            "innerWidth": 1508
+          }
+        },
+        {
+          "name": "十七代将軍・康虎 battle data-enemy",
+          "pass": true,
+          "detail": {
+            "battleDataEnemy": "enemy_18"
+          }
+        },
+        {
+          "name": "十七代将軍・康虎 R3 tactic line armed",
+          "pass": true,
+          "detail": "あと460で\n将軍の威を止める"
+        },
+        {
+          "name": "十七代将軍・康虎 R4 intent = else（必殺）",
+          "pass": true,
+          "detail": "将軍の威 320"
+        },
+        {
+          "name": "JS error 0",
+          "pass": true,
+          "detail": []
+        }
+      ],
+      "intents": [
+        "80",
+        "連撃 50×3",
+        "⚠ 追い込まねば次は将軍の威",
+        "将軍の威 320"
+      ]
+    },
+    {
+      "viewport": "sp375",
+      "mode": "normal",
+      "checks": [
+        {
+          "name": "enemy cards = 18 (7 + shogunate 10 + entrust)",
+          "pass": true,
+          "detail": 18
+        },
+        {
+          "name": "shogunate enemy listed: 将軍四天王・忠次",
+          "pass": true
+        },
+        {
+          "name": "shogunate enemy listed: 捕り方・岡っ引き",
+          "pass": true
+        },
+        {
+          "name": "shogunate enemy listed: 将軍四天王・直政",
+          "pass": true
+        },
+        {
+          "name": "shogunate enemy listed: 将軍四天王・康政",
+          "pass": true
+        },
+        {
+          "name": "shogunate enemy listed: 忍者衆・影",
+          "pass": true
+        },
+        {
+          "name": "shogunate enemy listed: 忍者衆・くノ一",
+          "pass": true
+        },
+        {
+          "name": "shogunate enemy listed: 影の頭領・鬼半蔵",
+          "pass": true
+        },
+        {
+          "name": "shogunate enemy listed: 将軍四天王・忠勝",
+          "pass": true
+        },
+        {
+          "name": "shogunate enemy listed: 科学者・ドーマン",
+          "pass": true
+        },
+        {
+          "name": "shogunate enemy listed: 十七代将軍・康虎",
+          "pass": true
+        },
+        {
+          "name": "shogunate section heading shown once",
+          "pass": true
+        },
+        {
+          "name": "core enemy listed: 試練の影",
+          "pass": true,
+          "detail": 1
+        },
+        {
+          "name": "core enemy listed: 業斧の鬼将",
+          "pass": true,
+          "detail": 1
+        },
+        {
+          "name": "core enemy listed: 藍花の怨霊",
+          "pass": true,
+          "detail": 1
+        },
+        {
+          "name": "core enemy listed: 銀甲の機工師",
+          "pass": true,
+          "detail": 1
+        },
+        {
+          "name": "core enemy listed: 双牙の魔獣",
+          "pass": true,
+          "detail": 1
+        },
+        {
+          "name": "core enemy listed: 蒼海の龍神",
+          "pass": true,
+          "detail": 1
+        },
+        {
+          "name": "core enemy listed: 乱舞の道化",
+          "pass": true,
+          "detail": 1
+        },
+        {
+          "name": "tadatsugu card shown (public roster)",
+          "pass": true
+        },
+        {
+          "name": "threat card hidden",
+          "pass": true
+        },
+        {
+          "name": "shogunate chip (enemy-shogunate-chip) shown 10",
+          "pass": true
+        },
+        {
+          "name": "shogunate chip text = 攻略盤の対象外・戦績は残る",
+          "pass": true,
+          "detail": "攻略盤の対象外・戦績は残る"
+        },
+        {
+          "name": "shogunate chip fits inside the card",
+          "pass": true,
+          "detail": {
+            "chipRight": 350,
+            "cardRight": 355,
+            "chipLeft": 197,
+            "cardLeft": 193
+          }
+        },
+        {
+          "name": "pilot chip hidden",
+          "pass": true
+        },
+        {
+          "name": "threat notice hidden",
+          "pass": true
+        },
+        {
+          "name": "no shogunate pilot notice",
+          "pass": true
+        },
+        {
+          "name": "no 「記録に残らない」 on tadatsugu card",
+          "pass": true
+        },
+        {
+          "name": "tadatsugu ★ = 1 (measured)",
+          "pass": true,
+          "detail": "脅威度 1 / 5"
+        },
+        {
+          "name": "no horizontal overflow on enemy select",
+          "pass": true,
+          "detail": {
+            "scrollWidth": 375,
+            "innerWidth": 375
+          }
+        },
+        {
+          "name": "battle started",
+          "pass": true
+        },
+        {
+          "name": "enemy name shown",
+          "pass": true
+        },
+        {
+          "name": ".battle[data-enemy=enemy_08]",
+          "pass": true,
+          "detail": {
+            "battleDataEnemy": "enemy_08"
+          }
+        },
+        {
+          "name": "battleSave written while playing (記録に残る)",
+          "pass": true,
+          "detail": [
+            "sevengods.battleSave",
+            "sevengods.deckPreference",
+            "sevengods.matchups"
+          ]
+        },
+        {
+          "name": "battleSave is enemy_08 / version 9",
+          "pass": true,
+          "detail": {
+            "version": 9
+          }
+        },
+        {
+          "name": "Home offers 続きから",
+          "pass": true
+        },
+        {
+          "name": "resumed battle shows tadatsugu",
+          "pass": true
+        },
+        {
+          "name": "resumed at round 1",
+          "pass": true,
+          "detail": "ラウンド 1 / 7\n神力 2 / 2\nスコア 0"
+        },
+        {
+          "name": "R1 intent = ⚔ 50",
+          "pass": true,
+          "detail": "50"
+        },
+        {
+          "name": "R3 intent = charge「⚠ 傷が浅ければ次は総攻め」",
+          "pass": true,
+          "detail": "⚠ 傷が浅ければ次は総攻め"
+        },
+        {
+          "name": "R4 intent = 軍略・総攻め 240 (else)",
+          "pass": true,
+          "detail": "軍略・総攻め 240"
+        },
+        {
+          "name": "battle finished (result shown)",
+          "pass": true
+        },
+        {
+          "name": "records written after battle (戦績に残る)",
+          "pass": true,
+          "detail": [
+            "sevengods.deckPreference",
+            "sevengods.matchups",
+            "sevengods.otomoBond",
+            "sevengods.records",
+            "sevengods.stakes"
+          ]
+        },
+        {
+          "name": "battleSave cleared after battle",
+          "pass": true,
+          "detail": [
+            "sevengods.deckPreference",
+            "sevengods.matchups",
+            "sevengods.otomoBond",
+            "sevengods.records",
+            "sevengods.stakes"
+          ]
+        },
+        {
+          "name": "matchups has no enemy_08 (49 盤の対象外)",
+          "pass": true,
+          "detail": {
+            "version": 1,
+            "cleared": {},
+            "seeded": {
+              "at": 1793738556612,
+              "source": "daily"
+            }
+          }
+        },
+        {
+          "name": "JS error 0",
+          "pass": true,
+          "detail": []
+        }
+      ],
+      "intents": [
+        "50",
+        "90",
+        "⚠ 傷が浅ければ次は総攻め",
+        "軍略・総攻め 240",
+        "行動予告なし"
+      ]
+    },
+    {
+      "viewport": "sp375",
+      "mode": "legacy-shogunate",
+      "checks": [
+        {
+          "name": "enemy cards = 18 (7 + shogunate 10 + entrust)",
+          "pass": true,
+          "detail": 18
+        },
+        {
+          "name": "shogunate enemy listed: 将軍四天王・忠次",
+          "pass": true
+        },
+        {
+          "name": "shogunate enemy listed: 捕り方・岡っ引き",
+          "pass": true
+        },
+        {
+          "name": "shogunate enemy listed: 将軍四天王・直政",
+          "pass": true
+        },
+        {
+          "name": "shogunate enemy listed: 将軍四天王・康政",
+          "pass": true
+        },
+        {
+          "name": "shogunate enemy listed: 忍者衆・影",
+          "pass": true
+        },
+        {
+          "name": "shogunate enemy listed: 忍者衆・くノ一",
+          "pass": true
+        },
+        {
+          "name": "shogunate enemy listed: 影の頭領・鬼半蔵",
+          "pass": true
+        },
+        {
+          "name": "shogunate enemy listed: 将軍四天王・忠勝",
+          "pass": true
+        },
+        {
+          "name": "shogunate enemy listed: 科学者・ドーマン",
+          "pass": true
+        },
+        {
+          "name": "shogunate enemy listed: 十七代将軍・康虎",
+          "pass": true
+        },
+        {
+          "name": "shogunate section heading shown once",
+          "pass": true
+        },
+        {
+          "name": "core enemy listed: 試練の影",
+          "pass": true,
+          "detail": 1
+        },
+        {
+          "name": "core enemy listed: 業斧の鬼将",
+          "pass": true,
+          "detail": 1
+        },
+        {
+          "name": "core enemy listed: 藍花の怨霊",
+          "pass": true,
+          "detail": 1
+        },
+        {
+          "name": "core enemy listed: 銀甲の機工師",
+          "pass": true,
+          "detail": 1
+        },
+        {
+          "name": "core enemy listed: 双牙の魔獣",
+          "pass": true,
+          "detail": 1
+        },
+        {
+          "name": "core enemy listed: 蒼海の龍神",
+          "pass": true,
+          "detail": 1
+        },
+        {
+          "name": "core enemy listed: 乱舞の道化",
+          "pass": true,
+          "detail": 1
+        },
+        {
+          "name": "tadatsugu card shown (public roster)",
+          "pass": true
+        },
+        {
+          "name": "threat card hidden",
+          "pass": true
+        },
+        {
+          "name": "shogunate chip (enemy-shogunate-chip) shown 10",
+          "pass": true
+        },
+        {
+          "name": "shogunate chip text = 攻略盤の対象外・戦績は残る",
+          "pass": true,
+          "detail": "攻略盤の対象外・戦績は残る"
+        },
+        {
+          "name": "shogunate chip fits inside the card",
+          "pass": true,
+          "detail": {
+            "chipRight": 350,
+            "cardRight": 355,
+            "chipLeft": 197,
+            "cardLeft": 193
+          }
+        },
+        {
+          "name": "pilot chip hidden",
+          "pass": true
+        },
+        {
+          "name": "threat notice hidden",
+          "pass": true
+        },
+        {
+          "name": "no shogunate pilot notice",
+          "pass": true
+        },
+        {
+          "name": "no 「記録に残らない」 on tadatsugu card",
+          "pass": true
+        },
+        {
+          "name": "tadatsugu ★ = 1 (measured)",
+          "pass": true,
+          "detail": "脅威度 1 / 5"
+        },
+        {
+          "name": "no horizontal overflow on enemy select",
+          "pass": true,
+          "detail": {
+            "scrollWidth": 375,
+            "innerWidth": 375
+          }
+        },
+        {
+          "name": "科学者・ドーマン battle data-enemy",
+          "pass": true,
+          "detail": {
+            "battleDataEnemy": "enemy_17"
+          }
+        },
+        {
+          "name": "科学者・ドーマン R3 tactic line armed",
+          "pass": true,
+          "detail": "共鳴あと4で\n五重塔を止める"
+        },
+        {
+          "name": "科学者・ドーマン R4 intent = else（必殺）",
+          "pass": true,
+          "detail": "逆さ五重塔 240"
+        },
+        {
+          "name": "JS error 0",
+          "pass": true,
+          "detail": []
+        }
+      ],
+      "intents": [
+        "50",
+        "70",
+        "⚠ 五重塔が共鳴に反応",
+        "逆さ五重塔 240"
+      ]
+    },
+    {
+      "viewport": "sp375",
+      "mode": "threat",
+      "checks": [
+        {
+          "name": "enemy cards = 19 (7 + shogunate 10 + entrust + threat)",
+          "pass": true,
+          "detail": 19
+        },
+        {
+          "name": "shogunate enemy listed: 将軍四天王・忠次",
+          "pass": true
+        },
+        {
+          "name": "shogunate enemy listed: 捕り方・岡っ引き",
+          "pass": true
+        },
+        {
+          "name": "shogunate enemy listed: 将軍四天王・直政",
+          "pass": true
+        },
+        {
+          "name": "shogunate enemy listed: 将軍四天王・康政",
+          "pass": true
+        },
+        {
+          "name": "shogunate enemy listed: 忍者衆・影",
+          "pass": true
+        },
+        {
+          "name": "shogunate enemy listed: 忍者衆・くノ一",
+          "pass": true
+        },
+        {
+          "name": "shogunate enemy listed: 影の頭領・鬼半蔵",
+          "pass": true
+        },
+        {
+          "name": "shogunate enemy listed: 将軍四天王・忠勝",
+          "pass": true
+        },
+        {
+          "name": "shogunate enemy listed: 科学者・ドーマン",
+          "pass": true
+        },
+        {
+          "name": "shogunate enemy listed: 十七代将軍・康虎",
+          "pass": true
+        },
+        {
+          "name": "shogunate section heading shown once",
+          "pass": true
+        },
+        {
+          "name": "core enemy listed: 試練の影",
+          "pass": true,
+          "detail": 1
+        },
+        {
+          "name": "core enemy listed: 業斧の鬼将",
+          "pass": true,
+          "detail": 2
+        },
+        {
+          "name": "core enemy listed: 藍花の怨霊",
+          "pass": true,
+          "detail": 1
+        },
+        {
+          "name": "core enemy listed: 銀甲の機工師",
+          "pass": true,
+          "detail": 1
+        },
+        {
+          "name": "core enemy listed: 双牙の魔獣",
+          "pass": true,
+          "detail": 1
+        },
+        {
+          "name": "core enemy listed: 蒼海の龍神",
+          "pass": true,
+          "detail": 1
+        },
+        {
+          "name": "core enemy listed: 乱舞の道化",
+          "pass": true,
+          "detail": 1
+        },
+        {
+          "name": "tadatsugu card shown (public roster)",
+          "pass": true
+        },
+        {
+          "name": "threat card shown",
+          "pass": true
+        },
+        {
+          "name": "shogunate chip (enemy-shogunate-chip) shown 10",
+          "pass": true
+        },
+        {
+          "name": "shogunate chip text = 攻略盤の対象外・戦績は残る",
+          "pass": true,
+          "detail": "攻略盤の対象外・戦績は残る"
+        },
+        {
+          "name": "shogunate chip fits inside the card",
+          "pass": true,
+          "detail": {
+            "chipRight": 350,
+            "cardRight": 355,
+            "chipLeft": 197,
+            "cardLeft": 193
+          }
+        },
+        {
+          "name": "pilot chip shown 1",
+          "pass": true
+        },
+        {
+          "name": "threat notice shown",
+          "pass": true
+        },
+        {
+          "name": "no shogunate pilot notice",
+          "pass": true
+        },
+        {
+          "name": "no 「記録に残らない」 on tadatsugu card",
+          "pass": true
+        },
+        {
+          "name": "tadatsugu ★ = 1 (measured)",
+          "pass": true,
+          "detail": "脅威度 1 / 5"
+        },
+        {
+          "name": "no horizontal overflow on enemy select",
+          "pass": true,
+          "detail": {
+            "scrollWidth": 375,
+            "innerWidth": 375
+          }
+        },
+        {
+          "name": "十七代将軍・康虎 battle data-enemy",
+          "pass": true,
+          "detail": {
+            "battleDataEnemy": "enemy_18"
+          }
+        },
+        {
+          "name": "十七代将軍・康虎 R3 tactic line armed",
+          "pass": true,
+          "detail": "あと460で\n将軍の威を止める"
+        },
+        {
+          "name": "十七代将軍・康虎 R4 intent = else（必殺）",
+          "pass": true,
+          "detail": "将軍の威 320"
+        },
+        {
+          "name": "JS error 0",
+          "pass": true,
+          "detail": []
+        }
+      ],
+      "intents": [
+        "80",
+        "連撃 50×3",
+        "⚠ 追い込まねば次は将軍の威",
+        "将軍の威 320"
+      ]
+    }
+  ]
+}
