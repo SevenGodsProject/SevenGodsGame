@@ -32,7 +32,7 @@
 
 ## 4. 証跡
 
-`docs/evidence/v1_1_2-production-smoke/`：json／txt を commit（S8 は `s8-save-migration.json`・`s8-stdout.txt`）。画像（webp／png）はローカルのみ。
+`docs/evidence/v1_1_2-production-smoke/`：json／txt を commit（S2 `s2-acceptance.json`・S5 `s5-acceptance.json`・S6 `s6-probe-normal/`・S8 `s8-save-migration.json`・各 stdout）。画像（webp／png）はローカルのみ。
 
 ## 5. 次
 
