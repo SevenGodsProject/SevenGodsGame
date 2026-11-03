@@ -144,6 +144,32 @@ for (const vp of VIEWPORTS) {
       await page.screenshot({ path: `${shotDir}/result-${vp.id}.png` })
       r.intents = intents
     }
+    // W2：康政（legacy-shogunate モード）／直政（threat モード）を 1 戦ずつ。札を出さず R3 の「あと N」行と R4 の else 分岐を確認（決定論）
+    if (mode === 'legacy-shogunate' || mode === 'threat') {
+      const target = mode === 'legacy-shogunate' ? { name: '将軍四天王・康政', dataEnemy: 'enemy_12', armed: /あと24で|采配を崩す/, r4: /采配・総崩し/, r4Amount: /260/ } : { name: '将軍四天王・直政', dataEnemy: 'enemy_11', armed: /一文字を止める/, r4: /猛り・一文字/, r4Amount: /220/ }
+      await page.getByRole('button', { name: new RegExp(target.name) }).first().click()
+      await page.getByText(new RegExp(target.name)).first().waitFor({ timeout: 8000 })
+      await clickText(page, 'この構成でバトル開始')
+      await page.getByRole('button', { name: 'ラウンドを終える' }).first().waitFor({ timeout: 20000 })
+      const dom = await page.evaluate(() => ({ battleDataEnemy: document.querySelector('.battle')?.getAttribute('data-enemy') ?? null }))
+      check(target.name + ' battle data-enemy', dom.battleDataEnemy === target.dataEnemy, dom)
+      const intents = []
+      let lineR3 = ''
+      for (let i = 0; i < 4; i++) {
+        const t = await intentText(page)
+        intents.push(t)
+        if (i === 2) lineR3 = await page.getByTestId('tactic-line').first().innerText().catch(() => '')
+        const btn = page.getByRole('button', { name: 'ラウンドを終える' }).first()
+        if (!(await btn.isVisible().catch(() => false))) break
+        await btn.click({ timeout: 5000 }).catch(() => {})
+        await page.waitForFunction((prev) => (document.querySelector('.intent')?.textContent ?? '') !== prev || !!document.querySelector('.game-over, .result-overlay'), t, { timeout: 15000 }).catch(() => {})
+        await page.waitForTimeout(400)
+      }
+      check(target.name + ' R3 tactic line armed', target.armed.test(lineR3), lineR3)
+      check(target.name + ' R4 intent = else（必殺）', target.r4.test(intents[3] ?? '') && target.r4Amount.test(intents[3] ?? ''), intents[3])
+      await page.screenshot({ path: `${shotDir}/battle-${target.dataEnemy}-${vp.id}.png` })
+      r.intents = intents
+    }
     check('JS error 0', errors.length === 0, errors)
     results.push(r)
     await context.close()
