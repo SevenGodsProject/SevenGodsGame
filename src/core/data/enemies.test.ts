@@ -7,11 +7,11 @@ describe('ENEMIES', () => {
     expect(new Set(ids).size).toBe(ids.length)
   })
 
-  it('is CORE 7 + Threat Pilot (enemy_09) + 将軍家 9 (enemy_08/10〜17) in that order; the default pick stays within CORE (W4)', () => {
-    expect(ENEMIES).toHaveLength(17)
-    expect(ENEMIES.map((e) => e.id as string)).toEqual([...Object.values(ENEMY_IDS), 'enemy_09', 'enemy_08', 'enemy_10', 'enemy_11', 'enemy_12', 'enemy_13', 'enemy_14', 'enemy_15', 'enemy_16', 'enemy_17'])
+  it('is CORE 7 + Threat Pilot (enemy_09) + 将軍家 10 (enemy_08/10〜18) in that order; the default pick stays within CORE (W5)', () => {
+    expect(ENEMIES).toHaveLength(18)
+    expect(ENEMIES.map((e) => e.id as string)).toEqual([...Object.values(ENEMY_IDS), 'enemy_09', 'enemy_08', 'enemy_10', 'enemy_11', 'enemy_12', 'enemy_13', 'enemy_14', 'enemy_15', 'enemy_16', 'enemy_17', 'enemy_18'])
     expect(PILOT_ENEMIES.map((e) => e.id as string)).toEqual(['enemy_09'])
-    expect(SHOGUNATE_ENEMIES.map((e) => e.id as string)).toEqual(['enemy_08', 'enemy_10', 'enemy_11', 'enemy_12', 'enemy_13', 'enemy_14', 'enemy_15', 'enemy_16', 'enemy_17'])
+    expect(SHOGUNATE_ENEMIES.map((e) => e.id as string)).toEqual(['enemy_08', 'enemy_10', 'enemy_11', 'enemy_12', 'enemy_13', 'enemy_14', 'enemy_15', 'enemy_16', 'enemy_17', 'enemy_18'])
     const core = new Set(CORE_ENEMIES.map((e) => e.id))
     for (const seed of ['a', 'seed-1', 'seed-2', 'seed-999999', 'こんにちは']) expect(core.has(pickEnemyId(seed))).toBe(true)
   })
@@ -47,12 +47,13 @@ describe('ENEMIES', () => {
 
   // LANE-D：Enemy Select＋Stage systemの表示専用メタデータが7体全てに揃っている
   // ことを保証する。HP・actions（数値・行動テーブル）は引き続き対象外＝無変更。
-  it('gives every enemy a threat rank between 1 and 4 (★5 is reserved for future bosses) (LANE-D)', () => {
+  it('gives every enemy a threat rank between 1 and 4; ★5 is the Boss slot and only 康虎 (enemy_18) uses it (LANE-D・W5)', () => {
     for (const enemy of ENEMIES) {
       expect(Number.isInteger(enemy.rank)).toBe(true)
       expect(enemy.rank).toBeGreaterThanOrEqual(1)
-      expect(enemy.rank).toBeLessThanOrEqual(4)
+      expect(enemy.rank).toBeLessThanOrEqual((enemy.id as string) === 'enemy_18' ? 5 : 4)
     }
+    expect(ENEMIES.filter((e) => e.rank === 5).map((e) => e.id as string)).toEqual(['enemy_18'])
   })
 
   // v1.0.1 ★再付番（AI 判断・実測）：旧 golden「影1/鬼将2/魔獣2/怨霊3/龍神3/機工師4/道化4」（LANE-D 叩き台）は

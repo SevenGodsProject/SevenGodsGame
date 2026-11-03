@@ -1,0 +1,67 @@
+/* ============================================================
+   W5 将軍家 最終（決定288 v1.1・2026-11-03）：十七代将軍・康虎（enemy_18・Boss ★5）の表示専用 CSS。
+   全セレクタを [data-enemy='enemy_18'] に閉じる＝既存 7 体・将軍家 9 体の見た目は不変。画像は無改変（gradient／mask／filter のみ）。
+   engine・timing 定数・既存セレクタの値は変更しない・reduce の @media は書かない（決定232）。
+   ============================================================ */
+
+/* 「あと N」行（第二陣〜第四陣と同じ見た目。Boss は金の縁） */
+.enemy-panel[data-enemy='enemy_18'] .enemy-assault-line {
+  margin: 4px auto 0;
+  padding: 2px 10px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1.5;
+  color: #fff1c2;
+  background: #1a1206cc;
+  border: 1px solid #d4a72ccc;
+  text-align: center;
+}
+.enemy-panel[data-enemy='enemy_18'] .enemy-assault-line-text {
+  display: inline-flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0 0.25em;
+}
+.enemy-panel[data-enemy='enemy_18'] .enemy-assault-line[data-state='cleared'] {
+  color: #d9ffd6;
+  border-color: #7ed67aaa;
+  background: #0f2a12cc;
+}
+@media (max-width: 420px) {
+  .enemy-panel[data-enemy='enemy_18'] .enemy-assault-line {
+    font-size: 11px;
+    padding: 1px 8px;
+  }
+}
+
+/* 康虎：黒と金の威光。Enemy Break の帯で金が褪せて赤が差す＝「将軍が追い込まれていく」（忠勝・鬼半蔵と同じ手法・方向は逆） */
+.enemy-panel[data-enemy='enemy_18'] .enemy-avatar::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(165deg, #fff6d5 0%, #d4a72c 42%, #0f0b05 100%);
+  -webkit-mask: var(--enemy-art) center / contain no-repeat;
+  mask: var(--enemy-art) center / contain no-repeat;
+  mix-blend-mode: soft-light;
+  opacity: 0.55;
+}
+.enemy-panel[data-enemy='enemy_18'].cf2-break-half .enemy-avatar::before {
+  background: linear-gradient(165deg, #ffe9b0 0%, #c47a1f 45%, #1a0804 100%);
+  opacity: 0.6;
+}
+.enemy-panel[data-enemy='enemy_18'].cf2-break-quarter .enemy-avatar::before {
+  background: linear-gradient(165deg, #ffd9a8 0%, #b3361f 48%, #200404 100%);
+  opacity: 0.7;
+}
+/* 溜め（将軍の威・穢土の裁き）：金の輪＋足元の影を深く */
+.enemy-panel[data-enemy='enemy_18'] .enemy-avatar.enemy-avatar-charging.enemy-avatar-charging-super {
+  box-shadow: none;
+  filter: drop-shadow(0 14px 18px #000000d9) drop-shadow(0 0 20px #d4a72c) drop-shadow(0 0 4px #fff1c2cc);
+}
+
+/* 舞台：大広間の周辺減光（Boss は少し強く）＋上からの金の薄明 */
+.battle[data-enemy='enemy_18'] .battle-main {
+  background-image: linear-gradient(180deg, #d4a72c14 0%, transparent 28%), radial-gradient(ellipse at 50% 42%, transparent 50%, #00000085 100%);
+}

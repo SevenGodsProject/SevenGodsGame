@@ -105,8 +105,8 @@ describe('将軍家 Pilot 敵（忠次）', () => {
 
   it('ENEMIES は既存 7 体＋Threat Pilot＋将軍家の順。将軍家判定は忠次にだけ真・Pilot 判定（記録ガード）は Threat Pilot にだけ真（W1：忠次は偽）', () => {
     expect(ENEMIES).toEqual([...CORE_ENEMIES, ...PILOT_ENEMIES, ...SHOGUNATE_ENEMIES])
-    expect(SHOGUNATE_ENEMIES).toHaveLength(9)
-    expect(SHOGUNATE_ENEMIES.map((e) => e.id as string)).toEqual(['enemy_08', 'enemy_10', 'enemy_11', 'enemy_12', 'enemy_13', 'enemy_14', 'enemy_15', 'enemy_16', 'enemy_17'])
+    expect(SHOGUNATE_ENEMIES).toHaveLength(10)
+    expect(SHOGUNATE_ENEMIES.map((e) => e.id as string)).toEqual(['enemy_08', 'enemy_10', 'enemy_11', 'enemy_12', 'enemy_13', 'enemy_14', 'enemy_15', 'enemy_16', 'enemy_17', 'enemy_18'])
     for (const e of SHOGUNATE_ENEMIES) expect(isShogunateEnemyId(e.id)).toBe(true)
     expect(isShogunateEnemyId(SHOGUNATE_ENEMY_IDS.tadatsugu)).toBe(true)
     expect(isShogunateEnemyId(PILOT_ENEMY_IDS.oniTactic)).toBe(false)
@@ -375,7 +375,64 @@ describe('W4 将軍家 第四陣（忠勝・ドーマン・決定288 v1.1）', (
       expect(text).not.toMatch(/公式|公認|提携/)
     }
     const all = [...CORE_ENEMIES, ...SHOGUNATE_ENEMIES]
-    expect(all).toHaveLength(16)
+    expect(all).toHaveLength(17)
+    expect(new Set(all.map((e) => e.art)).size).toBe(all.length)
+    expect(new Set(all.map((e) => e.stage.bg)).size).toBe(all.length)
+  })
+})
+
+describe('W5 将軍家 最終（康虎 Boss ★5・決定288 v1.1）', () => {
+  const yasutora = getEnemyDef(SHOGUNATE_ENEMY_IDS.yasutora)
+  const totals = (def: ReturnType<typeof getEnemyDef>, branch: 'then' | 'else') =>
+    def.actions.map((a) => (a.kind === 'tactic' ? enemyActionTotal(a[branch]) : enemyActionTotal(a)))
+
+  it('康虎：enemy_18・君臨型・heavy・rank 5（Boss 枠は康虎だけ）・全語彙（attack／multiAttack／charge／special／tactic 2 段）', () => {
+    expect(yasutora.id).toBe('enemy_18')
+    expect(yasutora.rank).toBe(5)
+    expect(yasutora.visualType).toBe('heavy')
+    expect(yasutora.maxHp).toBeGreaterThan(112) // 既存最大（忠勝）の上
+    expect(yasutora.actions.map((a) => a.kind)).toEqual(['attack', 'multiAttack', 'charge', 'tactic', 'attack', 'charge', 'tactic'])
+    expect(yasutora.actions[1]).toEqual({ kind: 'multiAttack', hits: [5, 5, 5] })
+    expect(yasutora.actions[2]).toEqual({ kind: 'charge', label: '⚠ 追い込まねば次は将軍の威' })
+    expect(yasutora.actions[5]).toEqual({ kind: 'charge', label: '⚠ 追い込まねば次は穢土の裁き' })
+    expect(SHOGUNATE_ENEMIES.filter((e) => e.rank === 5)).toHaveLength(1)
+  })
+
+  it('R4：opening 比まで追い込めば近習の槍 6×3、届かなければ将軍の威 32／R7：final 比まで追い込めば 12、届かなければ穢土の裁き 36（比は RULES.enemyTactic.boss*）。合計 then 67／else 105', () => {
+    const r4 = yasutora.actions[3]
+    const r7 = yasutora.actions[6]
+    if (r4.kind !== 'tactic' || r7.kind !== 'tactic') throw new Error('R4/R7 must be tactic')
+    expect(r4.cond).toEqual({ type: 'enemyHpRatioAtMost', ratio: RULES.enemyTactic.bossOpeningHpRatio, ratioByDifficulty: RULES.enemyTactic.bossOpeningHpRatioByDifficulty })
+    expect(r7.cond).toEqual({ type: 'enemyHpRatioAtMost', ratio: RULES.enemyTactic.bossFinalHpRatio, ratioByDifficulty: RULES.enemyTactic.bossFinalHpRatioByDifficulty })
+    expect(r4.then).toEqual({ kind: 'multiAttack', hits: [6, 6, 6], name: '近習の槍' })
+    expect(r4.else).toEqual({ kind: 'special', amount: 32, name: '将軍の威' })
+    expect(r7.then).toEqual({ kind: 'attack', amount: 12 })
+    expect(r7.else).toEqual({ kind: 'special', amount: 36, name: '穢土の裁き' })
+    expect(totals(yasutora, 'then').reduce((s, t) => s + t, 0)).toBe(67)
+    expect(totals(yasutora, 'else').reduce((s, t) => s + t, 0)).toBe(105)
+    const hp = yasutora.maxHp
+    const o = RULES.enemyTactic.bossOpeningHpRatioByDifficulty
+    const f = RULES.enemyTactic.bossFinalHpRatioByDifficulty
+    expect(tacticBranch(r4, Math.floor(hp * o.normal), hp, 'normal')).toBe('then')
+    expect(tacticBranch(r4, Math.floor(hp * o.normal) + 1, hp, 'normal')).toBe('else')
+    expect(tacticBranch(r7, Math.floor(hp * f.normal), hp, 'normal')).toBe('then')
+    expect(tacticBranch(r7, Math.floor(hp * f.normal) + 1, hp, 'normal')).toBe('else')
+    expect(tacticBranch(r7, Math.floor(hp * f.hard), hp, 'hard')).toBe('then')
+    // Boss の比は既定（0.5／0.6）より opening が甘く final が厳しい
+    expect(o.normal).toBeGreaterThan(RULES.enemyTactic.hpRatioByDifficulty.normal)
+    expect(f.normal).toBeLessThan(RULES.enemyTactic.hpRatioByDifficulty.normal)
+    // 共鳴・R 内ダメージは読まない
+    expect(tacticBranch(r7, hp, hp, 'normal', 999, 7, 7)).toBe('else')
+  })
+
+  it('表記：公式名と公式 role だけで名前を組み「公式」「公認」「提携」を書かない。素材は 17 体で一意', () => {
+    expect(yasutora.name).toBe('十七代将軍・康虎')
+    expect(yasutora.battleCries).toHaveLength(7)
+    expect(yasutora.typeDescription.length).toBeLessThanOrEqual(30)
+    const text = [yasutora.name, yasutora.typeLabel, yasutora.typeDescription, yasutora.stage.nameJa, ...yasutora.battleCries].join('\n')
+    expect(text).not.toMatch(/公式|公認|提携/)
+    const all = [...CORE_ENEMIES, ...SHOGUNATE_ENEMIES]
+    expect(all).toHaveLength(17)
     expect(new Set(all.map((e) => e.art)).size).toBe(all.length)
     expect(new Set(all.map((e) => e.stage.bg)).size).toBe(all.length)
   })
