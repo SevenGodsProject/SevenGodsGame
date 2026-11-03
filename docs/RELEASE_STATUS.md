@@ -2,7 +2,19 @@
 
 Production の「確定状態」を一目で確認するための要約です。新しい仕様判断は含みません（根拠は `docs/DECISIONS.md`）。**§A が現在の正本**。§B 以降は 8/31 Public Beta〜Phase 3（2026-09-06）時点の履歴として残します（当時の Known Non-blockers 1〜16 は §A-4 の生存 Known に統合済み）。
 
-## A. 現在の Production 状態（2026-11-03・決定287 v1.0.7 PRODUCTION LIVE）
+## A. 現在の Production 状態（2026-11-03・決定288 v1.1.0 PRODUCTION LIVE）
+
+### A-0000. v1.1.0 公開（2026-11-03・決定288 W2 PRODUCTION LIVE）
+
+| 項目 | 状態 |
+|---|---|
+| **Release** | **SEVEN GODS v1.1.0**（決定288 v1.1 W2）：将軍家 第二陣＝岡っ引き（群れ）・直政（追い込むと猛る）・康政（1 ラウンドで崩す＝engine に tactic cond `roundDamageAtLeast` 追加）を通常の Enemy Select に（将軍家 4 体・見出し）。★実測 3 体 ★1。敵ボイスなし・外部費用 0。Daily／49 盤／委ねる seed／gameVersion／save v9 不変。package version は 1.0.6 のまま（表示 `v1.0.6 (72025ae)`） |
+| **Production HEAD** | master = origin/master **`72025ae`**（PR #11 merge・2026-11-03T00:15:29Z・runtime tree は Gate 対象 `7e15a73` と同一） |
+| **CI** | master run `41551556420` success（PR run `41551123396` success） |
+| **Vercel deployment** | **`7506844432`**（sha `72025ae`・success 00:16:21Z）／bundle `index-BHsQ7ZzN.js`（485,398 B・sha 正規化後 W2 build と byte 一致）・`index-CT4lzcIP.css`（201,976 B） |
+| **Rollback 先** | deployment **`7505565396`**（`f7e263d`・v1.0.7）／**`7494257506`**（`10b0cd3`・v1.0.6）。Promote は CEO のみ・未使用 |
+| **Release Gate／Smoke** | `docs/W2_SHOGUNATE_WAVE2_GATE.md`（自動 Gate ALL PASS・CEO Human QA 3/3）／`docs/V1_1_0_PRODUCTION_SMOKE.md`（**ALL PASS**：S2 44・S5 192・S6 6 MATCH・**S8 旧セーブ 本番直撃 44/44**） |
+| **次** | W3 将軍家 第三陣（影・くノ一・鬼半蔵）＝`feat/w3-shogunate-wave3` 実装済み・Gate 中 → PR → CEO Human QA → CEO merge（v1.1.1） |
 
 ### A-000. v1.0.7 公開（2026-11-03・決定287 PRODUCTION LIVE）
 
