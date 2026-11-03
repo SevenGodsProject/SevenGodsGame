@@ -88,10 +88,10 @@ describe('tacticLine（忠次 R3 の残り必要ダメージ）', () => {
 
   it('EnemyPanel は忠次（isShogunateEnemyId）だけ・撃破中は出さない＝enemy_09 には出ない（source-fixed）', () => {
     const src = read('./EnemyPanel.tsx')
-    expect(src).toContain('const tLine = isShogunateEnemyId(enemy.defId) && !defeated ? tacticLine(enemy.intent, nextScript, hpShown, enemy.maxHp, difficulty, roundDamage) : null')
+    expect(src).toContain('const tLine = isShogunateEnemyId(enemy.defId) && !defeated ? tacticLine(enemy.intent, nextScript, hpShown, enemy.maxHp, difficulty, roundDamage, resonance, resonanceMax) : null')
     // 文言：未達「あと{N}で」＋「総攻めを止める」（句の切れ目で 2 span）／到達「✓ 総攻めを止めた」
     expect(src).toContain("'✓ 総攻めを止めた'")
-    expect(src).toContain('<span>{`あと${formatScaled(tLine.remaining)}で`}</span>')
+    expect(src).toContain("<span>{tLine.gauge === 'resonance' ? `共鳴あと${tLine.remaining}で` : `あと${formatScaled(tLine.remaining)}で`}</span>")
     // W2：文言は tacticLineWords から（忠次は従来どおり「総攻めを止める」。fallback 文字列も残す）
     expect(src).toContain("<span>{tWords?.armed ?? '総攻めを止める'}</span>")
     // enemy_09 は軍略を持つが将軍家ではない
@@ -137,5 +137,31 @@ describe('W3 文言：影「闇討ちを止める」・鬼半蔵「血風を止�
     // 影 R2（予告なしの静かな分岐）：直前が charge でなければ行は出ない
     const kage = getEnemyDef(SHOGUNATE_ENEMY_IDS.kage)
     expect(tacticLine({ kind: 'attack', amount: 5 }, kage.actions[1], 96, 96, 'normal')).toBeNull()
+  })
+})
+
+describe('W4 ドーマン（resonanceAtLeast）の「共鳴あと N で五重塔を止める」', () => {
+  const d = getEnemyDef(SHOGUNATE_ENEMY_IDS.doman)
+  const dTactic = d.actions[3]
+  const dCharge = d.actions[2] as EnemyActionDef
+  it('残り＝needed（4）− ゲージ。0 で cleared・gauge は resonance。max 0 なら行なし。忠次型・康政型は 7／8 引数目を読まない', () => {
+    const intent = { kind: 'charge', label: (dCharge as { label: string }).label } as const
+    expect(tacticLine(intent, dTactic, 100, 100, 'normal', 0, 0, 7)).toEqual({ remaining: 4, cleared: false, gauge: 'resonance' })
+    expect(tacticLine(intent, dTactic, 100, 100, 'normal', 0, 3, 7)).toEqual({ remaining: 1, cleared: false, gauge: 'resonance' })
+    expect(tacticLine(intent, dTactic, 100, 100, 'normal', 0, 4, 7)).toEqual({ remaining: 0, cleared: true, gauge: 'resonance' })
+    expect(tacticLine(intent, dTactic, 100, 100, 'hard', 0, 6, 7)).toEqual({ remaining: 0, cleared: true, gauge: 'resonance' })
+    expect(tacticLine(intent, dTactic, 100, 100, 'normal', 0, 4, 0)).toBeNull()
+    // R7 も同じ（溜め R6 の予告があるときだけ）
+    const r6 = d.actions[5] as EnemyActionDef
+    expect(tacticLine({ kind: 'charge', label: (r6 as { label: string }).label }, d.actions[6], 50, 100, 'normal', 0, 2, 7)).toEqual({ remaining: 2, cleared: false, gauge: 'resonance' })
+    const tIntent = { kind: 'charge', label: (charge as { label: string }).label } as const
+    expect(tacticLine(tIntent, tactic, 98, 98, 'normal', 0, 7, 7)).toEqual(tacticLine(tIntent, tactic, 98, 98, 'normal'))
+    const y = getEnemyDef(SHOGUNATE_ENEMY_IDS.yasumasa)
+    const yIntent = { kind: 'charge', label: (y.actions[2] as { label: string }).label } as const
+    expect(tacticLine(yIntent, y.actions[3], 96, 96, 'normal', 10, 7, 7)).toEqual({ remaining: 14, cleared: false })
+  })
+  it('文言：R4・R7 とも「五重塔を止める／✓ 五重塔を止めた」', () => {
+    expect(tacticLineWords(dTactic)).toEqual({ armed: '五重塔を止める', cleared: '✓ 五重塔を止めた' })
+    expect(tacticLineWords(d.actions[6])).toEqual({ armed: '五重塔を止める', cleared: '✓ 五重塔を止めた' })
   })
 })

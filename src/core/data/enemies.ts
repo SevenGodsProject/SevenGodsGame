@@ -406,6 +406,9 @@ export const SHOGUNATE_ENEMY_IDS = {
   kage: enemyId('enemy_13'),
   kunoichi: enemyId('enemy_14'),
   onihanzo: enemyId('enemy_15'),
+  // W4（決定288 v1.1・2026-11-03）：四天王最強の軍神と、逆さ五重塔の科学者
+  tadakatsu: enemyId('enemy_16'),
+  doman: enemyId('enemy_17'),
 } as const
 
 export const SHOGUNATE_ENEMIES: EnemyDef[] = [
@@ -692,6 +695,92 @@ export const SHOGUNATE_ENEMIES: EnemyDef[] = [
       { kind: 'attack', amount: 12 },
       { kind: 'charge', label: '⚠ 次は頭領の一撃' },
       { kind: 'special', amount: 26, name: '鬼嶽・頭領斬り' },
+    ],
+  },
+  /**
+   * W4 将軍家 第四陣（決定288 v1.1 §10-3）：忠勝（最後の盾）・ドーマン（共鳴に反応する逆さ五重塔）。engine は resonanceAtLeast を 1 種追加（ドーマンだけが使う）。
+   * 公式（Kit manifest）＝名前・role・profile・画像のみ。二つ名・型・台詞・技名は本作の創作（非公式）。公式ボイスは無く、本作も声を付けない。
+   */
+  {
+    id: SHOGUNATE_ENEMY_IDS.tadakatsu,
+    name: '将軍四天王・忠勝',
+    // 最後の盾：既存最大の龍神 103・鬼半蔵 110 を超える 112（将軍家で最も固い）。ロードマップ案の 120 帯は balanceSim 決定287（hard × 全神 ≥50%）で福永 33%／笑蓮 45% の詰みが出たため、特大 2 発（24／28）を残して HP を下げた（docs/W4_SHOGUNATE_WAVE4_GATE.md §3）
+    maxHp: 112,
+    // Kit FRONT（1600²・透過・sha256 884a0a54…46d0）→ 余白トリム → 768² webp（忠次と同手順・非生成加工）。原本は art-source/enemies/tadakatsu/
+    art: '/assets/enemies/tadakatsu/art.webp',
+    typeLabel: '鉄壁型',
+    typeDescription: 'R4とR7に蜻蛉切の大技。受けるか、削り切るか。',
+    visualType: 'heavy',
+    // ★は実測（docs/evidence/shogunate-wave4/star）：normal 指数 41.9 ＝ 龍神（★4・37.7）を超え 17 体で最高 → ★4（将軍家で初の ★4）
+    rank: 4,
+    // 舞台は STG-08（08-shogunate-camp・派生）を鉄灰へ減彩・減光した派生（台帳 STG-15）
+    stage: { nameJa: '盾の本陣', accent: '#ff8a1f', bg: '/assets/backgrounds/stages/15-tadakatsu-bastion.webp' },
+    // 非公式のファン創作（profile「四天王最強の軍神。槍・蜻蛉切を振るい、将軍を守る最後の盾となる」の範囲）
+    battleCries: [
+      '将軍の盾、ここに在り',
+      '槍は一本。迷いは、無い',
+      '受けてみよ、蜻蛉切',
+      '……良い踏み込みだ',
+      '盾は、退かぬ',
+      '次で、終わりにする',
+      '盾が割れるか……見事',
+    ],
+    // 鉄壁：tactic なし・単発重撃中心・R4／R7 の名前つき必殺（溜め→必殺の 2 段）。「受けるか削り切るか」は特大 2 発への配分で問う（敵ブロックは作らない）。
+    // 合計 8+10+0+24+12+0+28＝82（HP 112 の長期戦・既存帯 65〜77 の上）。ロードマップ案の 26／30 は hard で重すぎたため 24／28。「受けるか削り切るか」は balanceSim 決定287 で defensive／balanced の最善が全神 ≥50%（詰みなし）
+    actions: [
+      { kind: 'attack', amount: 8 },
+      { kind: 'attack', amount: 10 },
+      { kind: 'charge', label: '⚠ 次は蜻蛉切' },
+      { kind: 'special', amount: 24, name: '蜻蛉切・一閃' },
+      { kind: 'attack', amount: 12 },
+      { kind: 'charge', label: '⚠ 次は盾の全霊' },
+      { kind: 'special', amount: 28, name: '蜻蛉切・断' },
+    ],
+  },
+  {
+    id: SHOGUNATE_ENEMY_IDS.doman,
+    name: '科学者・ドーマン',
+    maxHp: 100,
+    // Kit FRONT（1600²・透過・sha256 d5c851f1…92a2）→ 余白トリム → 768² webp（非生成加工）。原本は art-source/enemies/doman/
+    art: '/assets/enemies/doman/art.webp',
+    typeLabel: '共鳴型',
+    typeDescription: '共鳴を溜めたまま迎えれば塔は沈黙。撃つか、溜めるか。',
+    visualType: 'standard',
+    // ★は実測（同上）：normal 指数 30.0 ＝ 道化（★1・28.6）〜機工師（★2・31.4）の間 → ★1
+    rank: 1,
+    // 舞台は STG-04（04-mecha-workshop・CEO 生成）を紫へ色相回転した派生（台帳 STG-16）
+    stage: { nameJa: '逆さ五重塔の工房', accent: '#8a4fc7', bg: '/assets/backgrounds/stages/16-doman-pagoda.webp' },
+    // 非公式のファン創作（profile「元・陰陽寮の天才科学者・道曼。将軍に「逆さ五重塔」を献じた」の範囲）
+    battleCries: [
+      'ふむ。興味深い被験体だ',
+      '塔は、君の共鳴を聴いている',
+      '溜めるかね？ 放つかね？',
+      '計算どおり……いや、少し違うな',
+      '五重塔は、逆さまに回る',
+      'さあ、最後の実験だ',
+      '……記録しておこう。君の名を',
+    ],
+    // ドーマン型（resonanceAtLeast）：R4／R7 開始時に共鳴ゲージが max×0.5（＝4）以上なら then（塔は沈黙＝攻撃 9／11）、
+    // 届かなければ必殺 24「逆さ五重塔」／26「逆さ五重塔・反転」。ゲージは 7 で自動発動して 0 に戻る＝「溜めるほど発動で失う」。
+    // 共鳴を R3／R6 の前に撃つ（＝神の介入を得て塔を受ける）か、4〜6 で温存して塔を黙らせるかの判断。合計 then 42／else 72
+    actions: [
+      { kind: 'attack', amount: 5 },
+      { kind: 'attack', amount: 7 },
+      { kind: 'charge', label: '⚠ 五重塔が共鳴に反応' },
+      {
+        kind: 'tactic',
+        cond: { type: 'resonanceAtLeast', ratio: RULES.enemyTactic.defaultResonanceRatio },
+        then: { kind: 'attack', amount: 9 },
+        else: { kind: 'special', amount: 24, name: '逆さ五重塔' },
+      },
+      { kind: 'attack', amount: 10 },
+      { kind: 'charge', label: '⚠ 五重塔が再び共鳴に反応' },
+      {
+        kind: 'tactic',
+        cond: { type: 'resonanceAtLeast', ratio: RULES.enemyTactic.defaultResonanceRatio },
+        then: { kind: 'attack', amount: 11 },
+        else: { kind: 'special', amount: 26, name: '逆さ五重塔・反転' },
+      },
     ],
   },
 ]

@@ -152,7 +152,7 @@ for (const vp of VIEWPORTS) {
     })),
   )
   // 決定287 W1：通常導線は CORE 7 ＋ 将軍家（忠次）＋ 委ねる ＝ 9 枚
-  check('enemy cards = 15 (7 + shogunate 7 + entrust)', cards.length === 15, cards.length)
+  check('enemy cards = 17 (7 + shogunate 9 + entrust)', cards.length === 17, cards.length)
   for (const [name, rank] of Object.entries(EXPECTED_RANK)) {
     const c = cards.find((x) => x.name === name)
     check(`★ ${name} = ${rank}`, !!c && c.filled === rank && c.total === 5 && c.aria === `脅威度 ${rank} / 5`, c)

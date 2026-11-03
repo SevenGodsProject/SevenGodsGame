@@ -1,5 +1,5 @@
 import type { Difficulty, EnemyActionScript, EnemyState } from '../../core/types'
-import { tacticBranch, tacticRoundDamageNeeded } from '../../core/engine/tactic'
+import { tacticBranch, tacticResonanceNeeded, tacticRoundDamageNeeded } from '../../core/engine/tactic'
 
 /**
  * 将軍家 Pilot v0.6（忠次 enemy_08 だけ・`docs/SHOGUNATE_V0_6_DESIGN_AUDIT.md` §1-3・表示専用）：
@@ -10,7 +10,7 @@ import { tacticBranch, tacticRoundDamageNeeded } from '../../core/engine/tactic'
  * - 判定は表示 HP（hpShown）＝予告の赤い輪（EnemyPanel の v0.4 分岐）と同じ値＝輪の消失と成功表示は同じ描画
  * - 出すのは「今の予告が溜め（charge）で、次の行動表が軍略（tactic）」のときだけ（＝忠次の R3）。それ以外は null
  */
-export type TacticLine = { remaining: number; cleared: boolean }
+export type TacticLine = { remaining: number; cleared: boolean; gauge?: 'resonance' }
 
 /**
  * W2：文言は行動表から導く（表示のみ）。else 側の必殺名「軍略・総攻め」→「総攻め」のように「・」の後ろを使う。
@@ -19,6 +19,8 @@ export type TacticLine = { remaining: number; cleared: boolean }
 export function tacticLineWords(script: EnemyActionScript): { armed: string; cleared: string } {
   if (script.kind !== 'tactic') return { armed: '', cleared: '' }
   if (script.cond.type === 'roundDamageAtLeast') return { armed: '采配を崩す', cleared: '✓ 采配を崩した' }
+  // W4 ドーマン型：R4「逆さ五重塔」・R7「逆さ五重塔・反転」のどちらも「五重塔を止める」（残りは『共鳴ゲージの不足分』）
+  if (script.cond.type === 'resonanceAtLeast') return { armed: '五重塔を止める', cleared: '✓ 五重塔を止めた' }
   const name = script.else.kind === 'special' || script.else.kind === 'multiAttack' ? (script.else.name ?? '') : ''
   const seg = name.includes('・') ? name.slice(name.indexOf('・') + 1) : name || '必殺'
   return { armed: `${seg}を止める`, cleared: `✓ ${seg}を止めた` }
@@ -42,8 +44,17 @@ export function tacticLine(
   maxHp: number,
   difficulty: Difficulty,
   roundDamage = 0,
+  resonance = 0,
+  resonanceMax = 0,
 ): TacticLine | null {
   if (!intent || intent.kind !== 'charge' || nextScript.kind !== 'tactic') return null
+  // W4 ドーマン型：残り＝「then に必要な共鳴ゲージ − 今のゲージ」（engine の tacticBranch と同じ needed）。ゲージが満タンで発動して 0 に戻れば行は armed に戻る
+  if (nextScript.cond.type === 'resonanceAtLeast') {
+    const needed = tacticResonanceNeeded(nextScript, resonanceMax, difficulty)
+    if (!Number.isFinite(needed)) return null
+    const remaining = Math.max(0, needed - resonance)
+    return { remaining, cleared: remaining === 0, gauge: 'resonance' }
+  }
   // W2 康政型：残り＝「then に必要な 1 ラウンド実効ダメージ − この R で与えた実効ダメージ」（engine の tacticBranch と同じ needed・同じ roundDamage）
   if (nextScript.cond.type === 'roundDamageAtLeast') {
     const needed = tacticRoundDamageNeeded(nextScript, maxHp, difficulty)

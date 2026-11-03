@@ -23,18 +23,27 @@ export function tacticRoundDamageNeeded(tactic: EnemyTacticDef, enemyMaxHp: numb
   return enemyMaxHp > 0 ? Math.ceil(enemyMaxHp * tacticRatio(tactic, difficulty)) : Number.POSITIVE_INFINITY
 }
 
+/** ドーマン型（resonanceAtLeast）：then に必要な共鳴ゲージ値（切り上げ・max 0 なら到達不能） */
+export function tacticResonanceNeeded(tactic: EnemyTacticDef, resonanceMax: number, difficulty: Difficulty): number {
+  return resonanceMax > 0 ? Math.ceil(resonanceMax * tacticRatio(tactic, difficulty)) : Number.POSITIVE_INFINITY
+}
+
 /**
- * then／else の解決。`roundDamage` は直前ラウンドの 1 ラウンド実効ダメージ（康政型だけが読む。省略時 0＝忠次型の既存呼び出しは不変）
+ * then／else の解決。`roundDamage` は直前ラウンドの 1 ラウンド実効ダメージ（康政型だけが読む。省略時 0＝忠次型の既存呼び出しは不変）。
+ * `resonance`／`resonanceMax` はラウンド開始時の共鳴ゲージ（W4 ドーマン型だけが読む。省略時 0／0＝到達不能＝else）
  */
-export function tacticBranch(tactic: EnemyTacticDef, enemyHp: number, enemyMaxHp: number, difficulty: Difficulty, roundDamage = 0): 'then' | 'else' {
+export function tacticBranch(tactic: EnemyTacticDef, enemyHp: number, enemyMaxHp: number, difficulty: Difficulty, roundDamage = 0, resonance = 0, resonanceMax = 0): 'then' | 'else' {
   if (tactic.cond.type === 'roundDamageAtLeast') {
     return roundDamage >= tacticRoundDamageNeeded(tactic, enemyMaxHp, difficulty) ? 'then' : 'else'
+  }
+  if (tactic.cond.type === 'resonanceAtLeast') {
+    return resonance >= tacticResonanceNeeded(tactic, resonanceMax, difficulty) ? 'then' : 'else'
   }
   const ratio = enemyMaxHp > 0 ? enemyHp / enemyMaxHp : 1
   return ratio <= tacticRatio(tactic, difficulty) ? 'then' : 'else'
 }
 
-export function resolveEnemyTactic(script: EnemyActionScript, enemyHp: number, enemyMaxHp: number, difficulty: Difficulty, roundDamage = 0): EnemyActionDef {
+export function resolveEnemyTactic(script: EnemyActionScript, enemyHp: number, enemyMaxHp: number, difficulty: Difficulty, roundDamage = 0, resonance = 0, resonanceMax = 0): EnemyActionDef {
   if (script.kind !== 'tactic') return script
-  return tacticBranch(script, enemyHp, enemyMaxHp, difficulty, roundDamage) === 'then' ? script.then : script.else
+  return tacticBranch(script, enemyHp, enemyMaxHp, difficulty, roundDamage, resonance, resonanceMax) === 'then' ? script.then : script.else
 }

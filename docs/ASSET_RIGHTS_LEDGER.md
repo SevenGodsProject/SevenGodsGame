@@ -471,4 +471,15 @@ v0.1〜v0.3（branch `feat/shogunate-pilot-v0.3` @ `5a357f1`・CEO 実装承認 
 | STG-13 | `backgrounds/stages/13-kunoichi-moonpath.webp`（1600×900）・忍者衆・くノ一「月下の忍び道」accent `#c9a24d` | STG-05（`05-beast-moonpeak.webp`・CEO 生成）からの派生 | stage | CEO 生成（原本＝STG-05）＋AI 非生成加工 | 同上 | 同上 | 同上 | なし | — | 同上 | 色相回転（hue 20）・減光 0.85・彩度 0.8 | — | — | f31097f348af5d51…・307964B | 同上 |
 | STG-14 | `backgrounds/stages/14-onihanzo-fort.webp`（1600×900）・影の頭領・鬼半蔵「鬼嶽の砦」accent `#b8322d` | STG-02（`02-oni-castle.webp`・CEO 生成）からの派生 | stage | CEO 生成（原本＝STG-02）＋AI 非生成加工 | 同上 | 同上 | 同上 | なし | — | 同上 | 色相回転（hue −15）・減光 0.75・彩度 1.1 | — | — | 26999c67af6fcdec…・191822B | 同上 |
 
+## 11. 将軍家 第四陣（忠勝・ドーマン）— W4（2026-11-03・branch `feat/w4-shogunate-wave4`・AI 記入）
+
+出典・規約・加工方針は §9・§10 と同じ（Kit 将軍家 v1.0.0・`SGG-FAN-CREATION-GUIDELINES-1.0.0`・確認日 2026-11-03・非生成加工のみ・二つ名／型／台詞／技名は本作の創作・音声なし）。原本は公式配布 URL（`/creator-kit/shogunate/v1/assets/02_tadakatsu/`・`09_doman/`）から DL し、manifest の sha256 と一致を確認。
+
+| ID | Path（配信） | Source file（art-source） | Category | Creator | Model-Service | Generation date | Prompt reference | Reference inputs | Terms version・date checked | Commercial use | Modification | Attribution | Canonical source | Evidence（sha256） | Status |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| ENEMY-KIT-08 | `enemies/tadakatsu/art.webp`（768²・alpha） | `art-source/enemies/tadakatsu/tadakatsu_front.webp`（Kit 原本 FRONT 1600²・透過・139,054B・無加工・tracked） | enemy | **Kit 公式**（将軍家 v1.0.0） | — | `releasedAt 2026-10-08` | — | なし | `SGG-FAN-CREATION-GUIDELINES-1.0.0`・2026-11-03 | 可 | 可。透明余白トリム（1008×1440）＋正方形キャンバス中央配置＋768²（sharp・非生成） | 任意（Credits に明記） | manifest `tadakatsu:FRONT` sha256 `884a0a5494556951…`（一致） | 24e8cefeb41124fd…・86924B | ◎ |
+| ENEMY-KIT-09 | `enemies/doman/art.webp`（768²・alpha） | `art-source/enemies/doman/doman_front.webp`（Kit 原本 FRONT 1600²・透過・163,948B・無加工・tracked） | enemy | **Kit 公式** | — | 同上 | — | なし | 同上 | 可 | 可。同上（トリム 862×1440） | 任意 | manifest `doman:FRONT` sha256 `d5c851f104896731…`（一致） | 422a04d8bc2a7f1a…・97884B | ◎ |
+| STG-15 | `backgrounds/stages/15-tadakatsu-bastion.webp`（1600×900）・将軍四天王・忠勝「盾の本陣」accent `#ff8a1f` | STG-08（`08-shogunate-camp.webp`・STG-02 派生）からの派生 | stage | CEO 生成（原本＝STG-02）＋AI 非生成加工 | STG-02 に従う | 同上 | 同上 | なし | — | 同上 | 色相回転（hue −10）・減光 0.78・彩度 0.35（鉄灰） | — | — | 56e72a20c15daccd…・126740B | STG-02 と同じ Status |
+| STG-16 | `backgrounds/stages/16-doman-pagoda.webp`（1600×900）・科学者・ドーマン「逆さ五重塔の工房」accent `#8a4fc7` | STG-04（`04-mecha-workshop.webp`・CEO 生成）からの派生 | stage | CEO 生成（原本＝STG-04）＋AI 非生成加工 | STG-04 に従う | 同上 | 同上 | なし | — | 同上 | 色相回転（hue 265）・減光 0.82・彩度 1.15（紫） | — | — | ab33dab6afc39666…・280220B | STG-04 と同じ Status |
+
 - 残る将軍家 3 体（康虎・忠勝・ドーマン）は W4／W5 で取得する。BACK は使用しない

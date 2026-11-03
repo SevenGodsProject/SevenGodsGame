@@ -473,6 +473,11 @@ export const RULES = {
      */
     defaultRoundDamageRatio: 0.25,
     roundDamageRatioByDifficulty: { easy: 0.25, normal: 0.25, hard: 0.2 },
+    /**
+     * W4 ドーマン（決定288 v1.1・AI 判断）：resonanceAtLeast の比（ラウンド開始時の共鳴ゲージ ≥ max × 比 なら then）。max 7 × 0.5 → 4 以上で then。
+     * ゲージは難易度で変わらないので難易度別の表は持たない。engine はこの表を直接読まず、敵データが `cond.ratio` として埋め込む
+     */
+    defaultResonanceRatio: 0.5,
   },
   saveVersion: 9,
 } as const

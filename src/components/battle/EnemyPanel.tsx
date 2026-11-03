@@ -45,6 +45,9 @@ type EnemyPanelProps = {
   difficulty?: Difficulty
   /** W2 康政型（roundDamageAtLeast）用：この R の 1 ラウンド実効ダメージ（state.mastery.roundDamage）。忠次型は読まない */
   roundDamage?: number
+  /** W4 ドーマン型（resonanceAtLeast）用：ラウンド開始時の共鳴ゲージ（state.resonance.value／max）。他の型は読まない */
+  resonance?: number
+  resonanceMax?: number
 }
 
 /** 敵立ち絵のリアクション1層。reaction が無いときは素通しの div（ツリー構造を変えない） */
@@ -105,6 +108,8 @@ export function EnemyPanel({
   staggerKey = 0,
   difficulty = 'normal',
   roundDamage = 0,
+  resonance = 0,
+  resonanceMax = 0,
 }: EnemyPanelProps) {
   const def = getEnemyDef(enemy.defId)
   const line = def.battleCries[(round - 1) % def.battleCries.length]
@@ -122,13 +127,13 @@ export function EnemyPanel({
   // engine は startRound で実 HP を使って改めて解決する（R4 開始時には hpShown === hp なので予告と実行は一致）。
   // enemy_09（Threat Branch Pilot）は従来どおり解決しない（未来情報の常時表示をしない＝決定263 の境界・Lane 1 の CEO QA 済み画面を変えない）
   // W2：康政型は roundDamage で解決（忠次型は引数を読まない＝従来どおり hpShown で解決）
-  const nextAction = isShogunateEnemyId(enemy.defId) ? resolveEnemyTactic(nextScript, hpShown, enemy.maxHp, difficulty, roundDamage) : nextScript
+  const nextAction = isShogunateEnemyId(enemy.defId) ? resolveEnemyTactic(nextScript, hpShown, enemy.maxHp, difficulty, roundDamage, resonance, resonanceMax) : nextScript
   const nextIsSpecial =
     nextAction.kind === 'special' || (nextAction.kind === 'multiAttack' && !!nextAction.special)
   const charging = enemy.intent?.kind === 'charge'
   // 将軍家 Pilot v0.6（enemy_08 忠次だけ・`docs/SHOGUNATE_V0_6_DESIGN_AUDIT.md` §1-3）：R3 の溜め中に「あと N で総攻めを止める」。
   // 上の赤い輪と同じ hpShown・同じ tacticBranch で決まる＝輪の消失と「✓ 総攻めを止めた」は同じ描画。enemy_09 には出さない
-  const tLine = isShogunateEnemyId(enemy.defId) && !defeated ? tacticLine(enemy.intent, nextScript, hpShown, enemy.maxHp, difficulty, roundDamage) : null
+  const tLine = isShogunateEnemyId(enemy.defId) && !defeated ? tacticLine(enemy.intent, nextScript, hpShown, enemy.maxHp, difficulty, roundDamage, resonance, resonanceMax) : null
   const tWords = tLine ? tacticLineWords(nextScript) : null
   const chargingClass =
     charging
@@ -182,7 +187,8 @@ export function EnemyPanel({
                 tWords?.cleared ?? '✓ 総攻めを止めた'
               ) : (
                 <span className="enemy-assault-line-text">
-                  <span>{`あと${formatScaled(tLine.remaining)}で`}</span>
+                  {/* W4 ドーマン型：残りは共鳴ゲージの段数（×10 の表示スケールは使わない） */}
+                  <span>{tLine.gauge === 'resonance' ? `共鳴あと${tLine.remaining}で` : `あと${formatScaled(tLine.remaining)}で`}</span>
                   <span>{tWords?.armed ?? '総攻めを止める'}</span>
                 </span>
               )}

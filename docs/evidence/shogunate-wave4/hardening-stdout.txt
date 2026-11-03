@@ -1,0 +1,22 @@
+sp844
+  ✓ A_normal (5s)
+  ✓ B_resumeUnknown (3s)
+  ✓ C_dailyUnknown (3s)
+  ✓ D_mixed (3s)
+  ✓ E_matchupsUnknown (3s)
+pc1508
+  ✓ A_normal (7s)
+  ✓ B_resumeUnknown (5s)
+  ✓ C_dailyUnknown (4s)
+  ✓ D_mixed (5s)
+  ✓ E_matchupsUnknown (4s)
+PASS  H1   Scenario A（正常データ）：Home・戦績とも従来どおり  (2/2)
+PASS  H2   Scenario B（Resume 破損）：Home はクラッシュせず、Resume CTA は出ない  (2/2)
+PASS  H3   Scenario B：Resume CTA が無いので誤ってクリックしてもバトルへ進まない  (2/2)
+PASS  H5   Scenario C（Daily 履歴が未知 ID のみ）：戦績クラッシュ 0、不明な敵で表示  (2/2)
+PASS  H6   Scenario D（正常＋未知が混在）：有効な行は消えず、無効な行だけ fallback  (2/2)
+PASS  H7   Scenario D：Resume も未知 ID なので CTA を出さない（Home クラッシュ 0）  (2/2)
+PASS  H8   Scenario E（matchups に未知 ID が混在）：戦績クラッシュ 0、既知の攻略は表示継続  (2/2)
+PASS  H9   正常データ（Scenario A）で横はみ出し 0（P2 の 390px 修正を維持）  (1/1)
+PASS  H10  全シナリオで JS error・uncaught exception 0  (10/10)
+ALL PASS
