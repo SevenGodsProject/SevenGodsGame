@@ -7,11 +7,11 @@ describe('ENEMIES', () => {
     expect(new Set(ids).size).toBe(ids.length)
   })
 
-  it('is CORE 7 + Threat Pilot (enemy_09) + 将軍家 Pilot (enemy_08) in that order; the default pick stays within CORE (v0.4)', () => {
-    expect(ENEMIES).toHaveLength(9)
-    expect(ENEMIES.map((e) => e.id as string)).toEqual([...Object.values(ENEMY_IDS), 'enemy_09', 'enemy_08'])
+  it('is CORE 7 + Threat Pilot (enemy_09) + 将軍家 4 (enemy_08/10/11/12) in that order; the default pick stays within CORE (W2)', () => {
+    expect(ENEMIES).toHaveLength(12)
+    expect(ENEMIES.map((e) => e.id as string)).toEqual([...Object.values(ENEMY_IDS), 'enemy_09', 'enemy_08', 'enemy_10', 'enemy_11', 'enemy_12'])
     expect(PILOT_ENEMIES.map((e) => e.id as string)).toEqual(['enemy_09'])
-    expect(SHOGUNATE_ENEMIES.map((e) => e.id as string)).toEqual(['enemy_08'])
+    expect(SHOGUNATE_ENEMIES.map((e) => e.id as string)).toEqual(['enemy_08', 'enemy_10', 'enemy_11', 'enemy_12'])
     const core = new Set(CORE_ENEMIES.map((e) => e.id))
     for (const seed of ['a', 'seed-1', 'seed-2', 'seed-999999', 'こんにちは']) expect(core.has(pickEnemyId(seed))).toBe(true)
   })

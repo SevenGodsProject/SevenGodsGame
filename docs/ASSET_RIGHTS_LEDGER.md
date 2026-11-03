@@ -441,3 +441,19 @@ v0.1〜v0.3（branch `feat/shogunate-pilot-v0.3` @ `5a357f1`・CEO 実装承認 
 - 本 Pilot で追加した配信ファイルは上記 2 本のみ。既存 7 体の画像・背景・Threat Pilot（enemy_09＝鬼将の画像・舞台を共有）は変更していない（`coreRoster.test.ts`／`shogunateRoster.test.ts` が `CORE_ENEMIES` の sha256 を固定）
 - BACK（`tadatsugu_back.webp`）と将軍家の他 9 体は使用しないため取得していない（原本 1 本だけ保全）
 - §7-4 の集計（86 行）には含めていない（Pilot branch の暫定行。本採用時に 3-C／3-F へ転記し集計を更新する）
+
+## 9. 将軍家 第二陣（岡っ引き・直政・康政）— W2（2026-11-03・branch `feat/w2-shogunate-wave2`・AI 記入）
+
+出典：SGG Creator Kit **将軍家**（`docs/assets-kit/shogunate-manifest.json`＝公式 manifest の無改変コピー・`kitVersion 1.0.0`・`releasedAt 2026-10-08`・`termsId SGG-FAN-CREATION-GUIDELINES-1.0.0`・Updated 2026-10-08・確認日 2026-11-03＝公式サイト・workers.dev・repo コピーの 3 経路で diff 0）。画像は規約 §2「加工と作品への組み込み」の範囲で非生成加工（sharp：トリム・切り出し・リサイズ・放射状フェード・色相回転）。公式名・role・profile 以外（二つ名・型・台詞・技名）は本作の創作＝非公式。将軍家に公式ボイスは無く、本作も声を付けない（決定288 v1.1）。
+
+| ID | Path（配信） | Source file（art-source） | Category | Creator | Model-Service | Generation date | Prompt reference | Reference inputs | Terms version・date checked | Commercial use | Modification | Attribution | Canonical source | Evidence（sha256） | Status |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| ENEMY-KIT-02 | `enemies/okappiki/art.webp`（768²・alpha・`enemies.ts` SHOGUNATE_ENEMIES art） | `art-source/enemies/okappiki/okappiki_main.webp`（Kit 原本 MAIN 1600²・非透過・140,426B・無加工・tracked） | enemy | **Kit 公式**（将軍家 v1.0.0） | — | `releasedAt 2026-10-08` | — | なし | `SGG-FAN-CREATION-GUIDELINES-1.0.0`・2026-11-03 | 可（§1） | 可（§2）。実施：人物中心を切り出し（1000×1250）＋放射状の透過フェード＋768² リサイズ・webp 再エンコード（sharp・AI 非生成加工） | 任意（§4）。Credits に「将軍家の敵の画像は Creator Kit 配布素材を切り抜き・縮小」と明記 | manifest `okappiki:MAIN` sha256 `2a0886ba7ba17f5c…`（原本と一致・2026-11-03 検証） | 配信ファイルの sha256 は PR 時に記入 | ◎（原本保全・sha256 一致・Terms 確認日） |
+| ENEMY-KIT-03 | `enemies/naomasa/art.webp`（768²・alpha） | `art-source/enemies/naomasa/naomasa_front.webp`（Kit 原本 FRONT 1600²・透過・127,604B・無加工・tracked） | enemy | **Kit 公式**（将軍家 v1.0.0） | — | `releasedAt 2026-10-08` | — | なし | 同上 | 可 | 可。実施：透明余白トリム＋768² リサイズ・webp 再エンコード（忠次 ENEMY-KIT-01 と同手順） | 任意 | manifest `naomasa:FRONT` sha256 `1a521795a16a7ecb…`（一致） | 4ec0c6d68d96a11b…・127790B | ◎ |
+| ENEMY-KIT-04 | `enemies/yasumasa/art.webp`（768²・alpha） | `art-source/enemies/yasumasa/yasumasa_front.webp`（Kit 原本 FRONT 1600²・透過・139,408B・無加工・tracked） | enemy | **Kit 公式**（将軍家 v1.0.0） | — | `releasedAt 2026-10-08` | — | なし | 同上 | 可 | 可。実施：同上 | 任意 | manifest `yasumasa:FRONT` sha256 `63e45c7358206869…`（一致） | 9f1a973ec99d7db1…・79420B | ◎ |
+| STG-09 | `backgrounds/stages/09-okappiki-street.webp`（1600×900）・捕り方・岡っ引き「御用提灯の町」accent `#8d7bd6` | STG-02（`02-oni-castle.webp`・CEO 生成）からの派生。独自の原本なし | stage | CEO 生成（原本＝STG-02）＋AI 非生成加工 | ChatGPT（STG-02 の記録に従う） | STG-02 に従う | STG-02 に従う | なし | — | STG-02 に従う | 色相回転（hue 215）・減光 0.72・彩度 0.85（sharp・非生成） | — | — | 1298242713f0ce6a…・85716B | STG-02 と同じ Status |
+| STG-10 | `backgrounds/stages/10-naomasa-camp.webp`（1600×900）・将軍四天王・直政「猛りの陣」accent `#d1402f` | STG-08（`08-shogunate-camp.webp`＝STG-02 派生）からの派生 | stage | CEO 生成（原本＝STG-02）＋AI 非生成加工 | 同上 | 同上 | 同上 | なし | — | 同上 | 色相回転（hue −22）・減光 0.92・彩度 1.25（sharp・非生成） | — | — | 04abe1812929fce9…・191554B | 同上 |
+| STG-11 | `backgrounds/stages/11-yasumasa-camp.webp`（1600×900）・将軍四天王・康政「采配の陣」accent `#2f9a86` | STG-08 からの派生 | stage | CEO 生成（原本＝STG-02）＋AI 非生成加工 | 同上 | 同上 | 同上 | なし | — | 同上 | 色相回転（hue 150）・減光 0.88・彩度 0.95（sharp・非生成） | — | — | cd846a54f0e5b7ce…・160808B | 同上 |
+
+- BACK（直政・康政）と将軍家の他 6 体（康虎・忠勝・鬼半蔵・影・くノ一・ドーマン）は本 wave では取得していない
+- 音声：追加 0（決定288 v1.1 で敵ボイスはスコープ外）

@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { Fragment, useState } from 'react'
 import type { EnemyId, GodId } from '../../core/types'
 import { CORE_ENEMIES, PILOT_ENEMIES, SHOGUNATE_ENEMIES, isPilotEnemyId, isShogunateEnemyId } from '../../core/data/enemies'
 import { isPilotEnabled } from '../pilot/pilotFlag'
@@ -76,9 +76,15 @@ export function EnemySelectScreen({ onSelect, onBack, godId = null }: EnemySelec
       )}
 
       <div className="enemy-select-grid">
-        {roster.map((enemy) => (
+        {roster.map((enemy, i) => (
+          <Fragment key={enemy.id}>
+          {/* W2（決定288 v1.1）：将軍家の最初のカードの前に全幅の見出し（表示のみ・setup.css の 1 ブロック） */}
+          {i > 0 && isShogunateEnemyId(enemy.id) && !isShogunateEnemyId(roster[i - 1].id) && (
+            <h2 className="enemy-select-section" data-testid="enemy-section-shogunate">
+              将軍家 <span className="enemy-select-section-note">SEVENGODS Creator Kit のキャラクター（本作の二次創作）・攻略盤の対象外</span>
+            </h2>
+          )}
           <button
-            key={enemy.id}
             type="button"
             className="enemy-select-card"
             style={{
@@ -141,6 +147,7 @@ export function EnemySelectScreen({ onSelect, onBack, godId = null }: EnemySelec
               <span className="enemy-select-stage">{enemy.stage.nameJa}</span>
             </span>
           </button>
+          </Fragment>
         ))}
 
         {/* 「神に委ねる」：敵カード（敵＋戦場）とは別のvisual language＝

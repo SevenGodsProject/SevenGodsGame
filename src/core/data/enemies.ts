@@ -398,6 +398,10 @@ export const PILOT_ENEMIES: EnemyDef[] = [
  */
 export const SHOGUNATE_ENEMY_IDS = {
   tadatsugu: enemyId('enemy_08'),
+  // W2（決定288 v1.1・2026-11-03）：公式 Kit 将軍家 3 体。enemy_09 は Threat Pilot（鬼将・軍略）で欠番
+  okappiki: enemyId('enemy_10'),
+  naomasa: enemyId('enemy_11'),
+  yasumasa: enemyId('enemy_12'),
 } as const
 
 export const SHOGUNATE_ENEMIES: EnemyDef[] = [
@@ -444,6 +448,125 @@ export const SHOGUNATE_ENEMIES: EnemyDef[] = [
         else: { kind: 'special', amount: 24, name: '軍略・総攻め' },
       },
       { kind: 'attack', amount: 15 },
+      { kind: 'attack', amount: 10 },
+      { kind: 'attack', amount: 6 },
+    ],
+  },
+  /**
+   * W2 将軍家 第二陣（決定288 v1.1・`docs/FINAL_SCOPE_ROADMAP_V1.md` §2-2・§10）：公式 Kit 将軍家の 3 体。
+   * 公式（Kit manifest）＝名前・role・profile・画像のみ。二つ名・型・台詞・技名は本作の創作（非公式）。公式ボイスは無く、本作も声を付けない。
+   * 既存 7 体・忠次のデータは 1 文字も変えない。Daily／49 盤／pickEnemyId／gameVersion は CORE 7 体のまま。
+   * ★（rank）は実測（scripts/enemy-star-audit）で付ける。HP・amount は Preflight sim（docs/evidence/shogunate-wave2/）で確定した値
+   */
+  {
+    id: SHOGUNATE_ENEMY_IDS.okappiki,
+    name: '捕り方・岡っ引き',
+    // 入門帯：既存 7 体で最も軽い道化（HP 88 帯）と同じ重さ
+    maxHp: 88,
+    // Kit MAIN（1600²・非透過のイラスト）→ 人物中心を切り出し、縁を放射状に透過（非生成加工・sharp）→ 768² webp。原本は art-source/enemies/okappiki/
+    art: '/assets/enemies/okappiki/art.webp',
+    typeLabel: '群れ型',
+    typeDescription: '偶数Rは小刻みな連撃。数で押される前に削れ。',
+    visualType: 'fast',
+    rank: 1,
+    // 舞台は STG-02（02-oni-castle・CEO 生成）の色相回転・減光の派生（新規生成なし・台帳 STG-09）
+    stage: { nameJa: '御用提灯の町', accent: '#8d7bd6', bg: '/assets/backgrounds/stages/09-okappiki-street.webp' },
+    // 非公式のファン創作（profile「穢土の町を取り締まる将軍家の捕り方」の範囲。新しい設定は足さない）
+    battleCries: [
+      '御用だ、御用だ！',
+      '神妙にしろい！',
+      '逃がしゃしねえぞ',
+      '町の静けさは、俺たちが守る',
+      'まだまだ、人手はあるんだ',
+      '十手の錆にしてやる！',
+      'おいおい、話が違うじゃねえか……',
+    ],
+    // 群れ：偶数 R は小さな連撃（ブロックの価値を教える入門）。R6 は技名つき連撃。合計 4+6+6+8+8+9+10＝51（道化 50 帯）
+    actions: [
+      { kind: 'attack', amount: 4 },
+      { kind: 'multiAttack', hits: [2, 2, 2] },
+      { kind: 'attack', amount: 6 },
+      { kind: 'multiAttack', hits: [2, 2, 2, 2] },
+      { kind: 'attack', amount: 8 },
+      { kind: 'multiAttack', hits: [3, 3, 3], name: '十手・乱打', special: true },
+      { kind: 'attack', amount: 10 },
+    ],
+  },
+  {
+    id: SHOGUNATE_ENEMY_IDS.naomasa,
+    name: '将軍四天王・直政',
+    maxHp: 96,
+    // Kit FRONT（1600²・透過）→ 余白トリム → 768² webp（忠次と同手順・非生成加工）。原本は art-source/enemies/naomasa/
+    art: '/assets/enemies/naomasa/art.webp',
+    typeLabel: '猛り型',
+    typeDescription: 'R4は追い込むと猛る連撃、浅ければ重撃。',
+    visualType: 'heavy',
+    rank: 1,
+    // 舞台は STG-08（08-shogunate-camp・派生）を朱へ色相回転した派生（台帳 STG-10）
+    stage: { nameJa: '猛りの陣', accent: '#d1402f', bg: '/assets/backgrounds/stages/10-naomasa-camp.webp' },
+    // 非公式のファン創作（profile「四天王で最も好戦的。直情的で、忠勝に対抗心を燃やす」の範囲）
+    battleCries: [
+      '待ちかねたぞ！',
+      '小細工は要らん、来い！',
+      '傷が深いほど、俺は猛る',
+      '忠勝より先に、俺が決める',
+      'まだだ、まだ足りん！',
+      '痛みは、燃料だ',
+      '……悪くない。次は俺の番だ',
+    ],
+    // 忠次の逆：R4 の軍略は「追い込めた（then）」で猛る連撃 5×3、「浅い（else）」で重撃 22。then を 0 にしない（一択化の防止）。
+    // しきい値は忠次と同じ既存の RULES.enemyTactic（easy／normal 0.5・hard 0.6）。合計 then 59／else 66（既存 65〜77 帯の下側）
+    actions: [
+      { kind: 'attack', amount: 6 },
+      { kind: 'attack', amount: 10 },
+      { kind: 'charge', label: '⚠ 傷が深ければ次は猛る' },
+      {
+        kind: 'tactic',
+        cond: { type: 'enemyHpRatioAtMost', ratio: RULES.enemyTactic.defaultHpRatio, ratioByDifficulty: RULES.enemyTactic.hpRatioByDifficulty },
+        then: { kind: 'multiAttack', hits: [5, 5, 5], name: '猛り・三連', special: true },
+        else: { kind: 'special', amount: 22, name: '猛り・一文字' },
+      },
+      { kind: 'attack', amount: 12 },
+      { kind: 'attack', amount: 9 },
+      { kind: 'attack', amount: 7 },
+    ],
+  },
+  {
+    id: SHOGUNATE_ENEMY_IDS.yasumasa,
+    name: '将軍四天王・康政',
+    maxHp: 96,
+    // Kit FRONT（1600²・透過）→ 余白トリム → 768² webp（非生成加工）。原本は art-source/enemies/yasumasa/
+    art: '/assets/enemies/yasumasa/art.webp',
+    typeLabel: '采配型',
+    typeDescription: 'R3の一撃が大きければ采配が崩れる。一点集中。',
+    visualType: 'standard',
+    rank: 1,
+    // 舞台は STG-08 を青緑へ色相回転した派生（台帳 STG-11）
+    stage: { nameJa: '采配の陣', accent: '#2f9a86', bg: '/assets/backgrounds/stages/11-yasumasa-camp.webp' },
+    // 非公式のファン創作（profile「四天王で最も文化人の面を持つ。兵を率いさせれば随一の指揮官」の範囲）
+    battleCries: [
+      'さて、指揮を執らせていただこう',
+      '兵は静かに、確実に',
+      '一手一手が、詩のように',
+      '崩すなら、一息で',
+      '采配は、まだ揺るがぬ',
+      '……ふむ、陣が乱れたか',
+      'お見事。良い戦でした',
+    ],
+    // 康政型（roundDamageAtLeast）：R4 開始時「R3 の 1 ラウンド実効ダメージ ≥ maxHp × 0.25（hard 0.20）」なら then（采配が崩れた）＝軽い手 10、
+    // 届かなければ必殺 26「采配・総崩し」。忠次「累積で追い込む」に対する「1 ラウンドで崩す」＝R2 で温存して R3 に一点集中するかの判断。
+    // 合計 then 53／else 69
+    actions: [
+      { kind: 'attack', amount: 5 },
+      { kind: 'attack', amount: 8 },
+      { kind: 'charge', label: '⚠ 一気に崩さねば次は采配' },
+      {
+        kind: 'tactic',
+        cond: { type: 'roundDamageAtLeast', ratio: RULES.enemyTactic.defaultRoundDamageRatio, ratioByDifficulty: RULES.enemyTactic.roundDamageRatioByDifficulty },
+        then: { kind: 'attack', amount: 10 },
+        else: { kind: 'special', amount: 26, name: '采配・総崩し' },
+      },
+      { kind: 'attack', amount: 14 },
       { kind: 'attack', amount: 10 },
       { kind: 'attack', amount: 6 },
     ],

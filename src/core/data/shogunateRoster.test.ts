@@ -105,7 +105,9 @@ describe('将軍家 Pilot 敵（忠次）', () => {
 
   it('ENEMIES は既存 7 体＋Threat Pilot＋将軍家の順。将軍家判定は忠次にだけ真・Pilot 判定（記録ガード）は Threat Pilot にだけ真（W1：忠次は偽）', () => {
     expect(ENEMIES).toEqual([...CORE_ENEMIES, ...PILOT_ENEMIES, ...SHOGUNATE_ENEMIES])
-    expect(SHOGUNATE_ENEMIES).toHaveLength(1)
+    expect(SHOGUNATE_ENEMIES).toHaveLength(4)
+    expect(SHOGUNATE_ENEMIES.map((e) => e.id as string)).toEqual(['enemy_08', 'enemy_10', 'enemy_11', 'enemy_12'])
+    for (const e of SHOGUNATE_ENEMIES) expect(isShogunateEnemyId(e.id)).toBe(true)
     expect(isShogunateEnemyId(SHOGUNATE_ENEMY_IDS.tadatsugu)).toBe(true)
     expect(isShogunateEnemyId(PILOT_ENEMY_IDS.oniTactic)).toBe(false)
     for (const e of CORE_ENEMIES) expect(isShogunateEnemyId(e.id)).toBe(false)
@@ -182,5 +184,81 @@ describe('将軍家 Pilot 敵（忠次）', () => {
       expect({ difficulty, maxHp, thenMax }).toEqual({ difficulty, maxHp, thenMax: expectedThenMax[difficulty] })
       expect({ difficulty, thenButNotBroken, brokenButElse }).toEqual({ difficulty, thenButNotBroken: expectedThenButNotBroken[difficulty], brokenButElse: 0 })
     }
+  })
+})
+
+describe('W2 将軍家 第二陣（岡っ引き・直政・康政・決定288 v1.1）', () => {
+  const okappiki = getEnemyDef(SHOGUNATE_ENEMY_IDS.okappiki)
+  const naomasa = getEnemyDef(SHOGUNATE_ENEMY_IDS.naomasa)
+  const yasumasa = getEnemyDef(SHOGUNATE_ENEMY_IDS.yasumasa)
+  const totals = (def: ReturnType<typeof getEnemyDef>, branch: 'then' | 'else') =>
+    def.actions.map((a) => (a.kind === 'tactic' ? enemyActionTotal(a[branch]) : enemyActionTotal(a)))
+
+  it('岡っ引き：HP 88・群れ型・fast・偶数 R は連撃・R6 は技名つき連撃・合計 51・engine 語彙は既存のみ', () => {
+    expect(okappiki.id).toBe('enemy_10')
+    expect(okappiki.maxHp).toBe(88)
+    expect(okappiki.typeLabel).toBe('群れ型')
+    expect(okappiki.visualType).toBe('fast')
+    expect(okappiki.actions.map((a) => a.kind)).toEqual(['attack', 'multiAttack', 'attack', 'multiAttack', 'attack', 'multiAttack', 'attack'])
+    expect(okappiki.actions[5]).toEqual({ kind: 'multiAttack', hits: [3, 3, 3], name: '十手・乱打', special: true })
+    expect(totals(okappiki, 'then')).toEqual([4, 6, 6, 8, 8, 9, 10])
+    expect(totals(okappiki, 'then').reduce((s, t) => s + t, 0)).toBe(51)
+  })
+
+  it('直政：HP 96・猛り型・heavy・R4 軍略は then＝猛り連撃 5×3（special）／else＝必殺 22・しきい値は忠次と同じ RULES.enemyTactic・合計 then 59／else 66', () => {
+    expect(naomasa.id).toBe('enemy_11')
+    expect(naomasa.maxHp).toBe(96)
+    expect(naomasa.visualType).toBe('heavy')
+    const r4 = naomasa.actions[3]
+    if (r4.kind !== 'tactic') throw new Error('R4 must be tactic')
+    expect(r4.cond).toEqual({ type: 'enemyHpRatioAtMost', ratio: RULES.enemyTactic.defaultHpRatio, ratioByDifficulty: RULES.enemyTactic.hpRatioByDifficulty })
+    expect(r4.then).toEqual({ kind: 'multiAttack', hits: [5, 5, 5], name: '猛り・三連', special: true })
+    expect(r4.else).toEqual({ kind: 'special', amount: 22, name: '猛り・一文字' })
+    expect(naomasa.actions[2]).toEqual({ kind: 'charge', label: '⚠ 傷が深ければ次は猛る' })
+    expect(totals(naomasa, 'then').reduce((s, t) => s + t, 0)).toBe(59)
+    expect(totals(naomasa, 'else').reduce((s, t) => s + t, 0)).toBe(66)
+  })
+
+  it('康政：HP 96・采配型・R4 軍略は roundDamageAtLeast（normal 0.25／hard 0.20）・then 10／else 必殺 26・合計 then 53／else 69', () => {
+    expect(yasumasa.id).toBe('enemy_12')
+    expect(yasumasa.maxHp).toBe(96)
+    const r4 = yasumasa.actions[3]
+    if (r4.kind !== 'tactic') throw new Error('R4 must be tactic')
+    expect(r4.cond).toEqual({ type: 'roundDamageAtLeast', ratio: RULES.enemyTactic.defaultRoundDamageRatio, ratioByDifficulty: RULES.enemyTactic.roundDamageRatioByDifficulty })
+    expect(r4.cond.ratioByDifficulty).toEqual({ easy: 0.25, normal: 0.25, hard: 0.2 })
+    expect(r4.then).toEqual({ kind: 'attack', amount: 10 })
+    expect(r4.else).toEqual({ kind: 'special', amount: 26, name: '采配・総崩し' })
+    expect(totals(yasumasa, 'then').reduce((s, t) => s + t, 0)).toBe(53)
+    expect(totals(yasumasa, 'else').reduce((s, t) => s + t, 0)).toBe(69)
+    // needed：normal 96×0.25＝24・hard 110×0.2＝22・easy 82×0.25＝20.5→21
+    const maxHpOf = (d: Difficulty) => Math.round(yasumasa.maxHp * RULES.difficulty[d].enemyHpMultiplier)
+    expect(tacticBranch(r4, maxHpOf('normal'), maxHpOf('normal'), 'normal', 24)).toBe('then')
+    expect(tacticBranch(r4, maxHpOf('normal'), maxHpOf('normal'), 'normal', 23)).toBe('else')
+    expect(tacticBranch(r4, maxHpOf('hard'), maxHpOf('hard'), 'hard', 22)).toBe('then')
+    expect(tacticBranch(r4, maxHpOf('hard'), maxHpOf('hard'), 'hard', 21)).toBe('else')
+    expect(tacticBranch(r4, maxHpOf('easy'), maxHpOf('easy'), 'easy', 21)).toBe('then')
+    // 敵 HP 比は読まない（HP 1 でも roundDamage 0 なら else）
+    expect(tacticBranch(r4, 1, maxHpOf('normal'), 'normal', 0)).toBe('else')
+  })
+
+  it('表記：3 体とも公式名と公式 role だけで名前を組み、「公式」「公認」「提携」を書かない（Kit 規約 §5／§6）', () => {
+    expect(okappiki.name).toBe('捕り方・岡っ引き')
+    expect(naomasa.name).toBe('将軍四天王・直政')
+    expect(yasumasa.name).toBe('将軍四天王・康政')
+    for (const def of [okappiki, naomasa, yasumasa]) {
+      expect(def.battleCries).toHaveLength(7)
+      expect(def.typeDescription.length).toBeLessThanOrEqual(30)
+      const text = [def.name, def.typeLabel, def.typeDescription, def.stage.nameJa, ...def.battleCries].join('\n')
+      expect(text).not.toMatch(/公式|公認|提携/)
+    }
+  })
+
+  it('素材：4 体とも専用の立ち絵・舞台を持ち、CORE 7 体＋将軍家 4 体で一意', () => {
+    const all = [...CORE_ENEMIES, ...SHOGUNATE_ENEMIES]
+    expect(new Set(all.map((e) => e.art)).size).toBe(all.length)
+    expect(new Set(all.map((e) => e.stage.bg)).size).toBe(all.length)
+    expect(okappiki.art).toBe('/assets/enemies/okappiki/art.webp')
+    expect(naomasa.stage.bg).toBe('/assets/backgrounds/stages/10-naomasa-camp.webp')
+    expect(yasumasa.stage.bg).toBe('/assets/backgrounds/stages/11-yasumasa-camp.webp')
   })
 })

@@ -25,6 +25,8 @@ const VIEWPORTS = [
 const MODES = ['normal', 'legacy-shogunate', 'threat']
 const CORE_NAMES = ['試練の影', '業斧の鬼将', '藍花の怨霊', '銀甲の機工師', '双牙の魔獣', '蒼海の龍神', '乱舞の道化']
 const TADATSUGU = '将軍四天王・忠次'
+// W2（決定288 v1.1）：将軍家は 4 体（忠次・岡っ引き・直政・康政）＝通常 12 枚（7 + 4 + 委ねる）・threat で 13 枚
+const SHOGUNATE_NAMES = ['将軍四天王・忠次', '捕り方・岡っ引き', '将軍四天王・直政', '将軍四天王・康政']
 const THREAT_NAME = '業斧の鬼将・軍略'
 
 async function clickText(page, text, timeout = 8000) {
@@ -64,9 +66,11 @@ for (const vp of VIEWPORTS) {
     const check = (name, pass, detail) => r.checks.push({ name, pass: !!pass, ...(detail !== undefined ? { detail } : {}) })
     await toEnemySelect(page)
     const threat = mode === 'threat'
-    const expectCards = threat ? 10 : 9
+    const expectCards = threat ? 13 : 12
     const cards = await page.locator('.enemy-select-card').count()
-    check(`enemy cards = ${expectCards} (7 + tadatsugu + entrust${threat ? ' + threat' : ''})`, cards === expectCards, cards)
+    check(`enemy cards = ${expectCards} (7 + shogunate 4 + entrust${threat ? ' + threat' : ''})`, cards === expectCards, cards)
+    for (const n of SHOGUNATE_NAMES) check(`shogunate enemy listed: ${n}`, (await page.getByRole('button', { name: new RegExp(n) }).count()) === 1)
+    check('shogunate section heading shown once', (await page.getByTestId('enemy-section-shogunate').count()) === 1)
     for (const n of CORE_NAMES) {
       const expected = threat && n === '業斧の鬼将' ? 2 : 1
       const cnt = await page.getByRole('button', { name: new RegExp(n) }).count()
@@ -75,11 +79,11 @@ for (const vp of VIEWPORTS) {
     const tadatsugu = page.getByRole('button', { name: new RegExp(TADATSUGU) })
     check('tadatsugu card shown (public roster)', (await tadatsugu.count()) === 1)
     check(`threat card ${threat ? 'shown' : 'hidden'}`, (await page.getByRole('button', { name: new RegExp(THREAT_NAME) }).count()) === (threat ? 1 : 0))
-    check('shogunate chip (enemy-shogunate-chip) shown 1', (await page.getByTestId('enemy-shogunate-chip').count()) === 1)
+    check('shogunate chip (enemy-shogunate-chip) shown 4', (await page.getByTestId('enemy-shogunate-chip').count()) === 4)
     const chipText = await page.getByTestId('enemy-shogunate-chip').first().innerText().catch(() => '')
     check('shogunate chip text = 攻略盤の対象外・戦績は残る', /攻略盤の対象外/.test(chipText) && /戦績は残る/.test(chipText), chipText)
     // SP375 で chip がカード幅に収まる（nowrap・10px）：chip 右端 ≤ カード右端
-    const chipFit = await page.evaluate(() => { const chip = document.querySelector('[data-testid="enemy-shogunate-chip"]'); const card = chip?.closest('.enemy-select-card'); if (!chip || !card) return null; const a = chip.getBoundingClientRect(), b = card.getBoundingClientRect(); return { chipRight: Math.round(a.right), cardRight: Math.round(b.right), chipLeft: Math.round(a.left), cardLeft: Math.round(b.left) } })
+    const chipFit = await page.evaluate(() => { const chips = [...document.querySelectorAll('[data-testid="enemy-shogunate-chip"]')]; const chip = chips[chips.length - 1]; const card = chip?.closest('.enemy-select-card'); if (!chip || !card) return null; const a = chip.getBoundingClientRect(), b = card.getBoundingClientRect(); return { chipRight: Math.round(a.right), cardRight: Math.round(b.right), chipLeft: Math.round(a.left), cardLeft: Math.round(b.left) } })
     check('shogunate chip fits inside the card', !!chipFit && chipFit.chipRight <= chipFit.cardRight && chipFit.chipLeft >= chipFit.cardLeft, chipFit)
     check(`pilot chip ${threat ? 'shown 1' : 'hidden'}`, (await page.getByTestId('enemy-pilot-chip').count()) === (threat ? 1 : 0))
     check(`threat notice ${threat ? 'shown' : 'hidden'}`, (await page.getByTestId('enemy-pilot-notice').count()) === (threat ? 1 : 0))
@@ -138,6 +142,32 @@ for (const vp of VIEWPORTS) {
       const matchups = await readJson(page, 'sevengods.matchups')
       check('matchups has no enemy_08 (49 盤の対象外)', !JSON.stringify(matchups ?? {}).includes('enemy_08'), matchups)
       await page.screenshot({ path: `${shotDir}/result-${vp.id}.png` })
+      r.intents = intents
+    }
+    // W2：康政（legacy-shogunate モード）／直政（threat モード）を 1 戦ずつ。札を出さず R3 の「あと N」行と R4 の else 分岐を確認（決定論）
+    if (mode === 'legacy-shogunate' || mode === 'threat') {
+      const target = mode === 'legacy-shogunate' ? { name: '将軍四天王・康政', dataEnemy: 'enemy_12', armed: /あと24で|采配を崩す/, r4: /采配・総崩し/, r4Amount: /260/ } : { name: '将軍四天王・直政', dataEnemy: 'enemy_11', armed: /一文字を止める/, r4: /猛り・一文字/, r4Amount: /220/ }
+      await page.getByRole('button', { name: new RegExp(target.name) }).first().click()
+      await page.getByText(new RegExp(target.name)).first().waitFor({ timeout: 8000 })
+      await clickText(page, 'この構成でバトル開始')
+      await page.getByRole('button', { name: 'ラウンドを終える' }).first().waitFor({ timeout: 20000 })
+      const dom = await page.evaluate(() => ({ battleDataEnemy: document.querySelector('.battle')?.getAttribute('data-enemy') ?? null }))
+      check(target.name + ' battle data-enemy', dom.battleDataEnemy === target.dataEnemy, dom)
+      const intents = []
+      let lineR3 = ''
+      for (let i = 0; i < 4; i++) {
+        const t = await intentText(page)
+        intents.push(t)
+        if (i === 2) lineR3 = await page.getByTestId('tactic-line').first().innerText().catch(() => '')
+        const btn = page.getByRole('button', { name: 'ラウンドを終える' }).first()
+        if (!(await btn.isVisible().catch(() => false))) break
+        await btn.click({ timeout: 5000 }).catch(() => {})
+        await page.waitForFunction((prev) => (document.querySelector('.intent')?.textContent ?? '') !== prev || !!document.querySelector('.game-over, .result-overlay'), t, { timeout: 15000 }).catch(() => {})
+        await page.waitForTimeout(400)
+      }
+      check(target.name + ' R3 tactic line armed', target.armed.test(lineR3), lineR3)
+      check(target.name + ' R4 intent = else（必殺）', target.r4.test(intents[3] ?? '') && target.r4Amount.test(intents[3] ?? ''), intents[3])
+      await page.screenshot({ path: `${shotDir}/battle-${target.dataEnemy}-${vp.id}.png` })
       r.intents = intents
     }
     check('JS error 0', errors.length === 0, errors)

@@ -36,9 +36,19 @@ export type EnemyActionDef =
  * （`RULES.enemyTactic.hpRatioByDifficulty` をデータ側で埋め込む。engine は RULES を直接読まない）。
  * 無い難易度は `ratio` にフォールバック。
  */
+export type EnemyTacticCond =
+  /** 忠次型：ラウンド開始時の敵 HP 比が ratio 以下なら then（累積で追い込めたか） */
+  | { type: 'enemyHpRatioAtMost'; ratio: number; ratioByDifficulty?: Readonly<Partial<Record<Difficulty, number>>> }
+  /**
+   * 康政型（決定288 v1.1 W2・`docs/LANE3_NEXT_PLAN_V1.md` §2-③／§3）：直前ラウンドの 1 ラウンド実効ダメージ
+   * （`state.mastery.roundDamage`・startRound のリセット前の値）が maxHp × ratio 以上なら then（1 ラウンドで崩せたか）。
+   * 乱数 0・save v9 不変（intent には解決後の既存 4 kind しか入らない）。値は RULES.enemyTactic.roundDamageRatioByDifficulty をデータが埋め込む
+   */
+  | { type: 'roundDamageAtLeast'; ratio: number; ratioByDifficulty?: Readonly<Partial<Record<Difficulty, number>>> }
+
 export type EnemyTacticDef = {
   kind: 'tactic'
-  cond: { type: 'enemyHpRatioAtMost'; ratio: number; ratioByDifficulty?: Readonly<Partial<Record<Difficulty, number>>> }
+  cond: EnemyTacticCond
   then: EnemyActionDef
   else: EnemyActionDef
 }

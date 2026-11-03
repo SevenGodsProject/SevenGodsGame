@@ -466,6 +466,13 @@ export const RULES = {
      * engine（`tactic.ts`）はこの表を直接読まず、敵データが `cond.ratioByDifficulty` として埋め込んだ値を難易度で引く。
      */
     hpRatioByDifficulty: { easy: 0.5, normal: 0.5, hard: 0.6 },
+    /**
+     * W2 康政（決定288 v1.1・`docs/LANE3_NEXT_PLAN_V1.md` §3・AI 判断）：roundDamageAtLeast の比（直前ラウンドの 1 ラウンド実効ダメージ ≥ maxHp × 比）。
+     * 代理敵 sim（1,680 戦）：normal 0.25 で「狙わない」23%／「狙う」69%（差 45pt＝狙いに報いる）。hard は maxHp ×1.15 で比が下がるため 0.20
+     * （32%／85%）。0.30 以上は狙っても届かない。engine はこの表を直接読まず、敵データが `cond.ratioByDifficulty` として埋め込む
+     */
+    defaultRoundDamageRatio: 0.25,
+    roundDamageRatioByDifficulty: { easy: 0.25, normal: 0.25, hard: 0.2 },
   },
   saveVersion: 9,
 } as const

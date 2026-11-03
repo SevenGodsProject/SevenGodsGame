@@ -82,7 +82,7 @@ describe('data-enemy の口と --enemy-art', () => {
 describe('v0.4：予告グローの分岐解決（表示 HP・enemy_08 限定）', () => {
   it('EnemyPanel は忠次のときだけ resolveEnemyTactic(nextScript, hpShown, enemy.maxHp, difficulty) で解決し、他の敵は解決しない', () => {
     const panel = read('./EnemyPanel.tsx')
-    expect(panel).toMatch(/const nextAction = isShogunateEnemyId\(enemy\.defId\) \? resolveEnemyTactic\(nextScript, hpShown, enemy\.maxHp, difficulty\) : nextScript/)
+    expect(panel).toMatch(/const nextAction = isShogunateEnemyId\(enemy\.defId\) \? resolveEnemyTactic\(nextScript, hpShown, enemy\.maxHp, difficulty, roundDamage\) : nextScript/)
     // 実 HP（enemy.hp）では解決しない＝Enemy Break（hpShown の帯遷移）と同じフレームに揃う
     expect(panel).not.toMatch(/resolveEnemyTactic\([^)]*enemy\.hp\b/)
     // 呼び出しは 1 か所だけ

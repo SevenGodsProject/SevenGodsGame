@@ -18,12 +18,23 @@ export function tacticRatio(tactic: EnemyTacticDef, difficulty: Difficulty): num
   return tactic.cond.ratioByDifficulty?.[difficulty] ?? tactic.cond.ratio
 }
 
-export function tacticBranch(tactic: EnemyTacticDef, enemyHp: number, enemyMaxHp: number, difficulty: Difficulty): 'then' | 'else' {
+/** 康政型（roundDamageAtLeast）：then に必要な 1 ラウンド実効ダメージ（切り上げ・maxHp 0 なら到達不能） */
+export function tacticRoundDamageNeeded(tactic: EnemyTacticDef, enemyMaxHp: number, difficulty: Difficulty): number {
+  return enemyMaxHp > 0 ? Math.ceil(enemyMaxHp * tacticRatio(tactic, difficulty)) : Number.POSITIVE_INFINITY
+}
+
+/**
+ * then／else の解決。`roundDamage` は直前ラウンドの 1 ラウンド実効ダメージ（康政型だけが読む。省略時 0＝忠次型の既存呼び出しは不変）
+ */
+export function tacticBranch(tactic: EnemyTacticDef, enemyHp: number, enemyMaxHp: number, difficulty: Difficulty, roundDamage = 0): 'then' | 'else' {
+  if (tactic.cond.type === 'roundDamageAtLeast') {
+    return roundDamage >= tacticRoundDamageNeeded(tactic, enemyMaxHp, difficulty) ? 'then' : 'else'
+  }
   const ratio = enemyMaxHp > 0 ? enemyHp / enemyMaxHp : 1
   return ratio <= tacticRatio(tactic, difficulty) ? 'then' : 'else'
 }
 
-export function resolveEnemyTactic(script: EnemyActionScript, enemyHp: number, enemyMaxHp: number, difficulty: Difficulty): EnemyActionDef {
+export function resolveEnemyTactic(script: EnemyActionScript, enemyHp: number, enemyMaxHp: number, difficulty: Difficulty, roundDamage = 0): EnemyActionDef {
   if (script.kind !== 'tactic') return script
-  return tacticBranch(script, enemyHp, enemyMaxHp, difficulty) === 'then' ? script.then : script.else
+  return tacticBranch(script, enemyHp, enemyMaxHp, difficulty, roundDamage) === 'then' ? script.then : script.else
 }

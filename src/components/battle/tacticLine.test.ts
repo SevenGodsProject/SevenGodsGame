@@ -7,7 +7,7 @@ import { RULES } from '../../core/data/rules'
 import { resolveEnemyTactic, tacticBranch } from '../../core/engine/tactic'
 import type { Difficulty, EnemyActionDef } from '../../core/types'
 import { labelContrastOnFill } from '../a11y/contrast'
-import { tacticLine, tacticThenMaxHp } from './tacticLine'
+import { tacticLine, tacticLineWords, tacticThenMaxHp } from './tacticLine'
 
 /**
  * 将軍家 Pilot v0.6（`docs/SHOGUNATE_V0_6_DESIGN_AUDIT.md` §1-3・§4 G5／G8）：「あと N で総攻めを止める」の契約。
@@ -88,11 +88,12 @@ describe('tacticLine（忠次 R3 の残り必要ダメージ）', () => {
 
   it('EnemyPanel は忠次（isShogunateEnemyId）だけ・撃破中は出さない＝enemy_09 には出ない（source-fixed）', () => {
     const src = read('./EnemyPanel.tsx')
-    expect(src).toContain('const tLine = isShogunateEnemyId(enemy.defId) && !defeated ? tacticLine(enemy.intent, nextScript, hpShown, enemy.maxHp, difficulty) : null')
+    expect(src).toContain('const tLine = isShogunateEnemyId(enemy.defId) && !defeated ? tacticLine(enemy.intent, nextScript, hpShown, enemy.maxHp, difficulty, roundDamage) : null')
     // 文言：未達「あと{N}で」＋「総攻めを止める」（句の切れ目で 2 span）／到達「✓ 総攻めを止めた」
     expect(src).toContain("'✓ 総攻めを止めた'")
     expect(src).toContain('<span>{`あと${formatScaled(tLine.remaining)}で`}</span>')
-    expect(src).toContain('<span>総攻めを止める</span>')
+    // W2：文言は tacticLineWords から（忠次は従来どおり「総攻めを止める」。fallback 文字列も残す）
+    expect(src).toContain("<span>{tWords?.armed ?? '総攻めを止める'}</span>")
     // enemy_09 は軍略を持つが将軍家ではない
     expect(getEnemyDef(PILOT_ENEMY_IDS.oniTactic).actions.some((a) => a.kind === 'tactic')).toBe(true)
   })
@@ -103,5 +104,28 @@ describe('tacticLine（忠次 R3 の残り必要ダメージ）', () => {
       expect(ratio, color).not.toBeNull()
       expect(ratio!, color).toBeGreaterThanOrEqual(4.5)
     }
+  })
+})
+
+describe('W2 康政（roundDamageAtLeast）の「あと N で采配を崩す」', () => {
+  const y = getEnemyDef(SHOGUNATE_ENEMY_IDS.yasumasa)
+  const yTactic = y.actions[3]
+  const yCharge = y.actions[2] as EnemyActionDef
+  it('残り＝needed − roundDamage（normal 24・hard 22）。0 で cleared。忠次型は 6 引数目を読まない', () => {
+    const intent = { kind: 'charge', label: (yCharge as { label: string }).label } as const
+    expect(tacticLine(intent, yTactic, 96, 96, 'normal', 0)).toEqual({ remaining: 24, cleared: false })
+    expect(tacticLine(intent, yTactic, 96, 96, 'normal', 10)).toEqual({ remaining: 14, cleared: false })
+    expect(tacticLine(intent, yTactic, 96, 96, 'normal', 24)).toEqual({ remaining: 0, cleared: true })
+    expect(tacticLine(intent, yTactic, 110, 110, 'hard', 21)).toEqual({ remaining: 1, cleared: false })
+    expect(tacticLine(intent, yTactic, 110, 110, 'hard', 22)).toEqual({ remaining: 0, cleared: true })
+    // 忠次：roundDamage を渡しても結果は不変
+    const tIntent = { kind: 'charge', label: (charge as { label: string }).label } as const
+    expect(tacticLine(tIntent, tactic, 98, 98, 'normal', 999)).toEqual(tacticLine(tIntent, tactic, 98, 98, 'normal'))
+  })
+  it('文言：忠次「総攻めを止める／✓ 総攻めを止めた」・直政「一文字を止める」・康政「采配を崩す／✓ 采配を崩した」', () => {
+    expect(tacticLineWords(tactic)).toEqual({ armed: '総攻めを止める', cleared: '✓ 総攻めを止めた' })
+    expect(tacticLineWords(getEnemyDef(SHOGUNATE_ENEMY_IDS.naomasa).actions[3])).toEqual({ armed: '一文字を止める', cleared: '✓ 一文字を止めた' })
+    expect(tacticLineWords(yTactic)).toEqual({ armed: '采配を崩す', cleared: '✓ 采配を崩した' })
+    expect(tacticLineWords(charge)).toEqual({ armed: '', cleared: '' })
   })
 })
