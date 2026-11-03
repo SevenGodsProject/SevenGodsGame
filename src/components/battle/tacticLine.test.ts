@@ -129,3 +129,13 @@ describe('W2 康政（roundDamageAtLeast）の「あと N で采配を崩す」'
     expect(tacticLineWords(charge)).toEqual({ armed: '', cleared: '' })
   })
 })
+
+describe('W3 文言：影「闇討ちを止める」・鬼半蔵「血風を止める」（tacticLineWords）', () => {
+  it('「・」の無い技名はそのまま、ある技名は後半を使う', () => {
+    expect(tacticLineWords(getEnemyDef(SHOGUNATE_ENEMY_IDS.kage).actions[4])).toEqual({ armed: '闇討ちを止める', cleared: '✓ 闇討ちを止めた' })
+    expect(tacticLineWords(getEnemyDef(SHOGUNATE_ENEMY_IDS.onihanzo).actions[3])).toEqual({ armed: '血風を止める', cleared: '✓ 血風を止めた' })
+    // 影 R2（予告なしの静かな分岐）：直前が charge でなければ行は出ない
+    const kage = getEnemyDef(SHOGUNATE_ENEMY_IDS.kage)
+    expect(tacticLine({ kind: 'attack', amount: 5 }, kage.actions[1], 96, 96, 'normal')).toBeNull()
+  })
+})

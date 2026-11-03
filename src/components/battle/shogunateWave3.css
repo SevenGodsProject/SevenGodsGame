@@ -1,0 +1,100 @@
+/* ============================================================
+   W3 将軍家 第三陣（決定288 v1.1・2026-11-03）：影（enemy_13）・くノ一（enemy_14）・鬼半蔵（enemy_15）の表示専用 CSS。
+   全セレクタを [data-enemy='enemy_1x'] に閉じる＝既存 7 体・忠次・第二陣の見た目は不変。画像は無改変（gradient／mask／filter のみ）。
+   engine・timing 定数・既存セレクタの値は変更しない・reduce の @media は書かない（決定232）。
+   ============================================================ */
+
+/* 共通：「あと N」行（第二陣と同じ見た目） */
+:where(.enemy-panel[data-enemy='enemy_13'], .enemy-panel[data-enemy='enemy_14'], .enemy-panel[data-enemy='enemy_15']) .enemy-assault-line {
+  margin: 4px auto 0;
+  padding: 2px 10px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1.5;
+  color: #ffe6a3;
+  background: #221607cc;
+  border: 1px solid #ffd166aa;
+  text-align: center;
+}
+:where(.enemy-panel[data-enemy='enemy_13'], .enemy-panel[data-enemy='enemy_14'], .enemy-panel[data-enemy='enemy_15']) .enemy-assault-line-text {
+  display: inline-flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0 0.25em;
+}
+:where(.enemy-panel[data-enemy='enemy_13'], .enemy-panel[data-enemy='enemy_14'], .enemy-panel[data-enemy='enemy_15']) .enemy-assault-line[data-state='cleared'] {
+  color: #d9ffd6;
+  border-color: #7ed67aaa;
+  background: #0f2a12cc;
+}
+@media (max-width: 420px) {
+  :where(.enemy-panel[data-enemy='enemy_13'], .enemy-panel[data-enemy='enemy_14'], .enemy-panel[data-enemy='enemy_15']) .enemy-assault-line {
+    font-size: 11px;
+    padding: 1px 8px;
+  }
+}
+
+/* 影：月光の藍。溜め（闇討ちの前）は影が濃くなる（filter のみ） */
+.enemy-panel[data-enemy='enemy_13'] .enemy-avatar::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(165deg, #dfe6ff 0%, #5a6b9e 45%, #0b1024 100%);
+  -webkit-mask: var(--enemy-art) center / contain no-repeat;
+  mask: var(--enemy-art) center / contain no-repeat;
+  mix-blend-mode: soft-light;
+  opacity: 0.55;
+}
+.enemy-panel[data-enemy='enemy_13'] .enemy-avatar.enemy-avatar-charging.enemy-avatar-charging-super {
+  box-shadow: none;
+  filter: drop-shadow(0 12px 16px #000000cc) drop-shadow(0 0 16px #2a3a8a) brightness(0.8);
+}
+
+/* くノ一：月の金。連撃の速さは既存 fast（visualType）が担う。充填は金の輪 */
+.enemy-panel[data-enemy='enemy_14'] .enemy-avatar::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(160deg, #fff4d6 0%, #c9a24d 45%, #2b1d05 100%);
+  -webkit-mask: var(--enemy-art) center / contain no-repeat;
+  mask: var(--enemy-art) center / contain no-repeat;
+  mix-blend-mode: soft-light;
+  opacity: 0.5;
+}
+.enemy-panel[data-enemy='enemy_14'] .enemy-avatar.enemy-avatar-charging.enemy-avatar-charging-super {
+  box-shadow: none;
+  filter: drop-shadow(0 12px 16px #000000cc) drop-shadow(0 0 14px #ffd166) drop-shadow(0 0 2px #fff6d6cc);
+}
+
+/* 鬼半蔵：血風の朱。Enemy Break の帯で赤みが増す（第二陣 直政と同じ手法） */
+.enemy-panel[data-enemy='enemy_15'] .enemy-avatar::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(170deg, #ffe0d6 0%, #b8322d 45%, #2a0505 100%);
+  -webkit-mask: var(--enemy-art) center / contain no-repeat;
+  mask: var(--enemy-art) center / contain no-repeat;
+  mix-blend-mode: soft-light;
+  opacity: 0.45;
+}
+.enemy-panel[data-enemy='enemy_15'].cf2-break-half .enemy-avatar::before {
+  opacity: 0.7;
+}
+.enemy-panel[data-enemy='enemy_15'].cf2-break-quarter .enemy-avatar::before {
+  opacity: 0.9;
+}
+.enemy-panel[data-enemy='enemy_15'] .enemy-avatar.enemy-avatar-charging.enemy-avatar-charging-super {
+  box-shadow: none;
+  filter: drop-shadow(0 12px 16px #000000cc) drop-shadow(0 0 18px #ff3b3b) drop-shadow(0 0 3px #ffd0d0cc);
+}
+
+/* 3 体共通：舞台の周辺減光 */
+.battle[data-enemy='enemy_13'] .battle-main,
+.battle[data-enemy='enemy_14'] .battle-main,
+.battle[data-enemy='enemy_15'] .battle-main {
+  background-image: radial-gradient(ellipse at 50% 40%, transparent 55%, #00000073 100%);
+}
