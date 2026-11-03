@@ -482,4 +482,13 @@ v0.1〜v0.3（branch `feat/shogunate-pilot-v0.3` @ `5a357f1`・CEO 実装承認 
 | STG-15 | `backgrounds/stages/15-tadakatsu-bastion.webp`（1600×900）・将軍四天王・忠勝「盾の本陣」accent `#ff8a1f` | STG-08（`08-shogunate-camp.webp`・STG-02 派生）からの派生 | stage | CEO 生成（原本＝STG-02）＋AI 非生成加工 | STG-02 に従う | 同上 | 同上 | なし | — | 同上 | 色相回転（hue −10）・減光 0.78・彩度 0.35（鉄灰） | — | — | 56e72a20c15daccd…・126740B | STG-02 と同じ Status |
 | STG-16 | `backgrounds/stages/16-doman-pagoda.webp`（1600×900）・科学者・ドーマン「逆さ五重塔の工房」accent `#8a4fc7` | STG-04（`04-mecha-workshop.webp`・CEO 生成）からの派生 | stage | CEO 生成（原本＝STG-04）＋AI 非生成加工 | STG-04 に従う | 同上 | 同上 | なし | — | 同上 | 色相回転（hue 265）・減光 0.82・彩度 1.15（紫） | — | — | ab33dab6afc39666…・280220B | STG-04 と同じ Status |
 
-- 残る将軍家 3 体（康虎・忠勝・ドーマン）は W4／W5 で取得する。BACK は使用しない
+- 残る将軍家 3 体（康虎・忠勝・ドーマン）は W4／W5 で取得する。BACK は使用しない → W4 で忠勝・ドーマン（§11）、W5 で康虎（§12）を取得済み＝将軍家 10 体 完了
+
+## 12. 将軍家 最終（康虎 Boss ★5）— W5（2026-11-03・branch `feat/w5-shogunate-wave5`・AI 記入）
+
+出典・規約・加工方針は §9〜§11 と同じ（Kit 将軍家 v1.0.0・`SGG-FAN-CREATION-GUIDELINES-1.0.0`・確認日 2026-11-03・非生成加工のみ・二つ名／型／台詞／技名は本作の創作）。原本は `https://sevengodsgames.com/creator-kit/shogunate/v1/assets/01_yasutora/yasutora_front.webp`（manifest `yasutora:FRONT`）を取得し sha256 を照合した。BACK（`yasutora:BACK`）は取得しない。これで将軍家 10 体の取得が完了（§11 の「残る 3 体」は解消）。
+
+| ID | Path（配信） | Source file（art-source） | Category | Creator | Model-Service | Generation date | Prompt reference | Reference inputs | Terms version・date checked | Commercial use | Modification | Attribution | Canonical source | Evidence（sha256） | Status |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| ENEMY-KIT-10 | `enemies/yasutora/art.webp`（768²・alpha） | `art-source/enemies/yasutora/yasutora_front.webp`（Kit 原本 FRONT 1600²・透過・123,902B・無加工・tracked） | enemy | **Kit 公式**（将軍家 v1.0.0） | — | `releasedAt 2026-10-08` | — | なし | `SGG-FAN-CREATION-GUIDELINES-1.0.0`・2026-11-03 | 可 | 可。透明余白トリム（666×1440）＋正方形キャンバス中央配置＋768²（sharp・非生成） | 任意（Credits に明記） | manifest `yasutora:FRONT` sha256 `fb7b5dcf4c4d0e6e…`（一致） | 52e5c68c095bc19f…・72062B | ◎ |
+| STG-17 | `backgrounds/stages/17-yasutora-throne.webp`（1600×900）・十七代将軍・康虎「穢土城・大広間」accent `#d4a72c` | STG-02（`02-oni-castle.webp`・CEO 生成）からの派生 | stage | CEO 生成（原本＝STG-02）＋AI 非生成加工 | STG-02 に従う | 同上 | 同上 | なし | — | 同上 | 色相回転（hue +40）・減光 0.70・彩度 0.9（金） | — | — | 811d09b55dc49021…・187116B | STG-02 と同じ Status |
