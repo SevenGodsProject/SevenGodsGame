@@ -61,6 +61,7 @@ import './battle.css'
 import './shogunateWave2.css'
 // W3 将軍家 第三陣：影・くノ一・鬼半蔵の表示専用 CSS
 import './shogunateWave3.css'
+import './shogunateWave4.css'
 
 type BattleScreenProps = {
   /** GameFlowが保持するuseGameEngineの戻り値。state は必ずゲーム進行中/決着済み */
@@ -495,6 +496,8 @@ export function BattleScreen({
           staggerKey={staggerKey}
           difficulty={state.difficulty}
           roundDamage={state.mastery.roundDamage}
+          resonance={state.resonance.value}
+          resonanceMax={state.resonance.max}
         />
         <div className="ally-row">
           <PlayerPanel

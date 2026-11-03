@@ -105,8 +105,8 @@ describe('将軍家 Pilot 敵（忠次）', () => {
 
   it('ENEMIES は既存 7 体＋Threat Pilot＋将軍家の順。将軍家判定は忠次にだけ真・Pilot 判定（記録ガード）は Threat Pilot にだけ真（W1：忠次は偽）', () => {
     expect(ENEMIES).toEqual([...CORE_ENEMIES, ...PILOT_ENEMIES, ...SHOGUNATE_ENEMIES])
-    expect(SHOGUNATE_ENEMIES).toHaveLength(7)
-    expect(SHOGUNATE_ENEMIES.map((e) => e.id as string)).toEqual(['enemy_08', 'enemy_10', 'enemy_11', 'enemy_12', 'enemy_13', 'enemy_14', 'enemy_15'])
+    expect(SHOGUNATE_ENEMIES).toHaveLength(9)
+    expect(SHOGUNATE_ENEMIES.map((e) => e.id as string)).toEqual(['enemy_08', 'enemy_10', 'enemy_11', 'enemy_12', 'enemy_13', 'enemy_14', 'enemy_15', 'enemy_16', 'enemy_17'])
     for (const e of SHOGUNATE_ENEMIES) expect(isShogunateEnemyId(e.id)).toBe(true)
     expect(isShogunateEnemyId(SHOGUNATE_ENEMY_IDS.tadatsugu)).toBe(true)
     expect(isShogunateEnemyId(PILOT_ENEMY_IDS.oniTactic)).toBe(false)
@@ -322,6 +322,60 @@ describe('W3 将軍家 第三陣（影・くノ一・鬼半蔵・決定288 v1.1�
       expect(text).not.toMatch(/公式|公認|提携/)
     }
     const all = [...CORE_ENEMIES, ...SHOGUNATE_ENEMIES]
+    expect(new Set(all.map((e) => e.art)).size).toBe(all.length)
+    expect(new Set(all.map((e) => e.stage.bg)).size).toBe(all.length)
+  })
+})
+
+describe('W4 将軍家 第四陣（忠勝・ドーマン・決定288 v1.1）', () => {
+  const tadakatsu = getEnemyDef(SHOGUNATE_ENEMY_IDS.tadakatsu)
+  const doman = getEnemyDef(SHOGUNATE_ENEMY_IDS.doman)
+  const totals = (def: ReturnType<typeof getEnemyDef>, branch: 'then' | 'else') =>
+    def.actions.map((a) => (a.kind === 'tactic' ? enemyActionTotal(a[branch]) : enemyActionTotal(a)))
+
+  it('忠勝：HP 112・鉄壁型・heavy・tactic なし・R3／R6 溜め → R4 蜻蛉切・一閃 24／R7 蜻蛉切・断 28・合計 82', () => {
+    expect(tadakatsu.id).toBe('enemy_16')
+    expect(tadakatsu.maxHp).toBe(112)
+    expect(tadakatsu.visualType).toBe('heavy')
+    expect(tadakatsu.actions.map((a) => a.kind)).toEqual(['attack', 'attack', 'charge', 'special', 'attack', 'charge', 'special'])
+    expect(tadakatsu.actions[3]).toEqual({ kind: 'special', amount: 24, name: '蜻蛉切・一閃' })
+    expect(tadakatsu.actions[6]).toEqual({ kind: 'special', amount: 28, name: '蜻蛉切・断' })
+    expect(totals(tadakatsu, 'then').reduce((s, t) => s + t, 0)).toBe(82)
+  })
+
+  it('ドーマン：HP 100・共鳴型・standard・R4／R7 が resonanceAtLeast（ratio 0.5＝ゲージ 4 以上で then）・then 攻撃 9／11・else 逆さ五重塔 24／26・合計 then 42／else 72', () => {
+    expect(doman.id).toBe('enemy_17')
+    expect(doman.maxHp).toBe(100)
+    expect(doman.visualType).toBe('standard')
+    const r4 = doman.actions[3]
+    const r7 = doman.actions[6]
+    if (r4.kind !== 'tactic' || r7.kind !== 'tactic') throw new Error('R4/R7 must be tactic')
+    expect(r4.cond).toEqual({ type: 'resonanceAtLeast', ratio: 0.5 })
+    expect(r7.cond).toEqual({ type: 'resonanceAtLeast', ratio: 0.5 })
+    expect(r4.then).toEqual({ kind: 'attack', amount: 9 })
+    expect(r4.else).toEqual({ kind: 'special', amount: 24, name: '逆さ五重塔' })
+    expect(r7.then).toEqual({ kind: 'attack', amount: 11 })
+    expect(r7.else).toEqual({ kind: 'special', amount: 26, name: '逆さ五重塔・反転' })
+    expect(doman.actions[2]).toEqual({ kind: 'charge', label: '⚠ 五重塔が共鳴に反応' })
+    expect(totals(doman, 'then').reduce((s, t) => s + t, 0)).toBe(42)
+    expect(totals(doman, 'else').reduce((s, t) => s + t, 0)).toBe(72)
+    // ゲージ max 7：4 以上で then・3 以下で else。敵 HP 比は読まない
+    expect(tacticBranch(r4, 100, 100, 'normal', 0, 4, 7)).toBe('then')
+    expect(tacticBranch(r4, 100, 100, 'normal', 0, 3, 7)).toBe('else')
+    expect(tacticBranch(r4, 1, 100, 'hard', 999, 0, 7)).toBe('else')
+  })
+
+  it('表記：公式名と公式 role だけで名前を組み「公式」「公認」「提携」を書かない。素材は 16 体で一意', () => {
+    expect(tadakatsu.name).toBe('将軍四天王・忠勝')
+    expect(doman.name).toBe('科学者・ドーマン')
+    for (const def of [tadakatsu, doman]) {
+      expect(def.battleCries).toHaveLength(7)
+      expect(def.typeDescription.length).toBeLessThanOrEqual(30)
+      const text = [def.name, def.typeLabel, def.typeDescription, def.stage.nameJa, ...def.battleCries].join('\n')
+      expect(text).not.toMatch(/公式|公認|提携/)
+    }
+    const all = [...CORE_ENEMIES, ...SHOGUNATE_ENEMIES]
+    expect(all).toHaveLength(16)
     expect(new Set(all.map((e) => e.art)).size).toBe(all.length)
     expect(new Set(all.map((e) => e.stage.bg)).size).toBe(all.length)
   })

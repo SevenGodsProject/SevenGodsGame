@@ -1,0 +1,82 @@
+/* ============================================================
+   W4 将軍家 第四陣（決定288 v1.1・2026-11-03）：忠勝（enemy_16）・ドーマン（enemy_17）の表示専用 CSS。
+   全セレクタを [data-enemy='enemy_16'|'enemy_17'] に閉じる＝既存 7 体・忠次・第二陣・第三陣の見た目は不変。画像は無改変（gradient／mask／filter のみ）。
+   engine・timing 定数・既存セレクタの値は変更しない・reduce の @media は書かない（決定232）。
+   ============================================================ */
+
+/* 共通：「あと N」行（第二陣・第三陣と同じ見た目） */
+:where(.enemy-panel[data-enemy='enemy_16'], .enemy-panel[data-enemy='enemy_17']) .enemy-assault-line {
+  margin: 4px auto 0;
+  padding: 2px 10px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1.5;
+  color: #ffe6a3;
+  background: #221607cc;
+  border: 1px solid #ffd166aa;
+  text-align: center;
+}
+:where(.enemy-panel[data-enemy='enemy_16'], .enemy-panel[data-enemy='enemy_17']) .enemy-assault-line-text {
+  display: inline-flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0 0.25em;
+}
+:where(.enemy-panel[data-enemy='enemy_16'], .enemy-panel[data-enemy='enemy_17']) .enemy-assault-line[data-state='cleared'] {
+  color: #d9ffd6;
+  border-color: #7ed67aaa;
+  background: #0f2a12cc;
+}
+@media (max-width: 420px) {
+  :where(.enemy-panel[data-enemy='enemy_16'], .enemy-panel[data-enemy='enemy_17']) .enemy-assault-line {
+    font-size: 11px;
+    padding: 1px 8px;
+  }
+}
+
+/* 忠勝：黒鉄と橙の熱。Enemy Break の帯で甲冑の熱（橙）が増す＝「盾が割れていく」（第二陣 直政・第三陣 鬼半蔵と同じ手法） */
+.enemy-panel[data-enemy='enemy_16'] .enemy-avatar::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(170deg, #fff1dc 0%, #ff8a1f 48%, #1a1612 100%);
+  -webkit-mask: var(--enemy-art) center / contain no-repeat;
+  mask: var(--enemy-art) center / contain no-repeat;
+  mix-blend-mode: soft-light;
+  opacity: 0.4;
+}
+.enemy-panel[data-enemy='enemy_16'].cf2-break-half .enemy-avatar::before {
+  opacity: 0.65;
+}
+.enemy-panel[data-enemy='enemy_16'].cf2-break-quarter .enemy-avatar::before {
+  opacity: 0.85;
+}
+.enemy-panel[data-enemy='enemy_16'] .enemy-avatar.enemy-avatar-charging.enemy-avatar-charging-super {
+  box-shadow: none;
+  filter: drop-shadow(0 12px 16px #000000cc) drop-shadow(0 0 18px #ff8a1f) drop-shadow(0 0 3px #ffe2b3cc);
+}
+
+/* ドーマン：紫の光層。溜め（塔が共鳴に反応）は紫の輪。「✓ 五重塔を止めた」は既存の緑転が担う */
+.enemy-panel[data-enemy='enemy_17'] .enemy-avatar::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(165deg, #f3e3ff 0%, #8a4fc7 45%, #12061f 100%);
+  -webkit-mask: var(--enemy-art) center / contain no-repeat;
+  mask: var(--enemy-art) center / contain no-repeat;
+  mix-blend-mode: soft-light;
+  opacity: 0.5;
+}
+.enemy-panel[data-enemy='enemy_17'] .enemy-avatar.enemy-avatar-charging.enemy-avatar-charging-super {
+  box-shadow: none;
+  filter: drop-shadow(0 12px 16px #000000cc) drop-shadow(0 0 16px #b06cff) drop-shadow(0 0 3px #ffb257cc);
+}
+
+/* 2 体共通：舞台の周辺減光 */
+.battle[data-enemy='enemy_16'] .battle-main,
+.battle[data-enemy='enemy_17'] .battle-main {
+  background-image: radial-gradient(ellipse at 50% 40%, transparent 55%, #00000073 100%);
+}

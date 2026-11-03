@@ -126,7 +126,7 @@ describe('Pilot 敵（enemy_09 業斧の鬼将・軍略）', () => {
     // enemy_08 は決定274 忠次（将軍家）。CORE にも PILOT_ENEMIES にも入らない。決定287 W1 で通常導線へ公開＝isPilotEnemyId は偽（記録ガードは Threat Pilot だけ）
     expect(CORE_ENEMIES.some((e) => (e.id as string) === 'enemy_08')).toBe(false)
     expect(PILOT_ENEMIES.some((e) => (e.id as string) === 'enemy_08')).toBe(false)
-    expect(SHOGUNATE_ENEMIES.map((e) => e.id as string)).toEqual(['enemy_08', 'enemy_10', 'enemy_11', 'enemy_12', 'enemy_13', 'enemy_14', 'enemy_15'])
+    expect(SHOGUNATE_ENEMIES.map((e) => e.id as string)).toEqual(['enemy_08', 'enemy_10', 'enemy_11', 'enemy_12', 'enemy_13', 'enemy_14', 'enemy_15', 'enemy_16', 'enemy_17'])
     expect(isPilotEnemyId(SHOGUNATE_ENEMIES[0].id)).toBe(false)
   })
 

@@ -7,11 +7,11 @@ describe('ENEMIES', () => {
     expect(new Set(ids).size).toBe(ids.length)
   })
 
-  it('is CORE 7 + Threat Pilot (enemy_09) + 将軍家 7 (enemy_08/10〜15) in that order; the default pick stays within CORE (W3)', () => {
-    expect(ENEMIES).toHaveLength(15)
-    expect(ENEMIES.map((e) => e.id as string)).toEqual([...Object.values(ENEMY_IDS), 'enemy_09', 'enemy_08', 'enemy_10', 'enemy_11', 'enemy_12', 'enemy_13', 'enemy_14', 'enemy_15'])
+  it('is CORE 7 + Threat Pilot (enemy_09) + 将軍家 9 (enemy_08/10〜17) in that order; the default pick stays within CORE (W4)', () => {
+    expect(ENEMIES).toHaveLength(17)
+    expect(ENEMIES.map((e) => e.id as string)).toEqual([...Object.values(ENEMY_IDS), 'enemy_09', 'enemy_08', 'enemy_10', 'enemy_11', 'enemy_12', 'enemy_13', 'enemy_14', 'enemy_15', 'enemy_16', 'enemy_17'])
     expect(PILOT_ENEMIES.map((e) => e.id as string)).toEqual(['enemy_09'])
-    expect(SHOGUNATE_ENEMIES.map((e) => e.id as string)).toEqual(['enemy_08', 'enemy_10', 'enemy_11', 'enemy_12', 'enemy_13', 'enemy_14', 'enemy_15'])
+    expect(SHOGUNATE_ENEMIES.map((e) => e.id as string)).toEqual(['enemy_08', 'enemy_10', 'enemy_11', 'enemy_12', 'enemy_13', 'enemy_14', 'enemy_15', 'enemy_16', 'enemy_17'])
     const core = new Set(CORE_ENEMIES.map((e) => e.id))
     for (const seed of ['a', 'seed-1', 'seed-2', 'seed-999999', 'こんにちは']) expect(core.has(pickEnemyId(seed))).toBe(true)
   })

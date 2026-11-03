@@ -45,6 +45,13 @@ export type EnemyTacticCond =
    * 乱数 0・save v9 不変（intent には解決後の既存 4 kind しか入らない）。値は RULES.enemyTactic.roundDamageRatioByDifficulty をデータが埋め込む
    */
   | { type: 'roundDamageAtLeast'; ratio: number; ratioByDifficulty?: Readonly<Partial<Record<Difficulty, number>>> }
+  /**
+   * ドーマン型（決定288 v1.1 W4・AI 判断）：ラウンド開始時の共鳴ゲージ（`state.resonance.value`）が max × ratio 以上なら then
+   * （共鳴を溜めたまま迎えたか）。ゲージは満タンで自動発動して 0 に戻るため「溜めるほど発動で失う」＝撃つか温存するかの判断になる。
+   * 乱数 0・save v9 不変・ゲージは読むだけで触らない（決定217 の報酬問題に干渉しない）。値は RULES.enemyTactic.defaultResonanceRatio を
+   * データが埋め込む。ゲージは難易度で変わらないので ratioByDifficulty は使わない（型の形は他 2 種と揃える）
+   */
+  | { type: 'resonanceAtLeast'; ratio: number; ratioByDifficulty?: Readonly<Partial<Record<Difficulty, number>>> }
 
 export type EnemyTacticDef = {
   kind: 'tactic'

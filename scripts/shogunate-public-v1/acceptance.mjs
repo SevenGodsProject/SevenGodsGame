@@ -25,8 +25,8 @@ const VIEWPORTS = [
 const MODES = ['normal', 'legacy-shogunate', 'threat']
 const CORE_NAMES = ['試練の影', '業斧の鬼将', '藍花の怨霊', '銀甲の機工師', '双牙の魔獣', '蒼海の龍神', '乱舞の道化']
 const TADATSUGU = '将軍四天王・忠次'
-// W2（決定288 v1.1）：将軍家は 4 体（忠次・岡っ引き・直政・康政）＝通常 12 枚（7 + 4 + 委ねる）・threat で 13 枚
-const SHOGUNATE_NAMES = ['将軍四天王・忠次', '捕り方・岡っ引き', '将軍四天王・直政', '将軍四天王・康政', '忍者衆・影', '忍者衆・くノ一', '影の頭領・鬼半蔵']
+// W4（決定288 v1.1）：将軍家は 9 体（忠次・岡っ引き・直政・康政・影・くノ一・鬼半蔵・忠勝・ドーマン）＝通常 17 枚（7 + 9 + 委ねる）・threat で 18 枚
+const SHOGUNATE_NAMES = ['将軍四天王・忠次', '捕り方・岡っ引き', '将軍四天王・直政', '将軍四天王・康政', '忍者衆・影', '忍者衆・くノ一', '影の頭領・鬼半蔵', '将軍四天王・忠勝', '科学者・ドーマン']
 const THREAT_NAME = '業斧の鬼将・軍略'
 
 async function clickText(page, text, timeout = 8000) {
@@ -66,9 +66,9 @@ for (const vp of VIEWPORTS) {
     const check = (name, pass, detail) => r.checks.push({ name, pass: !!pass, ...(detail !== undefined ? { detail } : {}) })
     await toEnemySelect(page)
     const threat = mode === 'threat'
-    const expectCards = threat ? 16 : 15
+    const expectCards = threat ? 18 : 17
     const cards = await page.locator('.enemy-select-card').count()
-    check(`enemy cards = ${expectCards} (7 + shogunate 7 + entrust${threat ? ' + threat' : ''})`, cards === expectCards, cards)
+    check(`enemy cards = ${expectCards} (7 + shogunate 9 + entrust${threat ? ' + threat' : ''})`, cards === expectCards, cards)
     for (const n of SHOGUNATE_NAMES) check(`shogunate enemy listed: ${n}`, (await page.getByRole('button', { name: new RegExp(n) }).count()) === 1)
     check('shogunate section heading shown once', (await page.getByTestId('enemy-section-shogunate').count()) === 1)
     for (const n of CORE_NAMES) {
@@ -79,7 +79,7 @@ for (const vp of VIEWPORTS) {
     const tadatsugu = page.getByRole('button', { name: new RegExp(TADATSUGU) })
     check('tadatsugu card shown (public roster)', (await tadatsugu.count()) === 1)
     check(`threat card ${threat ? 'shown' : 'hidden'}`, (await page.getByRole('button', { name: new RegExp(THREAT_NAME) }).count()) === (threat ? 1 : 0))
-    check('shogunate chip (enemy-shogunate-chip) shown 7', (await page.getByTestId('enemy-shogunate-chip').count()) === 7)
+    check('shogunate chip (enemy-shogunate-chip) shown 9', (await page.getByTestId('enemy-shogunate-chip').count()) === 9)
     const chipText = await page.getByTestId('enemy-shogunate-chip').first().innerText().catch(() => '')
     check('shogunate chip text = 攻略盤の対象外・戦績は残る', /攻略盤の対象外/.test(chipText) && /戦績は残る/.test(chipText), chipText)
     // SP375 で chip がカード幅に収まる（nowrap・10px）：chip 右端 ≤ カード右端
@@ -146,7 +146,7 @@ for (const vp of VIEWPORTS) {
     }
     // W2：康政（legacy-shogunate モード）／直政（threat モード）を 1 戦ずつ。札を出さず R3 の「あと N」行と R4 の else 分岐を確認（決定論）
     if (mode === 'legacy-shogunate' || mode === 'threat') {
-      const target = mode === 'legacy-shogunate' ? { name: '将軍四天王・康政', dataEnemy: 'enemy_12', armed: /あと24で|采配を崩す/, r4: /采配・総崩し/, r4Amount: /260/ } : { name: '影の頭領・鬼半蔵', dataEnemy: 'enemy_15', armed: /血風を止める/, r4: /鬼嶽・血風/, r4Amount: /240/ }
+      const target = mode === 'legacy-shogunate' ? { name: '科学者・ドーマン', dataEnemy: 'enemy_17', armed: /共鳴あと4で|五重塔を止める/, r4: /逆さ五重塔/, r4Amount: /240/ } : { name: '影の頭領・鬼半蔵', dataEnemy: 'enemy_15', armed: /血風を止める/, r4: /鬼嶽・血風/, r4Amount: /240/ }
       await page.getByRole('button', { name: new RegExp(target.name) }).first().click()
       await page.getByText(new RegExp(target.name)).first().waitFor({ timeout: 8000 })
       await clickText(page, 'この構成でバトル開始')

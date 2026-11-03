@@ -72,7 +72,7 @@ function nextEnemyAction(state: GameState): EnemyActionDef {
   // Pilot v1.1：しきい値は難易度別（`cond.ratioByDifficulty`・値は RULES.enemyTactic.hpRatioByDifficulty をデータが埋め込む）
   // W2（康政・roundDamageAtLeast）：直前ラウンドの 1 ラウンド実効ダメージも渡す（startRound はこの解決の後で roundDamage を 0 にする）。
   // 忠次型（enemyHpRatioAtMost）はこの引数を読まない＝既存の解決は不変
-  const raw = resolveEnemyTactic(actionForRound(enemyDef.actions, state.round), state.enemy.hp, state.enemy.maxHp, state.difficulty, state.mastery.roundDamage)
+  const raw = resolveEnemyTactic(actionForRound(enemyDef.actions, state.round), state.enemy.hp, state.enemy.maxHp, state.difficulty, state.mastery.roundDamage, state.resonance.value, state.resonance.max)
   // DAILY-01：神域強化の攻撃倍率は難易度倍率に乗算し、合計保存丸めを1回だけ行う。
   // 通常モード（modifier無し）は×1で従来と完全に同じ値。
   // 決定126：神階の累積ルール。難易度倍率×Daily修正子×神階ATK×後半激化×必殺・連撃倍率を

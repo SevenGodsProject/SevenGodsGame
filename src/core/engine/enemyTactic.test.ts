@@ -7,7 +7,7 @@ import { resolveStakeRules, specialMultiplierFor } from '../data/stakes'
 import type { Difficulty, EnemyActionDef, EnemyTacticDef, GameState } from '../types'
 import { applyAction } from './reducer'
 import { enemyActionTotal } from './intent'
-import { resolveEnemyTactic, tacticBranch, tacticRatio, tacticRoundDamageNeeded } from './tactic'
+import { resolveEnemyTactic, tacticBranch, tacticRatio, tacticResonanceNeeded, tacticRoundDamageNeeded } from './tactic'
 
 /**
  * Threat Branch Pilot v1：軍略（tactic）の契約（機構は決定274 忠次「軍略」の移植。純関数部分はそのまま）。
@@ -277,5 +277,41 @@ describe('W2 康政型（roundDamageAtLeast・決定288 v1.1）', () => {
     expect(r4s.round).toBe(4)
     expect(r4s.enemy.intent).toEqual({ kind: 'attack', amount: 10 })
     expect(r4s.mastery.roundDamage).toBe(0)
+  })
+})
+
+describe('W4 ドーマン型（resonanceAtLeast・決定288 v1.1）', () => {
+  const DOMAN = SHOGUNATE_ENEMY_IDS.doman
+  const r4 = getEnemyDef(DOMAN).actions[3] as EnemyTacticDef
+  function startD(seed: string, difficulty: Difficulty = 'normal'): GameState {
+    return applyAction(null, { type: 'START_GAME', seed, godId: GOD_IDS.ebisu, enemyId: DOMAN, deck: STARTER_DECK, difficulty }).state
+  }
+  it('純関数：ラウンド開始時の共鳴ゲージが max×ratio（切り上げ）以上なら then。敵 HP 比・roundDamage は読まない。省略時は到達不能＝else', () => {
+    expect(tacticResonanceNeeded(r4, 7, 'normal')).toBe(4)
+    expect(tacticResonanceNeeded(r4, 7, 'hard')).toBe(4)
+    expect(tacticResonanceNeeded(r4, 0, 'normal')).toBe(Number.POSITIVE_INFINITY)
+    expect(tacticBranch(r4, 100, 100, 'normal', 0, 4, 7)).toBe('then')
+    expect(tacticBranch(r4, 100, 100, 'normal', 0, 3, 7)).toBe('else')
+    expect(tacticBranch(r4, 1, 100, 'normal', 999, 3, 7)).toBe('else')
+    expect(tacticBranch(r4, 100, 100, 'normal')).toBe('else')
+    expect(resolveEnemyTactic(r4, 100, 100, 'normal', 0, 6, 7)).toEqual({ kind: 'attack', amount: 9 })
+    expect(resolveEnemyTactic(r4, 100, 100, 'normal', 0, 0, 7)).toEqual({ kind: 'special', amount: 24, name: '逆さ五重塔' })
+    // 忠次型・康政型は 6／7 引数目を読まない（既存の解決は不変）
+    expect(tacticBranch(TACTIC, 48, 94, 'normal', 0, 7, 7)).toBe('else')
+    expect(tacticBranch(TACTIC, 47, 94, 'normal', 0, 0, 7)).toBe('then')
+  })
+  it('engine：札を出さずに R4 へ進むとゲージ 0 → else（必殺 24×難易度）。R3 終了時のゲージを 4 にして R4 を開始すると then。ゲージ自体は変わらない', () => {
+    const s = toRound(startD('w4-doman-1'), 4)
+    expect(s.enemy.intent).toEqual({ kind: 'special', amount: 24, name: '逆さ五重塔' })
+    const r3 = toRound(startD('w4-doman-1'), 3)
+    const forced: GameState = { ...r3, resonance: { ...r3.resonance, value: 4 } }
+    const r4s = applyAction(forced, { type: 'END_ROUND' }).state
+    expect(r4s.round).toBe(4)
+    expect(r4s.enemy.intent).toEqual({ kind: 'attack', amount: 9 })
+    expect(r4s.resonance).toEqual({ value: 4, max: 7 })
+    // hard：amount は難易度倍率後だが分岐の条件は同じ（ゲージは難易度で変わらない）
+    const h = toRound(startD('w4-doman-1', 'hard'), 3)
+    const hs = applyAction({ ...h, resonance: { ...h.resonance, value: 3 } }, { type: 'END_ROUND' }).state
+    expect(hs.enemy.intent?.kind).toBe('special')
   })
 })
