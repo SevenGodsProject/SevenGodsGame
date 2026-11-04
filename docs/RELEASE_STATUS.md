@@ -12,11 +12,11 @@ Production の「確定状態」を一目で確認するための要約です。
 | **Production HEAD** | master = origin/master **`8af0082`**（PR #19 merge・2026-11-04T13:49:40Z・CEO 操作。runtime tree は W6 Gate 対象 `b9550f7` と同一）。docs-only 追記：PR #20（LIVE 記録・最終 Gate・運営報告書）merge → master **`c0c2b75`**（2026-11-04T14:31:11Z・CI `41848370685` success・Vercel `7548772113` success・bundle `index-BzulRGbV.js` は sha 以外 v1.1.4 と同一） |
 | **CI** | master run `41841665058` success |
 | **Vercel deployment** | **`7547769021`**（sha `8af0082`・success 13:50:28Z）／bundle `index-CwO8p6YY.js`（492,733 B・sha 正規化後 W6 Gate build `index-BwV2EshF.js` と byte 一致）・`index-BI3ZCUzF.css`（212,461 B・同一） |
-| **Rollback 先** | deployment **`7542751824`**（`86ed9ea`・v1.1.3）／**`7530012443`**（`11dd335`・v1.1.3 初回）。Promote は CEO のみ・未使用（演習は `docs/FINAL_RELEASE_GATE_V1_1.md` §5・戻し先は現在の本番 `7548772113`） |
+| **Rollback 先** | deployment **`7542751824`**（`86ed9ea`・v1.1.3）／**`7530012443`**（`11dd335`・v1.1.3 初回）。Promote は CEO のみ。**Rollback 演習 1 回 実施済み（2026-11-04 15:42〜15:47Z・DoD #11 DONE）**：`7542751824` へ戻し（本番 `v1.1.3 (86ed9ea)`・S2 42/44＝version 行は旧版の正しい表示）→ 現在の本番 `7549462791`（`997b06b`・PR #21 docs-only 再デプロイ）へ復旧（S2 44/44）。`docs/FINAL_RELEASE_GATE_V1_1.md` §5-1 |
 | **Release Gate／Smoke** | `docs/W6_ENEMY_PRESENTATION_GATE.md`（自動 Gate ALL PASS）／`docs/V1_1_4_PRODUCTION_SMOKE.md`（S2 44・S5 228・S6 6 MATCH・S8 旧セーブ 本番直撃 44/44 PASS）／`docs/FINAL_RELEASE_GATE_V1_1.md`（最終 Gate：7 神 × 将軍家 10 体 × normal／hard 140 組 決定論 140/140・DoD 18・Known K40〜K47 凍結（CEO 承認 2026-11-04）・台帳 20 行・Ranking 不在 PASS） |
 | **version 表示** | Home `v1.1.4 (8af0082)`（S2 で検証） |
 | **Known** | K01〜K39 据え置き＋**K40〜K47 凍結（CEO 承認 2026-11-04）**（A-4・新規の製品異常 0） |
-| **次** | 開発スコープ（決定288 v1.1）は完了。残りは CEO 操作のみ：Rollback 演習（Promote 2 回・AI が Smoke で確認）・tag `v1.1.4`（任意）・運営報告書 `docs/OPERATIONS_REPORT_V1.md` の共有と SGG 運営への任意連絡 |
+| **次** | 開発スコープ（決定288 v1.1）は完了。最終 Release Gate の必須項目（DoD #10 Known 凍結・#11 Rollback 演習）は 2026-11-04 に完了。残りは任意の CEO 操作のみ：tag `v1.1.4`・運営報告書 `docs/OPERATIONS_REPORT_V1.md` の共有と SGG 運営への任意連絡 |
 ### A-0000000. v1.1.3 公開（2026-11-04・決定288 W5 PRODUCTION LIVE・将軍家 10 体 公開完了）
 
 | 項目 | 状態 |

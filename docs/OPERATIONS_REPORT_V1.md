@@ -84,7 +84,7 @@
 - 将軍家の台詞・技名は AI 創作設定＝公式設定と異なる可能性があり、運営から指摘があれば文言差し替えは Fast Gate で可能（rules／enemies.ts の文字列のみ）
 - Credits の問い合わせ先は「準備中」（K47・CEO 確定待ち）。専門家（法務）による文言確認は未実施
 - 既存 7 体の画風統一（K07）・Card Art Unity（K32）・SE 実音源・God Strike 6 柱は課金判断のため未着手
-- Rollback 演習（Vercel Promote）は未実施（CEO 操作・`docs/FINAL_RELEASE_GATE_V1_1.md` §5）。tag は 0 本
+- Rollback 演習は 2026-11-04 に実施済み（v1.1.3 へ戻し → v1.1.4 へ復旧・各 S2 で機械確認・`docs/FINAL_RELEASE_GATE_V1_1.md` §5-1）。tag は 0 本（任意）
 
 ## 8. 今後の運営に向けた引き継ぎ
 

@@ -1,6 +1,6 @@
 # 最終 Production Release Gate v1.1 — 決定288 v1.1 最終スコープの完了判定（2026-11-04・AI 実施・CEO Gate 項目を明示）
 
-> **状態：自動 Gate 部分 ALL PASS。CEO にしかできない項目（Rollback 演習・Known 凍結の承認・tag／公開宣言）を §7 に分離。** 対象は v1.1.4（W6 敵演出 品質向上）＝決定288 v1.1 §10-3 の最終 wave。根拠は `docs/FINAL_SCOPE_ROADMAP_V1.md` §6（DoD 18 再点検・Known 凍結・最終 Smoke・CEO 操作）。CEO の承認は本書への返答で記録する：**K40〜K47 凍結＝CEO 承認 2026-11-04**（DoD #10 DONE）。Rollback 演習（#11）・tag／公開宣言（#18）は未。
+> **状態：自動 Gate 部分 ALL PASS。CEO にしかできない項目（Rollback 演習・Known 凍結の承認・tag／公開宣言）を §7 に分離。** 対象は v1.1.4（W6 敵演出 品質向上）＝決定288 v1.1 §10-3 の最終 wave。根拠は `docs/FINAL_SCOPE_ROADMAP_V1.md` §6（DoD 18 再点検・Known 凍結・最終 Smoke・CEO 操作）。CEO の承認は本書への返答で記録する：**K40〜K47 凍結＝CEO 承認 2026-11-04**（DoD #10 DONE）。**Rollback 演習（#11）＝2026-11-04 実施・DONE（§5-1）**。tag／公開宣言（#18）は任意・未。
 >
 > 本番（v1.1.4）の Smoke 結果は `docs/V1_1_4_PRODUCTION_SMOKE.md`。本書 §4-2 はその要約。
 
@@ -8,13 +8,13 @@
 
 | 区分 | 判定 | 根拠 |
 |---|---|---|
-| DoD 18 再点検（§1） | **AI で判定できる 15 項目 PASS・#10 は CEO 承認（2026-11-04）で DONE・CEO ONLY 残 2 項目（#11 Rollback 演習・#18 tag／公開宣言）** | §1 の表 |
+| DoD 18 再点検（§1） | **AI で判定できる 15 項目 PASS・#10 は CEO 承認（2026-11-04）で DONE・#11 は Rollback 演習（2026-11-04）で DONE・CEO ONLY 残 1 項目（#18 tag／公開宣言＝任意）** | §1 の表 |
 | 生存 Known の凍結（§2） | **K01〜K39（CEO 承認 2026-10-11）＋ v1.0.2〜v1.1.4 で増えた K40〜K47 を凍結（CEO 承認 2026-11-04）** | §2 |
 | 権利台帳 全行 Status（§3） | **PASS**（将軍家 10 体 × 立ち絵 10 行 ◎ KNOWN・舞台 10 行 UNKNOWN-ACCEPTED 継承・音声 0 行＝付けない方針） | §3 |
 | 最終 Smoke：7 神 × 将軍家 10 体 × normal／hard（§4-1） | **140/140 PASS**（決定論 140/140・JS error 0・外部通信 0・横はみ出し 0） | `docs/evidence/final-gate/matrix-gatebuild/` |
 | 本番 v1.1.4 Smoke（§4-2） | **PASS**（S2 44／S5 228／S6 6 MATCH／S8 44・bundle は W6 Gate build と byte 一致） | `docs/V1_1_4_PRODUCTION_SMOKE.md` |
 | Ranking 不在監査（§4-3） | **PASS**（W6 build dist・`ranking-absence.mjs`） | `docs/evidence/final-gate/ranking-absence.txt` |
-| CEO 操作（§7） | Rollback 演習（Promote 2 回）・Known 凍結 承認・tag `v1.1.4`（任意）・公開宣言・SGG 運営への任意連絡 | §5・§7 |
+| CEO 操作（§7） | Known 凍結 承認（済 2026-11-04）・Rollback 演習（済 2026-11-04・§5-1）・残りは任意：tag `v1.1.4`・公開宣言・SGG 運営への事前連絡 | §5・§7 |
 
 ## 1. DoD 18 項目の再点検（`docs/ROADMAP_TO_RELEASE.md` §7・前回の状態表は `RELEASE_GATE_REMAINING_V1.md` §A＝2026-10-10）
 
@@ -32,7 +32,7 @@
 | 8 | 課金・広告コード 0 | DONE/Prod | `scripts/release-audit/ranking-absence.mjs --dist dist`（W6 build）**RESULT: PASS**（§4-3）。W1〜W6 の runtime 変更に課金・広告・外部通信の追加 0（各 Gate の hardening／公開受入で外部オリジン通信 0） |
 | 9 | storage version ポリシー＋旧／future 読込テスト | DONE/Prod | `storageCompat.test.ts`＋各 wave の旧セーブ互換 44/44（v1.1.3 は本番 URL 直撃で 44/44・W6 Gate 44/44） |
 | 10 | RELEASE_STATUS が Production HEAD と一致・生存 Known が CEO 承認 | **DONE（CEO 承認 2026-11-04）** | HEAD 一致：v1.1.4 `8af0082` → docs-only `c0c2b75`（PR #20・A-00000000）。Known：K01〜K39 は CEO 承認済み（2026-10-11）・**K40〜K47（§2）は CEO 承認 2026-11-04 で凍結** |
-| 11 | Rollback 演習 1 回の記録 | **CEO ONLY（未実施）** | v1.0.0 以来 Promote は未使用。手順は §5。実施後に AI が Smoke（S2）で「戻った／戻した」を機械確認し `docs/evidence/final-gate/rollback-drill/` に記録 |
+| 11 | Rollback 演習 1 回の記録 | **DONE（2026-11-04・CEO Promote 2 回＋AI S2 確認 2 回）** | §5-1：v1.1.3 `7542751824` へ戻し（本番 `v1.1.3 (86ed9ea)`・S2 42/44＝version 行は旧版の正しい表示）→ v1.1.4 `7549462791` へ復旧（`v1.1.4 (997b06b)`・S2 44/44）。証跡 `docs/evidence/final-gate/rollback-drill/` |
 | 12 | CI（tsc／oxlint／vitest）が PR で自動実行 | DONE/Prod | PR #1〜#19 すべて CI success（master run も success）。W6：tsc 0／oxlint 0／vitest 1,695／build |
 | 13 | main repo＝master・worktree ACTIVE のみ・docs branch が origin | PARTIAL | docs branch：W1〜W6 の LIVE 記録 PR は origin に存在（merge 済み）。main repo は `feat/d224` で dirty のまま（K14・A-5「触らない」＝CEO 承認の残置）。worktree は 54 本（うち W1〜W6 の 6 本は ACTIVE）。整理は本スコープ外（CEO OK が要る削除を含むため） |
 | 14 | a11y 基準文書が存在し全項目 PASS | DONE/Prod | `A11Y_MINIMUM_PACK_V1.md`・各 wave 69/69（W6 69/69） |
@@ -106,6 +106,18 @@ Promote は Vercel の権限が CEO にしかないため、演習は CEO 操作
 
 注意：Promote の間（数十秒）は外部ユーザーに v1.1.3 が見える。将軍家 10 体・save v9 は両版で同じため、セーブの互換に影響はない。
 
+### 5-1. 実施結果（2026-11-04 15:42〜15:47 UTC＝JST 11-05 00:42〜00:47・**DONE**）
+
+| step | 操作／確認 | 結果 |
+|---|---|---|
+| 1 | CEO：Vercel で v1.1.3 の deployment `7542751824`（`86ed9ea`）を Promote to Production | 15:42:39Z に本番 JS が `index-BwXXHUnD.js`（埋め込み `86ed9ea`）へ切替を検知（10 秒間隔の監視） |
+| 2 | AI：`acceptance.mjs --sha 86ed9ea`（S2 回帰 44 項目・本番 URL） | **42/44**。「FAIL」2 件は version 表示チェックがスクリプトの手元 `package.json`（1.1.4）から期待値 `v1.1.4 (86ed9ea)` を組み立てたため。本番は正しく **`v1.1.3 (86ed9ea)`**（pc／sp375）＝**戻った証跡**。他 42 項目（v1.0.3 以降の確定文言・敵カード 18 枚・JS error 0・外部通信 0）PASS |
+| 3 | CEO：現在の v1.1.4 deployment `7549462791`（`997b06b`）を Promote to Production | 15:47:41Z に本番 JS が `index-BPWjxloL.js`（埋め込み `997b06b`）へ復旧を検知 |
+| 4 | AI：`acceptance.mjs --sha 997b06b` | **44/44 PASS**（Home `v1.1.4 (997b06b)`・JS error 0・外部通信 0）＝**戻した証跡** |
+
+- 外部ユーザーに v1.1.3 が見えていた時間：約 5 分。save v9・将軍家 10 体は両版で同じため、セーブの互換に影響なし
+- 学び：Promote は Vercel の反映に数十秒〜数分かかる（AI は本番 JS の埋め込み sha を 10 秒間隔で監視すると検知できる）。S2 の version 期待値は手元の `package.json` 依存のため、旧版へ戻した確認では version 行だけ「FAIL 表示＝旧版の正しい表示」になる（次回は `--expect-version` のような上書きを足すと 44/44 で揃う＝任意）
+- 証跡：`docs/evidence/final-gate/rollback-drill/`（`step1-detect.txt`・`step2-s2-v113.json`＋stdout・`step3-detect.txt`・`step4-s2-v114.json`＋stdout）
 ## 6. CEO 最終通しプレイ チェック項目（本番 URL・iPhone・1 周 約 20 分・YES／NO で可）
 
 | # | 画面 | 確認すること | 期待 |
@@ -128,7 +140,7 @@ NO が 1 つでもあれば AI が Fast Gate で調査（Rollback 判断は CEO�
 | # | 操作 | 必須／任意 | AI の後続 |
 |---|---|---|---|
 | 1 | §2 の K40〜K47 凍結の承認 | **済（CEO 承認 2026-11-04・DoD #10 DONE）** | `RELEASE_STATUS.md` A-4 に凍結を記録済み |
-| 2 | §5 Rollback 演習（Promote 2 回） | 必須（DoD #11）・時期は任意 | Smoke で確認・記録 |
+| 2 | §5 Rollback 演習（Promote 2 回） | **済（2026-11-04・DoD #11 DONE・§5-1）** | S2 で確認・記録済み |
 | 3 | tag `v1.1.4`（`git tag v1.1.4 8af0082 && git push origin v1.1.4`）・公開宣言 | 任意（DoD #18） | — |
 | 4 | SGG 運営への任意の事前連絡（規約 §8）＝運営報告書（`docs/OPERATIONS_REPORT_V1.md`）と同時 | 任意（推奨） | 共有ページ 1 枚は CEO の公開範囲で |
 
