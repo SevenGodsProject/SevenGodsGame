@@ -2,8 +2,21 @@
 
 Production の「確定状態」を一目で確認するための要約です。新しい仕様判断は含みません（根拠は `docs/DECISIONS.md`）。**§A が現在の正本**。§B 以降は 8/31 Public Beta〜Phase 3（2026-09-06）時点の履歴として残します（当時の Known Non-blockers 1〜16 は §A-4 の生存 Known に統合済み）。
 
-## A. 現在の Production 状態（2026-11-04・決定288 v1.1.3 PRODUCTION LIVE・将軍家 10 体 公開完了）
+## A. 現在の Production 状態（2026-11-04・決定288 v1.1.4 PRODUCTION LIVE・最終スコープ 実装完了＝将軍家 10 体＋敵演出 品質向上）
 
+### A-00000000. v1.1.4 公開（2026-11-04・決定288 W6 PRODUCTION LIVE・最終スコープ 実装完了）
+
+| 項目 | 状態 |
+|---|---|
+| **Release** | **SEVEN GODS v1.1.4**（決定288 v1.1 W6）：将軍家 敵演出 品質向上（10 体横断・表示のみ）＝立ち絵の大きさを決定261 の帯に正規化（`--artScale` 7 体・鬼半蔵／康虎／忠次 据え置き）・入口の外光 9 体・各敵 1 点の見せ場（CSS 1 ファイル `shogunateWave6.css`＋EnemyPanel の表示専用 `data-tactic` 1 行）。engine／enemies.ts 変更 0・既存 7 体 不変 |
+| **Production HEAD** | master = origin/master **`8af0082`**（PR #19 merge・2026-11-04T13:49:40Z・CEO 操作。runtime tree は W6 Gate 対象 `b9550f7` と同一） |
+| **CI** | master run `41841665058` success |
+| **Vercel deployment** | **`7547769021`**（sha `8af0082`・success 13:50:28Z）／bundle `index-CwO8p6YY.js`（492,733 B・sha 正規化後 W6 Gate build `index-BwV2EshF.js` と byte 一致）・`index-BI3ZCUzF.css`（212,461 B・同一） |
+| **Rollback 先** | deployment **`7542751824`**（`86ed9ea`・v1.1.3）／**`7530012443`**（`11dd335`・v1.1.3 初回）。Promote は CEO のみ・未使用（演習は `docs/FINAL_RELEASE_GATE_V1_1.md` §5） |
+| **Release Gate／Smoke** | `docs/W6_ENEMY_PRESENTATION_GATE.md`（自動 Gate ALL PASS）／`docs/V1_1_4_PRODUCTION_SMOKE.md`（S2 44・S5 228・S6 6 MATCH・S8 旧セーブ 本番直撃 44/44 PASS）／`docs/FINAL_RELEASE_GATE_V1_1.md`（最終 Gate：7 神 × 将軍家 10 体 × normal／hard 140 組 決定論 140/140・DoD 18・Known K40〜K47 凍結案・台帳 20 行・Ranking 不在 PASS） |
+| **version 表示** | Home `v1.1.4 (8af0082)`（S2 で検証） |
+| **Known** | K01〜K39 据え置き＋**K40〜K47 凍結案**（A-4・CEO 承認待ち・新規の製品異常 0） |
+| **次** | 開発スコープ（決定288 v1.1）は完了。残りは CEO 操作のみ：K40〜K47 凍結の承認／拒否・Rollback 演習（Promote 2 回・AI が Smoke で確認）・tag `v1.1.4`（任意）・運営報告書 `docs/OPERATIONS_REPORT_V1.md` の共有と SGG 運営への任意連絡 |
 ### A-0000000. v1.1.3 公開（2026-11-04・決定288 W5 PRODUCTION LIVE・将軍家 10 体 公開完了）
 
 | 項目 | 状態 |
@@ -15,7 +28,7 @@ Production の「確定状態」を一目で確認するための要約です。
 | **Rollback 先** | deployment **`7520160454`**（`f4828cf`・v1.1.2）／**`7507971142`**（`ee4f187`・v1.1.1）。Promote は CEO のみ・未使用 |
 | **Release Gate／Smoke** | `docs/W5_SHOGUNATE_WAVE5_GATE.md`（自動 Gate ALL PASS・balanceSim 決定287 PASS・★実測 48.4 最上位）／`docs/V1_1_3_PRODUCTION_SMOKE.md`（S2 44・S5 228・S6 6 MATCH・S8 旧セーブ 本番直撃 44/44 PASS） |
 | **version 表示** | Home `v1.1.3 (11dd335)`（S2 で検証） |
-| **次** | W6 敵演出 品質向上（10 体横断・表示のみ）＝`feat/w6-enemy-presentation` 実装済み・自動 Gate ALL PASS → PR → CEO Human QA 通し 1 周 → CEO merge（v1.1.4）→ 最終 Release Gate → 運営報告書 |
+| **次** | W6 敵演出 品質向上（10 体横断・表示のみ）＝PR #19 → CEO Human QA Q1／Q2 PASS → CEO merge → **LIVE（v1.1.4・A-00000000）** |
 
 ### A-000000. v1.1.2 公開（2026-11-03・決定288 W4 PRODUCTION LIVE）
 
@@ -85,7 +98,7 @@ Production の「確定状態」を一目で確認するための要約です。
 | **v1.1.1 RC（W3 将軍家 第三陣・決定288）** | branch `feat/w3-shogunate-wave3`（起点 `72025ae`）。影・くノ一・鬼半蔵を通常の Enemy Select に（将軍家 7 体）。engine 変更 0・★実測（鬼半蔵 ★2・他 ★1）・Daily／49 盤／seed／gameVersion／save v9 不変・敵ボイスなし。自動 Gate ALL PASS（`docs/W3_SHOGUNATE_WAVE3_GATE.md`）。CEO Human QA 3/3 → **LIVE（v1.1.1・`ee4f187`・A-00000）**。build +2.96 kB・CSS +3.04 kB |
 | **v1.1.2 RC（W4 将軍家 第四陣・決定288）** | branch `feat/w4-shogunate-wave4`（起点 `ee4f187`）。忠勝・ドーマンを通常の Enemy Select に（将軍家 9 体）。engine はドーマン型 cond 1 種追加のみ（指紋不変）・★実測（忠勝 normal 指数 41.9 → **★4**（龍神 37.7 を超え 17 体で最高・将軍家初の ★4）／ドーマン 30.0 → **★1**（道化 28.6〜機工師 31.4 の間）。既存 7 体の指数・順序は v1.0.1 と完全一致）・Daily／49 盤／seed／gameVersion／save v9 不変・敵ボイスなし・version 1.1.2 同梱。自動 Gate ALL PASS（`docs/W4_SHOGUNATE_WAVE4_GATE.md`）。CEO Human QA 2/2 → **LIVE（v1.1.2・`f4828cf`・A-000000）**。build +2.75 kB・CSS +2.28 kB |
 | **v1.1.3 RC（W5 将軍家 最終・康虎 Boss ★5・決定288）** | branch `feat/w5-shogunate-wave5`（起点 `f4828cf`）。十七代将軍・康虎（enemy_18・HP 114・rank 5・2 段 tactic 忠次型・連撃 5×3・必殺 32／36）を通常の Enemy Select に（将軍家 10 体＝全員公開・敵 18 体）。engine 変更 0（Boss 比 2 組を `RULES.enemyTactic.boss*` に集約・指紋除外）。version 1.1.3。自動 Gate ALL PASS（`docs/W5_SHOGUNATE_WAVE5_GATE.md`）。CEO merge → **LIVE（v1.1.3・`11dd335`・A-0000000）**。build index-Dc6IP1lD.js 492.68 kB（v1.1.2 491.10 → +1.58 kB）・index-DyYCyOuG.css 208.95 kB（+1.66 kB） |
-| **v1.1.4 RC（W6 敵演出 品質向上・10 体横断・表示のみ・決定288）** | branch `feat/w6-enemy-presentation`（起点 `11dd335`）。将軍家 10 体の立ち絵の大きさを決定261 の帯（神÷敵 0.9〜1.15）に正規化（--artScale 7 体・鬼半蔵／康虎／忠次 据え置き）・入口の外光 9 体・各敵 1 点の見せ場（CSS 1 ファイル `shogunateWave6.css`＋EnemyPanel の表示専用 `data-tactic` 1 行）。engine／enemies.ts 変更 0・既存 7 体 不変（計測で同値）。version 1.1.4。自動 Gate ALL PASS（`docs/W6_ENEMY_PRESENTATION_GATE.md`）。**CEO Human QA 通し 1 周 → CEO merge（Production 公開）待ち**。build index-BwV2EshF.js 492.73 kB（v1.1.3 492.68 → +0.05）・index-BI3ZCUzF.css 212.46 kB（+3.51） |
+| **v1.1.4 RC（W6 敵演出 品質向上・10 体横断・表示のみ・決定288）** | branch `feat/w6-enemy-presentation`（起点 `11dd335`）。将軍家 10 体の立ち絵の大きさを決定261 の帯（神÷敵 0.9〜1.15）に正規化（--artScale 7 体・鬼半蔵／康虎／忠次 据え置き）・入口の外光 9 体・各敵 1 点の見せ場（CSS 1 ファイル `shogunateWave6.css`＋EnemyPanel の表示専用 `data-tactic` 1 行）。engine／enemies.ts 変更 0・既存 7 体 不変（計測で同値）。version 1.1.4。自動 Gate ALL PASS（`docs/W6_ENEMY_PRESENTATION_GATE.md`）。**CEO Human QA Q1／Q2 PASS → PR #19 → CEO merge → LIVE（v1.1.4・A-00000000）**。build index-BwV2EshF.js 492.73 kB（v1.1.3 492.68 → +0.05）・index-BI3ZCUzF.css 212.46 kB（+3.51） |
 | **次 Release 候補（v1.0.7）** | **将軍家 第一陣 公開 v1**（忠次 enemy_08 を通常 Enemy Select の 8 体目へ・Daily／49 盤／委ねる seed／gameVersion は既存 7 体のまま固定）＝決定287（候補）・`docs/SHOGUNATE_PUBLIC_ROSTER_V1_AUDIT.md`（READ-ONLY 設計監査 完了・実装未開始・CEO 返答 1 回＝公開 GO＋台詞 7 本の監修）。2 番手＝康政 Pilot v0.1（`LANE3_NEXT_PLAN_V1.md` §2-③）／並走候補＝7 神 crisis・greeting ボイス展開（データ追加のみ・CEO 試聴） |
 
 ### A-0q. v1.0.5 公開（2026-10-24・決定285 PRODUCTION LIVE・履歴。記録 commit `98222ee` は v1.0.6 統合 RC に同梱）
@@ -231,8 +244,18 @@ BURST 任意発動（127）／Ranking 統合（152・256 NO-GO・READY-DORMANT�
 | **K37** | Credits S6「生成記録が揃っていない素材を制作者の責任で使用」は AI 追加文（事実のみ・禁止語 0。CEO が不要なら 1 行削除＝Fast Gate） | 文言 | CM-02 |
 | **K38** | 忠次 Pilot（v0.1〜v0.3）・Card Art Pilot 6 は v1.0 に含まれない（master に `enemy_08`／`shogunate` 参照 0・別 branch） | — | AR-04／将軍家 Pilot |
 | **K39** | 公開元 repo の CI は Production 公開と同時に初回実行された（同一 sha はミラーで GREEN 済み・公開元も GREEN）。以後は `docs/RELEASE_PROTECTION_V1.md` の経路で push 前に GREEN を取る | 運用 | RL-03 |
+| **K40** | 札の外枠 2〜4px／`scale(1.04)`（v1.0.2 から存在） | C | —（凍結案 2026-11-04） |
+| **K41** | hard の演出ずれ（有利側のみ・v1.0.6 統合 RC Gate v1 §4） | C | —（凍結案） |
+| **K42** | 将軍家の ★帯：★1〜2（9 体）・Boss 康虎 ★5。★帯の穴は数値調整で埋めない（実測方針） | D | —（凍結案） |
+| **K43** | 将軍家 hard の重さ：素朴方策では 直政 30%・忠勝 27〜29%・康虎 19〜29%（最善方策で全神 ≥50%＝詰みなし）。最終 Gate の素朴方策 140 組でも四天王・Boss は R4 敗北が多い（意図した「止めるか受けるか」） | D（監視） | —（凍結案） |
+| **K44** | 鬼半蔵・康虎の立ち絵は神より高いまま（面積優先で据え置き）・SP 375×667 の神÷敵 0.77〜0.82（決定261 S-1 lite の許容 ≥0.70） | C | —（凍結案） |
+| **K45** | Enemy Select 18 枚で SP375 の縦スクロールが増える（横はみ出し 0） | C | —（凍結案） |
+| **K46** | 「あと N」行の重複 CSS（W6 で据え置き） | C | —（凍結案） |
+| **K47** | Credits の問い合わせ先「準備中」（SGG 運営へ送らない旨の 1 文あり）。確定は CEO | 文言 | CM-02（凍結案） |
 
 **凍結（2026-10-11・CEO 承認）**：v1.0.0 時点の生存 Known は K01〜K39（CLOSED を除く）。新規の Known は v1.0.x の Decision 行で追加する。
+
+**凍結案（2026-11-04・最終 Release Gate v1.1・CEO 承認待ち）**：v1.0.2〜v1.1.4 で記録された残リスクを K40〜K47 として付番（`docs/FINAL_RELEASE_GATE_V1_1.md` §2）。CEO の承認／拒否の返答で本行を「凍結」に改める。
 
 CLOSED（記録のみ）：K02 iOS 割り込み後 BGM 再開（CEO 実機 PASS 2026-10-03）。
 

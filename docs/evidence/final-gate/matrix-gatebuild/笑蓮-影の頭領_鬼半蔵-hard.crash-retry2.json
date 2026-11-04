@@ -1,0 +1,344 @@
+{
+  "row": {
+    "key": "笑蓮×影の頭領・鬼半蔵×hard",
+    "god": "笑蓮",
+    "enemy": "影の頭領・鬼半蔵",
+    "enemyName": "影の頭領・鬼半蔵",
+    "diff": "hard",
+    "seed": "final-v114",
+    "repeat": 2,
+    "policy": "v1.3",
+    "deterministic": false,
+    "outcome": {
+      "won": true,
+      "lost": false
+    },
+    "lastRound": 7,
+    "r1Intent": "70",
+    "finalEnemyHp": "0 / 1,260",
+    "finalGodHp": "270 / 270",
+    "errorsTotal": 1,
+    "external": [],
+    "scrollOverflow": false,
+    "crashed": [
+      "TimeoutError: locator.click: Timeout 8000ms exceeded."
+    ],
+    "ms": [
+      77821,
+      18218
+    ],
+    "plays": 17
+  },
+  "reps": [
+    {
+      "god": "笑蓮",
+      "enemy": "影の頭領・鬼半蔵",
+      "enemyName": "影の頭領・鬼半蔵",
+      "diff": "hard",
+      "seed": "final-v114",
+      "rep": 1,
+      "rounds": [
+        {
+          "round": 1,
+          "intent": "70",
+          "band": "high",
+          "enemyHp": "1,260 / 1,260",
+          "godHp": "270 / 270",
+          "tactic": null,
+          "scrollW": 1508,
+          "vw": 1508
+        },
+        {
+          "round": 2,
+          "intent": "連撃 40+30+30",
+          "band": "high",
+          "enemyHp": "1,110 / 1,260",
+          "godHp": "240 / 270",
+          "tactic": null,
+          "scrollW": 1508,
+          "vw": 1508
+        },
+        {
+          "round": 3,
+          "intent": "⚠ 追い込めねば次は血風",
+          "band": "high",
+          "enemyHp": "740 / 1,260",
+          "godHp": "140 / 270",
+          "tactic": "cleared:✓ 血風を止めた",
+          "scrollW": 1508,
+          "vw": 1508
+        },
+        {
+          "round": 4,
+          "intent": "鬼嶽・連風 50+50+40",
+          "band": "half",
+          "enemyHp": "540 / 1,260",
+          "godHp": "140 / 270",
+          "tactic": null,
+          "scrollW": 1508,
+          "vw": 1508
+        },
+        {
+          "round": 5,
+          "intent": "強打 140",
+          "band": "half",
+          "enemyHp": "390 / 1,260",
+          "godHp": "▼ 50 / 270",
+          "tactic": null,
+          "scrollW": 1508,
+          "vw": 1508
+        },
+        {
+          "round": 6,
+          "intent": "⚠ 次は頭領の一撃",
+          "band": "half",
+          "enemyHp": "350 / 1,260",
+          "godHp": "▽ 80 / 270",
+          "tactic": null,
+          "scrollW": 1508,
+          "vw": 1508
+        },
+        {
+          "round": 7,
+          "intent": "鬼嶽・頭領斬り 300",
+          "band": "quarter",
+          "enemyHp": "30 / 1,260",
+          "godHp": "270 / 270",
+          "tactic": null,
+          "scrollW": 1508,
+          "vw": 1508
+        }
+      ],
+      "plays": [
+        {
+          "round": 1,
+          "card": "⚔ 捨身の一撃",
+          "hand": [
+            "🌿 笑って許す",
+            "⚔ 渾身の一撃(x)",
+            "⚔ 速攻",
+            "🌟 神託(x)"
+          ],
+          "ap": "1"
+        },
+        {
+          "round": 1,
+          "card": "⚔ 速攻",
+          "hand": [
+            "🌿 笑って許す",
+            "⚔ 渾身の一撃(x)",
+            "🌟 神託(x)",
+            "⚔ 剛撃(x)"
+          ],
+          "ap": "1"
+        },
+        {
+          "round": 1,
+          "card": "🌿 笑って許す",
+          "hand": [
+            "⚔ 渾身の一撃(x)",
+            "🌟 神託(x)",
+            "⚔ 剛撃(x)"
+          ],
+          "ap": "0"
+        },
+        {
+          "round": 2,
+          "card": "🌟 神託",
+          "hand": [
+            "⚔ 渾身の一撃(x)",
+            "⚔ 剛撃(x)",
+            "🌿 息吹(x)",
+            "🌟 予言(x)"
+          ],
+          "ap": "0"
+        },
+        {
+          "round": 3,
+          "card": "⚔ 渾身の一撃",
+          "hand": [
+            "⚔ 剛撃(x)",
+            "🌿 息吹(x)",
+            "🌟 予言(x)",
+            "🛡 懐の深さ(x)",
+            "✨ 共振"
+          ],
+          "ap": "1"
+        },
+        {
+          "round": 3,
+          "card": "✨ 共振",
+          "hand": [
+            "⚔ 剛撃(x)",
+            "🌿 息吹(x)",
+            "🌟 予言(x)",
+            "🛡 懐の深さ(x)"
+          ],
+          "ap": "0"
+        },
+        {
+          "round": 4,
+          "card": "⚔ 剛撃",
+          "hand": [
+            "🌿 息吹",
+            "🌟 予言",
+            "🛡 懐の深さ",
+            "🛡 守護",
+            "⚔ 神速"
+          ],
+          "ap": "3"
+        },
+        {
+          "round": 4,
+          "card": "🛡 守護",
+          "hand": [
+            "🌿 息吹",
+            "🌟 予言",
+            "🛡 懐の深さ",
+            "⚔ 神速"
+          ],
+          "ap": "2"
+        },
+        {
+          "round": 4,
+          "card": "⚔ 神速",
+          "hand": [
+            "🌿 息吹(x)",
+            "🌟 予言(x)",
+            "🛡 懐の深さ(x)"
+          ],
+          "ap": "1"
+        },
+        {
+          "round": 5,
+          "card": "💀 呪縛",
+          "hand": [
+            "🌿 息吹",
+            "🌟 予言",
+            "🛡 懐の深さ",
+            "🌿 福袋"
+          ],
+          "ap": "4"
+        },
+        {
+          "round": 5,
+          "card": "🌿 息吹",
+          "hand": [
+            "🌟 予言",
+            "🛡 懐の深さ",
+            "🌿 福袋"
+          ],
+          "ap": "2"
+        },
+        {
+          "round": 5,
+          "card": "🌟 予言",
+          "hand": [
+            "🛡 懐の深さ(x)",
+            "🌿 福袋(x)",
+            "🌿 癒し(x)",
+            "✨ 巫女の舞(x)"
+          ],
+          "ap": "0"
+        },
+        {
+          "round": 6,
+          "card": "⚔ おおらかな一打",
+          "hand": [
+            "🛡 懐の深さ",
+            "🌿 福袋",
+            "🌿 癒し",
+            "✨ 巫女の舞",
+            "✨ 神楽舞"
+          ],
+          "ap": "6"
+        },
+        {
+          "round": 6,
+          "card": "✨ 神楽舞",
+          "hand": [
+            "🛡 懐の深さ",
+            "🌿 福袋",
+            "🌿 癒し",
+            "✨ 巫女の舞"
+          ],
+          "ap": "4"
+        },
+        {
+          "round": 6,
+          "card": "🛡 懐の深さ",
+          "hand": [
+            "🌿 福袋",
+            "🌿 癒し",
+            "✨ 巫女の舞"
+          ],
+          "ap": "2"
+        },
+        {
+          "round": 6,
+          "card": "🌿 福袋",
+          "hand": [
+            "🌿 癒し(x)",
+            "✨ 巫女の舞(x)"
+          ],
+          "ap": "0"
+        },
+        {
+          "round": 7,
+          "card": "⚔ 一撃",
+          "hand": [
+            "🌿 癒し(x)",
+            "✨ 巫女の舞(x)",
+            "🛡 鉄壁の構え(x)"
+          ],
+          "ap": "7"
+        }
+      ],
+      "outcome": {
+        "won": true,
+        "lost": false
+      },
+      "final": {
+        "intent": "鬼嶽・頭領斬り 300",
+        "band": "quarter",
+        "enemyHp": "0 / 1,260",
+        "godHp": "270 / 270",
+        "tactic": null,
+        "scrollW": 1508,
+        "vw": 1508
+      },
+      "errors": [],
+      "external": [],
+      "crashed": null,
+      "ms": 77821,
+      "fingerprint": "{\"rounds\":[{\"r\":1,\"i\":\"70\",\"b\":\"high\",\"e\":\"1,260 / 1,260\",\"g\":\"270 / 270\",\"t\":null},{\"r\":2,\"i\":\"連撃 40+30+30\",\"b\":\"high\",\"e\":\"1,110 / 1,260\",\"g\":\"240 / 270\",\"t\":null},{\"r\":3,\"i\":\"⚠ 追い込めねば次は血風\",\"b\":\"high\",\"e\":\"740 / 1,260\",\"g\":\"140 / 270\",\"t\":\"cleared:✓ 血風を止めた\"},{\"r\":4,\"i\":\"鬼嶽・連風 50+50+40\",\"b\":\"half\",\"e\":\"540 / 1,260\",\"g\":\"140 / 270\",\"t\":null},{\"r\":5,\"i\":\"強打 140\",\"b\":\"half\",\"e\":\"390 / 1,260\",\"g\":\"▼ 50 / 270\",\"t\":null},{\"r\":6,\"i\":\"⚠ 次は頭領の一撃\",\"b\":\"half\",\"e\":\"350 / 1,260\",\"g\":\"▽ 80 / 270\",\"t\":null},{\"r\":7,\"i\":\"鬼嶽・頭領斬り 300\",\"b\":\"quarter\",\"e\":\"30 / 1,260\",\"g\":\"270 / 270\",\"t\":null}],\"plays\":[{\"round\":1,\"card\":\"⚔ 捨身の一撃\"},{\"round\":1,\"card\":\"⚔ 速攻\"},{\"round\":1,\"card\":\"🌿 笑って許す\"},{\"round\":2,\"card\":\"🌟 神託\"},{\"round\":3,\"card\":\"⚔ 渾身の一撃\"},{\"round\":3,\"card\":\"✨ 共振\"},{\"round\":4,\"card\":\"⚔ 剛撃\"},{\"round\":4,\"card\":\"🛡 守護\"},{\"round\":4,\"card\":\"⚔ 神速\"},{\"round\":5,\"card\":\"💀 呪縛\"},{\"round\":5,\"card\":\"🌿 息吹\"},{\"round\":5,\"card\":\"🌟 予言\"},{\"round\":6,\"card\":\"⚔ おおらかな一打\"},{\"round\":6,\"card\":\"✨ 神楽舞\"},{\"round\":6,\"card\":\"🛡 懐の深さ\"},{\"round\":6,\"card\":\"🌿 福袋\"},{\"round\":7,\"card\":\"⚔ 一撃\"}],\"outcome\":{\"won\":true,\"lost\":false}}"
+    },
+    {
+      "god": "笑蓮",
+      "enemy": "影の頭領・鬼半蔵",
+      "enemyName": "",
+      "diff": "hard",
+      "seed": "final-v114",
+      "rep": 2,
+      "rounds": [],
+      "plays": [],
+      "outcome": null,
+      "final": {
+        "intent": "",
+        "band": null,
+        "enemyHp": "",
+        "godHp": "",
+        "tactic": null,
+        "scrollW": 1508,
+        "vw": 1508
+      },
+      "errors": [
+        "run crashed: TimeoutError: locator.click: Timeout 8000ms exceeded."
+      ],
+      "external": [],
+      "crashed": "TimeoutError: locator.click: Timeout 8000ms exceeded.",
+      "ms": 18218,
+      "fingerprint": "{\"rounds\":[],\"plays\":[],\"outcome\":null}"
+    }
+  ]
+}
