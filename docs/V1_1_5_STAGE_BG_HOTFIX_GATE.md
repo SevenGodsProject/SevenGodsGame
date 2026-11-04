@@ -84,5 +84,5 @@ after: 34/34 画像あり（http://localhost:4197）
 
 ## 6. CEO 操作
 
-1. Hotfix PR（branch `hotfix/v1_1_5-shogunate-stage-bg`・番号は `docs/RELEASE_STATUS.md` v1.1.5 RC 行）の merge（CI GREEN・CLEAN 確認後・1 回）
+1. PR #23（branch `hotfix/v1_1_5-shogunate-stage-bg`）の merge（CI GREEN・CLEAN 確認後・1 回）
 2. Hotfix 本番確認（AI：S2 Smoke＋stage-bg-probe を本番 URL で再実行）→ CEO Human QA（iPhone）→ 完成宣言の再開は CEO 判断
