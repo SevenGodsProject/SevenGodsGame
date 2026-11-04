@@ -1,0 +1,9 @@
+MATCH trial-pc | after turns=23 plays=17 heavy=5 errors=0 bands=17:half,21:quarter | base turns=23 plays=17 heavy=5 bands=17:half,21:quarter
+MATCH oni-pc (rerun; run1 turns=14 transient) | after turns=23 plays=17 heavy=5 errors=0 bands=17:half,21:quarter | base turns=23 plays=17 heavy=5 bands=17:half,21:quarter
+MATCH onryo-pc | after turns=18 plays=13 heavy=2 errors=0 bands=17:half | base turns=18 plays=13 heavy=2 bands=17:half
+MATCH karakuri-pc | after turns=19 plays=14 heavy=2 errors=0 bands=17:half | base turns=19 plays=14 heavy=2 bands=17:half
+MATCH juuma-pc | after turns=21 plays=16 heavy=3 errors=0 bands=16:half,19:quarter | base turns=21 plays=16 heavy=3 bands=16:half,19:quarter
+MATCH ryujin-pc | after turns=22 plays=16 heavy=4 errors=0 bands=17:half,21:quarter | base turns=22 plays=16 heavy=4 bands=17:half,21:quarter
+MATCH doukeshi-pc | after turns=21 plays=16 heavy=3 errors=0 bands=16:half,21:quarter | base turns=21 plays=16 heavy=3 bands=16:half,21:quarter
+MATCH ryujin-sp375 | after turns=22 plays=16 heavy=4 errors=0 bands=17:half,21:quarter | base turns=22 plays=16 heavy=4 bands=17:half,21:quarter
+8/8 MATCH
