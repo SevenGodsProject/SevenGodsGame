@@ -29,7 +29,7 @@
 | v1.1.1 | 2026-11-03 | 将軍家 W3：影・くノ一・鬼半蔵 | `ee4f187` | `7507971142` |
 | v1.1.2 | 2026-11-03 | 将軍家 W4：忠勝・ドーマン | `f4828cf` | `7520160454` |
 | v1.1.3 | 2026-11-04 | 将軍家 W5：康虎 Boss ★5（10 体 公開完了） | `11dd335`→`86ed9ea`（記録） | `7530012443`→`7542751824` |
-| v1.1.4 | 2026-11-04 | 将軍家 W6：敵演出 品質向上（10 体横断・表示のみ）＝最終 wave | `8af0082` | `7547769021` |
+| v1.1.4 | 2026-11-04 | 将軍家 W6：敵演出 品質向上（10 体横断・表示のみ）＝最終 wave | `8af0082`→`c0c2b75`（記録） | `7547769021`→`7548772113` |
 
 公開経路は v1.0.1 以降すべて **feature branch → PR → CI（tsc／oxlint／vitest／build）GREEN → CEO merge → Vercel 自動 deploy**（PR #1〜#19・CI success）。AI による無承認 merge／deploy は 0（決定289）。
 
@@ -65,7 +65,7 @@
 | Human QA（CEO・iPhone 実機） | Practical QA v3（2026-10-10）・W1〜W6 各 wave の通し QA（Q1／Q2 PASS・2026-11-02〜04） | DECISIONS 決定273／287／288 各行 |
 | a11y | 最小パック 69/69（AA 4.5・44px・reduced-motion・音量） | `docs/A11Y_MINIMUM_PACK_V1.md` |
 | perf | SP 実機 3 問 YES＋sp375 probe rafP95 記録 | `docs/SP_PERF_EVIDENCE_V1.md` |
-| Known | K01〜K39 凍結（CEO 2026-10-11）＋K40〜K47（凍結案） | `docs/FINAL_RELEASE_GATE_V1_1.md` §2 |
+| Known | K01〜K39 凍結（CEO 2026-10-11）＋K40〜K47 凍結（CEO 2026-11-04） | `docs/FINAL_RELEASE_GATE_V1_1.md` §2 |
 
 ## 6. 開発で工夫した点
 

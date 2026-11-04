@@ -9,14 +9,14 @@ Production の「確定状態」を一目で確認するための要約です。
 | 項目 | 状態 |
 |---|---|
 | **Release** | **SEVEN GODS v1.1.4**（決定288 v1.1 W6）：将軍家 敵演出 品質向上（10 体横断・表示のみ）＝立ち絵の大きさを決定261 の帯に正規化（`--artScale` 7 体・鬼半蔵／康虎／忠次 据え置き）・入口の外光 9 体・各敵 1 点の見せ場（CSS 1 ファイル `shogunateWave6.css`＋EnemyPanel の表示専用 `data-tactic` 1 行）。engine／enemies.ts 変更 0・既存 7 体 不変 |
-| **Production HEAD** | master = origin/master **`8af0082`**（PR #19 merge・2026-11-04T13:49:40Z・CEO 操作。runtime tree は W6 Gate 対象 `b9550f7` と同一） |
+| **Production HEAD** | master = origin/master **`8af0082`**（PR #19 merge・2026-11-04T13:49:40Z・CEO 操作。runtime tree は W6 Gate 対象 `b9550f7` と同一）。docs-only 追記：PR #20（LIVE 記録・最終 Gate・運営報告書）merge → master **`c0c2b75`**（2026-11-04T14:31:11Z・CI `41848370685` success・Vercel `7548772113` success・bundle `index-BzulRGbV.js` は sha 以外 v1.1.4 と同一） |
 | **CI** | master run `41841665058` success |
 | **Vercel deployment** | **`7547769021`**（sha `8af0082`・success 13:50:28Z）／bundle `index-CwO8p6YY.js`（492,733 B・sha 正規化後 W6 Gate build `index-BwV2EshF.js` と byte 一致）・`index-BI3ZCUzF.css`（212,461 B・同一） |
-| **Rollback 先** | deployment **`7542751824`**（`86ed9ea`・v1.1.3）／**`7530012443`**（`11dd335`・v1.1.3 初回）。Promote は CEO のみ・未使用（演習は `docs/FINAL_RELEASE_GATE_V1_1.md` §5） |
+| **Rollback 先** | deployment **`7542751824`**（`86ed9ea`・v1.1.3）／**`7530012443`**（`11dd335`・v1.1.3 初回）。Promote は CEO のみ・未使用（演習は `docs/FINAL_RELEASE_GATE_V1_1.md` §5・戻し先は現在の本番 `7548772113`） |
 | **Release Gate／Smoke** | `docs/W6_ENEMY_PRESENTATION_GATE.md`（自動 Gate ALL PASS）／`docs/V1_1_4_PRODUCTION_SMOKE.md`（S2 44・S5 228・S6 6 MATCH・S8 旧セーブ 本番直撃 44/44 PASS）／`docs/FINAL_RELEASE_GATE_V1_1.md`（最終 Gate：7 神 × 将軍家 10 体 × normal／hard 140 組 決定論 140/140・DoD 18・Known K40〜K47 凍結案・台帳 20 行・Ranking 不在 PASS） |
 | **version 表示** | Home `v1.1.4 (8af0082)`（S2 で検証） |
-| **Known** | K01〜K39 据え置き＋**K40〜K47 凍結案**（A-4・CEO 承認待ち・新規の製品異常 0） |
-| **次** | 開発スコープ（決定288 v1.1）は完了。残りは CEO 操作のみ：K40〜K47 凍結の承認／拒否・Rollback 演習（Promote 2 回・AI が Smoke で確認）・tag `v1.1.4`（任意）・運営報告書 `docs/OPERATIONS_REPORT_V1.md` の共有と SGG 運営への任意連絡 |
+| **Known** | K01〜K39 据え置き＋**K40〜K47 凍結（CEO 承認 2026-11-04）**（A-4・新規の製品異常 0） |
+| **次** | 開発スコープ（決定288 v1.1）は完了。残りは CEO 操作のみ：Rollback 演習（Promote 2 回・AI が Smoke で確認）・tag `v1.1.4`（任意）・運営報告書 `docs/OPERATIONS_REPORT_V1.md` の共有と SGG 運営への任意連絡 |
 ### A-0000000. v1.1.3 公開（2026-11-04・決定288 W5 PRODUCTION LIVE・将軍家 10 体 公開完了）
 
 | 項目 | 状態 |
@@ -244,18 +244,18 @@ BURST 任意発動（127）／Ranking 統合（152・256 NO-GO・READY-DORMANT�
 | **K37** | Credits S6「生成記録が揃っていない素材を制作者の責任で使用」は AI 追加文（事実のみ・禁止語 0。CEO が不要なら 1 行削除＝Fast Gate） | 文言 | CM-02 |
 | **K38** | 忠次 Pilot（v0.1〜v0.3）・Card Art Pilot 6 は v1.0 に含まれない（master に `enemy_08`／`shogunate` 参照 0・別 branch） | — | AR-04／将軍家 Pilot |
 | **K39** | 公開元 repo の CI は Production 公開と同時に初回実行された（同一 sha はミラーで GREEN 済み・公開元も GREEN）。以後は `docs/RELEASE_PROTECTION_V1.md` の経路で push 前に GREEN を取る | 運用 | RL-03 |
-| **K40** | 札の外枠 2〜4px／`scale(1.04)`（v1.0.2 から存在） | C | —（凍結案 2026-11-04） |
-| **K41** | hard の演出ずれ（有利側のみ・v1.0.6 統合 RC Gate v1 §4） | C | —（凍結案） |
-| **K42** | 将軍家の ★帯：★1〜2（9 体）・Boss 康虎 ★5。★帯の穴は数値調整で埋めない（実測方針） | D | —（凍結案） |
-| **K43** | 将軍家 hard の重さ：素朴方策では 直政 30%・忠勝 27〜29%・康虎 19〜29%（最善方策で全神 ≥50%＝詰みなし）。最終 Gate の素朴方策 140 組でも四天王・Boss は R4 敗北が多い（意図した「止めるか受けるか」） | D（監視） | —（凍結案） |
-| **K44** | 鬼半蔵・康虎の立ち絵は神より高いまま（面積優先で据え置き）・SP 375×667 の神÷敵 0.77〜0.82（決定261 S-1 lite の許容 ≥0.70） | C | —（凍結案） |
-| **K45** | Enemy Select 18 枚で SP375 の縦スクロールが増える（横はみ出し 0） | C | —（凍結案） |
-| **K46** | 「あと N」行の重複 CSS（W6 で据え置き） | C | —（凍結案） |
-| **K47** | Credits の問い合わせ先「準備中」（SGG 運営へ送らない旨の 1 文あり）。確定は CEO | 文言 | CM-02（凍結案） |
+| **K40** | 札の外枠 2〜4px／`scale(1.04)`（v1.0.2 から存在） | C | —（凍結 2026-11-04・CEO 承認） |
+| **K41** | hard の演出ずれ（有利側のみ・v1.0.6 統合 RC Gate v1 §4） | C | —（凍結 2026-11-04・CEO 承認） |
+| **K42** | 将軍家の ★帯：★1〜2（9 体）・Boss 康虎 ★5。★帯の穴は数値調整で埋めない（実測方針） | D | —（凍結 2026-11-04・CEO 承認） |
+| **K43** | 将軍家 hard の重さ：素朴方策では 直政 30%・忠勝 27〜29%・康虎 19〜29%（最善方策で全神 ≥50%＝詰みなし）。最終 Gate の素朴方策 140 組でも四天王・Boss は R4 敗北が多い（意図した「止めるか受けるか」） | D（監視） | —（凍結 2026-11-04・CEO 承認） |
+| **K44** | 鬼半蔵・康虎の立ち絵は神より高いまま（面積優先で据え置き）・SP 375×667 の神÷敵 0.77〜0.82（決定261 S-1 lite の許容 ≥0.70） | C | —（凍結 2026-11-04・CEO 承認） |
+| **K45** | Enemy Select 18 枚で SP375 の縦スクロールが増える（横はみ出し 0） | C | —（凍結 2026-11-04・CEO 承認） |
+| **K46** | 「あと N」行の重複 CSS（W6 で据え置き） | C | —（凍結 2026-11-04・CEO 承認） |
+| **K47** | Credits の問い合わせ先「準備中」（SGG 運営へ送らない旨の 1 文あり）。確定は CEO | 文言 | CM-02（凍結 2026-11-04・CEO 承認） |
 
 **凍結（2026-10-11・CEO 承認）**：v1.0.0 時点の生存 Known は K01〜K39（CLOSED を除く）。新規の Known は v1.0.x の Decision 行で追加する。
 
-**凍結案（2026-11-04・最終 Release Gate v1.1・CEO 承認待ち）**：v1.0.2〜v1.1.4 で記録された残リスクを K40〜K47 として付番（`docs/FINAL_RELEASE_GATE_V1_1.md` §2）。CEO の承認／拒否の返答で本行を「凍結」に改める。
+**凍結（2026-11-04・CEO 承認・最終 Release Gate v1.1）**：v1.0.2〜v1.1.4 で記録された残リスク K40〜K47 を凍結（内容・影響度・凍結理由は `docs/FINAL_RELEASE_GATE_V1_1.md` §2・DECISIONS 2026-11-04 行）。以後の生存 Known は K01〜K47（CLOSED K02 を除く）。新規の Known は Decision 行で追加する。
 
 CLOSED（記録のみ）：K02 iOS 割り込み後 BGM 再開（CEO 実機 PASS 2026-10-03）。
 

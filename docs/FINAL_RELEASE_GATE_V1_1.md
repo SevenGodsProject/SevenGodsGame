@@ -1,6 +1,6 @@
 # 最終 Production Release Gate v1.1 — 決定288 v1.1 最終スコープの完了判定（2026-11-04・AI 実施・CEO Gate 項目を明示）
 
-> **状態：自動 Gate 部分 ALL PASS。CEO にしかできない項目（Rollback 演習・Known 凍結の承認・tag／公開宣言）を §7 に分離。** 対象は v1.1.4（W6 敵演出 品質向上）＝決定288 v1.1 §10-3 の最終 wave。根拠は `docs/FINAL_SCOPE_ROADMAP_V1.md` §6（DoD 18 再点検・Known 凍結・最終 Smoke・CEO 操作）。本書は何も「CEO 承認済み」とは書かない。CEO の承認は本書への返答（承認／拒否）で記録する。
+> **状態：自動 Gate 部分 ALL PASS。CEO にしかできない項目（Rollback 演習・Known 凍結の承認・tag／公開宣言）を §7 に分離。** 対象は v1.1.4（W6 敵演出 品質向上）＝決定288 v1.1 §10-3 の最終 wave。根拠は `docs/FINAL_SCOPE_ROADMAP_V1.md` §6（DoD 18 再点検・Known 凍結・最終 Smoke・CEO 操作）。CEO の承認は本書への返答で記録する：**K40〜K47 凍結＝CEO 承認 2026-11-04**（DoD #10 DONE）。Rollback 演習（#11）・tag／公開宣言（#18）は未。
 >
 > 本番（v1.1.4）の Smoke 結果は `docs/V1_1_4_PRODUCTION_SMOKE.md`。本書 §4-2 はその要約。
 
@@ -8,8 +8,8 @@
 
 | 区分 | 判定 | 根拠 |
 |---|---|---|
-| DoD 18 再点検（§1） | **AI で判定できる 15 項目 PASS・CEO ONLY 3 項目（#10 Known 凍結の承認・#11 Rollback 演習・#18 tag／公開宣言）** | §1 の表 |
-| 生存 Known の凍結（§2） | **K01〜K39（CEO 承認 2026-10-11）＋ v1.0.2〜v1.1.4 で増えた K40〜K47 を凍結案として提示** | §2 |
+| DoD 18 再点検（§1） | **AI で判定できる 15 項目 PASS・#10 は CEO 承認（2026-11-04）で DONE・CEO ONLY 残 2 項目（#11 Rollback 演習・#18 tag／公開宣言）** | §1 の表 |
+| 生存 Known の凍結（§2） | **K01〜K39（CEO 承認 2026-10-11）＋ v1.0.2〜v1.1.4 で増えた K40〜K47 を凍結（CEO 承認 2026-11-04）** | §2 |
 | 権利台帳 全行 Status（§3） | **PASS**（将軍家 10 体 × 立ち絵 10 行 ◎ KNOWN・舞台 10 行 UNKNOWN-ACCEPTED 継承・音声 0 行＝付けない方針） | §3 |
 | 最終 Smoke：7 神 × 将軍家 10 体 × normal／hard（§4-1） | **140/140 PASS**（決定論 140/140・JS error 0・外部通信 0・横はみ出し 0） | `docs/evidence/final-gate/matrix-gatebuild/` |
 | 本番 v1.1.4 Smoke（§4-2） | **PASS**（S2 44／S5 228／S6 6 MATCH／S8 44・bundle は W6 Gate build と byte 一致） | `docs/V1_1_4_PRODUCTION_SMOKE.md` |
@@ -31,7 +31,7 @@
 | 7 | 権利台帳 全行 Status・UNKNOWN の扱い記録 | DONE | §3。既存 86 行（KNOWN 29／UNKNOWN-ACCEPTED 56／CONDITIONAL 1）＋将軍家 20 行（◎ KNOWN 10／UNKNOWN-ACCEPTED 継承 10）。UNKNOWN の扱いは 2026-10-07 CEO 決定「B 条件付き承認」のまま |
 | 8 | 課金・広告コード 0 | DONE/Prod | `scripts/release-audit/ranking-absence.mjs --dist dist`（W6 build）**RESULT: PASS**（§4-3）。W1〜W6 の runtime 変更に課金・広告・外部通信の追加 0（各 Gate の hardening／公開受入で外部オリジン通信 0） |
 | 9 | storage version ポリシー＋旧／future 読込テスト | DONE/Prod | `storageCompat.test.ts`＋各 wave の旧セーブ互換 44/44（v1.1.3 は本番 URL 直撃で 44/44・W6 Gate 44/44） |
-| 10 | RELEASE_STATUS が Production HEAD と一致・生存 Known が CEO 承認 | PARTIAL → **CEO ONLY（承認）** | HEAD 一致：v1.1.3 `86ed9ea`（PR #18）・v1.1.4 は §4-2 記入後に一致。Known：K01〜K39 は CEO 承認済み（2026-10-11）。**K40〜K47（§2）は本書で初めて一覧化＝CEO の承認待ち** |
+| 10 | RELEASE_STATUS が Production HEAD と一致・生存 Known が CEO 承認 | **DONE（CEO 承認 2026-11-04）** | HEAD 一致：v1.1.4 `8af0082` → docs-only `c0c2b75`（PR #20・A-00000000）。Known：K01〜K39 は CEO 承認済み（2026-10-11）・**K40〜K47（§2）は CEO 承認 2026-11-04 で凍結** |
 | 11 | Rollback 演習 1 回の記録 | **CEO ONLY（未実施）** | v1.0.0 以来 Promote は未使用。手順は §5。実施後に AI が Smoke（S2）で「戻った／戻した」を機械確認し `docs/evidence/final-gate/rollback-drill/` に記録 |
 | 12 | CI（tsc／oxlint／vitest）が PR で自動実行 | DONE/Prod | PR #1〜#19 すべて CI success（master run も success）。W6：tsc 0／oxlint 0／vitest 1,695／build |
 | 13 | main repo＝master・worktree ACTIVE のみ・docs branch が origin | PARTIAL | docs branch：W1〜W6 の LIVE 記録 PR は origin に存在（merge 済み）。main repo は `feat/d224` で dirty のまま（K14・A-5「触らない」＝CEO 承認の残置）。worktree は 54 本（うち W1〜W6 の 6 本は ACTIVE）。整理は本スコープ外（CEO OK が要る削除を含むため） |
@@ -43,9 +43,9 @@
 
 集計：DONE 15／CEO ONLY 3（#10 承認・#11 演習・#18 tag／投稿）／PARTIAL のうち AI 側で残作業なし（#13 は CEO 承認の残置）。
 
-## 2. 生存 Known の凍結（案・CEO 承認で確定）
+## 2. 生存 Known の凍結（CEO 承認 2026-11-04・確定）
 
-K01〜K39（`RELEASE_STATUS.md` A-4・CEO 承認 2026-10-11・CLOSED：K02）に、v1.0.2〜v1.1.4 の Decision 行・Gate 文書で記録された残リスクを **K40〜K47** として付番する。いずれも「修正しない／本スコープでは扱わない」ものであり、製品異常ではない。
+K01〜K39（`RELEASE_STATUS.md` A-4・CEO 承認 2026-10-11・CLOSED：K02）に、v1.0.2〜v1.1.4 の Decision 行・Gate 文書で記録された残リスクを **K40〜K47** として付番し、CEO が内容・影響度・凍結理由（各 1 行）を確認のうえ承認した（2026-11-04）。いずれも「修正しない／本スコープでは扱わない」ものであり、製品異常ではない。
 
 | Known | 内容 | 出所 | 分類 |
 |---|---|---|---|
@@ -101,8 +101,8 @@ Promote は Vercel の権限が CEO にしかないため、演習は CEO 操作
 
 1. CEO：Vercel Dashboard → Project `seven-gods-game` → Deployments → **v1.1.3 の deployment `7542751824`**（sha `86ed9ea`）→ 「Promote to Production」
 2. AI：`node scripts/v1_0_3-rc/acceptance.mjs <out> https://seven-gods-game.vercel.app/ --sha 86ed9ea` で Home `v1.1.3 (86ed9ea)` を機械確認（戻った証跡）
-3. CEO：同じ手順で **v1.1.4 の deployment `7547769021`** を Promote to Production
-4. AI：同コマンドを `--sha 8af0082` で再実行（戻した証跡）→ `docs/evidence/final-gate/rollback-drill/` に保存 → DoD #11 DONE を `RELEASE_STATUS.md` に記録
+3. CEO：同じ手順で **現在の本番 deployment `7548772113`**（v1.1.4・PR #20 docs-only 再デプロイ `c0c2b75`。runtime は `7547769021` と同一）を Promote to Production
+4. AI：同コマンドを `--sha c0c2b75` で再実行（戻した証跡）→ `docs/evidence/final-gate/rollback-drill/` に保存 → DoD #11 DONE を `RELEASE_STATUS.md` に記録
 
 注意：Promote の間（数十秒）は外部ユーザーに v1.1.3 が見える。将軍家 10 体・save v9 は両版で同じため、セーブの互換に影響はない。
 
@@ -110,7 +110,7 @@ Promote は Vercel の権限が CEO にしかないため、演習は CEO 操作
 
 | # | 画面 | 確認すること | 期待 |
 |---|---|---|---|
-| C1 | Home | 右下の version が `v1.1.4 (8af0082)` | YES |
+| C1 | Home | 右下の version が `v1.1.4 (c0c2b75)` | YES |
 | C2 | Home → クレジット | 「非公式のファン作品」「将軍家の敵の画像は Creator Kit（将軍家）」の記載・問い合わせ先「準備中」 | 表示される |
 | C3 | 神を選ぶ | 7 柱すべて選べる・難易度 3 段 | YES |
 | C4 | 挑む敵を選ぼう | 既存 7 体＋「将軍家」見出しの下に 10 体（★と注記 chip）・Pilot 表記 0 | 18 枚 |
@@ -127,7 +127,7 @@ NO が 1 つでもあれば AI が Fast Gate で調査（Rollback 判断は CEO�
 
 | # | 操作 | 必須／任意 | AI の後続 |
 |---|---|---|---|
-| 1 | §2 の K40〜K47 凍結の **承認／拒否**（返答 1 行） | 必須（DoD #10） | `RELEASE_STATUS.md` A-4 に凍結を記録 |
+| 1 | §2 の K40〜K47 凍結の承認 | **済（CEO 承認 2026-11-04・DoD #10 DONE）** | `RELEASE_STATUS.md` A-4 に凍結を記録済み |
 | 2 | §5 Rollback 演習（Promote 2 回） | 必須（DoD #11）・時期は任意 | Smoke で確認・記録 |
 | 3 | tag `v1.1.4`（`git tag v1.1.4 8af0082 && git push origin v1.1.4`）・公開宣言 | 任意（DoD #18） | — |
 | 4 | SGG 運営への任意の事前連絡（規約 §8）＝運営報告書（`docs/OPERATIONS_REPORT_V1.md`）と同時 | 任意（推奨） | 共有ページ 1 枚は CEO の公開範囲で |
