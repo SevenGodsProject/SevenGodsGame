@@ -29,7 +29,7 @@
 | v1.1.1 | 2026-11-03 | 将軍家 W3：影・くノ一・鬼半蔵 | `ee4f187` | `7507971142` |
 | v1.1.2 | 2026-11-03 | 将軍家 W4：忠勝・ドーマン | `f4828cf` | `7520160454` |
 | v1.1.3 | 2026-11-04 | 将軍家 W5：康虎 Boss ★5（10 体 公開完了） | `11dd335`→`86ed9ea`（記録） | `7530012443`→`7542751824` |
-| v1.1.4 | {{V114_DATE}} | 将軍家 W6：敵演出 品質向上（10 体横断・表示のみ）＝最終 wave | {{V114_SHA}} | {{V114_DEPLOY}} |
+| v1.1.4 | 2026-11-04 | 将軍家 W6：敵演出 品質向上（10 体横断・表示のみ）＝最終 wave | `8af0082` | `7547769021` |
 
 公開経路は v1.0.1 以降すべて **feature branch → PR → CI（tsc／oxlint／vitest／build）GREEN → CEO merge → Vercel 自動 deploy**（PR #1〜#19・CI success）。AI による無承認 merge／deploy は 0（決定289）。
 
@@ -60,7 +60,7 @@
 |---|---|---|
 | Release Gate（各 wave） | W1〜W6 すべて自動 Gate ALL PASS（tsc／oxlint／vitest／公開受入 228／Threat 74／回帰 44／hardening 10／a11y 69／旧セーブ 44／cf2 8／将軍家 probe） | `docs/W1〜W6_*_GATE.md` |
 | Production Smoke（各 version） | v1.0.0〜v1.1.3 すべて PASS（本番 URL 直撃・JS error 0・外部通信 0） | `docs/V1_0_*_PRODUCTION_SMOKE.md`・`V1_1_*` |
-| v1.1.4 本番 Smoke | {{V114_SMOKE_SHORT}} | `docs/V1_1_4_PRODUCTION_SMOKE.md` |
+| v1.1.4 本番 Smoke | **PASS**（S2 44／S5 228／S6 6 MATCH／S8 旧セーブ 44・JS error 0・外部通信 0・bundle は W6 Gate build と byte 一致） | `docs/V1_1_4_PRODUCTION_SMOKE.md` |
 | 最終 Gate：7 神 × 将軍家 10 体 × normal／hard | **140 組 PASS**（同 seed 2 回で結果一致 140/140・JS error 0・外部通信 0） | `docs/FINAL_RELEASE_GATE_V1_1.md` §4-1 |
 | Human QA（CEO・iPhone 実機） | Practical QA v3（2026-10-10）・W1〜W6 各 wave の通し QA（Q1／Q2 PASS・2026-11-02〜04） | DECISIONS 決定273／287／288 各行 |
 | a11y | 最小パック 69/69（AA 4.5・44px・reduced-motion・音量） | `docs/A11Y_MINIMUM_PACK_V1.md` |

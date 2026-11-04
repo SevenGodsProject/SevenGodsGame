@@ -2,7 +2,7 @@
 
 > **状態：自動 Gate 部分 ALL PASS。CEO にしかできない項目（Rollback 演習・Known 凍結の承認・tag／公開宣言）を §7 に分離。** 対象は v1.1.4（W6 敵演出 品質向上）＝決定288 v1.1 §10-3 の最終 wave。根拠は `docs/FINAL_SCOPE_ROADMAP_V1.md` §6（DoD 18 再点検・Known 凍結・最終 Smoke・CEO 操作）。本書は何も「CEO 承認済み」とは書かない。CEO の承認は本書への返答（承認／拒否）で記録する。
 >
-> 本番（v1.1.4）の Smoke 結果は `docs/V1_1_4_PRODUCTION_SMOKE.md`。本書 §4-2 はその要約（merge 後に記入）。
+> 本番（v1.1.4）の Smoke 結果は `docs/V1_1_4_PRODUCTION_SMOKE.md`。本書 §4-2 はその要約。
 
 ## 0. 結論（先に）
 
@@ -12,7 +12,7 @@
 | 生存 Known の凍結（§2） | **K01〜K39（CEO 承認 2026-10-11）＋ v1.0.2〜v1.1.4 で増えた K40〜K47 を凍結案として提示** | §2 |
 | 権利台帳 全行 Status（§3） | **PASS**（将軍家 10 体 × 立ち絵 10 行 ◎ KNOWN・舞台 10 行 UNKNOWN-ACCEPTED 継承・音声 0 行＝付けない方針） | §3 |
 | 最終 Smoke：7 神 × 将軍家 10 体 × normal／hard（§4-1） | **140/140 PASS**（決定論 140/140・JS error 0・外部通信 0・横はみ出し 0） | `docs/evidence/final-gate/matrix-gatebuild/` |
-| 本番 v1.1.4 Smoke（§4-2） | {{V114_SMOKE_VERDICT}} | `docs/V1_1_4_PRODUCTION_SMOKE.md` |
+| 本番 v1.1.4 Smoke（§4-2） | **PASS**（S2 44／S5 228／S6 6 MATCH／S8 44・bundle は W6 Gate build と byte 一致） | `docs/V1_1_4_PRODUCTION_SMOKE.md` |
 | Ranking 不在監査（§4-3） | **PASS**（W6 build dist・`ranking-absence.mjs`） | `docs/evidence/final-gate/ranking-absence.txt` |
 | CEO 操作（§7） | Rollback 演習（Promote 2 回）・Known 凍結 承認・tag `v1.1.4`（任意）・公開宣言・SGG 運営への任意連絡 | §5・§7 |
 
@@ -80,9 +80,12 @@ K01〜K39（`RELEASE_STATUS.md` A-4・CEO 承認 2026-10-11・CLOSED：K02）に
 - 札選びの版（probe 側の時刻依存を消す修正・engine 不変）：v1 64 組／v1.1 3 組／v1.2 2 組／v1.3 71 組（`summary.json` の `policy`）。v1 で「不一致」になった 5 組は、神 HP 表示の追従アニメ中の読み取り（settle 待ちで解消）と、才華の札を引く札の直後に新しい札が配られる間・カットイン中を「使える札 0」と誤判定した probe の問題（カットイン／配り中は待つ v1.3 で解消・`*.policy-v1*-retry.json` に保存）。engine の不一致は 0
 - 証跡：`docs/evidence/final-gate/matrix-gatebuild/summary.json`（140 行）・組ごとの json（2 回分の全記録）・`matrix-probe.log.txt`
 
-### 4-2. 本番 v1.1.4 Smoke（merge 後に記入）
+### 4-2. 本番 v1.1.4 Smoke（2026-11-04・本番 URL 直撃）
 
-{{V114_SMOKE_SECTION}}
+- master `8af0082`（PR #19 merge 2026-11-04T13:49:40Z・CEO 操作）→ CI `41841665058` success → Vercel Production **`7547769021`** success（13:50:28Z）
+- bundle：`index-CwO8p6YY.js` 492,733 B は W6 Gate build（`index-BwV2EshF.js`）と sha 正規化後 byte 一致・`index-BI3ZCUzF.css` 212,461 B 同一 → §4-1 の 140 組は本番 bundle に対する結果と同値
+- **S2 44/44**（Home `v1.1.4 (8af0082)`）／**S5 228/228**／**S6 忠次 6/6 MATCH**（v1.1.3 本番基準）／**S8 旧セーブ 44/44**（本番 URL 直撃・4 回目で成立：1 回目 `ERR_NETWORK_CHANGED`（開発機のネットワーク切替・43/44）、2〜3 回目 base `127.0.0.1` での sandbox 由来 `ERR_NETWORK_ACCESS_DENIED` → base `localhost` で PASS）。JS error 0・外部通信 0
+- 詳細 `docs/V1_1_4_PRODUCTION_SMOKE.md`。Rollback 先 `7542751824`（v1.1.3 `86ed9ea`）
 
 ### 4-3. Ranking 不在監査（W6 build）
 
@@ -98,8 +101,8 @@ Promote は Vercel の権限が CEO にしかないため、演習は CEO 操作
 
 1. CEO：Vercel Dashboard → Project `seven-gods-game` → Deployments → **v1.1.3 の deployment `7542751824`**（sha `86ed9ea`）→ 「Promote to Production」
 2. AI：`node scripts/v1_0_3-rc/acceptance.mjs <out> https://seven-gods-game.vercel.app/ --sha 86ed9ea` で Home `v1.1.3 (86ed9ea)` を機械確認（戻った証跡）
-3. CEO：同じ手順で **v1.1.4 の deployment {{V114_DEPLOY}}** を Promote to Production
-4. AI：同コマンドを `--sha {{V114_SHA}}` で再実行（戻した証跡）→ `docs/evidence/final-gate/rollback-drill/` に保存 → DoD #11 DONE を `RELEASE_STATUS.md` に記録
+3. CEO：同じ手順で **v1.1.4 の deployment `7547769021`** を Promote to Production
+4. AI：同コマンドを `--sha 8af0082` で再実行（戻した証跡）→ `docs/evidence/final-gate/rollback-drill/` に保存 → DoD #11 DONE を `RELEASE_STATUS.md` に記録
 
 注意：Promote の間（数十秒）は外部ユーザーに v1.1.3 が見える。将軍家 10 体・save v9 は両版で同じため、セーブの互換に影響はない。
 
@@ -107,7 +110,7 @@ Promote は Vercel の権限が CEO にしかないため、演習は CEO 操作
 
 | # | 画面 | 確認すること | 期待 |
 |---|---|---|---|
-| C1 | Home | 右下の version が `v1.1.4 ({{V114_SHA}})` | YES |
+| C1 | Home | 右下の version が `v1.1.4 (8af0082)` | YES |
 | C2 | Home → クレジット | 「非公式のファン作品」「将軍家の敵の画像は Creator Kit（将軍家）」の記載・問い合わせ先「準備中」 | 表示される |
 | C3 | 神を選ぶ | 7 柱すべて選べる・難易度 3 段 | YES |
 | C4 | 挑む敵を選ぼう | 既存 7 体＋「将軍家」見出しの下に 10 体（★と注記 chip）・Pilot 表記 0 | 18 枚 |
@@ -126,7 +129,7 @@ NO が 1 つでもあれば AI が Fast Gate で調査（Rollback 判断は CEO�
 |---|---|---|---|
 | 1 | §2 の K40〜K47 凍結の **承認／拒否**（返答 1 行） | 必須（DoD #10） | `RELEASE_STATUS.md` A-4 に凍結を記録 |
 | 2 | §5 Rollback 演習（Promote 2 回） | 必須（DoD #11）・時期は任意 | Smoke で確認・記録 |
-| 3 | tag `v1.1.4`（`git tag v1.1.4 {{V114_SHA}} && git push origin v1.1.4`）・公開宣言 | 任意（DoD #18） | — |
+| 3 | tag `v1.1.4`（`git tag v1.1.4 8af0082 && git push origin v1.1.4`）・公開宣言 | 任意（DoD #18） | — |
 | 4 | SGG 運営への任意の事前連絡（規約 §8）＝運営報告書（`docs/OPERATIONS_REPORT_V1.md`）と同時 | 任意（推奨） | 共有ページ 1 枚は CEO の公開範囲で |
 
 ## 8. 変更していないもの
