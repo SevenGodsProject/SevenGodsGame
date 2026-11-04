@@ -13,7 +13,7 @@ Production の「確定状態」を一目で確認するための要約です。
 | **CI** | master run `41841665058` success |
 | **Vercel deployment** | **`7547769021`**（sha `8af0082`・success 13:50:28Z）／bundle `index-CwO8p6YY.js`（492,733 B・sha 正規化後 W6 Gate build `index-BwV2EshF.js` と byte 一致）・`index-BI3ZCUzF.css`（212,461 B・同一） |
 | **Rollback 先** | deployment **`7542751824`**（`86ed9ea`・v1.1.3）／**`7530012443`**（`11dd335`・v1.1.3 初回）。Promote は CEO のみ・未使用（演習は `docs/FINAL_RELEASE_GATE_V1_1.md` §5・戻し先は現在の本番 `7548772113`） |
-| **Release Gate／Smoke** | `docs/W6_ENEMY_PRESENTATION_GATE.md`（自動 Gate ALL PASS）／`docs/V1_1_4_PRODUCTION_SMOKE.md`（S2 44・S5 228・S6 6 MATCH・S8 旧セーブ 本番直撃 44/44 PASS）／`docs/FINAL_RELEASE_GATE_V1_1.md`（最終 Gate：7 神 × 将軍家 10 体 × normal／hard 140 組 決定論 140/140・DoD 18・Known K40〜K47 凍結案・台帳 20 行・Ranking 不在 PASS） |
+| **Release Gate／Smoke** | `docs/W6_ENEMY_PRESENTATION_GATE.md`（自動 Gate ALL PASS）／`docs/V1_1_4_PRODUCTION_SMOKE.md`（S2 44・S5 228・S6 6 MATCH・S8 旧セーブ 本番直撃 44/44 PASS）／`docs/FINAL_RELEASE_GATE_V1_1.md`（最終 Gate：7 神 × 将軍家 10 体 × normal／hard 140 組 決定論 140/140・DoD 18・Known K40〜K47 凍結（CEO 承認 2026-11-04）・台帳 20 行・Ranking 不在 PASS） |
 | **version 表示** | Home `v1.1.4 (8af0082)`（S2 で検証） |
 | **Known** | K01〜K39 据え置き＋**K40〜K47 凍結（CEO 承認 2026-11-04）**（A-4・新規の製品異常 0） |
 | **次** | 開発スコープ（決定288 v1.1）は完了。残りは CEO 操作のみ：Rollback 演習（Promote 2 回・AI が Smoke で確認）・tag `v1.1.4`（任意）・運営報告書 `docs/OPERATIONS_REPORT_V1.md` の共有と SGG 運営への任意連絡 |
