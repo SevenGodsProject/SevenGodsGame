@@ -1,0 +1,338 @@
+{
+  "row": {
+    "key": "笑蓮×捕り方・岡っ引き×normal",
+    "god": "笑蓮",
+    "enemy": "捕り方・岡っ引き",
+    "enemyName": "捕り方・岡っ引き",
+    "diff": "normal",
+    "seed": "final-v114",
+    "repeat": 2,
+    "policy": "v1.3",
+    "deterministic": true,
+    "outcome": {
+      "won": true,
+      "lost": false
+    },
+    "lastRound": 4,
+    "r1Intent": "40",
+    "finalEnemyHp": "0 / 880",
+    "finalGodHp": "230 / 300",
+    "errorsTotal": 0,
+    "external": [],
+    "scrollOverflow": false,
+    "crashed": [],
+    "ms": [
+      29789,
+      29080
+    ],
+    "plays": 7
+  },
+  "reps": [
+    {
+      "god": "笑蓮",
+      "enemy": "捕り方・岡っ引き",
+      "enemyName": "捕り方・岡っ引き",
+      "diff": "normal",
+      "seed": "final-v114",
+      "rep": 1,
+      "rounds": [
+        {
+          "round": 1,
+          "intent": "40",
+          "band": "high",
+          "enemyHp": "880 / 880",
+          "godHp": "300 / 300",
+          "tactic": null,
+          "scrollW": 1508,
+          "vw": 1508
+        },
+        {
+          "round": 2,
+          "intent": "連撃 20×3",
+          "band": "high",
+          "enemyHp": "730 / 880",
+          "godHp": "300 / 300",
+          "tactic": null,
+          "scrollW": 1508,
+          "vw": 1508
+        },
+        {
+          "round": 3,
+          "intent": "60",
+          "band": "half",
+          "enemyHp": "360 / 880",
+          "godHp": "240 / 300",
+          "tactic": null,
+          "scrollW": 1508,
+          "vw": 1508
+        },
+        {
+          "round": 4,
+          "intent": "連撃 20×4",
+          "band": "quarter",
+          "enemyHp": "60 / 880",
+          "godHp": "230 / 300",
+          "tactic": null,
+          "scrollW": 1508,
+          "vw": 1508
+        }
+      ],
+      "plays": [
+        {
+          "round": 1,
+          "card": "⚔ 捨身の一撃",
+          "hand": [
+            "🌿 笑って許す",
+            "⚔ 渾身の一撃(x)",
+            "⚔ 速攻",
+            "🌟 神託(x)"
+          ],
+          "ap": "1"
+        },
+        {
+          "round": 1,
+          "card": "⚔ 速攻",
+          "hand": [
+            "🌿 笑って許す",
+            "⚔ 渾身の一撃(x)",
+            "🌟 神託(x)",
+            "⚔ 剛撃(x)"
+          ],
+          "ap": "1"
+        },
+        {
+          "round": 1,
+          "card": "🌿 笑って許す",
+          "hand": [
+            "⚔ 渾身の一撃(x)",
+            "🌟 神託(x)",
+            "⚔ 剛撃(x)",
+            "🌿 息吹(x)"
+          ],
+          "ap": "0"
+        },
+        {
+          "round": 2,
+          "card": "🌟 神託",
+          "hand": [
+            "⚔ 渾身の一撃(x)",
+            "⚔ 剛撃(x)",
+            "🌿 息吹(x)",
+            "🌟 予言(x)",
+            "🛡 懐の深さ(x)"
+          ],
+          "ap": "0"
+        },
+        {
+          "round": 3,
+          "card": "⚔ 渾身の一撃",
+          "hand": [
+            "⚔ 剛撃(x)",
+            "🌿 息吹(x)",
+            "🌟 予言(x)",
+            "🛡 懐の深さ(x)",
+            "✨ 共振",
+            "🛡 守護"
+          ],
+          "ap": "1"
+        },
+        {
+          "round": 3,
+          "card": "🛡 守護",
+          "hand": [
+            "⚔ 剛撃(x)",
+            "🌿 息吹(x)",
+            "🌟 予言(x)",
+            "🛡 懐の深さ(x)",
+            "✨ 共振(x)"
+          ],
+          "ap": "0"
+        },
+        {
+          "round": 4,
+          "card": "⚔ 剛撃",
+          "hand": [
+            "🌿 息吹(x)",
+            "🌟 予言(x)",
+            "🛡 懐の深さ(x)",
+            "✨ 共振(x)",
+            "⚔ 神速(x)",
+            "💀 呪縛(x)"
+          ],
+          "ap": "3"
+        }
+      ],
+      "outcome": {
+        "won": true,
+        "lost": false
+      },
+      "final": {
+        "intent": "連撃 20×4",
+        "band": "quarter",
+        "enemyHp": "0 / 880",
+        "godHp": "230 / 300",
+        "tactic": null,
+        "scrollW": 1508,
+        "vw": 1508
+      },
+      "errors": [],
+      "external": [],
+      "crashed": null,
+      "ms": 29789,
+      "fingerprint": "{\"rounds\":[{\"r\":1,\"i\":\"40\",\"b\":\"high\",\"e\":\"880 / 880\",\"g\":\"300 / 300\",\"t\":null},{\"r\":2,\"i\":\"連撃 20×3\",\"b\":\"high\",\"e\":\"730 / 880\",\"g\":\"300 / 300\",\"t\":null},{\"r\":3,\"i\":\"60\",\"b\":\"half\",\"e\":\"360 / 880\",\"g\":\"240 / 300\",\"t\":null},{\"r\":4,\"i\":\"連撃 20×4\",\"b\":\"quarter\",\"e\":\"60 / 880\",\"g\":\"230 / 300\",\"t\":null}],\"plays\":[{\"round\":1,\"card\":\"⚔ 捨身の一撃\"},{\"round\":1,\"card\":\"⚔ 速攻\"},{\"round\":1,\"card\":\"🌿 笑って許す\"},{\"round\":2,\"card\":\"🌟 神託\"},{\"round\":3,\"card\":\"⚔ 渾身の一撃\"},{\"round\":3,\"card\":\"🛡 守護\"},{\"round\":4,\"card\":\"⚔ 剛撃\"}],\"outcome\":{\"won\":true,\"lost\":false}}"
+    },
+    {
+      "god": "笑蓮",
+      "enemy": "捕り方・岡っ引き",
+      "enemyName": "捕り方・岡っ引き",
+      "diff": "normal",
+      "seed": "final-v114",
+      "rep": 2,
+      "rounds": [
+        {
+          "round": 1,
+          "intent": "40",
+          "band": "high",
+          "enemyHp": "880 / 880",
+          "godHp": "300 / 300",
+          "tactic": null,
+          "scrollW": 1508,
+          "vw": 1508
+        },
+        {
+          "round": 2,
+          "intent": "連撃 20×3",
+          "band": "high",
+          "enemyHp": "730 / 880",
+          "godHp": "300 / 300",
+          "tactic": null,
+          "scrollW": 1508,
+          "vw": 1508
+        },
+        {
+          "round": 3,
+          "intent": "60",
+          "band": "half",
+          "enemyHp": "360 / 880",
+          "godHp": "240 / 300",
+          "tactic": null,
+          "scrollW": 1508,
+          "vw": 1508
+        },
+        {
+          "round": 4,
+          "intent": "連撃 20×4",
+          "band": "quarter",
+          "enemyHp": "60 / 880",
+          "godHp": "230 / 300",
+          "tactic": null,
+          "scrollW": 1508,
+          "vw": 1508
+        }
+      ],
+      "plays": [
+        {
+          "round": 1,
+          "card": "⚔ 捨身の一撃",
+          "hand": [
+            "🌿 笑って許す",
+            "⚔ 渾身の一撃(x)",
+            "⚔ 速攻",
+            "🌟 神託(x)"
+          ],
+          "ap": "1"
+        },
+        {
+          "round": 1,
+          "card": "⚔ 速攻",
+          "hand": [
+            "🌿 笑って許す",
+            "⚔ 渾身の一撃(x)",
+            "🌟 神託(x)",
+            "⚔ 剛撃(x)"
+          ],
+          "ap": "1"
+        },
+        {
+          "round": 1,
+          "card": "🌿 笑って許す",
+          "hand": [
+            "⚔ 渾身の一撃(x)",
+            "🌟 神託(x)",
+            "⚔ 剛撃(x)",
+            "🌿 息吹(x)"
+          ],
+          "ap": "0"
+        },
+        {
+          "round": 2,
+          "card": "🌟 神託",
+          "hand": [
+            "⚔ 渾身の一撃(x)",
+            "⚔ 剛撃(x)",
+            "🌿 息吹(x)",
+            "🌟 予言(x)",
+            "🛡 懐の深さ(x)"
+          ],
+          "ap": "0"
+        },
+        {
+          "round": 3,
+          "card": "⚔ 渾身の一撃",
+          "hand": [
+            "⚔ 剛撃(x)",
+            "🌿 息吹(x)",
+            "🌟 予言(x)",
+            "🛡 懐の深さ(x)",
+            "✨ 共振",
+            "🛡 守護"
+          ],
+          "ap": "1"
+        },
+        {
+          "round": 3,
+          "card": "🛡 守護",
+          "hand": [
+            "⚔ 剛撃(x)",
+            "🌿 息吹(x)",
+            "🌟 予言(x)",
+            "🛡 懐の深さ(x)",
+            "✨ 共振(x)"
+          ],
+          "ap": "0"
+        },
+        {
+          "round": 4,
+          "card": "⚔ 剛撃",
+          "hand": [
+            "🌿 息吹(x)",
+            "🌟 予言(x)",
+            "🛡 懐の深さ(x)",
+            "✨ 共振(x)",
+            "⚔ 神速(x)",
+            "💀 呪縛(x)"
+          ],
+          "ap": "3"
+        }
+      ],
+      "outcome": {
+        "won": true,
+        "lost": false
+      },
+      "final": {
+        "intent": "連撃 20×4",
+        "band": "quarter",
+        "enemyHp": "0 / 880",
+        "godHp": "230 / 300",
+        "tactic": null,
+        "scrollW": 1508,
+        "vw": 1508
+      },
+      "errors": [],
+      "external": [],
+      "crashed": null,
+      "ms": 29080,
+      "fingerprint": "{\"rounds\":[{\"r\":1,\"i\":\"40\",\"b\":\"high\",\"e\":\"880 / 880\",\"g\":\"300 / 300\",\"t\":null},{\"r\":2,\"i\":\"連撃 20×3\",\"b\":\"high\",\"e\":\"730 / 880\",\"g\":\"300 / 300\",\"t\":null},{\"r\":3,\"i\":\"60\",\"b\":\"half\",\"e\":\"360 / 880\",\"g\":\"240 / 300\",\"t\":null},{\"r\":4,\"i\":\"連撃 20×4\",\"b\":\"quarter\",\"e\":\"60 / 880\",\"g\":\"230 / 300\",\"t\":null}],\"plays\":[{\"round\":1,\"card\":\"⚔ 捨身の一撃\"},{\"round\":1,\"card\":\"⚔ 速攻\"},{\"round\":1,\"card\":\"🌿 笑って許す\"},{\"round\":2,\"card\":\"🌟 神託\"},{\"round\":3,\"card\":\"⚔ 渾身の一撃\"},{\"round\":3,\"card\":\"🛡 守護\"},{\"round\":4,\"card\":\"⚔ 剛撃\"}],\"outcome\":{\"won\":true,\"lost\":false}}"
+    }
+  ]
+}
