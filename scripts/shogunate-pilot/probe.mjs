@@ -31,7 +31,8 @@ const VIEWPORTS = [
   { id: 'sp360', viewport: { width: 360, height: 640 }, isMobile: true, hasTouch: true, deviceScaleFactor: 2 },
   { id: 'sp390', viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true, deviceScaleFactor: 2 },
 ].filter((v) => ONLY.includes(v.id))
-const PILOT_NAME = '将軍四天王・忠次'
+// W6（決定288 v1.1 §10-3）：SG_ENEMY_NAME で将軍家の他の敵も同じ手順で測れる（既定は忠次＝従来どおり）
+const PILOT_NAME = process.env.SG_ENEMY_NAME ?? '将軍四天王・忠次'
 
 async function clickText(page, text, timeout = 8000) {
   await page.getByRole('button', { name: text }).first().click({ timeout })

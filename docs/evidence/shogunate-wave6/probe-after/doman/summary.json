@@ -1,0 +1,656 @@
+{
+  "base": "http://localhost:4198",
+  "generatedAt": "2026-11-03T22:10:38.607Z",
+  "runs": [
+    {
+      "viewport": "pc",
+      "seed": "sg-v04-01",
+      "enemyName": "科学者・ドーマン",
+      "rounds": [
+        {
+          "round": 1,
+          "intent": "50",
+          "band": "high",
+          "hp": "1,000 / 1,000",
+          "glow": {
+            "chargingSuper": false,
+            "charging": false,
+            "boxShadow": "none",
+            "filter": "drop-shadow(rgba(0, 0, 0, 0.8) 0px 12px 16px) drop-shadow(rgba(155, 89, 182, 0.4) 0px 0px 26px) drop-shadow(rgba(255, 224, 170, 0.55) 0px 0px 1px)",
+            "dropShadowCount": 3,
+            "dataEnemy": "enemy_17"
+          },
+          "tacticLine": null,
+          "plateOverlap": {
+            "plateBottom": 198.5,
+            "plateH": 86,
+            "avatarTop": 130.6,
+            "visibleTop": 130.6,
+            "overlapBoxPx": 67.9,
+            "overlapVisiblePx": 67.9
+          }
+        },
+        {
+          "round": 2,
+          "intent": "70",
+          "band": "high",
+          "hp": "920 / 1,000",
+          "glow": {
+            "chargingSuper": false,
+            "charging": false,
+            "boxShadow": "none",
+            "filter": "drop-shadow(rgba(0, 0, 0, 0.8) 0px 12px 16px) drop-shadow(rgba(155, 89, 182, 0.4) 0px 0px 26px) drop-shadow(rgba(255, 224, 170, 0.55) 0px 0px 1px)",
+            "dropShadowCount": 3,
+            "dataEnemy": "enemy_17"
+          },
+          "tacticLine": null,
+          "plateOverlap": {
+            "plateBottom": 198.5,
+            "plateH": 86,
+            "avatarTop": 130.7,
+            "visibleTop": 130.7,
+            "overlapBoxPx": 67.8,
+            "overlapVisiblePx": 67.8
+          }
+        },
+        {
+          "round": 3,
+          "intent": "⚠ 五重塔が共鳴に反応",
+          "band": "high",
+          "hp": "670 / 1,000",
+          "glow": {
+            "chargingSuper": true,
+            "charging": true,
+            "boxShadow": "none",
+            "filter": "drop-shadow(rgba(0, 0, 0, 0.8) 0px 12px 16px) drop-shadow(rgb(176, 108, 255) 0px 0px 16px) drop-shadow(rgba(255, 178, 87, 0.8) 0px 0px 3px)",
+            "dropShadowCount": 3,
+            "dataEnemy": "enemy_17"
+          },
+          "tacticLine": {
+            "state": "armed",
+            "text": "共鳴あと2で五重塔を止める",
+            "rect": {
+              "x": 231,
+              "y": 200,
+              "w": 173,
+              "h": 26
+            },
+            "insidePlate": true,
+            "insideViewport": true,
+            "overflowX": false,
+            "lines": 1,
+            "fontSize": 13,
+            "visible": true,
+            "pageScrollW": 1508,
+            "vw": 1508
+          },
+          "plateOverlap": {
+            "plateBottom": 232,
+            "plateH": 119.5,
+            "avatarTop": 131.4,
+            "visibleTop": 131.4,
+            "overlapBoxPx": 100.6,
+            "overlapVisiblePx": 100.6
+          }
+        },
+        {
+          "round": 4,
+          "intent": "逆さ五重塔 240",
+          "band": "half",
+          "hp": "390 / 1,000",
+          "glow": {
+            "chargingSuper": false,
+            "charging": false,
+            "boxShadow": "none",
+            "filter": "drop-shadow(rgba(0, 0, 0, 0.8) 0px 12px 16px) drop-shadow(rgba(155, 89, 182, 0.4) 0px 0px 26px) drop-shadow(rgb(255, 92, 92) 0px 0px 3px) drop-shadow(rgba(229, 72, 77, 0.8) 0px 0px 24px) drop-shadow(rgba(255, 224, 170, 0",
+            "dropShadowCount": 5,
+            "dataEnemy": "enemy_17"
+          },
+          "tacticLine": null,
+          "plateOverlap": {
+            "plateBottom": 198.5,
+            "plateH": 86,
+            "avatarTop": 129.4,
+            "visibleTop": 129.4,
+            "overlapBoxPx": 69.1,
+            "overlapVisiblePx": 69.1
+          }
+        }
+      ],
+      "r3Intent": "⚠ 五重塔が共鳴に反応",
+      "r3Glow": {
+        "chargingSuper": true,
+        "charging": true,
+        "boxShadow": "none",
+        "filter": "drop-shadow(rgba(0, 0, 0, 0.8) 0px 12px 16px) drop-shadow(rgb(176, 108, 255) 0px 0px 16px) drop-shadow(rgba(255, 178, 87, 0.8) 0px 0px 3px)",
+        "dropShadowCount": 3,
+        "dataEnemy": "enemy_17"
+      },
+      "r4Intent": "逆さ五重塔 240",
+      "r4Branch": "then",
+      "r3HalfCrossing": {
+        "round": 3,
+        "card": "⚔ 豪快な一撃",
+        "bandBefore": "high",
+        "bandAfter": "half",
+        "shot": {
+          "cf2Animations": [
+            "cf2-plate-flash-half@520",
+            "cf2-wound-bloom-half@600",
+            "cf2-break-body-half@420"
+          ],
+          "plateAfterOpacity": "0.55",
+          "intentText": "⚠ 五重塔が共鳴に反応",
+          "intentColor": "rgb(255, 209, 102)",
+          "chargingSuper": true,
+          "avatarFilter": "drop-shadow(rgba(0, 0, 0, 0.8) 0px 12px 16px) drop-shadow(rgb(176, 108, 255) 0px 0px 16px) drop-shadow(rgba(255, 178, 87, 0.8) 0px 0px 3px)",
+          "collapseTransform": "matrix(0.985027, 0, 0, 0.985027, -6.98718, 0)"
+        },
+        "frames": 46,
+        "breakStartMs": 876,
+        "breakEndMs": 2052,
+        "pausedSpanMs": 628,
+        "breakActiveMs": 548,
+        "breakNames": [
+          "cf2-plate-flash-half",
+          "cf2-wound-bloom-half",
+          "cf2-break-body-half"
+        ],
+        "unlockBtnMs": 490,
+        "intentTextsDuringBreak": [
+          "⚠ 五重塔が共鳴に反応"
+        ],
+        "intentChargeDuringBreak": true,
+        "intentOffViewportFrames": 0,
+        "horizontalScrollFrames": 0,
+        "bandAtEnd": "half",
+        "superOnAtStart": true,
+        "halfStartMs": 876,
+        "halfStartFrame": 6,
+        "superOffMs": 2491,
+        "superOffFrame": 43,
+        "halfAndSuperOffSameFrame": false,
+        "superOffMinusHalfMs": 1615,
+        "tacticLineTexts": [
+          "共鳴あと2で五重塔を止める"
+        ],
+        "tacticLineClearMs": null,
+        "tacticLineClearAndSuperOffSameFrame": null,
+        "tacticLineClearAndHalfSameFrame": null,
+        "dropShadowAtStart": true,
+        "boxShadowAtStart": "none",
+        "rafP95Ms": 205,
+        "rafP95LiveMs": 467,
+        "rafMaxLiveMs": 467,
+        "immediateEnd": true
+      },
+      "breaks": [
+        {
+          "round": 3,
+          "card": "⚔ 豪快な一撃",
+          "band": "high->half",
+          "names": [
+            "cf2-plate-flash-half",
+            "cf2-wound-bloom-half",
+            "cf2-break-body-half"
+          ],
+          "breakStartMs": 876,
+          "breakEndMs": 2052,
+          "breakActiveMs": 548,
+          "unlockBtnMs": 490,
+          "intentTextsDuringBreak": [
+            "⚠ 五重塔が共鳴に反応"
+          ],
+          "intentChargeDuringBreak": true,
+          "intentOffViewportFrames": 0,
+          "horizontalScrollFrames": 0,
+          "superOnAtStart": true,
+          "halfStartMs": 876,
+          "superOffMs": 2491,
+          "halfAndSuperOffSameFrame": false,
+          "superOffMinusHalfMs": 1615,
+          "shot": {
+            "cf2Animations": [
+              "cf2-plate-flash-half@520",
+              "cf2-wound-bloom-half@600",
+              "cf2-break-body-half@420"
+            ],
+            "plateAfterOpacity": "0.55",
+            "intentText": "⚠ 五重塔が共鳴に反応",
+            "intentColor": "rgb(255, 209, 102)",
+            "chargingSuper": true,
+            "avatarFilter": "drop-shadow(rgba(0, 0, 0, 0.8) 0px 12px 16px) drop-shadow(rgb(176, 108, 255) 0px 0px 16px) drop-shadow(rgba(255, 178, 87, 0.8) 0px 0px 3px)",
+            "collapseTransform": "matrix(0.985027, 0, 0, 0.985027, -6.98718, 0)"
+          }
+        }
+      ],
+      "difficulty": "normal",
+      "tacticLineByRound": [
+        {
+          "round": 1,
+          "line": null
+        },
+        {
+          "round": 2,
+          "line": null
+        },
+        {
+          "round": 3,
+          "line": {
+            "state": "armed",
+            "text": "共鳴あと2で五重塔を止める",
+            "rect": {
+              "x": 231,
+              "y": 200,
+              "w": 173,
+              "h": 26
+            },
+            "insidePlate": true,
+            "insideViewport": true,
+            "overflowX": false,
+            "lines": 1,
+            "fontSize": 13,
+            "visible": true,
+            "pageScrollW": 1508,
+            "vw": 1508
+          }
+        },
+        {
+          "round": 4,
+          "line": null
+        }
+      ],
+      "plateOverlapByRound": [
+        {
+          "round": 1,
+          "plateBottom": 198.5,
+          "plateH": 86,
+          "avatarTop": 130.6,
+          "visibleTop": 130.6,
+          "overlapBoxPx": 67.9,
+          "overlapVisiblePx": 67.9
+        },
+        {
+          "round": 2,
+          "plateBottom": 198.5,
+          "plateH": 86,
+          "avatarTop": 130.7,
+          "visibleTop": 130.7,
+          "overlapBoxPx": 67.8,
+          "overlapVisiblePx": 67.8
+        },
+        {
+          "round": 3,
+          "plateBottom": 232,
+          "plateH": 119.5,
+          "avatarTop": 131.4,
+          "visibleTop": 131.4,
+          "overlapBoxPx": 100.6,
+          "overlapVisiblePx": 100.6
+        },
+        {
+          "round": 4,
+          "plateBottom": 198.5,
+          "plateH": 86,
+          "avatarTop": 129.4,
+          "visibleTop": 129.4,
+          "overlapBoxPx": 69.1,
+          "overlapVisiblePx": 69.1
+        }
+      ],
+      "tacticLineClears": [],
+      "tacticLineTextsR3": [
+        "共鳴あと2で五重塔を止める"
+      ],
+      "rafP95LiveMsMax": 895,
+      "immediateEnd": {
+        "round": 3,
+        "card": "⚔ 豪快な一撃",
+        "endClickMs": 1575,
+        "intentBefore": "⚠ 五重塔が共鳴に反応",
+        "glowBeforeEnd": {
+          "chargingSuper": true,
+          "charging": true,
+          "boxShadow": "none",
+          "filter": "drop-shadow(rgba(0, 0, 0, 0.8) 0px 12px 16px) drop-shadow(rgb(176, 108, 255) 0px 0px 16px) drop-shadow(rgba(255, 178, 87, 0.8) 0px 0px 3px)",
+          "dropShadowCount": 3,
+          "dataEnemy": "enemy_17"
+        },
+        "intentChangeMs": 2491,
+        "intentAfter": "逆さ五重塔 240",
+        "breakEndMs": 2052,
+        "breakStillRunningAtIntentChange": false,
+        "r4Intent": "逆さ五重塔 240",
+        "r4Band": "half"
+      },
+      "plays": 8,
+      "finished": false,
+      "errors": 0
+    },
+    {
+      "viewport": "sp375",
+      "seed": "sg-v04-01",
+      "enemyName": "科学者・ドーマン",
+      "rounds": [
+        {
+          "round": 1,
+          "intent": "50",
+          "band": "high",
+          "hp": "1,000 / 1,000",
+          "glow": {
+            "chargingSuper": false,
+            "charging": false,
+            "boxShadow": "none",
+            "filter": "drop-shadow(rgba(0, 0, 0, 0.8) 0px 12px 16px) drop-shadow(rgba(155, 89, 182, 0.4) 0px 0px 26px) drop-shadow(rgba(255, 224, 170, 0.55) 0px 0px 1px)",
+            "dropShadowCount": 3,
+            "dataEnemy": "enemy_17"
+          },
+          "tacticLine": null,
+          "plateOverlap": {
+            "plateBottom": 184.5,
+            "plateH": 76,
+            "avatarTop": 226.4,
+            "visibleTop": 226.4,
+            "overlapBoxPx": -41.9,
+            "overlapVisiblePx": -41.9
+          }
+        },
+        {
+          "round": 2,
+          "intent": "70",
+          "band": "high",
+          "hp": "920 / 1,000",
+          "glow": {
+            "chargingSuper": false,
+            "charging": false,
+            "boxShadow": "none",
+            "filter": "drop-shadow(rgba(0, 0, 0, 0.8) 0px 12px 16px) drop-shadow(rgba(155, 89, 182, 0.4) 0px 0px 26px) drop-shadow(rgba(255, 224, 170, 0.55) 0px 0px 1px)",
+            "dropShadowCount": 3,
+            "dataEnemy": "enemy_17"
+          },
+          "tacticLine": null,
+          "plateOverlap": {
+            "plateBottom": 184.5,
+            "plateH": 76,
+            "avatarTop": 226.4,
+            "visibleTop": 226.4,
+            "overlapBoxPx": -41.9,
+            "overlapVisiblePx": -41.9
+          }
+        },
+        {
+          "round": 3,
+          "intent": "⚠ 五重塔が共鳴に反応",
+          "band": "high",
+          "hp": "670 / 1,000",
+          "glow": {
+            "chargingSuper": true,
+            "charging": true,
+            "boxShadow": "none",
+            "filter": "drop-shadow(rgba(0, 0, 0, 0.8) 0px 12px 16px) drop-shadow(rgb(176, 108, 255) 0px 0px 16px) drop-shadow(rgba(255, 178, 87, 0.8) 0px 0px 3px)",
+            "dropShadowCount": 3,
+            "dataEnemy": "enemy_17"
+          },
+          "tacticLine": {
+            "state": "armed",
+            "text": "共鳴あと2で五重塔を止める",
+            "rect": {
+              "x": 31,
+              "y": 207,
+              "w": 145,
+              "h": 21
+            },
+            "insidePlate": true,
+            "insideViewport": true,
+            "overflowX": false,
+            "lines": 1,
+            "fontSize": 11,
+            "visible": true,
+            "pageScrollW": 375,
+            "vw": 375
+          },
+          "plateOverlap": {
+            "plateBottom": 232.3,
+            "plateH": 123.8,
+            "avatarTop": 228.5,
+            "visibleTop": 228.5,
+            "overlapBoxPx": 3.7,
+            "overlapVisiblePx": 3.7
+          }
+        },
+        {
+          "round": 4,
+          "intent": "逆さ五重塔 240",
+          "band": "half",
+          "hp": "390 / 1,000",
+          "glow": {
+            "chargingSuper": false,
+            "charging": false,
+            "boxShadow": "none",
+            "filter": "drop-shadow(rgba(0, 0, 0, 0.8) 0px 12px 16px) drop-shadow(rgba(155, 89, 182, 0.4) 0px 0px 26px) drop-shadow(rgb(255, 92, 92) 0px 0px 3px) drop-shadow(rgba(229, 72, 77, 0.8) 0px 0px 24px) drop-shadow(rgba(255, 224, 170, 0",
+            "dropShadowCount": 5,
+            "dataEnemy": "enemy_17"
+          },
+          "tacticLine": null,
+          "plateOverlap": {
+            "plateBottom": 184.5,
+            "plateH": 76,
+            "avatarTop": 227.6,
+            "visibleTop": 227.6,
+            "overlapBoxPx": -43.1,
+            "overlapVisiblePx": -43.1
+          }
+        }
+      ],
+      "r3Intent": "⚠ 五重塔が共鳴に反応",
+      "r3Glow": {
+        "chargingSuper": true,
+        "charging": true,
+        "boxShadow": "none",
+        "filter": "drop-shadow(rgba(0, 0, 0, 0.8) 0px 12px 16px) drop-shadow(rgb(176, 108, 255) 0px 0px 16px) drop-shadow(rgba(255, 178, 87, 0.8) 0px 0px 3px)",
+        "dropShadowCount": 3,
+        "dataEnemy": "enemy_17"
+      },
+      "r4Intent": "逆さ五重塔 240",
+      "r4Branch": "then",
+      "r3HalfCrossing": {
+        "round": 3,
+        "card": "⚔ 豪快な一撃",
+        "bandBefore": "high",
+        "bandAfter": "half",
+        "shot": {
+          "cf2Animations": [
+            "cf2-plate-flash-half@520",
+            "cf2-wound-bloom-half@600",
+            "cf2-break-body-half@420"
+          ],
+          "plateAfterOpacity": "0.55",
+          "intentText": "⚠ 五重塔が共鳴に反応",
+          "intentColor": "rgb(255, 209, 102)",
+          "chargingSuper": true,
+          "avatarFilter": "drop-shadow(rgba(0, 0, 0, 0.8) 0px 12px 16px) drop-shadow(rgb(176, 108, 255) 0px 0px 16px) drop-shadow(rgba(255, 178, 87, 0.8) 0px 0px 3px)",
+          "collapseTransform": "matrix(0.985027, 0, 0, 0.985027, -4.99084, 0)"
+        },
+        "frames": 125,
+        "breakStartMs": 628,
+        "breakEndMs": 2441,
+        "pausedSpanMs": 1291,
+        "breakActiveMs": 522,
+        "breakNames": [
+          "cf2-plate-flash-half",
+          "cf2-wound-bloom-half",
+          "cf2-break-body-half"
+        ],
+        "unlockBtnMs": 39,
+        "intentTextsDuringBreak": [
+          "⚠ 五重塔が共鳴に反応"
+        ],
+        "intentChargeDuringBreak": true,
+        "intentOffViewportFrames": 0,
+        "horizontalScrollFrames": 0,
+        "bandAtEnd": "half",
+        "superOnAtStart": true,
+        "halfStartMs": 628,
+        "halfStartFrame": 22,
+        "superOffMs": 2776,
+        "superOffFrame": 121,
+        "halfAndSuperOffSameFrame": false,
+        "superOffMinusHalfMs": 2148,
+        "tacticLineTexts": [
+          "共鳴あと2で五重塔を止める"
+        ],
+        "tacticLineClearMs": null,
+        "tacticLineClearAndSuperOffSameFrame": null,
+        "tacticLineClearAndHalfSameFrame": null,
+        "dropShadowAtStart": true,
+        "boxShadowAtStart": "none",
+        "rafP95Ms": 51,
+        "rafP95LiveMs": 59,
+        "rafMaxLiveMs": 547,
+        "immediateEnd": true
+      },
+      "breaks": [
+        {
+          "round": 3,
+          "card": "⚔ 豪快な一撃",
+          "band": "high->half",
+          "names": [
+            "cf2-plate-flash-half",
+            "cf2-wound-bloom-half",
+            "cf2-break-body-half"
+          ],
+          "breakStartMs": 628,
+          "breakEndMs": 2441,
+          "breakActiveMs": 522,
+          "unlockBtnMs": 39,
+          "intentTextsDuringBreak": [
+            "⚠ 五重塔が共鳴に反応"
+          ],
+          "intentChargeDuringBreak": true,
+          "intentOffViewportFrames": 0,
+          "horizontalScrollFrames": 0,
+          "superOnAtStart": true,
+          "halfStartMs": 628,
+          "superOffMs": 2776,
+          "halfAndSuperOffSameFrame": false,
+          "superOffMinusHalfMs": 2148,
+          "shot": {
+            "cf2Animations": [
+              "cf2-plate-flash-half@520",
+              "cf2-wound-bloom-half@600",
+              "cf2-break-body-half@420"
+            ],
+            "plateAfterOpacity": "0.55",
+            "intentText": "⚠ 五重塔が共鳴に反応",
+            "intentColor": "rgb(255, 209, 102)",
+            "chargingSuper": true,
+            "avatarFilter": "drop-shadow(rgba(0, 0, 0, 0.8) 0px 12px 16px) drop-shadow(rgb(176, 108, 255) 0px 0px 16px) drop-shadow(rgba(255, 178, 87, 0.8) 0px 0px 3px)",
+            "collapseTransform": "matrix(0.985027, 0, 0, 0.985027, -4.99084, 0)"
+          }
+        }
+      ],
+      "difficulty": "normal",
+      "tacticLineByRound": [
+        {
+          "round": 1,
+          "line": null
+        },
+        {
+          "round": 2,
+          "line": null
+        },
+        {
+          "round": 3,
+          "line": {
+            "state": "armed",
+            "text": "共鳴あと2で五重塔を止める",
+            "rect": {
+              "x": 31,
+              "y": 207,
+              "w": 145,
+              "h": 21
+            },
+            "insidePlate": true,
+            "insideViewport": true,
+            "overflowX": false,
+            "lines": 1,
+            "fontSize": 11,
+            "visible": true,
+            "pageScrollW": 375,
+            "vw": 375
+          }
+        },
+        {
+          "round": 4,
+          "line": null
+        }
+      ],
+      "plateOverlapByRound": [
+        {
+          "round": 1,
+          "plateBottom": 184.5,
+          "plateH": 76,
+          "avatarTop": 226.4,
+          "visibleTop": 226.4,
+          "overlapBoxPx": -41.9,
+          "overlapVisiblePx": -41.9
+        },
+        {
+          "round": 2,
+          "plateBottom": 184.5,
+          "plateH": 76,
+          "avatarTop": 226.4,
+          "visibleTop": 226.4,
+          "overlapBoxPx": -41.9,
+          "overlapVisiblePx": -41.9
+        },
+        {
+          "round": 3,
+          "plateBottom": 232.3,
+          "plateH": 123.8,
+          "avatarTop": 228.5,
+          "visibleTop": 228.5,
+          "overlapBoxPx": 3.7,
+          "overlapVisiblePx": 3.7
+        },
+        {
+          "round": 4,
+          "plateBottom": 184.5,
+          "plateH": 76,
+          "avatarTop": 227.6,
+          "visibleTop": 227.6,
+          "overlapBoxPx": -43.1,
+          "overlapVisiblePx": -43.1
+        }
+      ],
+      "tacticLineClears": [],
+      "tacticLineTextsR3": [
+        "共鳴あと2で五重塔を止める"
+      ],
+      "rafP95LiveMsMax": 1359,
+      "immediateEnd": {
+        "round": 3,
+        "card": "⚔ 豪快な一撃",
+        "endClickMs": 1967,
+        "intentBefore": "⚠ 五重塔が共鳴に反応",
+        "glowBeforeEnd": {
+          "chargingSuper": true,
+          "charging": true,
+          "boxShadow": "none",
+          "filter": "drop-shadow(rgba(0, 0, 0, 0.8) 0px 12px 16px) drop-shadow(rgb(176, 108, 255) 0px 0px 16px) drop-shadow(rgba(255, 178, 87, 0.8) 0px 0px 3px)",
+          "dropShadowCount": 3,
+          "dataEnemy": "enemy_17"
+        },
+        "intentChangeMs": 2776,
+        "intentAfter": "逆さ五重塔 240",
+        "breakEndMs": 2441,
+        "breakStillRunningAtIntentChange": false,
+        "r4Intent": "逆さ五重塔 240",
+        "r4Band": "half"
+      },
+      "plays": 8,
+      "finished": false,
+      "errors": 0
+    }
+  ]
+}

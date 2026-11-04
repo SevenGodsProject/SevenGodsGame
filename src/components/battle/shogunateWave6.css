@@ -1,0 +1,94 @@
+/* ============================================================
+   W6 将軍家 敵演出 品質向上（決定288 v1.1 §10-3・2026-11-04）：10 体横断の「整え」＋各敵 1 点の見せ場。表示専用 CSS。
+   全セレクタを [data-enemy='enemy_08'|'enemy_1x'] に閉じる＝既存 7 体・Threat Pilot（enemy_09）の見た目は不変。
+   画像は無改変（gradient／mask／filter／scale のみ）・animation／@keyframes を足さない（reduced-motion の追加規則が不要）・
+   engine・timing 定数・既存セレクタの値は変更しない・reduce の @media は書かない（決定232）。
+   根拠：docs/W6_ENEMY_PRESENTATION_GATE.md（実ブラウザ計測 scripts/shogunate-wave6/layout-probe.mjs）。
+   ============================================================ */
+
+/* ---- A. 大きさの正規化（決定261 の --artScale を将軍家にも適用）----
+   将軍家の立ち絵は Kit FRONT を余白なしで 768² に収めている（ink 高 100%）ため、既存 7 体（余白あり・ink 高 85%）と同じ箱でも
+   神より 19% 高く描かれていた（神÷敵 0.84・帯 0.9〜1.15 の外。PC 1508×660・SP 390×844・375×667 すべて同じ比）。
+   目安の神÷敵 ≈0.97（既存 7 体の中央値）に揃える。既存 7 体と同じく面積 ≥4.0%（PC）を下回る体は縮めない（機工師の前例）：
+   鬼半蔵・康虎は幅の細い立ち絵で面積 3.9% のため据え置き（Boss・頭領の「高さ」として許容）。忠次は v0.2 の 1.04（PC）据え置き */
+body.battle-viewport .enemy-panel[data-enemy='enemy_11'],
+body.battle-viewport .enemy-panel[data-enemy='enemy_12'],
+body.battle-viewport .enemy-panel[data-enemy='enemy_16'] {
+  --artScale: 0.87;
+}
+/* 肖像風（放射状フェード）の 3 体は ink 高 95% → 0.91 */
+body.battle-viewport .enemy-panel[data-enemy='enemy_10'],
+body.battle-viewport .enemy-panel[data-enemy='enemy_13'],
+body.battle-viewport .enemy-panel[data-enemy='enemy_14'] {
+  --artScale: 0.91;
+}
+/* ドーマンは 0.87 だと PC 面積 3.8%（<4.0%）になるため 0.92（面積 4.2%・神÷敵 0.91） */
+body.battle-viewport .enemy-panel[data-enemy='enemy_17'] {
+  --artScale: 0.92;
+}
+
+/* ---- B. 入口（降臨の間）の立ち絵に各敵の舞台 accent の外光（忠次 §5 と同じ filter のみ。既定は filter: none）---- */
+.battle-entrance[data-enemy='enemy_10'] .boss-entrance-art { filter: drop-shadow(0 10px 14px #000000cc) drop-shadow(0 0 26px #8d7bd680); }
+.battle-entrance[data-enemy='enemy_11'] .boss-entrance-art { filter: drop-shadow(0 10px 14px #000000cc) drop-shadow(0 0 26px #d1402f80); }
+.battle-entrance[data-enemy='enemy_12'] .boss-entrance-art { filter: drop-shadow(0 10px 14px #000000cc) drop-shadow(0 0 26px #2f9a8680); }
+.battle-entrance[data-enemy='enemy_13'] .boss-entrance-art { filter: drop-shadow(0 10px 14px #000000cc) drop-shadow(0 0 26px #5a6b9e99); }
+.battle-entrance[data-enemy='enemy_14'] .boss-entrance-art { filter: drop-shadow(0 10px 14px #000000cc) drop-shadow(0 0 26px #c9a24d80); }
+.battle-entrance[data-enemy='enemy_15'] .boss-entrance-art { filter: drop-shadow(0 10px 14px #000000cc) drop-shadow(0 0 26px #b8322d8c); }
+.battle-entrance[data-enemy='enemy_16'] .boss-entrance-art { filter: drop-shadow(0 10px 14px #000000cc) drop-shadow(0 0 26px #ff8a1f73); }
+.battle-entrance[data-enemy='enemy_17'] .boss-entrance-art { filter: drop-shadow(0 10px 14px #000000cc) drop-shadow(0 0 26px #8a4fc78c); }
+.battle-entrance[data-enemy='enemy_18'] .boss-entrance-art { filter: drop-shadow(0 12px 16px #000000d9) drop-shadow(0 0 32px #d4a72c99) drop-shadow(0 0 3px #fff1c2aa); }
+
+/* ---- C. 各敵 1 点の見せ場（既存のクラス・data 属性だけを読む。EnemyPanel の data-tactic は W6 で追加した表示専用の口）---- */
+
+/* 岡っ引き（群れ型・溜めなし）：連撃の突進中だけ提灯色の残像（2 つ＝群れ）。wrap の enemy-lunge-multi-* は EnemyPanel が連撃のときに付ける既存クラス */
+.enemy-panel[data-enemy='enemy_10'] .enemy-avatar-wrap.enemy-lunge-multi-2 .enemy-avatar,
+.enemy-panel[data-enemy='enemy_10'] .enemy-avatar-wrap.enemy-lunge-multi-3 .enemy-avatar {
+  filter: drop-shadow(0 12px 16px #000000cc) drop-shadow(-14px 0 0 #b9a6ff59) drop-shadow(-14px 0 0 #8d7bd633);
+}
+
+/* 直政（猛り型）：追い込まれた最終帯（表示 HP ≤25%・cf2-break-quarter）で足元が赤熱する（接地影の色だけ） */
+body.battle-viewport .battle-main .enemy-panel[data-enemy='enemy_11'].cf2-break-quarter .enemy-stage::after {
+  background: radial-gradient(ellipse at center, #000000a6 0%, #ff5a2a66 35%, #00000000 70%);
+}
+
+/* 康政（采配型）：「✓ 采配を崩した」（data-tactic=cleared）の瞬間、翠の光が静まる＝采配が崩れた */
+.enemy-panel[data-enemy='enemy_12'][data-tactic='cleared'] .enemy-avatar::before {
+  opacity: 0.12;
+}
+
+/* 影（読めぬ型）：闇討ちの溜め（data-tactic=armed）で月光の藍が影に沈む（光層の色と濃さだけ。溜めの輪は W3 のまま） */
+.enemy-panel[data-enemy='enemy_13'][data-tactic='armed'] .enemy-avatar::before {
+  background: linear-gradient(165deg, #9aa6d6 0%, #2b3663 45%, #05081a 100%);
+  opacity: 0.85;
+}
+
+/* くノ一（疾風型）：速い突進（enemy-lunge-fast＝visualType fast・連撃）に月の金の一筋の残像 */
+.enemy-panel[data-enemy='enemy_14'] .enemy-avatar-wrap.enemy-lunge-fast .enemy-avatar,
+.enemy-panel[data-enemy='enemy_14'] .enemy-avatar-wrap.enemy-lunge-multi-2 .enemy-avatar,
+.enemy-panel[data-enemy='enemy_14'] .enemy-avatar-wrap.enemy-lunge-multi-3 .enemy-avatar {
+  filter: drop-shadow(0 12px 16px #000000cc) drop-shadow(-22px 0 6px #ffd16666);
+}
+
+/* 鬼半蔵（頭領型）：最終帯（enemy-band-quarter）で足元に血風の朱（接地影の色だけ） */
+body.battle-viewport .battle-main .enemy-panel[data-enemy='enemy_15'].enemy-band-quarter .enemy-stage::after {
+  background: radial-gradient(ellipse at center, #000000a6 0%, #b8322d73 35%, #00000000 70%);
+}
+
+/* 忠勝（鉄壁型）：盾が割れた後（cf2-break-half 以降）の溜め＝「盾の全霊」の輪は白熱（R3 の蜻蛉切は橙のまま） */
+.enemy-panel[data-enemy='enemy_16'].cf2-break-half .enemy-avatar.enemy-avatar-charging.enemy-avatar-charging-super,
+.enemy-panel[data-enemy='enemy_16'].cf2-break-quarter .enemy-avatar.enemy-avatar-charging.enemy-avatar-charging-super {
+  filter: drop-shadow(0 12px 16px #000000cc) drop-shadow(0 0 22px #fff1dc) drop-shadow(0 0 3px #ff8a1fcc);
+}
+
+/* ドーマン（共鳴型）：五重塔が共鳴に反応している間（data-tactic=armed）は紫の光層が強まり、「✓ 五重塔を止めた」で静まる */
+.enemy-panel[data-enemy='enemy_17'][data-tactic='armed'] .enemy-avatar::before {
+  opacity: 0.8;
+}
+.enemy-panel[data-enemy='enemy_17'][data-tactic='cleared'] .enemy-avatar::before {
+  opacity: 0.25;
+}
+
+/* 康虎（Boss）：追い込んだ最終帯（cf2-break-quarter）の溜め＝「穢土の裁き」の輪は金から緋へ（追い込めなければ金のまま） */
+.enemy-panel[data-enemy='enemy_18'].cf2-break-quarter .enemy-avatar.enemy-avatar-charging.enemy-avatar-charging-super {
+  filter: drop-shadow(0 14px 18px #000000d9) drop-shadow(0 0 22px #b3361f) drop-shadow(0 0 4px #ffd9a8cc);
+}

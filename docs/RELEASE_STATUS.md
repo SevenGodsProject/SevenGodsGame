@@ -15,7 +15,7 @@ Production の「確定状態」を一目で確認するための要約です。
 | **Rollback 先** | deployment **`7520160454`**（`f4828cf`・v1.1.2）／**`7507971142`**（`ee4f187`・v1.1.1）。Promote は CEO のみ・未使用 |
 | **Release Gate／Smoke** | `docs/W5_SHOGUNATE_WAVE5_GATE.md`（自動 Gate ALL PASS・balanceSim 決定287 PASS・★実測 48.4 最上位）／`docs/V1_1_3_PRODUCTION_SMOKE.md`（S2 44・S5 228・S6 6 MATCH・S8 旧セーブ 本番直撃 44/44 PASS） |
 | **version 表示** | Home `v1.1.3 (11dd335)`（S2 で検証） |
-| **次** | W6 敵演出 品質向上（10 体横断・表示のみ・v1.1.4）＝別 branch で自律開始（READ-ONLY 監査 → 実装・自動 Gate・PR 作成まで）→ CEO Human QA 通し 1 周 → CEO merge → 最終 Release Gate → 運営報告書 |
+| **次** | W6 敵演出 品質向上（10 体横断・表示のみ）＝`feat/w6-enemy-presentation` 実装済み・自動 Gate ALL PASS → PR → CEO Human QA 通し 1 周 → CEO merge（v1.1.4）→ 最終 Release Gate → 運営報告書 |
 
 ### A-000000. v1.1.2 公開（2026-11-03・決定288 W4 PRODUCTION LIVE）
 
@@ -85,6 +85,7 @@ Production の「確定状態」を一目で確認するための要約です。
 | **v1.1.1 RC（W3 将軍家 第三陣・決定288）** | branch `feat/w3-shogunate-wave3`（起点 `72025ae`）。影・くノ一・鬼半蔵を通常の Enemy Select に（将軍家 7 体）。engine 変更 0・★実測（鬼半蔵 ★2・他 ★1）・Daily／49 盤／seed／gameVersion／save v9 不変・敵ボイスなし。自動 Gate ALL PASS（`docs/W3_SHOGUNATE_WAVE3_GATE.md`）。CEO Human QA 3/3 → **LIVE（v1.1.1・`ee4f187`・A-00000）**。build +2.96 kB・CSS +3.04 kB |
 | **v1.1.2 RC（W4 将軍家 第四陣・決定288）** | branch `feat/w4-shogunate-wave4`（起点 `ee4f187`）。忠勝・ドーマンを通常の Enemy Select に（将軍家 9 体）。engine はドーマン型 cond 1 種追加のみ（指紋不変）・★実測（忠勝 normal 指数 41.9 → **★4**（龍神 37.7 を超え 17 体で最高・将軍家初の ★4）／ドーマン 30.0 → **★1**（道化 28.6〜機工師 31.4 の間）。既存 7 体の指数・順序は v1.0.1 と完全一致）・Daily／49 盤／seed／gameVersion／save v9 不変・敵ボイスなし・version 1.1.2 同梱。自動 Gate ALL PASS（`docs/W4_SHOGUNATE_WAVE4_GATE.md`）。CEO Human QA 2/2 → **LIVE（v1.1.2・`f4828cf`・A-000000）**。build +2.75 kB・CSS +2.28 kB |
 | **v1.1.3 RC（W5 将軍家 最終・康虎 Boss ★5・決定288）** | branch `feat/w5-shogunate-wave5`（起点 `f4828cf`）。十七代将軍・康虎（enemy_18・HP 114・rank 5・2 段 tactic 忠次型・連撃 5×3・必殺 32／36）を通常の Enemy Select に（将軍家 10 体＝全員公開・敵 18 体）。engine 変更 0（Boss 比 2 組を `RULES.enemyTactic.boss*` に集約・指紋除外）。version 1.1.3。自動 Gate ALL PASS（`docs/W5_SHOGUNATE_WAVE5_GATE.md`）。CEO merge → **LIVE（v1.1.3・`11dd335`・A-0000000）**。build index-Dc6IP1lD.js 492.68 kB（v1.1.2 491.10 → +1.58 kB）・index-DyYCyOuG.css 208.95 kB（+1.66 kB） |
+| **v1.1.4 RC（W6 敵演出 品質向上・10 体横断・表示のみ・決定288）** | branch `feat/w6-enemy-presentation`（起点 `11dd335`）。将軍家 10 体の立ち絵の大きさを決定261 の帯（神÷敵 0.9〜1.15）に正規化（--artScale 7 体・鬼半蔵／康虎／忠次 据え置き）・入口の外光 9 体・各敵 1 点の見せ場（CSS 1 ファイル `shogunateWave6.css`＋EnemyPanel の表示専用 `data-tactic` 1 行）。engine／enemies.ts 変更 0・既存 7 体 不変（計測で同値）。version 1.1.4。自動 Gate ALL PASS（`docs/W6_ENEMY_PRESENTATION_GATE.md`）。**CEO Human QA 通し 1 周 → CEO merge（Production 公開）待ち**。build index-BwV2EshF.js 492.73 kB（v1.1.3 492.68 → +0.05）・index-BI3ZCUzF.css 212.46 kB（+3.51） |
 | **次 Release 候補（v1.0.7）** | **将軍家 第一陣 公開 v1**（忠次 enemy_08 を通常 Enemy Select の 8 体目へ・Daily／49 盤／委ねる seed／gameVersion は既存 7 体のまま固定）＝決定287（候補）・`docs/SHOGUNATE_PUBLIC_ROSTER_V1_AUDIT.md`（READ-ONLY 設計監査 完了・実装未開始・CEO 返答 1 回＝公開 GO＋台詞 7 本の監修）。2 番手＝康政 Pilot v0.1（`LANE3_NEXT_PLAN_V1.md` §2-③）／並走候補＝7 神 crisis・greeting ボイス展開（データ追加のみ・CEO 試聴） |
 
 ### A-0q. v1.0.5 公開（2026-10-24・決定285 PRODUCTION LIVE・履歴。記録 commit `98222ee` は v1.0.6 統合 RC に同梱）
