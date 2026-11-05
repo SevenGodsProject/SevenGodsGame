@@ -726,6 +726,9 @@ export function BattleScreen({
       {state.status !== 'playing' && presentationDone && !rewardOpen && (
         <GameOverOverlay
           bridged={showVictoryStage}
+          // v1.1.6 QW#1：報酬を確定したあとの再 mount（rewardDoneState＝この 1 戦で報酬の判断を終えた）は段階表示を最初から全表示にする。
+          // Pilot 敵（rewardDone が最初から true）や Daily は rewardDoneState が false のままなので初回の演出はそのまま
+          skipStaging={rewardDoneState}
           recap={buildBattleRecap(log, state)}
           rewardPending={state.status === 'won' && state.mode !== 'daily' && !rewardDone}
           onOpenReward={() => setRewardOpen(true)}

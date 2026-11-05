@@ -1,3 +1,4 @@
+import { readFileSync } from 'node:fs'
 import { describe, expect, it } from 'vitest'
 import { GODS } from '../../core/data/gods'
 import { GOD_THEME_COLOR, KEYVISUAL_OBJECT_POSITION } from '../setup/godStyle'
@@ -39,5 +40,25 @@ describe('決定226 Victory Reveal v1', () => {
     expect(tl.rewardMs).toBe(1580)
     const reduced = planVictory({ atMs: 90, stopMs: FINAL_HIT_STOP_MS }, true)
     expect(reduced.rewardMs).toBe(90 + 0 + 120 + 200 + 600)
+  })
+
+  // v1.1.6 QW#1：報酬を確定したあとの結果画面（再 mount）は段階表示とスコア巻き上げを二度流さない。
+  // 初回（報酬前）・Daily・Pilot は従来どおり段階表示を出す（BattleScreen は rewardDoneState だけを渡す）
+  it('報酬確定後の再 mount は段階表示を最初から全表示にする（skipStaging）。初回の演出は不変', () => {
+    const overlay = readFileSync(new URL('./GameOverOverlay.tsx', import.meta.url), 'utf8')
+    const screen = readFileSync(new URL('./BattleScreen.tsx', import.meta.url), 'utf8')
+    const css = readFileSync(new URL('./battle.css', import.meta.url), 'utf8')
+    expect(overlay).toContain('skipStaging = false')
+    expect(overlay).toContain('useState(skipStaging)')
+    expect(overlay).toContain("useState(status === 'won' && !reduced && !skipStaging ? 0 : finalScore)")
+    // BattleScreen：報酬の判断を終えた状態（rewardDoneState）だけを渡す。Pilot 敵の rewardDone（最初から true）は渡さない
+    expect(screen).toContain('skipStaging={rewardDoneState}')
+    expect(screen).not.toContain('skipStaging={rewardDone}')
+    // tap skip／skipStaging の対象に Result Hub 以降の要素が含まれる（決定187 で段階表示に加わった要素）
+    const skipRule = css.match(/\.game-over-card-won\.game-over-card-skipped\s*:is\(([^)]*)\)/)
+    expect(skipRule).not.toBeNull()
+    for (const cls of ['.result-hub', '.result-hub-pending', '.game-over-breakdown', '.result-tertiary', '.game-over-matchup', '.game-over-best-gap', '.game-over-status', '.game-over-score']) {
+      expect(skipRule![1], cls).toContain(cls)
+    }
   })
 })
