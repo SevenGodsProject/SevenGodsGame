@@ -69,5 +69,5 @@ AI-PM Decision「v1.1.6 Quick Wins GO」（READ-ONLY 監査の採用 3 件のう
 
 ## 6. CEO 操作
 
-1. Hotfix と同じく PR（branch `feat/v1_1_6-result-reveal-once`・番号は `docs/RELEASE_STATUS.md` v1.1.6 RC 行）の merge（CI GREEN・CLEAN 確認後・1 回）
+1. PR #25（branch `feat/v1_1_6-result-reveal-once`）の merge（CI GREEN・CLEAN 確認後・1 回）
 2. 本番反映後：AI が本番 S2＋result-reveal-probe → CEO Human QA（iPhone）→ 第 2 優先（託宣 SP 表示 3 点）へ
