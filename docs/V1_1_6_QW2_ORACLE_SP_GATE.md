@@ -69,5 +69,6 @@ CEO「Quick Win #2 GO」（QW#1 の iPhone Human QA PASS 後）。**runtime の�
 
 ## 6. CEO 操作
 
-1. PR #27（branch `feat/v1_1_6-qw2-oracle-sp`）の merge（CI GREEN・CLEAN 確認後・1 回）
-2. 本番反映後：AI が本番 S2＋oracle-sp-probe → CEO Human QA（iPhone）→ 第 3 優先（R6〜R7 のラウンド表示強調）へ
+1. ~~PR #27 の merge~~ **DONE**（CEO merge 2026-11-05T21:07:11Z → master `180688e` → Vercel `7585380880`・PRODUCTION LIVE）
+2. ~~本番確認（AI）~~ **DONE**：S2 **44/44**・oracle-sp-probe 本番 SP375 **「1枚引く＋神力1」58px／「出せる札＋1」45px／「出せる:神託」44px（枠 62px）**（`docs/V1_1_6_QW2_PRODUCTION_SMOKE.md`）
+3. **CEO Human QA（iPhone・本番 URL）**：託宣バー 3 行目（今使うとどうなるか）が読める・切れない・Tip ⑥ が画面と一致 → PASS で第 3 優先（R6〜R7 のラウンド表示強調）へ
