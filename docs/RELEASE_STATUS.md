@@ -2,7 +2,7 @@
 
 Production の「確定状態」を一目で確認するための要約です。新しい仕様判断は含みません（根拠は `docs/DECISIONS.md`）。**§A が現在の正本**。§B 以降は 8/31 Public Beta〜Phase 3（2026-09-06）時点の履歴として残します（当時の Known Non-blockers 1〜16 は §A-4 の生存 Known に統合済み）。
 
-## A. 現在の Production 状態（2026-11-05・**v1.1.6 Quick Win #1 PRODUCTION LIVE**（報酬後の勝利演出 再生の解消）・v1.1.5 Hotfix（将軍家 9 体の戦闘背景 復元・CEO QA PASS）・最終スコープ 実装完了＝将軍家 10 体＋敵演出 品質向上。**CEO Human QA（iPhone）待ち → #2 託宣 SP 表示へ。v1.1 完成宣言は最終通しプレイの完了状況を確認してから CEO 判断**）
+## A. 現在の Production 状態（2026-11-05・**v1.1.6 Quick Win #1 PRODUCTION LIVE**（報酬後の勝利演出 再生の解消）・v1.1.5 Hotfix（将軍家 9 体の戦闘背景 復元・CEO QA PASS）・最終スコープ 実装完了＝将軍家 10 体＋敵演出 品質向上。**CEO Human QA（iPhone）PASS 2026-11-06＝QW#1 正式完了 → #2 託宣 SP 表示を実装中。v1.1 完成宣言は最終通しプレイの完了状況を確認してから CEO 判断**）
 
 ### A-0000000000. v1.1.6 公開（2026-11-05・Quick Win #1 PRODUCTION LIVE・報酬選択後の勝利演出 再生の解消）
 
@@ -16,7 +16,8 @@ Production の「確定状態」を一目で確認するための要約です。
 | **Release Gate／Smoke** | `docs/V1_1_6_QW1_RESULT_REVEAL_GATE.md`（契約テスト 1・vitest 1,703・lint／tsc／build・実ブラウザ before／CSS のみ／after・S2 44・S5 228・phase7-p1 AC 18/18）／本番 Smoke：S2 **44/44**（Home `v1.1.6 (ed955ee)`）・result-reveal-probe 報酬後 Hub 表示 **PC 27 ms／SP375 24 ms**（初回演出は維持） |
 | **version 表示** | Home `v1.1.6 (ed955ee)`（S2 で検証） |
 | **Known** | K01〜K39 据え置き＋K40〜K47 凍結。本変更による Known の追加・解消なし（A-4） |
-| **次** | **CEO Human QA（iPhone・本番 URL）**：通常勝利 → 報酬 → 結果画面が待たずに出る・初回の勝利演出が従来どおり → PASS で **#2 託宣 SP 表示 3 点**へ（1 件ずつ独立 PR）。v1.1 完成宣言は最終通しプレイの完了状況を確認してから CEO 判断 |
+| **CEO Human QA** | **CEO Human QA（iPhone・本番 URL）PASS（2026-11-06）**：通常勝利 → 報酬 → 結果画面が待たずに出る・初回の勝利演出は従来どおり → **QW#1 正式完了（CEO）** |
+| **次** | **#2 スマホの託宣表示 3 点**（CEO「Quick Win #2 GO」2026-11-06・独立 PR）→ 本番反映 → CEO Human QA → #3 R6〜R7 ラウンド表示の強調。v1.1 完成宣言は最終通しプレイの完了状況を確認してから CEO 判断 |
 
 ### A-000000000. v1.1.5 公開（2026-11-05・決定288 Hotfix PRODUCTION LIVE・将軍家 9 体の戦闘背景 復元）
 
