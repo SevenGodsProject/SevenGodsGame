@@ -11,6 +11,8 @@ import type { CardDefId, CardInstance, CardUid, GameState } from '../../core/typ
 import {
   GUIDE_NO_CANDIDATE_SHORT,
   GUIDE_NO_CANDIDATE_TEXT,
+  GUIDE_SHORT_GENERIC,
+  GUIDE_SHORT_NAME_MAX,
   oraclePreviewShortTexts,
   ORACLE_ROLE_WORDS,
   cardDisplayValue,
@@ -77,7 +79,7 @@ describe('決定253 oraclePreview（表示専用の純関数）', () => {
     const none2 = withHand(start(), [inst(CARD_IDS.allOutStrike, 1), inst(CARD_IDS.oracle, 2)], 1) // 全部 AP+2 以上
     const none3 = withHand(start(), [], 0)
     for (const s of [none1, none2, none3]) expect(previewGuideText(s)).toBe(GUIDE_NO_CANDIDATE_TEXT)
-    expect(GUIDE_NO_CANDIDATE_TEXT).toBe('札を1枚引く（出せる札は増えない）')
+    expect(GUIDE_NO_CANDIDATE_TEXT).toBe('1枚引く＋神力1（出せる札は増えない）')
   })
 
   it('天啓：撃破判定は敵ブロック込み（残 HP＋ブロック ≤ 40 で「今なら 撃破」、それ以外は「40ダメージ」）', () => {
@@ -97,10 +99,18 @@ describe('決定253 oraclePreview（表示専用の純関数）', () => {
     expect(oraclePreviewTexts(noIntent)[0]).toBe('今なら ブロック20') // 予告なしでも最低保証 20（engine と同じ）
   })
 
-  it('SP 用の短い形：加護「ブロックNN」／導き「『札名』」or「札を1枚引く」／天啓「撃破」or「40ダメージ」（長い形と同じ判定）', () => {
+  it('SP 用の短い形：加護「ブロックNN」／導き「出せる:札名」or「出せる札＋1」or「1枚引く＋神力1」／天啓「撃破」or「40ダメージ」（長い形と同じ判定）', () => {
     const s = withHand(start(), [inst(CARD_IDS.heavyBlow, 1)], 1)
-    expect(oraclePreviewShortTexts(s)).toEqual(['ブロック20', '『剛撃』', '40ダメージ'])
+    expect(oraclePreviewShortTexts(s)).toEqual(['ブロック20', '出せる:剛撃', '40ダメージ'])
     expect(oraclePreviewShortTexts(withHand(s, [], 0))[1]).toBe(GUIDE_NO_CANDIDATE_SHORT)
+    // v1.1.6 QW#2：候補なしでも効果（1 枚引く＋神力 1）が読める。候補ありは「出せる」が先頭。
+    // 札名が 5 字以上（SP375 の内幅 62px に収まらない）は札名を出さず「出せる札＋1」（CSS の省略で切らない）
+    expect(GUIDE_NO_CANDIDATE_SHORT).toBe('1枚引く＋神力1')
+    expect(GUIDE_SHORT_NAME_MAX).toBe(4)
+    const long = withHand(start(), [inst(CARD_IDS.risingTide, 1)], 2) // 秘技・満ちる（6 字・cost 3）
+    expect(previewGuideText(long)).toBe('今なら『秘技・満ちる』が出せる') // 長い形（PC）は札名を出す
+    expect(oraclePreviewShortTexts(long)[1]).toBe(GUIDE_SHORT_GENERIC)
+    for (const t of [oraclePreviewShortTexts(s)[1], oraclePreviewShortTexts(long)[1]]) expect(t?.startsWith('出せる')).toBe(true)
     expect(oraclePreviewShortTexts({ ...s, enemy: { ...s.enemy, hp: 2, block: 2 } })[2]).toBe('撃破')
     // 長い形と短い形は同じ事実（札名・撃破判定・ブロック量）を指す
     expect(oraclePreviewTexts(s)[1]).toContain('剛撃')

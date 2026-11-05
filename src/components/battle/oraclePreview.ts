@@ -83,10 +83,20 @@ export function strikeWouldKill(state: GameState): boolean {
   return state.enemy.hp + state.enemy.block <= strikeDamage()
 }
 
-/** 導きの候補が無いときの文言。効果（札を引く）だけを述べ、出せる札が増えないことを明示する */
-export const GUIDE_NO_CANDIDATE_TEXT = '札を1枚引く（出せる札は増えない）'
-/** SP（79px 枠）向けの短い形。長い形は title 属性（効果文）と PC 表示が担う */
-export const GUIDE_NO_CANDIDATE_SHORT = '札を1枚引く'
+/**
+ * 導きの候補が無いときの文言。効果（札を 1 枚引く＋神力 1）を述べ、出せる札が増えないことを明示する。
+ * v1.1.6 QW#2：効果文（カードを1枚引き、神力を1得る）は高さ ≤700px と SP で畳まれるため、ここで神力 1 も伝える
+ */
+export const GUIDE_NO_CANDIDATE_TEXT = '1枚引く＋神力1（出せる札は増えない）'
+/** SP（79px 枠）向けの短い形。効果（1 枚引く＋神力 1）を 7 字で（SP375 の内幅 62px に実測で収まる） */
+export const GUIDE_NO_CANDIDATE_SHORT = '1枚引く＋神力1'
+/**
+ * v1.1.6 QW#2：短い形で札名を添えられる最大字数。SP375 のボタン内幅 62px・9px 字（実測 ≈7.6px／字）で
+ * 「出せる:」＋4 字 ≈ 56px が収まる上限（5 字は 64px で切れる）。超える札名は札名を出さず効果だけを示す
+ */
+export const GUIDE_SHORT_NAME_MAX = 4
+/** 札名が長くて収まらないときの短い形（効果だけ。CSS の省略で切らない） */
+export const GUIDE_SHORT_GENERIC = '出せる札＋1'
 
 /** 導きの状況表示 */
 export function previewGuideText(state: GameState): string {
@@ -107,7 +117,9 @@ export function previewGuardText(state: GameState): string | null {
 
 /**
  * SP（≤899px・ボタン内幅 ≈67px）向けの短い状況表示。長い形（PC）と同じ事実を、札名／数値だけで示す。
- * 加護「ブロック130」／導き「『剛撃』」または「札を1枚引く」／天啓「撃破」または「40ダメージ」
+ * 加護「ブロック130」／導き「出せる:剛撃」（札名 5 字以上は「出せる札＋1」）または「1枚引く＋神力1」／天啓「撃破」または「40ダメージ」
+ * v1.1.6 QW#2：導きは『札名』だけでは効果が伝わらず、札が「神託」のとき託宣と紛れたため「出せる」を先頭に置く。
+ * SP375 の内幅（62px）に収まらない札名は省略で切らず、効果だけの「出せる札＋1」にする（文字切れ 0）
  */
 export function previewGuardShort(state: GameState): string | null {
   const gained = previewIntentGuard(state, DIVINATION_CHOICES[0].effects)
@@ -115,7 +127,8 @@ export function previewGuardShort(state: GameState): string | null {
 }
 export function previewGuideShort(state: GameState): string {
   const [first] = guideUnlockedCards(state)
-  return first ? `『${first.name}』` : GUIDE_NO_CANDIDATE_SHORT
+  if (!first) return GUIDE_NO_CANDIDATE_SHORT
+  return [...first.name].length <= GUIDE_SHORT_NAME_MAX ? `出せる:${first.name}` : GUIDE_SHORT_GENERIC
 }
 export function previewStrikeShort(state: GameState): string {
   return strikeWouldKill(state) ? '撃破' : `${formatScaled(strikeDamage())}ダメージ`
