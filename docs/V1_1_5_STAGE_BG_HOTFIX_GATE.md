@@ -84,5 +84,6 @@ after: 34/34 画像あり（http://localhost:4197）
 
 ## 6. CEO 操作
 
-1. PR #23（branch `hotfix/v1_1_5-shogunate-stage-bg`）の merge（CI GREEN・CLEAN 確認後・1 回）
-2. Hotfix 本番確認（AI：S2 Smoke＋stage-bg-probe を本番 URL で再実行）→ CEO Human QA（iPhone）→ 完成宣言の再開は CEO 判断
+1. ~~PR #23 の merge~~ **DONE**（CEO merge 2026-11-05T10:27:23Z → master `01ffc94` → Vercel `7571139748`・v1.1.5 PRODUCTION LIVE）
+2. ~~Hotfix 本番確認（AI）~~ **DONE**：本番 stage-bg-probe **34/34**・S2 **44/44**（`docs/V1_1_5_PRODUCTION_SMOKE.md`）
+3. **CEO Human QA（iPhone・本番 URL）**：将軍家（岡っ引き／康虎ほか）の戦闘で舞台画像が見え、周辺減光との重なりの視認性に問題がないこと → 完成宣言の再開は CEO 判断

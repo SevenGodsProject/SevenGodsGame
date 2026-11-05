@@ -1,0 +1,354 @@
+{
+  "base": "https://seven-gods-game.vercel.app",
+  "god": "大耀",
+  "viewports": [
+    "pc",
+    "sp375"
+  ],
+  "total": 34,
+  "stageUrlApplied": 27,
+  "verdict": "FAIL",
+  "failing": [
+    "sp375:将軍四天王・康政:TimeoutError: page.goto: Timeout 30000ms exceeded.",
+    "sp375:忍者衆・影:Error: page.goto: net::ERR_NETWORK_CHANGED at https://seven-gods-game.vercel.app/?seed=stage-bg-probe",
+    "sp375:忍者衆・くノ一:Error: page.goto: net::ERR_NAME_NOT_RESOLVED at https://seven-gods-game.vercel.app/?seed=stage-bg-probe",
+    "sp375:影の頭領・鬼半蔵:Error: page.goto: net::ERR_NAME_NOT_RESOLVED at https://seven-gods-game.vercel.app/?seed=stage-bg-probe",
+    "sp375:将軍四天王・忠勝:Error: page.goto: net::ERR_NAME_NOT_RESOLVED at https://seven-gods-game.vercel.app/?seed=stage-bg-probe",
+    "sp375:科学者・ドーマン:Error: page.goto: net::ERR_NAME_NOT_RESOLVED at https://seven-gods-game.vercel.app/?seed=stage-bg-probe",
+    "sp375:十七代将軍・康虎:Error: page.goto: net::ERR_NAME_NOT_RESOLVED at https://seven-gods-game.vercel.app/?seed=stage-bg-probe"
+  ],
+  "rows": [
+    {
+      "vp": "pc",
+      "enemy": "試練の影",
+      "dataEnemy": "enemy_01",
+      "stageVar": "url('/assets/backgrounds/stages/01-trial-shadow.webp')",
+      "bgImage": "linear-gradient(rgba(5, 6, 13, 0.133) 0%, rgba(5, 6, 13, 0.267) 60%, rgba(5, 6, 13, 0.8) 100%), url(\"https://seven-gods-game.vercel.app/assets/backgrounds/stages/01-trial-shadow.webp\")",
+      "hasUrl": true,
+      "stageUrlApplied": true,
+      "enemyArtVisible": true,
+      "errors": []
+    },
+    {
+      "vp": "pc",
+      "enemy": "業斧の鬼将",
+      "dataEnemy": "enemy_02",
+      "stageVar": "url('/assets/backgrounds/stages/02-oni-castle.webp')",
+      "bgImage": "linear-gradient(rgba(5, 6, 13, 0.133) 0%, rgba(5, 6, 13, 0.267) 60%, rgba(5, 6, 13, 0.8) 100%), url(\"https://seven-gods-game.vercel.app/assets/backgrounds/stages/02-oni-castle.webp\")",
+      "hasUrl": true,
+      "stageUrlApplied": true,
+      "enemyArtVisible": true,
+      "errors": []
+    },
+    {
+      "vp": "pc",
+      "enemy": "藍花の怨霊",
+      "dataEnemy": "enemy_03",
+      "stageVar": "url('/assets/backgrounds/stages/03-ghost-hydrangea.webp')",
+      "bgImage": "linear-gradient(rgba(5, 6, 13, 0.133) 0%, rgba(5, 6, 13, 0.267) 60%, rgba(5, 6, 13, 0.8) 100%), url(\"https://seven-gods-game.vercel.app/assets/backgrounds/stages/03-ghost-hydrangea.webp\")",
+      "hasUrl": true,
+      "stageUrlApplied": true,
+      "enemyArtVisible": true,
+      "errors": []
+    },
+    {
+      "vp": "pc",
+      "enemy": "銀甲の機工師",
+      "dataEnemy": "enemy_04",
+      "stageVar": "url('/assets/backgrounds/stages/04-mecha-workshop.webp')",
+      "bgImage": "linear-gradient(rgba(5, 6, 13, 0.133) 0%, rgba(5, 6, 13, 0.267) 60%, rgba(5, 6, 13, 0.8) 100%), url(\"https://seven-gods-game.vercel.app/assets/backgrounds/stages/04-mecha-workshop.webp\")",
+      "hasUrl": true,
+      "stageUrlApplied": true,
+      "enemyArtVisible": true,
+      "errors": []
+    },
+    {
+      "vp": "pc",
+      "enemy": "双牙の魔獣",
+      "dataEnemy": "enemy_05",
+      "stageVar": "url('/assets/backgrounds/stages/05-beast-moonpeak.webp')",
+      "bgImage": "linear-gradient(rgba(5, 6, 13, 0.133) 0%, rgba(5, 6, 13, 0.267) 60%, rgba(5, 6, 13, 0.8) 100%), url(\"https://seven-gods-game.vercel.app/assets/backgrounds/stages/05-beast-moonpeak.webp\")",
+      "hasUrl": true,
+      "stageUrlApplied": true,
+      "enemyArtVisible": true,
+      "errors": []
+    },
+    {
+      "vp": "pc",
+      "enemy": "蒼海の龍神",
+      "dataEnemy": "enemy_06",
+      "stageVar": "url('/assets/backgrounds/stages/06-dragon-ocean.webp')",
+      "bgImage": "linear-gradient(rgba(5, 6, 13, 0.133) 0%, rgba(5, 6, 13, 0.267) 60%, rgba(5, 6, 13, 0.8) 100%), url(\"https://seven-gods-game.vercel.app/assets/backgrounds/stages/06-dragon-ocean.webp\")",
+      "hasUrl": true,
+      "stageUrlApplied": true,
+      "enemyArtVisible": true,
+      "errors": []
+    },
+    {
+      "vp": "pc",
+      "enemy": "乱舞の道化",
+      "dataEnemy": "enemy_07",
+      "stageVar": "url('/assets/backgrounds/stages/07-jester-festival.webp')",
+      "bgImage": "linear-gradient(rgba(5, 6, 13, 0.133) 0%, rgba(5, 6, 13, 0.267) 60%, rgba(5, 6, 13, 0.8) 100%), url(\"https://seven-gods-game.vercel.app/assets/backgrounds/stages/07-jester-festival.webp\")",
+      "hasUrl": true,
+      "stageUrlApplied": true,
+      "enemyArtVisible": true,
+      "errors": []
+    },
+    {
+      "vp": "pc",
+      "enemy": "将軍四天王・忠次",
+      "dataEnemy": "enemy_08",
+      "stageVar": "url('/assets/backgrounds/stages/08-shogunate-camp.webp')",
+      "bgImage": "linear-gradient(rgba(5, 6, 13, 0.133) 0%, rgba(5, 6, 13, 0.267) 60%, rgba(5, 6, 13, 0.8) 100%), radial-gradient(68% 62% at 50% 42%, rgba(0, 0, 0, 0) 0%, rgba(18, 11, 3, 0.4) 100%), url(\"https://seven-gods-game.vercel.app/assets/backgrounds/stages/08-shogunate-camp.webp\")",
+      "hasUrl": true,
+      "stageUrlApplied": true,
+      "enemyArtVisible": true,
+      "errors": []
+    },
+    {
+      "vp": "pc",
+      "enemy": "捕り方・岡っ引き",
+      "dataEnemy": "enemy_10",
+      "stageVar": "url('/assets/backgrounds/stages/09-okappiki-street.webp')",
+      "bgImage": "linear-gradient(rgba(5, 6, 13, 0.133) 0%, rgba(5, 6, 13, 0.267) 60%, rgba(5, 6, 13, 0.8) 100%), radial-gradient(at 50% 40%, rgba(0, 0, 0, 0) 55%, rgba(0, 0, 0, 0.45) 100%), url(\"https://seven-gods-game.vercel.app/assets/backgrounds/stages/09-okappiki-street.webp\")",
+      "hasUrl": true,
+      "stageUrlApplied": true,
+      "enemyArtVisible": true,
+      "errors": []
+    },
+    {
+      "vp": "pc",
+      "enemy": "将軍四天王・直政",
+      "dataEnemy": "enemy_11",
+      "stageVar": "url('/assets/backgrounds/stages/10-naomasa-camp.webp')",
+      "bgImage": "linear-gradient(rgba(5, 6, 13, 0.133) 0%, rgba(5, 6, 13, 0.267) 60%, rgba(5, 6, 13, 0.8) 100%), radial-gradient(at 50% 40%, rgba(0, 0, 0, 0) 55%, rgba(0, 0, 0, 0.45) 100%), url(\"https://seven-gods-game.vercel.app/assets/backgrounds/stages/10-naomasa-camp.webp\")",
+      "hasUrl": true,
+      "stageUrlApplied": true,
+      "enemyArtVisible": true,
+      "errors": []
+    },
+    {
+      "vp": "pc",
+      "enemy": "将軍四天王・康政",
+      "dataEnemy": "enemy_12",
+      "stageVar": "url('/assets/backgrounds/stages/11-yasumasa-camp.webp')",
+      "bgImage": "linear-gradient(rgba(5, 6, 13, 0.133) 0%, rgba(5, 6, 13, 0.267) 60%, rgba(5, 6, 13, 0.8) 100%), radial-gradient(at 50% 40%, rgba(0, 0, 0, 0) 55%, rgba(0, 0, 0, 0.45) 100%), url(\"https://seven-gods-game.vercel.app/assets/backgrounds/stages/11-yasumasa-camp.webp\")",
+      "hasUrl": true,
+      "stageUrlApplied": true,
+      "enemyArtVisible": true,
+      "errors": []
+    },
+    {
+      "vp": "pc",
+      "enemy": "忍者衆・影",
+      "dataEnemy": "enemy_13",
+      "stageVar": "url('/assets/backgrounds/stages/12-kage-village.webp')",
+      "bgImage": "linear-gradient(rgba(5, 6, 13, 0.133) 0%, rgba(5, 6, 13, 0.267) 60%, rgba(5, 6, 13, 0.8) 100%), radial-gradient(at 50% 40%, rgba(0, 0, 0, 0) 55%, rgba(0, 0, 0, 0.45) 100%), url(\"https://seven-gods-game.vercel.app/assets/backgrounds/stages/12-kage-village.webp\")",
+      "hasUrl": true,
+      "stageUrlApplied": true,
+      "enemyArtVisible": true,
+      "errors": []
+    },
+    {
+      "vp": "pc",
+      "enemy": "忍者衆・くノ一",
+      "dataEnemy": "enemy_14",
+      "stageVar": "url('/assets/backgrounds/stages/13-kunoichi-moonpath.webp')",
+      "bgImage": "linear-gradient(rgba(5, 6, 13, 0.133) 0%, rgba(5, 6, 13, 0.267) 60%, rgba(5, 6, 13, 0.8) 100%), radial-gradient(at 50% 40%, rgba(0, 0, 0, 0) 55%, rgba(0, 0, 0, 0.45) 100%), url(\"https://seven-gods-game.vercel.app/assets/backgrounds/stages/13-kunoichi-moonpath.webp\")",
+      "hasUrl": true,
+      "stageUrlApplied": true,
+      "enemyArtVisible": true,
+      "errors": []
+    },
+    {
+      "vp": "pc",
+      "enemy": "影の頭領・鬼半蔵",
+      "dataEnemy": "enemy_15",
+      "stageVar": "url('/assets/backgrounds/stages/14-onihanzo-fort.webp')",
+      "bgImage": "linear-gradient(rgba(5, 6, 13, 0.133) 0%, rgba(5, 6, 13, 0.267) 60%, rgba(5, 6, 13, 0.8) 100%), radial-gradient(at 50% 40%, rgba(0, 0, 0, 0) 55%, rgba(0, 0, 0, 0.45) 100%), url(\"https://seven-gods-game.vercel.app/assets/backgrounds/stages/14-onihanzo-fort.webp\")",
+      "hasUrl": true,
+      "stageUrlApplied": true,
+      "enemyArtVisible": true,
+      "errors": []
+    },
+    {
+      "vp": "pc",
+      "enemy": "将軍四天王・忠勝",
+      "dataEnemy": "enemy_16",
+      "stageVar": "url('/assets/backgrounds/stages/15-tadakatsu-bastion.webp')",
+      "bgImage": "linear-gradient(rgba(5, 6, 13, 0.133) 0%, rgba(5, 6, 13, 0.267) 60%, rgba(5, 6, 13, 0.8) 100%), radial-gradient(at 50% 40%, rgba(0, 0, 0, 0) 55%, rgba(0, 0, 0, 0.45) 100%), url(\"https://seven-gods-game.vercel.app/assets/backgrounds/stages/15-tadakatsu-bastion.webp\")",
+      "hasUrl": true,
+      "stageUrlApplied": true,
+      "enemyArtVisible": true,
+      "errors": []
+    },
+    {
+      "vp": "pc",
+      "enemy": "科学者・ドーマン",
+      "dataEnemy": "enemy_17",
+      "stageVar": "url('/assets/backgrounds/stages/16-doman-pagoda.webp')",
+      "bgImage": "linear-gradient(rgba(5, 6, 13, 0.133) 0%, rgba(5, 6, 13, 0.267) 60%, rgba(5, 6, 13, 0.8) 100%), radial-gradient(at 50% 40%, rgba(0, 0, 0, 0) 55%, rgba(0, 0, 0, 0.45) 100%), url(\"https://seven-gods-game.vercel.app/assets/backgrounds/stages/16-doman-pagoda.webp\")",
+      "hasUrl": true,
+      "stageUrlApplied": true,
+      "enemyArtVisible": true,
+      "errors": []
+    },
+    {
+      "vp": "pc",
+      "enemy": "十七代将軍・康虎",
+      "dataEnemy": "enemy_18",
+      "stageVar": "url('/assets/backgrounds/stages/17-yasutora-throne.webp')",
+      "bgImage": "linear-gradient(rgba(212, 167, 44, 0.08) 0%, rgba(0, 0, 0, 0) 28%), linear-gradient(rgba(5, 6, 13, 0.133) 0%, rgba(5, 6, 13, 0.267) 60%, rgba(5, 6, 13, 0.8) 100%), radial-gradient(at 50% 42%, rgba(0, 0, 0, 0) 50%, rgba(0, 0, 0, 0.52) 100%), url(\"https://seven-gods-game.vercel.app/assets/backgrounds/stages/17-yasutora-t",
+      "hasUrl": true,
+      "stageUrlApplied": true,
+      "enemyArtVisible": true,
+      "errors": []
+    },
+    {
+      "vp": "sp375",
+      "enemy": "試練の影",
+      "dataEnemy": "enemy_01",
+      "stageVar": "url('/assets/backgrounds/stages/01-trial-shadow.webp')",
+      "bgImage": "linear-gradient(rgba(5, 6, 13, 0.133) 0%, rgba(5, 6, 13, 0.267) 60%, rgba(5, 6, 13, 0.8) 100%), url(\"https://seven-gods-game.vercel.app/assets/backgrounds/stages/01-trial-shadow.webp\")",
+      "hasUrl": true,
+      "stageUrlApplied": true,
+      "enemyArtVisible": true,
+      "errors": []
+    },
+    {
+      "vp": "sp375",
+      "enemy": "業斧の鬼将",
+      "dataEnemy": "enemy_02",
+      "stageVar": "url('/assets/backgrounds/stages/02-oni-castle.webp')",
+      "bgImage": "linear-gradient(rgba(5, 6, 13, 0.133) 0%, rgba(5, 6, 13, 0.267) 60%, rgba(5, 6, 13, 0.8) 100%), url(\"https://seven-gods-game.vercel.app/assets/backgrounds/stages/02-oni-castle.webp\")",
+      "hasUrl": true,
+      "stageUrlApplied": true,
+      "enemyArtVisible": true,
+      "errors": []
+    },
+    {
+      "vp": "sp375",
+      "enemy": "藍花の怨霊",
+      "dataEnemy": "enemy_03",
+      "stageVar": "url('/assets/backgrounds/stages/03-ghost-hydrangea.webp')",
+      "bgImage": "linear-gradient(rgba(5, 6, 13, 0.133) 0%, rgba(5, 6, 13, 0.267) 60%, rgba(5, 6, 13, 0.8) 100%), url(\"https://seven-gods-game.vercel.app/assets/backgrounds/stages/03-ghost-hydrangea.webp\")",
+      "hasUrl": true,
+      "stageUrlApplied": true,
+      "enemyArtVisible": true,
+      "errors": []
+    },
+    {
+      "vp": "sp375",
+      "enemy": "銀甲の機工師",
+      "dataEnemy": "enemy_04",
+      "stageVar": "url('/assets/backgrounds/stages/04-mecha-workshop.webp')",
+      "bgImage": "linear-gradient(rgba(5, 6, 13, 0.133) 0%, rgba(5, 6, 13, 0.267) 60%, rgba(5, 6, 13, 0.8) 100%), url(\"https://seven-gods-game.vercel.app/assets/backgrounds/stages/04-mecha-workshop.webp\")",
+      "hasUrl": true,
+      "stageUrlApplied": true,
+      "enemyArtVisible": true,
+      "errors": []
+    },
+    {
+      "vp": "sp375",
+      "enemy": "双牙の魔獣",
+      "dataEnemy": "enemy_05",
+      "stageVar": "url('/assets/backgrounds/stages/05-beast-moonpeak.webp')",
+      "bgImage": "linear-gradient(rgba(5, 6, 13, 0.133) 0%, rgba(5, 6, 13, 0.267) 60%, rgba(5, 6, 13, 0.8) 100%), url(\"https://seven-gods-game.vercel.app/assets/backgrounds/stages/05-beast-moonpeak.webp\")",
+      "hasUrl": true,
+      "stageUrlApplied": true,
+      "enemyArtVisible": true,
+      "errors": []
+    },
+    {
+      "vp": "sp375",
+      "enemy": "蒼海の龍神",
+      "dataEnemy": "enemy_06",
+      "stageVar": "url('/assets/backgrounds/stages/06-dragon-ocean.webp')",
+      "bgImage": "linear-gradient(rgba(5, 6, 13, 0.133) 0%, rgba(5, 6, 13, 0.267) 60%, rgba(5, 6, 13, 0.8) 100%), url(\"https://seven-gods-game.vercel.app/assets/backgrounds/stages/06-dragon-ocean.webp\")",
+      "hasUrl": true,
+      "stageUrlApplied": true,
+      "enemyArtVisible": true,
+      "errors": []
+    },
+    {
+      "vp": "sp375",
+      "enemy": "乱舞の道化",
+      "dataEnemy": "enemy_07",
+      "stageVar": "url('/assets/backgrounds/stages/07-jester-festival.webp')",
+      "bgImage": "linear-gradient(rgba(5, 6, 13, 0.133) 0%, rgba(5, 6, 13, 0.267) 60%, rgba(5, 6, 13, 0.8) 100%), url(\"https://seven-gods-game.vercel.app/assets/backgrounds/stages/07-jester-festival.webp\")",
+      "hasUrl": true,
+      "stageUrlApplied": true,
+      "enemyArtVisible": true,
+      "errors": []
+    },
+    {
+      "vp": "sp375",
+      "enemy": "将軍四天王・忠次",
+      "dataEnemy": "enemy_08",
+      "stageVar": "url('/assets/backgrounds/stages/08-shogunate-camp.webp')",
+      "bgImage": "linear-gradient(rgba(5, 6, 13, 0.133) 0%, rgba(5, 6, 13, 0.267) 60%, rgba(5, 6, 13, 0.8) 100%), radial-gradient(68% 62% at 50% 42%, rgba(0, 0, 0, 0) 0%, rgba(18, 11, 3, 0.4) 100%), url(\"https://seven-gods-game.vercel.app/assets/backgrounds/stages/08-shogunate-camp.webp\")",
+      "hasUrl": true,
+      "stageUrlApplied": true,
+      "enemyArtVisible": true,
+      "errors": []
+    },
+    {
+      "vp": "sp375",
+      "enemy": "捕り方・岡っ引き",
+      "dataEnemy": "enemy_10",
+      "stageVar": "url('/assets/backgrounds/stages/09-okappiki-street.webp')",
+      "bgImage": "linear-gradient(rgba(5, 6, 13, 0.133) 0%, rgba(5, 6, 13, 0.267) 60%, rgba(5, 6, 13, 0.8) 100%), radial-gradient(at 50% 40%, rgba(0, 0, 0, 0) 55%, rgba(0, 0, 0, 0.45) 100%), url(\"https://seven-gods-game.vercel.app/assets/backgrounds/stages/09-okappiki-street.webp\")",
+      "hasUrl": true,
+      "stageUrlApplied": true,
+      "enemyArtVisible": true,
+      "errors": []
+    },
+    {
+      "vp": "sp375",
+      "enemy": "将軍四天王・直政",
+      "dataEnemy": "enemy_11",
+      "stageVar": "url('/assets/backgrounds/stages/10-naomasa-camp.webp')",
+      "bgImage": "linear-gradient(rgba(5, 6, 13, 0.133) 0%, rgba(5, 6, 13, 0.267) 60%, rgba(5, 6, 13, 0.8) 100%), radial-gradient(at 50% 40%, rgba(0, 0, 0, 0) 55%, rgba(0, 0, 0, 0.45) 100%), url(\"https://seven-gods-game.vercel.app/assets/backgrounds/stages/10-naomasa-camp.webp\")",
+      "hasUrl": true,
+      "stageUrlApplied": true,
+      "enemyArtVisible": true,
+      "errors": []
+    },
+    {
+      "vp": "sp375",
+      "enemy": "将軍四天王・康政",
+      "error": "TimeoutError: page.goto: Timeout 30000ms exceeded."
+    },
+    {
+      "vp": "sp375",
+      "enemy": "忍者衆・影",
+      "error": "Error: page.goto: net::ERR_NETWORK_CHANGED at https://seven-gods-game.vercel.app/?seed=stage-bg-probe"
+    },
+    {
+      "vp": "sp375",
+      "enemy": "忍者衆・くノ一",
+      "error": "Error: page.goto: net::ERR_NAME_NOT_RESOLVED at https://seven-gods-game.vercel.app/?seed=stage-bg-probe"
+    },
+    {
+      "vp": "sp375",
+      "enemy": "影の頭領・鬼半蔵",
+      "error": "Error: page.goto: net::ERR_NAME_NOT_RESOLVED at https://seven-gods-game.vercel.app/?seed=stage-bg-probe"
+    },
+    {
+      "vp": "sp375",
+      "enemy": "将軍四天王・忠勝",
+      "error": "Error: page.goto: net::ERR_NAME_NOT_RESOLVED at https://seven-gods-game.vercel.app/?seed=stage-bg-probe"
+    },
+    {
+      "vp": "sp375",
+      "enemy": "科学者・ドーマン",
+      "error": "Error: page.goto: net::ERR_NAME_NOT_RESOLVED at https://seven-gods-game.vercel.app/?seed=stage-bg-probe"
+    },
+    {
+      "vp": "sp375",
+      "enemy": "十七代将軍・康虎",
+      "error": "Error: page.goto: net::ERR_NAME_NOT_RESOLVED at https://seven-gods-game.vercel.app/?seed=stage-bg-probe"
+    }
+  ]
+}
