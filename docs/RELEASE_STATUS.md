@@ -2,7 +2,22 @@
 
 Production の「確定状態」を一目で確認するための要約です。新しい仕様判断は含みません（根拠は `docs/DECISIONS.md`）。**§A が現在の正本**。§B 以降は 8/31 Public Beta〜Phase 3（2026-09-06）時点の履歴として残します（当時の Known Non-blockers 1〜16 は §A-4 の生存 Known に統合済み）。
 
-## A. 現在の Production 状態（2026-11-04・決定288 v1.1.4 PRODUCTION LIVE・最終スコープ 実装完了＝将軍家 10 体＋敵演出 品質向上。**2026-11-05：v1.1.5 Hotfix（将軍家 9 体の戦闘背景 復元）を CEO merge 待ち・完成宣言は保留**）
+## A. 現在の Production 状態（2026-11-05・決定288 **v1.1.5 Hotfix PRODUCTION LIVE**（将軍家 9 体の戦闘背景 復元）・最終スコープ 実装完了＝将軍家 10 体＋敵演出 品質向上。**CEO Human QA（iPhone）PASS 2026-11-05＝Hotfix 完了。v1.1 完成宣言は最終通しプレイの完了状況を確認してから CEO 判断**）
+
+### A-000000000. v1.1.5 公開（2026-11-05・決定288 Hotfix PRODUCTION LIVE・将軍家 9 体の戦闘背景 復元）
+
+| 項目 | 状態 |
+|---|---|
+| **Release** | **SEVEN GODS v1.1.5**（決定288 v1.1 Hotfix）：将軍家 9 体（enemy_10〜18）の戦闘背景（舞台画像）を復元。原因は shogunateWave2〜5.css の周辺減光規則が `.battle-main` の background-image を上書きして舞台画像層 var(--stage-bg) を落としていたこと（v1.1.0〜v1.1.4）。**runtime は CSS 4 規則のみ**・engine／数値／決定論／save v9／素材／音声 変更 0・外部費用 0。契約テスト `shogunateStageBg.test.ts` 7 件・実ブラウザ検証 `scripts/release-audit/stage-bg-probe.mjs` を追加 |
+| **Production HEAD** | master = origin/master **`01ffc94`**（PR #23 merge・2026-11-05T10:27:23Z・CEO 操作。runtime tree は Hotfix Gate 対象 `b08a599` と同一） |
+| **CI** | master run `42010850426` success |
+| **Vercel deployment** | **`7571139748`**（sha `01ffc94`・success 10:28:10Z）／bundle `index-BSquymkM.js`（492,733 B・sha 正規化後 Hotfix Gate build `index-Cx9pXbN3.js` と byte 一致）・`index-CtARvCu4.css`（213,029 B・同一ハッシュ・byte 一致） |
+| **Rollback 先** | deployment **`7555983753`**（`15bc4b8`・v1.1.4 最終）。Promote は CEO のみ。戻すと将軍家 9 体の背景なしに戻る（製品異常の再発）ため、戻す判断は背景以外の重大異常が出た場合に限る |
+| **Release Gate／Smoke** | `docs/V1_1_5_STAGE_BG_HOTFIX_GATE.md`（契約テスト 7・vitest 1,702・lint／tsc／build・実ブラウザ before 16/34 → after 34/34・S5 228・S6 6/6 MATCH・cf2 8/8 MATCH）／`docs/V1_1_5_PRODUCTION_SMOKE.md`（S0 bundle 一致／**本番 stage-bg-probe 34/34**（17 体 × PC／SP375・JS error 0）／S2 44/44（Home `v1.1.5 (01ffc94)`）） |
+| **version 表示** | Home `v1.1.5 (01ffc94)`（S2 で検証） |
+| **Known** | K01〜K39 据え置き＋K40〜K47 凍結（CEO 承認 2026-11-04）。本 Hotfix による Known の追加・解消なし（A-4） |
+| **CEO Human QA** | **CEO Human QA（iPhone・本番 URL）PASS（2026-11-05）**：将軍家の戦闘背景が表示される。CEO 判定「v1.1.5 の背景 Hotfix は完了」。本番コードの追加変更・新規機能実装は不要（CEO 指示） |
+| **次** | **v1.1 完成宣言は最終通しプレイの完了状況を確認してから CEO が判断**（tag は v1.1.5 で検討）。AI は宣言しない |
 
 ### A-00000000. v1.1.4 公開（2026-11-04・決定288 W6 PRODUCTION LIVE・最終スコープ 実装完了）
 
@@ -16,7 +31,7 @@ Production の「確定状態」を一目で確認するための要約です。
 | **Release Gate／Smoke** | `docs/W6_ENEMY_PRESENTATION_GATE.md`（自動 Gate ALL PASS）／`docs/V1_1_4_PRODUCTION_SMOKE.md`（S2 44・S5 228・S6 6 MATCH・S8 旧セーブ 本番直撃 44/44 PASS）／`docs/FINAL_RELEASE_GATE_V1_1.md`（最終 Gate：7 神 × 将軍家 10 体 × normal／hard 140 組 決定論 140/140・DoD 18・Known K40〜K47 凍結（CEO 承認 2026-11-04）・台帳 20 行・Ranking 不在 PASS） |
 | **version 表示** | Home `v1.1.4 (8af0082)`（S2 で検証） |
 | **Known** | K01〜K39 据え置き＋**K40〜K47 凍結（CEO 承認 2026-11-04）**（A-4・新規の製品異常 0） |
-| **次** | **v1.1.5 Hotfix（将軍家の戦闘背景 復元・CSS 4 規則）を CEO merge 待ち**（2026-11-05・CEO 指摘「将軍家との戦闘に背景が表示されない」→ 監査 → AI-PM Decision GO。本表の v1.1.5 RC 行・`docs/V1_1_5_STAGE_BG_HOTFIX_GATE.md`）。**v1.1.4 の完成宣言は CEO 指示で保留**＝Hotfix 本番確認と CEO Human QA 後に再開を判断。tag `v1.1.4` は打たない（v1.1.5 で改めて検討）。開発スコープ（決定288 v1.1）の実装と最終 Release Gate の必須項目（DoD #10・#11）は 2026-11-04 に完了済み |
+| **次** | v1.1.5 Hotfix（将軍家の戦闘背景 復元・CSS 4 規則）＝PR #23 → CEO merge 2026-11-05 → **LIVE（v1.1.5・A-000000000）**。v1.1.4 の完成宣言は CEO 指示で保留（Hotfix の CEO Human QA 後に再開を判断）。tag `v1.1.4` は打たない。開発スコープ（決定288 v1.1）の実装と最終 Release Gate の必須項目（DoD #10・#11）は 2026-11-04 に完了済み |
 ### A-0000000. v1.1.3 公開（2026-11-04・決定288 W5 PRODUCTION LIVE・将軍家 10 体 公開完了）
 
 | 項目 | 状態 |
@@ -98,7 +113,7 @@ Production の「確定状態」を一目で確認するための要約です。
 | **v1.1.1 RC（W3 将軍家 第三陣・決定288）** | branch `feat/w3-shogunate-wave3`（起点 `72025ae`）。影・くノ一・鬼半蔵を通常の Enemy Select に（将軍家 7 体）。engine 変更 0・★実測（鬼半蔵 ★2・他 ★1）・Daily／49 盤／seed／gameVersion／save v9 不変・敵ボイスなし。自動 Gate ALL PASS（`docs/W3_SHOGUNATE_WAVE3_GATE.md`）。CEO Human QA 3/3 → **LIVE（v1.1.1・`ee4f187`・A-00000）**。build +2.96 kB・CSS +3.04 kB |
 | **v1.1.2 RC（W4 将軍家 第四陣・決定288）** | branch `feat/w4-shogunate-wave4`（起点 `ee4f187`）。忠勝・ドーマンを通常の Enemy Select に（将軍家 9 体）。engine はドーマン型 cond 1 種追加のみ（指紋不変）・★実測（忠勝 normal 指数 41.9 → **★4**（龍神 37.7 を超え 17 体で最高・将軍家初の ★4）／ドーマン 30.0 → **★1**（道化 28.6〜機工師 31.4 の間）。既存 7 体の指数・順序は v1.0.1 と完全一致）・Daily／49 盤／seed／gameVersion／save v9 不変・敵ボイスなし・version 1.1.2 同梱。自動 Gate ALL PASS（`docs/W4_SHOGUNATE_WAVE4_GATE.md`）。CEO Human QA 2/2 → **LIVE（v1.1.2・`f4828cf`・A-000000）**。build +2.75 kB・CSS +2.28 kB |
 | **v1.1.3 RC（W5 将軍家 最終・康虎 Boss ★5・決定288）** | branch `feat/w5-shogunate-wave5`（起点 `f4828cf`）。十七代将軍・康虎（enemy_18・HP 114・rank 5・2 段 tactic 忠次型・連撃 5×3・必殺 32／36）を通常の Enemy Select に（将軍家 10 体＝全員公開・敵 18 体）。engine 変更 0（Boss 比 2 組を `RULES.enemyTactic.boss*` に集約・指紋除外）。version 1.1.3。自動 Gate ALL PASS（`docs/W5_SHOGUNATE_WAVE5_GATE.md`）。CEO merge → **LIVE（v1.1.3・`11dd335`・A-0000000）**。build index-Dc6IP1lD.js 492.68 kB（v1.1.2 491.10 → +1.58 kB）・index-DyYCyOuG.css 208.95 kB（+1.66 kB） |
-| **v1.1.5 RC（Hotfix 将軍家の戦闘背景 復元・表示のみ・決定288）** | branch `hotfix/v1_1_5-shogunate-stage-bg`（起点 `15bc4b8`）。CEO 本番実プレイの指摘「将軍家との戦闘に背景が表示されない」→ 原因は shogunateWave2〜5.css の周辺減光規則が background-image を上書きして舞台画像層 var(--stage-bg) を落としていたこと（enemy_10〜18 の 9 体・v1.1.0〜v1.1.4）。修正は CSS 4 規則のみ（engine／数値／決定論／save／素材 変更 0）。Gate：契約テスト 7 件・vitest 1,702・lint／tsc／build・実ブラウザ 17 体 × PC／SP375 before 16/34 → after 34/34・S5 228・S6 6/6 MATCH・cf2 8/8 MATCH（`docs/V1_1_5_STAGE_BG_HOTFIX_GATE.md`・証跡 `docs/evidence/v1_1_5-stage-bg-hotfix/`）。**状態：PR #23（2026-11-05）→ CI GREEN → CEO merge 待ち**。merge 後：AI が本番 S2＋stage-bg-probe → CEO Human QA（iPhone）→ 完成宣言の再開は CEO 判断 |
+| **v1.1.5 RC（Hotfix 将軍家の戦闘背景 復元・表示のみ・決定288）** | branch `hotfix/v1_1_5-shogunate-stage-bg`（起点 `15bc4b8`）。CEO 本番実プレイの指摘「将軍家との戦闘に背景が表示されない」→ 原因は shogunateWave2〜5.css の周辺減光規則が background-image を上書きして舞台画像層 var(--stage-bg) を落としていたこと（enemy_10〜18 の 9 体・v1.1.0〜v1.1.4）。修正は CSS 4 規則のみ（engine／数値／決定論／save／素材 変更 0）。Gate：契約テスト 7 件・vitest 1,702・lint／tsc／build・実ブラウザ 17 体 × PC／SP375 before 16/34 → after 34/34・S5 228・S6 6/6 MATCH・cf2 8/8 MATCH（`docs/V1_1_5_STAGE_BG_HOTFIX_GATE.md`・証跡 `docs/evidence/v1_1_5-stage-bg-hotfix/`）。**PR #23 → CEO merge 2026-11-05T10:27:23Z → LIVE（v1.1.5・A-000000000）**。本番 Smoke：stage-bg-probe 34/34・S2 44/44（`docs/V1_1_5_PRODUCTION_SMOKE.md`）→ CEO Human QA（iPhone）→ 完成宣言の再開は CEO 判断 |
 | **v1.1.4 RC（W6 敵演出 品質向上・10 体横断・表示のみ・決定288）** | branch `feat/w6-enemy-presentation`（起点 `11dd335`）。将軍家 10 体の立ち絵の大きさを決定261 の帯（神÷敵 0.9〜1.15）に正規化（--artScale 7 体・鬼半蔵／康虎／忠次 据え置き）・入口の外光 9 体・各敵 1 点の見せ場（CSS 1 ファイル `shogunateWave6.css`＋EnemyPanel の表示専用 `data-tactic` 1 行）。engine／enemies.ts 変更 0・既存 7 体 不変（計測で同値）。version 1.1.4。自動 Gate ALL PASS（`docs/W6_ENEMY_PRESENTATION_GATE.md`）。**CEO Human QA Q1／Q2 PASS → PR #19 → CEO merge → LIVE（v1.1.4・A-00000000）**。build index-BwV2EshF.js 492.73 kB（v1.1.3 492.68 → +0.05）・index-BI3ZCUzF.css 212.46 kB（+3.51） |
 | **次 Release 候補（v1.0.7）** | **将軍家 第一陣 公開 v1**（忠次 enemy_08 を通常 Enemy Select の 8 体目へ・Daily／49 盤／委ねる seed／gameVersion は既存 7 体のまま固定）＝決定287（候補）・`docs/SHOGUNATE_PUBLIC_ROSTER_V1_AUDIT.md`（READ-ONLY 設計監査 完了・実装未開始・CEO 返答 1 回＝公開 GO＋台詞 7 本の監修）。2 番手＝康政 Pilot v0.1（`LANE3_NEXT_PLAN_V1.md` §2-③）／並走候補＝7 神 crisis・greeting ボイス展開（データ追加のみ・CEO 試聴） |
 

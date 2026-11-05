@@ -13,6 +13,7 @@ CEO の本番実プレイ（v1.1.4）で「将軍家との戦闘に背景が表�
 | 素材 | 既存の舞台 10 枚（`backgrounds/stages/08〜17`・台帳 STG-08〜17）をそのまま使用。新規生成 0 |
 | 検証 | §2（契約テスト・vitest 1,702）・§3（実ブラウザ 17 体 × PC／SP375 before／after）・§4（S5／S6／cf2 回帰） |
 | 残リスク | §5 |
+| CEO Human QA | **CEO Human QA（iPhone・本番 URL）PASS（2026-11-05）**：将軍家の戦闘背景が表示される。CEO 判定「v1.1.5 の背景 Hotfix は完了」（§6） |
 
 ## 1. 変更ファイル
 
@@ -84,5 +85,6 @@ after: 34/34 画像あり（http://localhost:4197）
 
 ## 6. CEO 操作
 
-1. PR #23（branch `hotfix/v1_1_5-shogunate-stage-bg`）の merge（CI GREEN・CLEAN 確認後・1 回）
-2. Hotfix 本番確認（AI：S2 Smoke＋stage-bg-probe を本番 URL で再実行）→ CEO Human QA（iPhone）→ 完成宣言の再開は CEO 判断
+1. ~~PR #23 の merge~~ **DONE**（CEO merge 2026-11-05T10:27:23Z → master `01ffc94` → Vercel `7571139748`・v1.1.5 PRODUCTION LIVE）
+2. ~~Hotfix 本番確認（AI）~~ **DONE**：本番 stage-bg-probe **34/34**・S2 **44/44**（`docs/V1_1_5_PRODUCTION_SMOKE.md`）
+3. ~~CEO Human QA（iPhone・本番 URL）~~ **PASS（CEO・2026-11-05）**：将軍家の戦闘背景が表示される → CEO 判定「v1.1.5 の背景 Hotfix は完了」。v1.1 完成宣言は最終通しプレイの完了状況を確認してから CEO が判断
