@@ -76,7 +76,12 @@
 }
 
 /* 2 体共通：舞台の周辺減光 */
+/* v1.1.5 Hotfix：background-image は多層指定ごと置き換わるため、共通規則（battle.css）の減光グラデと舞台画像 var(--stage-bg) を
+   忠次ブロック（battle.css 末尾）と同じ並びで併記する。周辺減光は中間層のまま（見せ場の意図は不変）。 */
 .battle[data-enemy='enemy_16'] .battle-main,
 .battle[data-enemy='enemy_17'] .battle-main {
-  background-image: radial-gradient(ellipse at 50% 40%, transparent 55%, #00000073 100%);
+  background-image:
+    linear-gradient(180deg, #05060d22 0%, #05060d44 60%, #05060dcc 100%),
+    radial-gradient(ellipse at 50% 40%, transparent 55%, #00000073 100%),
+    var(--stage-bg, url('/assets/backgrounds/arena.jpg'));
 }

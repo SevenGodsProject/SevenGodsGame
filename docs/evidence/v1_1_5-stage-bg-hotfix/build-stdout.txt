@@ -1,0 +1,19 @@
+
+> sevengodsgame@1.1.5 build
+> tsc -b && vite build
+
+[36mvite v8.2.0 [32mbuilding client environment for production...[36m[39m
+[2Ktransforming...✓ 194 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                   2.76 kB │ gzip:   0.99 kB
+dist/assets/index-CtARvCu4.css  213.02 kB │ gzip:  38.31 kB
+dist/assets/index-Cx9pXbN3.js   492.73 kB │ gzip: 153.36 kB
+
+[33m[33m[PLUGIN_TIMINGS] [0mYour build spent significant time in plugins. Here is a breakdown:
+  - vite:css (47%)
+  - vite:css-post (32%)
+  - vite:prepare-out-dir (15%)
+See https://rolldown.rs/reference/InputOptions.checks#plugintimings for more details.
+[39m
+[32m✓ built in 3.35s[39m
