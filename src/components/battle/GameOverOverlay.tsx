@@ -133,6 +133,11 @@ type GameOverOverlayProps = {
    * 過去の事実だけ（正解・推奨手は出さない＝決定263）
    */
   sameBoardLine?: string | null
+  /**
+   * v1.1.6 QW#1：この 1 戦で結果画面の段階表示（決定226）をすでに見せたあと（報酬の確定後に再 mount されるとき）true。
+   * 段階表示とスコアの巻き上げを最初から「全表示」にして、演出が二度流れないようにする。初回（報酬前・Daily・Pilot）は false のまま
+   */
+  skipStaging?: boolean
 }
 
 export function GameOverOverlay({
@@ -162,9 +167,10 @@ export function GameOverOverlay({
   sameBoardLine = null,
   onOpenReward,
   bridged = false,
+  skipStaging = false,
 }: GameOverOverlayProps) {
-  // 決定226：段階表示の skip（表示のみ。1 回押したら全表示のまま）
-  const [stagedSkip, setStagedSkip] = useState(false)
+  // 決定226：段階表示の skip（表示のみ。1 回押したら全表示のまま）。v1.1.6 QW#1：報酬後の再 mount は最初から skip 済み
+  const [stagedSkip, setStagedSkip] = useState(skipStaging)
   const god = getGodDef(godId)
   const otomoDef = getOtomoDef(otomo.defId)
   // BASE-D：ユーザーへ見せるスコアは最終スコア（素点合計×1.3）。内訳は素点を
@@ -175,7 +181,7 @@ export function GameOverOverlay({
   const stakeScale = stakeScoreScale(stake)
   // 決定128：勝利時はスコアを約0.8秒でロールアップ（reduced-motion なら即表示）。表示専用
   const reduced = typeof window !== 'undefined' && typeof window.matchMedia === 'function' && window.matchMedia('(prefers-reduced-motion: reduce)').matches
-  const [shownScore, setShownScore] = useState(status === 'won' && !reduced ? 0 : finalScore)
+  const [shownScore, setShownScore] = useState(status === 'won' && !reduced && !skipStaging ? 0 : finalScore)
   useEffect(() => {
     if (status !== 'won' || reduced || stagedSkip) {
       setShownScore(finalScore)

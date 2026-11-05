@@ -6737,10 +6737,13 @@ body.battle-viewport .battle-main > .battle-callout {
 .game-over-overlay-bridged .game-over-card {
   background: #0b0d17f0;
 }
-/* 結果の段階表示を tap で全表示（reduced-motion と同じ要素・同じ見え方） */
+/* 結果の段階表示を tap で全表示（reduced-motion と同じ要素・同じ見え方）。
+   v1.1.6 QW#1：Result Hub 以降の要素（.result-hub／.game-over-breakdown／.result-tertiary／.game-over-matchup／
+   .game-over-best-gap）も同じ skip の対象にする（決定187 で段階表示に加わったが skip の一覧から漏れていた） */
 .game-over-card-won.game-over-card-skipped
   :is(.game-over-status, .game-over-conquer, .game-over-portrait, .game-over-score, .game-over-new-best, .game-over-stake,
-    .game-over-daily, .game-over-otomo-levelup, .game-over-mastery, .score-breakdown, .game-over-share, .game-over-actions) {
+    .game-over-daily, .game-over-otomo-levelup, .game-over-mastery, .score-breakdown, .game-over-share, .game-over-actions,
+    .result-hub, .result-hub-pending, .game-over-breakdown, .result-tertiary, .game-over-matchup, .game-over-best-gap) {
   animation: none;
   opacity: 1;
   transform: none;

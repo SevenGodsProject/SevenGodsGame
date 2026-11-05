@@ -1,0 +1,4110 @@
+{
+  "base": "http://localhost:4198",
+  "baselineUrl": null,
+  "startedAt": "2026-11-05T12:10:19.054Z",
+  "viewports": {
+    "pc1508": {
+      "homeNoResume": {
+        "metrics": {
+          "vw": 1508,
+          "vh": 660,
+          "scrollX": 0,
+          "overflowX": false,
+          "primaryText": "初陣へおすすめの構成ですぐ戦う",
+          "primaryRect": {
+            "top": 306,
+            "bottom": 370,
+            "height": 64,
+            "width": 320
+          },
+          "resume": false,
+          "resumeText": null,
+          "todayRect": {
+            "top": 380,
+            "bottom": 480,
+            "height": 100,
+            "width": 524
+          },
+          "todayEnemy": "業斧の鬼将【重撃型】神域強化",
+          "todayEnemyInView": true,
+          "todayAttempts": "残り 3/3",
+          "todayAttemptsInView": true,
+          "todayBest": "まだ挑戦していません",
+          "todayCta": "挑戦する（残り3回）",
+          "todayCtaInView": true,
+          "countdown": null,
+          "progress": [],
+          "primaryAboveToday": true,
+          "primaryInView": true,
+          "linksInView": [
+            true,
+            true,
+            true
+          ],
+          "linkRects": [
+            {
+              "top": 490,
+              "bottom": 534,
+              "height": 44,
+              "width": 99
+            },
+            {
+              "top": 490,
+              "bottom": 534,
+              "height": 44,
+              "width": 166
+            },
+            {
+              "top": 490,
+              "bottom": 534,
+              "height": 44,
+              "width": 169
+            }
+          ],
+          "linkLabels": [
+            "戦績を見る",
+            "OTOMOとの絆を見る",
+            "クレジット・権利表記"
+          ],
+          "buttons": [
+            {
+              "text": "初陣へおすすめの構成ですぐ戦う",
+              "height": 64
+            },
+            {
+              "text": "神を選ぶ",
+              "height": 64
+            },
+            {
+              "text": "挑戦する（残り3回）",
+              "height": 44
+            },
+            {
+              "text": "戦績を見る",
+              "height": 44
+            },
+            {
+              "text": "OTOMOとの絆を見る",
+              "height": 44
+            },
+            {
+              "text": "クレジット・権利表記",
+              "height": 44
+            }
+          ],
+          "minButtonHeight": 44,
+          "hasOldDailyButton": false
+        },
+        "clsLoad": 0,
+        "clsAfterTutorial": 0,
+        "tutorialClosed": false,
+        "errors": []
+      },
+      "normalWin": {
+        "pending": {
+          "vw": 1508,
+          "vh": 660,
+          "status": "勝利",
+          "score": "スコア 8,790",
+          "rewardPending": true,
+          "goal": null,
+          "primary": null,
+          "secondary": [],
+          "tertiary": [],
+          "share": null,
+          "shareAfterPrimary": null,
+          "buttonsInView": [
+            {
+              "text": "報酬カードを選ぶ ›",
+              "exit": null
+            }
+          ],
+          "dailyDiff": null,
+          "breakdownOpen": true,
+          "scoreInView": true,
+          "card": {
+            "scrollHeight": 772,
+            "clientHeight": 559,
+            "overflowX": false
+          },
+          "pageOverflowX": false,
+          "scrollX": 0
+        },
+        "metrics": {
+          "vw": 1508,
+          "vh": 660,
+          "status": "勝利",
+          "score": "スコア 8,790",
+          "rewardPending": false,
+          "goal": {
+            "id": "NM1",
+            "text": "業斧の鬼将を別の神でも攻略する（この敵 1/7 神）",
+            "textHeight": 20,
+            "lineHeight": 20.3,
+            "lines": 1,
+            "inView": true
+          },
+          "primary": {
+            "text": "別の神で挑む（神を選び直す）",
+            "exit": "reselect",
+            "testid": "result-primary",
+            "top": 406,
+            "height": 49,
+            "width": 420,
+            "area": 20580,
+            "inView": true,
+            "disabled": false
+          },
+          "secondary": [
+            {
+              "text": "デッキを調整",
+              "exit": "adjustDeck",
+              "testid": "result-secondary",
+              "top": 463,
+              "height": 44,
+              "width": 206,
+              "area": 9064,
+              "inView": true,
+              "disabled": false
+            },
+            {
+              "text": "今日の神域挑戦へ",
+              "exit": "goDaily",
+              "testid": "result-secondary",
+              "top": 463,
+              "height": 44,
+              "width": 206,
+              "area": 9064,
+              "inView": true,
+              "disabled": false
+            }
+          ],
+          "tertiary": [
+            {
+              "text": "ホームへ",
+              "exit": "home",
+              "testid": "result-tertiary-link",
+              "top": 934,
+              "height": 44,
+              "width": 72,
+              "area": 3168,
+              "inView": false,
+              "disabled": false
+            },
+            {
+              "text": "同じ構成でもう一度",
+              "exit": "rematch",
+              "testid": "result-tertiary-link",
+              "top": 934,
+              "height": 44,
+              "width": 137,
+              "area": 6028,
+              "inView": false,
+              "disabled": false
+            },
+            {
+              "text": "挑戦状をコピー",
+              "exit": "share",
+              "testid": "result-share",
+              "top": 934,
+              "height": 44,
+              "width": 111,
+              "area": 4884,
+              "inView": false,
+              "disabled": false
+            }
+          ],
+          "share": {
+            "text": "挑戦状をコピー",
+            "exit": "share",
+            "testid": "result-share",
+            "top": 934,
+            "height": 44,
+            "width": 111,
+            "area": 4884,
+            "inView": false,
+            "disabled": false
+          },
+          "shareAfterPrimary": true,
+          "buttonsInView": [
+            {
+              "text": "別の神で挑む（神を選び直す）",
+              "exit": "reselect"
+            },
+            {
+              "text": "デッキを調整",
+              "exit": "adjustDeck"
+            },
+            {
+              "text": "今日の神域挑戦へ",
+              "exit": "goDaily"
+            }
+          ],
+          "dailyDiff": null,
+          "breakdownOpen": true,
+          "scoreInView": true,
+          "card": {
+            "scrollHeight": 944,
+            "clientHeight": 559,
+            "overflowX": false
+          },
+          "pageOverflowX": false,
+          "scrollX": 0
+        },
+        "rematch": {
+          "clicked": true,
+          "storage": {
+            "daily": null,
+            "save": {
+              "version": 9,
+              "mode": "normal",
+              "dailyKey": null,
+              "seed": "p7spec-result-normal-win",
+              "enemy": "enemy_02",
+              "stake": 0,
+              "round": 1,
+              "status": "playing"
+            }
+          }
+        },
+        "errors": []
+      },
+      "normalLoseChain": {
+        "lose": {
+          "pending": null,
+          "metrics": {
+            "vw": 1508,
+            "vh": 660,
+            "status": "敗北",
+            "score": "スコア 0",
+            "rewardPending": false,
+            "goal": {
+              "id": "N1",
+              "text": "業斧の鬼将を撃破する（残りHP 100%）",
+              "textHeight": 20,
+              "lineHeight": 20.3,
+              "lines": 1,
+              "inView": true
+            },
+            "primary": {
+              "text": "同じ盤面でもう一度",
+              "exit": "rematch",
+              "testid": "result-primary",
+              "top": 402,
+              "height": 49,
+              "width": 420,
+              "area": 20580,
+              "inView": true,
+              "disabled": false
+            },
+            "secondary": [
+              {
+                "text": "デッキを調整",
+                "exit": "adjustDeck",
+                "testid": "result-secondary",
+                "top": 459,
+                "height": 44,
+                "width": 206,
+                "area": 9064,
+                "inView": true,
+                "disabled": false
+              },
+              {
+                "text": "神・デッキを選び直す",
+                "exit": "reselect",
+                "testid": "result-secondary",
+                "top": 459,
+                "height": 44,
+                "width": 206,
+                "area": 9064,
+                "inView": true,
+                "disabled": false
+              }
+            ],
+            "tertiary": [
+              {
+                "text": "ホームへ",
+                "exit": "home",
+                "testid": "result-tertiary-link",
+                "top": 819,
+                "height": 44,
+                "width": 72,
+                "area": 3168,
+                "inView": false,
+                "disabled": false
+              },
+              {
+                "text": "今日の神域挑戦へ",
+                "exit": "goDaily",
+                "testid": "result-tertiary-link",
+                "top": 819,
+                "height": 44,
+                "width": 124,
+                "area": 5456,
+                "inView": false,
+                "disabled": false
+              },
+              {
+                "text": "挑戦状をコピー",
+                "exit": "share",
+                "testid": "result-share",
+                "top": 819,
+                "height": 44,
+                "width": 111,
+                "area": 4884,
+                "inView": false,
+                "disabled": false
+              }
+            ],
+            "share": {
+              "text": "挑戦状をコピー",
+              "exit": "share",
+              "testid": "result-share",
+              "top": 819,
+              "height": 44,
+              "width": 111,
+              "area": 4884,
+              "inView": false,
+              "disabled": false
+            },
+            "shareAfterPrimary": true,
+            "buttonsInView": [
+              {
+                "text": "同じ盤面でもう一度",
+                "exit": "rematch"
+              },
+              {
+                "text": "デッキを調整",
+                "exit": "adjustDeck"
+              },
+              {
+                "text": "神・デッキを選び直す",
+                "exit": "reselect"
+              }
+            ],
+            "dailyDiff": null,
+            "breakdownOpen": true,
+            "scoreInView": true,
+            "card": {
+              "scrollHeight": 829,
+              "clientHeight": 559,
+              "overflowX": false
+            },
+            "pageOverflowX": false,
+            "scrollX": 0
+          }
+        },
+        "adjustClicked": true,
+        "onDeckScreen": true,
+        "afterAdjust": {
+          "daily": null,
+          "save": {
+            "version": 9,
+            "mode": "normal",
+            "dailyKey": null,
+            "seed": "p7acc-normal-lose",
+            "enemy": "enemy_02",
+            "stake": 0,
+            "round": 1,
+            "status": "playing"
+          }
+        },
+        "homeResume": {
+          "vw": 1508,
+          "vh": 660,
+          "scrollX": 0,
+          "overflowX": false,
+          "primaryText": "続きから大耀vs業斧の鬼将・ラウンド2",
+          "primaryRect": {
+            "top": 289,
+            "bottom": 353,
+            "height": 64,
+            "width": 320
+          },
+          "resume": true,
+          "resumeText": "続きから大耀 vs 業斧の鬼将・ラウンド2",
+          "todayRect": {
+            "top": 363,
+            "bottom": 463,
+            "height": 100,
+            "width": 524
+          },
+          "todayEnemy": "業斧の鬼将【重撃型】神域強化",
+          "todayEnemyInView": true,
+          "todayAttempts": "残り 3/3",
+          "todayAttemptsInView": true,
+          "todayBest": "まだ挑戦していません",
+          "todayCta": "挑戦する（残り3回）",
+          "todayCtaInView": true,
+          "countdown": null,
+          "progress": [
+            "神階：🔒「むずかしい」撃破で解放",
+            "七柱との絆 1/7"
+          ],
+          "primaryAboveToday": true,
+          "primaryInView": true,
+          "linksInView": [
+            true,
+            true,
+            true
+          ],
+          "linkRects": [
+            {
+              "top": 508,
+              "bottom": 552,
+              "height": 44,
+              "width": 99
+            },
+            {
+              "top": 508,
+              "bottom": 552,
+              "height": 44,
+              "width": 166
+            },
+            {
+              "top": 508,
+              "bottom": 552,
+              "height": 44,
+              "width": 169
+            }
+          ],
+          "linkLabels": [
+            "戦績を見る",
+            "OTOMOとの絆を見る",
+            "クレジット・権利表記"
+          ],
+          "buttons": [
+            {
+              "text": "続きから大耀 vs 業斧の鬼将・ラウンド2",
+              "height": 64
+            },
+            {
+              "text": "神を選ぶ",
+              "height": 64
+            },
+            {
+              "text": "挑戦する（残り3回）",
+              "height": 44
+            },
+            {
+              "text": "戦績を見る",
+              "height": 44
+            },
+            {
+              "text": "OTOMOとの絆を見る",
+              "height": 44
+            },
+            {
+              "text": "クレジット・権利表記",
+              "height": 44
+            }
+          ],
+          "minButtonHeight": 44,
+          "hasOldDailyButton": false
+        },
+        "resumed": {
+          "pending": null,
+          "metrics": {
+            "vw": 1508,
+            "vh": 660,
+            "status": "敗北",
+            "score": "スコア 0",
+            "rewardPending": false,
+            "goal": {
+              "id": "N1",
+              "text": "業斧の鬼将を撃破する（残りHP 100%）",
+              "textHeight": 20,
+              "lineHeight": 20.3,
+              "lines": 1,
+              "inView": true
+            },
+            "primary": {
+              "text": "同じ盤面でもう一度",
+              "exit": "rematch",
+              "testid": "result-primary",
+              "top": 341,
+              "height": 49,
+              "width": 420,
+              "area": 20580,
+              "inView": true,
+              "disabled": false
+            },
+            "secondary": [
+              {
+                "text": "デッキを調整",
+                "exit": "adjustDeck",
+                "testid": "result-secondary",
+                "top": 398,
+                "height": 44,
+                "width": 206,
+                "area": 9064,
+                "inView": true,
+                "disabled": false
+              },
+              {
+                "text": "神・デッキを選び直す",
+                "exit": "reselect",
+                "testid": "result-secondary",
+                "top": 398,
+                "height": 44,
+                "width": 206,
+                "area": 9064,
+                "inView": true,
+                "disabled": false
+              }
+            ],
+            "tertiary": [
+              {
+                "text": "ホームへ",
+                "exit": "home",
+                "testid": "result-tertiary-link",
+                "top": 759,
+                "height": 44,
+                "width": 72,
+                "area": 3168,
+                "inView": false,
+                "disabled": false
+              },
+              {
+                "text": "今日の神域挑戦へ",
+                "exit": "goDaily",
+                "testid": "result-tertiary-link",
+                "top": 759,
+                "height": 44,
+                "width": 124,
+                "area": 5456,
+                "inView": false,
+                "disabled": false
+              },
+              {
+                "text": "挑戦状をコピー",
+                "exit": "share",
+                "testid": "result-share",
+                "top": 759,
+                "height": 44,
+                "width": 111,
+                "area": 4884,
+                "inView": false,
+                "disabled": false
+              }
+            ],
+            "share": {
+              "text": "挑戦状をコピー",
+              "exit": "share",
+              "testid": "result-share",
+              "top": 759,
+              "height": 44,
+              "width": 111,
+              "area": 4884,
+              "inView": false,
+              "disabled": false
+            },
+            "shareAfterPrimary": true,
+            "buttonsInView": [
+              {
+                "text": "同じ盤面でもう一度",
+                "exit": "rematch"
+              },
+              {
+                "text": "デッキを調整",
+                "exit": "adjustDeck"
+              },
+              {
+                "text": "神・デッキを選び直す",
+                "exit": "reselect"
+              }
+            ],
+            "dailyDiff": null,
+            "breakdownOpen": true,
+            "scoreInView": true,
+            "card": {
+              "scrollHeight": 768,
+              "clientHeight": 559,
+              "overflowX": false
+            },
+            "pageOverflowX": false,
+            "scrollX": 0
+          }
+        },
+        "homeClicked": true,
+        "homeAfter": {
+          "vw": 1508,
+          "vh": 660,
+          "scrollX": 0,
+          "overflowX": false,
+          "primaryText": "神域へ挑む今日の試練：業斧の鬼将・残り3/3",
+          "primaryRect": {
+            "top": 289,
+            "bottom": 353,
+            "height": 64,
+            "width": 320
+          },
+          "resume": false,
+          "resumeText": null,
+          "todayRect": {
+            "top": 363,
+            "bottom": 463,
+            "height": 100,
+            "width": 524
+          },
+          "todayEnemy": "業斧の鬼将【重撃型】神域強化",
+          "todayEnemyInView": true,
+          "todayAttempts": "残り 3/3",
+          "todayAttemptsInView": true,
+          "todayBest": "まだ挑戦していません",
+          "todayCta": "神域へ挑む今日の試練：業斧の鬼将・残り 3/3",
+          "todayCtaInView": true,
+          "countdown": null,
+          "progress": [
+            "神階：🔒「むずかしい」撃破で解放",
+            "七柱との絆 1/7"
+          ],
+          "primaryAboveToday": true,
+          "primaryInView": true,
+          "linksInView": [
+            true,
+            true,
+            true
+          ],
+          "linkRects": [
+            {
+              "top": 508,
+              "bottom": 552,
+              "height": 44,
+              "width": 99
+            },
+            {
+              "top": 508,
+              "bottom": 552,
+              "height": 44,
+              "width": 166
+            },
+            {
+              "top": 508,
+              "bottom": 552,
+              "height": 44,
+              "width": 169
+            }
+          ],
+          "linkLabels": [
+            "戦績を見る",
+            "OTOMOとの絆を見る",
+            "クレジット・権利表記"
+          ],
+          "buttons": [
+            {
+              "text": "神域へ挑む今日の試練：業斧の鬼将・残り 3/3",
+              "height": 64
+            },
+            {
+              "text": "神を選ぶ",
+              "height": 64
+            },
+            {
+              "text": "戦績を見る",
+              "height": 44
+            },
+            {
+              "text": "OTOMOとの絆を見る",
+              "height": 44
+            },
+            {
+              "text": "クレジット・権利表記",
+              "height": 44
+            }
+          ],
+          "minButtonHeight": 44,
+          "hasOldDailyButton": false
+        },
+        "storageAfter": {
+          "daily": null,
+          "save": null
+        },
+        "errors": []
+      },
+      "dailySequence": {
+        "homeBefore": {
+          "vw": 1508,
+          "vh": 660,
+          "scrollX": 0,
+          "overflowX": false,
+          "primaryText": "初陣へおすすめの構成ですぐ戦う",
+          "primaryRect": {
+            "top": 306,
+            "bottom": 370,
+            "height": 64,
+            "width": 320
+          },
+          "resume": false,
+          "resumeText": null,
+          "todayRect": {
+            "top": 380,
+            "bottom": 480,
+            "height": 100,
+            "width": 524
+          },
+          "todayEnemy": "業斧の鬼将【重撃型】神域強化",
+          "todayEnemyInView": true,
+          "todayAttempts": "残り 3/3",
+          "todayAttemptsInView": true,
+          "todayBest": "まだ挑戦していません",
+          "todayCta": "挑戦する（残り3回）",
+          "todayCtaInView": true,
+          "countdown": null,
+          "progress": [],
+          "primaryAboveToday": true,
+          "primaryInView": true,
+          "linksInView": [
+            true,
+            true,
+            true
+          ],
+          "linkRects": [
+            {
+              "top": 490,
+              "bottom": 534,
+              "height": 44,
+              "width": 99
+            },
+            {
+              "top": 490,
+              "bottom": 534,
+              "height": 44,
+              "width": 166
+            },
+            {
+              "top": 490,
+              "bottom": 534,
+              "height": 44,
+              "width": 169
+            }
+          ],
+          "linkLabels": [
+            "戦績を見る",
+            "OTOMOとの絆を見る",
+            "クレジット・権利表記"
+          ],
+          "buttons": [
+            {
+              "text": "初陣へおすすめの構成ですぐ戦う",
+              "height": 64
+            },
+            {
+              "text": "神を選ぶ",
+              "height": 64
+            },
+            {
+              "text": "挑戦する（残り3回）",
+              "height": 44
+            },
+            {
+              "text": "戦績を見る",
+              "height": 44
+            },
+            {
+              "text": "OTOMOとの絆を見る",
+              "height": 44
+            },
+            {
+              "text": "クレジット・権利表記",
+              "height": 44
+            }
+          ],
+          "minButtonHeight": 44,
+          "hasOldDailyButton": false
+        },
+        "r1": {
+          "pending": null,
+          "metrics": {
+            "vw": 1508,
+            "vh": 660,
+            "status": "敗北",
+            "score": "スコア 1,800",
+            "rewardPending": false,
+            "goal": {
+              "id": "D1",
+              "text": "同じ盤面で業斧の鬼将を撃破する（残り2回）",
+              "textHeight": 20,
+              "lineHeight": 20.3,
+              "lines": 1,
+              "inView": true
+            },
+            "primary": {
+              "text": "もう一度挑戦（残り2回）",
+              "exit": "rematch",
+              "testid": "result-primary",
+              "top": 506,
+              "height": 49,
+              "width": 420,
+              "area": 20580,
+              "inView": true,
+              "disabled": false
+            },
+            "secondary": [
+              {
+                "text": "デッキを調整",
+                "exit": "adjustDeck",
+                "testid": "result-secondary",
+                "top": 563,
+                "height": 44,
+                "width": 206,
+                "area": 9064,
+                "inView": true,
+                "disabled": false
+              },
+              {
+                "text": "神・デッキを選び直す",
+                "exit": "reselect",
+                "testid": "result-secondary",
+                "top": 563,
+                "height": 44,
+                "width": 206,
+                "area": 9064,
+                "inView": true,
+                "disabled": false
+              }
+            ],
+            "tertiary": [
+              {
+                "text": "ホームへ",
+                "exit": "home",
+                "testid": "result-tertiary-link",
+                "top": 923,
+                "height": 44,
+                "width": 72,
+                "area": 3168,
+                "inView": false,
+                "disabled": false
+              },
+              {
+                "text": "挑戦状をコピー",
+                "exit": "share",
+                "testid": "result-share",
+                "top": 923,
+                "height": 44,
+                "width": 111,
+                "area": 4884,
+                "inView": false,
+                "disabled": false
+              }
+            ],
+            "share": {
+              "text": "挑戦状をコピー",
+              "exit": "share",
+              "testid": "result-share",
+              "top": 923,
+              "height": 44,
+              "width": 111,
+              "area": 4884,
+              "inView": false,
+              "disabled": false
+            },
+            "shareAfterPrimary": true,
+            "buttonsInView": [
+              {
+                "text": "もう一度挑戦（残り2回）",
+                "exit": "rematch"
+              },
+              {
+                "text": "デッキを調整",
+                "exit": "adjustDeck"
+              },
+              {
+                "text": "神・デッキを選び直す",
+                "exit": "reselect"
+              }
+            ],
+            "dailyDiff": [
+              "今日の問い：未解（R4 敗北）",
+              "今日のベスト 1,800（1回目）",
+              "残り 2 回"
+            ],
+            "breakdownOpen": true,
+            "scoreInView": true,
+            "card": {
+              "scrollHeight": 933,
+              "clientHeight": 559,
+              "overflowX": false
+            },
+            "pageOverflowX": false,
+            "scrollX": 0
+          }
+        },
+        "r2": {
+          "pending": null,
+          "metrics": {
+            "vw": 1508,
+            "vh": 660,
+            "status": "勝利",
+            "score": "スコア 8,980",
+            "rewardPending": false,
+            "goal": {
+              "id": "D3",
+              "text": "今日のベスト 8,980。残り1回でさらに更新する",
+              "textHeight": 20,
+              "lineHeight": 20.3,
+              "lines": 1,
+              "inView": true
+            },
+            "primary": {
+              "text": "もう一度挑戦（残り1回）",
+              "exit": "rematch",
+              "testid": "result-primary",
+              "top": 504,
+              "height": 49,
+              "width": 420,
+              "area": 20580,
+              "inView": true,
+              "disabled": false
+            },
+            "secondary": [
+              {
+                "text": "デッキを調整",
+                "exit": "adjustDeck",
+                "testid": "result-secondary",
+                "top": 561,
+                "height": 44,
+                "width": 206,
+                "area": 9064,
+                "inView": true,
+                "disabled": false
+              },
+              {
+                "text": "神・デッキを選び直す",
+                "exit": "reselect",
+                "testid": "result-secondary",
+                "top": 561,
+                "height": 44,
+                "width": 206,
+                "area": 9064,
+                "inView": true,
+                "disabled": false
+              }
+            ],
+            "tertiary": [
+              {
+                "text": "ホームへ",
+                "exit": "home",
+                "testid": "result-tertiary-link",
+                "top": 1032,
+                "height": 44,
+                "width": 72,
+                "area": 3168,
+                "inView": false,
+                "disabled": false
+              },
+              {
+                "text": "挑戦状をコピー",
+                "exit": "share",
+                "testid": "result-share",
+                "top": 1032,
+                "height": 44,
+                "width": 111,
+                "area": 4884,
+                "inView": false,
+                "disabled": false
+              }
+            ],
+            "share": {
+              "text": "挑戦状をコピー",
+              "exit": "share",
+              "testid": "result-share",
+              "top": 1032,
+              "height": 44,
+              "width": 111,
+              "area": 4884,
+              "inView": false,
+              "disabled": false
+            },
+            "shareAfterPrimary": true,
+            "buttonsInView": [
+              {
+                "text": "もう一度挑戦（残り1回）",
+                "exit": "rematch"
+              },
+              {
+                "text": "デッキを調整",
+                "exit": "adjustDeck"
+              },
+              {
+                "text": "神・デッキを選び直す",
+                "exit": "reselect"
+              }
+            ],
+            "dailyDiff": [
+              "今日の問い：解けた（R5 撃破）",
+              "✨ 今日のベスト更新！ 8,980（+7,180）",
+              "前回 1,800 → 今回 8,980（+7,180）"
+            ],
+            "breakdownOpen": true,
+            "scoreInView": true,
+            "card": {
+              "scrollHeight": 1042,
+              "clientHeight": 559,
+              "overflowX": false
+            },
+            "pageOverflowX": false,
+            "scrollX": 0
+          }
+        },
+        "r3": {
+          "pending": null,
+          "metrics": {
+            "vw": 1508,
+            "vh": 660,
+            "status": "敗北",
+            "score": "スコア 0",
+            "rewardPending": false,
+            "goal": {
+              "id": "D4",
+              "text": "今日の挑戦は終了。明日の問いは【連撃型】・次の敵まで 02:47",
+              "textHeight": 20,
+              "lineHeight": 20.3,
+              "lines": 1,
+              "inView": true
+            },
+            "primary": {
+              "text": "ホームへ",
+              "exit": "home",
+              "testid": "result-primary",
+              "top": 486,
+              "height": 49,
+              "width": 420,
+              "area": 20580,
+              "inView": true,
+              "disabled": false
+            },
+            "secondary": [
+              {
+                "text": "神を選ぶ（通常攻略）",
+                "exit": "startNormal",
+                "testid": "result-secondary",
+                "top": 543,
+                "height": 44,
+                "width": 206,
+                "area": 9064,
+                "inView": true,
+                "disabled": false
+              },
+              {
+                "text": "戦績を見る",
+                "exit": "record",
+                "testid": "result-secondary",
+                "top": 543,
+                "height": 44,
+                "width": 206,
+                "area": 9064,
+                "inView": true,
+                "disabled": false
+              }
+            ],
+            "tertiary": [
+              {
+                "text": "挑戦状をコピー",
+                "exit": "share",
+                "testid": "result-share",
+                "top": 904,
+                "height": 44,
+                "width": 111,
+                "area": 4884,
+                "inView": false,
+                "disabled": false
+              }
+            ],
+            "share": {
+              "text": "挑戦状をコピー",
+              "exit": "share",
+              "testid": "result-share",
+              "top": 904,
+              "height": 44,
+              "width": 111,
+              "area": 4884,
+              "inView": false,
+              "disabled": false
+            },
+            "shareAfterPrimary": true,
+            "buttonsInView": [
+              {
+                "text": "ホームへ",
+                "exit": "home"
+              },
+              {
+                "text": "神を選ぶ（通常攻略）",
+                "exit": "startNormal"
+              },
+              {
+                "text": "戦績を見る",
+                "exit": "record"
+              }
+            ],
+            "dailyDiff": [
+              "今日の問い：未解（R4 敗北）",
+              "今日のベスト 8,980 まであと 8,980 点",
+              "前回 8,980 → 今回 0（−8,980）"
+            ],
+            "breakdownOpen": true,
+            "scoreInView": true,
+            "card": {
+              "scrollHeight": 913,
+              "clientHeight": 559,
+              "overflowX": false
+            },
+            "pageOverflowX": false,
+            "scrollX": 0
+          }
+        },
+        "primary1": "rematch",
+        "onDeckScreen": true,
+        "homeClicked": true,
+        "homeAfter": {
+          "vw": 1508,
+          "vh": 660,
+          "scrollX": 0,
+          "overflowX": false,
+          "primaryText": "神を選ぶ",
+          "primaryRect": {
+            "top": 269,
+            "bottom": 333,
+            "height": 64,
+            "width": 320
+          },
+          "resume": false,
+          "resumeText": null,
+          "todayRect": {
+            "top": 343,
+            "bottom": 482,
+            "height": 140,
+            "width": 524
+          },
+          "todayEnemy": "業斧の鬼将【重撃型】神域強化",
+          "todayEnemyInView": true,
+          "todayAttempts": "今日の3回は終了",
+          "todayAttemptsInView": true,
+          "todayBest": "今日のベスト 8,980（大耀） 勝利",
+          "todayCta": "今日の記録を見る",
+          "todayCtaInView": true,
+          "countdown": "明日の問いは【連撃型】・次の敵まで 02:47",
+          "progress": [
+            "神階：🔒「むずかしい」撃破で解放",
+            "七柱との絆 1/7"
+          ],
+          "primaryAboveToday": true,
+          "primaryInView": true,
+          "linksInView": [
+            true,
+            true,
+            true
+          ],
+          "linkRects": [
+            {
+              "top": 528,
+              "bottom": 572,
+              "height": 44,
+              "width": 99
+            },
+            {
+              "top": 528,
+              "bottom": 572,
+              "height": 44,
+              "width": 166
+            },
+            {
+              "top": 528,
+              "bottom": 572,
+              "height": 44,
+              "width": 169
+            }
+          ],
+          "linkLabels": [
+            "戦績を見る",
+            "OTOMOとの絆を見る",
+            "クレジット・権利表記"
+          ],
+          "buttons": [
+            {
+              "text": "神を選ぶ",
+              "height": 64
+            },
+            {
+              "text": "今日の記録を見る",
+              "height": 44
+            },
+            {
+              "text": "戦績を見る",
+              "height": 44
+            },
+            {
+              "text": "OTOMOとの絆を見る",
+              "height": 44
+            },
+            {
+              "text": "クレジット・権利表記",
+              "height": 44
+            }
+          ],
+          "minButtonHeight": 44,
+          "hasOldDailyButton": false
+        },
+        "startDisabled": true,
+        "steps": [
+          {
+            "label": "before-1",
+            "storage": {
+              "daily": null,
+              "save": null
+            }
+          },
+          {
+            "label": "battle-1-started",
+            "storage": {
+              "daily": [
+                {
+                  "dateKey": "2026-11-05",
+                  "enemyId": "enemy_02",
+                  "seed": "daily-2026-11-05-enemy_02",
+                  "attemptsUsed": 1,
+                  "results": [],
+                  "bestScore": 0
+                }
+              ],
+              "save": {
+                "version": 9,
+                "mode": "daily",
+                "dailyKey": "2026-11-05",
+                "seed": "daily-2026-11-05-enemy_02",
+                "enemy": "enemy_02",
+                "stake": 0,
+                "round": 1,
+                "status": "playing"
+              }
+            }
+          },
+          {
+            "label": "result-1",
+            "storage": {
+              "daily": [
+                {
+                  "dateKey": "2026-11-05",
+                  "enemyId": "enemy_02",
+                  "seed": "daily-2026-11-05-enemy_02",
+                  "attemptsUsed": 1,
+                  "results": [
+                    [
+                      180,
+                      "lost",
+                      4
+                    ]
+                  ],
+                  "bestScore": 180
+                }
+              ],
+              "save": null
+            }
+          },
+          {
+            "label": "battle-2-started",
+            "storage": {
+              "daily": [
+                {
+                  "dateKey": "2026-11-05",
+                  "enemyId": "enemy_02",
+                  "seed": "daily-2026-11-05-enemy_02",
+                  "attemptsUsed": 2,
+                  "results": [
+                    [
+                      180,
+                      "lost",
+                      4
+                    ]
+                  ],
+                  "bestScore": 180
+                }
+              ],
+              "save": {
+                "version": 9,
+                "mode": "daily",
+                "dailyKey": "2026-11-05",
+                "seed": "daily-2026-11-05-enemy_02",
+                "enemy": "enemy_02",
+                "stake": 0,
+                "round": 1,
+                "status": "playing"
+              }
+            }
+          },
+          {
+            "label": "result-2",
+            "storage": {
+              "daily": [
+                {
+                  "dateKey": "2026-11-05",
+                  "enemyId": "enemy_02",
+                  "seed": "daily-2026-11-05-enemy_02",
+                  "attemptsUsed": 2,
+                  "results": [
+                    [
+                      180,
+                      "lost",
+                      4
+                    ],
+                    [
+                      898,
+                      "won",
+                      5
+                    ]
+                  ],
+                  "bestScore": 898
+                }
+              ],
+              "save": null
+            }
+          },
+          {
+            "label": "deck-before-3",
+            "storage": {
+              "daily": [
+                {
+                  "dateKey": "2026-11-05",
+                  "enemyId": "enemy_02",
+                  "seed": "daily-2026-11-05-enemy_02",
+                  "attemptsUsed": 2,
+                  "results": [
+                    [
+                      180,
+                      "lost",
+                      4
+                    ],
+                    [
+                      898,
+                      "won",
+                      5
+                    ]
+                  ],
+                  "bestScore": 898
+                }
+              ],
+              "save": null
+            }
+          },
+          {
+            "label": "battle-3-started",
+            "storage": {
+              "daily": [
+                {
+                  "dateKey": "2026-11-05",
+                  "enemyId": "enemy_02",
+                  "seed": "daily-2026-11-05-enemy_02",
+                  "attemptsUsed": 3,
+                  "results": [
+                    [
+                      180,
+                      "lost",
+                      4
+                    ],
+                    [
+                      898,
+                      "won",
+                      5
+                    ]
+                  ],
+                  "bestScore": 898
+                }
+              ],
+              "save": {
+                "version": 9,
+                "mode": "daily",
+                "dailyKey": "2026-11-05",
+                "seed": "daily-2026-11-05-enemy_02",
+                "enemy": "enemy_02",
+                "stake": 0,
+                "round": 1,
+                "status": "playing"
+              }
+            }
+          },
+          {
+            "label": "result-3",
+            "storage": {
+              "daily": [
+                {
+                  "dateKey": "2026-11-05",
+                  "enemyId": "enemy_02",
+                  "seed": "daily-2026-11-05-enemy_02",
+                  "attemptsUsed": 3,
+                  "results": [
+                    [
+                      180,
+                      "lost",
+                      4
+                    ],
+                    [
+                      898,
+                      "won",
+                      5
+                    ],
+                    [
+                      0,
+                      "lost",
+                      4
+                    ]
+                  ],
+                  "bestScore": 898
+                }
+              ],
+              "save": null
+            }
+          },
+          {
+            "label": "home-after",
+            "storage": {
+              "daily": [
+                {
+                  "dateKey": "2026-11-05",
+                  "enemyId": "enemy_02",
+                  "seed": "daily-2026-11-05-enemy_02",
+                  "attemptsUsed": 3,
+                  "results": [
+                    [
+                      180,
+                      "lost",
+                      4
+                    ],
+                    [
+                      898,
+                      "won",
+                      5
+                    ],
+                    [
+                      0,
+                      "lost",
+                      4
+                    ]
+                  ],
+                  "bestScore": 898
+                }
+              ],
+              "save": null
+            }
+          }
+        ],
+        "errors": []
+      },
+      "dailyLoseFirst": {
+        "pending": null,
+        "metrics": {
+          "vw": 1508,
+          "vh": 660,
+          "status": "敗北",
+          "score": "スコア 0",
+          "rewardPending": false,
+          "goal": {
+            "id": "D1",
+            "text": "同じ盤面で業斧の鬼将を撃破する（残り2回）",
+            "textHeight": 20,
+            "lineHeight": 20.3,
+            "lines": 1,
+            "inView": true
+          },
+          "primary": {
+            "text": "もう一度挑戦（残り2回）",
+            "exit": "rematch",
+            "testid": "result-primary",
+            "top": 486,
+            "height": 49,
+            "width": 420,
+            "area": 20580,
+            "inView": true,
+            "disabled": false
+          },
+          "secondary": [
+            {
+              "text": "デッキを調整",
+              "exit": "adjustDeck",
+              "testid": "result-secondary",
+              "top": 543,
+              "height": 44,
+              "width": 206,
+              "area": 9064,
+              "inView": true,
+              "disabled": false
+            },
+            {
+              "text": "神・デッキを選び直す",
+              "exit": "reselect",
+              "testid": "result-secondary",
+              "top": 543,
+              "height": 44,
+              "width": 206,
+              "area": 9064,
+              "inView": true,
+              "disabled": false
+            }
+          ],
+          "tertiary": [
+            {
+              "text": "ホームへ",
+              "exit": "home",
+              "testid": "result-tertiary-link",
+              "top": 904,
+              "height": 44,
+              "width": 72,
+              "area": 3168,
+              "inView": false,
+              "disabled": false
+            },
+            {
+              "text": "挑戦状をコピー",
+              "exit": "share",
+              "testid": "result-share",
+              "top": 904,
+              "height": 44,
+              "width": 111,
+              "area": 4884,
+              "inView": false,
+              "disabled": false
+            }
+          ],
+          "share": {
+            "text": "挑戦状をコピー",
+            "exit": "share",
+            "testid": "result-share",
+            "top": 904,
+            "height": 44,
+            "width": 111,
+            "area": 4884,
+            "inView": false,
+            "disabled": false
+          },
+          "shareAfterPrimary": true,
+          "buttonsInView": [
+            {
+              "text": "もう一度挑戦（残り2回）",
+              "exit": "rematch"
+            },
+            {
+              "text": "デッキを調整",
+              "exit": "adjustDeck"
+            },
+            {
+              "text": "神・デッキを選び直す",
+              "exit": "reselect"
+            }
+          ],
+          "dailyDiff": [
+            "今日の問い：未解（R4 敗北）",
+            "今日のベストはまだありません",
+            "残り 2 回"
+          ],
+          "breakdownOpen": true,
+          "scoreInView": true,
+          "card": {
+            "scrollHeight": 913,
+            "clientHeight": 559,
+            "overflowX": false
+          },
+          "pageOverflowX": false,
+          "scrollX": 0
+        },
+        "storage": {
+          "daily": [
+            {
+              "dateKey": "2026-11-05",
+              "enemyId": "enemy_02",
+              "seed": "daily-2026-11-05-enemy_02",
+              "attemptsUsed": 1,
+              "results": [
+                [
+                  0,
+                  "lost",
+                  4
+                ]
+              ],
+              "bestScore": 0
+            }
+          ],
+          "save": null
+        },
+        "errors": []
+      }
+    },
+    "sp844": {
+      "homeNoResume": {
+        "metrics": {
+          "vw": 390,
+          "vh": 844,
+          "scrollX": 0,
+          "overflowX": false,
+          "primaryText": "初陣へおすすめの構成ですぐ戦う",
+          "primaryRect": {
+            "top": 377,
+            "bottom": 440,
+            "height": 63,
+            "width": 350
+          },
+          "resume": false,
+          "resumeText": null,
+          "todayRect": {
+            "top": 500,
+            "bottom": 654,
+            "height": 153,
+            "width": 350
+          },
+          "todayEnemy": "業斧の鬼将【重撃型】神域強化",
+          "todayEnemyInView": true,
+          "todayAttempts": "残り 3/3",
+          "todayAttemptsInView": true,
+          "todayBest": "まだ挑戦していません",
+          "todayCta": "挑戦する（残り3回）",
+          "todayCtaInView": true,
+          "countdown": null,
+          "progress": [],
+          "primaryAboveToday": true,
+          "primaryInView": true,
+          "linksInView": [
+            true,
+            true,
+            true
+          ],
+          "linkRects": [
+            {
+              "top": 662,
+              "bottom": 706,
+              "height": 44,
+              "width": 99
+            },
+            {
+              "top": 662,
+              "bottom": 706,
+              "height": 44,
+              "width": 166
+            },
+            {
+              "top": 706,
+              "bottom": 750,
+              "height": 44,
+              "width": 169
+            }
+          ],
+          "linkLabels": [
+            "戦績を見る",
+            "OTOMOとの絆を見る",
+            "クレジット・権利表記"
+          ],
+          "buttons": [
+            {
+              "text": "初陣へおすすめの構成ですぐ戦う",
+              "height": 63
+            },
+            {
+              "text": "神を選ぶ",
+              "height": 44
+            },
+            {
+              "text": "挑戦する（残り3回）",
+              "height": 44
+            },
+            {
+              "text": "戦績を見る",
+              "height": 44
+            },
+            {
+              "text": "OTOMOとの絆を見る",
+              "height": 44
+            },
+            {
+              "text": "クレジット・権利表記",
+              "height": 44
+            }
+          ],
+          "minButtonHeight": 44,
+          "hasOldDailyButton": false
+        },
+        "clsLoad": 0,
+        "clsAfterTutorial": 0,
+        "tutorialClosed": false,
+        "errors": []
+      },
+      "normalWin": {
+        "pending": {
+          "vw": 390,
+          "vh": 844,
+          "status": "勝利",
+          "score": "スコア 8,790",
+          "rewardPending": true,
+          "goal": null,
+          "primary": null,
+          "secondary": [],
+          "tertiary": [],
+          "share": null,
+          "shareAfterPrimary": null,
+          "buttonsInView": [
+            {
+              "text": "報酬カードを選ぶ ›",
+              "exit": null
+            }
+          ],
+          "dailyDiff": null,
+          "breakdownOpen": false,
+          "scoreInView": true,
+          "card": {
+            "scrollHeight": 627,
+            "clientHeight": 627,
+            "overflowX": false
+          },
+          "pageOverflowX": false,
+          "scrollX": 0
+        },
+        "metrics": {
+          "vw": 390,
+          "vh": 844,
+          "status": "勝利",
+          "score": "スコア 8,790",
+          "rewardPending": false,
+          "goal": {
+            "id": "NM1",
+            "text": "業斧の鬼将を別の神でも攻略する（この敵 1/7 神）",
+            "textHeight": 20,
+            "lineHeight": 20.3,
+            "lines": 1,
+            "inView": true
+          },
+          "primary": {
+            "text": "別の神で挑む（神を選び直す）",
+            "exit": "reselect",
+            "testid": "result-primary",
+            "top": 525,
+            "height": 49,
+            "width": 356,
+            "area": 17444,
+            "inView": true,
+            "disabled": false
+          },
+          "secondary": [
+            {
+              "text": "デッキを調整",
+              "exit": "adjustDeck",
+              "testid": "result-secondary",
+              "top": 582,
+              "height": 44,
+              "width": 174,
+              "area": 7656,
+              "inView": true,
+              "disabled": false
+            },
+            {
+              "text": "今日の神域挑戦へ",
+              "exit": "goDaily",
+              "testid": "result-secondary",
+              "top": 582,
+              "height": 44,
+              "width": 174,
+              "area": 7656,
+              "inView": true,
+              "disabled": false
+            }
+          ],
+          "tertiary": [
+            {
+              "text": "ホームへ",
+              "exit": "home",
+              "testid": "result-tertiary-link",
+              "top": 803,
+              "height": 44,
+              "width": 72,
+              "area": 3168,
+              "inView": false,
+              "disabled": false
+            },
+            {
+              "text": "同じ構成でもう一度",
+              "exit": "rematch",
+              "testid": "result-tertiary-link",
+              "top": 803,
+              "height": 44,
+              "width": 137,
+              "area": 6028,
+              "inView": false,
+              "disabled": false
+            },
+            {
+              "text": "挑戦状をコピー",
+              "exit": "share",
+              "testid": "result-share",
+              "top": 803,
+              "height": 44,
+              "width": 111,
+              "area": 4884,
+              "inView": false,
+              "disabled": false
+            }
+          ],
+          "share": {
+            "text": "挑戦状をコピー",
+            "exit": "share",
+            "testid": "result-share",
+            "top": 803,
+            "height": 44,
+            "width": 111,
+            "area": 4884,
+            "inView": false,
+            "disabled": false
+          },
+          "shareAfterPrimary": true,
+          "buttonsInView": [
+            {
+              "text": "別の神で挑む（神を選び直す）",
+              "exit": "reselect"
+            },
+            {
+              "text": "デッキを調整",
+              "exit": "adjustDeck"
+            },
+            {
+              "text": "今日の神域挑戦へ",
+              "exit": "goDaily"
+            }
+          ],
+          "dailyDiff": null,
+          "breakdownOpen": false,
+          "scoreInView": true,
+          "card": {
+            "scrollHeight": 801,
+            "clientHeight": 715,
+            "overflowX": false
+          },
+          "pageOverflowX": false,
+          "scrollX": 0
+        },
+        "rematch": {
+          "clicked": true,
+          "storage": {
+            "daily": null,
+            "save": {
+              "version": 9,
+              "mode": "normal",
+              "dailyKey": null,
+              "seed": "p7spec-result-normal-win",
+              "enemy": "enemy_02",
+              "stake": 0,
+              "round": 1,
+              "status": "playing"
+            }
+          }
+        },
+        "errors": []
+      },
+      "normalLoseChain": {
+        "lose": {
+          "pending": null,
+          "metrics": {
+            "vw": 390,
+            "vh": 844,
+            "status": "敗北",
+            "score": "スコア 0",
+            "rewardPending": false,
+            "goal": {
+              "id": "N1",
+              "text": "業斧の鬼将を撃破する（残りHP 100%）",
+              "textHeight": 20,
+              "lineHeight": 20.3,
+              "lines": 1,
+              "inView": true
+            },
+            "primary": {
+              "text": "同じ盤面でもう一度",
+              "exit": "rematch",
+              "testid": "result-primary",
+              "top": 509,
+              "height": 49,
+              "width": 356,
+              "area": 17444,
+              "inView": true,
+              "disabled": false
+            },
+            "secondary": [
+              {
+                "text": "デッキを調整",
+                "exit": "adjustDeck",
+                "testid": "result-secondary",
+                "top": 566,
+                "height": 44,
+                "width": 174,
+                "area": 7656,
+                "inView": true,
+                "disabled": false
+              },
+              {
+                "text": "神・デッキを選び直す",
+                "exit": "reselect",
+                "testid": "result-secondary",
+                "top": 566,
+                "height": 44,
+                "width": 174,
+                "area": 7656,
+                "inView": true,
+                "disabled": false
+              }
+            ],
+            "tertiary": [
+              {
+                "text": "ホームへ",
+                "exit": "home",
+                "testid": "result-tertiary-link",
+                "top": 674,
+                "height": 44,
+                "width": 72,
+                "area": 3168,
+                "inView": true,
+                "disabled": false
+              },
+              {
+                "text": "今日の神域挑戦へ",
+                "exit": "goDaily",
+                "testid": "result-tertiary-link",
+                "top": 674,
+                "height": 44,
+                "width": 124,
+                "area": 5456,
+                "inView": true,
+                "disabled": false
+              },
+              {
+                "text": "挑戦状をコピー",
+                "exit": "share",
+                "testid": "result-share",
+                "top": 674,
+                "height": 44,
+                "width": 111,
+                "area": 4884,
+                "inView": true,
+                "disabled": false
+              }
+            ],
+            "share": {
+              "text": "挑戦状をコピー",
+              "exit": "share",
+              "testid": "result-share",
+              "top": 674,
+              "height": 44,
+              "width": 111,
+              "area": 4884,
+              "inView": true,
+              "disabled": false
+            },
+            "shareAfterPrimary": true,
+            "buttonsInView": [
+              {
+                "text": "同じ盤面でもう一度",
+                "exit": "rematch"
+              },
+              {
+                "text": "デッキを調整",
+                "exit": "adjustDeck"
+              },
+              {
+                "text": "神・デッキを選び直す",
+                "exit": "reselect"
+              },
+              {
+                "text": "ホームへ",
+                "exit": "home"
+              },
+              {
+                "text": "今日の神域挑戦へ",
+                "exit": "goDaily"
+              },
+              {
+                "text": "挑戦状をコピー",
+                "exit": "share"
+              }
+            ],
+            "dailyDiff": null,
+            "breakdownOpen": false,
+            "scoreInView": true,
+            "card": {
+              "scrollHeight": 628,
+              "clientHeight": 628,
+              "overflowX": false
+            },
+            "pageOverflowX": false,
+            "scrollX": 0
+          }
+        },
+        "adjustClicked": true,
+        "onDeckScreen": true,
+        "afterAdjust": {
+          "daily": null,
+          "save": {
+            "version": 9,
+            "mode": "normal",
+            "dailyKey": null,
+            "seed": "p7acc-normal-lose",
+            "enemy": "enemy_02",
+            "stake": 0,
+            "round": 1,
+            "status": "playing"
+          }
+        },
+        "homeResume": {
+          "vw": 390,
+          "vh": 844,
+          "scrollX": 0,
+          "overflowX": false,
+          "primaryText": "続きから大耀vs業斧の鬼将・ラウンド2",
+          "primaryRect": {
+            "top": 377,
+            "bottom": 440,
+            "height": 63,
+            "width": 350
+          },
+          "resume": true,
+          "resumeText": "続きから大耀 vs 業斧の鬼将・ラウンド2",
+          "todayRect": {
+            "top": 500,
+            "bottom": 654,
+            "height": 153,
+            "width": 350
+          },
+          "todayEnemy": "業斧の鬼将【重撃型】神域強化",
+          "todayEnemyInView": true,
+          "todayAttempts": "残り 3/3",
+          "todayAttemptsInView": true,
+          "todayBest": "まだ挑戦していません",
+          "todayCta": "挑戦する（残り3回）",
+          "todayCtaInView": true,
+          "countdown": null,
+          "progress": [
+            "神階：🔒「むずかしい」撃破で解放",
+            "七柱との絆 1/7"
+          ],
+          "primaryAboveToday": true,
+          "primaryInView": true,
+          "linksInView": [
+            true,
+            true,
+            true
+          ],
+          "linkRects": [
+            {
+              "top": 695,
+              "bottom": 739,
+              "height": 44,
+              "width": 99
+            },
+            {
+              "top": 695,
+              "bottom": 739,
+              "height": 44,
+              "width": 166
+            },
+            {
+              "top": 739,
+              "bottom": 783,
+              "height": 44,
+              "width": 169
+            }
+          ],
+          "linkLabels": [
+            "戦績を見る",
+            "OTOMOとの絆を見る",
+            "クレジット・権利表記"
+          ],
+          "buttons": [
+            {
+              "text": "続きから大耀 vs 業斧の鬼将・ラウンド2",
+              "height": 63
+            },
+            {
+              "text": "神を選ぶ",
+              "height": 44
+            },
+            {
+              "text": "挑戦する（残り3回）",
+              "height": 44
+            },
+            {
+              "text": "戦績を見る",
+              "height": 44
+            },
+            {
+              "text": "OTOMOとの絆を見る",
+              "height": 44
+            },
+            {
+              "text": "クレジット・権利表記",
+              "height": 44
+            }
+          ],
+          "minButtonHeight": 44,
+          "hasOldDailyButton": false
+        },
+        "resumed": {
+          "pending": null,
+          "metrics": {
+            "vw": 390,
+            "vh": 844,
+            "status": "敗北",
+            "score": "スコア 0",
+            "rewardPending": false,
+            "goal": {
+              "id": "N1",
+              "text": "業斧の鬼将を撃破する（残りHP 100%）",
+              "textHeight": 20,
+              "lineHeight": 20.3,
+              "lines": 1,
+              "inView": true
+            },
+            "primary": {
+              "text": "同じ盤面でもう一度",
+              "exit": "rematch",
+              "testid": "result-primary",
+              "top": 469,
+              "height": 49,
+              "width": 356,
+              "area": 17444,
+              "inView": true,
+              "disabled": false
+            },
+            "secondary": [
+              {
+                "text": "デッキを調整",
+                "exit": "adjustDeck",
+                "testid": "result-secondary",
+                "top": 526,
+                "height": 44,
+                "width": 174,
+                "area": 7656,
+                "inView": true,
+                "disabled": false
+              },
+              {
+                "text": "神・デッキを選び直す",
+                "exit": "reselect",
+                "testid": "result-secondary",
+                "top": 526,
+                "height": 44,
+                "width": 174,
+                "area": 7656,
+                "inView": true,
+                "disabled": false
+              }
+            ],
+            "tertiary": [
+              {
+                "text": "ホームへ",
+                "exit": "home",
+                "testid": "result-tertiary-link",
+                "top": 634,
+                "height": 44,
+                "width": 72,
+                "area": 3168,
+                "inView": true,
+                "disabled": false
+              },
+              {
+                "text": "今日の神域挑戦へ",
+                "exit": "goDaily",
+                "testid": "result-tertiary-link",
+                "top": 634,
+                "height": 44,
+                "width": 124,
+                "area": 5456,
+                "inView": true,
+                "disabled": false
+              },
+              {
+                "text": "挑戦状をコピー",
+                "exit": "share",
+                "testid": "result-share",
+                "top": 634,
+                "height": 44,
+                "width": 111,
+                "area": 4884,
+                "inView": true,
+                "disabled": false
+              }
+            ],
+            "share": {
+              "text": "挑戦状をコピー",
+              "exit": "share",
+              "testid": "result-share",
+              "top": 634,
+              "height": 44,
+              "width": 111,
+              "area": 4884,
+              "inView": true,
+              "disabled": false
+            },
+            "shareAfterPrimary": true,
+            "buttonsInView": [
+              {
+                "text": "同じ盤面でもう一度",
+                "exit": "rematch"
+              },
+              {
+                "text": "デッキを調整",
+                "exit": "adjustDeck"
+              },
+              {
+                "text": "神・デッキを選び直す",
+                "exit": "reselect"
+              },
+              {
+                "text": "ホームへ",
+                "exit": "home"
+              },
+              {
+                "text": "今日の神域挑戦へ",
+                "exit": "goDaily"
+              },
+              {
+                "text": "挑戦状をコピー",
+                "exit": "share"
+              }
+            ],
+            "dailyDiff": null,
+            "breakdownOpen": false,
+            "scoreInView": true,
+            "card": {
+              "scrollHeight": 547,
+              "clientHeight": 547,
+              "overflowX": false
+            },
+            "pageOverflowX": false,
+            "scrollX": 0
+          }
+        },
+        "homeClicked": true,
+        "homeAfter": {
+          "vw": 390,
+          "vh": 844,
+          "scrollX": 0,
+          "overflowX": false,
+          "primaryText": "神域へ挑む今日の試練：業斧の鬼将・残り3/3",
+          "primaryRect": {
+            "top": 377,
+            "bottom": 440,
+            "height": 63,
+            "width": 350
+          },
+          "resume": false,
+          "resumeText": null,
+          "todayRect": {
+            "top": 500,
+            "bottom": 602,
+            "height": 101,
+            "width": 350
+          },
+          "todayEnemy": "業斧の鬼将【重撃型】神域強化",
+          "todayEnemyInView": true,
+          "todayAttempts": "残り 3/3",
+          "todayAttemptsInView": true,
+          "todayBest": "まだ挑戦していません",
+          "todayCta": "神域へ挑む今日の試練：業斧の鬼将・残り 3/3",
+          "todayCtaInView": true,
+          "countdown": null,
+          "progress": [
+            "神階：🔒「むずかしい」撃破で解放",
+            "七柱との絆 1/7"
+          ],
+          "primaryAboveToday": true,
+          "primaryInView": true,
+          "linksInView": [
+            true,
+            true,
+            true
+          ],
+          "linkRects": [
+            {
+              "top": 643,
+              "bottom": 687,
+              "height": 44,
+              "width": 99
+            },
+            {
+              "top": 643,
+              "bottom": 687,
+              "height": 44,
+              "width": 166
+            },
+            {
+              "top": 687,
+              "bottom": 731,
+              "height": 44,
+              "width": 169
+            }
+          ],
+          "linkLabels": [
+            "戦績を見る",
+            "OTOMOとの絆を見る",
+            "クレジット・権利表記"
+          ],
+          "buttons": [
+            {
+              "text": "神域へ挑む今日の試練：業斧の鬼将・残り 3/3",
+              "height": 63
+            },
+            {
+              "text": "神を選ぶ",
+              "height": 44
+            },
+            {
+              "text": "戦績を見る",
+              "height": 44
+            },
+            {
+              "text": "OTOMOとの絆を見る",
+              "height": 44
+            },
+            {
+              "text": "クレジット・権利表記",
+              "height": 44
+            }
+          ],
+          "minButtonHeight": 44,
+          "hasOldDailyButton": false
+        },
+        "storageAfter": {
+          "daily": null,
+          "save": null
+        },
+        "errors": []
+      },
+      "dailySequence": {
+        "homeBefore": {
+          "vw": 390,
+          "vh": 844,
+          "scrollX": 0,
+          "overflowX": false,
+          "primaryText": "初陣へおすすめの構成ですぐ戦う",
+          "primaryRect": {
+            "top": 377,
+            "bottom": 440,
+            "height": 63,
+            "width": 350
+          },
+          "resume": false,
+          "resumeText": null,
+          "todayRect": {
+            "top": 500,
+            "bottom": 654,
+            "height": 153,
+            "width": 350
+          },
+          "todayEnemy": "業斧の鬼将【重撃型】神域強化",
+          "todayEnemyInView": true,
+          "todayAttempts": "残り 3/3",
+          "todayAttemptsInView": true,
+          "todayBest": "まだ挑戦していません",
+          "todayCta": "挑戦する（残り3回）",
+          "todayCtaInView": true,
+          "countdown": null,
+          "progress": [],
+          "primaryAboveToday": true,
+          "primaryInView": true,
+          "linksInView": [
+            true,
+            true,
+            true
+          ],
+          "linkRects": [
+            {
+              "top": 662,
+              "bottom": 706,
+              "height": 44,
+              "width": 99
+            },
+            {
+              "top": 662,
+              "bottom": 706,
+              "height": 44,
+              "width": 166
+            },
+            {
+              "top": 706,
+              "bottom": 750,
+              "height": 44,
+              "width": 169
+            }
+          ],
+          "linkLabels": [
+            "戦績を見る",
+            "OTOMOとの絆を見る",
+            "クレジット・権利表記"
+          ],
+          "buttons": [
+            {
+              "text": "初陣へおすすめの構成ですぐ戦う",
+              "height": 63
+            },
+            {
+              "text": "神を選ぶ",
+              "height": 44
+            },
+            {
+              "text": "挑戦する（残り3回）",
+              "height": 44
+            },
+            {
+              "text": "戦績を見る",
+              "height": 44
+            },
+            {
+              "text": "OTOMOとの絆を見る",
+              "height": 44
+            },
+            {
+              "text": "クレジット・権利表記",
+              "height": 44
+            }
+          ],
+          "minButtonHeight": 44,
+          "hasOldDailyButton": false
+        },
+        "r1": {
+          "pending": null,
+          "metrics": {
+            "vw": 390,
+            "vh": 844,
+            "status": "敗北",
+            "score": "スコア 1,800",
+            "rewardPending": false,
+            "goal": {
+              "id": "D1",
+              "text": "同じ盤面で業斧の鬼将を撃破する（残り2回）",
+              "textHeight": 20,
+              "lineHeight": 20.3,
+              "lines": 1,
+              "inView": true
+            },
+            "primary": {
+              "text": "もう一度挑戦（残り2回）",
+              "exit": "rematch",
+              "testid": "result-primary",
+              "top": 572,
+              "height": 49,
+              "width": 356,
+              "area": 17444,
+              "inView": true,
+              "disabled": false
+            },
+            "secondary": [
+              {
+                "text": "デッキを調整",
+                "exit": "adjustDeck",
+                "testid": "result-secondary",
+                "top": 629,
+                "height": 44,
+                "width": 174,
+                "area": 7656,
+                "inView": true,
+                "disabled": false
+              },
+              {
+                "text": "神・デッキを選び直す",
+                "exit": "reselect",
+                "testid": "result-secondary",
+                "top": 629,
+                "height": 44,
+                "width": 174,
+                "area": 7656,
+                "inView": true,
+                "disabled": false
+              }
+            ],
+            "tertiary": [
+              {
+                "text": "ホームへ",
+                "exit": "home",
+                "testid": "result-tertiary-link",
+                "top": 737,
+                "height": 44,
+                "width": 72,
+                "area": 3168,
+                "inView": true,
+                "disabled": false
+              },
+              {
+                "text": "挑戦状をコピー",
+                "exit": "share",
+                "testid": "result-share",
+                "top": 737,
+                "height": 44,
+                "width": 111,
+                "area": 4884,
+                "inView": true,
+                "disabled": false
+              }
+            ],
+            "share": {
+              "text": "挑戦状をコピー",
+              "exit": "share",
+              "testid": "result-share",
+              "top": 737,
+              "height": 44,
+              "width": 111,
+              "area": 4884,
+              "inView": true,
+              "disabled": false
+            },
+            "shareAfterPrimary": true,
+            "buttonsInView": [
+              {
+                "text": "もう一度挑戦（残り2回）",
+                "exit": "rematch"
+              },
+              {
+                "text": "デッキを調整",
+                "exit": "adjustDeck"
+              },
+              {
+                "text": "神・デッキを選び直す",
+                "exit": "reselect"
+              },
+              {
+                "text": "ホームへ",
+                "exit": "home"
+              },
+              {
+                "text": "挑戦状をコピー",
+                "exit": "share"
+              }
+            ],
+            "dailyDiff": [
+              "今日の問い：未解（R4 敗北）",
+              "今日のベスト 1,800（1回目）",
+              "残り 2 回"
+            ],
+            "breakdownOpen": false,
+            "scoreInView": true,
+            "card": {
+              "scrollHeight": 734,
+              "clientHeight": 715,
+              "overflowX": false
+            },
+            "pageOverflowX": false,
+            "scrollX": 0
+          }
+        },
+        "r2": {
+          "pending": null,
+          "metrics": {
+            "vw": 390,
+            "vh": 844,
+            "status": "勝利",
+            "score": "スコア 8,980",
+            "rewardPending": false,
+            "goal": {
+              "id": "D3",
+              "text": "今日のベスト 8,980。残り1回でさらに更新する",
+              "textHeight": 20,
+              "lineHeight": 20.3,
+              "lines": 1,
+              "inView": true
+            },
+            "primary": {
+              "text": "もう一度挑戦（残り1回）",
+              "exit": "rematch",
+              "testid": "result-primary",
+              "top": 624,
+              "height": 49,
+              "width": 356,
+              "area": 17444,
+              "inView": true,
+              "disabled": false
+            },
+            "secondary": [
+              {
+                "text": "デッキを調整",
+                "exit": "adjustDeck",
+                "testid": "result-secondary",
+                "top": 681,
+                "height": 44,
+                "width": 174,
+                "area": 7656,
+                "inView": true,
+                "disabled": false
+              },
+              {
+                "text": "神・デッキを選び直す",
+                "exit": "reselect",
+                "testid": "result-secondary",
+                "top": 681,
+                "height": 44,
+                "width": 174,
+                "area": 7656,
+                "inView": true,
+                "disabled": false
+              }
+            ],
+            "tertiary": [
+              {
+                "text": "ホームへ",
+                "exit": "home",
+                "testid": "result-tertiary-link",
+                "top": 901,
+                "height": 44,
+                "width": 72,
+                "area": 3168,
+                "inView": false,
+                "disabled": false
+              },
+              {
+                "text": "挑戦状をコピー",
+                "exit": "share",
+                "testid": "result-share",
+                "top": 901,
+                "height": 44,
+                "width": 111,
+                "area": 4884,
+                "inView": false,
+                "disabled": false
+              }
+            ],
+            "share": {
+              "text": "挑戦状をコピー",
+              "exit": "share",
+              "testid": "result-share",
+              "top": 901,
+              "height": 44,
+              "width": 111,
+              "area": 4884,
+              "inView": false,
+              "disabled": false
+            },
+            "shareAfterPrimary": true,
+            "buttonsInView": [
+              {
+                "text": "もう一度挑戦（残り1回）",
+                "exit": "rematch"
+              },
+              {
+                "text": "デッキを調整",
+                "exit": "adjustDeck"
+              },
+              {
+                "text": "神・デッキを選び直す",
+                "exit": "reselect"
+              }
+            ],
+            "dailyDiff": [
+              "今日の問い：解けた（R5 撃破）",
+              "✨ 今日のベスト更新！ 8,980（+7,180）",
+              "前回 1,800 → 今回 8,980（+7,180）"
+            ],
+            "breakdownOpen": false,
+            "scoreInView": true,
+            "card": {
+              "scrollHeight": 899,
+              "clientHeight": 715,
+              "overflowX": false
+            },
+            "pageOverflowX": false,
+            "scrollX": 0
+          }
+        },
+        "r3": {
+          "pending": null,
+          "metrics": {
+            "vw": 390,
+            "vh": 844,
+            "status": "敗北",
+            "score": "スコア 0",
+            "rewardPending": false,
+            "goal": {
+              "id": "D4",
+              "text": "今日の挑戦は終了。明日の問いは【連撃型】・次の敵まで 02:43",
+              "textHeight": 41,
+              "lineHeight": 20.3,
+              "lines": 2,
+              "inView": true
+            },
+            "primary": {
+              "text": "ホームへ",
+              "exit": "home",
+              "testid": "result-primary",
+              "top": 553,
+              "height": 49,
+              "width": 356,
+              "area": 17444,
+              "inView": true,
+              "disabled": false
+            },
+            "secondary": [
+              {
+                "text": "神を選ぶ（通常攻略）",
+                "exit": "startNormal",
+                "testid": "result-secondary",
+                "top": 610,
+                "height": 44,
+                "width": 174,
+                "area": 7656,
+                "inView": true,
+                "disabled": false
+              },
+              {
+                "text": "戦績を見る",
+                "exit": "record",
+                "testid": "result-secondary",
+                "top": 610,
+                "height": 44,
+                "width": 174,
+                "area": 7656,
+                "inView": true,
+                "disabled": false
+              }
+            ],
+            "tertiary": [
+              {
+                "text": "挑戦状をコピー",
+                "exit": "share",
+                "testid": "result-share",
+                "top": 718,
+                "height": 44,
+                "width": 111,
+                "area": 4884,
+                "inView": true,
+                "disabled": false
+              }
+            ],
+            "share": {
+              "text": "挑戦状をコピー",
+              "exit": "share",
+              "testid": "result-share",
+              "top": 718,
+              "height": 44,
+              "width": 111,
+              "area": 4884,
+              "inView": true,
+              "disabled": false
+            },
+            "shareAfterPrimary": true,
+            "buttonsInView": [
+              {
+                "text": "ホームへ",
+                "exit": "home"
+              },
+              {
+                "text": "神を選ぶ（通常攻略）",
+                "exit": "startNormal"
+              },
+              {
+                "text": "戦績を見る",
+                "exit": "record"
+              },
+              {
+                "text": "挑戦状をコピー",
+                "exit": "share"
+              }
+            ],
+            "dailyDiff": [
+              "今日の問い：未解（R4 敗北）",
+              "今日のベスト 8,980 まであと 8,980 点",
+              "前回 8,980 → 今回 0（−8,980）"
+            ],
+            "breakdownOpen": false,
+            "scoreInView": true,
+            "card": {
+              "scrollHeight": 716,
+              "clientHeight": 715,
+              "overflowX": false
+            },
+            "pageOverflowX": false,
+            "scrollX": 0
+          }
+        },
+        "primary1": "rematch",
+        "onDeckScreen": true,
+        "homeClicked": true,
+        "homeAfter": {
+          "vw": 390,
+          "vh": 844,
+          "scrollX": 0,
+          "overflowX": false,
+          "primaryText": "神を選ぶ",
+          "primaryRect": {
+            "top": 377,
+            "bottom": 439,
+            "height": 62,
+            "width": 350
+          },
+          "resume": false,
+          "resumeText": null,
+          "todayRect": {
+            "top": 447,
+            "bottom": 641,
+            "height": 194,
+            "width": 350
+          },
+          "todayEnemy": "業斧の鬼将【重撃型】神域強化",
+          "todayEnemyInView": true,
+          "todayAttempts": "今日の3回は終了",
+          "todayAttemptsInView": true,
+          "todayBest": "今日のベスト 8,980（大耀） 勝利",
+          "todayCta": "今日の記録を見る",
+          "todayCtaInView": true,
+          "countdown": "明日の問いは【連撃型】・次の敵まで 02:43",
+          "progress": [
+            "神階：🔒「むずかしい」撃破で解放",
+            "七柱との絆 1/7"
+          ],
+          "primaryAboveToday": true,
+          "primaryInView": true,
+          "linksInView": [
+            true,
+            true,
+            true
+          ],
+          "linkRects": [
+            {
+              "top": 682,
+              "bottom": 726,
+              "height": 44,
+              "width": 99
+            },
+            {
+              "top": 682,
+              "bottom": 726,
+              "height": 44,
+              "width": 166
+            },
+            {
+              "top": 726,
+              "bottom": 770,
+              "height": 44,
+              "width": 169
+            }
+          ],
+          "linkLabels": [
+            "戦績を見る",
+            "OTOMOとの絆を見る",
+            "クレジット・権利表記"
+          ],
+          "buttons": [
+            {
+              "text": "神を選ぶ",
+              "height": 62
+            },
+            {
+              "text": "今日の記録を見る",
+              "height": 44
+            },
+            {
+              "text": "戦績を見る",
+              "height": 44
+            },
+            {
+              "text": "OTOMOとの絆を見る",
+              "height": 44
+            },
+            {
+              "text": "クレジット・権利表記",
+              "height": 44
+            }
+          ],
+          "minButtonHeight": 44,
+          "hasOldDailyButton": false
+        },
+        "startDisabled": true,
+        "steps": [
+          {
+            "label": "before-1",
+            "storage": {
+              "daily": null,
+              "save": null
+            }
+          },
+          {
+            "label": "battle-1-started",
+            "storage": {
+              "daily": [
+                {
+                  "dateKey": "2026-11-05",
+                  "enemyId": "enemy_02",
+                  "seed": "daily-2026-11-05-enemy_02",
+                  "attemptsUsed": 1,
+                  "results": [],
+                  "bestScore": 0
+                }
+              ],
+              "save": {
+                "version": 9,
+                "mode": "daily",
+                "dailyKey": "2026-11-05",
+                "seed": "daily-2026-11-05-enemy_02",
+                "enemy": "enemy_02",
+                "stake": 0,
+                "round": 1,
+                "status": "playing"
+              }
+            }
+          },
+          {
+            "label": "result-1",
+            "storage": {
+              "daily": [
+                {
+                  "dateKey": "2026-11-05",
+                  "enemyId": "enemy_02",
+                  "seed": "daily-2026-11-05-enemy_02",
+                  "attemptsUsed": 1,
+                  "results": [
+                    [
+                      180,
+                      "lost",
+                      4
+                    ]
+                  ],
+                  "bestScore": 180
+                }
+              ],
+              "save": null
+            }
+          },
+          {
+            "label": "battle-2-started",
+            "storage": {
+              "daily": [
+                {
+                  "dateKey": "2026-11-05",
+                  "enemyId": "enemy_02",
+                  "seed": "daily-2026-11-05-enemy_02",
+                  "attemptsUsed": 2,
+                  "results": [
+                    [
+                      180,
+                      "lost",
+                      4
+                    ]
+                  ],
+                  "bestScore": 180
+                }
+              ],
+              "save": {
+                "version": 9,
+                "mode": "daily",
+                "dailyKey": "2026-11-05",
+                "seed": "daily-2026-11-05-enemy_02",
+                "enemy": "enemy_02",
+                "stake": 0,
+                "round": 1,
+                "status": "playing"
+              }
+            }
+          },
+          {
+            "label": "result-2",
+            "storage": {
+              "daily": [
+                {
+                  "dateKey": "2026-11-05",
+                  "enemyId": "enemy_02",
+                  "seed": "daily-2026-11-05-enemy_02",
+                  "attemptsUsed": 2,
+                  "results": [
+                    [
+                      180,
+                      "lost",
+                      4
+                    ],
+                    [
+                      898,
+                      "won",
+                      5
+                    ]
+                  ],
+                  "bestScore": 898
+                }
+              ],
+              "save": null
+            }
+          },
+          {
+            "label": "deck-before-3",
+            "storage": {
+              "daily": [
+                {
+                  "dateKey": "2026-11-05",
+                  "enemyId": "enemy_02",
+                  "seed": "daily-2026-11-05-enemy_02",
+                  "attemptsUsed": 2,
+                  "results": [
+                    [
+                      180,
+                      "lost",
+                      4
+                    ],
+                    [
+                      898,
+                      "won",
+                      5
+                    ]
+                  ],
+                  "bestScore": 898
+                }
+              ],
+              "save": null
+            }
+          },
+          {
+            "label": "battle-3-started",
+            "storage": {
+              "daily": [
+                {
+                  "dateKey": "2026-11-05",
+                  "enemyId": "enemy_02",
+                  "seed": "daily-2026-11-05-enemy_02",
+                  "attemptsUsed": 3,
+                  "results": [
+                    [
+                      180,
+                      "lost",
+                      4
+                    ],
+                    [
+                      898,
+                      "won",
+                      5
+                    ]
+                  ],
+                  "bestScore": 898
+                }
+              ],
+              "save": {
+                "version": 9,
+                "mode": "daily",
+                "dailyKey": "2026-11-05",
+                "seed": "daily-2026-11-05-enemy_02",
+                "enemy": "enemy_02",
+                "stake": 0,
+                "round": 1,
+                "status": "playing"
+              }
+            }
+          },
+          {
+            "label": "result-3",
+            "storage": {
+              "daily": [
+                {
+                  "dateKey": "2026-11-05",
+                  "enemyId": "enemy_02",
+                  "seed": "daily-2026-11-05-enemy_02",
+                  "attemptsUsed": 3,
+                  "results": [
+                    [
+                      180,
+                      "lost",
+                      4
+                    ],
+                    [
+                      898,
+                      "won",
+                      5
+                    ],
+                    [
+                      0,
+                      "lost",
+                      4
+                    ]
+                  ],
+                  "bestScore": 898
+                }
+              ],
+              "save": null
+            }
+          },
+          {
+            "label": "home-after",
+            "storage": {
+              "daily": [
+                {
+                  "dateKey": "2026-11-05",
+                  "enemyId": "enemy_02",
+                  "seed": "daily-2026-11-05-enemy_02",
+                  "attemptsUsed": 3,
+                  "results": [
+                    [
+                      180,
+                      "lost",
+                      4
+                    ],
+                    [
+                      898,
+                      "won",
+                      5
+                    ],
+                    [
+                      0,
+                      "lost",
+                      4
+                    ]
+                  ],
+                  "bestScore": 898
+                }
+              ],
+              "save": null
+            }
+          }
+        ],
+        "errors": []
+      },
+      "dailyLoseFirst": {
+        "pending": null,
+        "metrics": {
+          "vw": 390,
+          "vh": 844,
+          "status": "敗北",
+          "score": "スコア 0",
+          "rewardPending": false,
+          "goal": {
+            "id": "D1",
+            "text": "同じ盤面で業斧の鬼将を撃破する（残り2回）",
+            "textHeight": 20,
+            "lineHeight": 20.3,
+            "lines": 1,
+            "inView": true
+          },
+          "primary": {
+            "text": "もう一度挑戦（残り2回）",
+            "exit": "rematch",
+            "testid": "result-primary",
+            "top": 543,
+            "height": 49,
+            "width": 356,
+            "area": 17444,
+            "inView": true,
+            "disabled": false
+          },
+          "secondary": [
+            {
+              "text": "デッキを調整",
+              "exit": "adjustDeck",
+              "testid": "result-secondary",
+              "top": 600,
+              "height": 44,
+              "width": 174,
+              "area": 7656,
+              "inView": true,
+              "disabled": false
+            },
+            {
+              "text": "神・デッキを選び直す",
+              "exit": "reselect",
+              "testid": "result-secondary",
+              "top": 600,
+              "height": 44,
+              "width": 174,
+              "area": 7656,
+              "inView": true,
+              "disabled": false
+            }
+          ],
+          "tertiary": [
+            {
+              "text": "ホームへ",
+              "exit": "home",
+              "testid": "result-tertiary-link",
+              "top": 708,
+              "height": 44,
+              "width": 72,
+              "area": 3168,
+              "inView": true,
+              "disabled": false
+            },
+            {
+              "text": "挑戦状をコピー",
+              "exit": "share",
+              "testid": "result-share",
+              "top": 708,
+              "height": 44,
+              "width": 111,
+              "area": 4884,
+              "inView": true,
+              "disabled": false
+            }
+          ],
+          "share": {
+            "text": "挑戦状をコピー",
+            "exit": "share",
+            "testid": "result-share",
+            "top": 708,
+            "height": 44,
+            "width": 111,
+            "area": 4884,
+            "inView": true,
+            "disabled": false
+          },
+          "shareAfterPrimary": true,
+          "buttonsInView": [
+            {
+              "text": "もう一度挑戦（残り2回）",
+              "exit": "rematch"
+            },
+            {
+              "text": "デッキを調整",
+              "exit": "adjustDeck"
+            },
+            {
+              "text": "神・デッキを選び直す",
+              "exit": "reselect"
+            },
+            {
+              "text": "ホームへ",
+              "exit": "home"
+            },
+            {
+              "text": "挑戦状をコピー",
+              "exit": "share"
+            }
+          ],
+          "dailyDiff": [
+            "今日の問い：未解（R4 敗北）",
+            "今日のベストはまだありません",
+            "残り 2 回"
+          ],
+          "breakdownOpen": false,
+          "scoreInView": true,
+          "card": {
+            "scrollHeight": 695,
+            "clientHeight": 695,
+            "overflowX": false
+          },
+          "pageOverflowX": false,
+          "scrollX": 0
+        },
+        "storage": {
+          "daily": [
+            {
+              "dateKey": "2026-11-05",
+              "enemyId": "enemy_02",
+              "seed": "daily-2026-11-05-enemy_02",
+              "attemptsUsed": 1,
+              "results": [
+                [
+                  0,
+                  "lost",
+                  4
+                ]
+              ],
+              "bestScore": 0
+            }
+          ],
+          "save": null
+        },
+        "errors": []
+      }
+    },
+    "pc1366": {
+      "homeNoResume": {
+        "metrics": {
+          "vw": 1366,
+          "vh": 768,
+          "scrollX": 0,
+          "overflowX": false,
+          "primaryText": "初陣へおすすめの構成ですぐ戦う",
+          "primaryRect": {
+            "top": 347,
+            "bottom": 411,
+            "height": 64,
+            "width": 320
+          },
+          "resume": false,
+          "resumeText": null,
+          "todayRect": {
+            "top": 425,
+            "bottom": 552,
+            "height": 127,
+            "width": 524
+          },
+          "todayEnemy": "業斧の鬼将【重撃型】神域強化",
+          "todayEnemyInView": true,
+          "todayAttempts": "残り 3/3",
+          "todayAttemptsInView": true,
+          "todayBest": "まだ挑戦していません",
+          "todayCta": "挑戦する（残り3回）",
+          "todayCtaInView": true,
+          "countdown": null,
+          "progress": [],
+          "primaryAboveToday": true,
+          "primaryInView": true,
+          "linksInView": [
+            true,
+            true,
+            true
+          ],
+          "linkRects": [
+            {
+              "top": 566,
+              "bottom": 610,
+              "height": 44,
+              "width": 99
+            },
+            {
+              "top": 566,
+              "bottom": 610,
+              "height": 44,
+              "width": 166
+            },
+            {
+              "top": 566,
+              "bottom": 610,
+              "height": 44,
+              "width": 169
+            }
+          ],
+          "linkLabels": [
+            "戦績を見る",
+            "OTOMOとの絆を見る",
+            "クレジット・権利表記"
+          ],
+          "buttons": [
+            {
+              "text": "初陣へおすすめの構成ですぐ戦う",
+              "height": 64
+            },
+            {
+              "text": "神を選ぶ",
+              "height": 64
+            },
+            {
+              "text": "挑戦する（残り3回）",
+              "height": 44
+            },
+            {
+              "text": "戦績を見る",
+              "height": 44
+            },
+            {
+              "text": "OTOMOとの絆を見る",
+              "height": 44
+            },
+            {
+              "text": "クレジット・権利表記",
+              "height": 44
+            }
+          ],
+          "minButtonHeight": 44,
+          "hasOldDailyButton": false
+        },
+        "clsLoad": 0,
+        "clsAfterTutorial": 0,
+        "tutorialClosed": false,
+        "errors": []
+      },
+      "normalWin": {
+        "pending": {
+          "vw": 1366,
+          "vh": 768,
+          "status": "勝利",
+          "score": "スコア 8,790",
+          "rewardPending": true,
+          "goal": null,
+          "primary": null,
+          "secondary": [],
+          "tertiary": [],
+          "share": null,
+          "shareAfterPrimary": null,
+          "buttonsInView": [
+            {
+              "text": "報酬カードを選ぶ ›",
+              "exit": null
+            }
+          ],
+          "dailyDiff": null,
+          "breakdownOpen": true,
+          "scoreInView": true,
+          "card": {
+            "scrollHeight": 777,
+            "clientHeight": 651,
+            "overflowX": false
+          },
+          "pageOverflowX": false,
+          "scrollX": 0
+        },
+        "metrics": {
+          "vw": 1366,
+          "vh": 768,
+          "status": "勝利",
+          "score": "スコア 8,790",
+          "rewardPending": false,
+          "goal": {
+            "id": "NM1",
+            "text": "業斧の鬼将を別の神でも攻略する（この敵 1/7 神）",
+            "textHeight": 20,
+            "lineHeight": 20.3,
+            "lines": 1,
+            "inView": true
+          },
+          "primary": {
+            "text": "別の神で挑む（神を選び直す）",
+            "exit": "reselect",
+            "testid": "result-primary",
+            "top": 420,
+            "height": 49,
+            "width": 420,
+            "area": 20580,
+            "inView": true,
+            "disabled": false
+          },
+          "secondary": [
+            {
+              "text": "デッキを調整",
+              "exit": "adjustDeck",
+              "testid": "result-secondary",
+              "top": 477,
+              "height": 44,
+              "width": 206,
+              "area": 9064,
+              "inView": true,
+              "disabled": false
+            },
+            {
+              "text": "今日の神域挑戦へ",
+              "exit": "goDaily",
+              "testid": "result-secondary",
+              "top": 477,
+              "height": 44,
+              "width": 206,
+              "area": 9064,
+              "inView": true,
+              "disabled": false
+            }
+          ],
+          "tertiary": [
+            {
+              "text": "ホームへ",
+              "exit": "home",
+              "testid": "result-tertiary-link",
+              "top": 948,
+              "height": 44,
+              "width": 72,
+              "area": 3168,
+              "inView": false,
+              "disabled": false
+            },
+            {
+              "text": "同じ構成でもう一度",
+              "exit": "rematch",
+              "testid": "result-tertiary-link",
+              "top": 948,
+              "height": 44,
+              "width": 137,
+              "area": 6028,
+              "inView": false,
+              "disabled": false
+            },
+            {
+              "text": "挑戦状をコピー",
+              "exit": "share",
+              "testid": "result-share",
+              "top": 948,
+              "height": 44,
+              "width": 111,
+              "area": 4884,
+              "inView": false,
+              "disabled": false
+            }
+          ],
+          "share": {
+            "text": "挑戦状をコピー",
+            "exit": "share",
+            "testid": "result-share",
+            "top": 948,
+            "height": 44,
+            "width": 111,
+            "area": 4884,
+            "inView": false,
+            "disabled": false
+          },
+          "shareAfterPrimary": true,
+          "buttonsInView": [
+            {
+              "text": "別の神で挑む（神を選び直す）",
+              "exit": "reselect"
+            },
+            {
+              "text": "デッキを調整",
+              "exit": "adjustDeck"
+            },
+            {
+              "text": "今日の神域挑戦へ",
+              "exit": "goDaily"
+            }
+          ],
+          "dailyDiff": null,
+          "breakdownOpen": true,
+          "scoreInView": true,
+          "card": {
+            "scrollHeight": 949,
+            "clientHeight": 651,
+            "overflowX": false
+          },
+          "pageOverflowX": false,
+          "scrollX": 0
+        },
+        "rematch": {
+          "clicked": true,
+          "storage": {
+            "daily": null,
+            "save": {
+              "version": 9,
+              "mode": "normal",
+              "dailyKey": null,
+              "seed": "p7spec-result-normal-win",
+              "enemy": "enemy_02",
+              "stake": 0,
+              "round": 1,
+              "status": "playing"
+            }
+          }
+        },
+        "errors": []
+      },
+      "dailyLoseFirst": {
+        "pending": null,
+        "metrics": {
+          "vw": 1366,
+          "vh": 768,
+          "status": "敗北",
+          "score": "スコア 0",
+          "rewardPending": false,
+          "goal": {
+            "id": "D1",
+            "text": "同じ盤面で業斧の鬼将を撃破する（残り2回）",
+            "textHeight": 20,
+            "lineHeight": 20.3,
+            "lines": 1,
+            "inView": true
+          },
+          "primary": {
+            "text": "もう一度挑戦（残り2回）",
+            "exit": "rematch",
+            "testid": "result-primary",
+            "top": 501,
+            "height": 49,
+            "width": 420,
+            "area": 20580,
+            "inView": true,
+            "disabled": false
+          },
+          "secondary": [
+            {
+              "text": "デッキを調整",
+              "exit": "adjustDeck",
+              "testid": "result-secondary",
+              "top": 558,
+              "height": 44,
+              "width": 206,
+              "area": 9064,
+              "inView": true,
+              "disabled": false
+            },
+            {
+              "text": "神・デッキを選び直す",
+              "exit": "reselect",
+              "testid": "result-secondary",
+              "top": 558,
+              "height": 44,
+              "width": 206,
+              "area": 9064,
+              "inView": true,
+              "disabled": false
+            }
+          ],
+          "tertiary": [
+            {
+              "text": "ホームへ",
+              "exit": "home",
+              "testid": "result-tertiary-link",
+              "top": 918,
+              "height": 44,
+              "width": 72,
+              "area": 3168,
+              "inView": false,
+              "disabled": false
+            },
+            {
+              "text": "挑戦状をコピー",
+              "exit": "share",
+              "testid": "result-share",
+              "top": 918,
+              "height": 44,
+              "width": 111,
+              "area": 4884,
+              "inView": false,
+              "disabled": false
+            }
+          ],
+          "share": {
+            "text": "挑戦状をコピー",
+            "exit": "share",
+            "testid": "result-share",
+            "top": 918,
+            "height": 44,
+            "width": 111,
+            "area": 4884,
+            "inView": false,
+            "disabled": false
+          },
+          "shareAfterPrimary": true,
+          "buttonsInView": [
+            {
+              "text": "もう一度挑戦（残り2回）",
+              "exit": "rematch"
+            },
+            {
+              "text": "デッキを調整",
+              "exit": "adjustDeck"
+            },
+            {
+              "text": "神・デッキを選び直す",
+              "exit": "reselect"
+            }
+          ],
+          "dailyDiff": [
+            "今日の問い：未解（R4 敗北）",
+            "今日のベストはまだありません",
+            "残り 2 回"
+          ],
+          "breakdownOpen": true,
+          "scoreInView": true,
+          "card": {
+            "scrollHeight": 920,
+            "clientHeight": 651,
+            "overflowX": false
+          },
+          "pageOverflowX": false,
+          "scrollX": 0
+        },
+        "storage": {
+          "daily": [
+            {
+              "dateKey": "2026-11-05",
+              "enemyId": "enemy_02",
+              "seed": "daily-2026-11-05-enemy_02",
+              "attemptsUsed": 1,
+              "results": [
+                [
+                  0,
+                  "lost",
+                  4
+                ]
+              ],
+              "bestScore": 0
+            }
+          ],
+          "save": null
+        },
+        "errors": []
+      }
+    },
+    "sp760": {
+      "homeNoResume": {
+        "metrics": {
+          "vw": 390,
+          "vh": 760,
+          "scrollX": 0,
+          "overflowX": false,
+          "primaryText": "初陣へおすすめの構成ですぐ戦う",
+          "primaryRect": {
+            "top": 340,
+            "bottom": 403,
+            "height": 63,
+            "width": 350
+          },
+          "resume": false,
+          "resumeText": null,
+          "todayRect": {
+            "top": 463,
+            "bottom": 617,
+            "height": 153,
+            "width": 350
+          },
+          "todayEnemy": "業斧の鬼将【重撃型】神域強化",
+          "todayEnemyInView": true,
+          "todayAttempts": "残り 3/3",
+          "todayAttemptsInView": true,
+          "todayBest": "まだ挑戦していません",
+          "todayCta": "挑戦する（残り3回）",
+          "todayCtaInView": true,
+          "countdown": null,
+          "progress": [],
+          "primaryAboveToday": true,
+          "primaryInView": true,
+          "linksInView": [
+            true,
+            true,
+            true
+          ],
+          "linkRects": [
+            {
+              "top": 625,
+              "bottom": 669,
+              "height": 44,
+              "width": 99
+            },
+            {
+              "top": 625,
+              "bottom": 669,
+              "height": 44,
+              "width": 166
+            },
+            {
+              "top": 669,
+              "bottom": 713,
+              "height": 44,
+              "width": 169
+            }
+          ],
+          "linkLabels": [
+            "戦績を見る",
+            "OTOMOとの絆を見る",
+            "クレジット・権利表記"
+          ],
+          "buttons": [
+            {
+              "text": "初陣へおすすめの構成ですぐ戦う",
+              "height": 63
+            },
+            {
+              "text": "神を選ぶ",
+              "height": 44
+            },
+            {
+              "text": "挑戦する（残り3回）",
+              "height": 44
+            },
+            {
+              "text": "戦績を見る",
+              "height": 44
+            },
+            {
+              "text": "OTOMOとの絆を見る",
+              "height": 44
+            },
+            {
+              "text": "クレジット・権利表記",
+              "height": 44
+            }
+          ],
+          "minButtonHeight": 44,
+          "hasOldDailyButton": false
+        },
+        "clsLoad": 0,
+        "clsAfterTutorial": 0,
+        "tutorialClosed": false,
+        "errors": []
+      },
+      "normalWin": {
+        "pending": {
+          "vw": 390,
+          "vh": 760,
+          "status": "勝利",
+          "score": "スコア 8,790",
+          "rewardPending": true,
+          "goal": null,
+          "primary": null,
+          "secondary": [],
+          "tertiary": [],
+          "share": null,
+          "shareAfterPrimary": null,
+          "buttonsInView": [
+            {
+              "text": "報酬カードを選ぶ ›",
+              "exit": null
+            }
+          ],
+          "dailyDiff": null,
+          "breakdownOpen": false,
+          "scoreInView": true,
+          "card": {
+            "scrollHeight": 541,
+            "clientHeight": 541,
+            "overflowX": false
+          },
+          "pageOverflowX": false,
+          "scrollX": 0
+        },
+        "metrics": {
+          "vw": 390,
+          "vh": 760,
+          "status": "勝利",
+          "score": "スコア 8,790",
+          "rewardPending": false,
+          "goal": {
+            "id": "NM1",
+            "text": "業斧の鬼将を別の神でも攻略する（この敵 1/7 神）",
+            "textHeight": 20,
+            "lineHeight": 20.3,
+            "lines": 1,
+            "inView": true
+          },
+          "primary": {
+            "text": "別の神で挑む（神を選び直す）",
+            "exit": "reselect",
+            "testid": "result-primary",
+            "top": 439,
+            "height": 49,
+            "width": 356,
+            "area": 17444,
+            "inView": true,
+            "disabled": false
+          },
+          "secondary": [
+            {
+              "text": "デッキを調整",
+              "exit": "adjustDeck",
+              "testid": "result-secondary",
+              "top": 496,
+              "height": 44,
+              "width": 174,
+              "area": 7656,
+              "inView": true,
+              "disabled": false
+            },
+            {
+              "text": "今日の神域挑戦へ",
+              "exit": "goDaily",
+              "testid": "result-secondary",
+              "top": 496,
+              "height": 44,
+              "width": 174,
+              "area": 7656,
+              "inView": true,
+              "disabled": false
+            }
+          ],
+          "tertiary": [
+            {
+              "text": "ホームへ",
+              "exit": "home",
+              "testid": "result-tertiary-link",
+              "top": 711,
+              "height": 44,
+              "width": 72,
+              "area": 3168,
+              "inView": false,
+              "disabled": false
+            },
+            {
+              "text": "同じ構成でもう一度",
+              "exit": "rematch",
+              "testid": "result-tertiary-link",
+              "top": 711,
+              "height": 44,
+              "width": 137,
+              "area": 6028,
+              "inView": false,
+              "disabled": false
+            },
+            {
+              "text": "挑戦状をコピー",
+              "exit": "share",
+              "testid": "result-share",
+              "top": 711,
+              "height": 44,
+              "width": 111,
+              "area": 4884,
+              "inView": false,
+              "disabled": false
+            }
+          ],
+          "share": {
+            "text": "挑戦状をコピー",
+            "exit": "share",
+            "testid": "result-share",
+            "top": 711,
+            "height": 44,
+            "width": 111,
+            "area": 4884,
+            "inView": false,
+            "disabled": false
+          },
+          "shareAfterPrimary": true,
+          "buttonsInView": [
+            {
+              "text": "別の神で挑む（神を選び直す）",
+              "exit": "reselect"
+            },
+            {
+              "text": "デッキを調整",
+              "exit": "adjustDeck"
+            },
+            {
+              "text": "今日の神域挑戦へ",
+              "exit": "goDaily"
+            }
+          ],
+          "dailyDiff": null,
+          "breakdownOpen": false,
+          "scoreInView": true,
+          "card": {
+            "scrollHeight": 713,
+            "clientHeight": 644,
+            "overflowX": false
+          },
+          "pageOverflowX": false,
+          "scrollX": 0
+        },
+        "rematch": {
+          "clicked": true,
+          "storage": {
+            "daily": null,
+            "save": {
+              "version": 9,
+              "mode": "normal",
+              "dailyKey": null,
+              "seed": "p7spec-result-normal-win",
+              "enemy": "enemy_02",
+              "stake": 0,
+              "round": 1,
+              "status": "playing"
+            }
+          }
+        },
+        "errors": []
+      },
+      "dailyLoseFirst": {
+        "pending": null,
+        "metrics": {
+          "vw": 390,
+          "vh": 760,
+          "status": "敗北",
+          "score": "スコア 0",
+          "rewardPending": false,
+          "goal": {
+            "id": "D1",
+            "text": "同じ盤面で業斧の鬼将を撃破する（残り2回）",
+            "textHeight": 20,
+            "lineHeight": 20.3,
+            "lines": 1,
+            "inView": true
+          },
+          "primary": {
+            "text": "もう一度挑戦（残り2回）",
+            "exit": "rematch",
+            "testid": "result-primary",
+            "top": 500,
+            "height": 49,
+            "width": 356,
+            "area": 17444,
+            "inView": true,
+            "disabled": false
+          },
+          "secondary": [
+            {
+              "text": "デッキを調整",
+              "exit": "adjustDeck",
+              "testid": "result-secondary",
+              "top": 557,
+              "height": 44,
+              "width": 174,
+              "area": 7656,
+              "inView": true,
+              "disabled": false
+            },
+            {
+              "text": "神・デッキを選び直す",
+              "exit": "reselect",
+              "testid": "result-secondary",
+              "top": 557,
+              "height": 44,
+              "width": 174,
+              "area": 7656,
+              "inView": true,
+              "disabled": false
+            }
+          ],
+          "tertiary": [
+            {
+              "text": "ホームへ",
+              "exit": "home",
+              "testid": "result-tertiary-link",
+              "top": 661,
+              "height": 44,
+              "width": 72,
+              "area": 3168,
+              "inView": false,
+              "disabled": false
+            },
+            {
+              "text": "挑戦状をコピー",
+              "exit": "share",
+              "testid": "result-share",
+              "top": 661,
+              "height": 44,
+              "width": 111,
+              "area": 4884,
+              "inView": false,
+              "disabled": false
+            }
+          ],
+          "share": {
+            "text": "挑戦状をコピー",
+            "exit": "share",
+            "testid": "result-share",
+            "top": 661,
+            "height": 44,
+            "width": 111,
+            "area": 4884,
+            "inView": false,
+            "disabled": false
+          },
+          "shareAfterPrimary": true,
+          "buttonsInView": [
+            {
+              "text": "もう一度挑戦（残り2回）",
+              "exit": "rematch"
+            },
+            {
+              "text": "デッキを調整",
+              "exit": "adjustDeck"
+            },
+            {
+              "text": "神・デッキを選び直す",
+              "exit": "reselect"
+            }
+          ],
+          "dailyDiff": [
+            "今日の問い：未解（R4 敗北）",
+            "今日のベストはまだありません",
+            "残り 2 回"
+          ],
+          "breakdownOpen": false,
+          "scoreInView": true,
+          "card": {
+            "scrollHeight": 663,
+            "clientHeight": 644,
+            "overflowX": false
+          },
+          "pageOverflowX": false,
+          "scrollX": 0
+        },
+        "storage": {
+          "daily": [
+            {
+              "dateKey": "2026-11-05",
+              "enemyId": "enemy_02",
+              "seed": "daily-2026-11-05-enemy_02",
+              "attemptsUsed": 1,
+              "results": [
+                [
+                  0,
+                  "lost",
+                  4
+                ]
+              ],
+              "bestScore": 0
+            }
+          ],
+          "save": null
+        },
+        "errors": []
+      }
+    }
+  },
+  "layout": null,
+  "errors": [],
+  "finishedAt": "2026-11-05T12:20:01.689Z"
+}
