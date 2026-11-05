@@ -2,7 +2,7 @@
 
 Production の「確定状態」を一目で確認するための要約です。新しい仕様判断は含みません（根拠は `docs/DECISIONS.md`）。**§A が現在の正本**。§B 以降は 8/31 Public Beta〜Phase 3（2026-09-06）時点の履歴として残します（当時の Known Non-blockers 1〜16 は §A-4 の生存 Known に統合済み）。
 
-## A. 現在の Production 状態（2026-11-05・決定288 **v1.1.5 Hotfix PRODUCTION LIVE**（将軍家 9 体の戦闘背景 復元）・最終スコープ 実装完了＝将軍家 10 体＋敵演出 品質向上。**完成宣言は CEO Human QA（iPhone・本番）まで保留**）
+## A. 現在の Production 状態（2026-11-05・決定288 **v1.1.5 Hotfix PRODUCTION LIVE**（将軍家 9 体の戦闘背景 復元）・最終スコープ 実装完了＝将軍家 10 体＋敵演出 品質向上。**CEO Human QA（iPhone）PASS 2026-11-05＝Hotfix 完了。v1.1 完成宣言は最終通しプレイの完了状況を確認してから CEO 判断**）
 
 ### A-000000000. v1.1.5 公開（2026-11-05・決定288 Hotfix PRODUCTION LIVE・将軍家 9 体の戦闘背景 復元）
 
@@ -16,7 +16,8 @@ Production の「確定状態」を一目で確認するための要約です。
 | **Release Gate／Smoke** | `docs/V1_1_5_STAGE_BG_HOTFIX_GATE.md`（契約テスト 7・vitest 1,702・lint／tsc／build・実ブラウザ before 16/34 → after 34/34・S5 228・S6 6/6 MATCH・cf2 8/8 MATCH）／`docs/V1_1_5_PRODUCTION_SMOKE.md`（S0 bundle 一致／**本番 stage-bg-probe 34/34**（17 体 × PC／SP375・JS error 0）／S2 44/44（Home `v1.1.5 (01ffc94)`）） |
 | **version 表示** | Home `v1.1.5 (01ffc94)`（S2 で検証） |
 | **Known** | K01〜K39 据え置き＋K40〜K47 凍結（CEO 承認 2026-11-04）。本 Hotfix による Known の追加・解消なし（A-4） |
-| **次** | **CEO Human QA（iPhone・本番 URL）**：将軍家（岡っ引き／康虎ほか）の戦闘で舞台画像が見え、周辺減光との重なりの視認性に問題がないこと。PASS なら **v1.1 完成宣言の再開は CEO 判断**（tag は v1.1.5 で検討）。AI は宣言しない |
+| **CEO Human QA** | **CEO Human QA（iPhone・本番 URL）PASS（2026-11-05）**：将軍家の戦闘背景が表示される。CEO 判定「v1.1.5 の背景 Hotfix は完了」。本番コードの追加変更・新規機能実装は不要（CEO 指示） |
+| **次** | **v1.1 完成宣言は最終通しプレイの完了状況を確認してから CEO が判断**（tag は v1.1.5 で検討）。AI は宣言しない |
 
 ### A-00000000. v1.1.4 公開（2026-11-04・決定288 W6 PRODUCTION LIVE・最終スコープ 実装完了）
 

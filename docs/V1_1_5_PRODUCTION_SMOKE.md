@@ -1,6 +1,6 @@
 # v1.1.5 Production Smoke — 将軍家 9 体の戦闘背景（舞台画像）復元 Hotfix（決定288・2026-11-05）
 
-> **状態：PASS（S0 bundle 一致／本番 stage-bg-probe 34/34／S2 44/44・本番 URL 直撃・headless Chromium・1 browser 直列）。製品異常 0・Rollback 不要。** master = origin/master **`01ffc94`**（PR #23 merge・2026-11-05T10:27:23Z・CEO 操作）→ CI run `42010850426` success → Vercel Production **`7571139748`** success（10:28:10Z）。**v1.1 完成宣言は CEO Human QA（iPhone・本番）まで保留。**
+> **状態：PASS（S0 bundle 一致／本番 stage-bg-probe 34/34／S2 44/44・本番 URL 直撃・headless Chromium・1 browser 直列）。製品異常 0・Rollback 不要。** master = origin/master **`01ffc94`**（PR #23 merge・2026-11-05T10:27:23Z・CEO 操作）→ CI run `42010850426` success → Vercel Production **`7571139748`** success（10:28:10Z）。**CEO Human QA（iPhone・本番）PASS（2026-11-05）→ CEO 判定「v1.1.5 の背景 Hotfix は完了」。v1.1 完成宣言は最終通しプレイの完了状況を確認してから CEO が判断。**
 
 ## 1. 配信物（S0）
 
@@ -25,7 +25,7 @@
 
 ## 3. UNVERIFIED（PASS 扱いにしない）
 
-1. **本番 iOS 実機（CEO Human QA）**：将軍家（岡っ引き／康虎ほか）の戦闘で舞台画像が見え、周辺減光との重なりの視認性に問題がないこと。本 Hotfix で初めて本番に出る見た目のため必須 → 完成宣言の再開は CEO 判断
+1. ~~本番 iOS 実機（CEO Human QA）~~ → **PASS（CEO・2026-11-05）**：将軍家の戦闘背景が表示される（周辺減光との重なりも含め CEO 確認）。CEO 判定「v1.1.5 の背景 Hotfix は完了」
 2. S5／S6／cf2 の本番再実行（bundle byte 一致のため省略）
 
 ## 4. 証跡
@@ -35,4 +35,4 @@
 ## 5. 次
 
 - 決定288 v1.1.5 Hotfix を **PRODUCTION LIVE** として `docs/DECISIONS.md`・`docs/RELEASE_STATUS.md`（A-000000000）に記録（本 commit・docs-only）→ PR（merge は CEO）
-- CEO Human QA（iPhone・本番 URL）→ PASS なら v1.1 完成宣言の再開を CEO が判断（AI は宣言しない）
+- ~~CEO Human QA（iPhone・本番 URL）~~ **PASS（2026-11-05）**。v1.1 完成宣言は最終通しプレイの完了状況を確認してから CEO が判断（AI は宣言しない）。本番コードの追加変更・新規機能実装は不要（CEO 指示）
