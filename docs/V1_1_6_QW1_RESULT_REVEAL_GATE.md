@@ -69,5 +69,6 @@ AI-PM Decision「v1.1.6 Quick Wins GO」（READ-ONLY 監査の採用 3 件のう
 
 ## 6. CEO 操作
 
-1. PR #25（branch `feat/v1_1_6-result-reveal-once`）の merge（CI GREEN・CLEAN 確認後・1 回）
-2. 本番反映後：AI が本番 S2＋result-reveal-probe → CEO Human QA（iPhone）→ 第 2 優先（託宣 SP 表示 3 点）へ
+1. ~~PR #25 の merge~~ **DONE**（CEO merge 2026-11-05T19:21:51Z → master `ed955ee` → Vercel `7583106189`・v1.1.6 PRODUCTION LIVE）
+2. ~~本番確認（AI）~~ **DONE**：S2 **44/44**・result-reveal-probe 報酬後 **PC 27 ms／SP375 24 ms**（`docs/V1_1_6_PRODUCTION_SMOKE.md`）
+3. **CEO Human QA（iPhone・本番 URL）**：通常勝利 → 報酬 → 結果画面が待たずに出る・初回の勝利演出が従来どおり → PASS で第 2 優先（託宣 SP 表示 3 点）へ
