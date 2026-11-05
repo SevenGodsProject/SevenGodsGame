@@ -69,5 +69,5 @@ CEO「Quick Win #2 GO」（QW#1 の iPhone Human QA PASS 後）。**runtime の�
 
 ## 6. CEO 操作
 
-1. PR（branch `feat/v1_1_6-qw2-oracle-sp`・番号は `docs/RELEASE_STATUS.md` v1.1.6 QW#2 RC 行）の merge（CI GREEN・CLEAN 確認後・1 回）
+1. PR #27（branch `feat/v1_1_6-qw2-oracle-sp`）の merge（CI GREEN・CLEAN 確認後・1 回）
 2. 本番反映後：AI が本番 S2＋oracle-sp-probe → CEO Human QA（iPhone）→ 第 3 優先（R6〜R7 のラウンド表示強調）へ
