@@ -1,0 +1,954 @@
+{
+  "base": "https://seven-gods-game.vercel.app",
+  "enemy": "oni",
+  "seed": "qw2-oracle",
+  "candidates": [
+    "『{name}』",
+    "出せる『{name}』",
+    "出せる:{name}",
+    "出せる {name}",
+    "『{name}』可",
+    "出せる札＋1",
+    "1枚引く＋神力1",
+    "札を1枚引く"
+  ],
+  "generatedAt": "2026-11-05T21:09:09.565Z",
+  "rows": [
+    {
+      "vp": "sp375",
+      "errors": [],
+      "states": [
+        {
+          "tag": "r1-start",
+          "title": "託宣（残り3回・1ラウンド1回まで）",
+          "panelBox": {
+            "x": 6,
+            "y": 418,
+            "w": 363,
+            "h": 69
+          },
+          "hScroll": false,
+          "ap": [
+            "2",
+            "2"
+          ],
+          "choices": [
+            {
+              "box": {
+                "x": 17,
+                "y": 442,
+                "w": 74,
+                "h": 39
+              },
+              "name": "加護の託宣守る",
+              "effectTextVisible": false,
+              "previewMode": "short",
+              "preview": "ブロック20",
+              "previewFont": "9px",
+              "previewBox": {
+                "x": 23,
+                "y": 463,
+                "w": 41,
+                "h": 14
+              },
+              "previewTextWidth": 36,
+              "previewTruncated": false,
+              "availWidth": 62,
+              "buttonOverflowX": false,
+              "buttonOverflowY": true,
+              "disabled": false
+            },
+            {
+              "box": {
+                "x": 97,
+                "y": 442,
+                "w": 74,
+                "h": 39
+              },
+              "name": "導きの託宣整える",
+              "effectTextVisible": false,
+              "previewMode": "short",
+              "preview": "1枚引く＋神力1",
+              "previewFont": "9px",
+              "previewBox": {
+                "x": 103,
+                "y": 463,
+                "w": 58,
+                "h": 14
+              },
+              "previewTextWidth": 58,
+              "previewTruncated": false,
+              "availWidth": 62,
+              "buttonOverflowX": false,
+              "buttonOverflowY": true,
+              "disabled": false
+            },
+            {
+              "box": {
+                "x": 178,
+                "y": 442,
+                "w": 74,
+                "h": 39
+              },
+              "name": "天啓の託宣攻める",
+              "effectTextVisible": false,
+              "previewMode": "short",
+              "preview": "40ダメージ",
+              "previewFont": "9px",
+              "previewBox": {
+                "x": 184,
+                "y": 463,
+                "w": 49,
+                "h": 14
+              },
+              "previewTextWidth": 36,
+              "previewTruncated": false,
+              "availWidth": 62,
+              "buttonOverflowX": false,
+              "buttonOverflowY": true,
+              "disabled": false
+            }
+          ]
+        },
+        {
+          "tag": "guide-candidate",
+          "title": "託宣（残り3回・1ラウンド1回まで）",
+          "panelBox": {
+            "x": 6,
+            "y": 418,
+            "w": 363,
+            "h": 69
+          },
+          "hScroll": false,
+          "ap": [
+            "0",
+            "2"
+          ],
+          "choices": [
+            {
+              "box": {
+                "x": 17,
+                "y": 442,
+                "w": 74,
+                "h": 39
+              },
+              "name": "加護の託宣守る",
+              "effectTextVisible": false,
+              "previewMode": "short",
+              "preview": "ブロック20",
+              "previewFont": "9px",
+              "previewBox": {
+                "x": 23,
+                "y": 463,
+                "w": 41,
+                "h": 14
+              },
+              "previewTextWidth": 36,
+              "previewTruncated": false,
+              "availWidth": 62,
+              "buttonOverflowX": false,
+              "buttonOverflowY": true,
+              "disabled": false
+            },
+            {
+              "box": {
+                "x": 97,
+                "y": 442,
+                "w": 74,
+                "h": 39
+              },
+              "name": "導きの託宣整える",
+              "effectTextVisible": false,
+              "previewMode": "short",
+              "preview": "出せる札＋1",
+              "previewFont": "9px",
+              "previewBox": {
+                "x": 103,
+                "y": 463,
+                "w": 47,
+                "h": 14
+              },
+              "previewTextWidth": 45,
+              "previewTruncated": false,
+              "availWidth": 62,
+              "buttonOverflowX": false,
+              "buttonOverflowY": true,
+              "disabled": false
+            },
+            {
+              "box": {
+                "x": 178,
+                "y": 442,
+                "w": 74,
+                "h": 39
+              },
+              "name": "天啓の託宣攻める",
+              "effectTextVisible": false,
+              "previewMode": "short",
+              "preview": "40ダメージ",
+              "previewFont": "9px",
+              "previewBox": {
+                "x": 184,
+                "y": 463,
+                "w": 49,
+                "h": 14
+              },
+              "previewTextWidth": 36,
+              "previewTruncated": false,
+              "availWidth": 62,
+              "buttonOverflowX": false,
+              "buttonOverflowY": true,
+              "disabled": false
+            }
+          ]
+        }
+      ],
+      "measure": [
+        {
+          "candidate": "『{name}』",
+          "fits": 59,
+          "total": 60,
+          "avail": 62,
+          "overflow": [
+            "『おおらかな一打』(63.8)"
+          ]
+        },
+        {
+          "candidate": "出せる『{name}』",
+          "fits": 30,
+          "total": 60,
+          "avail": 62,
+          "overflow": [
+            "出せる『アンコール』(66.9)",
+            "出せる『おおらかな一打』(87.7)",
+            "出せる『からかい半分』(80)",
+            "出せる『一心不乱』(68.9)",
+            "出せる『一攫千金』(68.9)",
+            "出せる『不動の構え』(74.6)",
+            "出せる『不屈の一歩』(76.4)",
+            "出せる『冒険者の勘』(76.4)",
+            "出せる『反撃の刃』(67.4)",
+            "出せる『受け流し』(64.5)",
+            "出せる『姉御の号令』(76.4)",
+            "出せる『守りの陣』(64.7)",
+            "出せる『小さな託宣』(74.1)",
+            "出せる『巫女の舞』(67.4)",
+            "出せる『幸運の女神』(76.4)",
+            "出せる『後輩想い』(67.4)",
+            "出せる『恵比寿顔』(68.9)",
+            "出せる『懐の深さ』(64.8)",
+            "出せる『捨身の一撃』(76.4)",
+            "出せる『気まぐれ』(63.1)",
+            "出せる『浄めの光』(65.9)",
+            "出せる『渾身の一撃』(76.4)",
+            "出せる『神力の泉』(67.4)",
+            "出せる『秘技・満ちる』(78.3)",
+            "出せる『笑って許す』(71)",
+            "出せる『誓いの盾』(65.9)",
+            "出せる『豪快な一撃』(76.7)",
+            "出せる『鉄壁の構え』(74.6)",
+            "出せる『長生きの知恵』(83.3)",
+            "出せる『魅惑の舞』(67.4)"
+          ]
+        },
+        {
+          "candidate": "出せる:{name}",
+          "fits": 45,
+          "total": 60,
+          "avail": 62,
+          "overflow": [
+            "出せる:おおらかな一打(80.9)",
+            "出せる:からかい半分(73.2)",
+            "出せる:不動の構え(67.8)",
+            "出せる:不屈の一歩(69.5)",
+            "出せる:冒険者の勘(69.5)",
+            "出せる:姉御の号令(69.5)",
+            "出せる:小さな託宣(67.3)",
+            "出せる:幸運の女神(69.5)",
+            "出せる:捨身の一撃(69.5)",
+            "出せる:渾身の一撃(69.5)",
+            "出せる:秘技・満ちる(71.5)",
+            "出せる:笑って許す(64.2)",
+            "出せる:豪快な一撃(69.9)",
+            "出せる:鉄壁の構え(67.8)",
+            "出せる:長生きの知恵(76.5)"
+          ]
+        },
+        {
+          "candidate": "出せる {name}",
+          "fits": 42,
+          "total": 60,
+          "avail": 62,
+          "overflow": [
+            "出せる おおらかな一打(81.2)",
+            "出せる からかい半分(73.5)",
+            "出せる 一心不乱(62.3)",
+            "出せる 一攫千金(62.3)",
+            "出せる 不動の構え(68.1)",
+            "出せる 不屈の一歩(69.9)",
+            "出せる 冒険者の勘(69.9)",
+            "出せる 姉御の号令(69.9)",
+            "出せる 小さな託宣(67.6)",
+            "出せる 幸運の女神(69.9)",
+            "出せる 恵比寿顔(62.3)",
+            "出せる 捨身の一撃(69.9)",
+            "出せる 渾身の一撃(69.9)",
+            "出せる 秘技・満ちる(71.8)",
+            "出せる 笑って許す(64.5)",
+            "出せる 豪快な一撃(70.2)",
+            "出せる 鉄壁の構え(68.1)",
+            "出せる 長生きの知恵(76.8)"
+          ]
+        },
+        {
+          "candidate": "『{name}』可",
+          "fits": 56,
+          "total": 60,
+          "avail": 62,
+          "overflow": [
+            "『おおらかな一打』可(72.8)",
+            "『からかい半分』可(65.1)",
+            "『秘技・満ちる』可(63.4)",
+            "『長生きの知恵』可(68.5)"
+          ]
+        },
+        {
+          "candidate": "出せる札＋1",
+          "fits": 1,
+          "total": 1,
+          "avail": 62,
+          "overflow": []
+        },
+        {
+          "candidate": "1枚引く＋神力1",
+          "fits": 1,
+          "total": 1,
+          "avail": 62,
+          "overflow": []
+        },
+        {
+          "candidate": "札を1枚引く",
+          "fits": 1,
+          "total": 1,
+          "avail": 62,
+          "overflow": []
+        }
+      ]
+    },
+    {
+      "vp": "sp390",
+      "errors": [],
+      "states": [
+        {
+          "tag": "r1-start",
+          "title": "託宣（残り3回・1ラウンド1回まで）",
+          "panelBox": {
+            "x": 6,
+            "y": 577,
+            "w": 378,
+            "h": 69
+          },
+          "hScroll": false,
+          "ap": [
+            "2",
+            "2"
+          ],
+          "choices": [
+            {
+              "box": {
+                "x": 17,
+                "y": 601,
+                "w": 79,
+                "h": 39
+              },
+              "name": "加護の託宣守る",
+              "effectTextVisible": false,
+              "previewMode": "short",
+              "preview": "ブロック20",
+              "previewFont": "9px",
+              "previewBox": {
+                "x": 23,
+                "y": 622,
+                "w": 41,
+                "h": 14
+              },
+              "previewTextWidth": 36,
+              "previewTruncated": false,
+              "availWidth": 67,
+              "buttonOverflowX": false,
+              "buttonOverflowY": true,
+              "disabled": false
+            },
+            {
+              "box": {
+                "x": 102,
+                "y": 601,
+                "w": 79,
+                "h": 39
+              },
+              "name": "導きの託宣整える",
+              "effectTextVisible": false,
+              "previewMode": "short",
+              "preview": "1枚引く＋神力1",
+              "previewFont": "9px",
+              "previewBox": {
+                "x": 108,
+                "y": 622,
+                "w": 58,
+                "h": 14
+              },
+              "previewTextWidth": 58,
+              "previewTruncated": false,
+              "availWidth": 67,
+              "buttonOverflowX": false,
+              "buttonOverflowY": true,
+              "disabled": false
+            },
+            {
+              "box": {
+                "x": 188,
+                "y": 601,
+                "w": 79,
+                "h": 39
+              },
+              "name": "天啓の託宣攻める",
+              "effectTextVisible": false,
+              "previewMode": "short",
+              "preview": "40ダメージ",
+              "previewFont": "9px",
+              "previewBox": {
+                "x": 194,
+                "y": 622,
+                "w": 49,
+                "h": 14
+              },
+              "previewTextWidth": 36,
+              "previewTruncated": false,
+              "availWidth": 67,
+              "buttonOverflowX": false,
+              "buttonOverflowY": true,
+              "disabled": false
+            }
+          ]
+        },
+        {
+          "tag": "guide-candidate",
+          "title": "託宣（残り3回・1ラウンド1回まで）",
+          "panelBox": {
+            "x": 6,
+            "y": 577,
+            "w": 378,
+            "h": 69
+          },
+          "hScroll": false,
+          "ap": [
+            "0",
+            "2"
+          ],
+          "choices": [
+            {
+              "box": {
+                "x": 17,
+                "y": 601,
+                "w": 79,
+                "h": 39
+              },
+              "name": "加護の託宣守る",
+              "effectTextVisible": false,
+              "previewMode": "short",
+              "preview": "ブロック20",
+              "previewFont": "9px",
+              "previewBox": {
+                "x": 23,
+                "y": 622,
+                "w": 41,
+                "h": 14
+              },
+              "previewTextWidth": 36,
+              "previewTruncated": false,
+              "availWidth": 67,
+              "buttonOverflowX": false,
+              "buttonOverflowY": true,
+              "disabled": false
+            },
+            {
+              "box": {
+                "x": 102,
+                "y": 601,
+                "w": 79,
+                "h": 39
+              },
+              "name": "導きの託宣整える",
+              "effectTextVisible": false,
+              "previewMode": "short",
+              "preview": "出せる札＋1",
+              "previewFont": "9px",
+              "previewBox": {
+                "x": 108,
+                "y": 622,
+                "w": 47,
+                "h": 14
+              },
+              "previewTextWidth": 45,
+              "previewTruncated": false,
+              "availWidth": 67,
+              "buttonOverflowX": false,
+              "buttonOverflowY": true,
+              "disabled": false
+            },
+            {
+              "box": {
+                "x": 188,
+                "y": 601,
+                "w": 79,
+                "h": 39
+              },
+              "name": "天啓の託宣攻める",
+              "effectTextVisible": false,
+              "previewMode": "short",
+              "preview": "40ダメージ",
+              "previewFont": "9px",
+              "previewBox": {
+                "x": 194,
+                "y": 622,
+                "w": 49,
+                "h": 14
+              },
+              "previewTextWidth": 36,
+              "previewTruncated": false,
+              "availWidth": 67,
+              "buttonOverflowX": false,
+              "buttonOverflowY": true,
+              "disabled": false
+            }
+          ]
+        }
+      ],
+      "measure": [
+        {
+          "candidate": "『{name}』",
+          "fits": 60,
+          "total": 60,
+          "avail": 67,
+          "overflow": []
+        },
+        {
+          "candidate": "出せる『{name}』",
+          "fits": 37,
+          "total": 60,
+          "avail": 67,
+          "overflow": [
+            "出せる『おおらかな一打』(87.7)",
+            "出せる『からかい半分』(80)",
+            "出せる『一心不乱』(68.9)",
+            "出せる『一攫千金』(68.9)",
+            "出せる『不動の構え』(74.6)",
+            "出せる『不屈の一歩』(76.4)",
+            "出せる『冒険者の勘』(76.4)",
+            "出せる『反撃の刃』(67.4)",
+            "出せる『姉御の号令』(76.4)",
+            "出せる『小さな託宣』(74.1)",
+            "出せる『巫女の舞』(67.4)",
+            "出せる『幸運の女神』(76.4)",
+            "出せる『後輩想い』(67.4)",
+            "出せる『恵比寿顔』(68.9)",
+            "出せる『捨身の一撃』(76.4)",
+            "出せる『渾身の一撃』(76.4)",
+            "出せる『神力の泉』(67.4)",
+            "出せる『秘技・満ちる』(78.3)",
+            "出せる『笑って許す』(71)",
+            "出せる『豪快な一撃』(76.7)",
+            "出せる『鉄壁の構え』(74.6)",
+            "出せる『長生きの知恵』(83.3)",
+            "出せる『魅惑の舞』(67.4)"
+          ]
+        },
+        {
+          "candidate": "出せる:{name}",
+          "fits": 46,
+          "total": 60,
+          "avail": 67,
+          "overflow": [
+            "出せる:おおらかな一打(80.9)",
+            "出せる:からかい半分(73.2)",
+            "出せる:不動の構え(67.8)",
+            "出せる:不屈の一歩(69.5)",
+            "出せる:冒険者の勘(69.5)",
+            "出せる:姉御の号令(69.5)",
+            "出せる:小さな託宣(67.3)",
+            "出せる:幸運の女神(69.5)",
+            "出せる:捨身の一撃(69.5)",
+            "出せる:渾身の一撃(69.5)",
+            "出せる:秘技・満ちる(71.5)",
+            "出せる:豪快な一撃(69.9)",
+            "出せる:鉄壁の構え(67.8)",
+            "出せる:長生きの知恵(76.5)"
+          ]
+        },
+        {
+          "candidate": "出せる {name}",
+          "fits": 46,
+          "total": 60,
+          "avail": 67,
+          "overflow": [
+            "出せる おおらかな一打(81.2)",
+            "出せる からかい半分(73.5)",
+            "出せる 不動の構え(68.1)",
+            "出せる 不屈の一歩(69.9)",
+            "出せる 冒険者の勘(69.9)",
+            "出せる 姉御の号令(69.9)",
+            "出せる 小さな託宣(67.6)",
+            "出せる 幸運の女神(69.9)",
+            "出せる 捨身の一撃(69.9)",
+            "出せる 渾身の一撃(69.9)",
+            "出せる 秘技・満ちる(71.8)",
+            "出せる 豪快な一撃(70.2)",
+            "出せる 鉄壁の構え(68.1)",
+            "出せる 長生きの知恵(76.8)"
+          ]
+        },
+        {
+          "candidate": "『{name}』可",
+          "fits": 58,
+          "total": 60,
+          "avail": 67,
+          "overflow": [
+            "『おおらかな一打』可(72.8)",
+            "『長生きの知恵』可(68.5)"
+          ]
+        },
+        {
+          "candidate": "出せる札＋1",
+          "fits": 1,
+          "total": 1,
+          "avail": 67,
+          "overflow": []
+        },
+        {
+          "candidate": "1枚引く＋神力1",
+          "fits": 1,
+          "total": 1,
+          "avail": 67,
+          "overflow": []
+        },
+        {
+          "candidate": "札を1枚引く",
+          "fits": 1,
+          "total": 1,
+          "avail": 67,
+          "overflow": []
+        }
+      ]
+    },
+    {
+      "vp": "pc660",
+      "errors": [],
+      "states": [
+        {
+          "tag": "r1-start",
+          "title": "託宣（残り3回・1ラウンド1回まで）",
+          "panelBox": {
+            "x": 134,
+            "y": 426,
+            "w": 1240,
+            "h": 56
+          },
+          "hScroll": false,
+          "ap": [
+            "2",
+            "2"
+          ],
+          "choices": [
+            {
+              "box": {
+                "x": 326,
+                "y": 432,
+                "w": 342,
+                "h": 44
+              },
+              "name": "加護の託宣守る",
+              "effectTextVisible": false,
+              "previewMode": "long",
+              "preview": "今なら ブロック20",
+              "previewFont": "10px",
+              "previewBox": {
+                "x": 363,
+                "y": 456,
+                "w": 77,
+                "h": 15
+              },
+              "previewTextWidth": 69,
+              "previewTruncated": false,
+              "availWidth": 324,
+              "buttonOverflowX": false,
+              "buttonOverflowY": false,
+              "disabled": false
+            },
+            {
+              "box": {
+                "x": 674,
+                "y": 432,
+                "w": 342,
+                "h": 44
+              },
+              "name": "導きの託宣整える",
+              "effectTextVisible": false,
+              "previewMode": "long",
+              "preview": "1枚引く＋神力1（出せる札は増えない）",
+              "previewFont": "10px",
+              "previewBox": {
+                "x": 711,
+                "y": 456,
+                "w": 165,
+                "h": 15
+              },
+              "previewTextWidth": 165,
+              "previewTruncated": false,
+              "availWidth": 324,
+              "buttonOverflowX": false,
+              "buttonOverflowY": false,
+              "disabled": false
+            },
+            {
+              "box": {
+                "x": 1021,
+                "y": 432,
+                "w": 342,
+                "h": 44
+              },
+              "name": "天啓の託宣攻める",
+              "effectTextVisible": false,
+              "previewMode": "long",
+              "preview": "40ダメージ",
+              "previewFont": "10px",
+              "previewBox": {
+                "x": 1058,
+                "y": 456,
+                "w": 86,
+                "h": 15
+              },
+              "previewTextWidth": 40,
+              "previewTruncated": false,
+              "availWidth": 324,
+              "buttonOverflowX": false,
+              "buttonOverflowY": false,
+              "disabled": false
+            }
+          ]
+        },
+        {
+          "tag": "guide-candidate",
+          "title": "託宣（残り3回・1ラウンド1回まで）",
+          "panelBox": {
+            "x": 134,
+            "y": 426,
+            "w": 1240,
+            "h": 56
+          },
+          "hScroll": false,
+          "ap": [
+            "0",
+            "2"
+          ],
+          "choices": [
+            {
+              "box": {
+                "x": 326,
+                "y": 432,
+                "w": 342,
+                "h": 44
+              },
+              "name": "加護の託宣守る",
+              "effectTextVisible": false,
+              "previewMode": "long",
+              "preview": "今なら ブロック20",
+              "previewFont": "10px",
+              "previewBox": {
+                "x": 363,
+                "y": 456,
+                "w": 77,
+                "h": 15
+              },
+              "previewTextWidth": 69,
+              "previewTruncated": false,
+              "availWidth": 324,
+              "buttonOverflowX": false,
+              "buttonOverflowY": false,
+              "disabled": false
+            },
+            {
+              "box": {
+                "x": 674,
+                "y": 432,
+                "w": 342,
+                "h": 44
+              },
+              "name": "導きの託宣整える",
+              "effectTextVisible": false,
+              "previewMode": "long",
+              "preview": "今なら『姉御の号令』が出せる",
+              "previewFont": "10px",
+              "previewBox": {
+                "x": 711,
+                "y": 456,
+                "w": 119,
+                "h": 15
+              },
+              "previewTextWidth": 119,
+              "previewTruncated": false,
+              "availWidth": 324,
+              "buttonOverflowX": false,
+              "buttonOverflowY": false,
+              "disabled": false
+            },
+            {
+              "box": {
+                "x": 1021,
+                "y": 432,
+                "w": 342,
+                "h": 44
+              },
+              "name": "天啓の託宣攻める",
+              "effectTextVisible": false,
+              "previewMode": "long",
+              "preview": "40ダメージ",
+              "previewFont": "10px",
+              "previewBox": {
+                "x": 1058,
+                "y": 456,
+                "w": 86,
+                "h": 15
+              },
+              "previewTextWidth": 40,
+              "previewTruncated": false,
+              "availWidth": 324,
+              "buttonOverflowX": false,
+              "buttonOverflowY": false,
+              "disabled": false
+            }
+          ]
+        }
+      ],
+      "measure": [
+        {
+          "candidate": "『{name}』",
+          "fits": 60,
+          "total": 60,
+          "avail": 324,
+          "overflow": []
+        },
+        {
+          "candidate": "出せる『{name}』",
+          "fits": 60,
+          "total": 60,
+          "avail": 324,
+          "overflow": []
+        },
+        {
+          "candidate": "出せる:{name}",
+          "fits": 60,
+          "total": 60,
+          "avail": 324,
+          "overflow": []
+        },
+        {
+          "candidate": "出せる {name}",
+          "fits": 60,
+          "total": 60,
+          "avail": 324,
+          "overflow": []
+        },
+        {
+          "candidate": "『{name}』可",
+          "fits": 60,
+          "total": 60,
+          "avail": 324,
+          "overflow": []
+        },
+        {
+          "candidate": "出せる札＋1",
+          "fits": 1,
+          "total": 1,
+          "avail": 324,
+          "overflow": []
+        },
+        {
+          "candidate": "1枚引く＋神力1",
+          "fits": 1,
+          "total": 1,
+          "avail": 324,
+          "overflow": []
+        },
+        {
+          "candidate": "札を1枚引く",
+          "fits": 1,
+          "total": 1,
+          "avail": 324,
+          "overflow": []
+        }
+      ]
+    }
+  ],
+  "names": [
+    "アンコール",
+    "おおらかな一打",
+    "からかい半分",
+    "一喝",
+    "一心不乱",
+    "一撃",
+    "一攫千金",
+    "不動の構え",
+    "不屈の一歩",
+    "乱舞",
+    "予言",
+    "共振",
+    "冒険者の勘",
+    "剛撃",
+    "反撃の刃",
+    "受け流し",
+    "呪縛",
+    "喝采",
+    "大喝",
+    "大治癒",
+    "大漁",
+    "姉御の号令",
+    "威嚇",
+    "守りの陣",
+    "守護",
+    "小さな託宣",
+    "巫女の舞",
+    "幸運の女神",
+    "後輩想い",
+    "息吹",
+    "息継ぎ",
+    "恵比寿顔",
+    "悪戯",
+    "懐の深さ",
+    "捨身の一撃",
+    "気まぐれ",
+    "浄めの光",
+    "渾身の一撃",
+    "潮招き",
+    "独奏",
+    "癒し",
+    "神力の泉",
+    "神楽舞",
+    "神託",
+    "神速",
+    "福授け",
+    "福袋",
+    "秘技・満ちる",
+    "笑って許す",
+    "見切り",
+    "見通し",
+    "誓いの盾",
+    "豪快な一撃",
+    "速攻",
+    "連撃",
+    "金縛り",
+    "鉄壁の構え",
+    "長生きの知恵",
+    "闘志",
+    "魅惑の舞"
+  ]
+}
